@@ -1,0 +1,7 @@
+accessWidener v1 named
+
+accessible class net/minecraft/client/gui/screen/ingame/CreativeInventoryScreen$CreativeSlot
+
+accessible method net/minecraft/client/gui/screen/ingame/HandledScreen onMouseClick (Lnet/minecraft/screen/slot/Slot;Lnet/minecraft/screen/slot/SlotActionType;)V
+
+accessible field net/minecraft/client/gui/screen/ingame/CreativeInventoryScreen$CreativeSlot slot Lnet/minecraft/screen/slot/Slot;

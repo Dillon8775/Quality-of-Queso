@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "net.dillon.qualityofqueso.mixin.client",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "CreativeInventoryScreenMixin",
+    "HandledScreenMixin",
+    "ScreensMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
