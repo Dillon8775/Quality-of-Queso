@@ -1,6 +1,6 @@
 package net.dillon.qualityofqueso.mixin.client;
 
-import net.dillon.qualityofqueso.QuesoOptions;
+import net.dillon.qualityofqueso.option.ModOptions;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
@@ -23,7 +23,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> {
      */
     @Inject(method = "onMouseClick(Lnet/minecraft/screen/slot/Slot;IILnet/minecraft/screen/slot/SlotActionType;)V", at = @At("HEAD"))
     private void closeButtonOnClickOutOfBounds(Slot slot, int slotId, int button, SlotActionType actionType, CallbackInfo ci) {
-        if (QuesoOptions.OPTIONS.close_gui_menu_by_clicking_off && this.handler.getCursorStack().isEmpty() && button == 0 && slot == null) {
+        if (ModOptions.OPTIONS.close_gui_menu_by_clicking_off && this.handler.getCursorStack().isEmpty() && button == 0 && slot == null) {
             this.close();
         }
     }

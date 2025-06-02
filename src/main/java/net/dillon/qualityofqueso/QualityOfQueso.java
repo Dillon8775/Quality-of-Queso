@@ -7,9 +7,13 @@ import org.slf4j.LoggerFactory;
 
 public class QualityOfQueso implements ModInitializer {
 	public static final String MOD_ID = "qualityofqueso";
-	public static final Logger LOGGER = LoggerFactory.getLogger("Quality of QUESO");
+	private static final Logger LOGGER = LoggerFactory.getLogger("Quality of QUESO");
 
 	@Override
 	public void onInitialize() {
+	}
+
+	public static void info(String message) {
+		LOGGER.info(message);
 	}
 }

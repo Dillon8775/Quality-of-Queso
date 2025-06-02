@@ -1,4 +1,4 @@
-package net.dillon.qualityofqueso;
+package net.dillon.qualityofqueso.option;
 
 import net.fabricmc.loader.api.FabricLoader;
 
@@ -8,10 +8,10 @@ import java.io.FileWriter;
 
 import static net.fabricmc.fabric.impl.resource.loader.ModResourcePackUtil.GSON;
 
-public class QuesoOptions {
+public class ModOptions {
     public static final String CONFIG = "qualityofqueso-config.json";
     private static File file;
-    public static QuesoOptions OPTIONS = getConfig();
+    public static ModOptions OPTIONS = getConfig();
 
     public boolean close_gui_menu_by_clicking_off = true;
     public boolean type_anywhere_to_search = true;
@@ -23,7 +23,7 @@ public class QuesoOptions {
         File configFile = getConfigFile();
 
         if (!configFile.exists()) {
-            OPTIONS = new QuesoOptions();
+            OPTIONS = new ModOptions();
         } else {
             readConfig();
         }
@@ -52,7 +52,7 @@ public class QuesoOptions {
     /**
      * Sets the {@code OPTIONS} variable to the config.
      */
-    public static void setConfig(QuesoOptions config) {
+    public static void setConfig(ModOptions config) {
         OPTIONS = config;
         saveConfig();
     }
@@ -60,12 +60,12 @@ public class QuesoOptions {
     /**
      * Gets all the Speedrunner Mod configuration options and returns them.
      */
-    public static QuesoOptions getConfig() {
+    public static ModOptions getConfig() {
         File file = getConfigFile();
         try (FileReader reader = new FileReader(file)) {
-            return GSON.fromJson(reader, QuesoOptions.class);
+            return GSON.fromJson(reader, ModOptions.class);
         } catch (Exception e) {
-            QuesoOptions newconfig = new QuesoOptions();
+            ModOptions newconfig = new ModOptions();
             setConfig(newconfig);
             return newconfig;
         }

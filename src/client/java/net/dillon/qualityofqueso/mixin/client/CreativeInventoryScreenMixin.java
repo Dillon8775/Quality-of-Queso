@@ -1,6 +1,6 @@
 package net.dillon.qualityofqueso.mixin.client;
 
-import net.dillon.qualityofqueso.QuesoOptions;
+import net.dillon.qualityofqueso.option.ModOptions;
 import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -44,7 +44,7 @@ public abstract class CreativeInventoryScreenMixin extends HandledScreen<Creativ
 	 */
 	@Inject(method = "onMouseClick(Lnet/minecraft/screen/slot/Slot;IILnet/minecraft/screen/slot/SlotActionType;)V", at = @At("HEAD"))
 	private void closeButtonOnClickOutOfBounds(Slot slot, int slotId, int button, SlotActionType actionType, CallbackInfo ci) {
-		if (QuesoOptions.OPTIONS.close_gui_menu_by_clicking_off && this.handler.getCursorStack().isEmpty() && button == 0 && slot == null) {
+		if (ModOptions.OPTIONS.close_gui_menu_by_clicking_off && this.handler.getCursorStack().isEmpty() && button == 0 && slot == null) {
 			this.close();
 		}
 	}
@@ -57,10 +57,10 @@ public abstract class CreativeInventoryScreenMixin extends HandledScreen<Creativ
 	public boolean charTyped(char chr, int modifiers) {
 		if (this.ignoreTypedCharacter) {
 			return false;
-		} else if (!QuesoOptions.OPTIONS.type_anywhere_to_search && selectedTab.getType() != ItemGroup.Type.SEARCH) {
+		} else if (!ModOptions.OPTIONS.type_anywhere_to_search && selectedTab.getType() != ItemGroup.Type.SEARCH) {
 			return false;
 		} else {
-			if (QuesoOptions.OPTIONS.type_anywhere_to_search) {
+			if (ModOptions.OPTIONS.type_anywhere_to_search) {
 				this.setSelectedTab(ItemGroups.getSearchGroup());
 			}
 			String string = this.searchBox.getText();
@@ -81,7 +81,7 @@ public abstract class CreativeInventoryScreenMixin extends HandledScreen<Creativ
 	 */
 	@Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
 	private void allowCertainChars(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-		if (QuesoOptions.OPTIONS.type_anywhere_to_search) {
+		if (ModOptions.OPTIONS.type_anywhere_to_search) {
 			List<Integer> keys = List.of(GLFW.GLFW_KEY_T, GLFW.GLFW_KEY_E);
 			List<Integer> disallowedKeys = List.of(
 					GLFW.GLFW_KEY_1,

@@ -1,34 +1,29 @@
-package net.dillon.qualityofqueso;
+package net.dillon.qualityofqueso.option;
 
+import net.dillon.qualityofqueso.QualityOfQueso;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.option.GameOptionsScreen;
 import net.minecraft.client.option.SimpleOption;
 import net.minecraft.text.Text;
 
-public class QualityOfQuesoOptionsScreen extends GameOptionsScreen {
+public class ModOptionsScreen extends GameOptionsScreen {
 
-    public QualityOfQuesoOptionsScreen(Screen parent) {
+    public ModOptionsScreen(Screen parent) {
         super(parent, MinecraftClient.getInstance().options, Text.translatable("qualityofqueso.gui.options.title"));
-    }
-
-    private SimpleOption<?>[] options() {
-        return new SimpleOption[]{
-        };
     }
 
     @Override
     protected void init() {
         super.init();
-        this.body.addSingleOptionEntry(QuesoListOptions.CLOSE_GUI_MENU_BY_CLICKING_OFF);
-        this.body.addSingleOptionEntry(QuesoListOptions.TYPE_ANYWHERE_TO_SEARCH);
-//      this.body.addAll(options());
+        this.body.addSingleOptionEntry(ModListOptions.CLOSE_GUI_MENU_BY_CLICKING_OFF);
+        this.body.addSingleOptionEntry(ModListOptions.TYPE_ANYWHERE_TO_SEARCH);
     }
 
     @Override
     public void close() {
-        QuesoOptions.saveConfig();
-        QualityOfQueso.LOGGER.info("Flushed changes.");
+        ModOptions.saveConfig();
+        QualityOfQueso.info("Flushed changes.");
         super.close();
     }
 

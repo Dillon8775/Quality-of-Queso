@@ -1,9 +1,9 @@
-package net.dillon.qualityofqueso;
+package net.dillon.qualityofqueso.util;
 
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
-public class QuesoTexts {
+public class ModTexts {
     public static final Text BLANK = Text.literal("");
     public static final Text ON = Text.translatable("qualityofqueso.gui.on").formatted(Formatting.GREEN);
     public static final Text OFF = Text.translatable("qualityofqueso.gui.off").formatted(Formatting.RED);

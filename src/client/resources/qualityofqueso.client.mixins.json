@@ -4,8 +4,9 @@
   "compatibilityLevel": "JAVA_21",
   "client": [
     "CreativeInventoryScreenMixin",
+    "GameMenuScreenMixin",
     "HandledScreenMixin",
-    "ScreensMixin"
+    "TitleScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1
