@@ -31,7 +31,7 @@ public class GameMenuScreenMixin extends Screen {
     @Inject(method = "init", at = @At("TAIL"))
     private void init(CallbackInfo ci) {
         if (this.showMenu) {
-            this.settingsButton = this.addDrawableChild(ButtonUtil.initializeButton(this.client, this, this.width / 2 - 4 - 120 - 2, this.height / 4 + 96 - 16));
+            this.settingsButton = this.addDrawableChild(ButtonUtil.initializeButton(this.client, this, this.width / 2 + 112, this.height / 4 + 72 - 16));
         }
     }
 
