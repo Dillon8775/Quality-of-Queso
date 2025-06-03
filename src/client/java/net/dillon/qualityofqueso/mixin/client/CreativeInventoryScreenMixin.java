@@ -1,6 +1,9 @@
 package net.dillon.qualityofqueso.mixin.client;
 
+import net.dillon.qualityofqueso.QualityOfQuesoClient;
 import net.dillon.qualityofqueso.option.ModOptions;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -10,7 +13,6 @@ import net.minecraft.item.ItemGroups;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.text.Text;
-import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
@@ -19,9 +21,9 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.List;
 import java.util.Objects;
 
+@Environment(EnvType.CLIENT)
 @Mixin(CreativeInventoryScreen.class)
 public abstract class CreativeInventoryScreenMixin extends HandledScreen<CreativeInventoryScreen.CreativeScreenHandler> {
 	@Shadow
@@ -82,25 +84,14 @@ public abstract class CreativeInventoryScreenMixin extends HandledScreen<Creativ
 	@Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
 	private void allowCertainChars(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
 		if (ModOptions.OPTIONS.type_anywhere_to_search) {
-			List<Integer> keys = List.of(GLFW.GLFW_KEY_T, GLFW.GLFW_KEY_E);
-			List<Integer> disallowedKeys = List.of(
-					GLFW.GLFW_KEY_1,
-					GLFW.GLFW_KEY_2,
-					GLFW.GLFW_KEY_3,
-					GLFW.GLFW_KEY_4,
-					GLFW.GLFW_KEY_5,
-					GLFW.GLFW_KEY_6,
-					GLFW.GLFW_KEY_7,
-					GLFW.GLFW_KEY_8,
-					GLFW.GLFW_KEY_9
-			);
-			for (int key : keys) {
+
+			for (int key : QualityOfQuesoClient.keys) {
 				if (keyCode == key) {
 					this.ignoreTypedCharacter = false;
 					cir.setReturnValue(true);
 				}
 			}
-			for (int key : disallowedKeys) {
+			for (int key : QualityOfQuesoClient.disallowedKeys) {
 				if (keyCode == key) {
 					this.ignoreTypedCharacter = true;
 					cir.setReturnValue(super.keyPressed(keyCode, scanCode, modifiers));

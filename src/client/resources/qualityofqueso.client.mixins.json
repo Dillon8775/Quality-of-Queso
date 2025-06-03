@@ -3,9 +3,13 @@
   "package": "net.dillon.qualityofqueso.mixin.client",
   "compatibilityLevel": "JAVA_21",
   "client": [
+    "AbstractFurnaceScreenMixin",
+    "CraftingScreenMixin",
     "CreativeInventoryScreenMixin",
     "GameMenuScreenMixin",
     "HandledScreenMixin",
+    "InventoryScreenMixin",
+    "RecipeBookWidgetMixin",
     "TitleScreenMixin"
   ],
   "injectors": {

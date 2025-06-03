@@ -4,7 +4,6 @@ import net.dillon.qualityofqueso.QualityOfQueso;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.option.GameOptionsScreen;
-import net.minecraft.client.option.SimpleOption;
 import net.minecraft.text.Text;
 
 public class ModOptionsScreen extends GameOptionsScreen {

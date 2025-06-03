@@ -9,5 +9,5 @@
   "qualityofqueso.options.close_gui_menu_by_clicking_off": "Close GUI Menu By Clicking Off GUI",
   "qualityofqueso.options.close_gui_menu_by_clicking_off.tooltip": "Closes any interactive menu when you click anywhere outside of the GUI screen.",
   "qualityofqueso.options.type_anywhere_to_search": "Type Anywhere to Search",
-  "qualityofqueso.options.type_anywhere_to_search.tooltip": "Begin typing in any of the creative menu categories to begin searching for items."
+  "qualityofqueso.options.type_anywhere_to_search.tooltip": "Begin typing in any menu to search for items."
 }

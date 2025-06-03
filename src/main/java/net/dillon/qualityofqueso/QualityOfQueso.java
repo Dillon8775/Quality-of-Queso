@@ -1,7 +1,6 @@
 package net.dillon.qualityofqueso;
 
 import net.fabricmc.api.ModInitializer;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,6 +12,9 @@ public class QualityOfQueso implements ModInitializer {
 	public void onInitialize() {
 	}
 
+	/**
+	 * Sends a message to console.
+	 */
 	public static void info(String message) {
 		LOGGER.info(message);
 	}
