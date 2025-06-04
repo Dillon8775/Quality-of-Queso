@@ -1,38 +1,16 @@
 package net.dillon.qualityofqueso.util;
 
-import net.dillon.qualityofqueso.QualityOfQuesoClient;
 import net.dillon.qualityofqueso.option.ModOptionsScreen;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ingame.RecipeBookScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 public class ButtonUtil {
-
-    /**
-     * Code used for automatic typing in certain screens.
-     */
-    public static boolean keyPressed(int keyCode, RecipeBookScreen<?> screen) {
-        boolean ignoreTyping = false;
-        for (int key : QualityOfQuesoClient.disallowedKeys) {
-            if (keyCode == key) {
-                ignoreTyping = true;
-                break;
-            }
-        }
-        if (!ignoreTyping && !screen.recipeBook.isOpen()) {
-            screen.recipeBook.toggleOpen();
-            screen.refreshWidgetPositions();
-            screen.recipeBook.searchField.setFocused(true);
-            return true;
-        }
-        return false;
-    }
 
     /**
      * Initializes the settings button.

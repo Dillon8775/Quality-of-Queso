@@ -6,8 +6,10 @@
   "qualityofqueso.gui.yes": "YES",
   "qualityofqueso.gui.no": "NO",
 
-  "qualityofqueso.options.close_gui_menu_by_clicking_off": "Close GUI Menu By Clicking Off GUI",
-  "qualityofqueso.options.close_gui_menu_by_clicking_off.tooltip": "Closes any interactive menu when you click anywhere outside of the GUI screen.",
+  "qualityofqueso.options.close_gui_by_clicking_off": "Close GUI By Clicking Off",
+  "qualityofqueso.options.close_gui_by_clicking_off.tooltip": "Close any GUI menu when you click anywhere outside of the GUI screen.",
   "qualityofqueso.options.type_anywhere_to_search": "Type Anywhere to Search",
-  "qualityofqueso.options.type_anywhere_to_search.tooltip": "Begin typing in any menu to search for items."
+  "qualityofqueso.options.type_anywhere_to_search.tooltip": "Begin typing in any GUI menu to search for items (creative inventory, survival inventory, and recipe book screens).",
+  "qualityofqueso.options.show_config_button": "Show Config Button",
+  "qualityofqueso.options.show_config_button.tooltip": "Display the §6Quality of Queso§r§f configuration button on the title screen and the pause screen.\n\n§e§lPlease Note:§r§f If you disable this option, you can only re-enable it if you go into the config file §o(located in .minecraft/config/qualityofqueso-config.json)"
 }

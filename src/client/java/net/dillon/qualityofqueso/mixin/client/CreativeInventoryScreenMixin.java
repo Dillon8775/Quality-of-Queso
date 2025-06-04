@@ -10,6 +10,7 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemGroups;
+import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.text.Text;
@@ -46,7 +47,7 @@ public abstract class CreativeInventoryScreenMixin extends HandledScreen<Creativ
 	 */
 	@Inject(method = "onMouseClick(Lnet/minecraft/screen/slot/Slot;IILnet/minecraft/screen/slot/SlotActionType;)V", at = @At("HEAD"))
 	private void closeButtonOnClickOutOfBounds(Slot slot, int slotId, int button, SlotActionType actionType, CallbackInfo ci) {
-		if (ModOptions.OPTIONS.close_gui_menu_by_clicking_off && this.handler.getCursorStack().isEmpty() && button == 0 && slot == null) {
+		if (ModOptions.OPTIONS.closeGuiByClickingOff && this.handler.getCursorStack().isEmpty() && button == 0 && slot == null) {
 			this.close();
 		}
 	}
@@ -57,12 +58,10 @@ public abstract class CreativeInventoryScreenMixin extends HandledScreen<Creativ
 	 */
 	@Overwrite
 	public boolean charTyped(char chr, int modifiers) {
-		if (this.ignoreTypedCharacter) {
-			return false;
-		} else if (!ModOptions.OPTIONS.type_anywhere_to_search && selectedTab.getType() != ItemGroup.Type.SEARCH) {
+		if (this.ignoreTypedCharacter || (!(ModOptions.OPTIONS.typeAnywhereToSearch) && selectedTab.getType() != ItemGroup.Type.SEARCH)) {
 			return false;
 		} else {
-			if (ModOptions.OPTIONS.type_anywhere_to_search) {
+			if (QualityOfQuesoClient.options().typeAnywhereToSearch) {
 				this.setSelectedTab(ItemGroups.getSearchGroup());
 			}
 			String string = this.searchBox.getText();
@@ -83,7 +82,11 @@ public abstract class CreativeInventoryScreenMixin extends HandledScreen<Creativ
 	 */
 	@Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
 	private void allowCertainChars(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-		if (ModOptions.OPTIONS.type_anywhere_to_search) {
+		if (QualityOfQuesoClient.options().typeAnywhereToSearch) {
+			if (this.focusedSlot != null && this.focusedSlot.getStack() != ItemStack.EMPTY && !this.searchBox.isFocused()) {
+				this.ignoreTypedCharacter = true;
+				cir.setReturnValue(super.keyPressed(keyCode, scanCode, modifiers));
+			}
 
 			for (int key : QualityOfQuesoClient.keys) {
 				if (keyCode == key) {

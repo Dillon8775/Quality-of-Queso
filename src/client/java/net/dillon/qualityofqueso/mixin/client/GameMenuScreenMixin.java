@@ -1,5 +1,6 @@
 package net.dillon.qualityofqueso.mixin.client;
 
+import net.dillon.qualityofqueso.QualityOfQuesoClient;
 import net.dillon.qualityofqueso.util.ButtonUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -30,14 +31,14 @@ public class GameMenuScreenMixin extends Screen {
 
     @Inject(method = "init", at = @At("TAIL"))
     private void init(CallbackInfo ci) {
-        if (this.showMenu) {
+        if (QualityOfQuesoClient.options().showConfigurationButton && this.showMenu) {
             this.settingsButton = this.addDrawableChild(ButtonUtil.initializeButton(this.client, this, this.width / 2 + 108, this.height / 4 + 72 - 16));
         }
     }
 
     @Inject(method = "render", at = @At("TAIL"))
     private void renderTooltips(DrawContext context, int mouseX, int mouseY, float deltaTicks, CallbackInfo ci) {
-        if (this.showMenu) {
+        if (QualityOfQuesoClient.options().showConfigurationButton && this.showMenu) {
             ButtonUtil.drawTooltipAndTexture(context, this.textRenderer, this.settingsButton, mouseX, mouseY);
         }
     }

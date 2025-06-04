@@ -13,8 +13,9 @@ public class ModOptions {
     private static File file;
     public static ModOptions OPTIONS = getConfig();
 
-    public boolean close_gui_menu_by_clicking_off = true;
-    public boolean type_anywhere_to_search = true;
+    public boolean closeGuiByClickingOff = true;
+    public boolean typeAnywhereToSearch = true;
+    public boolean showConfigurationButton = true;
 
     /**
      * Loads the configuration file.
