@@ -9,6 +9,15 @@ import java.util.List;
 public class QualityOfQuesoClient implements ClientModInitializer {
 	public static final List<Integer> keys = List.of(GLFW.GLFW_KEY_T, GLFW.GLFW_KEY_E);
 	public static final List<Integer> disallowedKeys = List.of(
+			GLFW.GLFW_KEY_1,
+			GLFW.GLFW_KEY_2,
+			GLFW.GLFW_KEY_3,
+			GLFW.GLFW_KEY_4,
+			GLFW.GLFW_KEY_5,
+			GLFW.GLFW_KEY_6,
+			GLFW.GLFW_KEY_7,
+			GLFW.GLFW_KEY_8,
+			GLFW.GLFW_KEY_9,
 			GLFW.GLFW_KEY_ESCAPE,
 			GLFW.GLFW_KEY_LEFT_SHIFT,
 			GLFW.GLFW_KEY_RIGHT_SHIFT,
