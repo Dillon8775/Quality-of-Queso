@@ -1,24 +1,27 @@
 {
   "schemaVersion": 1,
   "id": "qualityofqueso",
-  "version": "1.1.1",
+  "version": "1.1.1+mc1.21.2x",
   "name": "Quality of QUESO",
   "description": "A quality of life mod, features and ideas by MannyQUESO. Implemented by Dillon.",
   "accessWidener": "qualityofqueso.accessWidener",
   "authors": [
-    "MannyQUESO265",
-	"Dillon"
+    "MannyQUESO",
+	"Dillon8775"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "homepage": "https://modrinth.com/mod/quality-of-queso",
+    "sources": "https://github.com/Dillon8775/Quality-of-Queso"
   },
-  "license": "CC0-1.0",
+  "license": "All rights reserved.",
   "icon": "assets/qualityofqueso/icon.png",
   "environment": "*",
   "entrypoints": {
     "client": [
       "net.dillon.qualityofqueso.QualityOfQuesoClient"
+    ],
+    "modmenu": [
+      "net.dillon.qualityofqueso.impl.ModMenuImpl"
     ]
   },
   "mixins": [

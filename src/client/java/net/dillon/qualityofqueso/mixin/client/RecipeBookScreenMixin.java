@@ -50,7 +50,8 @@ public abstract class RecipeBookScreenMixin<T extends AbstractRecipeScreenHandle
                     }
                 }
             }
-            // if clear, type anywhere
+
+            // if clear, begin type anywhere
             if (!ignoreTyping) {
                 if (!this.recipeBook.isOpen()) {
                     this.recipeBook.toggleOpen();

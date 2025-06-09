@@ -1,3 +1,6 @@
+- New mod icon.
 - Renamed options.
 - Optimizations and bug fixes.
+- Added support for Mod Menu.
 - Mod is now a client-side only mod. Do not try to install on server.
+- Changed license (All rights reserved).
