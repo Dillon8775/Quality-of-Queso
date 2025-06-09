@@ -47,7 +47,7 @@ public abstract class CreativeInventoryScreenMixin extends HandledScreen<Creativ
 	 */
 	@Inject(method = "onMouseClick(Lnet/minecraft/screen/slot/Slot;IILnet/minecraft/screen/slot/SlotActionType;)V", at = @At("HEAD"))
 	private void closeButtonOnClickOutOfBounds(Slot slot, int slotId, int button, SlotActionType actionType, CallbackInfo ci) {
-		if (ModOptions.OPTIONS.closeGuiByClickingOff && this.handler.getCursorStack().isEmpty() && button == 0 && slot == null) {
+		if (ModOptions.OPTIONS.betterGuiExit && this.handler.getCursorStack().isEmpty() && button == 0 && slot == null) {
 			this.close();
 		}
 	}
@@ -58,10 +58,10 @@ public abstract class CreativeInventoryScreenMixin extends HandledScreen<Creativ
 	 */
 	@Overwrite
 	public boolean charTyped(char chr, int modifiers) {
-		if (this.ignoreTypedCharacter || (!(ModOptions.OPTIONS.typeAnywhereToSearch) && selectedTab.getType() != ItemGroup.Type.SEARCH)) {
+		if (this.ignoreTypedCharacter || (!(ModOptions.OPTIONS.betterSearching) && selectedTab.getType() != ItemGroup.Type.SEARCH)) {
 			return false;
 		} else {
-			if (QualityOfQuesoClient.options().typeAnywhereToSearch) {
+			if (QualityOfQuesoClient.options().betterSearching) {
 				this.setSelectedTab(ItemGroups.getSearchGroup());
 			}
 			String string = this.searchBox.getText();
@@ -82,7 +82,7 @@ public abstract class CreativeInventoryScreenMixin extends HandledScreen<Creativ
 	 */
 	@Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
 	private void allowCertainChars(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-		if (QualityOfQuesoClient.options().typeAnywhereToSearch) {
+		if (QualityOfQuesoClient.options().betterSearching) {
 			if (this.focusedSlot != null && this.focusedSlot.getStack() != ItemStack.EMPTY && !this.searchBox.isFocused()) {
 				this.ignoreTypedCharacter = true;
 				cir.setReturnValue(super.keyPressed(keyCode, scanCode, modifiers));

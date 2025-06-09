@@ -26,7 +26,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> {
      */
     @Inject(method = "onMouseClick(Lnet/minecraft/screen/slot/Slot;IILnet/minecraft/screen/slot/SlotActionType;)V", at = @At("HEAD"))
     private void closeButtonOnClickOutOfBounds(Slot slot, int slotId, int button, SlotActionType actionType, CallbackInfo ci) {
-        if (ModOptions.OPTIONS.closeGuiByClickingOff && this.handler.getCursorStack().isEmpty() && button == 0 && slot == null) {
+        if (ModOptions.OPTIONS.betterGuiExit && this.handler.getCursorStack().isEmpty() && button == 0 && slot == null) {
             this.close();
         }
     }

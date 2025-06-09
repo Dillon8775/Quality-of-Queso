@@ -1,6 +1,8 @@
 package net.dillon.qualityofqueso.util;
 
 import net.dillon.qualityofqueso.option.ModOptionsScreen;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
@@ -10,6 +12,10 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
+/**
+ * Utility class.
+ */
+@Environment(EnvType.CLIENT)
 public class ButtonUtil {
 
     /**

@@ -1,5 +1,7 @@
 package net.dillon.qualityofqueso.option;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 
 import java.io.File;
@@ -8,14 +10,15 @@ import java.io.FileWriter;
 
 import static net.fabricmc.fabric.impl.resource.loader.ModResourcePackUtil.GSON;
 
+@Environment(EnvType.CLIENT)
 public class ModOptions {
     public static final String CONFIG = "qualityofqueso-config.json";
     private static File file;
     public static ModOptions OPTIONS = getConfig();
 
-    public boolean closeGuiByClickingOff = true;
-    public boolean typeAnywhereToSearch = true;
-    public boolean showConfigurationButton = true;
+    public boolean betterGuiExit = true;
+    public boolean betterSearching = true;
+    public boolean showConfigButton = true;
 
     /**
      * Loads the configuration file.

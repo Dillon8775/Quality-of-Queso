@@ -1,0 +1,3 @@
+- Renamed options.
+- Optimizations and bug fixes.
+- Mod is now a client-side only mod. Do not try to install on server.

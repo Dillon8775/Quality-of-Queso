@@ -1,6 +1,8 @@
 package net.dillon.qualityofqueso.mixin.client;
 
 import net.dillon.qualityofqueso.QualityOfQuesoClient;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.screen.ingame.RecipeBookScreen;
 import net.minecraft.client.gui.screen.recipebook.RecipeBookWidget;
@@ -15,6 +17,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+@Environment(EnvType.CLIENT)
 @Mixin(RecipeBookScreen.class)
 public abstract class RecipeBookScreenMixin<T extends AbstractRecipeScreenHandler> extends HandledScreen<T> {
     @Shadow @Final
@@ -29,14 +32,25 @@ public abstract class RecipeBookScreenMixin<T extends AbstractRecipeScreenHandle
      */
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
     private void searchAnyways(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-        if (QualityOfQuesoClient.options().typeAnywhereToSearch) {
-            boolean ignoreTyping = this.focusedSlot != null && this.focusedSlot.getStack() != ItemStack.EMPTY;
+        if (QualityOfQuesoClient.options().betterSearching) {
+            boolean ignoreTyping = (this.focusedSlot != null && this.focusedSlot.getStack() != ItemStack.EMPTY);
+            // handle disallowed keys
             for (int key : QualityOfQuesoClient.disallowedKeys) {
                 if (keyCode == key) {
                     ignoreTyping = true;
                     break;
                 }
             }
+            // handle switching items from hotbar to another slot in inventory; cancel out typing if an item can be moved
+            if (this.handler.getCursorStack().isEmpty() && this.focusedSlot != null) {
+                for (int i = 0; i < 9; i++) {
+                    if (this.client.options.hotbarKeys[i].matchesKey(keyCode, scanCode)) {
+                        ignoreTyping = true;
+                        break;
+                    }
+                }
+            }
+            // if clear, type anywhere
             if (!ignoreTyping) {
                 if (!this.recipeBook.isOpen()) {
                     this.recipeBook.toggleOpen();

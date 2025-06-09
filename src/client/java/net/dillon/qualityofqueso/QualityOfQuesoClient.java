@@ -2,11 +2,17 @@ package net.dillon.qualityofqueso;
 
 import net.dillon.qualityofqueso.option.ModOptions;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import org.lwjgl.glfw.GLFW;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
+@Environment(EnvType.CLIENT)
 public class QualityOfQuesoClient implements ClientModInitializer {
+	private static final Logger LOGGER = LoggerFactory.getLogger("Quality of QUESO");
 	public static final List<Integer> keys = List.of(GLFW.GLFW_KEY_T, GLFW.GLFW_KEY_E);
 	public static final List<Integer> disallowedKeys = List.of(
 			GLFW.GLFW_KEY_1,
@@ -32,7 +38,14 @@ public class QualityOfQuesoClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		ModOptions.loadConfig();
-		QualityOfQueso.info("Quality of Queso has successfully loaded!");
+		QualityOfQuesoClient.info("Quality of Queso has successfully loaded!");
+	}
+
+	/**
+	 * Sends a message to console.
+	 */
+	public static void info(String message) {
+		LOGGER.info(message);
 	}
 
 	/**
