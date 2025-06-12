@@ -88,13 +88,15 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                 for (int i = 0; i < this.getScreenHandler().slots.size(); i++) {
                     Slot slot = this.getScreenHandler().getSlot(i);
                     ItemStack stack = slot.getStack();
+                    boolean filled = false;
                     if (stack.hasEnchantments() || stack.isOf(Items.ENCHANTED_BOOK)) {
                         ItemEnchantmentsComponent enchantments = EnchantmentHelper.getEnchantments(stack);
                         for (RegistryEntry<Enchantment> enchantment : enchantments.getEnchantments()) {
                             String encName = Text.translatable(enchantment.value().description().getString()).getString();
                             String name = encName + " " + enchantments.getLevel(enchantment);
-                            if (!name.toLowerCase().contains(text)) {
+                            if (!name.toLowerCase().contains(text) && !filled) {
                                 grayoutSlot(context, slot);
+                                filled = true;
                             }
                         }
                     } else {
