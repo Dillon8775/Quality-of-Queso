@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "qualityofqueso",
-  "version": "1.1.1+mc1.21.2x",
+  "version": "1.2+mc1.21.2x",
   "name": "Quality of QUESO",
   "description": "A quality of life mod, with a bunch of cool QOL features.",
   "accessWidener": "qualityofqueso.accessWidener",

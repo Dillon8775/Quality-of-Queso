@@ -6,10 +6,12 @@
   "qualityofqueso.gui.yes": "YES",
   "qualityofqueso.gui.no": "NO",
 
-  "qualityofqueso.options.close_gui_by_clicking_off": "Better GUI Exit",
-  "qualityofqueso.options.close_gui_by_clicking_off.tooltip": "Close any GUI menu when you click anywhere outside of the GUI screen.\n\nFor example, clicking off of the crafting inventory screen (as long as your cursor isn't holding anything) will close the screen.",
-  "qualityofqueso.options.type_anywhere_to_search": "Better Searching",
-  "qualityofqueso.options.type_anywhere_to_search.tooltip": "Begin typing no matter what screen you are on to search for items.\n\nFor example, if you are in the creative inventory menu screen, and you want to search for an item, you no longer have to click on the compass to search for an item. Just begin typing and it will begin searching. The same applies to recipe book screens and crafting screens. (Note: if your cursor is hovered over a slot with an item that is bound to a hotbar key, it will not automatically search. You must move your mouse away from the bounded hotbar slot.)",
+  "qualityofqueso.options.better_gui_exit": "Better GUI Exit",
+  "qualityofqueso.options.better_gui_exit.tooltip": "Close any GUI menu when you click anywhere outside of the GUI screen.\n\nFor example, clicking off of the crafting inventory screen (as long as your cursor isn't holding anything) will close the screen.",
+  "qualityofqueso.options.better_searching": "Better Searching",
+  "qualityofqueso.options.better_searching.tooltip": "Begin typing no matter what screen you are on to search for items.\n\nFor example, if you are in the creative inventory menu screen, and you want to search for an item, you no longer have to click on the compass to search for an item. Just begin typing and it will begin searching. The same applies to recipe book screens and crafting screens. (Note: if your cursor is hovered over a slot with an item that is bound to a hotbar key, it will not automatically search. You must move your mouse away from the bounded hotbar slot.)",
+  "qualityofqueso.options.container_searching": "Container Searching",
+  "qualityofqueso.options.container_searching.tooltip": "Adds a search bar to the top of chests and shulker boxes, and highlights the items you are looking for!",
   "qualityofqueso.options.show_config_button": "Show Config Button",
-  "qualityofqueso.options.show_config_button.tooltip": "Display the §6Quality of Queso§r§f configuration button on the title screen and the pause screen.\n\n§e§lPlease Note:§r§f If you disable this option, you can only re-enable it if you go into the config file §o(located in .minecraft/config/qualityofqueso-config.json)"
+  "qualityofqueso.options.show_config_button.tooltip": "Display the §6Quality of Queso§r§f configuration button on the title screen and the pause screen.\n\n§e§lPlease Note:§r§f If you disable this option, you can only re-enable it if you go into the config file §o(located in .minecraft/config/qualityofqueso-config.json,§r§f or if you have Mod Menu installed you can open this configuration screen from there.)."
 }

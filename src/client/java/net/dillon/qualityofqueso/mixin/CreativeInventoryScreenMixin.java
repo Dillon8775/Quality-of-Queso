@@ -1,9 +1,10 @@
-package net.dillon.qualityofqueso.mixin.client;
+package net.dillon.qualityofqueso.mixin;
 
 import net.dillon.qualityofqueso.QualityOfQuesoClient;
 import net.dillon.qualityofqueso.option.ModOptions;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -14,6 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.text.Text;
+import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
@@ -22,6 +24,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.List;
 import java.util.Objects;
 
 @Environment(EnvType.CLIENT)
@@ -94,7 +97,18 @@ public abstract class CreativeInventoryScreenMixin extends HandledScreen<Creativ
 					cir.setReturnValue(true);
 				}
 			}
-			for (int key : QualityOfQuesoClient.disallowedKeys) {
+			List<Integer> disallowedKeys = List.of(
+					GLFW.GLFW_KEY_ESCAPE,
+					GLFW.GLFW_KEY_LEFT_SHIFT,
+					GLFW.GLFW_KEY_RIGHT_SHIFT,
+					GLFW.GLFW_KEY_LEFT_CONTROL,
+					GLFW.GLFW_KEY_RIGHT_CONTROL,
+					GLFW.GLFW_KEY_LEFT_ALT,
+					GLFW.GLFW_KEY_RIGHT_ALT,
+					GLFW.GLFW_KEY_LEFT_SUPER,
+					GLFW.GLFW_KEY_RIGHT_SUPER
+			);
+			for (int key : disallowedKeys) {
 				if (keyCode == key) {
 					this.ignoreTypedCharacter = true;
 					cir.setReturnValue(super.keyPressed(keyCode, scanCode, modifiers));

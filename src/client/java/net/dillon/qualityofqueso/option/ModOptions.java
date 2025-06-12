@@ -18,6 +18,7 @@ public class ModOptions {
 
     public boolean betterGuiExit = true;
     public boolean betterSearching = true;
+    public boolean containerSearching = true;
     public boolean showConfigButton = true;
 
     /**
