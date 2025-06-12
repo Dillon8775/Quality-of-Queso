@@ -24,6 +24,7 @@ public class ModOptionsScreen extends GameOptionsScreen {
                 ModListOptions.BETTER_GUI_EXIT,
                 ModListOptions.BETTER_SEARCHING,
                 ModListOptions.CONTAINER_SEARCHING,
+                ModListOptions.CONTAINER_TRANSFERRING,
                 ModListOptions.SHOW_CONFIG_BUTTON
         };
     }

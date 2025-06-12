@@ -9,4 +9,5 @@ accessible field net/minecraft/client/gui/screen/ingame/HandledScreen focusedSlo
 accessible field net/minecraft/client/option/KeyBinding boundKey Lnet/minecraft/client/util/InputUtil$Key;
 accessible field net/minecraft/client/gui/screen/recipebook/RecipeBookWidget searchField Lnet/minecraft/client/gui/widget/TextFieldWidget;
 accessible field net/minecraft/client/gui/screen/ingame/RecipeBookScreen recipeBook Lnet/minecraft/client/gui/screen/recipebook/RecipeBookWidget;
+accessible field net/minecraft/screen/ShulkerBoxScreenHandler inventory Lnet/minecraft/inventory/Inventory;
 accessible field net/minecraft/client/gui/screen/ingame/CreativeInventoryScreen$CreativeSlot slot Lnet/minecraft/screen/slot/Slot;

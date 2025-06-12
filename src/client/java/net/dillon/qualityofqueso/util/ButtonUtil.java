@@ -48,6 +48,6 @@ public class ButtonUtil {
      * Draws the settings texture over top of the settings button.
      */
     private static void drawTexture(DrawContext context, ButtonWidget button) {
-        context.drawTexture(RenderLayer::getGuiTextured, Identifier.of("qualityofqueso:textures/gui/cheesewheel.png"), button.getX() + 1, button.getY() + 1, 0.0F, 0.0F, 18, 18, 18, 18);
+        context.drawTexture(RenderLayer::getGuiTextured, Identifier.of("qualityofqueso:textures/gui/cheese_wheel.png"), button.getX() + 1, button.getY() + 1, 0.0F, 0.0F, 18, 18, 18, 18);
     }
 }

@@ -1,2 +1,6 @@
-- Added container searching (toggleable)!
+- Added container searching and transferring (toggleable)!
+- At the top of any chest or shulker box, you can now search for any item and it will highlight the selected item!
+- You can also use "#" in the beginning of your search query to search for item tags.
+- You can now transfer items from chest -> inventory, or inventory -> chest.
+- To transfer items from inventory -> chest, you must be holding down alt. This is to prevent from pressing the button and sending your whole inventory into the chest by accident.
 - Bug fixes and optimizations.
