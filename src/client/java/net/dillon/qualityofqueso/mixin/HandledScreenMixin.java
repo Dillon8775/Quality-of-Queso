@@ -29,8 +29,6 @@ import net.minecraft.registry.tag.TagKey;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
-import net.minecraft.screen.sync.ComponentChangesHash;
-import net.minecraft.screen.sync.ItemStackHash;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
@@ -132,10 +130,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             Slot fromSlot = screen.getScreenHandler().getSlot(i);
             ItemStack fromStack = fromSlot.getStack();
 
-            if (this.searchField != null &&
-                    this.searchField.isFocused() &&
-                    !this.getSearchFieldText().isEmpty() &&
-                    !this.isSlotAvailable(this.getSearchFieldText(), fromSlot)) {
+            if (this.searchField != null && !this.getSearchFieldText().isEmpty() && !this.isSlotAvailable(this.getSearchFieldText(), fromSlot)) {
                 continue; // skip container slot if item not found via search
             }
 
@@ -158,9 +153,9 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     @Unique
     private void sendClickSlotPacket(int slotIndex) {
         MinecraftClient client = MinecraftClient.getInstance();
-        ClientPlayNetworkHandler networkHandler = client.getNetworkHandler();
+        ClientPlayNetworkHandler network = client.getNetworkHandler();
 
-        if (client.player == null || networkHandler == null || client.player.currentScreenHandler == null) {
+        if (client.player == null || network == null || client.player.currentScreenHandler == null) {
             return;
         }
 
@@ -171,25 +166,22 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
         ItemStack cursorStack = handler.getCursorStack();
         ItemStack clickedStack = handler.getSlot(slotIndex).getStack();
 
-        ComponentChangesHash.ComponentHasher hasher = networkHandler.method_68823();
+        // Build modifiedStacks: track the clicked slot's current stack
+        var modifiedStacks = new Int2ObjectOpenHashMap<ItemStack>();
+        modifiedStacks.put(slotIndex, clickedStack.copy());
 
-        ItemStackHash cursorHash = ItemStackHash.fromItemStack(cursorStack, hasher);
-        ItemStackHash clickedHash = ItemStackHash.fromItemStack(clickedStack, hasher);
-
-        Int2ObjectOpenHashMap<ItemStackHash> modifiedStacks = new Int2ObjectOpenHashMap<>();
-        modifiedStacks.put(slotIndex, clickedHash);
-
-        ClickSlotC2SPacket packet = new ClickSlotC2SPacket(
+        // Create packet using new constructor
+        var packet = new ClickSlotC2SPacket(
                 syncId,
                 revision,
-                (short) slotIndex,
-                (byte) 0,
+                slotIndex,
+                0, // left-click
                 SlotActionType.QUICK_MOVE,
-                modifiedStacks,
-                cursorHash
+                cursorStack.copy(),
+                modifiedStacks
         );
 
-        networkHandler.sendPacket(packet);
+        network.sendPacket(packet);
     }
 
     /**
