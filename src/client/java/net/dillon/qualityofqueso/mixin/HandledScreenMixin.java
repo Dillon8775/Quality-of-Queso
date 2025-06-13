@@ -132,10 +132,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             Slot fromSlot = screen.getScreenHandler().getSlot(i);
             ItemStack fromStack = fromSlot.getStack();
 
-            if (this.searchField != null &&
-                    this.searchField.isFocused() &&
-                    !this.getSearchFieldText().isEmpty() &&
-                    !this.isSlotAvailable(this.getSearchFieldText(), fromSlot)) {
+            if (this.searchField != null && !this.getSearchFieldText().isEmpty() && !this.isSlotAvailable(this.getSearchFieldText(), fromSlot)) {
                 continue; // skip container slot if item not found via search
             }
 
