@@ -2,8 +2,8 @@ package net.dillon.qualityofqueso.mixin;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.dillon.qualityofqueso.QualityOfQuesoClient;
-import net.dillon.qualityofqueso.client.SensitiveButton;
 import net.dillon.qualityofqueso.option.ModOptions;
+import net.dillon.qualityofqueso.screen.gui.SensitiveButton;
 import net.dillon.qualityofqueso.util.ModTexts;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -51,8 +51,6 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     @Shadow
     protected int backgroundWidth;
     @Shadow
-    protected int x;
-    @Shadow
     protected int y;
     @Shadow
     protected int titleY;
@@ -60,6 +58,9 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     public abstract T getScreenHandler();
     @Shadow @Nullable
     public Slot focusedSlot;
+
+    @Shadow @Nullable protected abstract Slot getSlotAt(double mouseX, double mouseY);
+
     @Unique
     private final HandledScreen<?> screen = (HandledScreen<?>)(Object)this;
     @Unique

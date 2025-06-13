@@ -1,4 +1,4 @@
-package net.dillon.qualityofqueso.impl;
+package net.dillon.qualityofqueso.screen.impl;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;

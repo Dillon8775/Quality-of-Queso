@@ -1,5 +1,6 @@
 package net.dillon.qualityofqueso;
 
+import net.dillon.qualityofqueso.keybind.ModKeybinds;
 import net.dillon.qualityofqueso.option.ModOptions;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -37,6 +38,7 @@ public class QualityOfQuesoClient implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
+		ModKeybinds.init();
 		ModOptions.loadConfig();
 		QualityOfQuesoClient.info("Quality of Queso has successfully loaded!");
 	}

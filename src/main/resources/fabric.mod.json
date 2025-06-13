@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "qualityofqueso",
-  "version": "1.2+mc1.21.5",
+  "version": "1.2.1+mc1.21.5",
   "name": "Quality of QUESO",
   "description": "A quality of life mod, with a bunch of cool QOL features.",
   "accessWidener": "qualityofqueso.accessWidener",
@@ -21,7 +21,7 @@
       "net.dillon.qualityofqueso.QualityOfQuesoClient"
     ],
     "modmenu": [
-      "net.dillon.qualityofqueso.impl.ModMenuImpl"
+      "net.dillon.qualityofqueso.screen.impl.ModMenuImpl"
     ]
   },
   "mixins": [
