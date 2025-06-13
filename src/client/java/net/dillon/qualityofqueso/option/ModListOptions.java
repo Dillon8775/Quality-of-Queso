@@ -19,11 +19,11 @@ public class ModListOptions {
     public static final SimpleOption<Boolean> BETTER_SEARCHING = new SimpleOption<>("qualityofqueso.options.better_searching", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.better_searching.tooltip")),
             (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, QualityOfQuesoClient.options().betterSearching, value -> QualityOfQuesoClient.options().betterSearching = value);
 
-    public static final SimpleOption<Boolean> CONTAINER_SEARCHING = new SimpleOption<>("qualityofqueso.options.container_searching", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.container_searching.tooltip")),
-            (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, QualityOfQuesoClient.options().containerSearching, value -> QualityOfQuesoClient.options().containerSearching = value);
+    public static final SimpleOption<Boolean> CHEST_SEARCH = new SimpleOption<>("qualityofqueso.options.chest_search", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.chest_search.tooltip")),
+            (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, QualityOfQuesoClient.options().chestSearch, value -> QualityOfQuesoClient.options().chestSearch = value);
 
-    public static final SimpleOption<Boolean> CONTAINER_TRANSFERRING = new SimpleOption<>("qualityofqueso.options.container_transferring", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.container_transferring.tooltip")),
-            (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, QualityOfQuesoClient.options().containerTransferring, value -> QualityOfQuesoClient.options().containerTransferring = value);
+    public static final SimpleOption<Boolean> INVENTORY_SORTING = new SimpleOption<>("qualityofqueso.options.inventory_sorting", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.inventory_sorting.tooltip")),
+            (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, QualityOfQuesoClient.options().inventorySorting, value -> QualityOfQuesoClient.options().inventorySorting = value);
 
     public static final SimpleOption<Boolean> SEARCH_INVENTORY = new SimpleOption<>("qualityofqueso.options.search_inventory", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.search_inventory.tooltip")),
             (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, QualityOfQuesoClient.options().searchInventory, value -> QualityOfQuesoClient.options().searchInventory = value);

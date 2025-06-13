@@ -18,8 +18,8 @@ public class ModOptions {
 
     public boolean betterGuiExit = true;
     public boolean betterSearching = true;
-    public boolean containerSearching = true;
-    public boolean containerTransferring = true;
+    public boolean chestSearch = true;
+    public boolean inventorySorting = true;
     public boolean searchInventory = true;
     public boolean showConfigButton = true;
 
