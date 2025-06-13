@@ -14,6 +14,8 @@
   "qualityofqueso.options.container_searching.tooltip": "Adds a search bar to the top of chests and shulker boxes, and highlights the items you are looking for!",
   "qualityofqueso.options.container_transferring": "Container Transferring",
   "qualityofqueso.options.container_transferring.tooltip": "Adds two buttons to transfer items from §ocontainer -> inventory§r§f and vise-versa.\n\nTo transfer items from §oinventory -> container§r§f, you must hold down the ALT key in order to activate the button. This is here to prevent the player from accidentally clicking the button and unintentionally sending their whole inventory to the container.",
+  "qualityofqueso.options.search_inventory": "Search Inventory",
+  "qualityofqueso.options.search_inventory.tooltip": "Searches the players inventory in addition to searching for items in a container.",
   "qualityofqueso.options.show_config_button": "Show Config Button",
   "qualityofqueso.options.show_config_button.tooltip": "Display the §6Quality of Queso§r§f configuration button on the title screen and the pause screen.\n\n§e§lPlease Note:§r§f If you disable this option, you can only re-enable it if you go into the config file §o(located in .minecraft/config/qualityofqueso-config.json,§r§f or if you have Mod Menu installed you can open this configuration screen from there.)."
 }

@@ -51,9 +51,11 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     @Shadow
     protected int backgroundWidth;
     @Shadow
-    protected int titleY;
+    protected int x;
     @Shadow
     protected int y;
+    @Shadow
+    protected int titleY;
     @Shadow
     public abstract T getScreenHandler();
     @Shadow @Nullable
@@ -130,10 +132,10 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             Slot fromSlot = screen.getScreenHandler().getSlot(i);
             ItemStack fromStack = fromSlot.getStack();
 
-            if (reverse && this.searchField != null &&
+            if (this.searchField != null &&
                     this.searchField.isFocused() &&
-                    !this.searchField.getText().isEmpty() &&
-                    !this.isSlotAvailable(this.searchField.getText(), fromSlot)) {
+                    !this.getSearchFieldText().isEmpty() &&
+                    !this.isSlotAvailable(this.getSearchFieldText(), fromSlot)) {
                 continue; // skip container slot if item not found via search
             }
 
@@ -207,7 +209,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                     this.transferContainerButton.active = true;
                 }
             }
-            if (j == 0) {
+            if (j == 0 || this.allSlotsUnavailable()) {
                 this.transferContainerButton.active = false;
             }
             // Initialize transfer inventory button
@@ -244,12 +246,10 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                 }
             }
             // Render transfer inventory -> chest button texture
-            if (transferInventoryButton != null) {
-                if (!transferInventoryButton.active) {
-                    context.drawTexture(RenderLayer::getGuiTextured, Identifier.of("qualityofqueso:textures/gui/transfer_inventory_button_inactive.png"), transferInventoryButton.getX() - 1, transferInventoryButton.getY() - 1, 0.0F, 0.0F, 12, 12, 12, 12);
-                } else {
-                    context.drawTexture(RenderLayer::getGuiTextured, Identifier.of(transferInventoryButton.isMouseOver(mouseX, mouseY) ? "qualityofqueso:textures/gui/transfer_inventory_button_hovered.png" : "qualityofqueso:textures/gui/transfer_inventory_button.png"), transferInventoryButton.getX() - 1, transferInventoryButton.getY() - 1, 0.0F, 0.0F, 12, 12, 12, 12);
-                }
+            if (!transferInventoryButton.active) {
+                context.drawTexture(RenderLayer::getGuiTextured, Identifier.of("qualityofqueso:textures/gui/transfer_inventory_button_inactive.png"), transferInventoryButton.getX() - 1, transferInventoryButton.getY() - 1, 0.0F, 0.0F, 12, 12, 12, 12);
+            } else {
+                context.drawTexture(RenderLayer::getGuiTextured, Identifier.of(transferInventoryButton.isMouseOver(mouseX, mouseY) ? "qualityofqueso:textures/gui/transfer_inventory_button_hovered.png" : "qualityofqueso:textures/gui/transfer_inventory_button.png"), transferInventoryButton.getX() - 1, transferInventoryButton.getY() - 1, 0.0F, 0.0F, 12, 12, 12, 12);
             }
         }
     }
@@ -259,17 +259,30 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
      */
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ingame/HandledScreen;drawForeground(Lnet/minecraft/client/gui/DrawContext;II)V", shift = At.Shift.AFTER))
     private void grayoutSlot(DrawContext context, int mouseX, int mouseY, float deltaTicks, CallbackInfo ci) {
-        if (QualityOfQuesoClient.options().containerSearching && this.searchField != null) {
-            String searchQuery = this.searchField.getText();
-            if (searchQuery != null) {
-                for (int i = 0; i < this.inventory.size(); i++) {
-                    Slot slot = this.getScreenHandler().getSlot(i);
-                    if (!this.searchField.getText().isEmpty() && !this.isSlotAvailable(searchQuery, slot)) {
-                        this.grayoutSlot(context, slot);
-                    }
+        if (this.searchField != null && !this.getSearchFieldText().isEmpty()) {
+            for (int i = 0; i < this.getInventorySize(); i++) {
+                Slot slot = this.getScreenHandler().getSlot(i);
+                if (!this.isSlotAvailable(this.getSearchFieldText(), slot)) {
+                    this.makeSlotUnavailable(context, slot);
                 }
             }
         }
+    }
+
+    /**
+     * Returns the {@code search field's} text.
+     */
+    @Unique
+    private String getSearchFieldText() {
+        return this.searchField.getText();
+    }
+
+    /**
+     * Returns the inventory (size) that should be searched.
+     */
+    @Unique
+    private int getInventorySize() {
+        return QualityOfQuesoClient.options().searchInventory ? this.getScreenHandler().slots.size() : this.inventory.size();
     }
 
     /**
@@ -293,8 +306,23 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
      * Grays out a containerSlot.
      */
     @Unique
-    private void grayoutSlot(DrawContext context, Slot slot) {
+    private void makeSlotUnavailable(DrawContext context, Slot slot) {
         context.fillGradient(RenderLayer.getGuiOverlay(), slot.x, slot.y, slot.x + 16, slot.y + 16, -1275068416, -1275068416, 0);
+    }
+
+    /**
+     * Returns true if all slots are grayed out, or unavailable.
+     */
+    @Unique
+    private boolean allSlotsUnavailable() {
+        int j = 0;
+        for (int i = 0; i < this.inventory.size(); i++) {
+            Slot slot = this.getScreenHandler().getSlot(i);
+            if (isSlotAvailable(this.getSearchFieldText(), slot)) {
+                j++;
+            }
+        }
+        return j == 0;
     }
 
     /**

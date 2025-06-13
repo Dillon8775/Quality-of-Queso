@@ -1,11 +1,13 @@
 package net.dillon.qualityofqueso.option;
 
 import net.dillon.qualityofqueso.QualityOfQuesoClient;
+import net.dillon.qualityofqueso.util.ModTexts;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.option.GameOptionsScreen;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.option.SimpleOption;
 import net.minecraft.text.Text;
 
@@ -25,6 +27,7 @@ public class ModOptionsScreen extends GameOptionsScreen {
                 ModListOptions.BETTER_SEARCHING,
                 ModListOptions.CONTAINER_SEARCHING,
                 ModListOptions.CONTAINER_TRANSFERRING,
+                ModListOptions.SEARCH_INVENTORY,
                 ModListOptions.SHOW_CONFIG_BUTTON
         };
     }
