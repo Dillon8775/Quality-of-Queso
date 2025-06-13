@@ -3,4 +3,5 @@
 - You can also use "#" in the beginning of your search query to search for item tags.
 - You can now transfer items from chest -> inventory, or inventory -> chest.
 - To transfer items from inventory -> chest, you must be holding down alt. This is to prevent from pressing the button and sending your whole inventory into the chest by accident.
+- Only compatible with Minecraft 1.21.4 and 1.21.5.
 - Bug fixes and optimizations.
