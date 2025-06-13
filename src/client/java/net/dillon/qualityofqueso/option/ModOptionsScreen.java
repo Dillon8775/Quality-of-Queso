@@ -23,8 +23,8 @@ public class ModOptionsScreen extends GameOptionsScreen {
         return new SimpleOption<?>[]{
                 ModListOptions.BETTER_GUI_EXIT,
                 ModListOptions.BETTER_SEARCHING,
-                ModListOptions.CONTAINER_SEARCHING,
-                ModListOptions.CONTAINER_TRANSFERRING,
+                ModListOptions.CHEST_SEARCH,
+                ModListOptions.INVENTORY_SEARCHING,
                 ModListOptions.SEARCH_INVENTORY,
                 ModListOptions.SHOW_CONFIG_BUTTON
         };
