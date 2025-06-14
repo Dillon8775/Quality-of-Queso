@@ -7,12 +7,13 @@
 ---
 
 # _Chest Searching!_
-#### A search bar for chests and shulker boxes, which highlight the items you are looking for!
-### Searching Features:
-#### Search by item name (just type the item name in the search bar, ex. grass) [since v1.2]
-#### Search for multiple items (separate each item with a command, ex. "grass,dirt,iron") [since v1.2.1]
-#### Search by tag (begin search query with a #, ex. "#logs", works with all vanilla and non-vanilla tags) [since v1.2, full tag support since v1.2.1]
-#### Exclude item from search (begin search query with a !, ex. searching "log" will display any item that does _not_ contain "log" in its name) [since v1.2.1]
+### A search bar for chests, ender chests, barrels, and shulker boxes, which highlight the items you are looking for!
+## Searching Features:
+- #### Search by item name (just type the item name in the search bar, ex. grass) [since v1.2]
+- #### Search for multiple items (separate each item with a command, ex. "grass,dirt,iron") [since v1.2.1]
+- #### Search by tag (begin search query with a #, ex. "#logs", works with all vanilla and non-vanilla tags) [since v1.2, full tag support since v1.2.1]
+    - Searching by tag will make all items display what tag(s) they are in if you hover over them. [since v1.2.1]
+- #### Exclude item from search (begin search query with a !, ex. searching "log" will display any item that does _not_ contain "log" in its name) [since v1.2.1]
 
 ![Chest searching feature.](https://i.imgur.com/8lklp15.gif)
 
@@ -20,20 +21,12 @@
 
 # _Inventory Sorting!_
 #### Adds two small buttons to chests and shulker boxes, which allow the player to transfer the items in the chest to the inventory, and vice-versa.
-#### By utilizing the chest searching feature, you can also choose to transfer _only_ the searched items.
-#### If you hover over one of the transfer buttons with an item in the cursor, only items which are equal to the cursor's stack will be moved. [since: v1.2.1]
-#### Note: in order to transfer items from the player's inventory to the container, you must hold down the ALT key for the button to become active. This is done to prevent moving items from the inventory to the container *by accident.*
+- #### By utilizing the Chest Search feature, you can transfer _only_ the searched items.
+- #### If you hover over the button with an item in the cursor, only items which are equal to the cursor's item will be moved. [since: v1.2.1]
+- #### Note: in order to transfer items from the player's inventory to the container, you must hold down the ALT key for the button to become active. This is done to prevent moving items from the inventory to the container *by accident.* You can disable this if you'd like.
 #### (since: v1.2)
 
 ![Chest transferring feature.](https://i.imgur.com/GBbDquc.gif)
-
----
-
-# _Better GUI Closing!_
-Clicking off of any GUI screen (as long as your cursor isn't holding anything) will close the screen.
-#### (since: v1.0)
-
-![Closing GUI menu by clicking off.](https://i.imgur.com/tMVWv3y.gif)
 
 ---
 
@@ -43,6 +36,14 @@ Clicking off of any GUI screen (as long as your cursor isn't holding anything) w
 #### (since v1.2.1)
 
 ![Quick Equip feature in action.](https://i.imgur.com/f3yUwAA.gif)
+
+---
+
+# _Better GUI Closing!_
+Clicking off of any GUI screen (as long as your cursor isn't holding anything) will close the screen.
+#### (since: v1.0)
+
+![Closing GUI menu by clicking off.](https://i.imgur.com/tMVWv3y.gif)
 
 ---
 

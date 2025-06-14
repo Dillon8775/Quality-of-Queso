@@ -3,5 +3,6 @@
 - You can now search for multiple items by separating each search query with a command (ex. "grass,iron,dirt").
 - You can now exclude items when searching in a container (use ! to exclude the item from search).
 - Improved tag searching functionality (works with any mod's tags, and if the tag's name contains whatever is in the search bar, and the item in the container is found in the tag, the item will display as searched).
+- When searching via item tag, all tags are displayed on each item hovered.
 - Added the option to turn off the requirement of having to hold down the ALT key to transfer items from inventory -> container.
 - Bug fixes and optimizations.

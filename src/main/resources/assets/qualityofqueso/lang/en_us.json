@@ -1,6 +1,7 @@
 {
   "qualityofqueso.gui.options.title": "Quality of QUESO",
   "qualityofqueso.gui.options.tooltip": "Configure Quality of QUESO...",
+  "qualityofqueso.gui.learn_more": "Learn More...",
   "qualityofqueso.gui.on": "ON",
   "qualityofqueso.gui.off": "OFF",
   "qualityofqueso.gui.yes": "YES",
