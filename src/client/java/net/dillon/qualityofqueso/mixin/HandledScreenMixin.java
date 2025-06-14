@@ -16,6 +16,7 @@ import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.ItemEnchantmentsComponent;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -444,7 +445,8 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
         }
 
         String itemName = stack.getItemName().getString().toLowerCase();
-        String customName = stack.getCustomName() != null ? stack.getName().getString().toLowerCase() : "";
+        Text customNameComponent = stack.get(DataComponentTypes.CUSTOM_NAME);
+        String customName = customNameComponent != null ? stack.getName().getString().toLowerCase() : "";
 
         String[] terms = searchQuery.split(",");
         // If slot contains a comma, for each query searched (separated by each comma), return true if search query'namespace find an item (make slot available)
