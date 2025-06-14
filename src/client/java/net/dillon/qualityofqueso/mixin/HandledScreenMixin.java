@@ -147,8 +147,15 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                 for (int j = toStart; j < toEnd; j++) {
                     Slot toSlot = screen.getScreenHandler().getSlot(j);
                     if (toSlot.getStack().isEmpty()) {
-                        this.sendClickSlotPacket(i, SlotActionType.QUICK_MOVE);
-                        break;
+                        if (!this.getScreenHandler().getCursorStack().isEmpty()) {
+                            if (fromStack.isOf(this.getScreenHandler().getCursorStack().getItem())) {
+                                this.sendClickSlotPacket(i, SlotActionType.QUICK_MOVE);
+                                break;
+                            }
+                        } else {
+                            this.sendClickSlotPacket(i, SlotActionType.QUICK_MOVE);
+                            break;
+                        }
                     }
                 }
             }
@@ -466,7 +473,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
      */
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
     private void handleKeyPressing(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-        if (keyCode == ModKeybinds.QUICK_EQUIP.boundKey.getCode() && this.focusedSlot != null) {
+        if (keyCode == ModKeybinds.QUICK_EQUIP.boundKey.getCode() && this.focusedSlot != null && (this.screen instanceof InventoryScreen || this.screen instanceof CreativeInventoryScreen)) {
             ItemStack stack = this.focusedSlot.getStack();
             if (stack.isIn(ItemTags.HEAD_ARMOR)) {
                 if (this.client.player.getEquippedStack(EquipmentSlot.HEAD).isEmpty()) {

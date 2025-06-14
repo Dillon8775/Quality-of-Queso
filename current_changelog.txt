@@ -1,4 +1,5 @@
 - Added Quick Swap keybind! This lets you quickly swap armor slots with different items, or quickly equip them when pressing this keybind while hovering over the item that you want to equip in your inventory (similar to how hotbar keys work, just with armor now!).
+- You can now move certain items by clicking on the move items button with the item that you want to move.
 - You can now search for multiple items by separating each search query with a command (ex. "grass,iron,dirt").
 - You can now exclude items when searching in a container (use ! to exclude the item from search).
 - Improved tag searching functionality (works with any mod's tags, and if the tag's name contains whatever is in the search bar, and the item in the container is found in the tag, the item will display as searched).

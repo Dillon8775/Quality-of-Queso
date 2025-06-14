@@ -20,7 +20,9 @@
 
 # _Inventory Sorting!_
 #### Adds two small buttons to chests and shulker boxes, which allow the player to transfer the items in the chest to the inventory, and vice-versa.
-**Note:** in order to transfer items from the player's inventory to the container, you must hold down the ALT key for the button to become active. This is done to prevent moving items from the inventory to the container *by accident.*
+#### By utilizing the chest searching feature, you can also choose to transfer _only_ the searched items.
+#### If you hover over one of the transfer buttons with an item in the cursor, only items which are equal to the cursor's stack will be moved. [since: v1.2.1]
+#### Note: in order to transfer items from the player's inventory to the container, you must hold down the ALT key for the button to become active. This is done to prevent moving items from the inventory to the container *by accident.*
 #### (since: v1.2)
 
 ![Chest transferring feature.](https://i.imgur.com/GBbDquc.gif)
