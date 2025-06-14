@@ -203,9 +203,9 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     private void renderField(DrawContext context, int mouseX, int mouseY, float deltaTicks, CallbackInfo ci) {
         if (QualityOfQuesoClient.options().chestSearch && this.searchField != null) {
             this.searchField.render(context, mouseX, mouseY, deltaTicks); // Render search field
+            this.shouldButtonBeActive(false, null, this.transferContainerButton);
         }
         if (QualityOfQuesoClient.options().inventorySorting && this.isValidScreen()) {
-            this.shouldButtonBeActive(false, null, this.transferContainerButton);
             PlayerInventory playerInventory = this.client.player.getInventory();
             // Initialize transfer inventory button
             ClickableWidget transferInventoryButton = this.addSelectableChild(
@@ -274,7 +274,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
      */
     @Unique
     private String getSearchFieldText() {
-        return this.searchField.getText();
+        return this.searchField != null ? this.searchField.getText() : "";
     }
 
     /**
@@ -339,6 +339,9 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
      */
     @Unique
     private boolean shouldButtonBeActive(boolean isPlayerInventory, @Nullable PlayerInventory playerInventory, ClickableWidget button) {
+        if (button == null) {
+            return false;
+        }
         int size = isPlayerInventory ? playerInventory.size() : this.inventory.size();
         int j = 0;
         for (int i = 0; i < size; i++) {
@@ -348,7 +351,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                 button.active = true;
             }
         }
-        if (j == 0 || this.allSlotsUnavailable(isPlayerInventory, isPlayerInventory ? playerInventory : null)) {
+        if (j == 0 || this.areAllSlotsUnavailable(isPlayerInventory, isPlayerInventory ? playerInventory : null)) {
             button.active = false;
             return false;
         }
@@ -359,7 +362,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
      * @return {@code true} if all slots are grayed out, or {@code unavailable.}
      */
     @Unique
-    private boolean allSlotsUnavailable(boolean isPlayerInventory, @Nullable PlayerInventory playerInventory) {
+    private boolean areAllSlotsUnavailable(boolean isPlayerInventory, @Nullable PlayerInventory playerInventory) {
         int j = 0;
         List<Slot> playerSlots = new ArrayList<>();
         if (isPlayerInventory) {
@@ -603,7 +606,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
      */
     @Inject(method = "close", at = @At("TAIL"))
     private void saveSearchText(CallbackInfo ci) {
-        if (QualityOfQuesoClient.options().saveSearchText && this.isValidScreen()) {
+        if (QualityOfQuesoClient.options().chestSearch && QualityOfQuesoClient.options().saveSearchText && this.searchField != null && this.isValidScreen()) {
             QualityOfQuesoClient.SAVED_TEXT = this.searchField.getText();
         }
     }
