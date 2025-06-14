@@ -2,6 +2,7 @@ package net.dillon.qualityofqueso.mixin;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.dillon.qualityofqueso.QualityOfQuesoClient;
+import net.dillon.qualityofqueso.keybind.ModKeybinds;
 import net.dillon.qualityofqueso.option.ModOptions;
 import net.dillon.qualityofqueso.screen.gui.SensitiveButton;
 import net.dillon.qualityofqueso.util.ModTexts;
@@ -18,13 +19,17 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.component.type.ItemEnchantmentsComponent;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.network.packet.c2s.play.ClickSlotC2SPacket;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
@@ -43,6 +48,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Environment(EnvType.CLIENT)
@@ -58,9 +64,6 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     public abstract T getScreenHandler();
     @Shadow @Nullable
     public Slot focusedSlot;
-
-    @Shadow @Nullable protected abstract Slot getSlotAt(double mouseX, double mouseY);
-
     @Unique
     private final HandledScreen<?> screen = (HandledScreen<?>)(Object)this;
     @Unique
@@ -77,14 +80,14 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     }
 
     /**
-     * Creates the search field and repositions the mouse in a good position to begin typing.
+     * Creates and initializes the search field and container button.
      */
     @Inject(method = "init", at = @At("TAIL"))
     private void init(CallbackInfo ci) {
         if (this.isValidScreen()) {
-            if (screen instanceof ShulkerBoxScreen shulkerBoxScreen) {
+            if (this.screen instanceof ShulkerBoxScreen shulkerBoxScreen) {
                 this.inventory = shulkerBoxScreen.getScreenHandler().inventory;
-            } else if (screen instanceof GenericContainerScreen genericContainerScreen) {
+            } else if (this.screen instanceof GenericContainerScreen genericContainerScreen) {
                 this.inventory = genericContainerScreen.getScreenHandler().getInventory();
             } else {
                 this.inventory = null;
@@ -93,6 +96,9 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             if (QualityOfQuesoClient.options().chestSearch) {
                 int barWidth = (int)((double)this.backgroundWidth * 0.6);
                 this.searchField = new TextFieldWidget(MinecraftClient.getInstance().textRenderer, this.width / 2 + barWidth / 2 - 64, this.y + this.titleY - 2, 90, 12, null);
+                if (QualityOfQuesoClient.options().saveSearchText) {
+                    this.searchField.setText(QualityOfQuesoClient.SAVED_TEXT);
+                }
                 this.searchField.setMaxLength(50);
                 this.searchField.setDrawsBackground(true);
                 this.searchField.setEditableColor(16777215);
@@ -117,7 +123,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
 
     /**
      * Transfers items from one container to another.
-     * <p>boolean variable {@code reverse} is true if {@code chest -> inventory,} otherwise {@code inventory -> chest.}</p>
+     * <p>boolean variable {@code reverse} should be {@code true} if {@code chest -> inventory,} otherwise {@code inventory -> chest.}</p>
      */
     @Unique
     private void transferItems(HandledScreen<?> screen, boolean reverse) {
@@ -141,7 +147,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                 for (int j = toStart; j < toEnd; j++) {
                     Slot toSlot = screen.getScreenHandler().getSlot(j);
                     if (toSlot.getStack().isEmpty()) {
-                        this.sendClickSlotPacket(i);
+                        this.sendClickSlotPacket(i, SlotActionType.QUICK_MOVE);
                         break;
                     }
                 }
@@ -150,11 +156,11 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     }
 
     /**
-     * Sends transferring item packet from client to server.
+     * Sends transferring item packet from {@code client to server.}
      */
     // ChatGPT
     @Unique
-    private void sendClickSlotPacket(int slotIndex) {
+    private void sendClickSlotPacket(int slotIndex, SlotActionType slotActionType) {
         MinecraftClient client = MinecraftClient.getInstance();
         ClientPlayNetworkHandler networkHandler = client.getNetworkHandler();
 
@@ -182,7 +188,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                 revision,
                 (short) slotIndex,
                 (byte) 0,
-                SlotActionType.QUICK_MOVE,
+                slotActionType,
                 modifiedStacks,
                 cursorHash
         );
@@ -191,7 +197,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     }
 
     /**
-     * Renders the search field.
+     * Handles rendering, such as the search field and transferring inventory button textures.
      */
     @Inject(method = "render", at = @At("TAIL"))
     private void renderField(DrawContext context, int mouseX, int mouseY, float deltaTicks, CallbackInfo ci) {
@@ -199,17 +205,8 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             this.searchField.render(context, mouseX, mouseY, deltaTicks); // Render search field
         }
         if (QualityOfQuesoClient.options().inventorySorting && this.isValidScreen()) {
-            int j = 0;
-            for (int i = 0; i < this.inventory.size(); i++) {
-                Slot slot = this.getScreenHandler().getSlot(i);
-                if (!slot.getStack().isEmpty()) {
-                    j++;
-                    this.transferContainerButton.active = true;
-                }
-            }
-            if (j == 0 || this.allSlotsUnavailable()) {
-                this.transferContainerButton.active = false;
-            }
+            this.shouldButtonBeActive(false, null, this.transferContainerButton);
+            PlayerInventory playerInventory = this.client.player.getInventory();
             // Initialize transfer inventory button
             ClickableWidget transferInventoryButton = this.addSelectableChild(
                     new SensitiveButton(
@@ -219,35 +216,40 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                             10,
                             ModTexts.BLANK,
                             b -> this.transferItems(this.screen, false),
-                            () -> hasAltDown() || this.keepInventoryButtonActive
+                            () -> (this.altDown() || this.keepInventoryButtonActive) && !this.isPlayerInventoryEmpty(playerInventory)
                     )
             );
             // Transfer inventory button is only active if it is already active and hovered, otherwise only becomes active if ALT is pressed
             boolean hovering = transferInventoryButton.isMouseOver(mouseX, mouseY);
-            if (hasAltDown()) {
-                // Alt is held, activate and allow "keep active" if mouse is over
-                transferInventoryButton.active = true;
-                this.keepInventoryButtonActive = hovering;
-            } else {
-                // Alt is not held – only keep active if still hovering from last Alt-down
-                if (!hovering) {
-                    this.keepInventoryButtonActive = false;
+            if (this.shouldButtonBeActive(true, playerInventory, transferInventoryButton)) {
+                if (this.altDown()) {
+                    // Alt is held, activate and allow "keep active" if mouse is over
+                    transferInventoryButton.active = true;
+                    this.keepInventoryButtonActive = hovering;
+                } else {
+                    // Alt is not held – only keep active if still hovering from last Alt-down
+                    if (!hovering) {
+                        this.keepInventoryButtonActive = false;
+                    }
+                    transferInventoryButton.active = this.keepInventoryButtonActive;
                 }
-                transferInventoryButton.active = this.keepInventoryButtonActive;
             }
+            this.shouldButtonBeActive(true, playerInventory, transferInventoryButton);
             // Render transfer chest -> inventory button texture
             if (this.transferContainerButton != null) {
                 if (!this.transferContainerButton.active) {
-                    context.drawTexture(RenderLayer::getGuiTextured, Identifier.of("qualityofqueso:textures/gui/transfer_container_button_inactive.png"), this.transferContainerButton.getX() - 1, this.transferContainerButton.getY() - 1, 0.0F, 0.0F, 12, 12, 12, 12);
+                    this.renderTransferButtonTexture("transfer_container_button_inactive", this.transferContainerButton, context);
                 } else {
-                    context.drawTexture(RenderLayer::getGuiTextured, Identifier.of(this.transferContainerButton.isMouseOver(mouseX, mouseY) ? "qualityofqueso:textures/gui/transfer_container_button_hovered.png" : "qualityofqueso:textures/gui/transfer_container_button.png"), this.transferContainerButton.getX() - 1, this.transferContainerButton.getY() - 1, 0.0F, 0.0F, 12, 12, 12, 12);
+                    this.renderTransferButtonTexture(this.transferContainerButton.isMouseOver(mouseX, mouseY) ? "transfer_container_button_hovered" : "transfer_container_button", this.transferContainerButton, context);
                 }
             }
             // Render transfer inventory -> chest button texture
-            if (!transferInventoryButton.active) {
-                context.drawTexture(RenderLayer::getGuiTextured, Identifier.of("qualityofqueso:textures/gui/transfer_inventory_button_inactive.png"), transferInventoryButton.getX() - 1, transferInventoryButton.getY() - 1, 0.0F, 0.0F, 12, 12, 12, 12);
+            if (!this.shouldButtonBeActive(true, playerInventory, transferInventoryButton)) {
+                this.renderTransferButtonTexture("transfer_inventory_button_inactive", transferInventoryButton, context);
+            } else if (!this.altDown()) {
+                this.renderTransferButtonTexture("transfer_inventory_button_hold_alt", transferInventoryButton, context);
             } else {
-                context.drawTexture(RenderLayer::getGuiTextured, Identifier.of(transferInventoryButton.isMouseOver(mouseX, mouseY) ? "qualityofqueso:textures/gui/transfer_inventory_button_hovered.png" : "qualityofqueso:textures/gui/transfer_inventory_button.png"), transferInventoryButton.getX() - 1, transferInventoryButton.getY() - 1, 0.0F, 0.0F, 12, 12, 12, 12);
+                this.renderTransferButtonTexture(transferInventoryButton.isMouseOver(mouseX, mouseY) ? "transfer_inventory_button_hovered" : "transfer_inventory_button", transferInventoryButton, context);
             }
         }
     }
@@ -256,7 +258,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
      * Grays out any containerSlot which doesn't contain the item name being searched.
      */
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ingame/HandledScreen;drawForeground(Lnet/minecraft/client/gui/DrawContext;II)V", shift = At.Shift.AFTER))
-    private void grayoutSlot(DrawContext context, int mouseX, int mouseY, float deltaTicks, CallbackInfo ci) {
+    private void grayOutSlot(DrawContext context, int mouseX, int mouseY, float deltaTicks, CallbackInfo ci) {
         if (this.searchField != null && !this.getSearchFieldText().isEmpty()) {
             for (int i = 0; i < this.getInventorySize(); i++) {
                 Slot slot = this.getScreenHandler().getSlot(i);
@@ -268,7 +270,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     }
 
     /**
-     * Returns the {@code search field's} text.
+     * @return the {@code searchField namespace} text.
      */
     @Unique
     private String getSearchFieldText() {
@@ -276,7 +278,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     }
 
     /**
-     * Returns the inventory (size) that should be searched.
+     * @return the inventory (size) that should be searched.
      */
     @Unique
     private int getInventorySize() {
@@ -284,7 +286,23 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     }
 
     /**
-     * Returns the {@code X} value for transferring item buttons.
+     * @return {@code true} if the hovered slot has an item (assuming hovered slot isn't {@code null}).
+     */
+    @Unique
+    private boolean hoveredSlotHasItem() {
+        return this.focusedSlot != null && this.focusedSlot.getStack() != ItemStack.EMPTY;
+    }
+
+    /**
+     * Gets the current ALT button status.
+     */
+    @Unique
+    private boolean altDown() {
+        return !QualityOfQuesoClient.options().requireAltToSort || hasAltDown();
+    }
+
+    /**
+     * @return the {@code X} value for transferring item buttons.
      */
     @Unique
     private int getTransferButtonX(boolean chestToInventory) {
@@ -293,7 +311,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     }
 
     /**
-     * Returns the {@code Y} value for transferring item buttons.
+     * @return the {@code Y} value for transferring item buttons.
      */
     @Unique
     private int getTransferButtonY() {
@@ -309,39 +327,116 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     }
 
     /**
-     * Returns true if all slots are grayed out, or unavailable.
+     * Renders a transfer button texture.
      */
     @Unique
-    private boolean allSlotsUnavailable() {
+    private void renderTransferButtonTexture(String id, ClickableWidget buttonReference, DrawContext context) {
+        context.drawTexture(RenderLayer::getGuiTextured, Identifier.of("qualityofqueso:textures/gui/"+id+".png"), buttonReference.getX() - 1, buttonReference.getY() - 1, 0.0F, 0.0F, 12, 12, 12, 12);
+    }
+
+    /**
+     * @return {@code true} if the {@code inventory} has something in it.
+     */
+    @Unique
+    private boolean shouldButtonBeActive(boolean isPlayerInventory, @Nullable PlayerInventory playerInventory, ClickableWidget button) {
+        int size = isPlayerInventory ? playerInventory.size() : this.inventory.size();
         int j = 0;
-        for (int i = 0; i < this.inventory.size(); i++) {
-            Slot slot = this.getScreenHandler().getSlot(i);
-            if (isSlotAvailable(this.getSearchFieldText(), slot)) {
+        for (int i = 0; i < size; i++) {
+            ItemStack stack = isPlayerInventory ? playerInventory.getStack(i) : this.getScreenHandler().getSlot(i).getStack();
+            if (!stack.isEmpty()) {
                 j++;
+                button.active = true;
+            }
+        }
+        if (j == 0 || this.allSlotsUnavailable(isPlayerInventory, isPlayerInventory ? playerInventory : null)) {
+            button.active = false;
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * @return {@code true} if all slots are grayed out, or {@code unavailable.}
+     */
+    @Unique
+    private boolean allSlotsUnavailable(boolean isPlayerInventory, @Nullable PlayerInventory playerInventory) {
+        int j = 0;
+        List<Slot> playerSlots = new ArrayList<>();
+        if (isPlayerInventory) {
+            for (Slot s : this.getScreenHandler().slots) {
+                if (s.inventory == playerInventory) {
+                    playerSlots.add(s);
+                }
+            }
+            for (Slot slot : playerSlots) {
+                if (isSlotAvailable(this.getSearchFieldText(), slot)) {
+                    j++;
+                }
+            }
+        } else {
+            for (int i = 0; i < this.inventory.size(); i++) {
+                Slot slot = this.getScreenHandler().getSlot(i);
+                if (isSlotAvailable(this.getSearchFieldText(), slot)) {
+                    j++;
+                }
             }
         }
         return j == 0;
     }
 
     /**
-     * Returns true if an item is found from search result. Returns false otherwise.
+     * @return {@code true} if {@code playerInventory} is empty (excluding armor items).
+     */
+    @Unique
+    private boolean isPlayerInventoryEmpty(PlayerInventory playerInventory) {
+        for (ItemStack stack : playerInventory.getMainStacks()) {
+            if (!stack.isEmpty()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * @return {@code true} if an item is found from {@code searchQuery}.
      */
     @Unique
     private boolean isSlotAvailable(String searchQuery, Slot slot) {
         ItemStack stack = slot.getStack();
 
+        // If slot is empty, return false (slot is unavailable)
         if (stack.isEmpty()) {
             return false;
         }
 
-        if (searchQuery.startsWith("#")) {
-            String tag = searchQuery.substring(1);
-            Identifier id = Identifier.tryParse(tag);
+        String itemName = stack.getItemName().getString().toLowerCase();
+        String customName = stack.getCustomName() != null ? stack.getName().getString().toLowerCase() : "";
 
-            if (id != null) {
-                TagKey<Item> tagKey = TagKey.of(RegistryKeys.ITEM, id);
-                if (stack.isIn(tagKey)) {
-                    return true;
+        String[] terms = searchQuery.split(",");
+        // If slot contains a comma, for each query searched (separated by each comma), return true if search query'namespace find an item (make slot available)
+        for (String term : terms) {
+            if (itemName.contains(term.trim().toLowerCase())) {
+                return true;
+            }
+        }
+
+        // As long as slot doesn't contain whatever is searched (beginning after "!"), return true (slot is available)
+        if (searchQuery.startsWith("!")) {
+            return !itemName.contains(searchQuery.substring(1)) && !customName.contains(searchQuery.substring(1));
+        }
+
+        // If tag contains search query and stack is in returned tag, slot is available
+        if (searchQuery.startsWith("#")) {
+            String tagSearch = searchQuery.substring(1);
+            RegistryWrapper.WrapperLookup lookup = MinecraftClient.getInstance().world.getRegistryManager();
+            RegistryWrapper<Item> itemRegistry = lookup.getOrThrow(RegistryKeys.ITEM);
+
+            for (TagKey<Item> tagKey : itemRegistry.streamTagKeys().toList()) {
+                Identifier id = tagKey.id();
+                if (id.getPath().toLowerCase().contains(tagSearch) || id.toString().toLowerCase().contains(tagSearch)) {
+                    if (stack.isIn(tagKey)) {
+                        return true;
+                    }
                 }
             }
         }
@@ -351,32 +446,58 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             for (RegistryEntry<Enchantment> enchantment : enchantments.getEnchantments()) {
                 String encName = enchantment.value().description().getString();
                 String fullName = encName + " " + enchantments.getLevel(enchantment);
+
+                // If slot contains enchantments searched, return true (slot is available)
                 if (fullName.toLowerCase().contains(searchQuery)) {
                     return true;
                 }
             }
         }
 
-        String itemName = stack.getItemName().getString().toLowerCase();
-        String customName = stack.getCustomName() != null ? stack.getName().getString().toLowerCase() : "";
-
+        // If slot contains whatever is searched, return true (slot is available)
         return itemName.contains(searchQuery) || customName.contains(searchQuery);
     }
 
     /**
-     * Handles key pressing correctly.
+     * Handles key pressing correctly and implements functionality for the {@link ModKeybinds#QUICK_EQUIP} keybind.
      */
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
     private void handleKeyPressing(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
+        if (keyCode == ModKeybinds.QUICK_EQUIP.boundKey.getCode() && this.focusedSlot != null) {
+            ItemStack stack = this.focusedSlot.getStack();
+            if (stack.isIn(ItemTags.HEAD_ARMOR)) {
+                if (this.client.player.getEquippedStack(EquipmentSlot.HEAD).isEmpty()) {
+                    this.sendClickSlotPacket(this.focusedSlot.id, SlotActionType.QUICK_MOVE);
+                } else {
+                    this.quickSwap(this.focusedSlot.id, EquipmentSlot.HEAD);
+                }
+            } else if (stack.isIn(ItemTags.CHEST_ARMOR) || stack.isOf(Items.ELYTRA)) {
+                if (this.client.player.getEquippedStack(EquipmentSlot.CHEST).isEmpty()) {
+                    this.sendClickSlotPacket(this.focusedSlot.id, SlotActionType.QUICK_MOVE);
+                } else {
+                    this.quickSwap(this.focusedSlot.id, EquipmentSlot.CHEST);
+                }
+            } else if (stack.isIn(ItemTags.LEG_ARMOR)) {
+                if (this.client.player.getEquippedStack(EquipmentSlot.LEGS).isEmpty()) {
+                    this.sendClickSlotPacket(this.focusedSlot.id, SlotActionType.QUICK_MOVE);
+                } else {
+                    this.quickSwap(this.focusedSlot.id, EquipmentSlot.LEGS);
+                }
+            } else if (stack.isIn(ItemTags.FOOT_ARMOR)) {
+                if (this.client.player.getEquippedStack(EquipmentSlot.FEET).isEmpty()) {
+                    this.sendClickSlotPacket(this.focusedSlot.id, SlotActionType.QUICK_MOVE);
+                } else {
+                    this.quickSwap(this.focusedSlot.id, EquipmentSlot.FEET);
+                }
+            }
+        }
         HandledScreen<?> handledScreen = (HandledScreen<?>)(Object)this;
-        boolean ignoreTyping = (this.focusedSlot != null && this.focusedSlot.getStack() != ItemStack.EMPTY);
-        boolean secondaryIgnoreTyping = false;
-        boolean hotbarKeyPressed = false;
+        boolean ignoreTyping = this.hoveredSlotHasItem();
+        boolean secondaryIgnoreTyping = false, hotbarKeyPressed = false;
         // handle disallowed keys
         for (int key : QualityOfQuesoClient.disallowedKeys) {
             if (keyCode == key) {
-                ignoreTyping = true;
-                secondaryIgnoreTyping = true;
+                ignoreTyping = true; secondaryIgnoreTyping = true;
                 break;
             }
         }
@@ -384,13 +505,44 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
         if (this.getScreenHandler().getCursorStack().isEmpty() && this.focusedSlot != null) {
             for (int i = 0; i < 9; i++) {
                 if (this.client.options.hotbarKeys[i].matchesKey(keyCode, scanCode)) {
-                    ignoreTyping = true;
-                    secondaryIgnoreTyping = true;
-                    hotbarKeyPressed = true;
+                    ignoreTyping = true; secondaryIgnoreTyping = true; hotbarKeyPressed = true;
                     break;
                 }
             }
         }
+
+        for (int key : QualityOfQuesoClient.keys) {
+            if (keyCode == key) {
+                secondaryIgnoreTyping = false;
+                cir.setReturnValue(true);
+                break;
+            }
+        }
+        boolean numberKeyPressed = false;
+        List<Integer> numbers = List.of(
+                GLFW.GLFW_KEY_1,
+                GLFW.GLFW_KEY_2,
+                GLFW.GLFW_KEY_3,
+                GLFW.GLFW_KEY_4,
+                GLFW.GLFW_KEY_5,
+                GLFW.GLFW_KEY_6,
+                GLFW.GLFW_KEY_7,
+                GLFW.GLFW_KEY_8,
+                GLFW.GLFW_KEY_9
+        );
+        for (int key : numbers) {
+            if (keyCode == key) {
+                numberKeyPressed = true;
+                break;
+            }
+        }
+
+        boolean dropKeyPressed = false;
+        if (keyCode == MinecraftClient.getInstance().options.dropKey.boundKey.getCode()) {
+            secondaryIgnoreTyping = true; dropKeyPressed = true;
+        }
+
+        boolean cannotType = (numberKeyPressed || hotbarKeyPressed || dropKeyPressed) && this.hoveredSlotHasItem();
 
         // if clear, begin type anywhere (on RECIPE / CREATIVE inventory screens)
         if (QualityOfQuesoClient.options().betterSearching && handledScreen instanceof RecipeBookScreen<?> recipeBookScreen) {
@@ -400,7 +552,6 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                     this.refreshWidgetPositions();
                 }
                 recipeBookScreen.recipeBook.searchField.setFocused(true);
-                cir.setReturnValue(true);
             }
             if (recipeBookScreen.recipeBook.searchField != null && recipeBookScreen.recipeBook.searchField.isFocused()) {
                 cir.setReturnValue(recipeBookScreen.recipeBook.keyPressed(keyCode, scanCode, modifiers) || super.keyPressed(keyCode, scanCode, modifiers));
@@ -408,37 +559,11 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
         }
         // handle chest searching
         else if (QualityOfQuesoClient.options().chestSearch && this.isValidScreen()) {
-            for (int key : QualityOfQuesoClient.keys) {
-                if (keyCode == key) {
-                    secondaryIgnoreTyping = false;
-                    cir.setReturnValue(true);
-                    break;
-                }
-            }
-            boolean numberKeyPressed = false;
-            List<Integer> numbers = List.of(
-                    GLFW.GLFW_KEY_1,
-                    GLFW.GLFW_KEY_2,
-                    GLFW.GLFW_KEY_3,
-                    GLFW.GLFW_KEY_4,
-                    GLFW.GLFW_KEY_5,
-                    GLFW.GLFW_KEY_6,
-                    GLFW.GLFW_KEY_7,
-                    GLFW.GLFW_KEY_8,
-                    GLFW.GLFW_KEY_9
-            );
-            for (int key : numbers) {
-                if (keyCode == key) {
-                    numberKeyPressed = true;
-                    break;
-                }
-            }
-
+            // Prevent drop key from interfering with search field
             if (!secondaryIgnoreTyping) {
                 this.searchField.setFocused(true);
-                this.setInitialFocus(this.searchField);
             } else {
-                if (this.searchField.isFocused() && (numberKeyPressed || hotbarKeyPressed) && this.focusedSlot != null && this.focusedSlot.getStack() != ItemStack.EMPTY) {
+                if (this.searchField.isFocused() && cannotType) {
                     this.searchField.setFocused(false);
                 }
             }
@@ -450,12 +575,33 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     }
 
     /**
+     * Quickly swaps two items in the player's inventory.
+     */
+    @Unique
+    private void quickSwap(int sourceSlot, EquipmentSlot slot) {
+        int slotIndex = slot == EquipmentSlot.HEAD ? 5 : slot == EquipmentSlot.CHEST ? 6 : slot == EquipmentSlot.LEGS ? 7 : slot == EquipmentSlot.FEET ? 8 : 6;
+        this.sendClickSlotPacket(sourceSlot, SlotActionType.PICKUP);
+        this.sendClickSlotPacket(slotIndex, SlotActionType.PICKUP);
+        this.sendClickSlotPacket(sourceSlot, SlotActionType.PICKUP);
+    }
+
+    /**
      * Closes the screen when clicking outside of menu.
      */
     @Inject(method = "onMouseClick(Lnet/minecraft/screen/slot/Slot;IILnet/minecraft/screen/slot/SlotActionType;)V", at = @At("HEAD"))
     private void closeButtonOnClickOutOfBounds(Slot slot, int slotId, int button, SlotActionType actionType, CallbackInfo ci) {
         if (ModOptions.OPTIONS.betterGuiExit && this.getScreenHandler().getCursorStack().isEmpty() && button == 0 && slot == null) {
             this.close();
+        }
+    }
+
+    /**
+     * Saves the current text in {@code searchField.getText()} to memory so it can be referenced when opening a container screen again.
+     */
+    @Inject(method = "close", at = @At("TAIL"))
+    private void saveSearchText(CallbackInfo ci) {
+        if (QualityOfQuesoClient.options().saveSearchText && this.isValidScreen()) {
+            QualityOfQuesoClient.SAVED_TEXT = this.searchField.getText();
         }
     }
 
@@ -485,7 +631,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     }
 
     /**
-     * Returns valid handled screens which can use the container search feature.
+     * @return valid handled screens which can use the container search feature.
      */
     @Unique
     private boolean isValidScreen() {

@@ -1,7 +1,6 @@
 package net.dillon.qualityofqueso.option;
 
 import net.dillon.qualityofqueso.QualityOfQuesoClient;
-import net.dillon.qualityofqueso.keybind.ModKeybinds;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -14,7 +13,7 @@ import net.minecraft.text.Text;
 public class ModOptionsScreen extends GameOptionsScreen {
 
     public ModOptionsScreen(Screen parent) {
-        super(parent, MinecraftClient.getInstance().options, Text.translatable(ModKeybinds.QUALITY_OF_QUESO));
+        super(parent, MinecraftClient.getInstance().options, Text.translatable(QualityOfQuesoClient.TITLE));
     }
 
     /**
@@ -25,8 +24,10 @@ public class ModOptionsScreen extends GameOptionsScreen {
                 ModListOptions.BETTER_GUI_EXIT,
                 ModListOptions.BETTER_SEARCHING,
                 ModListOptions.CHEST_SEARCH,
-                ModListOptions.INVENTORY_SORTING,
                 ModListOptions.SEARCH_INVENTORY,
+                ModListOptions.SAVE_SEARCH_TEXT,
+                ModListOptions.INVENTORY_SORTING,
+                ModListOptions.REQUIRE_ALT_TO_SORT,
                 ModListOptions.QUICK_EQUIP,
                 ModListOptions.SHOW_CONFIG_BUTTON
         };

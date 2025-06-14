@@ -8,8 +8,11 @@
 
 # _Chest Searching!_
 #### A search bar for chests and shulker boxes, which highlight the items you are looking for!
-You can also search by tag (for now, you must type the full tag name for the item(s) to appear).
-#### (since: v1.2)
+### Searching Features:
+#### Search by item name (just type the item name in the search bar, ex. grass) [since v1.2]
+#### Search for multiple items (separate each item with a command, ex. "grass,dirt,iron") [since v1.2.1]
+#### Search by tag (begin search query with a #, ex. "#logs", works with all vanilla and non-vanilla tags) [since v1.2, full tag support since v1.2.1]
+#### Exclude item from search (begin search query with a !, ex. searching "log" will display any item that does _not_ contain "log" in its name) [since v1.2.1]
 
 ![Chest searching feature.](https://i.imgur.com/8lklp15.gif)
 
@@ -29,6 +32,15 @@ Clicking off of any GUI screen (as long as your cursor isn't holding anything) w
 #### (since: v1.0)
 
 ![Closing GUI menu by clicking off.](https://i.imgur.com/tMVWv3y.gif)
+
+---
+
+# _Quick Equip!_
+#### Hover over an equippable item (like a piece of armor or an elytra) in your inventory and quickly equip it!
+### Default Hotkey = B, you can change this in the Controls menu.
+#### (since v1.2.1)
+
+![Quick Equip feature in action.](https://i.imgur.com/f3yUwAA.gif)
 
 ---
 

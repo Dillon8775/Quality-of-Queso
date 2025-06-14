@@ -19,8 +19,10 @@ public class ModOptions {
     public boolean betterGuiExit = true;
     public boolean betterSearching = true;
     public boolean chestSearch = true;
-    public boolean inventorySorting = true;
     public boolean searchInventory = true;
+    public boolean saveSearchText = false;
+    public boolean inventorySorting = true;
+    public boolean requireAltToSort = true;
     public boolean quickEquip = true;
     public boolean showConfigButton = true;
 

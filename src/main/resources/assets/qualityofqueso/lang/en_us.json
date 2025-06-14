@@ -6,18 +6,24 @@
   "qualityofqueso.gui.yes": "YES",
   "qualityofqueso.gui.no": "NO",
 
+  "qualityofqueso.quick_equip": "Quick Equip",
+
   "qualityofqueso.options.better_gui_exit": "Better GUI Exit",
   "qualityofqueso.options.better_gui_exit.tooltip": "Close any GUI menu when you click anywhere outside of the GUI screen.\n\nFor example, clicking off of the crafting inventory screen (as long as your cursor isn't holding anything) will close the screen.",
   "qualityofqueso.options.better_searching": "Better Searching",
   "qualityofqueso.options.better_searching.tooltip": "Begin typing no matter what screen you are on to search for items.\n\nFor example, if you are in the creative inventory menu screen, and you want to search for an item, you no longer have to click on the compass to search for an item. Just begin typing and it will begin searching. The same applies to recipe book screens and crafting screens. (Note: if your cursor is hovered over a slot with an item that is bound to a hotbar key, it will not automatically search. You must move your mouse away from the bounded hotbar slot.)",
   "qualityofqueso.options.chest_search": "Chest Search",
   "qualityofqueso.options.chest_search.tooltip": "Adds a search bar to the top of chests and shulker boxes, and highlights the items you are looking for!",
-  "qualityofqueso.options.inventory_sorting": "Inventory Sorting",
-  "qualityofqueso.options.inventory_sorting.tooltip": "Adds two buttons to transfer items from §ocontainer -> inventory§r§f and vise-versa.\n\nTo transfer items from §oinventory -> container§r§f, you must hold down the ALT key in order to activate the button. This is here to prevent the player from accidentally clicking the button and unintentionally sending their whole inventory to the container.",
   "qualityofqueso.options.search_inventory": "Search Inventory",
   "qualityofqueso.options.search_inventory.tooltip": "Searches the players inventory in addition to searching for items in a container.",
+  "qualityofqueso.options.save_search_text": "Save Search Text",
+  "qualityofqueso.options.save_search_text.tooltip": "Saves the text in the chest search bar so that when you reopen the container, the text is put back.",
+  "qualityofqueso.options.inventory_sorting": "Inventory Sorting",
+  "qualityofqueso.options.inventory_sorting.tooltip": "Adds two buttons to transfer items from §ocontainer -> inventory§r§f and vise-versa.\n\nTo transfer items from §oinventory -> container§r§f, you must hold down the ALT key in order to activate the button. This is here to prevent the player from accidentally clicking the button and unintentionally sending their whole inventory to the container.",
+  "qualityofqueso.options.require_alt_to_sort": "Require ALT to Sort",
+  "qualityofqueso.options.require_alt_to_sort.tooltip": "Unlocks the §oinventory -> container§r§f button if the holds down the ALT key. Disable this if you do §onot§r§f want to press the ALT key.",
   "qualityofqueso.options.quick_equip": "Quick Equip",
-  "qualityofqueso.options.quick_equip.tooltip": "Quickly equips the hovered item to the respective equipment slot.\n\nDefault key = B, you can change this in the controls settings.",
+  "qualityofqueso.options.quick_equip.tooltip": "Quickly equips the hovered item to the respective equipment slot.\n\nDefault Key = B\n§lBounded Key = %s §r§f\nYou can change this in the controls settings.",
   "qualityofqueso.options.show_config_button": "Show Config Button",
   "qualityofqueso.options.show_config_button.tooltip": "Display the §6Quality of Queso§r§f configuration button on the title screen and the pause screen.\n\n§e§lPlease Note:§r§f If you disable this option, you can only re-enable it if you go into the config file §o(located in .minecraft/config/qualityofqueso-config.json,§r§f or if you have Mod Menu installed you can open this configuration screen from there.)."
 }

@@ -1,7 +1,6 @@
-- Added container searching and transferring (toggleable)!
-- At the top of any chest or shulker box, you can now search for any item and it will highlight the selected item!
-- You can also use "#" in the beginning of your search query to search for item tags.
-- You can now transfer items from chest -> inventory, or inventory -> chest.
-- To transfer items from inventory -> chest, you must be holding down alt. This is to prevent from pressing the button and sending your whole inventory into the chest by accident.
-- Only compatible with Minecraft 1.21.4 and 1.21.5.
+- Added Quick Swap keybind! This lets you quickly swap armor slots with different items, or quickly equip them when pressing this keybind while hovering over the item that you want to equip in your inventory (similar to how hotbar keys work, just with armor now!).
+- You can now search for multiple items by separating each search query with a command (ex. "grass,iron,dirt").
+- You can now exclude items when searching in a container (use ! to exclude the item from search).
+- Improved tag searching functionality (works with any mod's tags, and if the tag's name contains whatever is in the search bar, and the item in the container is found in the tag, the item will display as searched).
+- Added the option to turn off the requirement of having to hold down the ALT key to transfer items from inventory -> container.
 - Bug fixes and optimizations.
