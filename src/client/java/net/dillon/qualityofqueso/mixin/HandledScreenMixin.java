@@ -509,6 +509,9 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                     break;
                 }
             }
+            if (this.screen instanceof RecipeBookScreen<?> && keyCode == ModKeybinds.QUICK_EQUIP.boundKey.getCode()) {
+                ignoreTyping = true;
+            }
         }
 
         for (int key : QualityOfQuesoClient.keys) {
