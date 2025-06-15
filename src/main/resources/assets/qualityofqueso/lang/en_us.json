@@ -28,6 +28,14 @@
   "qualityofqueso.gui.yes": "YES",
   "qualityofqueso.gui.no": "NO",
 
+  "qualityofqueso.gui.transfer_container_button.with_cursor_stack": "Move all \"%ss\" to inventory",
+  "qualityofqueso.gui.transfer_container_button.with_search_query": "Move all items containing \"%s\" to inventory",
+  "qualityofqueso.gui.transfer_container_button": "Move all items in this container to inventory",
+  "qualityofqueso.gui.transfer_inventory_button.hold_alt": "Hold Left Alt to use this button",
+  "qualityofqueso.gui.transfer_inventory_button.with_cursor_stack": "Move all \"%ss\" to this container",
+  "qualityofqueso.gui.transfer_inventory_button.with_search_query": "Move all items containing \"%s\" to this container",
+  "qualityofqueso.gui.transfer_inventory_button": "Move all items in inventory to this container",
+
   "qualityofqueso.quick_equip": "Quick Equip",
   "qualityofqueso.open_item_frame_search_gui": "Open Item Frame Search GUI",
 
@@ -47,8 +55,8 @@
   "qualityofqueso.options.save_search_text.tooltip": "Saves the text in the chest search bar so that when you reopen the container, the text is put back.",
   "qualityofqueso.options.inventory_sorting": "Inventory Sorting",
   "qualityofqueso.options.inventory_sorting.tooltip": "Adds two buttons to transfer items from §ocontainer -> inventory§r§f and vise-versa.\n\nTo transfer items from §oinventory -> container§r§f, you must hold down the ALT key in order to activate the button. This is here to prevent the player from accidentally clicking the button and unintentionally sending their whole inventory to the container.",
-  "qualityofqueso.options.require_alt_to_sort": "Require ALT to Sort",
-  "qualityofqueso.options.require_alt_to_sort.tooltip": "Unlocks the §oinventory -> container§r§f button if the holds down the ALT key. Disable this if you do §onot§r§f want to press the ALT key.",
+  "qualityofqueso.options.require_alt_to_move": "Require ALT to Move",
+  "qualityofqueso.options.require_alt_to_move.tooltip": "Unlocks the §oinventory -> container§r§f button if the holds down the ALT key. Disable this if you do §onot§r§f want to press the ALT key.",
   "qualityofqueso.options.quick_equip": "Quick Equip",
   "qualityofqueso.options.quick_equip.tooltip": "Quickly equips the hovered item to the respective equipment slot.\n\nDefault Key = B\n§lBounded Key = %s §r§f\nYou can change this in the controls settings.",
   "qualityofqueso.options.item_frame_searching": "Item Frame Searching",

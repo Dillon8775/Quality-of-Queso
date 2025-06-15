@@ -22,7 +22,7 @@ public class ModOptions {
     public boolean searchInventory = true;
     public boolean saveSearchText = false;
     public boolean inventorySorting = true;
-    public boolean requireAltToSort = true;
+    public boolean requireAltToMove = true;
     public boolean quickEquip = true;
     public boolean itemFrameSearching = true;
     public int itemFrameSearchTimer = 0;

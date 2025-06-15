@@ -241,15 +241,15 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                     )
             );
             // Transfer inventory button is only active if it is already active and hovered, otherwise only becomes active if ALT is pressed
-            boolean hovering = transferInventoryButton.isMouseOver(mouseX, mouseY);
+            boolean isTransferInventoryButtonHovered = transferInventoryButton.isMouseOver(mouseX, mouseY);
             if (this.shouldButtonBeActive(true, playerInventory, transferInventoryButton)) {
                 if (this.altDown()) {
                     // Alt is held, activate and allow "keep active" if mouse is over
                     transferInventoryButton.active = true;
-                    this.keepInventoryButtonActive = hovering;
+                    this.keepInventoryButtonActive = isTransferInventoryButtonHovered;
                 } else {
-                    // Alt is not held – only keep active if still hovering from last Alt-down
-                    if (!hovering) {
+                    // Alt is not held – only keep active if still isTransferInventoryButtonHovered from last Alt-down
+                    if (!isTransferInventoryButtonHovered) {
                         this.keepInventoryButtonActive = false;
                     }
                     transferInventoryButton.active = this.keepInventoryButtonActive;
@@ -266,6 +266,17 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                 else {
                     this.renderTransferButtonTexture(this.transferContainerButton.isMouseOver(mouseX, mouseY) ? "transfer_container_button_hovered" : "transfer_container_button", this.transferContainerButton, context);
                 }
+
+                // Render tooltip if searching or cursor has item
+                if (this.transferContainerButton.isMouseOver(mouseX, mouseY)) {
+                    if (!this.getScreenHandler().getCursorStack().isEmpty()) {
+                        context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.transfer_container_button.with_cursor_stack", this.getScreenHandler().getCursorStack().getItemName()), 200), mouseX, mouseY);
+                    } else if (!this.getSearchFieldText().isEmpty()) {
+                        context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.transfer_container_button.with_search_query", this.getSearchFieldText()), 200), mouseX, mouseY);
+                    } else {
+                        context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.transfer_container_button"), 200), mouseX, mouseY);
+                    }
+                }
             }
             // Render transfer inventory -> chest button texture
             // If the button should not be active (meaning if there is nothing in the inventory), render inactive texture
@@ -279,6 +290,23 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             // Otherwise render unhovered/hovered texture, depending on if the button is hovered
             else {
                 this.renderTransferButtonTexture(transferInventoryButton.isMouseOver(mouseX, mouseY) ? "transfer_inventory_button_hovered" : "transfer_inventory_button", transferInventoryButton, context);
+            }
+
+            // Render tooltip if cursor stack has an item and button is hovered
+            if (isTransferInventoryButtonHovered) {
+                if (transferInventoryButton.active && this.altDown()) {
+                    if (!this.getScreenHandler().getCursorStack().isEmpty()) {
+                        context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.transfer_inventory_button.with_cursor_stack", this.getScreenHandler().getCursorStack().getItemName()), 200), mouseX, mouseY);
+                    } else if (!this.getSearchFieldText().isEmpty() && QualityOfQueso.options().searchInventory) {
+                        context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.transfer_inventory_button.with_search_query", this.getSearchFieldText()), 200), mouseX, mouseY);
+                    } else {
+                        context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.transfer_inventory_button"), 200), mouseX, mouseY);
+                    }
+                } else {
+                    if (this.shouldButtonBeActive(true, playerInventory, transferInventoryButton)) {
+                        context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.transfer_inventory_button.hold_alt"), 200), mouseX, mouseY);
+                    }
+                }
             }
         }
     }
@@ -328,7 +356,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
      */
     @Unique
     private boolean altDown() {
-        return !QualityOfQueso.options().requireAltToSort || hasAltDown();
+        return !QualityOfQueso.options().requireAltToMove || hasAltDown();
     }
 
     /**
