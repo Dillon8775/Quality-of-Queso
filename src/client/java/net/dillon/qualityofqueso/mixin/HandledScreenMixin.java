@@ -1,8 +1,8 @@
 package net.dillon.qualityofqueso.mixin;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import net.dillon.qualityofqueso.QualityOfQuesoClient;
 import net.dillon.qualityofqueso.keybind.ModKeybinds;
+import net.dillon.qualityofqueso.main.QualityOfQueso;
 import net.dillon.qualityofqueso.option.ModOptions;
 import net.dillon.qualityofqueso.screen.gui.SensitiveButton;
 import net.dillon.qualityofqueso.util.ModTexts;
@@ -69,8 +69,6 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     public Slot focusedSlot;
     @Shadow @Nullable
     protected abstract Slot getSlotAt(double mouseX, double mouseY);
-
-    @Shadow protected int x;
     @Unique
     private final HandledScreen<?> screen = (HandledScreen<?>)(Object)this;
     @Unique
@@ -105,18 +103,18 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                 this.inventory = null;
             }
 
-            if (QualityOfQuesoClient.options().chestSearch) {
+            if (QualityOfQueso.options().chestSearch) {
                 int barWidth = (int)((double)this.backgroundWidth * 0.6);
                 this.searchField = new TextFieldWidget(MinecraftClient.getInstance().textRenderer, this.width / 2 + barWidth / 2 - 64, this.y + this.titleY - 2, 90, 12, null);
-                if (QualityOfQuesoClient.options().saveSearchText) {
-                    this.searchField.setText(QualityOfQuesoClient.SAVED_TEXT);
+                if (QualityOfQueso.options().saveSearchText) {
+                    this.searchField.setText(QualityOfQueso.SAVED_TEXT);
                 }
                 this.searchField.setMaxLength(50);
                 this.searchField.setDrawsBackground(true);
                 this.searchField.setEditableColor(16777215);
                 this.addSelectableChild(this.searchField);
             }
-            if (QualityOfQuesoClient.options().inventorySorting) {
+            if (QualityOfQueso.options().inventorySorting) {
                 this.transferContainerButton = this.addSelectableChild(
                         new SensitiveButton(
                                 this.getTransferButtonX(true),
@@ -220,7 +218,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
      */
     @Inject(method = "render", at = @At("TAIL"))
     private void renderField(DrawContext context, int mouseX, int mouseY, float deltaTicks, CallbackInfo ci) {
-        if (QualityOfQuesoClient.options().chestSearch && this.searchField != null) {
+        if (QualityOfQueso.options().chestSearch && this.searchField != null) {
             // Render search field and determine if transferContainerButton should render as active
             this.searchField.render(context, mouseX, mouseY, deltaTicks);
             if (this.searchField.isHovered()) {
@@ -228,7 +226,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             }
             this.shouldButtonBeActive(false, null, this.transferContainerButton);
         }
-        if (QualityOfQuesoClient.options().inventorySorting && this.isValidScreen()) {
+        if (QualityOfQueso.options().inventorySorting && this.isValidScreen()) {
             PlayerInventory playerInventory = this.client.player.getInventory();
             // Initialize transfer inventory button
             ClickableWidget transferInventoryButton = this.addSelectableChild(
@@ -314,7 +312,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
      */
     @Unique
     private int getInventorySize() {
-        return QualityOfQuesoClient.options().searchInventory ? this.getScreenHandler().slots.size() : this.inventory.size();
+        return QualityOfQueso.options().searchInventory ? this.getScreenHandler().slots.size() : this.inventory.size();
     }
 
     /**
@@ -330,7 +328,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
      */
     @Unique
     private boolean altDown() {
-        return !QualityOfQuesoClient.options().requireAltToSort || hasAltDown();
+        return !QualityOfQueso.options().requireAltToSort || hasAltDown();
     }
 
     /**
@@ -583,7 +581,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
         boolean swapKeyPressed = false;
 
         // If a "disallowed key" is pressed, ignoreTyping and secondaryIgnoreTyping become true.
-        for (int key : QualityOfQuesoClient.disallowedKeys) {
+        for (int key : QualityOfQueso.disallowedKeys) {
             if (keyCode == key) {
                 ignoreTyping = true; secondaryIgnoreTyping = true;
                 break;
@@ -604,7 +602,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
         }
 
         // Handle 'T' and 'E' keys
-        for (int key : QualityOfQuesoClient.keys) {
+        for (int key : QualityOfQueso.keys) {
             if (keyCode == key) {
                 secondaryIgnoreTyping = false;
                 cir.setReturnValue(true);
@@ -644,7 +642,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
         boolean cannotType = (numberKeyPressed || hotbarKeyPressed || dropKeyPressed || swapKeyPressed) && this.hoveredSlotHasItem();
 
         // Recipe book search field logic
-        if (QualityOfQuesoClient.options().betterSearching && this.screen instanceof RecipeBookScreen<?> recipeScreen) {
+        if (QualityOfQueso.options().betterSearching && this.screen instanceof RecipeBookScreen<?> recipeScreen) {
             if (!ignoreTyping && !recipeScreen.recipeBook.isOpen()) {
                 recipeScreen.recipeBook.toggleOpen();
                 refreshWidgetPositions();
@@ -657,7 +655,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             }
         }
         // Chest search field logic
-        else if (QualityOfQuesoClient.options().chestSearch && isValidScreen()) {
+        else if (QualityOfQueso.options().chestSearch && isValidScreen()) {
             if (!secondaryIgnoreTyping) {
                 this.searchField.setFocused(true);
             } else if (this.searchField.isFocused() && cannotType) {
@@ -697,8 +695,8 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
      */
     @Inject(method = "close", at = @At("TAIL"))
     private void saveSearchText(CallbackInfo ci) {
-        if (QualityOfQuesoClient.options().chestSearch && QualityOfQuesoClient.options().saveSearchText && this.searchField != null && this.isValidScreen()) {
-            QualityOfQuesoClient.SAVED_TEXT = this.searchField.getText();
+        if (QualityOfQueso.options().chestSearch && QualityOfQueso.options().saveSearchText && this.searchField != null && this.isValidScreen()) {
+            QualityOfQueso.SAVED_TEXT = this.searchField.getText();
         }
     }
 
@@ -707,7 +705,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
      */
     @Override
     public boolean charTyped(char chr, int modifiers) {
-        if (QualityOfQuesoClient.options().chestSearch && this.searchField != null && this.searchField.isFocused()) {
+        if (QualityOfQueso.options().chestSearch && this.searchField != null && this.searchField.isFocused()) {
             return this.searchField.charTyped(chr, modifiers);
         }
         return super.charTyped(chr, modifiers);

@@ -83,7 +83,7 @@ public class PacketHandling implements ModInitializer {
                         }
                     }
                     if (nearbyFrames.isEmpty()) {
-                        player.playSoundToPlayer(SoundEvents.BLOCK_NOTE_BLOCK_BASS.value(), SoundCategory.AMBIENT, 1.5F, 1.0F);
+                        player.playSoundToPlayer(SoundEvents.BLOCK_NOTE_BLOCK_BASS.value(), SoundCategory.AMBIENT, 2.0F, 1.0F);
                     } else if (payload.clear()) {
                         player.playSoundToPlayer(SoundEvents.ENTITY_PLAYER_SPLASH, SoundCategory.AMBIENT, 1.0F, 1.0F);
                     } else {

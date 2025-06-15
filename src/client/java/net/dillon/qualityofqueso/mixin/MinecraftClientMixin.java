@@ -1,7 +1,7 @@
 package net.dillon.qualityofqueso.mixin;
 
-import net.dillon.qualityofqueso.QualityOfQuesoClient;
 import net.dillon.qualityofqueso.keybind.ModKeybinds;
+import net.dillon.qualityofqueso.main.QualityOfQueso;
 import net.dillon.qualityofqueso.screen.ItemFrameSearchScreen;
 import net.minecraft.client.MinecraftClient;
 import org.spongepowered.asm.mixin.Mixin;
@@ -17,7 +17,7 @@ public class MinecraftClientMixin {
      */
     @Inject(method = "handleInputEvents", at = @At("TAIL"))
     private void handleKeyPressing(CallbackInfo ci) {
-        if (QualityOfQuesoClient.options().itemFrameSearching) {
+        if (QualityOfQueso.options().itemFrameSearching) {
             while (ModKeybinds.OPEN_SEARCH_ITEM_FRAMES_GUI.wasPressed()) {
                 MinecraftClient.getInstance().setScreen(new ItemFrameSearchScreen());
             }

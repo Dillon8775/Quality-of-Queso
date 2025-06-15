@@ -1,6 +1,6 @@
 package net.dillon.qualityofqueso.option;
 
-import net.dillon.qualityofqueso.QualityOfQuesoClient;
+import net.dillon.qualityofqueso.main.QualityOfQueso;
 import net.dillon.qualityofqueso.screen.ItemFrameSearchScreen;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -19,7 +19,7 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
     private ButtonWidget chestSearchingOptions, inventorySortingOptions, itemFrameSearchingOptions, openItemFrameSearchGUI, otherOptions;
 
     public ModOptionsScreen(Screen parent) {
-        super(parent, Text.translatable(QualityOfQuesoClient.TITLE));
+        super(parent, Text.translatable(QualityOfQueso.TITLE));
     }
 
     @Override
@@ -65,7 +65,7 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
         }).build());
         buttons.add(this.itemFrameSearchingOptions);
         this.openItemFrameSearchGUI = this.addDrawableChild(ButtonWidget.builder(Text.translatable("qualityofqueso.gui.open_item_frame_search_gui"), button -> {
-            if (QualityOfQuesoClient.options().itemFrameSearching && this.client.world != null) {
+            if (QualityOfQueso.options().itemFrameSearching && this.client.world != null) {
                 this.client.setScreen(new ItemFrameSearchScreen());
             }
         }).build());
@@ -90,7 +90,7 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
         super.render(context, mouseX, mouseY, deltaTicks);
-        this.openItemFrameSearchGUI.active = QualityOfQuesoClient.options().itemFrameSearching && this.client.world != null;
+        this.openItemFrameSearchGUI.active = QualityOfQueso.options().itemFrameSearching && this.client.world != null;
         if (this.chestSearchingOptions.isHovered()) {
             context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.chest_searching_options.tooltip"), 200), mouseX, mouseY);
         }

@@ -18,7 +18,7 @@
   "environment": "*",
   "entrypoints": {
     "client": [
-      "net.dillon.qualityofqueso.QualityOfQuesoClient"
+      "net.dillon.qualityofqueso.main.QualityOfQueso"
     ],
     "main": [
       "net.dillon.qualityofqueso.packet.PacketHandling"

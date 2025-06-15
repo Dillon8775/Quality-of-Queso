@@ -1,6 +1,6 @@
 package net.dillon.qualityofqueso.mixin;
 
-import net.dillon.qualityofqueso.QualityOfQuesoClient;
+import net.dillon.qualityofqueso.main.QualityOfQueso;
 import net.dillon.qualityofqueso.option.ModOptions;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -63,7 +63,7 @@ public abstract class CreativeInventoryScreenMixin extends HandledScreen<Creativ
 		if (this.ignoreTypedCharacter || (!(ModOptions.OPTIONS.betterSearching) && selectedTab.getType() != ItemGroup.Type.SEARCH)) {
 			return false;
 		} else {
-			if (QualityOfQuesoClient.options().betterSearching) {
+			if (QualityOfQueso.options().betterSearching) {
 				this.setSelectedTab(ItemGroups.getSearchGroup());
 			}
 			String string = this.searchBox.getText();
@@ -84,13 +84,13 @@ public abstract class CreativeInventoryScreenMixin extends HandledScreen<Creativ
 	 */
 	@Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
 	private void allowCertainChars(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-		if (QualityOfQuesoClient.options().betterSearching) {
+		if (QualityOfQueso.options().betterSearching) {
 			if (this.focusedSlot != null && this.focusedSlot.getStack() != ItemStack.EMPTY && !this.searchBox.isFocused()) {
 				this.ignoreTypedCharacter = true;
 				cir.setReturnValue(super.keyPressed(keyCode, scanCode, modifiers));
 			}
 
-			for (int key : QualityOfQuesoClient.keys) {
+			for (int key : QualityOfQueso.keys) {
 				if (keyCode == key) {
 					this.ignoreTypedCharacter = false;
 					cir.setReturnValue(true);

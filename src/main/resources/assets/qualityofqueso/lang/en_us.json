@@ -3,11 +3,12 @@
   "qualityofqueso.gui.options.tooltip": "Configure Quality of QUESO...",
   "qualityofqueso.gui.learn_more": "Learn More...",
   "qualityofqueso.gui.search_item_frames": "Search for §oitem §r§fto make all item frames with §oitem §r§fglow.",
-  "qualityofqueso.gui.chest_search.search_filtering": "Any item name that contains the text in this field will be highlighted.\n\nSeparate item names with §l,§r§f\n(example: \"iron,stone,gold\")\n\nSearch item by tag with §l#§r§f\n(example: #logs)\n\nExclude item from search with §l!§r§f\n(example: \"!sign\" will highlight any item that doesn't contain \"sign\" in it's name)",
-  "qualityofqueso.gui.search_item_frames.search_filtering": "Any item name that contains the text in this field will be set to glow.\n\nSeparate item names with §l, §r§f(ex. \"diamond,coal,iron\")\n\nYou will hear a ding sound if item frames were found with the searched item. If no item frames were found, you will hear a low-pitched note block sound.\n\n§cPlease note:§r§f this feature will only work if the server-side has this mod installed as well (if you are on singleplayer and have the mod installed it will work just fine).",
+  "qualityofqueso.gui.chest_search.search_filtering": "Any item name that contains the text in this field will be highlighted.\n\nYou can also...\n\nSeparate item names with §o,§r§f\n§lExample: §r§f\"iron,stone,gold\"\n\nSearch item by tag with §o#§r§f\n§lExample: §r§f#logs\n\nExclude item from search with §l!§r§f\n§lExample: §r§f\"!sign\" will highlight any item that doesn't contain \"sign\" in it's name",
+  "qualityofqueso.gui.search_item_frames.search_filtering": "Any item name that contains the text in this field will be set to glow.\n\nYou can also...\n\nSeparate item names with §o,§r§f\n§lExample: §r§f\"diamond,coal,iron\"\n\nSearch by namespace.\n§lExample: §r§f\"minecraft\" will make all item frames containing any vanilla minecraft item glow. You can do this for other mods as well.\n\nYou will hear a ding sound if item frames were found with the searched item. If no item frames were found, you will hear a low-pitched note block sound.\n\n§cPlease note:§r§f this feature will only work if the server-side has this mod installed as well (if you are on singleplayer and have the mod installed it will work just fine).",
   "qualityofqueso.gui.search": "Search...",
+  "qualityofqueso.gui.search.tooltip": "Search for item frames containing \"%s\"",
   "qualityofqueso.gui.clear": "Clear...",
-  "qualityofqueso.gui.clear.tooltip": "Clear the text and remove the glowing effect from all item frames.",
+  "qualityofqueso.gui.clear.tooltip": "Clear the text and remove the glowing effect from all item frames within the specified radius.",
   "qualityofqueso.gui.close": "Close...",
   "qualityofqueso.gui.chest_searching_options": "Chest Searching...",
   "qualityofqueso.gui.title.chest_searching_options": "Chest Searching Options",
@@ -29,6 +30,9 @@
 
   "qualityofqueso.quick_equip": "Quick Equip",
 
+  "qualityofqueso.item_frame_searcher.executed.without_timer": "Searched item frames containing \"%s\" within a %s block radius.",
+  "qualityofqueso.item_frame_searcher.executed.with_timer": "Searched item frames containing \"%s\" within a %s block radius, removing glow after %s second(s).",
+
   "qualityofqueso.options.better_gui_exit": "Better GUI Exit",
   "qualityofqueso.options.better_gui_exit.tooltip": "Close any GUI menu when you click anywhere outside of the GUI screen.\n\nFor example, clicking off of the crafting inventory screen (as long as your cursor isn't holding anything) will close the screen.",
   "qualityofqueso.options.better_searching": "Better Searching",
@@ -48,9 +52,9 @@
   "qualityofqueso.options.item_frame_searching": "Item Frame Searching",
   "qualityofqueso.options.item_frame_searching.tooltip": "Search for an item frame with a specific item inside of it and make it glow.\n\nDefault Key = I\n§lBounded Key = %s §r§f\nPress this key to open the GUI for item frame searching.",
   "qualityofqueso.options.item_frame_search_radius": "Radius",
-  "qualityofqueso.options.item_frame_search_radius.tooltip": "Determines the radius for finding item frames.",
+  "qualityofqueso.options.item_frame_search_radius.tooltip": "Determines the radius for finding item frames.\n\n1m = 1 block.",
   "qualityofqueso.options.item_frame_search_timer": "Timer",
-  "qualityofqueso.options.item_frame_search_timer.tooltip": "Specifies how long item frames will remain glowing.",
+  "qualityofqueso.options.item_frame_search_timer.tooltip": "Specifies how long item frames will remain glowing.\n\n§aNo Timer §r§fmeans item frames will remain glowing until cleared.",
   "qualityofqueso.options.show_config_button": "Show Config Button",
   "qualityofqueso.options.show_config_button.tooltip": "Display the §6Quality of Queso§r§f configuration button on the title screen and the pause screen.\n\n§e§lPlease Note:§r§f If you disable this option, you can only re-enable it if you go into the config file §o(located in .minecraft/config/qualityofqueso-config.json,§r§f or if you have Mod Menu installed you can open this configuration screen from there.)."
 }

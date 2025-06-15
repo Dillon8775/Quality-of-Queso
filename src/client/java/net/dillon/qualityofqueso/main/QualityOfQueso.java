@@ -1,10 +1,12 @@
-package net.dillon.qualityofqueso;
+package net.dillon.qualityofqueso.main;
 
+import net.dillon.qualityofqueso.command.ItemFrameSearcherCommand;
 import net.dillon.qualityofqueso.keybind.ModKeybinds;
 import net.dillon.qualityofqueso.option.ModOptions;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +14,7 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 @Environment(EnvType.CLIENT)
-public class QualityOfQuesoClient implements ClientModInitializer {
+public class QualityOfQueso implements ClientModInitializer {
 	public static final String TITLE = "qualityofqueso.gui.options.title";
 	public static String SAVED_TEXT = "";
 	public static String SAVED_ITEM_FRAME_TEXT = "";
@@ -42,8 +44,11 @@ public class QualityOfQuesoClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		ModKeybinds.init();
+		CommandRegistrationCallback.EVENT.register((commandDispatcher, commandRegistryAccess, registrationEnvironment) -> {
+			ItemFrameSearcherCommand.register(commandDispatcher, commandRegistryAccess);
+		});
 		ModOptions.loadConfig();
-		QualityOfQuesoClient.info("Quality of Queso has successfully loaded!");
+		QualityOfQueso.info("Quality of Queso has successfully loaded!");
 	}
 
 	/**

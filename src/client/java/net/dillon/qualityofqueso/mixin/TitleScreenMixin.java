@@ -1,6 +1,6 @@
 package net.dillon.qualityofqueso.mixin;
 
-import net.dillon.qualityofqueso.QualityOfQuesoClient;
+import net.dillon.qualityofqueso.main.QualityOfQueso;
 import net.dillon.qualityofqueso.util.ButtonUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -27,14 +27,14 @@ public class TitleScreenMixin extends Screen {
 
     @Inject(method = "init", at = @At("TAIL"))
     private void init(CallbackInfo ci) {
-        if (QualityOfQuesoClient.options().showConfigButton) {
+        if (QualityOfQueso.options().showConfigButton) {
             this.settingsButton = this.addDrawableChild(ButtonUtil.initializeButton(this.client, this, this.width / 2 + 128, this.height / 4 + 132));
         }
     }
 
     @Inject(method = "render", at = @At("TAIL"))
     private void renderTooltips(DrawContext context, int mouseX, int mouseY, float deltaTicks, CallbackInfo ci) {
-        if (QualityOfQuesoClient.options().showConfigButton) {
+        if (QualityOfQueso.options().showConfigButton) {
             ButtonUtil.drawTooltipAndTexture(context, this.textRenderer, this.settingsButton, mouseX, mouseY);
         }
     }
