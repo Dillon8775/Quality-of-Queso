@@ -6,6 +6,7 @@
     "CreativeInventoryScreenMixin",
     "GameMenuScreenMixin",
     "HandledScreenMixin",
+    "MinecraftClientMixin",
     "TitleScreenMixin"
   ],
   "injectors": {

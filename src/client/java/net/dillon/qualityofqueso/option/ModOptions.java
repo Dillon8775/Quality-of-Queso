@@ -24,6 +24,9 @@ public class ModOptions {
     public boolean inventorySorting = true;
     public boolean requireAltToSort = true;
     public boolean quickEquip = true;
+    public boolean itemFrameSearching = true;
+    public int itemFrameSearchTimer = 0;
+    public int itemFrameSearchRadius = 150;
     public boolean showConfigButton = true;
 
     /**

@@ -5,8 +5,10 @@ import net.dillon.qualityofqueso.keybind.ModKeybinds;
 import net.dillon.qualityofqueso.util.ModTexts;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.option.GameOptions;
 import net.minecraft.client.option.SimpleOption;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 
 /**
  * Options displayed on {@link ModOptionsScreen}.
@@ -38,8 +40,26 @@ public class ModListOptions {
     public static final SimpleOption<Boolean> QUICK_EQUIP = new SimpleOption<>("qualityofqueso.options.quick_equip", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.quick_equip.tooltip", parseKeyAsString(ModKeybinds.QUICK_EQUIP.boundKey.toString().toUpperCase()))),
             (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, QualityOfQuesoClient.options().quickEquip, value -> QualityOfQuesoClient.options().quickEquip = value);
 
+    public static final SimpleOption<Boolean> ITEM_FRAME_SEARCHING = new SimpleOption<>("qualityofqueso.options.item_frame_searching", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.item_frame_searching.tooltip", parseKeyAsString(ModKeybinds.OPEN_SEARCH_ITEM_FRAMES_GUI.boundKey.toString().toUpperCase()))),
+            (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, QualityOfQuesoClient.options().itemFrameSearching, value -> QualityOfQuesoClient.options().itemFrameSearching = value);
+
     public static final SimpleOption<Boolean> SHOW_CONFIG_BUTTON = new SimpleOption<>("qualityofqueso.options.show_config_button", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.show_config_button.tooltip")),
             (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, QualityOfQuesoClient.options().showConfigButton, value -> QualityOfQuesoClient.options().showConfigButton = value);
+
+    public static final SimpleOption<Integer> ITEM_FRAME_SEARCH_TIMER =
+            new SimpleOption<>("qualityofqueso.options.item_frame_search_timer", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.item_frame_search_timer.tooltip")),
+                    (optionText, value) -> {
+                        if (value == 0) {
+                            return GameOptions.getGenericValueText(optionText, Text.literal("No Timer").formatted(Formatting.GREEN));
+                        } else {
+                            return GameOptions.getGenericValueText(optionText, Text.literal(value + "s"));
+                        }},
+                    new SimpleOption.ValidatingIntSliderCallbacks(0, 180), QualityOfQuesoClient.options().itemFrameSearchTimer, value -> QualityOfQuesoClient.options().itemFrameSearchTimer = value);
+
+    public static final SimpleOption<Integer> ITEM_FRAME_SEARCH_RADIUS =
+            new SimpleOption<>("qualityofqueso.options.item_frame_search_radius", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.item_frame_search_radius.tooltip")),
+                    (optionText, value) -> GameOptions.getGenericValueText(optionText, Text.literal(value + "m")),
+                    new SimpleOption.ValidatingIntSliderCallbacks(25, 300), QualityOfQuesoClient.options().itemFrameSearchRadius, value -> QualityOfQuesoClient.options().itemFrameSearchRadius = value);
 
     /**
      * @return the key name (ex. B or F).

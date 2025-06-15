@@ -3,6 +3,7 @@
   "package": "net.dillon.qualityofqueso.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "ItemFrameEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1

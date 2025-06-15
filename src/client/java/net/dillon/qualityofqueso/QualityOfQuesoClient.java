@@ -15,6 +15,7 @@ import java.util.List;
 public class QualityOfQuesoClient implements ClientModInitializer {
 	public static final String TITLE = "qualityofqueso.gui.options.title";
 	public static String SAVED_TEXT = "";
+	public static String SAVED_ITEM_FRAME_TEXT = "";
 	private static final Logger LOGGER = LoggerFactory.getLogger("Quality of QUESO");
 	public static final List<Integer> keys = List.of(GLFW.GLFW_KEY_T, GLFW.GLFW_KEY_E);
 	public static final List<Integer> disallowedKeys = List.of(

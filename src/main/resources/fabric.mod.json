@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "qualityofqueso",
-  "version": "1.2.1+mc1.21.5",
+  "version": "1.3+mc1.21.5",
   "name": "Quality of QUESO",
   "description": "A quality of life mod, with a bunch of cool QOL features.",
   "accessWidener": "qualityofqueso.accessWidener",
@@ -15,10 +15,13 @@
   },
   "license": "All rights reserved.",
   "icon": "assets/qualityofqueso/icon.png",
-  "environment": "client",
+  "environment": "*",
   "entrypoints": {
     "client": [
       "net.dillon.qualityofqueso.QualityOfQuesoClient"
+    ],
+    "main": [
+      "net.dillon.qualityofqueso.packet.PacketHandling"
     ],
     "modmenu": [
       "net.dillon.qualityofqueso.screen.impl.ModMenuImpl"

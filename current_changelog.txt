@@ -1,8 +1,6 @@
-- Added Quick Swap keybind! This lets you quickly swap armor slots with different items, or quickly equip them when pressing this keybind while hovering over the item that you want to equip in your inventory (similar to how hotbar keys work, just with armor now!).
-- You can now move certain items by clicking on the move items button with the item that you want to move.
-- You can now search for multiple items by separating each search query with a command (ex. "grass,iron,dirt").
-- You can now exclude items when searching in a container (use ! to exclude the item from search).
-- Improved tag searching functionality (works with any mod's tags, and if the tag's name contains whatever is in the search bar, and the item in the container is found in the tag, the item will display as searched).
-- When searching via item tag, all tags are displayed on each item hovered.
-- Added the option to turn off the requirement of having to hold down the ALT key to transfer items from inventory -> container.
-- Bug fixes and optimizations.
+- Added item frame searching! Press I to open the Item Frame Searching GUI, which will allow you to search item frames by the item that they hold.
+- If the item frame contains the item that you searched, that item frame will glow.
+- You can set how long you want the item frame to remain glowing if you'd like.
+- You can also remove glow from all item frames.
+- Revamped configuration screen.
+- More optimizations.

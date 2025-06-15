@@ -69,6 +69,8 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     public Slot focusedSlot;
     @Shadow @Nullable
     protected abstract Slot getSlotAt(double mouseX, double mouseY);
+
+    @Shadow protected int x;
     @Unique
     private final HandledScreen<?> screen = (HandledScreen<?>)(Object)this;
     @Unique
@@ -150,14 +152,14 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             ItemStack fromStack = fromSlot.getStack();
 
             if (this.searchField != null && !this.getSearchFieldText().isEmpty() && !this.search(this.getSearchFieldText(), fromSlot)) {
-                continue; // skip container slot if item not found via search
+                continue; // skip container slot if query not found via search
             }
 
             if (!fromStack.isEmpty()) {
                 for (int j = toStart; j < toEnd; j++) {
                     Slot toSlot = screen.getScreenHandler().getSlot(j);
                     if (toSlot.getStack().isEmpty()) {
-                        // Only transfer items if the item matches whatever the cursor is holding
+                        // Only transfer items if the query matches whatever the cursor is holding
                         if (!this.getScreenHandler().getCursorStack().isEmpty()) {
                             if (fromStack.isOf(this.getScreenHandler().getCursorStack().getItem())) {
                                 this.sendClickSlotPacket(i, SlotActionType.QUICK_MOVE);
@@ -221,6 +223,9 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
         if (QualityOfQuesoClient.options().chestSearch && this.searchField != null) {
             // Render search field and determine if transferContainerButton should render as active
             this.searchField.render(context, mouseX, mouseY, deltaTicks);
+            if (this.searchField.isHovered()) {
+                context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.chest_search.search_filtering"), 200), mouseX, mouseY);
+            }
             this.shouldButtonBeActive(false, null, this.transferContainerButton);
         }
         if (QualityOfQuesoClient.options().inventorySorting && this.isValidScreen()) {
@@ -281,14 +286,14 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     }
 
     /**
-     * Grays out any containerSlot which doesn't contain the item name being searched.
+     * Grays out any containerSlot which doesn't contain the query name being searched.
      */
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ingame/HandledScreen;drawForeground(Lnet/minecraft/client/gui/DrawContext;II)V", shift = At.Shift.AFTER))
     private void grayOutSlot(DrawContext context, int mouseX, int mouseY, float deltaTicks, CallbackInfo ci) {
         if (this.searchField != null && !this.getSearchFieldText().isEmpty()) {
             for (int i = 0; i < this.getInventorySize(); i++) {
                 Slot slot = this.getScreenHandler().getSlot(i);
-                // If item not found from search result, the slot becomes unavailable
+                // If query not found from search result, the slot becomes unavailable
                 if (!this.search(this.getSearchFieldText(), slot)) {
                     this.makeSlotUnavailable(context, slot);
                 }
@@ -313,7 +318,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     }
 
     /**
-     * @return {@code true} if the hovered slot has an item (assuming hovered slot isn't {@code null}).
+     * @return {@code true} if the hovered slot has an query (assuming hovered slot isn't {@code null}).
      */
     @Unique
     private boolean hoveredSlotHasItem() {
@@ -329,7 +334,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     }
 
     /**
-     * @return the {@code X} value for transferring item buttons.
+     * @return the {@code X} value for transferring query buttons.
      */
     @Unique
     private int getTransferButtonX(boolean chestToInventory) {
@@ -338,7 +343,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     }
 
     /**
-     * @return the {@code Y} value for transferring item buttons.
+     * @return the {@code Y} value for transferring query buttons.
      */
     @Unique
     private int getTransferButtonY() {
@@ -407,11 +412,11 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             }
             for (Slot slot : playerSlots) {
                 if (search(this.getSearchFieldText(), slot)) {
-                    j++; // increment J if item found in slot
+                    j++; // increment J if query found in slot
                 }
             }
         } else {
-            // Otherwise, loop through the container inventory and increment J if item found inside
+            // Otherwise, loop through the container inventory and increment J if query found inside
             for (int i = 0; i < this.inventory.size(); i++) {
                 Slot slot = this.getScreenHandler().getSlot(i);
                 if (search(this.getSearchFieldText(), slot)) {
@@ -419,7 +424,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                 }
             }
         }
-        // If J == 0 then no item was found, returning true for all slots are unavailable
+        // If J == 0 then no query was found, returning true for all slots are unavailable
         return j == 0;
     }
 
@@ -437,7 +442,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     }
 
     /**
-     * @return {@code true} if an item is found from {@code searchQuery}.
+     * @return {@code true} if an query is found from {@code searchQuery}.
      */
     @Unique
     private boolean search(String searchQuery, Slot slot) {
@@ -452,7 +457,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
         String customName = stack.getCustomName() != null ? stack.getName().getString().toLowerCase() : "";
 
         String[] terms = searchQuery.split(",");
-        // If slot contains a comma, for each query searched (separated by each comma), return true if search query'namespace find an item (make slot available)
+        // If slot contains a comma, for each query searched (separated by each comma), return true if search query'namespace find an query (make slot available)
         for (String term : terms) {
             if (itemName.contains(term.trim().toLowerCase())) {
                 return true;
@@ -510,7 +515,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                 return;
             }
 
-            // Exit if hovered slot doesn't have an item in it
+            // Exit if hovered slot doesn't have an query in it
             Slot hoveredSlot = this.getSlotAt(x, y);
             if (hoveredSlot == null || !hoveredSlot.hasStack()) {
                 return;
@@ -524,13 +529,13 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             // Loop through all tags loaded (vanilla and modded)
             for (TagKey<Item> tagKey : itemRegistry.streamTagKeys().toList()) {
                 if (stack.isIn(tagKey)) {
-                    // Add each tag to the item hovered
+                    // Add each tag to the query hovered
                     originalTooltip.add(1, Text.literal("#" + tagKey.id()).formatted(Formatting.LIGHT_PURPLE));
                     foundTags = true;
                 }
             }
 
-            // If tags were found in the item add it to the tooltip and render
+            // If tags were found in the query add it to the tooltip and render
             // cancel out original method to prevent overlapping tooltips
             if (foundTags) {
                 drawContext.drawTooltip(this.textRenderer, originalTooltip, Optional.empty(), x, y);
@@ -585,7 +590,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             }
         }
 
-        // handle switching items from hotbar to another containerSlot in inventory; cancel out typing if an item can be moved
+        // handle switching items from hotbar to another containerSlot in inventory; cancel out typing if an query can be moved
         if (this.getScreenHandler().getCursorStack().isEmpty() && this.focusedSlot != null) {
             for (int i = 0; i < 9; i++) {
                 if (this.client.options.hotbarKeys[i].matchesKey(keyCode, scanCode)) {
