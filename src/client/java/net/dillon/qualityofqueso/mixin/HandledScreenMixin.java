@@ -35,8 +35,6 @@ import net.minecraft.registry.tag.TagKey;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
-import net.minecraft.screen.sync.ComponentChangesHash;
-import net.minecraft.screen.sync.ItemStackHash;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
@@ -175,13 +173,12 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
         }
     }
 
-
     @Unique
     private void sendClickSlotPacket(int slotIndex, SlotActionType slotActionType) {
         MinecraftClient client = MinecraftClient.getInstance();
-        ClientPlayNetworkHandler networkHandler = client.getNetworkHandler();
+        ClientPlayNetworkHandler network = client.getNetworkHandler();
 
-        if (client.player == null || networkHandler == null || client.player.currentScreenHandler == null) {
+        if (client.player == null || network == null || client.player.currentScreenHandler == null) {
             return;
         }
 
@@ -192,25 +189,20 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
         ItemStack cursorStack = handler.getCursorStack();
         ItemStack clickedStack = handler.getSlot(slotIndex).getStack();
 
-        ComponentChangesHash.ComponentHasher hasher = networkHandler.method_68823();
+        var modifiedStacks = new Int2ObjectOpenHashMap<ItemStack>();
+        modifiedStacks.put(slotIndex, clickedStack.copy());
 
-        ItemStackHash cursorHash = ItemStackHash.fromItemStack(cursorStack, hasher);
-        ItemStackHash clickedHash = ItemStackHash.fromItemStack(clickedStack, hasher);
-
-        Int2ObjectOpenHashMap<ItemStackHash> modifiedStacks = new Int2ObjectOpenHashMap<>();
-        modifiedStacks.put(slotIndex, clickedHash);
-
-        ClickSlotC2SPacket packet = new ClickSlotC2SPacket(
+        var packet = new ClickSlotC2SPacket(
                 syncId,
                 revision,
-                (short) slotIndex,
-                (byte) 0,
+                slotIndex,
+                0,
                 slotActionType,
-                modifiedStacks,
-                cursorHash
+                cursorStack.copy(),
+                modifiedStacks
         );
 
-        networkHandler.sendPacket(packet);
+        network.sendPacket(packet);
     }
 
     /**
@@ -459,7 +451,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
      */
     @Unique
     private boolean isPlayerInventoryEmpty(PlayerInventory playerInventory) {
-        for (ItemStack stack : playerInventory.getMainStacks()) {
+        for (ItemStack stack : playerInventory.main) {
             if (!stack.isEmpty()) {
                 return false;
             }

@@ -60,6 +60,6 @@ public abstract class ItemFrameEntityMixin extends AbstractDecorationEntity impl
      */
     @Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
     private void readGlowTicks(NbtCompound nbt, CallbackInfo ci) {
-        this.glowTicksRemaining = nbt.getInt("GlowTicksRemaining").orElse(-1);
+        this.glowTicksRemaining = nbt.getInt("GlowTicksRemaining");
     }
 }
