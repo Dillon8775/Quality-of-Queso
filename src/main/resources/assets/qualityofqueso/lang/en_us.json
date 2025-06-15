@@ -29,6 +29,7 @@
   "qualityofqueso.gui.no": "NO",
 
   "qualityofqueso.quick_equip": "Quick Equip",
+  "qualityofqueso.open_item_frame_search_gui": "Open Item Frame Search GUI",
 
   "qualityofqueso.item_frame_searcher.executed.without_timer": "Searched item frames containing \"%s\" within a %s block radius.",
   "qualityofqueso.item_frame_searcher.executed.with_timer": "Searched item frames containing \"%s\" within a %s block radius, removing glow after %s second(s).",
