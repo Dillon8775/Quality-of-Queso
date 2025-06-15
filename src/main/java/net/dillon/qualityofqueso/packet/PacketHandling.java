@@ -5,13 +5,18 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.decoration.ItemFrameEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 
@@ -66,6 +71,23 @@ public class PacketHandling implements ModInitializer {
                                 String trimmed = term.trim().toLowerCase();
                                 if (itemName.contains(trimmed) || itemId.contains(trimmed)) {
                                     return true;
+                                }
+                            }
+
+                            // Search by tag
+                            // If item in item frame is in the tag searched, add it to the list to glow
+                            if (payload.query().startsWith("#")) {
+                                String tagSearch = payload.query().substring(1);
+                                RegistryWrapper.WrapperLookup lookup = world.getRegistryManager();
+                                RegistryWrapper<Item> itemRegistry = lookup.getOrThrow(RegistryKeys.ITEM);
+
+                                for (TagKey<Item> tagKey : itemRegistry.streamTagKeys().toList()) {
+                                    Identifier id = tagKey.id();
+                                    if (id.getPath().toLowerCase().contains(tagSearch) || id.toString().toLowerCase().contains(tagSearch)) {
+                                        if (stack.isIn(tagKey)) {
+                                            return true;
+                                        }
+                                    }
                                 }
                             }
 

@@ -528,7 +528,8 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             for (TagKey<Item> tagKey : itemRegistry.streamTagKeys().toList()) {
                 if (stack.isIn(tagKey)) {
                     // Add each tag to the query hovered
-                    originalTooltip.add(1, Text.literal("#" + tagKey.id()).formatted(Formatting.LIGHT_PURPLE));
+                    String tagString = tagKey.id().getNamespace().equals("c") ? "#fabric:" + tagKey.id().getPath() : "#" + tagKey.id();
+                    originalTooltip.add(1, Text.literal(tagString).formatted(Formatting.LIGHT_PURPLE));
                     foundTags = true;
                 }
             }

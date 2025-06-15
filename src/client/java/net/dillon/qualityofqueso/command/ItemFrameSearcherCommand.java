@@ -91,7 +91,9 @@ public class ItemFrameSearcherCommand {
      * Executes the command and makes respective item frames glow.
      */
     private static int execute(CommandContext<ServerCommandSource> context, String query, boolean clear, int timer, int radius) {
-        if (timer == 0) {
+        if (clear) {
+            context.getSource().sendFeedback(() -> Text.translatable("qualityofqueso.item_frame_searcher.executed.clear", radius), true);
+        } else if (timer == 0) {
             context.getSource().sendFeedback(() -> Text.translatable("qualityofqueso.item_frame_searcher.executed.without_timer", query, radius), true);
         } else {
             context.getSource().sendFeedback(() -> Text.translatable("qualityofqueso.item_frame_searcher.executed.with_timer", query, radius, timer), true);
