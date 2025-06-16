@@ -3,7 +3,6 @@ package net.dillon.qualityofqueso.mixin;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.dillon.qualityofqueso.keybind.ModKeybinds;
 import net.dillon.qualityofqueso.main.QualityOfQueso;
-import net.dillon.qualityofqueso.option.ModOptions;
 import net.dillon.qualityofqueso.screen.gui.SensitiveButton;
 import net.dillon.qualityofqueso.util.ModTexts;
 import net.fabricmc.api.EnvType;
@@ -714,7 +713,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
      */
     @Inject(method = "onMouseClick(Lnet/minecraft/screen/slot/Slot;IILnet/minecraft/screen/slot/SlotActionType;)V", at = @At("HEAD"))
     private void closeButtonOnClickOutOfBounds(Slot slot, int slotId, int button, SlotActionType actionType, CallbackInfo ci) {
-        if (ModOptions.OPTIONS.betterGuiExit && this.getScreenHandler().getCursorStack().isEmpty() && button == 0 && slot == null) {
+        if (QualityOfQueso.options().betterGuiExit && this.getScreenHandler().getCursorStack().isEmpty() && button == 0 && slot == null) {
             this.close();
         }
     }

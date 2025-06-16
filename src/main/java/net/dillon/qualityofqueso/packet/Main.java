@@ -1,9 +1,12 @@
 package net.dillon.qualityofqueso.packet;
 
+import net.dillon.qualityofqueso.option.ModServerOptions;
 import net.dillon.qualityofqueso.util.GlowCountdown;
+import net.fabricmc.api.EnvType;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.decoration.ItemFrameEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -19,20 +22,36 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-public class PacketHandling implements ModInitializer {
+public final class Main implements ModInitializer {
+    private static final Logger LOGGER = LoggerFactory.getLogger("Quality of QUESO");
 
     @Override
     public void onInitialize() {
-        registerGlowSearchPacket();
+        // Register packet on SERVER environment ONLY IF it should be enabled
+        if (FabricLoader.getInstance().getEnvironmentType().equals(EnvType.SERVER)) {
+            if (ModServerOptions.SERVER_OPTIONS.getInstance().itemFrameSearchingOnServer) {
+                registerGlowSearchPacketReceiver();
+                info("Registered glowing packet on SERVER.");
+            } else {
+                info("Did NOT register glowing packet, \"itemFrameSearchingOnServer\" is disabled. No-one can use this feature unless enabled here on server environment.");
+            }
+        }
+        // Only register packet on DEDICATED SERVER (if the player is in singleplayer or owner has the mod installed)
+        else if (!FabricLoader.getInstance().getEnvironmentType().equals(EnvType.SERVER)) {
+            registerGlowSearchPacketReceiver();
+            info("Registered glowing packet on DEDICATED SERVER.");
+        }
     }
 
     /**
      * Registers the {@link CustomPayload} for making item frames glow.
      */
-    private static void registerGlowSearchPacket() {
+    private static void registerGlowSearchPacketReceiver() {
         PayloadTypeRegistry.playC2S().register(
                 GlowSearchC2SPayload.ID,
                 GlowSearchC2SPayload.CODEC
@@ -113,5 +132,12 @@ public class PacketHandling implements ModInitializer {
                     }
                 }
         );
+    }
+
+    /**
+     * Sends a message to console.
+     */
+    public static void info(String message) {
+        LOGGER.info(message);
     }
 }

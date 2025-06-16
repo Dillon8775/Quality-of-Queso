@@ -1,7 +1,6 @@
 package net.dillon.qualityofqueso.mixin;
 
 import net.dillon.qualityofqueso.main.QualityOfQueso;
-import net.dillon.qualityofqueso.option.ModOptions;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
@@ -49,7 +48,7 @@ public abstract class CreativeInventoryScreenMixin extends HandledScreen<Creativ
 	 */
 	@Inject(method = "onMouseClick(Lnet/minecraft/screen/slot/Slot;IILnet/minecraft/screen/slot/SlotActionType;)V", at = @At("HEAD"))
 	private void closeButtonOnClickOutOfBounds(Slot slot, int slotId, int button, SlotActionType actionType, CallbackInfo ci) {
-		if (ModOptions.OPTIONS.betterGuiExit && this.handler.getCursorStack().isEmpty() && button == 0 && slot == null) {
+		if (QualityOfQueso.options().betterGuiExit && this.handler.getCursorStack().isEmpty() && button == 0 && slot == null) {
 			this.close();
 		}
 	}
@@ -60,7 +59,7 @@ public abstract class CreativeInventoryScreenMixin extends HandledScreen<Creativ
 	 */
 	@Overwrite
 	public boolean charTyped(char chr, int modifiers) {
-		if (this.ignoreTypedCharacter || (!(ModOptions.OPTIONS.betterSearching) && selectedTab.getType() != ItemGroup.Type.SEARCH)) {
+		if (this.ignoreTypedCharacter || (!(QualityOfQueso.options().betterSearching) && selectedTab.getType() != ItemGroup.Type.SEARCH)) {
 			return false;
 		} else {
 			if (QualityOfQueso.options().betterSearching) {

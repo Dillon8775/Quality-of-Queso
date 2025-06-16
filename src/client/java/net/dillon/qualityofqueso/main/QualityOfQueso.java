@@ -3,13 +3,12 @@ package net.dillon.qualityofqueso.main;
 import net.dillon.qualityofqueso.command.ItemFrameSearcherCommand;
 import net.dillon.qualityofqueso.keybind.ModKeybinds;
 import net.dillon.qualityofqueso.option.ModOptions;
+import net.dillon.qualityofqueso.packet.Main;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import org.lwjgl.glfw.GLFW;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -18,7 +17,6 @@ public class QualityOfQueso implements ClientModInitializer {
 	public static final String TITLE = "qualityofqueso.gui.options.title";
 	public static String SAVED_TEXT = "";
 	public static String SAVED_ITEM_FRAME_TEXT = "";
-	private static final Logger LOGGER = LoggerFactory.getLogger("Quality of QUESO");
 	public static final List<Integer> keys = List.of(GLFW.GLFW_KEY_T, GLFW.GLFW_KEY_E);
 	public static final List<Integer> disallowedKeys = List.of(
 			GLFW.GLFW_KEY_1,
@@ -47,21 +45,13 @@ public class QualityOfQueso implements ClientModInitializer {
 		CommandRegistrationCallback.EVENT.register((commandDispatcher, commandRegistryAccess, registrationEnvironment) -> {
 			ItemFrameSearcherCommand.register(commandDispatcher, commandRegistryAccess);
 		});
-		ModOptions.loadConfig();
-		QualityOfQueso.info("Quality of Queso has successfully loaded!");
-	}
-
-	/**
-	 * Sends a message to console.
-	 */
-	public static void info(String message) {
-		LOGGER.info(message);
+		Main.info("Quality of Queso has successfully loaded!");
 	}
 
 	/**
 	 * Returns the options.
 	 */
 	public static ModOptions options() {
-		return ModOptions.OPTIONS;
+		return ModOptions.OPTIONS.getInstance();
 	}
 }

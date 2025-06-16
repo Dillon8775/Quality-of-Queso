@@ -106,7 +106,7 @@ public class ItemFrameSearchScreen extends Screen {
     @Override
     public void close() {
         QualityOfQueso.SAVED_ITEM_FRAME_TEXT = this.searchField.getText();
-        ModOptions.saveConfig();
+        ModOptions.OPTIONS.save();
         super.close();
     }
 

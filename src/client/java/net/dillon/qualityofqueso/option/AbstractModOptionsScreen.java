@@ -1,6 +1,6 @@
 package net.dillon.qualityofqueso.option;
 
-import net.dillon.qualityofqueso.main.QualityOfQueso;
+import net.dillon.qualityofqueso.packet.Main;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -53,8 +53,8 @@ public abstract class AbstractModOptionsScreen extends GameOptionsScreen {
      */
     @Override
     public void close() {
-        ModOptions.saveConfig();
-        QualityOfQueso.info("Flushed changes.");
+        ModOptions.OPTIONS.save();
+        Main.info("Saved changes.");
         super.close();
     }
 
