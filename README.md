@@ -1,4 +1,4 @@
-**# ![https://modrinth.com/mod/fabric-api](https://cdn.modrinth.com/data/cached_images/deafc20c4eb1ab02e3f8ac364a61aa78e90ee056.png)
+# ![https://modrinth.com/mod/fabric-api](https://cdn.modrinth.com/data/cached_images/deafc20c4eb1ab02e3f8ac364a61aa78e90ee056.png)
 
 # A quality of life mod, with a bunch of cool _QOL_ features.
 
