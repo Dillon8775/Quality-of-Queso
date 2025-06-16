@@ -3,6 +3,9 @@ package net.dillon.qualityofqueso.option;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
+/**
+ * Client-side options, only loaded on client side.
+ */
 @Environment(EnvType.CLIENT)
 public class ModOptions {
     public boolean betterGuiExit = true;

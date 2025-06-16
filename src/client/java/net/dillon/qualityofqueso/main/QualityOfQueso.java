@@ -3,7 +3,7 @@ package net.dillon.qualityofqueso.main;
 import net.dillon.qualityofqueso.command.ItemFrameSearcherCommand;
 import net.dillon.qualityofqueso.keybind.ModKeybinds;
 import net.dillon.qualityofqueso.option.ModOptions;
-import net.dillon.qualityofqueso.packet.Main;
+import net.dillon.qualityofqueso.packet.ServerHandler;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -42,10 +42,19 @@ public class QualityOfQueso implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		ModKeybinds.init();
-		CommandRegistrationCallback.EVENT.register((commandDispatcher, commandRegistryAccess, registrationEnvironment) -> {
-			ItemFrameSearcherCommand.register(commandDispatcher, commandRegistryAccess);
-		});
-		Main.info("Quality of Queso has successfully loaded!");
+		registerCommands();
+		ServerHandler.info("Quality of Queso has successfully loaded!");
+	}
+
+	/**
+	 * Registers the {@code Quality of Queso} commands.
+	 */
+	private static void registerCommands() {
+		if (options().itemFrameSearching) {
+			CommandRegistrationCallback.EVENT.register((commandDispatcher, commandRegistryAccess, registrationEnvironment) -> {
+				ItemFrameSearcherCommand.register(commandDispatcher, commandRegistryAccess);
+			});
+		}
 	}
 
 	/**

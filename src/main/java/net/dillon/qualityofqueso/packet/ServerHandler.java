@@ -10,7 +10,6 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.decoration.ItemFrameEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
@@ -27,9 +26,12 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-public final class Main implements ModInitializer {
+public final class ServerHandler implements ModInitializer {
     private static final Logger LOGGER = LoggerFactory.getLogger("Quality of QUESO");
 
+    /**
+     * Handles server/client conflicts.
+     */
     @Override
     public void onInitialize() {
         // Register packet on SERVER environment ONLY IF it should be enabled
@@ -49,7 +51,7 @@ public final class Main implements ModInitializer {
     }
 
     /**
-     * Registers the {@link CustomPayload} for making item frames glow.
+     * Registers the dedicated server-side payload for receiving the packet to make item frames glow.
      */
     private static void registerGlowSearchPacketReceiver() {
         PayloadTypeRegistry.playC2S().register(

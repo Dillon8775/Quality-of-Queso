@@ -21,7 +21,7 @@
       "net.dillon.qualityofqueso.main.QualityOfQueso"
     ],
     "main": [
-      "net.dillon.qualityofqueso.packet.Main"
+      "net.dillon.qualityofqueso.packet.ServerHandler"
     ],
     "modmenu": [
       "net.dillon.qualityofqueso.screen.impl.ModMenuImpl"

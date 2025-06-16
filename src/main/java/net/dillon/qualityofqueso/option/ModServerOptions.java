@@ -3,6 +3,9 @@ package net.dillon.qualityofqueso.option;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
+/**
+ * Server-side options, only loaded on server-side.
+ */
 @Environment(EnvType.SERVER)
 public class ModServerOptions {
     public boolean itemFrameSearchingOnServer = true;
