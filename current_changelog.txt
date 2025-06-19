@@ -1,7 +1,2 @@
-- Added item frame searching! Press I to open the Item Frame Searching GUI, which will allow you to search item frames by the item that they hold.
-- If the item frame contains the item that you searched, that item frame will glow.
-- You can set how long you want the item frame to remain glowing if you'd like.
-- You can also remove glow from all item frames.
-- You can also do /itemframesearcher to search for item frames if you don't want to use the GUI (GUI is simpler to understand, command is for fast people, hehe).
-- Revamped configuration screen.
-- More optimizations.
+- Updated to 1.21.6!
+- Bug fixes and optimizations.

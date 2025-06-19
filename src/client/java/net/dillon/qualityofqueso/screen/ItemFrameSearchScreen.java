@@ -35,7 +35,7 @@ public class ItemFrameSearchScreen extends Screen {
      */
     @Override
     protected void init() {
-        this.searchField = new TextFieldWidget(this.textRenderer, this.width / 2 - 100, this.height / 2 - 24, 200, 20, Text.literal("Search for query..."));
+        this.searchField = new TextFieldWidget(this.textRenderer, this.width / 2 - 100, this.height / 2 - 24, 200, 20, null);
         this.searchField.setText(QualityOfQueso.SAVED_ITEM_FRAME_TEXT);
         this.searchField.setMaxLength(50);
         this.searchButton = this.addDrawableChild(ButtonWidget.builder(Text.translatable("qualityofqueso.gui.search"), button -> {
@@ -63,7 +63,7 @@ public class ItemFrameSearchScreen extends Screen {
     public void render(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
         this.searchField.render(context, mouseX, mouseY, deltaTicks);
         super.render(context, mouseX, mouseY, deltaTicks);
-        context.drawTextWithShadow(this.textRenderer, Text.translatable("qualityofqueso.gui.search_item_frames"), this.width / 2 - 135, this.height / 2 - 64, 0xFFFFFF);
+        context.drawTextWithShadow(this.textRenderer, Text.translatable("qualityofqueso.gui.search_item_frames"), this.width / 2 - 135, this.height / 2 - 64, -2039584);
         this.searchButton.active = !this.searchField.getText().isEmpty();
         if (!this.searchField.getText().isEmpty() && this.searchButton.isHovered()) {
             context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.search.tooltip", this.searchField.getText()), 200), mouseX, mouseY);

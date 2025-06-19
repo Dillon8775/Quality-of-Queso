@@ -4,7 +4,8 @@ import net.dillon.qualityofqueso.util.GlowCountdown;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.decoration.AbstractDecorationEntity;
 import net.minecraft.entity.decoration.ItemFrameEntity;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -50,16 +51,16 @@ public abstract class ItemFrameEntityMixin extends AbstractDecorationEntity impl
     /**
      * Writes the glow ticks remaining to NBT.
      */
-    @Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
-    private void writeGlowTicks(NbtCompound nbt, CallbackInfo ci) {
-        nbt.putInt("GlowTicksRemaining", this.glowTicksRemaining);
+    @Inject(method = "writeCustomData", at = @At("TAIL"))
+    private void writeGlowTicks(WriteView view, CallbackInfo ci) {
+        view.putInt("GlowTicksRemaining", this.glowTicksRemaining);
     }
 
     /**
      * Reads the glow ticks remaining to NBT.
      */
-    @Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
-    private void readGlowTicks(NbtCompound nbt, CallbackInfo ci) {
-        this.glowTicksRemaining = nbt.getInt("GlowTicksRemaining").orElse(-1);
+    @Inject(method = "readCustomData", at = @At("TAIL"))
+    private void readGlowTicks(ReadView view, CallbackInfo ci) {
+        this.glowTicksRemaining = view.getInt("GlowTicksRemaining", -1);
     }
 }

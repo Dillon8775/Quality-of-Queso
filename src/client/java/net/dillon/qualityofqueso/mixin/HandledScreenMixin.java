@@ -8,13 +8,13 @@ import net.dillon.qualityofqueso.util.ModTexts;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.*;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.component.type.ItemEnchantmentsComponent;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -104,13 +104,12 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
 
             if (QualityOfQueso.options().chestSearch) {
                 int barWidth = (int)((double)this.backgroundWidth * 0.6);
-                this.searchField = new TextFieldWidget(MinecraftClient.getInstance().textRenderer, this.width / 2 + barWidth / 2 - 64, this.y + this.titleY - 2, 90, 12, null);
+                this.searchField = new TextFieldWidget(this.textRenderer, this.width / 2 + barWidth / 2 - 64, this.y + this.titleY - 2, 90, 12, null);
                 if (QualityOfQueso.options().saveSearchText) {
                     this.searchField.setText(QualityOfQueso.SAVED_TEXT);
                 }
                 this.searchField.setMaxLength(50);
-                this.searchField.setDrawsBackground(true);
-                this.searchField.setEditableColor(16777215);
+                this.searchField.setPlaceholder(Text.translatable("qualityofqueso.gui.search.placeholder").formatted(Formatting.ITALIC).formatted(Formatting.GRAY));
                 this.addSelectableChild(this.searchField);
             }
             if (QualityOfQueso.options().inventorySorting) {
@@ -174,7 +173,6 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
         }
     }
 
-
     @Unique
     private void sendClickSlotPacket(int slotIndex, SlotActionType slotActionType) {
         MinecraftClient client = MinecraftClient.getInstance();
@@ -191,7 +189,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
         ItemStack cursorStack = handler.getCursorStack();
         ItemStack clickedStack = handler.getSlot(slotIndex).getStack();
 
-        ComponentChangesHash.ComponentHasher hasher = networkHandler.method_68823();
+        ComponentChangesHash.ComponentHasher hasher = networkHandler.getComponentHasher();
 
         ItemStackHash cursorHash = ItemStackHash.fromItemStack(cursorStack, hasher);
         ItemStackHash clickedHash = ItemStackHash.fromItemStack(clickedStack, hasher);
@@ -213,19 +211,36 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     }
 
     /**
+     * Grays out any containerSlot which doesn't contain the query name being searched.
+     */
+    @Inject(method = "renderMain", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ingame/HandledScreen;drawSlotHighlightFront(Lnet/minecraft/client/gui/DrawContext;)V", shift = At.Shift.AFTER))
+    private void grayOutSlot(DrawContext context, int mouseX, int mouseY, float deltaTicks, CallbackInfo ci) {
+        if (this.searchField != null && !this.getSearchFieldText().isEmpty()) {
+            for (int i = 0; i < this.getInventorySize(); i++) {
+                Slot slot = this.getScreenHandler().getSlot(i);
+                // If query not found from search result, the slot becomes unavailable
+                if (!this.search(this.getSearchFieldText(), slot)) {
+                    this.makeSlotUnavailable(context, slot);
+                }
+            }
+        }
+    }
+
+    /**
      * Handles rendering, such as the search field and transferring inventory button textures.
      */
-    @Inject(method = "render", at = @At("TAIL"))
-    private void renderField(DrawContext context, int mouseX, int mouseY, float deltaTicks, CallbackInfo ci) {
-        if (QualityOfQueso.options().chestSearch && this.searchField != null) {
-            // Render search field and determine if transferContainerButton should render as active
+    @Inject(method = "renderMain", at = @At("TAIL"))
+    private void renderWidgets(DrawContext context, int mouseX, int mouseY, float deltaTicks, CallbackInfo ci) {
+        // Render the search field
+        if (this.searchField != null) {
             this.searchField.render(context, mouseX, mouseY, deltaTicks);
             if (this.searchField.isHovered()) {
                 context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.chest_search.search_filtering"), 200), mouseX, mouseY);
             }
-            this.shouldButtonBeActive(false, null, this.transferContainerButton);
         }
         if (QualityOfQueso.options().inventorySorting && this.isValidScreen()) {
+            // Determine if transfer container button should be active
+            this.shouldButtonBeActive(false, null, this.transferContainerButton);
             PlayerInventory playerInventory = this.client.player.getInventory();
             // Initialize transfer inventory button
             ClickableWidget transferInventoryButton = this.addSelectableChild(
@@ -311,22 +326,6 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     }
 
     /**
-     * Grays out any containerSlot which doesn't contain the query name being searched.
-     */
-    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ingame/HandledScreen;drawForeground(Lnet/minecraft/client/gui/DrawContext;II)V", shift = At.Shift.AFTER))
-    private void grayOutSlot(DrawContext context, int mouseX, int mouseY, float deltaTicks, CallbackInfo ci) {
-        if (this.searchField != null && !this.getSearchFieldText().isEmpty()) {
-            for (int i = 0; i < this.getInventorySize(); i++) {
-                Slot slot = this.getScreenHandler().getSlot(i);
-                // If query not found from search result, the slot becomes unavailable
-                if (!this.search(this.getSearchFieldText(), slot)) {
-                    this.makeSlotUnavailable(context, slot);
-                }
-            }
-        }
-    }
-
-    /**
      * @return the {@code searchField namespace} text.
      */
     @Unique
@@ -380,7 +379,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
      */
     @Unique
     private void makeSlotUnavailable(DrawContext context, Slot slot) {
-        context.fillGradient(RenderLayer.getGuiOverlay(), slot.x, slot.y, slot.x + 16, slot.y + 16, -1275068416, -1275068416, 0);
+        context.fillGradient(slot.x, slot.y, slot.x + 16, slot.y + 16, -1275068416, -1275068416);
     }
 
     /**
@@ -388,7 +387,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
      */
     @Unique
     private void renderTransferButtonTexture(String id, ClickableWidget buttonReference, DrawContext context) {
-        context.drawTexture(RenderLayer::getGuiTextured, Identifier.of("qualityofqueso:textures/gui/"+id+".png"), buttonReference.getX() - 1, buttonReference.getY() - 1, 0.0F, 0.0F, 12, 12, 12, 12);
+        context.drawTexture(RenderPipelines.GUI_TEXTURED, Identifier.of("qualityofqueso:textures/gui/"+id+".png"), buttonReference.getX() - 1, buttonReference.getY() - 1, 0.0F, 0.0F, 12, 12, 12, 12);
     }
 
     /**

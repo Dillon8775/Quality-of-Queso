@@ -62,7 +62,7 @@ public final class ServerHandler implements ModInitializer {
         ServerPlayNetworking.registerGlobalReceiver(GlowSearchC2SPayload.ID,
                 (payload, context) -> {
                     ServerPlayerEntity player = context.player();
-                    ServerWorld world = player.getServerWorld();
+                    ServerWorld world = player.getWorld();
 
                     Vec3d playerPos = player.getPos();
                     double radius = payload.radius(); // All item frames within the specified radius will be affected
