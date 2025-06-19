@@ -1,8 +1,8 @@
-# ![https://modrinth.com/mod/fabric-api](https://cdn.modrinth.com/data/cached_images/deafc20c4eb1ab02e3f8ac364a61aa78e90ee056.png)
+# [![Requires Fabric API](https://cdn.modrinth.com/data/cached_images/8bd6d7ff822dc33ffb55af6cc0c7062cec53e9e3.png)](https://modrinth.com/mod/fabric-api)
 
 # A quality of life mod, with a bunch of cool _QOL_ features.
 
-### Currently compatible with Minecraft versions **1.21.2-1.21.5.**
+### Currently compatible with Minecraft versions **1.21.2-1.21.6.**
 
 ---
 
