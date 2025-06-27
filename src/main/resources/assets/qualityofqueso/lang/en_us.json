@@ -36,6 +36,8 @@
   "qualityofqueso.gui.transfer_inventory_button.with_cursor_stack": "Move all \"%ss\" to this container",
   "qualityofqueso.gui.transfer_inventory_button.with_search_query": "Move all items containing \"%s\" to this container",
   "qualityofqueso.gui.transfer_inventory_button": "Move all items in inventory to this container",
+  "qualityofqueso.gui.include_hotbar": "Including hotbar when moving items\nClick to disable",
+  "qualityofqueso.gui.exclude_hotbar": "Ignoring hotbar when moving items\nClick to include hotbar",
 
   "qualityofqueso.quick_equip": "Quick Equip",
   "qualityofqueso.open_item_frame_search_gui": "Open Item Frame Search GUI",

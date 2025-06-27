@@ -45,7 +45,8 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
                 protected SimpleOption<?>[] options() {
                     return new SimpleOption[]{
                             ModListOptions.INVENTORY_SORTING,
-                            ModListOptions.REQUIRE_ALT_TO_MOVE
+                            ModListOptions.REQUIRE_ALT_TO_MOVE,
+                            ModListOptions.INCLUDE_HOTBAR
                     };
                 }
             });

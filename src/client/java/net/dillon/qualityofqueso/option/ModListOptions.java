@@ -37,6 +37,9 @@ public class ModListOptions {
     public static final SimpleOption<Boolean> REQUIRE_ALT_TO_MOVE = new SimpleOption<>("qualityofqueso.options.require_alt_to_move", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.require_alt_to_move.tooltip")),
             (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, QualityOfQueso.options().requireAltToMove, value -> QualityOfQueso.options().requireAltToMove = value);
 
+    public static final SimpleOption<Boolean> INCLUDE_HOTBAR = new SimpleOption<>("qualityofqueso.options.include_hotbar", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.include_hotbar.tooltip")),
+            (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, QualityOfQueso.options().includeHotbar, value -> QualityOfQueso.options().includeHotbar = value);
+
     public static final SimpleOption<Boolean> QUICK_EQUIP = new SimpleOption<>("qualityofqueso.options.quick_equip", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.quick_equip.tooltip", parseKeyAsString(ModKeybinds.QUICK_EQUIP.boundKey.toString().toUpperCase()))),
             (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, QualityOfQueso.options().quickEquip, value -> QualityOfQueso.options().quickEquip = value);
 

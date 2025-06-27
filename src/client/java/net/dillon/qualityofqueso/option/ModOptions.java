@@ -15,6 +15,7 @@ public class ModOptions {
     public boolean saveSearchText = false;
     public boolean inventorySorting = true;
     public boolean requireAltToMove = true;
+    public boolean includeHotbar = true;
     public boolean quickEquip = true;
     public boolean itemFrameSearching = true;
     public int itemFrameSearchTimer = 0;
