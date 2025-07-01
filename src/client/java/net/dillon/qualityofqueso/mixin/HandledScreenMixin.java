@@ -152,7 +152,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             ItemStack fromStack = fromSlot.getStack();
 
             if (!options().includeHotbar && !reverse && fromSlot.id >= 81 && fromSlot.id <= 89) {
-                continue; // skip slot if exclude hotbar is on and slot is anywhere from 0-8 (hotbar slots)
+                continue; // skip slot if exclude hotbar is on and slot is anywhere from 81-89 (hotbar slots, idk why 81 through 89 lol)
             } else if (this.searchField != null && !this.getSearchFieldText().isEmpty() && !this.search(this.getSearchFieldText(), fromSlot)) {
                 continue; // skip container slot if query not found via search
             }
@@ -402,7 +402,15 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
      */
     @Unique
     private int getTransferButtonY() {
-        return this.inventory.size() > 27 ? this.y + this.titleY + 120 : this.y + this.titleY + 66;
+        int y = 120; // 6 rows
+        if (this.inventory.size() == 27) { // 3 rows
+            y = 66;
+        } else if (this.inventory.size() == 36) { // 4 rows
+            y = 84;
+        } else if (this.inventory.size() == 45) { // 5 rows
+            y = 102;
+        }
+        return this.y + this.titleY + y;
     }
 
     /**
@@ -503,8 +511,10 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     private boolean search(String searchQuery, Slot slot) {
         ItemStack stack = slot.getStack();
 
-        // If slot is empty, return false (slot is unavailable)
-        if (stack.isEmpty()) {
+        // If slot is empty, eturn false (slot is unavailable)
+        // If include hotbar is off, return false if hotbar slot
+        if (stack.isEmpty() ||
+                (!options().includeHotbar && options().searchInventory && slot.id >= 81 && slot.id <= 89)) {
             return false;
         }
 
