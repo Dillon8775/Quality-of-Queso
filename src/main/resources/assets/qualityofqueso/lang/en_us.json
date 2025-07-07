@@ -60,6 +60,8 @@
   "qualityofqueso.options.inventory_sorting.tooltip": "Adds two buttons to transfer items from §ocontainer -> inventory§r§f and vise-versa.\n\nTo transfer items from §oinventory -> container§r§f, you must hold down the ALT key in order to activate the button. This is here to prevent the player from accidentally clicking the button and unintentionally sending their whole inventory to the container.",
   "qualityofqueso.options.require_alt_to_move": "Require ALT to Move",
   "qualityofqueso.options.require_alt_to_move.tooltip": "Unlocks the §oinventory -> container§r§f button if the holds down the ALT key. Disable this if you do §onot§r§f want to press the ALT key.",
+  "qualityofqueso.options.include_hotbar": "Include Hotbar",
+  "qualityofqueso.options.include_hotbar.tooltip": "Allows you to include/exclude all items from the hotbar when transferring items from §oinventory -> container.",
   "qualityofqueso.options.quick_equip": "Quick Equip",
   "qualityofqueso.options.quick_equip.tooltip": "Quickly equips the hovered item to the respective equipment slot.\n\nDefault Key = B\n§lBounded Key = %s §r§f\nYou can change this in the controls settings.",
   "qualityofqueso.options.item_frame_searching": "Item Frame Searching",

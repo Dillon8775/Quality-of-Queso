@@ -151,8 +151,8 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             Slot fromSlot = screen.getScreenHandler().getSlot(i);
             ItemStack fromStack = fromSlot.getStack();
 
-            if (!options().includeHotbar && !reverse && fromSlot.id >= 81 && fromSlot.id <= 89) {
-                continue; // skip slot if exclude hotbar is on and slot is anywhere from 81-89 (hotbar slots, idk why 81 through 89 lol)
+            if (!options().includeHotbar && !reverse && this.isValidSlot(screen, fromSlot.id)) {
+                continue; // skip slot if exclude hotbar is on and slot is in hotbar
             } else if (this.searchField != null && !this.getSearchFieldText().isEmpty() && !this.search(this.getSearchFieldText(), fromSlot)) {
                 continue; // skip container slot if query not found via search
             }
@@ -514,7 +514,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
         // If slot is empty, eturn false (slot is unavailable)
         // If include hotbar is off, return false if hotbar slot
         if (stack.isEmpty() ||
-                (!options().includeHotbar && options().searchInventory && slot.id >= 81 && slot.id <= 89)) {
+                (!options().includeHotbar && options().searchInventory && this.isValidSlot(this.screen, slot.id))) {
             return false;
         }
 
@@ -734,6 +734,16 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                 cir.setReturnValue(true);
             }
         }
+    }
+
+    /**
+     * @return {@code true} if the slot is valid to move.
+     */
+    @Unique
+    private boolean isValidSlot(HandledScreen<?> screen, int slotIndex) {
+        int totalSlots = screen.getScreenHandler().slots.size();
+        // If we're in the last 9 slots and hotbar is disabled, return false
+        return slotIndex >= totalSlots - 9;
     }
 
     /**

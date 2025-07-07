@@ -1,2 +1,4 @@
+- Support for 1.21.7!
 - Added support for container screens with sizes of 3, 4, 5, and 6.
 - Added Include Hotbar button, which allows you to include/exclude your hotbar from the transferring of items from inventory -> chest.
+- Bug fixes.
