@@ -42,9 +42,13 @@
   "qualityofqueso.quick_equip": "Quick Equip",
   "qualityofqueso.open_item_frame_search_gui": "Open Item Frame Search GUI",
 
-  "qualityofqueso.item_frame_searcher.executed.without_timer": "Searched item frames containing \"%s\" within a %s block radius.",
-  "qualityofqueso.item_frame_searcher.executed.with_timer": "Searched item frames containing \"%s\" within a %s block radius, removing glow after %s second(s).",
-  "qualityofqueso.item_frame_searcher.executed.clear": "Removed glow from item frames within a %s block radius.",
+  "qualityofqueso.item_frame_searcher_command.executed.without_timer": "Searched item frames containing \"%s\" within a %s block radius.",
+  "qualityofqueso.item_frame_searcher_command.executed.with_timer": "Searched item frames containing \"%s\" within a %s block radius, removing glow after %s second(s).",
+  "qualityofqueso.item_frame_searcher_command.executed.clear": "Removed glow from item frames within a %s block radius.",
+  "qualityofqueso.item_frame_searcher.executed.found_none": "Searched %s item frames but found none containing \"%s\".",
+  "qualityofqueso.item_frame_searcher.executed.cleared": "Removed glow from %s item frames.",
+  "qualityofqueso.item_frame_searcher.executed.without_timer": "Found %s item frames containing \"%s\" and set glowing indefinitely.",
+  "qualityofqueso.item_frame_searcher.executed.with_timer": "Found %s item frames containing \"%s\" and set glowing for %s seconds.",
 
   "qualityofqueso.options.better_gui_exit": "Better GUI Exit",
   "qualityofqueso.options.better_gui_exit.tooltip": "Close any GUI menu when you click anywhere outside of the GUI screen.\n\nFor example, clicking off of the crafting inventory screen (as long as your cursor isn't holding anything) will close the screen.",

@@ -511,7 +511,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     private boolean search(String searchQuery, Slot slot) {
         ItemStack stack = slot.getStack();
 
-        // If slot is empty, eturn false (slot is unavailable)
+        // If slot is empty, return false (slot is unavailable)
         // If include hotbar is off, return false if hotbar slot
         if (stack.isEmpty() ||
                 (!options().includeHotbar && options().searchInventory && this.isValidSlot(this.screen, slot.id))) {
@@ -572,7 +572,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
      * Renders tag tooltips to all slots if searching by tag {@code searchQuery.startsWith(#)}.
      */
     @Inject(method = "drawMouseoverTooltip", at = @At("HEAD"), cancellable = true)
-    private void allAllItemTagsToTooltip(DrawContext drawContext, int x, int y, CallbackInfo ci) {
+    private void addAllItemTagsToTooltip(DrawContext drawContext, int x, int y, CallbackInfo ci) {
         String searchQuery = this.getSearchFieldText();
         if (this.searchField != null) {
             // Exit if search query doesn't start with #

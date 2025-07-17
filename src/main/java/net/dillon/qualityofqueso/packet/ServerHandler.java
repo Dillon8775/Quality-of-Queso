@@ -18,6 +18,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
@@ -117,19 +118,32 @@ public final class ServerHandler implements ModInitializer {
                         }
                     });
 
+                    int searched = 0;
                     // If item frame is found, make it glow
                     for (ItemFrameEntity frame : nearbyFrames) {
+                        boolean alreadyGlowing = frame.isGlowing();
                         frame.setGlowing(!payload.clear());
+                        searched++; // Add to search count
+                        if (payload.clear() && !alreadyGlowing) {
+                            searched--; // If clearing and the frame wasn't already glowing to begin with, subtract it from searched
+                        }
                         // If payload timer isn't null and not clearing, begin the countdown before the glow effect is removed
                         if (!payload.clear() && payload.timer() != 0) {
                             ((GlowCountdown)frame).startGlowCountdown(payload.timer() * 20);
                         }
                     }
                     if (nearbyFrames.isEmpty()) {
+                        player.sendMessage(Text.translatable("qualityofqueso.item_frame_searcher.executed.found_none", searched, payload.query()), false);
                         player.playSoundToPlayer(SoundEvents.BLOCK_NOTE_BLOCK_BASS.value(), SoundCategory.AMBIENT, 2.0F, 1.0F);
                     } else if (payload.clear()) {
+                        player.sendMessage(Text.translatable("qualityofqueso.item_frame_searcher.executed.cleared", searched), false);
                         player.playSoundToPlayer(SoundEvents.ENTITY_PLAYER_SPLASH, SoundCategory.AMBIENT, 1.0F, 1.0F);
                     } else {
+                        if (payload.timer() == 0) {
+                            player.sendMessage(Text.translatable("qualityofqueso.item_frame_searcher.executed.without_timer", searched, payload.query()), false);
+                        } else {
+                            player.sendMessage(Text.translatable("qualityofqueso.item_frame_searcher.executed.with_timer", searched, payload.query(), payload.timer()), false);
+                        }
                         player.playSoundToPlayer(SoundEvents.ENTITY_ARROW_HIT_PLAYER, SoundCategory.AMBIENT, 1.0F, 1.0F);
                     }
                 }
