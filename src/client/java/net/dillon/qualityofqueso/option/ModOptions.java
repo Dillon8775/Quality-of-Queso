@@ -3,11 +3,15 @@ package net.dillon.qualityofqueso.option;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Client-side options, only loaded on client side.
  */
 @Environment(EnvType.CLIENT)
 public class ModOptions {
+    public boolean enableMod = true;
     public boolean betterGuiExit = true;
     public boolean betterSearching = true;
     public boolean chestSearch = true;
@@ -17,6 +21,7 @@ public class ModOptions {
     public boolean requireAltToMove = true;
     public boolean includeHotbar = true;
     public boolean quickEquip = true;
+    public List<String> blacklistedServers = new ArrayList<>();
     public boolean itemFrameSearching = true;
     public int itemFrameSearchTimer = 0;
     public int itemFrameSearchRadius = 150;

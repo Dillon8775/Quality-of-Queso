@@ -68,6 +68,8 @@
   "qualityofqueso.options.include_hotbar.tooltip": "Allows you to include/exclude all items from the hotbar when transferring items from §oinventory -> container.",
   "qualityofqueso.options.quick_equip": "Quick Equip",
   "qualityofqueso.options.quick_equip.tooltip": "Quickly equips the hovered item to the respective equipment slot.\n\nDefault Key = B\n§lBounded Key = %s §r§f\nYou can change this in the controls settings.",
+  "qualityofqueso.options.blacklisted_servers": "Add blacklisted servers...",
+  "qualityofqueso.options.blacklisted_servers.tooltip": "Add your blacklisted servers here.\n\nBlacklisted servers are servers in which the Quality of Queso mod will be disabled on.\nIf you join a blacklisted server, none of the mod's features will be present.",
   "qualityofqueso.options.item_frame_searching": "Item Frame Searching",
   "qualityofqueso.options.item_frame_searching.tooltip": "Search for an item frame with a specific item inside of it and make it glow.\n\nDefault Key = I\n§lBounded Key = %s §r§f\nPress this key to open the GUI for item frame searching.",
   "qualityofqueso.options.item_frame_search_radius": "Radius",

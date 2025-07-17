@@ -15,6 +15,8 @@ import net.minecraft.util.Formatting;
  */
 @Environment(EnvType.CLIENT)
 public class ModListOptions {
+    public static final SimpleOption<Boolean> ENABLE_MOD = new SimpleOption<>("qualityofqueso.options.enable_mod", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.enable_mod.tooltip")),
+            (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, QualityOfQueso.options().enableMod, value -> QualityOfQueso.options().enableMod = value);
 
     public static final SimpleOption<Boolean> BETTER_GUI_EXIT = new SimpleOption<>("qualityofqueso.options.better_gui_exit", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.better_gui_exit.tooltip")),
             (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, QualityOfQueso.options().betterGuiExit, value -> QualityOfQueso.options().betterGuiExit = value);

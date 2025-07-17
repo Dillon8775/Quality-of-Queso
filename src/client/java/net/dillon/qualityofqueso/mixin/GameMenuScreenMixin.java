@@ -1,6 +1,5 @@
 package net.dillon.qualityofqueso.mixin;
 
-import net.dillon.qualityofqueso.main.QualityOfQueso;
 import net.dillon.qualityofqueso.util.ButtonUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -17,6 +16,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import static net.dillon.qualityofqueso.main.QualityOfQueso.options;
+
 @Environment(EnvType.CLIENT)
 @Mixin(GameMenuScreen.class)
 public class GameMenuScreenMixin extends Screen {
@@ -31,14 +32,14 @@ public class GameMenuScreenMixin extends Screen {
 
     @Inject(method = "init", at = @At("TAIL"))
     private void init(CallbackInfo ci) {
-        if (QualityOfQueso.options().showConfigButton && this.showMenu) {
+        if (options().enableMod && options().showConfigButton && this.showMenu) {
             this.settingsButton = this.addDrawableChild(ButtonUtil.initializeButton(this.client, this, this.width / 2 + 106, this.height / 4 + 72 - 16));
         }
     }
 
     @Inject(method = "render", at = @At("TAIL"))
     private void renderTooltips(DrawContext context, int mouseX, int mouseY, float deltaTicks, CallbackInfo ci) {
-        if (QualityOfQueso.options().showConfigButton && this.showMenu) {
+        if (options().enableMod && options().showConfigButton && this.showMenu) {
             ButtonUtil.drawTooltipAndTexture(context, this.textRenderer, this.settingsButton, mouseX, mouseY);
         }
     }

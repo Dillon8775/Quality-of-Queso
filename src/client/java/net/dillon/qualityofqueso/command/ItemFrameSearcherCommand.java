@@ -3,7 +3,6 @@ package net.dillon.qualityofqueso.command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
-import net.dillon.qualityofqueso.main.QualityOfQueso;
 import net.dillon.qualityofqueso.packet.GlowSearchC2SPayload;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.command.CommandRegistryAccess;
@@ -11,6 +10,8 @@ import net.minecraft.command.argument.ItemStackArgumentType;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
+
+import static net.dillon.qualityofqueso.main.QualityOfQueso.options;
 
 public class ItemFrameSearcherCommand {
 
@@ -20,7 +21,7 @@ public class ItemFrameSearcherCommand {
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess commandRegistryAccess) {
         dispatcher.register(
                 CommandManager.literal("itemframesearcher")
-                        .requires(source -> source.hasPermissionLevel(0))
+                        .requires(source -> options().enableMod && source.hasPermissionLevel(0))
                         .then(
                                 CommandManager.literal("clear")
                                         .executes(
@@ -29,7 +30,7 @@ public class ItemFrameSearcherCommand {
                                                         "",
                                                         true,
                                                         0,
-                                                        QualityOfQueso.options().itemFrameSearchRadius
+                                                        options().itemFrameSearchRadius
                                                 )
                                         )
                                         .then(
@@ -55,7 +56,7 @@ public class ItemFrameSearcherCommand {
                                                                         ItemStackArgumentType.getItemStackArgument(context, "item").getItem().toString(),
                                                                         false,
                                                                         0,
-                                                                        QualityOfQueso.options().itemFrameSearchRadius
+                                                                        options().itemFrameSearchRadius
                                                                 )
                                                         )
                                                         .then(

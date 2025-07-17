@@ -25,6 +25,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.List;
 import java.util.Objects;
 
+import static net.dillon.qualityofqueso.main.QualityOfQueso.options;
+
 @Environment(EnvType.CLIENT)
 @Mixin(CreativeInventoryScreen.class)
 public abstract class CreativeInventoryScreenMixin extends HandledScreen<CreativeInventoryScreen.CreativeScreenHandler> {
@@ -48,7 +50,7 @@ public abstract class CreativeInventoryScreenMixin extends HandledScreen<Creativ
 	 */
 	@Inject(method = "onMouseClick(Lnet/minecraft/screen/slot/Slot;IILnet/minecraft/screen/slot/SlotActionType;)V", at = @At("HEAD"))
 	private void closeButtonOnClickOutOfBounds(Slot slot, int slotId, int button, SlotActionType actionType, CallbackInfo ci) {
-		if (QualityOfQueso.options().betterGuiExit && this.handler.getCursorStack().isEmpty() && button == 0 && slot == null) {
+		if (options().enableMod && options().betterGuiExit && this.handler.getCursorStack().isEmpty() && button == 0 && slot == null) {
 			this.close();
 		}
 	}
@@ -59,10 +61,10 @@ public abstract class CreativeInventoryScreenMixin extends HandledScreen<Creativ
 	 */
 	@Overwrite
 	public boolean charTyped(char chr, int modifiers) {
-		if (this.ignoreTypedCharacter || (!(QualityOfQueso.options().betterSearching) && selectedTab.getType() != ItemGroup.Type.SEARCH)) {
+		if (this.ignoreTypedCharacter || (!(options().betterSearching) && selectedTab.getType() != ItemGroup.Type.SEARCH)) {
 			return false;
 		} else {
-			if (QualityOfQueso.options().betterSearching) {
+			if (options().enableMod && options().betterSearching) {
 				this.setSelectedTab(ItemGroups.getSearchGroup());
 			}
 			String string = this.searchBox.getText();
@@ -83,7 +85,7 @@ public abstract class CreativeInventoryScreenMixin extends HandledScreen<Creativ
 	 */
 	@Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
 	private void allowCertainChars(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-		if (QualityOfQueso.options().betterSearching) {
+		if (options().enableMod && options().betterSearching) {
 			if (this.focusedSlot != null && this.focusedSlot.getStack() != ItemStack.EMPTY && !this.searchBox.isFocused()) {
 				this.ignoreTypedCharacter = true;
 				cir.setReturnValue(super.keyPressed(keyCode, scanCode, modifiers));

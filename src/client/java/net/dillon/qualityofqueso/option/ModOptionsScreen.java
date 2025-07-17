@@ -1,6 +1,10 @@
 package net.dillon.qualityofqueso.option;
 
 import net.dillon.qualityofqueso.main.QualityOfQueso;
+import net.dillon.qualityofqueso.option.options.ChestSearchingOptionsScreen;
+import net.dillon.qualityofqueso.option.options.InventorySortingOptionsScreen;
+import net.dillon.qualityofqueso.option.options.ItemFrameSearchingOptionsScreen;
+import net.dillon.qualityofqueso.option.options.OtherOptionsScreen;
 import net.dillon.qualityofqueso.screen.ItemFrameSearchScreen;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -27,42 +31,15 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
         super.init();
         List<ClickableWidget> buttons = new ArrayList<>();
         this.chestSearchingOptions = this.addDrawableChild(ButtonWidget.builder(Text.translatable("qualityofqueso.gui.chest_searching_options"), button -> {
-            this.client.setScreen(new AbstractModOptionsScreen(this, Text.translatable("qualityofqueso.gui.chest_searching_options")) {
-                @Override
-                protected SimpleOption<?>[] options() {
-                    return new SimpleOption[]{
-                            ModListOptions.CHEST_SEARCH,
-                            ModListOptions.SEARCH_INVENTORY,
-                            ModListOptions.SAVE_SEARCH_TEXT
-                    };
-                }
-            });
+            this.client.setScreen(new ChestSearchingOptionsScreen(this));
         }).build());
         buttons.add(this.chestSearchingOptions);
         this.inventorySortingOptions = this.addDrawableChild(ButtonWidget.builder(Text.translatable("qualityofqueso.gui.inventory_sorting_options"), button -> {
-            this.client.setScreen(new AbstractModOptionsScreen(this, Text.translatable("qualityofqueso.gui.inventory_sorting_options")) {
-                @Override
-                protected SimpleOption<?>[] options() {
-                    return new SimpleOption[]{
-                            ModListOptions.INVENTORY_SORTING,
-                            ModListOptions.REQUIRE_ALT_TO_MOVE,
-                            ModListOptions.INCLUDE_HOTBAR
-                    };
-                }
-            });
+            this.client.setScreen(new InventorySortingOptionsScreen(this));
         }).build());
         buttons.add(this.inventorySortingOptions);
         this.itemFrameSearchingOptions = this.addDrawableChild(ButtonWidget.builder(Text.translatable("qualityofqueso.gui.item_frame_searching_options"), button -> {
-            this.client.setScreen(new AbstractModOptionsScreen(this, Text.translatable("qualityofqueso.gui.item_frame_searching_options")) {
-                @Override
-                protected SimpleOption<?>[] options() {
-                    return new SimpleOption[]{
-                            ModListOptions.ITEM_FRAME_SEARCHING,
-                            ModListOptions.ITEM_FRAME_SEARCH_TIMER,
-                            ModListOptions.ITEM_FRAME_SEARCH_RADIUS
-                    };
-                }
-            });
+            this.client.setScreen(new ItemFrameSearchingOptionsScreen(this));
         }).build());
         buttons.add(this.itemFrameSearchingOptions);
         this.openItemFrameSearchGUI = this.addDrawableChild(ButtonWidget.builder(Text.translatable("qualityofqueso.gui.open_item_frame_search_gui"), button -> {
@@ -72,17 +49,7 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
         }).build());
         buttons.add(this.openItemFrameSearchGUI);
         this.otherOptions = this.addDrawableChild(ButtonWidget.builder(Text.translatable("qualityofqueso.gui.other_options"), button -> {
-            this.client.setScreen(new AbstractModOptionsScreen(this, Text.translatable("qualityofqueso.gui.other_options")) {
-                @Override
-                protected SimpleOption<?>[] options() {
-                    return new SimpleOption[]{
-                            ModListOptions.BETTER_SEARCHING,
-                            ModListOptions.BETTER_GUI_EXIT,
-                            ModListOptions.QUICK_EQUIP,
-                            ModListOptions.SHOW_CONFIG_BUTTON
-                    };
-                }
-            });
+            this.client.setScreen(new OtherOptionsScreen(this));
         }).build());
         buttons.add(this.otherOptions);
         this.body.addAll(buttons);

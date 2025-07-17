@@ -92,7 +92,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
      */
     @Inject(method = "init", at = @At("TAIL"))
     private void init(CallbackInfo ci) {
-        if (this.isValidScreen()) {
+        if (options().enableMod && this.isValidScreen()) {
             // Determine inventory variable; if instance ShulkerBoxScreen, inventory is the shulker box's inventory
             if (this.screen instanceof ShulkerBoxScreen shulkerBoxScreen) {
                 this.inventory = shulkerBoxScreen.getScreenHandler().inventory;
@@ -244,7 +244,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                 context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.chest_search.search_filtering"), 200), mouseX, mouseY);
             }
         }
-        if (options().inventorySorting && this.isValidScreen()) {
+        if (options().enableMod && options().inventorySorting && this.isValidScreen()) {
             // Determine if transfer container button should be active
             this.shouldButtonBeActive(false, null, this.transferContainerButton);
             PlayerInventory playerInventory = this.client.player.getInventory();
@@ -615,123 +615,125 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
      */
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
     private void handleKeyPressing(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-        // Quick equip key logic
-        if (keyCode == ModKeybinds.QUICK_EQUIP.boundKey.getCode() && this.focusedSlot != null && (this.screen instanceof InventoryScreen || this.screen instanceof CreativeInventoryScreen)) {
-            ItemStack stack = this.focusedSlot.getStack();
-            EquipmentSlot targetSlot = null;
+        if (options().enableMod) {
+            // Quick equip key logic
+            if (options().quickEquip && keyCode == ModKeybinds.QUICK_EQUIP.boundKey.getCode() && this.focusedSlot != null && (this.screen instanceof InventoryScreen || this.screen instanceof CreativeInventoryScreen)) {
+                ItemStack stack = this.focusedSlot.getStack();
+                EquipmentSlot targetSlot = null;
 
-            if (stack.isIn(ItemTags.HEAD_ARMOR)) {
-                targetSlot = EquipmentSlot.HEAD;
-            } else if (stack.isIn(ItemTags.CHEST_ARMOR) || stack.isOf(Items.ELYTRA)) {
-                targetSlot = EquipmentSlot.CHEST;
-            } else if (stack.isIn(ItemTags.LEG_ARMOR)) {
-                targetSlot = EquipmentSlot.LEGS;
-            } else if (stack.isIn(ItemTags.FOOT_ARMOR)) {
-                targetSlot = EquipmentSlot.FEET;
-            }
+                if (stack.isIn(ItemTags.HEAD_ARMOR)) {
+                    targetSlot = EquipmentSlot.HEAD;
+                } else if (stack.isIn(ItemTags.CHEST_ARMOR) || stack.isOf(Items.ELYTRA)) {
+                    targetSlot = EquipmentSlot.CHEST;
+                } else if (stack.isIn(ItemTags.LEG_ARMOR)) {
+                    targetSlot = EquipmentSlot.LEGS;
+                } else if (stack.isIn(ItemTags.FOOT_ARMOR)) {
+                    targetSlot = EquipmentSlot.FEET;
+                }
 
-            if (targetSlot != null) {
-                ItemStack equippedStack = this.client.player.getEquippedStack(targetSlot);
-                if (equippedStack.isEmpty()) {
-                    this.sendClickSlotPacket(this.focusedSlot.id, SlotActionType.QUICK_MOVE);
-                } else {
-                    this.quickSwap(this.focusedSlot.id, targetSlot);
+                if (targetSlot != null) {
+                    ItemStack equippedStack = this.client.player.getEquippedStack(targetSlot);
+                    if (equippedStack.isEmpty()) {
+                        this.sendClickSlotPacket(this.focusedSlot.id, SlotActionType.QUICK_MOVE);
+                    } else {
+                        this.quickSwap(this.focusedSlot.id, targetSlot);
+                    }
                 }
             }
-        }
 
-        // Declare typing variables
-        boolean ignoreTyping = this.hoveredSlotHasItem();
-        boolean secondaryIgnoreTyping = false;
-        boolean numberKeyPressed = false;
-        boolean hotbarKeyPressed = false;
-        boolean dropKeyPressed = false;
-        boolean swapKeyPressed = false;
+            // Declare typing variables
+            boolean ignoreTyping = this.hoveredSlotHasItem();
+            boolean secondaryIgnoreTyping = false;
+            boolean numberKeyPressed = false;
+            boolean hotbarKeyPressed = false;
+            boolean dropKeyPressed = false;
+            boolean swapKeyPressed = false;
 
-        // If a "disallowed key" is pressed, ignoreTyping and secondaryIgnoreTyping become true.
-        for (int key : QualityOfQueso.disallowedKeys) {
-            if (keyCode == key) {
-                ignoreTyping = true; secondaryIgnoreTyping = true;
-                break;
-            }
-        }
-
-        // handle switching items from hotbar to another containerSlot in inventory; cancel out typing if an query can be moved
-        if (this.getScreenHandler().getCursorStack().isEmpty() && this.focusedSlot != null) {
-            for (int i = 0; i < 9; i++) {
-                if (this.client.options.hotbarKeys[i].matchesKey(keyCode, scanCode)) {
-                    ignoreTyping = true; secondaryIgnoreTyping = true; hotbarKeyPressed = true;
+            // If a "disallowed key" is pressed, ignoreTyping and secondaryIgnoreTyping become true.
+            for (int key : QualityOfQueso.disallowedKeys) {
+                if (keyCode == key) {
+                    ignoreTyping = true; secondaryIgnoreTyping = true;
                     break;
                 }
             }
-            if (this.screen instanceof RecipeBookScreen<?> && keyCode == ModKeybinds.QUICK_EQUIP.boundKey.getCode()) {
-                ignoreTyping = true;
-            }
-        }
 
-        // Handle 'T' and 'E' keys
-        for (int key : QualityOfQueso.keys) {
-            if (keyCode == key) {
-                secondaryIgnoreTyping = false;
-                cir.setReturnValue(true);
-                break;
-            }
-        }
-
-        // Check if number key was pressed
-        List<Integer> numbers = List.of(
-                GLFW.GLFW_KEY_1,
-                GLFW.GLFW_KEY_2,
-                GLFW.GLFW_KEY_3,
-                GLFW.GLFW_KEY_4,
-                GLFW.GLFW_KEY_5,
-                GLFW.GLFW_KEY_6,
-                GLFW.GLFW_KEY_7,
-                GLFW.GLFW_KEY_8,
-                GLFW.GLFW_KEY_9
-        );
-        for (int key : numbers) {
-            if (keyCode == key) {
-                numberKeyPressed = true;
-                break;
-            }
-        }
-
-        // Check if drop key or swap hands key was pressed
-        if (keyCode == MinecraftClient.getInstance().options.dropKey.boundKey.getCode()) {
-            secondaryIgnoreTyping = true;
-            dropKeyPressed = true;
-        } else if (keyCode == MinecraftClient.getInstance().options.swapHandsKey.boundKey.getCode()) {
-            secondaryIgnoreTyping = true;
-            swapKeyPressed = true;
-        }
-
-        // If any of these are true, the user cannot type in the search field
-        boolean cannotType = (numberKeyPressed || hotbarKeyPressed || dropKeyPressed || swapKeyPressed) && this.hoveredSlotHasItem();
-
-        // Recipe book search field logic
-        if (options().betterSearching && this.screen instanceof RecipeBookScreen<?> recipeScreen) {
-            if (!ignoreTyping && !recipeScreen.recipeBook.isOpen()) {
-                recipeScreen.recipeBook.toggleOpen();
-                refreshWidgetPositions();
-            }
-            if (recipeScreen.recipeBook.searchField != null) {
-                recipeScreen.recipeBook.searchField.setFocused(!ignoreTyping);
-                if (recipeScreen.recipeBook.searchField.isFocused()) {
-                    cir.setReturnValue(recipeScreen.recipeBook.keyPressed(keyCode, scanCode, modifiers) || super.keyPressed(keyCode, scanCode, modifiers));
+            // handle switching items from hotbar to another containerSlot in inventory; cancel out typing if an query can be moved
+            if (this.getScreenHandler().getCursorStack().isEmpty() && this.focusedSlot != null) {
+                for (int i = 0; i < 9; i++) {
+                    if (this.client.options.hotbarKeys[i].matchesKey(keyCode, scanCode)) {
+                        ignoreTyping = true; secondaryIgnoreTyping = true; hotbarKeyPressed = true;
+                        break;
+                    }
+                }
+                if (this.screen instanceof RecipeBookScreen<?> && keyCode == ModKeybinds.QUICK_EQUIP.boundKey.getCode()) {
+                    ignoreTyping = true;
                 }
             }
-        }
-        // Chest search field logic
-        else if (options().chestSearch && isValidScreen()) {
-            if (!secondaryIgnoreTyping) {
-                this.searchField.setFocused(true);
-            } else if (this.searchField.isFocused() && cannotType) {
-                this.searchField.setFocused(false);
+
+            // Handle 'T' and 'E' keys
+            for (int key : QualityOfQueso.keys) {
+                if (keyCode == key) {
+                    secondaryIgnoreTyping = false;
+                    cir.setReturnValue(true);
+                    break;
+                }
             }
 
-            if (this.searchField.isFocused() && this.searchField.keyPressed(keyCode, scanCode, modifiers)) {
-                cir.setReturnValue(true);
+            // Check if number key was pressed
+            List<Integer> numbers = List.of(
+                    GLFW.GLFW_KEY_1,
+                    GLFW.GLFW_KEY_2,
+                    GLFW.GLFW_KEY_3,
+                    GLFW.GLFW_KEY_4,
+                    GLFW.GLFW_KEY_5,
+                    GLFW.GLFW_KEY_6,
+                    GLFW.GLFW_KEY_7,
+                    GLFW.GLFW_KEY_8,
+                    GLFW.GLFW_KEY_9
+            );
+            for (int key : numbers) {
+                if (keyCode == key) {
+                    numberKeyPressed = true;
+                    break;
+                }
+            }
+
+            // Check if drop key or swap hands key was pressed
+            if (keyCode == MinecraftClient.getInstance().options.dropKey.boundKey.getCode()) {
+                secondaryIgnoreTyping = true;
+                dropKeyPressed = true;
+            } else if (keyCode == MinecraftClient.getInstance().options.swapHandsKey.boundKey.getCode()) {
+                secondaryIgnoreTyping = true;
+                swapKeyPressed = true;
+            }
+
+            // If any of these are true, the user cannot type in the search field
+            boolean cannotType = (numberKeyPressed || hotbarKeyPressed || dropKeyPressed || swapKeyPressed) && this.hoveredSlotHasItem();
+
+            // Recipe book search field logic
+            if (options().betterSearching && this.screen instanceof RecipeBookScreen<?> recipeScreen) {
+                if (!ignoreTyping && !recipeScreen.recipeBook.isOpen()) {
+                    recipeScreen.recipeBook.toggleOpen();
+                    refreshWidgetPositions();
+                }
+                if (recipeScreen.recipeBook.searchField != null) {
+                    recipeScreen.recipeBook.searchField.setFocused(!ignoreTyping);
+                    if (recipeScreen.recipeBook.searchField.isFocused()) {
+                        cir.setReturnValue(recipeScreen.recipeBook.keyPressed(keyCode, scanCode, modifiers) || super.keyPressed(keyCode, scanCode, modifiers));
+                    }
+                }
+            }
+            // Chest search field logic
+            else if (options().chestSearch && isValidScreen()) {
+                if (!secondaryIgnoreTyping) {
+                    this.searchField.setFocused(true);
+                } else if (this.searchField.isFocused() && cannotType) {
+                    this.searchField.setFocused(false);
+                }
+
+                if (this.searchField.isFocused() && this.searchField.keyPressed(keyCode, scanCode, modifiers)) {
+                    cir.setReturnValue(true);
+                }
             }
         }
     }
