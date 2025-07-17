@@ -10,7 +10,10 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
+import net.minecraft.util.Colors;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.ColorHelper;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Utility class.
@@ -30,11 +33,11 @@ public class ButtonUtil {
     /**
      * Draws the tooltip and texture for the settings button.
      */
-    public static void drawTooltipAndTexture(DrawContext context, TextRenderer renderer, ButtonWidget button, int mouseX, int mouseY) {
+    public static void drawTooltipAndTexture(DrawContext context, TextRenderer renderer, ButtonWidget button, int mouseX, int mouseY, @Nullable Float f) {
         if (button.isHovered()) {
             drawTooltip(context, renderer, mouseX, mouseY);
         }
-        drawTexture(context, button);
+        drawTexture(context, button, f == null ? 1.0F : f);
     }
 
     /**
@@ -47,7 +50,7 @@ public class ButtonUtil {
     /**
      * Draws the settings texture over top of the settings button.
      */
-    private static void drawTexture(DrawContext context, ButtonWidget button) {
-        context.drawTexture(RenderPipelines.GUI_TEXTURED, Identifier.of("qualityofqueso:textures/gui/cheese_wheel.png"), button.getX() + 1, button.getY() + 1, 0.0F, 0.0F, 18, 18, 18, 18);
+    private static void drawTexture(DrawContext context, ButtonWidget button, float f) {
+        context.drawTexture(RenderPipelines.GUI_TEXTURED, Identifier.of("qualityofqueso:textures/gui/cheese_wheel.png"), button.getX() + 1, button.getY() + 1, 0.0F, 0.0F, 18, 18, 18, 18, ColorHelper.withAlpha(f, Colors.WHITE));
     }
 }

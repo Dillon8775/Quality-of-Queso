@@ -25,6 +25,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.List;
 import java.util.Objects;
 
+import static net.dillon.qualityofqueso.main.QualityOfQueso.modEnabled;
 import static net.dillon.qualityofqueso.main.QualityOfQueso.options;
 
 @Environment(EnvType.CLIENT)
@@ -50,7 +51,7 @@ public abstract class CreativeInventoryScreenMixin extends HandledScreen<Creativ
 	 */
 	@Inject(method = "onMouseClick(Lnet/minecraft/screen/slot/Slot;IILnet/minecraft/screen/slot/SlotActionType;)V", at = @At("HEAD"))
 	private void closeButtonOnClickOutOfBounds(Slot slot, int slotId, int button, SlotActionType actionType, CallbackInfo ci) {
-		if (options().enableMod && options().betterGuiExit && this.handler.getCursorStack().isEmpty() && button == 0 && slot == null) {
+		if (modEnabled(this.client) && options().betterGuiExit && this.handler.getCursorStack().isEmpty() && button == 0 && slot == null) {
 			this.close();
 		}
 	}
@@ -64,7 +65,7 @@ public abstract class CreativeInventoryScreenMixin extends HandledScreen<Creativ
 		if (this.ignoreTypedCharacter || (!(options().betterSearching) && selectedTab.getType() != ItemGroup.Type.SEARCH)) {
 			return false;
 		} else {
-			if (options().enableMod && options().betterSearching) {
+			if (modEnabled(this.client) && options().betterSearching) {
 				this.setSelectedTab(ItemGroups.getSearchGroup());
 			}
 			String string = this.searchBox.getText();
@@ -85,7 +86,7 @@ public abstract class CreativeInventoryScreenMixin extends HandledScreen<Creativ
 	 */
 	@Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
 	private void allowCertainChars(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-		if (options().enableMod && options().betterSearching) {
+		if (modEnabled(this.client) && options().betterSearching) {
 			if (this.focusedSlot != null && this.focusedSlot.getStack() != ItemStack.EMPTY && !this.searchBox.isFocused()) {
 				this.ignoreTypedCharacter = true;
 				cir.setReturnValue(super.keyPressed(keyCode, scanCode, modifiers));

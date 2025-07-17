@@ -21,12 +21,17 @@ public abstract class AbstractModOptionsScreen extends GameOptionsScreen {
         super(parent, MinecraftClient.getInstance().options, title);
     }
 
+    /**
+     * The list of {@link SimpleOption}s that should be added to the screen.
+     */
     protected abstract SimpleOption<?>[] options();
 
     @Override
     protected void init() {
         super.init();
-        this.body.addAll(options());
+        if (this.addOptionsByDefault()) {
+            this.body.addAll(this.options());
+        }
     }
 
     @Override
@@ -56,6 +61,13 @@ public abstract class AbstractModOptionsScreen extends GameOptionsScreen {
         ModOptions.OPTIONS.save();
         ServerHandler.info("Saved changes.");
         super.close();
+    }
+
+    /**
+     * @return if all options in the {@link AbstractModOptionsScreen#options()} method should be added by default when calling {@code super.init().}
+     */
+    protected boolean addOptionsByDefault() {
+        return true;
     }
 
     /**

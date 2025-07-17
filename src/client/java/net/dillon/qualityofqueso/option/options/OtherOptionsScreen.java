@@ -1,12 +1,12 @@
 package net.dillon.qualityofqueso.option.options;
 
+import com.google.common.collect.ImmutableList;
 import net.dillon.qualityofqueso.main.QualityOfQueso;
 import net.dillon.qualityofqueso.option.AbstractModOptionsScreen;
 import net.dillon.qualityofqueso.option.ModListOptions;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.gui.widget.OptionListWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.option.SimpleOption;
 import net.minecraft.text.Text;
@@ -25,6 +25,7 @@ public class OtherOptionsScreen extends AbstractModOptionsScreen {
     @Override
     protected SimpleOption<?>[] options() {
         return new SimpleOption[]{
+                ModListOptions.ENABLE_MOD,
                 ModListOptions.BETTER_SEARCHING,
                 ModListOptions.BETTER_GUI_EXIT,
                 ModListOptions.QUICK_EQUIP,
@@ -34,10 +35,9 @@ public class OtherOptionsScreen extends AbstractModOptionsScreen {
 
     @Override
     protected void init() {
-        this.body = this.layout.addBody(new OptionListWidget(this.client, this.width, this));
+        super.init();
         this.body.addSingleOptionEntry(ModListOptions.ENABLE_MOD);
         this.body.addAll(this.options());
-        this.refreshWidgetPositions();
 
         // Initialize the list from current options
         this.blacklistedServers = new ArrayList<>(QualityOfQueso.options().blacklistedServers);
@@ -47,10 +47,12 @@ public class OtherOptionsScreen extends AbstractModOptionsScreen {
                 this.textRenderer,
                 this.width / 2 - 150,
                 70,
-                100,
+                310,
                 20,
                 null
         );
+
+        this.blacklistedServersField.setMaxLength(Integer.MAX_VALUE);
 
         this.blacklistedServersField.setPlaceholder(Text.translatable("qualityofqueso.options.blacklisted_servers"));
         // Set initial text from current blacklisted servers
@@ -59,11 +61,13 @@ public class OtherOptionsScreen extends AbstractModOptionsScreen {
         // Add change listener
         this.blacklistedServersField.setChangedListener(this::onTextChanged);
 
-        List<ClickableWidget> widgets = new ArrayList<>();
-        widgets.add(this.blacklistedServersField);
+        List<ClickableWidget> widgets = ImmutableList.of(this.blacklistedServersField);
         this.body.addAll(widgets);
     }
 
+    /**
+     * Clears and writes the new blacklisted servers to the {@code blacklisted servers option.}
+     */
     private void onTextChanged(String newText) {
         // Clear the current list
         this.blacklistedServers.clear();
@@ -91,5 +95,9 @@ public class OtherOptionsScreen extends AbstractModOptionsScreen {
         QualityOfQueso.options().blacklistedServers.clear();
         QualityOfQueso.options().blacklistedServers.addAll(this.blacklistedServers);
         super.close();
+    }
+
+    protected boolean addOptionsByDefault() {
+        return false;
     }
 }

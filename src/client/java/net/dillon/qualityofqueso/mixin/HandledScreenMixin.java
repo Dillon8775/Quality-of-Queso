@@ -55,6 +55,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static net.dillon.qualityofqueso.main.QualityOfQueso.modEnabled;
 import static net.dillon.qualityofqueso.main.QualityOfQueso.options;
 
 @Environment(EnvType.CLIENT)
@@ -92,7 +93,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
      */
     @Inject(method = "init", at = @At("TAIL"))
     private void init(CallbackInfo ci) {
-        if (options().enableMod && this.isValidScreen()) {
+        if (modEnabled(this.client) && this.isValidScreen()) {
             // Determine inventory variable; if instance ShulkerBoxScreen, inventory is the shulker box's inventory
             if (this.screen instanceof ShulkerBoxScreen shulkerBoxScreen) {
                 this.inventory = shulkerBoxScreen.getScreenHandler().inventory;
@@ -244,7 +245,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                 context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.chest_search.search_filtering"), 200), mouseX, mouseY);
             }
         }
-        if (options().enableMod && options().inventorySorting && this.isValidScreen()) {
+        if (modEnabled(this.client) && options().inventorySorting && this.isValidScreen()) {
             // Determine if transfer container button should be active
             this.shouldButtonBeActive(false, null, this.transferContainerButton);
             PlayerInventory playerInventory = this.client.player.getInventory();
@@ -615,7 +616,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
      */
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
     private void handleKeyPressing(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-        if (options().enableMod) {
+        if (modEnabled(this.client)) {
             // Quick equip key logic
             if (options().quickEquip && keyCode == ModKeybinds.QUICK_EQUIP.boundKey.getCode() && this.focusedSlot != null && (this.screen instanceof InventoryScreen || this.screen instanceof CreativeInventoryScreen)) {
                 ItemStack stack = this.focusedSlot.getStack();
@@ -765,7 +766,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
      */
     @Inject(method = "onMouseClick(Lnet/minecraft/screen/slot/Slot;IILnet/minecraft/screen/slot/SlotActionType;)V", at = @At("HEAD"))
     private void closeButtonOnClickOutOfBounds(Slot slot, int slotId, int button, SlotActionType actionType, CallbackInfo ci) {
-        if (options().betterGuiExit && this.getScreenHandler().getCursorStack().isEmpty() && button == 0 && slot == null) {
+        if (modEnabled(this.client) && options().betterGuiExit && this.getScreenHandler().getCursorStack().isEmpty() && button == 0 && slot == null) {
             this.close();
         }
     }

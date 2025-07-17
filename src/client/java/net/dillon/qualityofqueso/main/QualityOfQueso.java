@@ -8,9 +8,11 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.minecraft.client.MinecraftClient;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
+import java.util.Objects;
 
 @Environment(EnvType.CLIENT)
 public class QualityOfQueso implements ClientModInitializer {
@@ -62,5 +64,28 @@ public class QualityOfQueso implements ClientModInitializer {
 	 */
 	public static ModOptions options() {
 		return ModOptions.OPTIONS.getInstance();
+	}
+
+	/**
+	 * Checks if any of the mod's features should function.
+	 */
+	public static boolean modEnabled(MinecraftClient client) {
+		Objects.requireNonNull(client, "\"client\" cannot be null.");
+
+		if (isOnServer(client)) {
+			for (String blacklistedServer : options().blacklistedServers) {
+				if (client.getCurrentServerEntry().address.equals(blacklistedServer)) {
+					return false;
+				}
+			}
+		}
+		return options().enableMod;
+    }
+
+	/**
+	 * @return if the player is on a server.
+	 */
+	public static boolean isOnServer(MinecraftClient client) {
+		return !client.isInSingleplayer() && !(client.getCurrentServerEntry() == null);
 	}
 }

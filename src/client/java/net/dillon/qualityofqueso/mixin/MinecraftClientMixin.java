@@ -8,6 +8,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import static net.dillon.qualityofqueso.main.QualityOfQueso.modEnabled;
 import static net.dillon.qualityofqueso.main.QualityOfQueso.options;
 
 @Mixin(MinecraftClient.class)
@@ -18,7 +19,7 @@ public class MinecraftClientMixin {
      */
     @Inject(method = "handleInputEvents", at = @At("TAIL"))
     private void handleKeyPressing(CallbackInfo ci) {
-        if (options().enableMod && options().itemFrameSearching) {
+        if (modEnabled((MinecraftClient)(Object)this) && options().itemFrameSearching) {
             while (ModKeybinds.OPEN_SEARCH_ITEM_FRAMES_GUI.wasPressed()) {
                 MinecraftClient.getInstance().setScreen(new ItemFrameSearchScreen());
             }
