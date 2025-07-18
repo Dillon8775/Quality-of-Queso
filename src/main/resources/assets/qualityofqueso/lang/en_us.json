@@ -39,6 +39,12 @@
   "qualityofqueso.gui.include_hotbar": "Including hotbar when moving items\nClick to disable",
   "qualityofqueso.gui.exclude_hotbar": "Ignoring hotbar when moving items\nClick to include hotbar",
 
+  "qualityofqueso.gui.blacklisted_server_button_prefix": "§6§lQuality of Queso§r",
+  "qualityofqueso.gui.server_already_blacklisted": "This server is already blacklisted!",
+  "qualityofqueso.gui.add_blacklisted_server": "Disable the mod from functioning on this server.",
+  "qualityofqueso.gui.remove_blacklisted_server": "Allow the mod to function on this server.",
+  "qualityofqueso.gui.server_not_blacklisted": "This server is not blacklisted!",
+
   "qualityofqueso.quick_equip": "Quick Equip",
   "qualityofqueso.open_item_frame_search_gui": "Open Item Frame Search GUI",
 

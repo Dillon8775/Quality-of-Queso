@@ -33,18 +33,18 @@ public class ButtonUtil {
     /**
      * Draws the tooltip and texture for the settings button.
      */
-    public static void drawTooltipAndTexture(DrawContext context, TextRenderer renderer, ButtonWidget button, int mouseX, int mouseY, @Nullable Float f) {
+    public static void drawTooltipAndTexture(Text tooltip, DrawContext context, TextRenderer renderer, ButtonWidget button, int mouseX, int mouseY, @Nullable Float f) {
         if (button.isHovered()) {
-            drawTooltip(context, renderer, mouseX, mouseY);
+            drawTooltip(tooltip, context, renderer, mouseX, mouseY);
         }
         drawTexture(context, button, f == null ? 1.0F : f);
     }
 
     /**
-     * Draws the tooltip over the settings button.
+     * Draws a tooltip.
      */
-    private static void drawTooltip(DrawContext context, TextRenderer renderer, int mouseX, int mouseY) {
-        context.drawOrderedTooltip(renderer, renderer.wrapLines(Text.translatable("qualityofqueso.gui.options.tooltip"), 200), mouseX, mouseY);
+    public static void drawTooltip(Text tooltip, DrawContext context, TextRenderer renderer, int mouseX, int mouseY) {
+        context.drawOrderedTooltip(renderer, renderer.wrapLines(tooltip, 200), mouseX, mouseY);
     }
 
     /**

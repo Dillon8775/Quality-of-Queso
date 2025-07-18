@@ -67,6 +67,13 @@ public class QualityOfQueso implements ClientModInitializer {
 	}
 
 	/**
+	 * Saves the configuration.
+	 */
+	public static void save() {
+		ModOptions.OPTIONS.save();
+	}
+
+	/**
 	 * Checks if any of the mod's features should function.
 	 */
 	public static boolean modEnabled(MinecraftClient client) {

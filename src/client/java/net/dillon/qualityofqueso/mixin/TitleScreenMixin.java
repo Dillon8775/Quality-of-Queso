@@ -1,6 +1,7 @@
 package net.dillon.qualityofqueso.mixin;
 
 import net.dillon.qualityofqueso.util.ButtonUtil;
+import net.dillon.qualityofqueso.util.ModTexts;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.DrawContext;
@@ -37,7 +38,7 @@ public class TitleScreenMixin extends Screen {
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/ColorHelper;withAlpha(FI)I"), locals = LocalCapture.CAPTURE_FAILHARD)
     private void renderTooltips(DrawContext context, int mouseX, int mouseY, float deltaTicks, CallbackInfo ci, float f) {
         if (options().showConfigButton) {
-            ButtonUtil.drawTooltipAndTexture(context, this.textRenderer, this.settingsButton, mouseX, mouseY, f);
+            ButtonUtil.drawTooltipAndTexture(ModTexts.CONFIGURE_QOQ, context, this.textRenderer, this.settingsButton, mouseX, mouseY, f);
         }
     }
 }

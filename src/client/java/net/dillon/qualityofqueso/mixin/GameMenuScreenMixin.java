@@ -17,8 +17,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static net.dillon.qualityofqueso.main.QualityOfQueso.isOnServer;
-import static net.dillon.qualityofqueso.main.QualityOfQueso.options;
+import static net.dillon.qualityofqueso.main.QualityOfQueso.*;
 
 @Environment(EnvType.CLIENT)
 @Mixin(GameMenuScreen.class)
@@ -26,7 +25,7 @@ public class GameMenuScreenMixin extends Screen {
     @Shadow @Final
     private boolean showMenu;
     @Unique
-    private ButtonWidget settingsButton;
+    private ButtonWidget settingsButton, addBlacklistedServerButton, removeBlacklistedServerButton;
 
     public GameMenuScreenMixin(Text title) {
         super(title);
@@ -37,20 +36,72 @@ public class GameMenuScreenMixin extends Screen {
         if (options().showConfigButton && this.showMenu) {
             this.settingsButton = this.addDrawableChild(ButtonUtil.initializeButton(this.client, this, this.width / 2 + 106, this.height / 4 + 72 - 16));
         }
-        ButtonWidget addServerToBlacklistButton = this.addDrawableChild(ButtonWidget.builder(ModTexts.BLANK, button -> {
-            options().blacklistedServers.add(this.client.getCurrentServerEntry().address);
-        }).dimensions(this.width / 2 + 106, this.height / 4 + 96 - 16, 20, 20).build());
-        addServerToBlacklistButton.active = isOnServer(this.client);
-        ButtonWidget removeServerFromBlacklistButton = this.addDrawableChild(ButtonWidget.builder(ModTexts.BLANK, button -> {
-            options().blacklistedServers.remove(this.client.getCurrentServerEntry().address);
-        }).dimensions(this.width / 2 + 106, this.height / 4 + 120 - 16, 20, 20).build());
-        removeServerFromBlacklistButton.active = isOnServer(this.client);
+        if (!(this.client.getCurrentServerEntry() == null)) {
+            String address = this.getServerAddress();
+            this.addBlacklistedServerButton = this.addDrawableChild(ButtonWidget.builder(ModTexts.BLANK, button -> {
+                options().blacklistedServers.add(address);
+                save();
+            }).dimensions(this.width / 2 + 106, this.height / 4 + 96 - 16, 20, 20).build());
+            this.addBlacklistedServerButton.active = isOnServer(this.client) && !this.isServerBlacklisted(address);
+            this.removeBlacklistedServerButton = this.addDrawableChild(ButtonWidget.builder(ModTexts.BLANK, button -> {
+                options().blacklistedServers.remove(address);
+                save();
+            }).dimensions(this.width / 2 + 106, this.height / 4 + 120 - 16, 20, 20).build());
+            this.removeBlacklistedServerButton.active = isOnServer(this.client) && !this.isServerBlacklisted(address);
+        }
     }
 
     @Inject(method = "render", at = @At("TAIL"))
     private void renderTooltips(DrawContext context, int mouseX, int mouseY, float deltaTicks, CallbackInfo ci) {
-        if (options().showConfigButton && this.showMenu) {
-            ButtonUtil.drawTooltipAndTexture(context, this.textRenderer, this.settingsButton, mouseX, mouseY, null);
+        if (this.showMenu) {
+            if (options().showConfigButton) {
+                ButtonUtil.drawTooltipAndTexture(ModTexts.CONFIGURE_QOQ, context, this.textRenderer, this.settingsButton, mouseX, mouseY, null);
+            }
+            if (!(this.client.getCurrentServerEntry() == null)) {
+                if (this.addBlacklistedServerButton.isHovered()) {
+                    if (this.isServerBlacklisted(this.getServerAddress())) {
+                        ButtonUtil.drawTooltip(this.tooltipWithPrefix(Text.translatable("qualityofqueso.gui.server_already_blacklisted")), context, this.textRenderer, mouseX, mouseY);
+                    } else {
+                        ButtonUtil.drawTooltip(this.tooltipWithPrefix(Text.translatable("qualityofqueso.gui.add_blacklisted_server")), context, this.textRenderer, mouseX, mouseY);
+                    }
+                }
+                if (this.removeBlacklistedServerButton.isHovered()) {
+                    if (this.isServerBlacklisted(this.getServerAddress())) {
+                        ButtonUtil.drawTooltip(this.tooltipWithPrefix(Text.translatable("qualityofqueso.gui.remove_blacklisted_server")), context, this.textRenderer, mouseX, mouseY);
+                    } else {
+                        ButtonUtil.drawTooltip(this.tooltipWithPrefix(Text.translatable("qualityofqueso.gui.server_not_blacklisted")), context, this.textRenderer, mouseX, mouseY);
+                    }
+                }
+            }
         }
+    }
+
+    /**
+     * Appends the {@code Quality of Queso} prefix to a tooltip.
+     */
+    @Unique
+    private Text tooltipWithPrefix(Text text) {
+        return Text.translatable("qualityofqueso.gui.blacklisted_server_button_prefix").append("\n").append(text);
+    }
+
+    /**
+     * @return the current server address.
+     */
+    @Unique
+    private String getServerAddress() {
+        return this.client.getCurrentServerEntry().address;
+    }
+
+    /**
+     * Checks if a server is blacklisted or not.
+     */
+    @Unique
+    private boolean isServerBlacklisted(String serverAddress) {
+        for (String s : options().blacklistedServers) {
+            if (s.equals(serverAddress)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

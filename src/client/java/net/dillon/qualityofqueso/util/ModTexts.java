@@ -10,6 +10,7 @@ import net.minecraft.util.Formatting;
  */
 @Environment(EnvType.CLIENT)
 public class ModTexts {
+    public static final Text CONFIGURE_QOQ = Text.translatable("qualityofqueso.gui.options.tooltip");
     public static final Text BLANK = Text.literal("");
     public static final Text ON = Text.translatable("qualityofqueso.gui.on").formatted(Formatting.GREEN);
     public static final Text OFF = Text.translatable("qualityofqueso.gui.off").formatted(Formatting.RED);
