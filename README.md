@@ -76,5 +76,9 @@ Note: if your cursor is hovered over a slot with an item that is bound to a hotb
 #### (since: v1.0)
 
 ---
+# Enabled Mod and Blacklisted Servers
+If you want, without removing the mod from your mods folder entirely, there is an option to disable the mod entirely from functioning, and you can also add blacklisted servers to make the mod not work on those specific servers. Just go to the Quality of Queso options GUI to configure that.
+
+---
 
 Features and ideas created by MannyQUESO. Implemented by Dillon8775.**
