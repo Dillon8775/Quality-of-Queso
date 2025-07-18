@@ -38,7 +38,7 @@ public class TitleScreenMixin extends Screen {
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/ColorHelper;withAlpha(FI)I"), locals = LocalCapture.CAPTURE_FAILHARD)
     private void renderTooltips(DrawContext context, int mouseX, int mouseY, float deltaTicks, CallbackInfo ci, float f) {
         if (options().showConfigButton) {
-            ButtonUtil.drawTooltipAndTexture(ModTexts.CONFIGURE_QOQ, context, this.textRenderer, this.settingsButton, mouseX, mouseY, f);
+            ButtonUtil.drawTooltipAndTexture(ModTexts.CONFIGURE_QOQ, ButtonUtil.CHEESE_WHEEL, context, this.textRenderer, this.settingsButton, mouseX, mouseY, f);
         }
     }
 }

@@ -20,6 +20,9 @@ import org.jetbrains.annotations.Nullable;
  */
 @Environment(EnvType.CLIENT)
 public class ButtonUtil {
+    public static final String CHEESE_WHEEL = "cheese_wheel";
+    public static final String ENABLED = "qoq_enabled";
+    public static final String DISABLED = "qoq_disabled";
 
     /**
      * Initializes the settings button.
@@ -33,11 +36,11 @@ public class ButtonUtil {
     /**
      * Draws the tooltip and texture for the settings button.
      */
-    public static void drawTooltipAndTexture(Text tooltip, DrawContext context, TextRenderer renderer, ButtonWidget button, int mouseX, int mouseY, @Nullable Float f) {
+    public static void drawTooltipAndTexture(Text tooltip, String name, DrawContext context, TextRenderer renderer, ButtonWidget button, int mouseX, int mouseY, @Nullable Float f) {
         if (button.isHovered()) {
             drawTooltip(tooltip, context, renderer, mouseX, mouseY);
         }
-        drawTexture(context, button, f == null ? 1.0F : f);
+        drawTexture(context, name, button, f == null ? 1.0F : f);
     }
 
     /**
@@ -48,9 +51,16 @@ public class ButtonUtil {
     }
 
     /**
-     * Draws the settings texture over top of the settings button.
+     * Draws a texture over a button.
      */
-    private static void drawTexture(DrawContext context, ButtonWidget button, float f) {
-        context.drawTexture(RenderPipelines.GUI_TEXTURED, Identifier.of("qualityofqueso:textures/gui/cheese_wheel.png"), button.getX() + 1, button.getY() + 1, 0.0F, 0.0F, 18, 18, 18, 18, ColorHelper.withAlpha(f, Colors.WHITE));
+    public static void drawTexture(DrawContext context, String name, ButtonWidget button, float f) {
+        context.drawTexture(RenderPipelines.GUI_TEXTURED, Identifier.of("qualityofqueso:textures/gui/" + name + ".png"), button.getX() + 1, button.getY() + 1, 0.0F, 0.0F, 18, 18, 18, 18, ColorHelper.withAlpha(f, Colors.WHITE));
+    }
+
+    /**
+     * Draws a texture over a button without a custom fade.
+     */
+    public static void drawTexture(DrawContext context, String name, ButtonWidget button) {
+        drawTexture(context, name, button, 1.0F);
     }
 }

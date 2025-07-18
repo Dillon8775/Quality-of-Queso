@@ -31,6 +31,9 @@ public class GameMenuScreenMixin extends Screen {
         super(title);
     }
 
+    /**
+     * Adds all {@code Quality of Queso} configuration buttons.
+     */
     @Inject(method = "init", at = @At("TAIL"))
     private void init(CallbackInfo ci) {
         if (options().showConfigButton && this.showMenu) {
@@ -42,34 +45,41 @@ public class GameMenuScreenMixin extends Screen {
                 options().blacklistedServers.add(address);
                 save();
             }).dimensions(this.width / 2 + 106, this.height / 4 + 96 - 16, 20, 20).build());
-            this.addBlacklistedServerButton.active = isOnServer(this.client) && !this.isServerBlacklisted(address);
             this.removeBlacklistedServerButton = this.addDrawableChild(ButtonWidget.builder(ModTexts.BLANK, button -> {
                 options().blacklistedServers.remove(address);
                 save();
             }).dimensions(this.width / 2 + 106, this.height / 4 + 120 - 16, 20, 20).build());
-            this.removeBlacklistedServerButton.active = isOnServer(this.client) && !this.isServerBlacklisted(address);
         }
     }
 
+    /**
+     * Renders toolips and textures over top of the {@code Quality of Queso buttons.}
+     */
     @Inject(method = "render", at = @At("TAIL"))
-    private void renderTooltips(DrawContext context, int mouseX, int mouseY, float deltaTicks, CallbackInfo ci) {
+    private void renderTooltipsAndTextures(DrawContext context, int mouseX, int mouseY, float deltaTicks, CallbackInfo ci) {
         if (this.showMenu) {
             if (options().showConfigButton) {
-                ButtonUtil.drawTooltipAndTexture(ModTexts.CONFIGURE_QOQ, context, this.textRenderer, this.settingsButton, mouseX, mouseY, null);
+                ButtonUtil.drawTooltipAndTexture(ModTexts.CONFIGURE_QOQ, ButtonUtil.CHEESE_WHEEL, context, this.textRenderer, this.settingsButton, mouseX, mouseY, null);
             }
             if (!(this.client.getCurrentServerEntry() == null)) {
-                if (this.addBlacklistedServerButton.isHovered()) {
-                    if (this.isServerBlacklisted(this.getServerAddress())) {
-                        ButtonUtil.drawTooltip(this.tooltipWithPrefix(Text.translatable("qualityofqueso.gui.server_already_blacklisted")), context, this.textRenderer, mouseX, mouseY);
-                    } else {
-                        ButtonUtil.drawTooltip(this.tooltipWithPrefix(Text.translatable("qualityofqueso.gui.add_blacklisted_server")), context, this.textRenderer, mouseX, mouseY);
+                if (this.addBlacklistedServerButton != null && this.removeBlacklistedServerButton != null) {
+                    this.addBlacklistedServerButton.active = isOnServer(this.client) && !this.isServerBlacklisted(this.getServerAddress());
+                    this.removeBlacklistedServerButton.active = isOnServer(this.client) && this.isServerBlacklisted(this.getServerAddress());
+                    ButtonUtil.drawTexture(context, ButtonUtil.DISABLED, this.addBlacklistedServerButton);
+                    ButtonUtil.drawTexture(context, this.removeBlacklistedServerButton.active ? ButtonUtil.ENABLED : ButtonUtil.DISABLED, this.removeBlacklistedServerButton);
+                    if (this.addBlacklistedServerButton.isHovered()) {
+                        if (this.isServerBlacklisted(this.getServerAddress())) {
+                            ButtonUtil.drawTooltip(this.tooltipWithPrefix(Text.translatable("qualityofqueso.gui.server_already_blacklisted")), context, this.textRenderer, mouseX, mouseY);
+                        } else {
+                            ButtonUtil.drawTooltip(this.tooltipWithPrefix(Text.translatable("qualityofqueso.gui.add_blacklisted_server")), context, this.textRenderer, mouseX, mouseY);
+                        }
                     }
-                }
-                if (this.removeBlacklistedServerButton.isHovered()) {
-                    if (this.isServerBlacklisted(this.getServerAddress())) {
-                        ButtonUtil.drawTooltip(this.tooltipWithPrefix(Text.translatable("qualityofqueso.gui.remove_blacklisted_server")), context, this.textRenderer, mouseX, mouseY);
-                    } else {
-                        ButtonUtil.drawTooltip(this.tooltipWithPrefix(Text.translatable("qualityofqueso.gui.server_not_blacklisted")), context, this.textRenderer, mouseX, mouseY);
+                    if (this.removeBlacklistedServerButton.isHovered()) {
+                        if (this.isServerBlacklisted(this.getServerAddress())) {
+                            ButtonUtil.drawTooltip(this.tooltipWithPrefix(Text.translatable("qualityofqueso.gui.remove_blacklisted_server")), context, this.textRenderer, mouseX, mouseY);
+                        } else {
+                            ButtonUtil.drawTooltip(this.tooltipWithPrefix(Text.translatable("qualityofqueso.gui.server_not_blacklisted")), context, this.textRenderer, mouseX, mouseY);
+                        }
                     }
                 }
             }
