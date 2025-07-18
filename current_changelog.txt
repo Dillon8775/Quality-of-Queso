@@ -1,3 +1,5 @@
+- Added "Enable Mod" option, which allows you to enable/disable the mod entirely.
+- Added "Blacklisted Servers" option, which allows you to add servers that you don't want the mod to function on.
 - Fixed bug where disabling "Quick Equip" doesn't actually disable it.
 - Added Include Hotbar button, which allows you to include/exclude your hotbar from the transferring of items from inventory -> chest.
 - Added support for container screens with sizes of 3, 4, 5, and 6.
