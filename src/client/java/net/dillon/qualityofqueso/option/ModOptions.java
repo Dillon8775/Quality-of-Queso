@@ -21,6 +21,7 @@ public class ModOptions {
     public boolean requireAltToMove = true;
     public boolean includeHotbar = true;
     public boolean quickEquip = true;
+    public boolean preventRageQuitting = false;
     public List<String> blacklistedServers = new ArrayList<>();
     public boolean itemFrameSearching = true;
     public int itemFrameSearchTimer = 0;

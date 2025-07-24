@@ -9,6 +9,7 @@ import net.minecraft.client.gui.screen.GameMenuScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -24,6 +25,7 @@ import static net.dillon.qualityofqueso.main.QualityOfQueso.*;
 public class GameMenuScreenMixin extends Screen {
     @Shadow @Final
     private boolean showMenu;
+    @Shadow private @Nullable ButtonWidget exitButton;
     @Unique
     private ButtonWidget settingsButton, addBlacklistedServerButton, removeBlacklistedServerButton;
 
@@ -36,19 +38,24 @@ public class GameMenuScreenMixin extends Screen {
      */
     @Inject(method = "init", at = @At("TAIL"))
     private void init(CallbackInfo ci) {
-        if (options().showConfigButton && this.showMenu) {
-            this.settingsButton = this.addDrawableChild(ButtonUtil.initializeButton(this.client, this, this.width / 2 + 106, this.height / 4 + 72 - 16));
-        }
-        if (!(this.client.getCurrentServerEntry() == null)) {
-            String address = this.getServerAddress();
-            this.addBlacklistedServerButton = this.addDrawableChild(ButtonWidget.builder(ModTexts.BLANK, button -> {
-                options().blacklistedServers.add(address);
-                save();
-            }).dimensions(this.width / 2 + 106, this.height / 4 + 96 - 16, 20, 20).build());
-            this.removeBlacklistedServerButton = this.addDrawableChild(ButtonWidget.builder(ModTexts.BLANK, button -> {
-                options().blacklistedServers.remove(address);
-                save();
-            }).dimensions(this.width / 2 + 106, this.height / 4 + 120 - 16, 20, 20).build());
+        if (this.showMenu) {
+            if (options().showConfigButton) {
+                this.settingsButton = this.addDrawableChild(ButtonUtil.initializeButton(this.client, this, this.width / 2 + 106, this.height / 4 + 72 - 16));
+            }
+            if (this.exitButton != null && options().preventRageQuitting) {
+                this.exitButton.active = false;
+            }
+            if (!(this.client.getCurrentServerEntry() == null)) {
+                String address = this.getServerAddress();
+                this.addBlacklistedServerButton = this.addDrawableChild(ButtonWidget.builder(ModTexts.BLANK, button -> {
+                    options().blacklistedServers.add(address);
+                    save();
+                }).dimensions(this.width / 2 + 106, this.height / 4 + 96 - 16, 20, 20).build());
+                this.removeBlacklistedServerButton = this.addDrawableChild(ButtonWidget.builder(ModTexts.BLANK, button -> {
+                    options().blacklistedServers.remove(address);
+                    save();
+                }).dimensions(this.width / 2 + 106, this.height / 4 + 120 - 16, 20, 20).build());
+            }
         }
     }
 

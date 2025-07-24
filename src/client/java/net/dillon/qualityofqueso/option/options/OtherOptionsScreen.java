@@ -29,6 +29,7 @@ public class OtherOptionsScreen extends AbstractModOptionsScreen {
                 ModListOptions.BETTER_SEARCHING,
                 ModListOptions.BETTER_GUI_EXIT,
                 ModListOptions.QUICK_EQUIP,
+                ModListOptions.PREVENT_RAGE_QUITTING,
                 ModListOptions.SHOW_CONFIG_BUTTON
         };
     }
