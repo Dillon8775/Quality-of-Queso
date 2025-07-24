@@ -68,6 +68,9 @@ public class GameMenuScreenMixin extends Screen {
             if (options().showConfigButton) {
                 ButtonUtil.drawTooltipAndTexture(ModTexts.CONFIGURE_QOQ, ButtonUtil.CHEESE_WHEEL, context, this.textRenderer, this.settingsButton, mouseX, mouseY, null);
             }
+            if (options().preventRageQuitting && this.exitButton != null && this.exitButton.isHovered()) {
+                ButtonUtil.drawTooltip(Text.translatable("qualityofqueso.gui.disconnect"), context, this.textRenderer, mouseX, mouseY);
+            }
             if (!(this.client.getCurrentServerEntry() == null)) {
                 if (this.addBlacklistedServerButton != null && this.removeBlacklistedServerButton != null) {
                     this.addBlacklistedServerButton.active = isOnServer(this.client) && !this.isServerBlacklisted(this.getServerAddress());

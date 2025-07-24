@@ -56,6 +56,8 @@
   "qualityofqueso.item_frame_searcher.executed.without_timer": "Found %s item frames containing \"%s\" and set glowing indefinitely.",
   "qualityofqueso.item_frame_searcher.executed.with_timer": "Found %s item frames containing \"%s\" and set glowing for %s seconds.",
 
+  "qualityofqueso.gui.disconnect": "don't be stupid like manny\n\ncontrol your anger",
+
   "qualityofqueso.options.better_gui_exit": "Better GUI Exit",
   "qualityofqueso.options.better_gui_exit.tooltip": "Close any GUI menu when you click anywhere outside of the GUI screen.\n\nFor example, clicking off of the crafting inventory screen (as long as your cursor isn't holding anything) will close the screen.",
   "qualityofqueso.options.better_searching": "Better Searching",
