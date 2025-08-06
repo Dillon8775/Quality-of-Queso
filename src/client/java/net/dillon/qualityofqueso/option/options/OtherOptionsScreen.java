@@ -10,6 +10,7 @@ import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.option.SimpleOption;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +38,6 @@ public class OtherOptionsScreen extends AbstractModOptionsScreen {
     @Override
     protected void init() {
         super.init();
-        this.body.addSingleOptionEntry(ModListOptions.ENABLE_MOD);
         this.body.addAll(this.options());
 
         // Initialize the list from current options
@@ -55,7 +55,7 @@ public class OtherOptionsScreen extends AbstractModOptionsScreen {
 
         this.blacklistedServersField.setMaxLength(Integer.MAX_VALUE);
 
-        this.blacklistedServersField.setPlaceholder(Text.translatable("qualityofqueso.options.blacklisted_servers"));
+        this.blacklistedServersField.setPlaceholder(Text.translatable("qualityofqueso.options.blacklisted_servers").formatted(Formatting.GRAY));
         // Set initial text from current blacklisted servers
         this.blacklistedServersField.setText(String.join(", ", this.blacklistedServers));
 

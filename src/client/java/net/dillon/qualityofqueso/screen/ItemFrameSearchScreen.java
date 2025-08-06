@@ -63,7 +63,9 @@ public class ItemFrameSearchScreen extends Screen {
     public void render(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
         this.searchField.render(context, mouseX, mouseY, deltaTicks);
         super.render(context, mouseX, mouseY, deltaTicks);
-        context.drawTextWithShadow(this.textRenderer, Text.translatable("qualityofqueso.gui.search_item_frames"), this.width / 2 - 135, this.height / 2 - 64, -2039584);
+        context.drawTextWithShadow(this.textRenderer, Text.translatable("qualityofqueso.gui.search_item_frames"), this.width / 2 - 135, this.height / 2 - 104, -2039584);
+        context.drawTextWithShadow(this.textRenderer, Text.translatable("qualityofqueso.gui.search_item_frames.warning.line1"), this.width / 2 - 175, this.height / 2 - 80, -2039584);
+        context.drawTextWithShadow(this.textRenderer, Text.translatable("qualityofqueso.gui.search_item_frames.warning.line2"), this.width / 2 - 110, this.height / 2 - 56, -2039584);
         this.searchButton.active = !this.searchField.getText().isEmpty();
         if (!this.searchField.getText().isEmpty() && this.searchButton.isHovered()) {
             context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.search.tooltip", this.searchField.getText()), 200), mouseX, mouseY);

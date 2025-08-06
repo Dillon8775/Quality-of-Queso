@@ -1,2 +1,3 @@
-- Added "Prevent Rage Qutting" option, which prevents the player from disconnecting from a server/world. The only way to exit is to ALT + F4.
-- Fixed bug where certain buttons still show without the pause menu GUI on the game menu screen.
+- Fixed small bug where the "Enable Mod" option appears twice in the options screen.
+- Compacted the Blacklist Server Button into just one button on the game menu screen (instead of two).
+- Small optimizations and tweaks.
