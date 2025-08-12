@@ -39,7 +39,7 @@ public class GameMenuScreenMixin extends Screen {
     @Inject(method = "init", at = @At("TAIL"))
     private void init(CallbackInfo ci) {
         if (this.showMenu) {
-            if (options().showConfigButton) {
+            if (options().showQoQButtons) {
                 this.settingsButton = this.addDrawableChild(ButtonUtil.initializeButton(this.client, this, this.width / 2 + 106, this.height / 4 + 72 - 16));
             }
             if (this.exitButton != null && options().preventRageQuitting) {
@@ -65,7 +65,7 @@ public class GameMenuScreenMixin extends Screen {
     @Inject(method = "render", at = @At("TAIL"))
     private void renderTooltipsAndTextures(DrawContext context, int mouseX, int mouseY, float deltaTicks, CallbackInfo ci) {
         if (this.showMenu) {
-            if (options().showConfigButton) {
+            if (options().showQoQButtons) {
                 ButtonUtil.drawTooltipAndTexture(ModTexts.CONFIGURE_QOQ, ButtonUtil.CHEESE_WHEEL, context, this.textRenderer, this.settingsButton, mouseX, mouseY, null);
             }
             if (options().preventRageQuitting && this.exitButton != null && this.exitButton.isHovered()) {

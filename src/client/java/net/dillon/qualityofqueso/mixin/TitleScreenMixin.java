@@ -30,15 +30,11 @@ public class TitleScreenMixin extends Screen {
 
     @Inject(method = "init", at = @At("TAIL"))
     private void init(CallbackInfo ci) {
-        if (options().showConfigButton) {
-            this.settingsButton = this.addDrawableChild(ButtonUtil.initializeButton(this.client, this, this.width / 2 + 128, this.height / 4 + 132));
-        }
+        this.settingsButton = this.addDrawableChild(ButtonUtil.initializeButton(this.client, this, this.width / 2 + 128, this.height / 4 + 132));
     }
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/ColorHelper;withAlpha(FI)I"), locals = LocalCapture.CAPTURE_FAILHARD)
     private void renderTooltips(DrawContext context, int mouseX, int mouseY, float deltaTicks, CallbackInfo ci, float f) {
-        if (options().showConfigButton) {
-            ButtonUtil.drawTooltipAndTexture(ModTexts.CONFIGURE_QOQ, ButtonUtil.CHEESE_WHEEL, context, this.textRenderer, this.settingsButton, mouseX, mouseY, f);
-        }
+        ButtonUtil.drawTooltipAndTexture(ModTexts.CONFIGURE_QOQ, ButtonUtil.CHEESE_WHEEL, context, this.textRenderer, this.settingsButton, mouseX, mouseY, f);
     }
 }

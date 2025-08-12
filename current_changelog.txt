@@ -1,3 +1,3 @@
-- Fixed small bug where the "Enable Mod" option appears twice in the options screen.
-- Compacted the Blacklist Server Button into just one button on the game menu screen (instead of two).
-- Small optimizations and tweaks.
+- The Quality of Queso configuration button now shows on the title screen, no matter what the option "Show Config Button" is set to.
+- Changed "Show Config Button" to "Show QoQ Buttons", which controls all Quality of Queso buttons displaying only on the game menu screen.
+- Added support for the Flashback mod (Quality of Queso buttons will be in a different position if the mod is loaded).

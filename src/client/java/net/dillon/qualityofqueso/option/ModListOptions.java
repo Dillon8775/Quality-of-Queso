@@ -51,8 +51,8 @@ public class ModListOptions {
     public static final SimpleOption<Boolean> ITEM_FRAME_SEARCHING = new SimpleOption<>("qualityofqueso.options.item_frame_searching", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.item_frame_searching.tooltip", parseKeyAsString(ModKeybinds.OPEN_SEARCH_ITEM_FRAMES_GUI.boundKey.toString().toUpperCase()))),
             (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, QualityOfQueso.options().itemFrameSearching, value -> QualityOfQueso.options().itemFrameSearching = value);
 
-    public static final SimpleOption<Boolean> SHOW_CONFIG_BUTTON = new SimpleOption<>("qualityofqueso.options.show_config_button", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.show_config_button.tooltip")),
-            (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, QualityOfQueso.options().showConfigButton, value -> QualityOfQueso.options().showConfigButton = value);
+    public static final SimpleOption<Boolean> SHOW_QOQ_BUTTONS = new SimpleOption<>("qualityofqueso.options.show_qoq_buttons", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.show_config_button.tooltip")),
+            (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, QualityOfQueso.options().showQoQButtons, value -> QualityOfQueso.options().showQoQButtons = value);
 
     public static final SimpleOption<Integer> ITEM_FRAME_SEARCH_TIMER =
             new SimpleOption<>("qualityofqueso.options.item_frame_search_timer", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.item_frame_search_timer.tooltip")),

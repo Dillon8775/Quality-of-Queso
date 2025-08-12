@@ -8,6 +8,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import org.lwjgl.glfw.GLFW;
 
@@ -87,6 +88,13 @@ public class QualityOfQueso implements ClientModInitializer {
 			}
 		}
 		return options().enableMod;
+    }
+
+    /**
+     * Checks if the {@code Flashback mod} is loaded.
+     */
+    public static boolean isFlashbackLoaded() {
+        return FabricLoader.getInstance().isModLoaded("flashback");
     }
 
 	/**

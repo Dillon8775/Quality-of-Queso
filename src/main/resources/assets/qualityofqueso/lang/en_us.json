@@ -90,6 +90,6 @@
   "qualityofqueso.options.item_frame_search_radius.tooltip": "Determines the radius for finding item frames.\n\n1m = 1 block.",
   "qualityofqueso.options.item_frame_search_timer": "Timer",
   "qualityofqueso.options.item_frame_search_timer.tooltip": "Specifies how long item frames will remain glowing.\n\n§aNo Timer §r§fmeans item frames will remain glowing until cleared.",
-  "qualityofqueso.options.show_config_button": "Show Config Button",
-  "qualityofqueso.options.show_config_button.tooltip": "Display the §6Quality of Queso§r§f configuration button on the title screen and the pause screen.\n\n§e§lPlease Note:§r§f If you disable this option, you can only re-enable it if you go into the config file §o(located in .minecraft/config/qualityofqueso-config.json,§r§f or if you have Mod Menu installed you can open this configuration screen from there.)."
+  "qualityofqueso.options.show_qoq_buttons": "Show QoQ Buttons",
+  "qualityofqueso.options.show_qoq_buttons.tooltip": "Displays all Quality of Queso buttons on the game menu screen."
 }

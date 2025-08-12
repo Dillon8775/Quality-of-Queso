@@ -26,7 +26,7 @@ public class ModOptions {
     public boolean itemFrameSearching = true;
     public int itemFrameSearchTimer = 0;
     public int itemFrameSearchRadius = 150;
-    public boolean showConfigButton = true;
+    public boolean showQoQButtons = true;
 
     public static final ModOptionsHandler OPTIONS = new ModOptionsHandler();
 
