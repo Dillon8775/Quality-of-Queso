@@ -16,8 +16,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-import static net.dillon.qualityofqueso.main.QualityOfQueso.options;
-
 @Environment(EnvType.CLIENT)
 @Mixin(TitleScreen.class)
 public class TitleScreenMixin extends Screen {

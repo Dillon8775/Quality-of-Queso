@@ -54,7 +54,7 @@ public class GameMenuScreenMixin extends Screen {
                         options().blacklistedServers.add(address);
                     }
                     save();
-                }).dimensions(this.width / 2 + 106, this.height / 4 + 96 - 16, 20, 20).build());
+                }).dimensions(this.width / 2 + 106, isFlashbackLoaded() ? this.height / 4 + 120 - 16 : this.height / 4 + 96 - 16, 20, 20).build());
             }
         }
     }
