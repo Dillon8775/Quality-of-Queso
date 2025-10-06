@@ -2,7 +2,7 @@
 
 # A quality of life mod, with a bunch of cool _QOL_ features.
 
-### Currently compatible with Minecraft versions **1.21.6-1.21.9.**
+### Currently compatible with Minecraft versions ***1.21.6-1.21.9.***
 
 ---
 
