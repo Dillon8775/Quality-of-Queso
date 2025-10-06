@@ -83,4 +83,4 @@ If you want, without removing the mod from your mods folder entirely, there is a
 
 ---
 
-Features and ideas created by MannyQUESO. Implemented by Dillon8775.**
+Features and ideas created by MannyQUESO. Implemented by Dillon8775.
