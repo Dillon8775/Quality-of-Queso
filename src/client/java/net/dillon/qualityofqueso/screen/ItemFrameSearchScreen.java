@@ -14,6 +14,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.input.KeyInput;
 import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
 
@@ -94,12 +95,12 @@ public class ItemFrameSearchScreen extends Screen {
      * Handles key pressing.
      */
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+    public boolean keyPressed(KeyInput input) {
         // Send packet upon pressing enter.
-        if (keyCode == GLFW.GLFW_KEY_ENTER && !this.searchField.getText().isEmpty()) {
+        if (input.key() == GLFW.GLFW_KEY_ENTER && !this.searchField.getText().isEmpty()) {
             this.sendPacket(false, QualityOfQueso.options().itemFrameSearchTimer != 0 ? QualityOfQueso.options().itemFrameSearchTimer : 0, QualityOfQueso.options().itemFrameSearchRadius);
         }
-        return super.keyPressed(keyCode, scanCode, modifiers);
+        return super.keyPressed(input);
     }
 
     /**

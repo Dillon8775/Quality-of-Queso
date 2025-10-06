@@ -6,6 +6,8 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.input.CharInput;
+import net.minecraft.client.input.KeyInput;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemGroups;
@@ -61,7 +63,7 @@ public abstract class CreativeInventoryScreenMixin extends HandledScreen<Creativ
 	 * @reason Allow typing in creative menu regardless of what menu.
 	 */
 	@Overwrite
-	public boolean charTyped(char chr, int modifiers) {
+	public boolean charTyped(CharInput input) {
 		if (this.ignoreTypedCharacter || (!(options().betterSearching) && selectedTab.getType() != ItemGroup.Type.SEARCH)) {
 			return false;
 		} else {
@@ -69,7 +71,7 @@ public abstract class CreativeInventoryScreenMixin extends HandledScreen<Creativ
 				this.setSelectedTab(ItemGroups.getSearchGroup());
 			}
 			String string = this.searchBox.getText();
-			if (this.searchBox.charTyped(chr, modifiers)) {
+			if (this.searchBox.charTyped(input)) {
 				if (!Objects.equals(string, this.searchBox.getText())) {
 					this.search();
 				}
@@ -85,15 +87,15 @@ public abstract class CreativeInventoryScreenMixin extends HandledScreen<Creativ
 	 * Fixes certain characters not being inputted when typing.
 	 */
 	@Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
-	private void allowCertainChars(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
+	private void allowCertainChars(KeyInput input, CallbackInfoReturnable<Boolean> cir) {
 		if (modEnabled(this.client) && options().betterSearching) {
 			if (this.focusedSlot != null && this.focusedSlot.getStack() != ItemStack.EMPTY && !this.searchBox.isFocused()) {
 				this.ignoreTypedCharacter = true;
-				cir.setReturnValue(super.keyPressed(keyCode, scanCode, modifiers));
+				cir.setReturnValue(super.keyPressed(input));
 			}
 
 			for (int key : QualityOfQueso.keys) {
-				if (keyCode == key) {
+				if (input.key() == key) {
 					this.ignoreTypedCharacter = false;
 					cir.setReturnValue(true);
 				}
@@ -110,9 +112,9 @@ public abstract class CreativeInventoryScreenMixin extends HandledScreen<Creativ
 					GLFW.GLFW_KEY_RIGHT_SUPER
 			);
 			for (int key : disallowedKeys) {
-				if (keyCode == key) {
+				if (input.key() == key) {
 					this.ignoreTypedCharacter = true;
-					cir.setReturnValue(super.keyPressed(keyCode, scanCode, modifiers));
+					cir.setReturnValue(super.keyPressed(input));
 				}
 			}
 		}

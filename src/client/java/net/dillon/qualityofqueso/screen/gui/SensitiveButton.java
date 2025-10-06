@@ -1,5 +1,6 @@
 package net.dillon.qualityofqueso.screen.gui;
 
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
 
@@ -17,11 +18,11 @@ public class SensitiveButton extends ButtonWidget {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(Click click, boolean doubled) {
         // Fully blocks sound AND onClick if not allowed
         if (!this.canActivate.get()) {
             return false;
         }
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(click, doubled);
     }
 }

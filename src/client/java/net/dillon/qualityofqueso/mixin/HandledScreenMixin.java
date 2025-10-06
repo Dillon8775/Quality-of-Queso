@@ -16,6 +16,8 @@ import net.minecraft.client.gui.screen.ingame.*;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.input.CharInput;
+import net.minecraft.client.input.KeyInput;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.component.type.ItemEnchantmentsComponent;
 import net.minecraft.enchantment.Enchantment;
@@ -386,7 +388,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
      */
     @Unique
     private boolean altDown() {
-        return !options().requireAltToMove || hasAltDown();
+        return !options().requireAltToMove || MinecraftClient.getInstance().isAltPressed();
     }
 
     /**
@@ -615,10 +617,10 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
      * Handles key pressing correctly and implements functionality for the {@link ModKeybinds#QUICK_EQUIP} keybind.
      */
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
-    private void handleKeyPressing(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
+    private void handleKeyPressing(KeyInput input, CallbackInfoReturnable<Boolean> cir) {
         if (modEnabled(this.client)) {
             // Quick equip key logic
-            if (options().quickEquip && keyCode == ModKeybinds.QUICK_EQUIP.boundKey.getCode() && this.focusedSlot != null && (this.screen instanceof InventoryScreen || this.screen instanceof CreativeInventoryScreen)) {
+            if (options().quickEquip && input.key() == ModKeybinds.QUICK_EQUIP.boundKey.getCode() && this.focusedSlot != null && (this.screen instanceof InventoryScreen || this.screen instanceof CreativeInventoryScreen)) {
                 ItemStack stack = this.focusedSlot.getStack();
                 EquipmentSlot targetSlot = null;
 
@@ -652,7 +654,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
 
             // If a "disallowed key" is pressed, ignoreTyping and secondaryIgnoreTyping become true.
             for (int key : QualityOfQueso.disallowedKeys) {
-                if (keyCode == key) {
+                if (input.key() == key) {
                     ignoreTyping = true; secondaryIgnoreTyping = true;
                     break;
                 }
@@ -661,19 +663,19 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             // handle switching items from hotbar to another containerSlot in inventory; cancel out typing if an query can be moved
             if (this.getScreenHandler().getCursorStack().isEmpty() && this.focusedSlot != null) {
                 for (int i = 0; i < 9; i++) {
-                    if (this.client.options.hotbarKeys[i].matchesKey(keyCode, scanCode)) {
+                    if (this.client.options.hotbarKeys[i].matchesKey(input)) {
                         ignoreTyping = true; secondaryIgnoreTyping = true; hotbarKeyPressed = true;
                         break;
                     }
                 }
-                if (this.screen instanceof RecipeBookScreen<?> && keyCode == ModKeybinds.QUICK_EQUIP.boundKey.getCode()) {
+                if (this.screen instanceof RecipeBookScreen<?> && input.key() == ModKeybinds.QUICK_EQUIP.boundKey.getCode()) {
                     ignoreTyping = true;
                 }
             }
 
             // Handle 'T' and 'E' keys
             for (int key : QualityOfQueso.keys) {
-                if (keyCode == key) {
+                if (input.key() == key) {
                     secondaryIgnoreTyping = false;
                     cir.setReturnValue(true);
                     break;
@@ -693,17 +695,17 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                     GLFW.GLFW_KEY_9
             );
             for (int key : numbers) {
-                if (keyCode == key) {
+                if (input.key() == key) {
                     numberKeyPressed = true;
                     break;
                 }
             }
 
             // Check if drop key or swap hands key was pressed
-            if (keyCode == MinecraftClient.getInstance().options.dropKey.boundKey.getCode()) {
+            if (input.key() == MinecraftClient.getInstance().options.dropKey.boundKey.getCode()) {
                 secondaryIgnoreTyping = true;
                 dropKeyPressed = true;
-            } else if (keyCode == MinecraftClient.getInstance().options.swapHandsKey.boundKey.getCode()) {
+            } else if (input.key() == MinecraftClient.getInstance().options.swapHandsKey.boundKey.getCode()) {
                 secondaryIgnoreTyping = true;
                 swapKeyPressed = true;
             }
@@ -720,7 +722,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                 if (recipeScreen.recipeBook.searchField != null) {
                     recipeScreen.recipeBook.searchField.setFocused(!ignoreTyping);
                     if (recipeScreen.recipeBook.searchField.isFocused()) {
-                        cir.setReturnValue(recipeScreen.recipeBook.keyPressed(keyCode, scanCode, modifiers) || super.keyPressed(keyCode, scanCode, modifiers));
+                        cir.setReturnValue(recipeScreen.recipeBook.keyPressed(input) || super.keyPressed(input));
                     }
                 }
             }
@@ -732,7 +734,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                     this.searchField.setFocused(false);
                 }
 
-                if (this.searchField.isFocused() && this.searchField.keyPressed(keyCode, scanCode, modifiers)) {
+                if (this.searchField.isFocused() && this.searchField.keyPressed(input)) {
                     cir.setReturnValue(true);
                 }
             }
@@ -785,11 +787,11 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
      * Allows correct functionality for typing into search field without clicking on it.
      */
     @Override
-    public boolean charTyped(char chr, int modifiers) {
+    public boolean charTyped(CharInput input) {
         if (options().chestSearch && this.searchField != null && this.searchField.isFocused()) {
-            return this.searchField.charTyped(chr, modifiers);
+            return this.searchField.charTyped(input);
         }
-        return super.charTyped(chr, modifiers);
+        return super.charTyped(input);
     }
 
     /**

@@ -23,7 +23,7 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
     private ButtonWidget chestSearchingOptions, inventorySortingOptions, itemFrameSearchingOptions, openItemFrameSearchGUI, otherOptions;
 
     public ModOptionsScreen(Screen parent) {
-        super(parent, Text.translatable(QualityOfQueso.TITLE));
+        super(parent, Text.translatable("qualityofqueso.gui.options.title"));
     }
 
     @Override
