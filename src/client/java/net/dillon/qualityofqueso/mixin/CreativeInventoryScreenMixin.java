@@ -1,6 +1,6 @@
 package net.dillon.qualityofqueso.mixin;
 
-import net.dillon.qualityofqueso.main.QualityOfQueso;
+import net.dillon.qualityofqueso.main.QoQ;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
@@ -27,8 +27,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.List;
 import java.util.Objects;
 
-import static net.dillon.qualityofqueso.main.QualityOfQueso.modEnabled;
-import static net.dillon.qualityofqueso.main.QualityOfQueso.options;
+import static net.dillon.qualityofqueso.main.QoQ.modEnabled;
+import static net.dillon.qualityofqueso.main.QoQ.options;
 
 @Environment(EnvType.CLIENT)
 @Mixin(CreativeInventoryScreen.class)
@@ -94,7 +94,7 @@ public abstract class CreativeInventoryScreenMixin extends HandledScreen<Creativ
 				cir.setReturnValue(super.keyPressed(input));
 			}
 
-			for (int key : QualityOfQueso.keys) {
+			for (int key : QoQ.keys) {
 				if (input.key() == key) {
 					this.ignoreTypedCharacter = false;
 					cir.setReturnValue(true);

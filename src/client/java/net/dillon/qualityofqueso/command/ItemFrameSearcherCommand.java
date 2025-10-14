@@ -11,7 +11,7 @@ import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 
-import static net.dillon.qualityofqueso.main.QualityOfQueso.options;
+import static net.dillon.qualityofqueso.main.QoQ.options;
 
 public class ItemFrameSearcherCommand {
 

@@ -1,7 +1,7 @@
 package net.dillon.qualityofqueso.option.options;
 
 import com.google.common.collect.ImmutableList;
-import net.dillon.qualityofqueso.main.QualityOfQueso;
+import net.dillon.qualityofqueso.main.QoQ;
 import net.dillon.qualityofqueso.option.AbstractModOptionsScreen;
 import net.dillon.qualityofqueso.option.ModListOptions;
 import net.minecraft.client.gui.DrawContext;
@@ -15,12 +15,12 @@ import net.minecraft.util.Formatting;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OtherOptionsScreen extends AbstractModOptionsScreen {
+public class MiscOptionsScreen extends AbstractModOptionsScreen {
     private TextFieldWidget blacklistedServersField;
     private List<String> blacklistedServers = new ArrayList<>();
 
-    public OtherOptionsScreen(Screen parent) {
-        super(parent, Text.translatable("qualityofqueso.gui.other_options"));
+    public MiscOptionsScreen(Screen parent) {
+        super(parent, Text.translatable("qualityofqueso.gui.misc_options"));
     }
 
     @Override
@@ -31,6 +31,8 @@ public class OtherOptionsScreen extends AbstractModOptionsScreen {
                 ModListOptions.BETTER_GUI_EXIT,
                 ModListOptions.QUICK_EQUIP,
                 ModListOptions.PREVENT_RAGE_QUITTING,
+                ModListOptions.PREVENT_E_FROM_TYPING,
+                ModListOptions.HELPFUL_TOOLTIPS,
                 ModListOptions.SHOW_QOQ_BUTTONS
         };
     }
@@ -41,7 +43,7 @@ public class OtherOptionsScreen extends AbstractModOptionsScreen {
         this.body.addAll(this.options());
 
         // Initialize the list from current options
-        this.blacklistedServers = new ArrayList<>(QualityOfQueso.options().blacklistedServers);
+        this.blacklistedServers = new ArrayList<>(QoQ.options().blacklistedServers);
 
         // Create and position the text field
         this.blacklistedServersField = new TextFieldWidget(
@@ -93,8 +95,8 @@ public class OtherOptionsScreen extends AbstractModOptionsScreen {
 
     @Override
     public void close() {
-        QualityOfQueso.options().blacklistedServers.clear();
-        QualityOfQueso.options().blacklistedServers.addAll(this.blacklistedServers);
+        QoQ.options().blacklistedServers.clear();
+        QoQ.options().blacklistedServers.addAll(this.blacklistedServers);
         super.close();
     }
 

@@ -1,6 +1,6 @@
 package net.dillon.qualityofqueso.screen;
 
-import net.dillon.qualityofqueso.main.QualityOfQueso;
+import net.dillon.qualityofqueso.main.QoQ;
 import net.dillon.qualityofqueso.option.ModListOptions;
 import net.dillon.qualityofqueso.option.ModOptions;
 import net.dillon.qualityofqueso.packet.GlowSearchC2SPayload;
@@ -17,6 +17,8 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.input.KeyInput;
 import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
+
+import static net.dillon.qualityofqueso.main.QoQ.options;
 
 /**
  * A utility screen to search for all nearby item frames. If an item frame is found, it glows.
@@ -37,10 +39,10 @@ public class ItemFrameSearchScreen extends Screen {
     @Override
     protected void init() {
         this.searchField = new TextFieldWidget(this.textRenderer, this.width / 2 - 100, this.height / 2 - 24, 200, 20, null);
-        this.searchField.setText(QualityOfQueso.SAVED_ITEM_FRAME_TEXT);
+        this.searchField.setText(QoQ.SAVED_ITEM_FRAME_TEXT);
         this.searchField.setMaxLength(50);
         this.searchButton = this.addDrawableChild(ButtonWidget.builder(Text.translatable("qualityofqueso.gui.search"), button -> {
-            this.sendPacket(false, QualityOfQueso.options().itemFrameSearchTimer != 0 ? QualityOfQueso.options().itemFrameSearchTimer : 0, QualityOfQueso.options().itemFrameSearchRadius);
+            this.sendPacket(false, options().itemFrameSearchTimer != 0 ? options().itemFrameSearchTimer : 0, options().itemFrameSearchRadius);
         }).dimensions(this.width / 2 + 115, this.height / 2 + 24, 100, 20).build());
         ClickableWidget itemFrameSearchTimer = this.addDrawableChild(ModListOptions.ITEM_FRAME_SEARCH_TIMER.createWidget(MinecraftClient.getInstance().options));
         itemFrameSearchTimer.setDimensionsAndPosition(100, 20, this.width / 2 + 5, this.height / 2 + 24);
@@ -48,7 +50,7 @@ public class ItemFrameSearchScreen extends Screen {
         itemFrameSearchRadius.setDimensionsAndPosition(100, 20, itemFrameSearchTimer.getX(), itemFrameSearchTimer.getY() + 32);
         this.clearButton = this.addDrawableChild(ButtonWidget.builder(Text.translatable("qualityofqueso.gui.clear"), button -> {
             this.searchField.setText("");
-            this.sendPacket(true, 0, QualityOfQueso.options().itemFrameSearchRadius);
+            this.sendPacket(true, 0, options().itemFrameSearchRadius);
         }).dimensions(this.width / 2 - 105, this.height / 2 + 24, 100, 20).build());
         this.addDrawableChild(ButtonWidget.builder(Text.translatable("qualityofqueso.gui.close"), button -> {
             this.close();
@@ -76,7 +78,7 @@ public class ItemFrameSearchScreen extends Screen {
         if (this.clearButton.isHovered()) {
             context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.clear.tooltip"), 200), mouseX, mouseY);
         }
-        if (this.searchField.isHovered()) {
+        if (options().helpfulTooltips && this.searchField.isHovered() && this.searchField.getText().isEmpty()) {
             context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.search_item_frames.search_filtering"), 200), mouseX, mouseY);
         }
     }
@@ -100,7 +102,7 @@ public class ItemFrameSearchScreen extends Screen {
     public boolean keyPressed(KeyInput input) {
         // Send packet upon pressing enter.
         if (input.key() == GLFW.GLFW_KEY_ENTER && !this.searchField.getText().isEmpty()) {
-            this.sendPacket(false, QualityOfQueso.options().itemFrameSearchTimer != 0 ? QualityOfQueso.options().itemFrameSearchTimer : 0, QualityOfQueso.options().itemFrameSearchRadius);
+            this.sendPacket(false, options().itemFrameSearchTimer != 0 ? options().itemFrameSearchTimer : 0, options().itemFrameSearchRadius);
         }
         return super.keyPressed(input);
     }
@@ -110,7 +112,7 @@ public class ItemFrameSearchScreen extends Screen {
      */
     @Override
     public void close() {
-        QualityOfQueso.SAVED_ITEM_FRAME_TEXT = this.searchField.getText();
+        QoQ.SAVED_ITEM_FRAME_TEXT = this.searchField.getText();
         ModOptions.OPTIONS.save();
         super.close();
     }

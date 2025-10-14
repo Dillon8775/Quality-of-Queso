@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static net.dillon.qualityofqueso.main.QualityOfQueso.*;
+import static net.dillon.qualityofqueso.main.QoQ.*;
 
 @Environment(EnvType.CLIENT)
 @Mixin(GameMenuScreen.class)
@@ -68,7 +68,7 @@ public class GameMenuScreenMixin extends Screen {
             if (options().showQoQButtons) {
                 ButtonUtil.drawTooltipAndTexture(ModTexts.CONFIGURE_QOQ, ButtonUtil.CHEESE_WHEEL, context, this.textRenderer, this.settingsButton, mouseX, mouseY, null);
             }
-            if (options().preventRageQuitting && this.exitButton != null && this.exitButton.isHovered()) {
+            if (options().preventRageQuitting && options().helpfulTooltips && this.exitButton != null && this.exitButton.isHovered()) {
                 ButtonUtil.drawTooltip(Text.translatable("qualityofqueso.gui.disconnect"), context, this.textRenderer, mouseX, mouseY);
             }
             if (!(this.client.getCurrentServerEntry() == null)) {

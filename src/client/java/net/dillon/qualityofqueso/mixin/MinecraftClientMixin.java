@@ -8,8 +8,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static net.dillon.qualityofqueso.main.QualityOfQueso.modEnabled;
-import static net.dillon.qualityofqueso.main.QualityOfQueso.options;
+import static net.dillon.qualityofqueso.main.QoQ.modEnabled;
+import static net.dillon.qualityofqueso.main.QoQ.options;
 
 @Mixin(MinecraftClient.class)
 public class MinecraftClientMixin {

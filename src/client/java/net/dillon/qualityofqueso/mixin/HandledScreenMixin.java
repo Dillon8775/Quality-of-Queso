@@ -2,7 +2,7 @@ package net.dillon.qualityofqueso.mixin;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.dillon.qualityofqueso.keybind.ModKeybinds;
-import net.dillon.qualityofqueso.main.QualityOfQueso;
+import net.dillon.qualityofqueso.main.QoQ;
 import net.dillon.qualityofqueso.option.ModOptions;
 import net.dillon.qualityofqueso.screen.gui.SensitiveButton;
 import net.dillon.qualityofqueso.util.ModTexts;
@@ -10,6 +10,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.RenderPipelines;
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.*;
@@ -19,6 +20,7 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.input.CharInput;
 import net.minecraft.client.input.KeyInput;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.client.util.InputUtil;
 import net.minecraft.component.type.ItemEnchantmentsComponent;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -55,10 +57,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
-import static net.dillon.qualityofqueso.main.QualityOfQueso.modEnabled;
-import static net.dillon.qualityofqueso.main.QualityOfQueso.options;
+import static net.dillon.qualityofqueso.main.QoQ.modEnabled;
+import static net.dillon.qualityofqueso.main.QoQ.options;
 
 @Environment(EnvType.CLIENT)
 @Mixin(HandledScreen.class)
@@ -85,6 +88,13 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     private Inventory inventory;
     @Unique
     private boolean keepInventoryButtonActive = false;
+    @Unique
+    private final Map<TagKey<Item>, EquipmentSlot> quicklyEquippables = Map.of(
+            ItemTags.HEAD_ARMOR, EquipmentSlot.HEAD,
+            ItemTags.CHEST_ARMOR, EquipmentSlot.CHEST,
+            ItemTags.LEG_ARMOR, EquipmentSlot.LEGS,
+            ItemTags.FOOT_ARMOR, EquipmentSlot.FEET
+    );
 
     public HandledScreenMixin(Text title) {
         super(title);
@@ -113,7 +123,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                 int barWidth = (int)((double)this.backgroundWidth * 0.6);
                 this.searchField = new TextFieldWidget(this.textRenderer, this.width / 2 + barWidth / 2 - 64, this.y + this.titleY - 2, 90, 12, null);
                 if (options().saveSearchText) {
-                    this.searchField.setText(QualityOfQueso.SAVED_TEXT);
+                    this.searchField.setText(QoQ.SAVED_TEXT);
                 }
                 this.searchField.setMaxLength(50);
                 this.searchField.setPlaceholder(Text.translatable("qualityofqueso.gui.search.placeholder").formatted(Formatting.ITALIC).formatted(Formatting.GRAY));
@@ -243,7 +253,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
         // Render the search field
         if (this.searchField != null) {
             this.searchField.render(context, mouseX, mouseY, deltaTicks);
-            if (this.searchField.isHovered()) {
+            if (options().helpfulTooltips && this.searchField.isHovered() && this.searchField.getText().isEmpty()) {
                 context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.chest_search.search_filtering"), 200), mouseX, mouseY);
             }
         }
@@ -283,11 +293,11 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             if (this.transferContainerButton != null) {
                 // If button isn't active, render inactive texture
                 if (!this.transferContainerButton.active) {
-                    this.renderTransferButtonTexture("transfer_container_button_inactive", this.transferContainerButton, context);
+                    this.renderButtonTexture("transfer_container_button_inactive", true, this.transferContainerButton, context);
                 }
                 // Otherwise render unhovered/texture, depending on if the button is hovered
                 else {
-                    this.renderTransferButtonTexture(this.transferContainerButton.isMouseOver(mouseX, mouseY) ? "transfer_container_button_hovered" : "transfer_container_button", this.transferContainerButton, context);
+                    this.renderButtonTexture(this.transferContainerButton.isMouseOver(mouseX, mouseY) ? "transfer_container_button_hovered" : "transfer_container_button", true, this.transferContainerButton, context);
                 }
 
                 // Render tooltip if searching or cursor has item
@@ -295,7 +305,11 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                     if (!this.getScreenHandler().getCursorStack().isEmpty()) {
                         context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.transfer_container_button.with_cursor_stack", this.getScreenHandler().getCursorStack().getItemName()), 200), mouseX, mouseY);
                     } else if (!this.getSearchFieldText().isEmpty()) {
-                        context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.transfer_container_button.with_search_query", this.getSearchFieldText()), 200), mouseX, mouseY);
+                        context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(this.getSearchFieldText().startsWith("#") ?
+                                Text.translatable("qualityofqueso.gui.transfer_container_button.with_search_query.tag", this.getSearchFieldText().substring(1)) :
+                                this.getSearchFieldText().startsWith("!") ?
+                                        Text.translatable("qualityofqueso.gui.transfer_container_button.with_search_query.exclude", this.getSearchFieldText().substring(1)) :
+                                        Text.translatable("qualityofqueso.gui.transfer_container_button.with_search_query", this.getSearchFieldText()), 200), mouseX, mouseY);
                     } else {
                         context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.transfer_container_button"), 200), mouseX, mouseY);
                     }
@@ -304,15 +318,15 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             // Render transfer inventory -> chest button texture
             // If the button should not be active (meaning if there is nothing in the inventory), render inactive texture
             if (!this.shouldButtonBeActive(true, playerInventory, transferInventoryButton)) {
-                this.renderTransferButtonTexture("transfer_inventory_button_inactive", transferInventoryButton, context);
+                this.renderButtonTexture("transfer_inventory_button_inactive", true, transferInventoryButton, context);
             }
             // If inventory contains something, then check if alt is down. If it's not, render hold alt texture
             else if (!this.altDown()) {
-                this.renderTransferButtonTexture("transfer_inventory_button_hold_alt", transferInventoryButton, context);
+                this.renderButtonTexture("transfer_inventory_button_hold_alt", true, transferInventoryButton, context);
             }
             // Otherwise render unhovered/hovered texture, depending on if the button is hovered
             else {
-                this.renderTransferButtonTexture(transferInventoryButton.isMouseOver(mouseX, mouseY) ? "transfer_inventory_button_hovered" : "transfer_inventory_button", transferInventoryButton, context);
+                this.renderButtonTexture(transferInventoryButton.isMouseOver(mouseX, mouseY) ? "transfer_inventory_button_hovered" : "transfer_inventory_button", true, transferInventoryButton, context);
             }
 
             // Button to include hotbar transfer or not
@@ -326,17 +340,17 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             // Handles rendering textures and tooltips for include hotbar
             if (includeHotbarButton.isMouseOver(mouseX, mouseY)) {
                 if (options().includeHotbar) {
-                    this.renderTransferButtonTexture("include_hotbar_button_hovered", includeHotbarButton, context);
+                    this.renderButtonTexture("include_hotbar_button_hovered", false, includeHotbarButton, context);
                     context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.include_hotbar"), 200), mouseX, mouseY);
                 } else {
-                    this.renderTransferButtonTexture("exclude_hotbar_button_hovered", includeHotbarButton, context);
+                    this.renderButtonTexture("exclude_hotbar_button_hovered", false, includeHotbarButton, context);
                     context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.exclude_hotbar"), 200), mouseX, mouseY);
                 }
             } else {
                 if (options().includeHotbar) {
-                    this.renderTransferButtonTexture("include_hotbar_button", includeHotbarButton, context);
+                    this.renderButtonTexture("include_hotbar_button", false, includeHotbarButton, context);
                 } else {
-                    this.renderTransferButtonTexture("exclude_hotbar_button", includeHotbarButton, context);
+                    this.renderButtonTexture("exclude_hotbar_button", false, includeHotbarButton, context);
                 }
             }
 
@@ -346,7 +360,11 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                     if (!this.getScreenHandler().getCursorStack().isEmpty()) {
                         context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.transfer_inventory_button.with_cursor_stack", this.getScreenHandler().getCursorStack().getItemName()), 200), mouseX, mouseY);
                     } else if (!this.getSearchFieldText().isEmpty() && options().searchInventory) {
-                        context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.transfer_inventory_button.with_search_query", this.getSearchFieldText()), 200), mouseX, mouseY);
+                        context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(this.getSearchFieldText().startsWith("#") ?
+                                Text.translatable("qualityofqueso.gui.transfer_inventory_button.with_search_query.tag", this.getSearchFieldText().substring(1)) :
+                                this.getSearchFieldText().startsWith("!") ?
+                                        Text.translatable("qualityofqueso.gui.transfer_inventory_button.with_search_query.exclude", this.getSearchFieldText().substring(1)) :
+                                        Text.translatable("qualityofqueso.gui.transfer_inventory_button.with_search_query", this.getSearchFieldText()), 200), mouseX, mouseY);
                     } else {
                         context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.transfer_inventory_button"), 200), mouseX, mouseY);
                     }
@@ -428,8 +446,13 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
      * Renders a transfer button texture.
      */
     @Unique
-    private void renderTransferButtonTexture(String id, ClickableWidget buttonReference, DrawContext context) {
-        context.drawTexture(RenderPipelines.GUI_TEXTURED, Identifier.of("qualityofqueso:textures/gui/"+id+".png"), buttonReference.getX() - 1, buttonReference.getY() - 1, 0.0F, 0.0F, 12, 12, 12, 12);
+    private void renderButtonTexture(String id, boolean transferable, ClickableWidget buttonReference, DrawContext context) {
+        String transferableString = this.getSearchFieldText().startsWith("!") ?
+                "_exclude.png" : this.getSearchFieldText().startsWith("#") ?
+                "_with_tag.png" : !this.getScreenHandler().getCursorStack().isEmpty() ?
+                "_with_stack.png" : ".png";
+        String appended = transferable ? transferableString : ".png";
+        context.drawTexture(RenderPipelines.GUI_TEXTURED, Identifier.of("qualityofqueso:textures/gui/"+id+appended), buttonReference.getX() - 1, buttonReference.getY() - 1, 0.0F, 0.0F, 12, 12, 12, 12);
     }
 
     /**
@@ -614,46 +637,46 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     }
 
     /**
+     * Implements functionality for the {@code Quick Equip right-click feature.}
+     */
+    @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
+    private void handleMouseClicking(Click click, boolean doubled, CallbackInfoReturnable<Boolean> cir) {
+        if (modEnabled(this.client) && click.button() == InputUtil.GLFW_MOUSE_BUTTON_RIGHT && this.focusedSlot != null && this.isQuicklyEquippable(this.focusedSlot.getStack())) {
+            this.quickEquip();
+            cir.setReturnValue(true);
+        }
+    }
+
+    /**
      * Handles key pressing correctly and implements functionality for the {@link ModKeybinds#QUICK_EQUIP} keybind.
      */
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
     private void handleKeyPressing(KeyInput input, CallbackInfoReturnable<Boolean> cir) {
         if (modEnabled(this.client)) {
-            // Quick equip key logic
-            if (options().quickEquip && input.key() == ModKeybinds.QUICK_EQUIP.boundKey.getCode() && this.focusedSlot != null && (this.screen instanceof InventoryScreen || this.screen instanceof CreativeInventoryScreen)) {
-                ItemStack stack = this.focusedSlot.getStack();
-                EquipmentSlot targetSlot = null;
+            // Quick equip logic
+            if (input.key() == ModKeybinds.QUICK_EQUIP.boundKey.getCode()) {
+                this.quickEquip();
+            }
 
-                if (stack.isIn(ItemTags.HEAD_ARMOR)) {
-                    targetSlot = EquipmentSlot.HEAD;
-                } else if (stack.isIn(ItemTags.CHEST_ARMOR) || stack.isOf(Items.ELYTRA)) {
-                    targetSlot = EquipmentSlot.CHEST;
-                } else if (stack.isIn(ItemTags.LEG_ARMOR)) {
-                    targetSlot = EquipmentSlot.LEGS;
-                } else if (stack.isIn(ItemTags.FOOT_ARMOR)) {
-                    targetSlot = EquipmentSlot.FEET;
-                }
-
-                if (targetSlot != null) {
-                    ItemStack equippedStack = this.client.player.getEquippedStack(targetSlot);
-                    if (equippedStack.isEmpty()) {
-                        this.sendClickSlotPacket(this.focusedSlot.id, SlotActionType.QUICK_MOVE);
-                    } else {
-                        this.quickSwap(this.focusedSlot.id, targetSlot);
-                    }
-                }
+            // Prevent E from typing entirely in inventory screens\
+            if (input.key() == GLFW.GLFW_KEY_E && options().preventEFromTyping && (this.screen instanceof InventoryScreen || this.screen instanceof CreativeInventoryScreen)) {
+                this.close();
+                cir.setReturnValue(true);
             }
 
             // Declare typing variables
-            boolean ignoreTyping = this.hoveredSlotHasItem();
-            boolean secondaryIgnoreTyping = false;
-            boolean numberKeyPressed = false;
-            boolean hotbarKeyPressed = false;
-            boolean dropKeyPressed = false;
-            boolean swapKeyPressed = false;
+            // Both of these variables apply to disallowed keys and hotbar switching
+            boolean ignoreTyping = this.hoveredSlotHasItem(); // Basic ignore typing variable; applies to recipe book screens only.
+            boolean secondaryIgnoreTyping = false; // Secondary ignore typing variable; applies to "T" and "E" keys and chest searching screens only.
+
+            // These variables only apply to the chest search bar
+            boolean numberKeyPressed = false; // Determines if a number key was pressed
+            boolean hotbarKeyPressed = false; // Determines if a hotbar key was pressed
+            boolean dropKeyPressed = false; // Determines if the drop key was pressed
+            boolean swapKeyPressed = false; // Determines if the swap item key was pressed
 
             // If a "disallowed key" is pressed, ignoreTyping and secondaryIgnoreTyping become true.
-            for (int key : QualityOfQueso.disallowedKeys) {
+            for (int key : QoQ.disallowedKeys) {
                 if (input.key() == key) {
                     ignoreTyping = true; secondaryIgnoreTyping = true;
                     break;
@@ -674,7 +697,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             }
 
             // Handle 'T' and 'E' keys
-            for (int key : QualityOfQueso.keys) {
+            for (int key : QoQ.keys) {
                 if (input.key() == key) {
                     secondaryIgnoreTyping = false;
                     cir.setReturnValue(true);
@@ -752,6 +775,19 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     }
 
     /**
+     * @return {@code true} if the hovered item is a {@code quickly equippable item.}
+     */
+    @Unique
+    private boolean isQuicklyEquippable(ItemStack stack) {
+        for (TagKey<Item> quicklyEquippable : this.quicklyEquippables.keySet()) {
+            if (stack.isIn(quicklyEquippable) || stack.isOf(Items.ELYTRA)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Quickly swaps two items in the player's inventory.
      */
     @Unique
@@ -761,6 +797,36 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
         this.sendClickSlotPacket(sourceSlot, SlotActionType.PICKUP);
         this.sendClickSlotPacket(slotIndex, SlotActionType.PICKUP);
         this.sendClickSlotPacket(sourceSlot, SlotActionType.PICKUP);
+    }
+
+    /**
+     * Quickly equips an item.
+     */
+    @Unique
+    private void quickEquip() {
+        if (options().quickEquip && this.focusedSlot != null && (this.focusedSlot.id >= 5) && (this.screen instanceof InventoryScreen || this.screen instanceof CreativeInventoryScreen)) {
+            ItemStack stack = this.focusedSlot.getStack();
+            EquipmentSlot targetSlot = null;
+
+            for (TagKey<Item> quicklyEquippable : this.quicklyEquippables.keySet()) {
+                if (stack.isIn(quicklyEquippable)) {
+                    targetSlot = this.quicklyEquippables.get(quicklyEquippable);
+                }
+            }
+
+            if (stack.isOf(Items.ELYTRA)) {
+                targetSlot = EquipmentSlot.CHEST;
+            }
+
+            if (targetSlot != null) {
+                ItemStack equippedStack = this.client.player.getEquippedStack(targetSlot);
+                if (equippedStack.isEmpty()) {
+                    this.sendClickSlotPacket(this.focusedSlot.id, SlotActionType.QUICK_MOVE);
+                } else {
+                    this.quickSwap(this.focusedSlot.id, targetSlot);
+                }
+            }
+        }
     }
 
     /**
@@ -779,7 +845,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     @Inject(method = "close", at = @At("TAIL"))
     private void saveSearchText(CallbackInfo ci) {
         if (options().chestSearch && options().saveSearchText && this.searchField != null && this.isValidScreen()) {
-            QualityOfQueso.SAVED_TEXT = this.searchField.getText();
+            QoQ.SAVED_TEXT = this.searchField.getText();
         }
     }
 

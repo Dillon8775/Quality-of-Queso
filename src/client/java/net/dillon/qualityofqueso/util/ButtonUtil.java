@@ -15,6 +15,8 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.ColorHelper;
 import org.jetbrains.annotations.Nullable;
 
+import static net.dillon.qualityofqueso.main.QoQ.options;
+
 /**
  * Utility class.
  */
@@ -37,7 +39,7 @@ public class ButtonUtil {
      * Draws the tooltip and texture for the settings button.
      */
     public static void drawTooltipAndTexture(Text tooltip, String name, DrawContext context, TextRenderer renderer, ButtonWidget button, int mouseX, int mouseY, @Nullable Float f) {
-        if (button.isHovered()) {
+        if (options().helpfulTooltips && button.isHovered()) {
             drawTooltip(tooltip, context, renderer, mouseX, mouseY);
         }
         drawTexture(context, name, button, f == null ? 1.0F : f);

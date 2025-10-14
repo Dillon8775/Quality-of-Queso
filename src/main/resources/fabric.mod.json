@@ -3,7 +3,7 @@
   "id": "qualityofqueso",
   "version": "1.3.6+mc1.21.9x",
   "name": "Quality of Queso",
-  "description": "A quality of life mod, with a bunch of cool QOL features.",
+  "description": "Chest searching, inventory sorting, and more quality-of-life features!",
   "accessWidener": "qualityofqueso.accessWidener",
   "authors": [
     "MannyQUESO",
@@ -18,7 +18,7 @@
   "environment": "*",
   "entrypoints": {
     "client": [
-      "net.dillon.qualityofqueso.main.QualityOfQueso"
+      "net.dillon.qualityofqueso.main.QoQ"
     ],
     "main": [
       "net.dillon.qualityofqueso.packet.ServerHandler"

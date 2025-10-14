@@ -1,10 +1,10 @@
 package net.dillon.qualityofqueso.option;
 
-import net.dillon.qualityofqueso.main.QualityOfQueso;
+import net.dillon.qualityofqueso.main.QoQ;
 import net.dillon.qualityofqueso.option.options.ChestSearchingOptionsScreen;
 import net.dillon.qualityofqueso.option.options.InventorySortingOptionsScreen;
 import net.dillon.qualityofqueso.option.options.ItemFrameSearchingOptionsScreen;
-import net.dillon.qualityofqueso.option.options.OtherOptionsScreen;
+import net.dillon.qualityofqueso.option.options.MiscOptionsScreen;
 import net.dillon.qualityofqueso.screen.ItemFrameSearchScreen;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -43,13 +43,13 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
         }).build());
         buttons.add(this.itemFrameSearchingOptions);
         this.openItemFrameSearchGUI = this.addDrawableChild(ButtonWidget.builder(Text.translatable("qualityofqueso.gui.open_item_frame_search_gui"), button -> {
-            if (QualityOfQueso.options().itemFrameSearching && this.client.world != null) {
+            if (QoQ.options().itemFrameSearching && this.client.world != null) {
                 this.client.setScreen(new ItemFrameSearchScreen());
             }
         }).build());
         buttons.add(this.openItemFrameSearchGUI);
-        this.otherOptions = this.addDrawableChild(ButtonWidget.builder(Text.translatable("qualityofqueso.gui.other_options"), button -> {
-            this.client.setScreen(new OtherOptionsScreen(this));
+        this.otherOptions = this.addDrawableChild(ButtonWidget.builder(Text.translatable("qualityofqueso.gui.misc_options"), button -> {
+            this.client.setScreen(new MiscOptionsScreen(this));
         }).build());
         buttons.add(this.otherOptions);
         this.body.addAll(buttons);
@@ -58,7 +58,7 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
         super.render(context, mouseX, mouseY, deltaTicks);
-        this.openItemFrameSearchGUI.active = QualityOfQueso.options().itemFrameSearching && this.client.world != null;
+        this.openItemFrameSearchGUI.active = QoQ.options().itemFrameSearching && this.client.world != null;
         if (this.chestSearchingOptions.isHovered()) {
             context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.chest_searching_options.tooltip"), 200), mouseX, mouseY);
         }
@@ -69,14 +69,14 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
             context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.item_frame_searching_options.tooltip"), 200), mouseX, mouseY);
         }
         if (this.openItemFrameSearchGUI.isHovered()) {
-            if (!QualityOfQueso.options().itemFrameSearching) {
+            if (!QoQ.options().itemFrameSearching) {
                 context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.open_item_frame_search_gui.disabled"), 200), mouseX, mouseY);
             } else if (this.client.world == null) {
                 context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.open_item_frame_search_gui.null_world"), 200), mouseX, mouseY);
             }
         }
-        if (this.otherOptions.isHovered()) {
-            context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.other_options.tooltip"), 200), mouseX, mouseY);
+        if (this.otherOptions.isHovered() && QoQ.options().helpfulTooltips) {
+            context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.misc_options.tooltip"), 200), mouseX, mouseY);
         }
     }
 

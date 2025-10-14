@@ -22,6 +22,8 @@ public class ModOptions {
     public boolean includeHotbar = true;
     public boolean quickEquip = true;
     public boolean preventRageQuitting = false;
+    public boolean preventEFromTyping = false;
+    public boolean helpfulTooltips = true;
     public List<String> blacklistedServers = new ArrayList<>();
     public boolean itemFrameSearching = true;
     public int itemFrameSearchTimer = 0;
