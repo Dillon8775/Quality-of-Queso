@@ -17,7 +17,7 @@ public class ModOptions {
     public boolean chestSearch = true;
     public boolean searchInventory = true;
     public boolean saveSearchText = false;
-    public boolean inventorySorting = true;
+    public boolean inventoryManagement = true;
     public boolean requireAltToMove = false;
     public boolean includeHotbar = true;
     public boolean quickEquip = true;

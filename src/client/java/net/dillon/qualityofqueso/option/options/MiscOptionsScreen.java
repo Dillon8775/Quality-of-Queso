@@ -27,9 +27,9 @@ public class MiscOptionsScreen extends AbstractModOptionsScreen {
     protected SimpleOption<?>[] options() {
         return new SimpleOption[]{
                 ModListOptions.ENABLE_MOD,
+                ModListOptions.QUICK_EQUIP,
                 ModListOptions.BETTER_SEARCHING,
                 ModListOptions.BETTER_GUI_EXIT,
-                ModListOptions.QUICK_EQUIP,
                 ModListOptions.PREVENT_RAGE_QUITTING,
                 ModListOptions.PREVENT_E_FROM_TYPING,
                 ModListOptions.HELPFUL_TOOLTIPS,

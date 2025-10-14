@@ -2,6 +2,7 @@ package net.dillon.qualityofqueso.packet;
 
 import net.dillon.qualityofqueso.option.ModServerOptions;
 import net.dillon.qualityofqueso.util.GlowCountdown;
+import net.dillon.qualityofqueso.util.ModUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
@@ -22,13 +23,10 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 public final class ServerHandler implements ModInitializer {
-    private static final Logger LOGGER = LoggerFactory.getLogger("Quality of QUESO");
 
     /**
      * Handles server/client conflicts.
@@ -39,15 +37,15 @@ public final class ServerHandler implements ModInitializer {
         if (FabricLoader.getInstance().getEnvironmentType().equals(EnvType.SERVER)) {
             if (ModServerOptions.SERVER_OPTIONS.getInstance().itemFrameSearchingOnServer) {
                 registerGlowSearchPacketReceiver();
-                info("Registered glowing packet on SERVER.");
+                ModUtil.debug("Registered glowing packet on server.");
             } else {
-                info("Did NOT register glowing packet, \"itemFrameSearchingOnServer\" is disabled. No-one can use this feature unless enabled here on server environment.");
+                ModUtil.debug("Did NOT register glowing packet, \"itemFrameSearchingOnServer\" is disabled. No-one can use this feature unless enabled here on server environment.");
             }
         }
         // Only register packet on DEDICATED SERVER (if the player is in singleplayer or owner has the mod installed)
         else if (!FabricLoader.getInstance().getEnvironmentType().equals(EnvType.SERVER)) {
             registerGlowSearchPacketReceiver();
-            info("Registered glowing packet on DEDICATED SERVER.");
+            ModUtil.debug("Registered glowing packet on dedicated server.");
         }
     }
 
@@ -158,12 +156,5 @@ public final class ServerHandler implements ModInitializer {
                     }
                 }
         );
-    }
-
-    /**
-     * Sends a message to console.
-     */
-    public static void info(String message) {
-        LOGGER.info(message);
     }
 }

@@ -2,28 +2,33 @@
 
 # A quality of life mod, with a bunch of cool _QOL_ features.
 
-### Currently compatible with Minecraft versions ***1.21.6-1.21.9.***
+### Currently compatible with Minecraft versions ***1.21.6-1.21.10.***
 
 ---
 
 # _Chest Searching!_
 ### A search bar for chests, ender chests, barrels, and shulker boxes, which highlight the items you are looking for!
 ## Searching Features:
-- #### Search by item name (just type the item name in the search bar, ex. grass) [since v1.2]
-- #### Search for multiple items (separate each item with a command, ex. "grass,dirt,iron") [since v1.2.1]
-- #### Search by tag (begin search query with a #, ex. "#logs", works with all vanilla and non-vanilla tags) [since v1.2, full tag support since v1.2.1]
-    - Searching by tag will make all items display what tag(s) they are in if you hover over them. [since v1.2.1]
-- #### Exclude item from search (begin search query with a !, ex. searching "log" will display any item that does _not_ contain "log" in its name) [since v1.2.1]
+- #### Search by item name (just type the item name in the search bar, ex. grass) [since: v1.2]
+- #### Search for multiple items (separate each item with a command, ex. "grass,dirt,iron") [since: v1.2.1]
+- #### Search by tag (begin search query with a #, ex. "#logs", works with all vanilla and non-vanilla tags) [since: v1.2, full tag support since v1.2.1]
+    - Searching by tag will make all items display what tag(s) they are in if you hover over them. [since: v1.2.1]
+- #### Exclude item from search (begin search query with a !, ex. searching "log" will display any item that does _not_ contain "log" in its name) [since: v1.2.1]
+    - The transfer button will have a hint of red to represent tag transferring. [since: v1.3.6]
 
 ![Chest searching feature.](https://i.imgur.com/wrOeB2D.gif)
 
 ---
 
-# _Inventory Sorting!_
+# _Inventory Management!_
 #### Adds two small buttons to chests and shulker boxes, which allow the player to transfer the items in the chest to the inventory, and vice-versa.
 - #### By utilizing the Chest Search feature, you can transfer _only_ the searched items.
 - #### If you hover over the button with an item in the cursor, only items which are equal to the cursor's item will be moved. [since: v1.2.1]
-- #### Note: in order to transfer items from the player's inventory to the container, you must hold down the ALT key for the button to become active. This is done to prevent moving items from the inventory to the container *by accident.* You can disable this if you'd like.
+    - The transfer button will have a hint of green to represent stack filtering. [since: v1.3.6]
+    - The transfer button will have a hint of red when searching by exclude (!) [since: v1.3.6]
+    - The transfer button will have a hint of blue when searching by tag (#) [since: v1.3.6]
+- #### You can also quickly transfer items by using CTRL + C (move items from container -> inventory) and CTRL + I (move items from inventory -> container) [since: v1.3.6].
+- #### Note: You can prevent accidentally moving items from the player's inventory to the container by enabling the "Require ALT to move" option in the Quality of Queso options.
 
 ![Chest transferring feature.](https://i.imgur.com/91vGfnG.gif)
 #### (since: v1.2)
@@ -32,7 +37,11 @@
 
 # _Quick Equip!_
 #### Hover over an equippable item (like a piece of armor or an elytra) in your inventory and quickly equip it!
-### Default Hotkey = _B_, you can change this in the Controls menu.
+
+### Right-click the hovered item to quickly equip it!
+[since: v1.3.6]
+
+#### You can also use the hotkey to quick equip. Default Hotkey = _B_, you can change this in the Controls menu.
 
 ![Quick Equip feature in action.](https://i.imgur.com/f3yUwAA.gif)
 #### (since v1.2.1)

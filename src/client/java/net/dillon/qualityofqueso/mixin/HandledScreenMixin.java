@@ -83,7 +83,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     @Unique
     private TextFieldWidget searchField;
     @Unique
-    private ClickableWidget transferContainerButton;
+    private ClickableWidget transferContainerButton, transferInventoryButton;
     @Unique
     private Inventory inventory;
     @Unique
@@ -129,7 +129,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                 this.searchField.setPlaceholder(Text.translatable("qualityofqueso.gui.search.placeholder").formatted(Formatting.ITALIC).formatted(Formatting.GRAY));
                 this.addSelectableChild(this.searchField);
             }
-            if (options().inventorySorting) {
+            if (options().inventoryManagement) {
                 this.transferContainerButton = this.addSelectableChild(
                         new SensitiveButton(
                                 this.getTransferButtonX(true),
@@ -257,12 +257,12 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                 context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.chest_search.search_filtering"), 200), mouseX, mouseY);
             }
         }
-        if (modEnabled(this.client) && options().inventorySorting && this.isValidScreen()) {
+        if (modEnabled(this.client) && options().inventoryManagement && this.isValidScreen()) {
             // Determine if transfer container button should be active
             this.shouldButtonBeActive(false, null, this.transferContainerButton);
             PlayerInventory playerInventory = this.client.player.getInventory();
             // Initialize transfer inventory button
-            ClickableWidget transferInventoryButton = this.addSelectableChild(
+            this.transferInventoryButton = this.addSelectableChild(
                     new SensitiveButton(
                             this.getTransferButtonX(false),
                             this.getTransferButtonY(),
@@ -274,21 +274,21 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                     )
             );
             // Transfer inventory button is only active if it is already active and hovered, otherwise only becomes active if ALT is pressed
-            boolean isTransferInventoryButtonHovered = transferInventoryButton.isMouseOver(mouseX, mouseY);
-            if (this.shouldButtonBeActive(true, playerInventory, transferInventoryButton)) {
+            boolean isTransferInventoryButtonHovered = this.transferInventoryButton.isMouseOver(mouseX, mouseY);
+            if (this.shouldButtonBeActive(true, playerInventory, this.transferInventoryButton)) {
                 if (this.altDown()) {
                     // Alt is held, activate and allow "keep active" if mouse is over
-                    transferInventoryButton.active = true;
+                    this.transferInventoryButton.active = true;
                     this.keepInventoryButtonActive = isTransferInventoryButtonHovered;
                 } else {
                     // Alt is not held – only keep active if still isTransferInventoryButtonHovered from last Alt-down
                     if (!isTransferInventoryButtonHovered) {
                         this.keepInventoryButtonActive = false;
                     }
-                    transferInventoryButton.active = this.keepInventoryButtonActive;
+                    this.transferInventoryButton.active = this.keepInventoryButtonActive;
                 }
             }
-            this.shouldButtonBeActive(true, playerInventory, transferInventoryButton);
+            this.shouldButtonBeActive(true, playerInventory, this.transferInventoryButton);
             // Render transfer chest -> inventory button texture
             if (this.transferContainerButton != null) {
                 // If button isn't active, render inactive texture
@@ -317,16 +317,16 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             }
             // Render transfer inventory -> chest button texture
             // If the button should not be active (meaning if there is nothing in the inventory), render inactive texture
-            if (!this.shouldButtonBeActive(true, playerInventory, transferInventoryButton)) {
-                this.renderButtonTexture("transfer_inventory_button_inactive", true, transferInventoryButton, context);
+            if (!this.shouldButtonBeActive(true, playerInventory, this.transferInventoryButton)) {
+                this.renderButtonTexture("transfer_inventory_button_inactive", true, this.transferInventoryButton, context);
             }
             // If inventory contains something, then check if alt is down. If it's not, render hold alt texture
             else if (!this.altDown()) {
-                this.renderButtonTexture("transfer_inventory_button_hold_alt", true, transferInventoryButton, context);
+                this.renderButtonTexture("transfer_inventory_button_hold_alt", true, this.transferInventoryButton, context);
             }
             // Otherwise render unhovered/hovered texture, depending on if the button is hovered
             else {
-                this.renderButtonTexture(transferInventoryButton.isMouseOver(mouseX, mouseY) ? "transfer_inventory_button_hovered" : "transfer_inventory_button", true, transferInventoryButton, context);
+                this.renderButtonTexture(this.transferInventoryButton.isMouseOver(mouseX, mouseY) ? "transfer_inventory_button_hovered" : "transfer_inventory_button", true, transferInventoryButton, context);
             }
 
             // Button to include hotbar transfer or not
@@ -426,7 +426,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
         int y = 120; // 6 rows
         if (this.inventory.size() == 27) { // 3 rows
             y = 66;
-        } else if (this.inventory.size() == 36) { // 4 rows
+        } else if (this.inventory.size() == 36) { // 4 rows3
             y = 84;
         } else if (this.inventory.size() == 45) { // 5 rows
             y = 102;
@@ -447,10 +447,10 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
      */
     @Unique
     private void renderButtonTexture(String id, boolean transferable, ClickableWidget buttonReference, DrawContext context) {
-        String transferableString = this.getSearchFieldText().startsWith("!") ?
+        String transferableString = !this.getScreenHandler().getCursorStack().isEmpty() ?
+                "_with_stack.png" : this.getSearchFieldText().startsWith("!") ?
                 "_exclude.png" : this.getSearchFieldText().startsWith("#") ?
-                "_with_tag.png" : !this.getScreenHandler().getCursorStack().isEmpty() ?
-                "_with_stack.png" : ".png";
+                "_with_tag.png" : ".png";
         String appended = transferable ? transferableString : ".png";
         context.drawTexture(RenderPipelines.GUI_TEXTURED, Identifier.of("qualityofqueso:textures/gui/"+id+appended), buttonReference.getX() - 1, buttonReference.getY() - 1, 0.0F, 0.0F, 12, 12, 12, 12);
     }
@@ -500,7 +500,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                 }
             }
             for (Slot slot : playerSlots) {
-                if (search(this.getSearchFieldText(), slot)) {
+                if (this.search(this.getSearchFieldText(), slot)) {
                     j++; // increment J if query found in slot
                 }
             }
@@ -508,7 +508,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             // Otherwise, loop through the container inventory and increment J if query found inside
             for (int i = 0; i < this.inventory.size(); i++) {
                 Slot slot = this.getScreenHandler().getSlot(i);
-                if (search(this.getSearchFieldText(), slot)) {
+                if (this.search(this.getSearchFieldText(), slot)) {
                     j++;
                 }
             }
@@ -653,12 +653,22 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
     private void handleKeyPressing(KeyInput input, CallbackInfoReturnable<Boolean> cir) {
         if (modEnabled(this.client)) {
+            if (MinecraftClient.getInstance().isCtrlPressed()) {
+                if (this.transferContainerButton != null && this.transferContainerButton.active && input.key() == ModKeybinds.MOVE_TO_INVENTORY.boundKey.getCode()) {
+                    this.transferItems(this.screen, true);
+                }
+
+                if (this.transferInventoryButton != null && this.transferInventoryButton.active && input.key() == ModKeybinds.MOVE_TO_CONTAINER.boundKey.getCode()) {
+                    this.transferItems(this.screen, false);
+                }
+            }
+
             // Quick equip logic
             if (input.key() == ModKeybinds.QUICK_EQUIP.boundKey.getCode()) {
                 this.quickEquip();
             }
 
-            // Prevent E from typing entirely in inventory screens\
+            // Prevent E from typing entirely in inventory screens
             if (input.key() == GLFW.GLFW_KEY_E && options().preventEFromTyping && (this.screen instanceof InventoryScreen || this.screen instanceof CreativeInventoryScreen)) {
                 this.close();
                 cir.setReturnValue(true);
@@ -750,8 +760,8 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                 }
             }
             // Chest search field logic
-            else if (options().chestSearch && isValidScreen() && !MinecraftClient.getInstance().isCtrlPressed()) {
-                if (!secondaryIgnoreTyping) {
+            else if (options().chestSearch && isValidScreen()) {
+                if (!secondaryIgnoreTyping && !MinecraftClient.getInstance().isCtrlPressed()) {
                     this.searchField.setFocused(true);
                 } else if (this.searchField.isFocused() && cannotType) {
                     this.searchField.setFocused(false);

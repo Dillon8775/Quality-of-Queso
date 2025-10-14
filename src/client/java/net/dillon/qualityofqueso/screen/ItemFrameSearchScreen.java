@@ -81,6 +81,7 @@ public class ItemFrameSearchScreen extends Screen {
         if (options().helpfulTooltips && this.searchField.isHovered() && this.searchField.getText().isEmpty()) {
             context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.search_item_frames.search_filtering"), 200), mouseX, mouseY);
         }
+        this.applyBlur(context);
     }
 
     /**

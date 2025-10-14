@@ -2,7 +2,7 @@ package net.dillon.qualityofqueso.option;
 
 import net.dillon.qualityofqueso.main.QoQ;
 import net.dillon.qualityofqueso.option.options.ChestSearchingOptionsScreen;
-import net.dillon.qualityofqueso.option.options.InventorySortingOptionsScreen;
+import net.dillon.qualityofqueso.option.options.InventoryManagementOptionsScreen;
 import net.dillon.qualityofqueso.option.options.ItemFrameSearchingOptionsScreen;
 import net.dillon.qualityofqueso.option.options.MiscOptionsScreen;
 import net.dillon.qualityofqueso.screen.ItemFrameSearchScreen;
@@ -20,7 +20,7 @@ import java.util.List;
 
 @Environment(EnvType.CLIENT)
 public class ModOptionsScreen extends AbstractModOptionsScreen {
-    private ButtonWidget chestSearchingOptions, inventorySortingOptions, itemFrameSearchingOptions, openItemFrameSearchGUI, otherOptions;
+    private ButtonWidget chestSearchingOptions, inventoryManagementOptions, itemFrameSearchingOptions, openItemFrameSearchGUI, otherOptions;
 
     public ModOptionsScreen(Screen parent) {
         super(parent, Text.translatable("qualityofqueso.gui.options.title"));
@@ -34,10 +34,10 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
             this.client.setScreen(new ChestSearchingOptionsScreen(this));
         }).build());
         buttons.add(this.chestSearchingOptions);
-        this.inventorySortingOptions = this.addDrawableChild(ButtonWidget.builder(Text.translatable("qualityofqueso.gui.inventory_sorting_options"), button -> {
-            this.client.setScreen(new InventorySortingOptionsScreen(this));
+        this.inventoryManagementOptions = this.addDrawableChild(ButtonWidget.builder(Text.translatable("qualityofqueso.gui.inventory_management_options"), button -> {
+            this.client.setScreen(new InventoryManagementOptionsScreen(this));
         }).build());
-        buttons.add(this.inventorySortingOptions);
+        buttons.add(this.inventoryManagementOptions);
         this.itemFrameSearchingOptions = this.addDrawableChild(ButtonWidget.builder(Text.translatable("qualityofqueso.gui.item_frame_searching_options"), button -> {
             this.client.setScreen(new ItemFrameSearchingOptionsScreen(this));
         }).build());
@@ -62,8 +62,8 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
         if (this.chestSearchingOptions.isHovered()) {
             context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.chest_searching_options.tooltip"), 200), mouseX, mouseY);
         }
-        if (this.inventorySortingOptions.isHovered()) {
-            context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.inventory_sorting_options.tooltip"), 200), mouseX, mouseY);
+        if (this.inventoryManagementOptions.isHovered()) {
+            context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.inventory_management_options.tooltip"), 200), mouseX, mouseY);
         }
         if (this.itemFrameSearchingOptions.isHovered()) {
             context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.item_frame_searching_options.tooltip"), 200), mouseX, mouseY);

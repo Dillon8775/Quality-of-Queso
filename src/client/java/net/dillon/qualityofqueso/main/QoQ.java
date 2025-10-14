@@ -3,7 +3,7 @@ package net.dillon.qualityofqueso.main;
 import net.dillon.qualityofqueso.command.ItemFrameSearcherCommand;
 import net.dillon.qualityofqueso.keybind.ModKeybinds;
 import net.dillon.qualityofqueso.option.ModOptions;
-import net.dillon.qualityofqueso.packet.ServerHandler;
+import net.dillon.qualityofqueso.util.ModUtil;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -45,7 +45,7 @@ public class QoQ implements ClientModInitializer {
 	public void onInitializeClient() {
 		ModKeybinds.init();
 		registerCommands();
-		ServerHandler.info("Quality of Queso has successfully loaded!");
+		ModUtil.info("Quality of Queso has successfully loaded!");
 	}
 
 	/**

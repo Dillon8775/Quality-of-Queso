@@ -1,5 +1,7 @@
 - You can now quickly equip an item in your inventory by hovering and right-clicking the item (you can also still use the "B" key if you'd like).
 
+- You can now quickly transfer items in an inventory using CTRL + C (move items from container -> inventory) and CTRL + I (move items from inventory -> container).
+
 - If the user is holding down the CTRL button in an inventory menu (chest, inventory, creative, etc.), the game will no longer automatically begin typing in its respective menu search bar.
 This means holding down control in your survival inventory will no longer automatically begin typing in the recipe book. Same thing with chest search bars, and any other search bar.
 
@@ -9,7 +11,8 @@ This means holding down control in your survival inventory will no longer automa
 - Added the option "Prevent E from typing", which prevents the E key from automatically typing in inventory screens (instead, it closes the inventory screen). This only applies to the survival and creative inventory menus.
 - Added a "Helpful Tooltips" option, which displays all helpful quality of queso tooltips.
 
-- Added indications when using inventory sorting features.
+- Renamed "Inventory Sorting" to "Inventory Management".
+- Added indications when using inventory management features.
 Arrows now appear blue when filtering by tag.
 Arrows now appear red when excluding items.
 Arrows now appear green when filtering by the cursor stack.
