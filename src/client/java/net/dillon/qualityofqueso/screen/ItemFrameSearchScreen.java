@@ -69,7 +69,9 @@ public class ItemFrameSearchScreen extends Screen {
         context.drawTextWithShadow(this.textRenderer, Text.translatable("qualityofqueso.gui.search_item_frames.warning.line2"), this.width / 2 - 110, this.height / 2 - 56, -2039584);
         this.searchButton.active = !this.searchField.getText().isEmpty();
         if (!this.searchField.getText().isEmpty() && this.searchButton.isHovered()) {
-            context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.search.tooltip", this.searchField.getText()), 200), mouseX, mouseY);
+            context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(!MinecraftClient.getInstance().isCtrlPressed() ?
+                    Text.translatable("qualityofqueso.gui.search.tooltip", this.searchField.getText()) :
+                    Text.translatable("qualityofqueso.gui.search.match_case.tooltip", this.searchField.getText()), 200), mouseX, mouseY);
         }
         if (this.clearButton.isHovered()) {
             context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.clear.tooltip"), 200), mouseX, mouseY);
@@ -118,6 +120,6 @@ public class ItemFrameSearchScreen extends Screen {
      */
     private void sendPacket(boolean clear, int timer, int radius) {
         this.close();
-        ClientPlayNetworking.send(new GlowSearchC2SPayload(this.searchField.getText(), clear, timer, radius));
+        ClientPlayNetworking.send(new GlowSearchC2SPayload(this.searchField.getText(), MinecraftClient.getInstance().isCtrlPressed(), clear, timer, radius));
     }
 }

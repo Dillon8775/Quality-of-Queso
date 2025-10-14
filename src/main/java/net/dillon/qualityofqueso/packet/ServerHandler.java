@@ -7,6 +7,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.decoration.ItemFrameEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -84,14 +85,18 @@ public final class ServerHandler implements ModInitializer {
                                 return false;
                             }
 
-                            String itemName = stack.getItem().getName().getString().toLowerCase();
+                            String itemName = stack.getItem().getComponents().contains(DataComponentTypes.ITEM_NAME) ?
+                                    stack.getItem().getComponents().get(DataComponentTypes.ITEM_NAME).getString() :
+                                    stack.getItem().getName().getString().toLowerCase();
                             String itemId = Registries.ITEM.getId(stack.getItem()).toString().toLowerCase();
 
                             // Check all searched queries (separated by comma)
                             // If item frame has stack, add it to the list to glow
                             for (String term : terms) {
                                 String trimmed = term.trim().toLowerCase();
-                                if (itemName.contains(trimmed) || itemId.contains(trimmed)) {
+                                if (payload.matchCase() ?
+                                        itemName.matches(trimmed) || itemId.matches(trimmed) :
+                                        itemName.contains(trimmed) || itemId.contains(trimmed)) {
                                     return true;
                                 }
                             }
@@ -105,7 +110,9 @@ public final class ServerHandler implements ModInitializer {
 
                                 for (TagKey<Item> tagKey : itemRegistry.streamTagKeys().toList()) {
                                     Identifier id = tagKey.id();
-                                    if (id.getPath().toLowerCase().contains(tagSearch) || id.toString().toLowerCase().contains(tagSearch)) {
+                                    if (payload.matchCase() ?
+                                            id.getPath().toLowerCase().matches(tagSearch) || id.toString().toLowerCase().matches(tagSearch) :
+                                            id.getPath().toLowerCase().contains(tagSearch) || id.toString().toLowerCase().contains(tagSearch)) {
                                         if (stack.isIn(tagKey)) {
                                             return true;
                                         }
@@ -133,16 +140,22 @@ public final class ServerHandler implements ModInitializer {
                         }
                     }
                     if (nearbyFrames.isEmpty()) {
-                        player.sendMessage(Text.translatable("qualityofqueso.item_frame_searcher.executed.found_none", searched, payload.query()), false);
+                        player.sendMessage(payload.matchCase() ?
+                                Text.translatable("qualityofqueso.item_frame_searcher.executed.found_none.match_case", searched, payload.query()) :
+                                Text.translatable("qualityofqueso.item_frame_searcher.executed.found_none", searched, payload.query()), false);
                         player.playSoundToPlayer(SoundEvents.BLOCK_NOTE_BLOCK_BASS.value(), SoundCategory.AMBIENT, 2.0F, 1.0F);
                     } else if (payload.clear()) {
                         player.sendMessage(Text.translatable("qualityofqueso.item_frame_searcher.executed.cleared", searched), false);
                         player.playSoundToPlayer(SoundEvents.ENTITY_PLAYER_SPLASH, SoundCategory.AMBIENT, 1.0F, 1.0F);
                     } else {
                         if (payload.timer() == 0) {
-                            player.sendMessage(Text.translatable("qualityofqueso.item_frame_searcher.executed.without_timer", searched, payload.query()), false);
+                            player.sendMessage(payload.matchCase() ?
+                                    Text.translatable("qualityofqueso.item_frame_searcher.executed.without_timer.match_case", searched, payload.query()) :
+                                    Text.translatable("qualityofqueso.item_frame_searcher.executed.without_timer", searched, payload.query()), false);
                         } else {
-                            player.sendMessage(Text.translatable("qualityofqueso.item_frame_searcher.executed.with_timer", searched, payload.query(), payload.timer()), false);
+                            player.sendMessage(payload.matchCase() ?
+                                    Text.translatable("qualityofqueso.item_frame_searcher.executed.with_timer.match_case", searched, payload.query(), payload.timer()) :
+                                    Text.translatable("qualityofqueso.item_frame_searcher.executed.with_timer", searched, payload.query(), payload.timer()), false);
                         }
                         player.playSoundToPlayer(SoundEvents.ENTITY_ARROW_HIT_PLAYER, SoundCategory.AMBIENT, 1.0F, 1.0F);
                     }

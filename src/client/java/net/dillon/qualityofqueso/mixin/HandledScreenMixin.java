@@ -714,7 +714,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             boolean cannotType = (numberKeyPressed || hotbarKeyPressed || dropKeyPressed || swapKeyPressed) && this.hoveredSlotHasItem();
 
             // Recipe book search field logic
-            if (options().betterSearching && this.screen instanceof RecipeBookScreen<?> recipeScreen) {
+            if (options().betterSearching && this.screen instanceof RecipeBookScreen<?> recipeScreen && !MinecraftClient.getInstance().isCtrlPressed()) {
                 if (!ignoreTyping && !recipeScreen.recipeBook.isOpen()) {
                     recipeScreen.recipeBook.toggleOpen();
                     refreshWidgetPositions();
@@ -727,7 +727,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                 }
             }
             // Chest search field logic
-            else if (options().chestSearch && isValidScreen()) {
+            else if (options().chestSearch && isValidScreen() && !MinecraftClient.getInstance().isCtrlPressed()) {
                 if (!secondaryIgnoreTyping) {
                     this.searchField.setFocused(true);
                 } else if (this.searchField.isFocused() && cannotType) {

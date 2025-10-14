@@ -99,7 +99,7 @@ public class ItemFrameSearcherCommand {
         } else {
             context.getSource().sendFeedback(() -> Text.translatable("qualityofqueso.item_frame_searcher_command.executed.with_timer", query, radius, timer), true);
         }
-        ClientPlayNetworking.send(new GlowSearchC2SPayload(query, clear, timer, radius));
+        ClientPlayNetworking.send(new GlowSearchC2SPayload(query, false, clear, timer, radius));
         return 0;
     }
 }
