@@ -68,6 +68,13 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
         if (this.itemFrameSearchingOptions.isHovered()) {
             context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.item_frame_searching_options.tooltip"), 200), mouseX, mouseY);
         }
+        if (this.openItemFrameSearchGUI.isHovered()) {
+            if (!QualityOfQueso.options().itemFrameSearching) {
+                context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.open_item_frame_search_gui.disabled"), 200), mouseX, mouseY);
+            } else if (this.client.world == null) {
+                context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.open_item_frame_search_gui.null_world"), 200), mouseX, mouseY);
+            }
+        }
         if (this.otherOptions.isHovered()) {
             context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.other_options.tooltip"), 200), mouseX, mouseY);
         }

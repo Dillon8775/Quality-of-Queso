@@ -1,8 +1,8 @@
-MAIN CHANGES;
 - If the user is holding down the CTRL button in an inventory menu (chest, inventory, creative, etc.), the game will no longer automatically begin typing in its respective menu search bar.
 This means holding down control in your survival inventory will no longer automatically begin typing in the recipe book. Same thing with chest search bars, and any other search bar.
 - You can now search items which have a custom name via the item frame searching feature.
 - You can now match item name case with the item frame searching feature. Hold CTRL over the "Search" button in the item frame GUI to match item name case.
 
-MISCELLANEOUS CHANGES:
+- The option "Require ALT to move" is now OFF by default.
 - Removed the capitalization of "QUESO" in the mod name (now "Quality of Queso").
+- Tweaks and optimizations.

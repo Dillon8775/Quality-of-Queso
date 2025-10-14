@@ -7,7 +7,6 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.decoration.ItemFrameEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -85,9 +84,7 @@ public final class ServerHandler implements ModInitializer {
                                 return false;
                             }
 
-                            String itemName = stack.getItem().getComponents().contains(DataComponentTypes.ITEM_NAME) ?
-                                    stack.getItem().getComponents().get(DataComponentTypes.ITEM_NAME).getString() :
-                                    stack.getItem().getName().getString().toLowerCase();
+                            String itemName = stack.getItem().getName().getString().toLowerCase();
                             String itemId = Registries.ITEM.getId(stack.getItem()).toString().toLowerCase();
 
                             // Check all searched queries (separated by comma)

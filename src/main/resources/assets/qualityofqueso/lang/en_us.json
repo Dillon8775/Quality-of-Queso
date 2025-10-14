@@ -23,6 +23,8 @@
   "qualityofqueso.gui.item_frame_searching_options": "Item Frame Searching...",
   "qualityofqueso.gui.title.item_frame_sorting_options": "Item Frame Searching Options",
   "qualityofqueso.gui.open_item_frame_search_gui": "Open Item Frame Search GUI...",
+  "qualityofqueso.gui.open_item_frame_search_gui.disabled": "You must enable the Item Frame Searching option to use this feature!",
+  "qualityofqueso.gui.open_item_frame_search_gui.null_world": "You must be in a world to use this feature!",
   "qualityofqueso.gui.item_frame_searching_options.tooltip": "Toggle/configure Item Frame Searching features...",
   "qualityofqueso.gui.other_options": "Other...",
   "qualityofqueso.gui.title.other_options": "Other Options",
