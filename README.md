@@ -14,7 +14,6 @@
 - #### Search by tag (begin search query with a #, ex. "#logs", works with all vanilla and non-vanilla tags) [since: v1.2, full tag support since v1.2.1]
     - Searching by tag will make all items display what tag(s) they are in if you hover over them. [since: v1.2.1]
 - #### Exclude item from search (begin search query with a !, ex. searching "log" will display any item that does _not_ contain "log" in its name) [since: v1.2.1]
-    - The transfer button will have a hint of red to represent tag transferring. [since: v1.3.6]
 
 ![Chest searching feature.](https://i.imgur.com/wrOeB2D.gif)
 
