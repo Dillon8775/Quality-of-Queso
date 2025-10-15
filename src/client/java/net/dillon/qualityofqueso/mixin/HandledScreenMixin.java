@@ -456,7 +456,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     }
 
     /**
-     * @return {@code true} if the {@code inventory} has something in it.
+     * @return {@code true} if the {@code inventory} has a match with the search query.
      */
     @Unique
     private boolean shouldButtonBeActive(boolean isPlayerInventory, @Nullable PlayerInventory playerInventory, ClickableWidget button) {
@@ -471,9 +471,17 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             // If slot is not empty, the button should be active
             // Increment J and make button active
             ItemStack stack = isPlayerInventory ? playerInventory.getStack(i) : this.getScreenHandler().getSlot(i).getStack();
-            if (!stack.isEmpty()) {
-                j++;
-                button.active = true;
+            // Handle cursor stack
+            if (!this.getScreenHandler().getCursorStack().isEmpty()) {
+                if (stack.isOf(this.getScreenHandler().getCursorStack().getItem())) {
+                    j++;
+                    button.active = true;
+                }
+            } else {
+                if (!stack.isEmpty()) {
+                    j++;
+                    button.active = true;
+                }
             }
         }
         // If J == 0 or are slots are unavailable in the player inventory (assuming it's not null), button is not active and return false
