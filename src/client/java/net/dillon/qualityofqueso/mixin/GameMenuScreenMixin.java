@@ -77,8 +77,8 @@ public class GameMenuScreenMixin extends Screen {
                     String address = this.getServerAddress();
 
                     if (this.blacklistServerButton.isHovered()) {
-                        ButtonUtil.drawTexture(context, this.blacklistServerButton.isHovered() ? ButtonUtil.ENABLED_TEXTURE : ButtonUtil.DISABLED_TEXTURE, this.blacklistServerButton);
-                        ButtonUtil.drawTooltip(this.tooltipWithPrefix(this.blacklistServerButton.isHovered() ?
+                        ButtonUtil.drawTexture(context, this.isServerBlacklisted(address) ? ButtonUtil.ENABLED_TEXTURE : ButtonUtil.DISABLED_TEXTURE, this.blacklistServerButton);
+                        ButtonUtil.drawTooltip(this.tooltipWithPrefix(this.isServerBlacklisted(address) ?
                                 Text.translatable("qualityofqueso.gui.remove_blacklisted_server") :
                                 Text.translatable("qualityofqueso.gui.add_blacklisted_server")),
                                 context, this.textRenderer, mouseX, mouseY);
