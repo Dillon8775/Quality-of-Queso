@@ -554,7 +554,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
         }
 
         String itemName = stack.getItemName().getString().toLowerCase();
-        String customName = stack.getCustomName() != null ? stack.getName().getString().toLowerCase() : "";
+        String customName = stack.getCustomName() != null ? stack.getCustomName().getString().toLowerCase() : "";
 
         String[] terms = searchQuery.split(",");
         // If slot contains a comma, for each query searched (separated by each comma), return true if search query'namespace find an query (make slot available)
