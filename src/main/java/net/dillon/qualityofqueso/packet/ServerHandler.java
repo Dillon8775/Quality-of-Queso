@@ -1,13 +1,11 @@
 package net.dillon.qualityofqueso.packet;
 
-import net.dillon.qualityofqueso.option.ModServerOptions;
+import net.dillon.qualityofqueso.option.ModCommonOptions;
 import net.dillon.qualityofqueso.util.GlowCountdown;
 import net.dillon.qualityofqueso.util.ModUtil;
-import net.fabricmc.api.EnvType;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.decoration.ItemFrameEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -33,19 +31,11 @@ public final class ServerHandler implements ModInitializer {
      */
     @Override
     public void onInitialize() {
-        // Register packet on SERVER environment ONLY IF it should be enabled
-        if (FabricLoader.getInstance().getEnvironmentType().equals(EnvType.SERVER)) {
-            if (ModServerOptions.SERVER_OPTIONS.getInstance().itemFrameSearchingOnServer) {
-                registerGlowSearchPacketReceiver();
-                ModUtil.debug("Registered glowing packet on server.");
-            } else {
-                ModUtil.debug("Did NOT register glowing packet, \"itemFrameSearchingOnServer\" is disabled. No-one can use this feature unless enabled here on server environment.");
-            }
-        }
-        // Only register packet on DEDICATED SERVER (if the player is in singleplayer or owner has the mod installed)
-        else if (!FabricLoader.getInstance().getEnvironmentType().equals(EnvType.SERVER)) {
+        if (ModCommonOptions.COMMON_OPTIONS.getInstance().itemFrameSearching) {
             registerGlowSearchPacketReceiver();
-            ModUtil.debug("Registered glowing packet on dedicated server.");
+            ModUtil.debug("Registered glowing packet on server.");
+        } else {
+            ModUtil.debug("Did NOT register glowing packet, \"itemFrameSearchingOnServer\" is disabled. No-one can use this feature unless enabled here on server environment.");
         }
     }
 

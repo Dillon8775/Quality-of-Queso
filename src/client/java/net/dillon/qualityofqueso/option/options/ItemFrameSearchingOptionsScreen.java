@@ -9,7 +9,7 @@ import net.minecraft.text.Text;
 public class ItemFrameSearchingOptionsScreen extends AbstractModOptionsScreen {
 
     public ItemFrameSearchingOptionsScreen(Screen parent) {
-        super(parent, Text.translatable("qualityofqueso.gui.item_frame_searching_options"));
+        super(parent, Text.translatable("qualityofqueso.gui.title.item_frame_searching_options"));
     }
 
     @Override

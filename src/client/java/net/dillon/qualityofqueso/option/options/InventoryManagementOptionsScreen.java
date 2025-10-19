@@ -9,7 +9,7 @@ import net.minecraft.text.Text;
 public class InventoryManagementOptionsScreen extends AbstractModOptionsScreen {
 
     public InventoryManagementOptionsScreen(Screen parent) {
-        super(parent, Text.translatable("qualityofqueso.gui.inventory_management_options"));
+        super(parent, Text.translatable("qualityofqueso.gui.title.inventory_management_options"));
     }
 
     @Override

@@ -1,5 +1,6 @@
 package net.dillon.qualityofqueso.option;
 
+import net.dillon.qualityofqueso.main.QoQ;
 import net.dillon.qualityofqueso.util.ModUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -58,7 +59,7 @@ public abstract class AbstractModOptionsScreen extends GameOptionsScreen {
      */
     @Override
     public void close() {
-        ModOptions.OPTIONS.save();
+        QoQ.saveAll();
         ModUtil.info("Saved changes.");
         super.close();
     }

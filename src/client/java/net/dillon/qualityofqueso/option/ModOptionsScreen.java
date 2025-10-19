@@ -6,6 +6,7 @@ import net.dillon.qualityofqueso.option.options.InventoryManagementOptionsScreen
 import net.dillon.qualityofqueso.option.options.ItemFrameSearchingOptionsScreen;
 import net.dillon.qualityofqueso.option.options.MiscOptionsScreen;
 import net.dillon.qualityofqueso.screen.ItemFrameSearchScreen;
+import net.dillon.qualityofqueso.util.ButtonUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.DrawContext;
@@ -43,7 +44,7 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
         }).build());
         buttons.add(this.itemFrameSearchingOptions);
         this.openItemFrameSearchGUI = this.addDrawableChild(ButtonWidget.builder(Text.translatable("qualityofqueso.gui.open_item_frame_search_gui"), button -> {
-            if (QoQ.options().itemFrameSearching && this.client.world != null) {
+            if (QoQ.coptions().itemFrameSearching && this.client.world != null) {
                 this.client.setScreen(new ItemFrameSearchScreen());
             }
         }).build());
@@ -58,25 +59,25 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
         super.render(context, mouseX, mouseY, deltaTicks);
-        this.openItemFrameSearchGUI.active = QoQ.options().itemFrameSearching && this.client.world != null;
+        this.openItemFrameSearchGUI.active = QoQ.coptions().itemFrameSearching && this.client.world != null;
         if (this.chestSearchingOptions.isHovered()) {
-            context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.chest_searching_options.tooltip"), 200), mouseX, mouseY);
+            ButtonUtil.drawTooltip(Text.translatable("qualityofqueso.gui.chest_searching_options.tooltip"), context, this.textRenderer, mouseX, mouseY);
         }
         if (this.inventoryManagementOptions.isHovered()) {
-            context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.inventory_management_options.tooltip"), 200), mouseX, mouseY);
+            ButtonUtil.drawTooltip(Text.translatable("qualityofqueso.gui.inventory_management_options.tooltip"), context, this.textRenderer, mouseX, mouseY);
         }
         if (this.itemFrameSearchingOptions.isHovered()) {
-            context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.item_frame_searching_options.tooltip"), 200), mouseX, mouseY);
+            ButtonUtil.drawTooltip(Text.translatable("qualityofqueso.gui.item_frame_searching_options.tooltip"), context, this.textRenderer, mouseX, mouseY);
         }
         if (this.openItemFrameSearchGUI.isHovered()) {
-            if (!QoQ.options().itemFrameSearching) {
-                context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.open_item_frame_search_gui.disabled"), 200), mouseX, mouseY);
+            if (!QoQ.coptions().itemFrameSearching) {
+                ButtonUtil.drawTooltip(Text.translatable("qualityofqueso.gui.open_item_frame_search_gui.disabled"), context, this.textRenderer, mouseX, mouseY);
             } else if (this.client.world == null) {
-                context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.open_item_frame_search_gui.null_world"), 200), mouseX, mouseY);
+                ButtonUtil.drawTooltip(Text.translatable("qualityofqueso.gui.open_item_frame_search_gui.null_world"), context, this.textRenderer, mouseX, mouseY);
             }
         }
         if (this.otherOptions.isHovered() && QoQ.options().helpfulTooltips) {
-            context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.misc_options.tooltip"), 200), mouseX, mouseY);
+            ButtonUtil.drawTooltip(Text.translatable("qualityofqueso.gui.misc_options.tooltip"), context, this.textRenderer, mouseX, mouseY);
         }
     }
 

@@ -15,7 +15,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.text.Text;
-import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
@@ -24,7 +23,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.List;
 import java.util.Objects;
 
 import static net.dillon.qualityofqueso.main.QoQ.modEnabled;
@@ -94,24 +92,14 @@ public abstract class CreativeInventoryScreenMixin extends HandledScreen<Creativ
 				cir.setReturnValue(super.keyPressed(input));
 			}
 
-			for (int key : QoQ.keys) {
+			for (int key : QoQ.popularKeys) {
 				if (input.key() == key) {
 					this.ignoreTypedCharacter = false;
 					cir.setReturnValue(true);
 				}
 			}
-			List<Integer> disallowedKeys = List.of(
-					GLFW.GLFW_KEY_ESCAPE,
-					GLFW.GLFW_KEY_LEFT_SHIFT,
-					GLFW.GLFW_KEY_RIGHT_SHIFT,
-					GLFW.GLFW_KEY_LEFT_CONTROL,
-					GLFW.GLFW_KEY_RIGHT_CONTROL,
-					GLFW.GLFW_KEY_LEFT_ALT,
-					GLFW.GLFW_KEY_RIGHT_ALT,
-					GLFW.GLFW_KEY_LEFT_SUPER,
-					GLFW.GLFW_KEY_RIGHT_SUPER
-			);
-			for (int key : disallowedKeys) {
+
+			for (int key : QoQ.disallowedKeys) {
 				if (input.key() == key) {
 					this.ignoreTypedCharacter = true;
 					cir.setReturnValue(super.keyPressed(input));

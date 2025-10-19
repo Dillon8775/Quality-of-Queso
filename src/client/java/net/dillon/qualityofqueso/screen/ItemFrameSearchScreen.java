@@ -1,9 +1,10 @@
 package net.dillon.qualityofqueso.screen;
 
 import net.dillon.qualityofqueso.main.QoQ;
+import net.dillon.qualityofqueso.option.ModClientOptions;
 import net.dillon.qualityofqueso.option.ModListOptions;
-import net.dillon.qualityofqueso.option.ModOptions;
 import net.dillon.qualityofqueso.packet.GlowSearchC2SPayload;
+import net.dillon.qualityofqueso.util.ButtonUtil;
 import net.dillon.qualityofqueso.util.ModTexts;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -39,7 +40,9 @@ public class ItemFrameSearchScreen extends Screen {
     @Override
     protected void init() {
         this.searchField = new TextFieldWidget(this.textRenderer, this.width / 2 - 100, this.height / 2 - 24, 200, 20, null);
-        this.searchField.setText(QoQ.SAVED_ITEM_FRAME_TEXT);
+        if (options().saveSearchText) {
+            this.searchField.setText(QoQ.SAVED_ITEM_FRAME_TEXT);
+        }
         this.searchField.setMaxLength(50);
         this.searchButton = this.addDrawableChild(ButtonWidget.builder(Text.translatable("qualityofqueso.gui.search"), button -> {
             this.sendPacket(false, options().itemFrameSearchTimer != 0 ? options().itemFrameSearchTimer : 0, options().itemFrameSearchRadius);
@@ -71,15 +74,16 @@ public class ItemFrameSearchScreen extends Screen {
         context.drawTextWithShadow(this.textRenderer, Text.translatable("qualityofqueso.gui.search_item_frames.warning.line2"), this.width / 2 - 110, this.height / 2 - 56, -2039584);
         this.searchButton.active = !this.searchField.getText().isEmpty();
         if (!this.searchField.getText().isEmpty() && this.searchButton.isHovered()) {
-            context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(!MinecraftClient.getInstance().isCtrlPressed() ?
+            ButtonUtil.drawTooltip(!MinecraftClient.getInstance().isCtrlPressed() ?
                     Text.translatable("qualityofqueso.gui.search.tooltip", this.searchField.getText()) :
-                    Text.translatable("qualityofqueso.gui.search.match_case.tooltip", this.searchField.getText()), 200), mouseX, mouseY);
+                    Text.translatable("qualityofqueso.gui.search.match_case.tooltip", this.searchField.getText()),
+                    context, this.textRenderer, mouseX, mouseY);
         }
         if (this.clearButton.isHovered()) {
-            context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.clear.tooltip"), 200), mouseX, mouseY);
+            ButtonUtil.drawTooltip(Text.translatable("qualityofqueso.gui.clear.tooltip"), context, this.textRenderer, mouseX, mouseY);
         }
         if (options().helpfulTooltips && this.searchField.isHovered() && this.searchField.getText().isEmpty()) {
-            context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.search_item_frames.search_filtering"), 200), mouseX, mouseY);
+            ButtonUtil.drawTooltip(Text.translatable("qualityofqueso.gui.search_item_frames.search_filtering"), context, this.textRenderer, mouseX, mouseY);
         }
         this.applyBlur(context);
     }
@@ -114,7 +118,7 @@ public class ItemFrameSearchScreen extends Screen {
     @Override
     public void close() {
         QoQ.SAVED_ITEM_FRAME_TEXT = this.searchField.getText();
-        ModOptions.OPTIONS.save();
+        ModClientOptions.CLIENT_OPTIONS.save();
         super.close();
     }
 

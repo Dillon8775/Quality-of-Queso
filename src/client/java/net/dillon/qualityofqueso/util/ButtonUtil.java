@@ -23,8 +23,8 @@ import static net.dillon.qualityofqueso.main.QoQ.options;
 @Environment(EnvType.CLIENT)
 public class ButtonUtil {
     public static final String CHEESE_WHEEL = "cheese_wheel";
-    public static final String ENABLED = "qoq_enabled";
-    public static final String DISABLED = "qoq_disabled";
+    public static final String ENABLED_TEXTURE = "qoq_enabled";
+    public static final String DISABLED_TEXTURE = "qoq_disabled";
 
     /**
      * Initializes the settings button.

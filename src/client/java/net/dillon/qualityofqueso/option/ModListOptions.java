@@ -24,8 +24,8 @@ public class ModListOptions {
     public static final SimpleOption<Boolean> BETTER_SEARCHING = new SimpleOption<>("qualityofqueso.options.better_searching", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.better_searching.tooltip")),
             (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, QoQ.options().betterSearching, value -> QoQ.options().betterSearching = value);
 
-    public static final SimpleOption<Boolean> CHEST_SEARCH = new SimpleOption<>("qualityofqueso.options.chest_search", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.chest_search.tooltip")),
-            (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, QoQ.options().chestSearch, value -> QoQ.options().chestSearch = value);
+    public static final SimpleOption<Boolean> CHEST_SEARCHING = new SimpleOption<>("qualityofqueso.options.chest_searching", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.chest_searching.tooltip")),
+            (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, QoQ.options().chestSearching, value -> QoQ.options().chestSearching = value);
 
     public static final SimpleOption<Boolean> SEARCH_INVENTORY = new SimpleOption<>("qualityofqueso.options.search_inventory", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.search_inventory.tooltip")),
             (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, QoQ.options().searchInventory, value -> QoQ.options().searchInventory = value);
@@ -55,7 +55,7 @@ public class ModListOptions {
             (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, QoQ.options().helpfulTooltips, value -> QoQ.options().helpfulTooltips = value);
 
     public static final SimpleOption<Boolean> ITEM_FRAME_SEARCHING = new SimpleOption<>("qualityofqueso.options.item_frame_searching", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.item_frame_searching.tooltip", parseKeyAsString(ModKeybinds.OPEN_SEARCH_ITEM_FRAMES_GUI.boundKey.toString().toUpperCase()))),
-            (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, QoQ.options().itemFrameSearching, value -> QoQ.options().itemFrameSearching = value);
+            (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, QoQ.coptions().itemFrameSearching, value -> QoQ.coptions().itemFrameSearching = value);
 
     public static final SimpleOption<Boolean> SHOW_QOQ_BUTTONS = new SimpleOption<>("qualityofqueso.options.show_qoq_buttons", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.show_qoq_buttons.tooltip")),
             (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, QoQ.options().showQoQButtons, value -> QoQ.options().showQoQButtons = value);

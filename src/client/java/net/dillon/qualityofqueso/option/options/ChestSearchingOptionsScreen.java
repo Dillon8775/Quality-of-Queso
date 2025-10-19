@@ -9,13 +9,13 @@ import net.minecraft.text.Text;
 public class ChestSearchingOptionsScreen extends AbstractModOptionsScreen {
 
     public ChestSearchingOptionsScreen(Screen parent) {
-        super(parent, Text.translatable("qualityofqueso.gui.chest_searching_options"));
+        super(parent, Text.translatable("qualityofqueso.gui.title.chest_searching_options"));
     }
 
     @Override
     protected SimpleOption<?>[] options() {
         return new SimpleOption[]{
-                ModListOptions.CHEST_SEARCH,
+                ModListOptions.CHEST_SEARCHING,
                 ModListOptions.SEARCH_INVENTORY,
                 ModListOptions.SAVE_SEARCH_TEXT
         };

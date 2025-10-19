@@ -3,8 +3,9 @@ package net.dillon.qualityofqueso.mixin;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.dillon.qualityofqueso.keybind.ModKeybinds;
 import net.dillon.qualityofqueso.main.QoQ;
-import net.dillon.qualityofqueso.option.ModOptions;
+import net.dillon.qualityofqueso.option.ModClientOptions;
 import net.dillon.qualityofqueso.screen.gui.SensitiveButton;
+import net.dillon.qualityofqueso.util.ButtonUtil;
 import net.dillon.qualityofqueso.util.ModTexts;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -119,7 +120,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                 this.inventory = null;
             }
 
-            if (options().chestSearch) {
+            if (options().chestSearching) {
                 int barWidth = (int)((double)this.backgroundWidth * 0.6);
                 this.searchField = new TextFieldWidget(this.textRenderer, this.width / 2 + barWidth / 2 - 64, this.y + this.titleY - 2, 90, 12, null);
                 if (options().saveSearchText) {
@@ -254,7 +255,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
         if (this.searchField != null) {
             this.searchField.render(context, mouseX, mouseY, deltaTicks);
             if (options().helpfulTooltips && this.searchField.isHovered() && this.searchField.getText().isEmpty()) {
-                context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.chest_search.search_filtering"), 200), mouseX, mouseY);
+                ButtonUtil.drawTooltip(Text.translatable("qualityofqueso.gui.chest_search.search_filtering"), context, this.textRenderer, mouseX, mouseY);
             }
         }
         if (modEnabled(this.client) && options().inventoryManagement && this.isValidScreen()) {
@@ -303,15 +304,15 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                 // Render tooltip if searching or cursor has item
                 if (this.transferContainerButton.isMouseOver(mouseX, mouseY)) {
                     if (!this.getScreenHandler().getCursorStack().isEmpty()) {
-                        context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.transfer_container_button.with_cursor_stack", this.getScreenHandler().getCursorStack().getItemName()), 200), mouseX, mouseY);
+                        ButtonUtil.drawTooltip(Text.translatable("qualityofqueso.gui.transfer_container_button.with_cursor_stack", this.getScreenHandler().getCursorStack().getItemName()), context, this.textRenderer, mouseX, mouseY);
                     } else if (!this.getSearchFieldText().isEmpty()) {
-                        context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(this.getSearchFieldText().startsWith("#") ?
+                        ButtonUtil.drawTooltip(this.getSearchFieldText().startsWith("#") ?
                                 Text.translatable("qualityofqueso.gui.transfer_container_button.with_search_query.tag", this.getSearchFieldText().substring(1)) :
                                 this.getSearchFieldText().startsWith("!") ?
                                         Text.translatable("qualityofqueso.gui.transfer_container_button.with_search_query.exclude", this.getSearchFieldText().substring(1)) :
-                                        Text.translatable("qualityofqueso.gui.transfer_container_button.with_search_query", this.getSearchFieldText()), 200), mouseX, mouseY);
+                                        Text.translatable("qualityofqueso.gui.transfer_container_button.with_search_query", this.getSearchFieldText()), context, this.textRenderer, mouseX, mouseY);
                     } else {
-                        context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.transfer_container_button"), 200), mouseX, mouseY);
+                        ButtonUtil.drawTooltip(Text.translatable("qualityofqueso.gui.transfer_container_button"), context, this.textRenderer, mouseX, mouseY);
                     }
                 }
             }
@@ -334,17 +335,17 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                     ButtonWidget.builder(
                             ModTexts.BLANK, button -> {
                                 options().includeHotbar = !options().includeHotbar;
-                                ModOptions.OPTIONS.save();
+                                ModClientOptions.CLIENT_OPTIONS.save();
                             }).dimensions(this.getTransferButtonX(false) - 12, this.getTransferButtonY(), 10, 10).build());
 
             // Handles rendering textures and tooltips for include hotbar
             if (includeHotbarButton.isMouseOver(mouseX, mouseY)) {
                 if (options().includeHotbar) {
                     this.renderButtonTexture("include_hotbar_button_hovered", false, includeHotbarButton, context);
-                    context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.include_hotbar"), 200), mouseX, mouseY);
+                    ButtonUtil.drawTooltip(Text.translatable("qualityofqueso.gui.include_hotbar"), context, this.textRenderer, mouseX, mouseY);
                 } else {
                     this.renderButtonTexture("exclude_hotbar_button_hovered", false, includeHotbarButton, context);
-                    context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.exclude_hotbar"), 200), mouseX, mouseY);
+                    ButtonUtil.drawTooltip(Text.translatable("qualityofqueso.gui.exclude_hotbar"), context, this.textRenderer, mouseX, mouseY);
                 }
             } else {
                 if (options().includeHotbar) {
@@ -358,19 +359,19 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             if (isTransferInventoryButtonHovered) {
                 if (transferInventoryButton.active && this.altDown()) {
                     if (!this.getScreenHandler().getCursorStack().isEmpty()) {
-                        context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.transfer_inventory_button.with_cursor_stack", this.getScreenHandler().getCursorStack().getItemName()), 200), mouseX, mouseY);
+                        ButtonUtil.drawTooltip(Text.translatable("qualityofqueso.gui.transfer_inventory_button.with_cursor_stack", this.getScreenHandler().getCursorStack().getItemName()), context, this.textRenderer, mouseX, mouseY);
                     } else if (!this.getSearchFieldText().isEmpty() && options().searchInventory) {
-                        context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(this.getSearchFieldText().startsWith("#") ?
+                        ButtonUtil.drawTooltip(this.getSearchFieldText().startsWith("#") ?
                                 Text.translatable("qualityofqueso.gui.transfer_inventory_button.with_search_query.tag", this.getSearchFieldText().substring(1)) :
                                 this.getSearchFieldText().startsWith("!") ?
                                         Text.translatable("qualityofqueso.gui.transfer_inventory_button.with_search_query.exclude", this.getSearchFieldText().substring(1)) :
-                                        Text.translatable("qualityofqueso.gui.transfer_inventory_button.with_search_query", this.getSearchFieldText()), 200), mouseX, mouseY);
+                                        Text.translatable("qualityofqueso.gui.transfer_inventory_button.with_search_query", this.getSearchFieldText()), context, this.textRenderer, mouseX, mouseY);
                     } else {
-                        context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.transfer_inventory_button"), 200), mouseX, mouseY);
+                        ButtonUtil.drawTooltip(Text.translatable("qualityofqueso.gui.transfer_inventory_button"), context, this.textRenderer, mouseX, mouseY);
                     }
                 } else {
                     if (this.shouldButtonBeActive(true, playerInventory, transferInventoryButton)) {
-                        context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.gui.transfer_inventory_button.hold_alt"), 200), mouseX, mouseY);
+                        ButtonUtil.drawTooltip(Text.translatable("qualityofqueso.gui.transfer_inventory_button.hold_alt"), context, this.textRenderer, mouseX, mouseY);
                     }
                 }
             }
@@ -694,7 +695,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             boolean swapKeyPressed = false; // Determines if the swap item key was pressed
 
             // If a "disallowed key" is pressed, ignoreTyping and secondaryIgnoreTyping become true.
-            for (int key : QoQ.disallowedKeys) {
+            for (int key : QoQ.allDisallowedKeys) {
                 if (input.key() == key) {
                     ignoreTyping = true; secondaryIgnoreTyping = true;
                     break;
@@ -715,7 +716,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             }
 
             // Handle 'T' and 'E' keys
-            for (int key : QoQ.keys) {
+            for (int key : QoQ.popularKeys) {
                 if (input.key() == key) {
                     secondaryIgnoreTyping = false;
                     cir.setReturnValue(true);
@@ -758,7 +759,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             if (options().betterSearching && this.screen instanceof RecipeBookScreen<?> recipeScreen && !MinecraftClient.getInstance().isCtrlPressed()) {
                 if (!ignoreTyping && !recipeScreen.recipeBook.isOpen()) {
                     recipeScreen.recipeBook.toggleOpen();
-                    refreshWidgetPositions();
+                    this.refreshWidgetPositions();
                 }
                 if (recipeScreen.recipeBook.searchField != null) {
                     recipeScreen.recipeBook.searchField.setFocused(!ignoreTyping);
@@ -768,7 +769,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                 }
             }
             // Chest search field logic
-            else if (options().chestSearch && isValidScreen()) {
+            else if (options().chestSearching && isValidScreen()) {
                 if (!secondaryIgnoreTyping && !MinecraftClient.getInstance().isCtrlPressed()) {
                     this.searchField.setFocused(true);
                 } else if (this.searchField.isFocused() && cannotType) {
@@ -862,7 +863,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
      */
     @Inject(method = "close", at = @At("TAIL"))
     private void saveSearchText(CallbackInfo ci) {
-        if (options().chestSearch && options().saveSearchText && this.searchField != null && this.isValidScreen()) {
+        if (options().chestSearching && options().saveSearchText && this.searchField != null && this.isValidScreen()) {
             QoQ.SAVED_TEXT = this.searchField.getText();
         }
     }
@@ -872,7 +873,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
      */
     @Override
     public boolean charTyped(CharInput input) {
-        if (options().chestSearch && this.searchField != null && this.searchField.isFocused()) {
+        if (options().chestSearching && this.searchField != null && this.searchField.isFocused()) {
             return this.searchField.charTyped(input);
         }
         return super.charTyped(input);

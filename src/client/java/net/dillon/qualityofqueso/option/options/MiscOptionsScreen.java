@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import net.dillon.qualityofqueso.main.QoQ;
 import net.dillon.qualityofqueso.option.AbstractModOptionsScreen;
 import net.dillon.qualityofqueso.option.ModListOptions;
+import net.dillon.qualityofqueso.util.ButtonUtil;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ClickableWidget;
@@ -20,7 +21,7 @@ public class MiscOptionsScreen extends AbstractModOptionsScreen {
     private List<String> blacklistedServers = new ArrayList<>();
 
     public MiscOptionsScreen(Screen parent) {
-        super(parent, Text.translatable("qualityofqueso.gui.misc_options"));
+        super(parent, Text.translatable("qualityofqueso.gui.title.misc_options"));
     }
 
     @Override
@@ -89,7 +90,7 @@ public class MiscOptionsScreen extends AbstractModOptionsScreen {
     public void render(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
         super.render(context, mouseX, mouseY, deltaTicks);
         if (this.blacklistedServersField.isHovered()) {
-            context.drawOrderedTooltip(this.textRenderer, this.textRenderer.wrapLines(Text.translatable("qualityofqueso.options.blacklisted_servers.tooltip"), 200), mouseX, mouseY);
+            ButtonUtil.drawTooltip(Text.translatable("qualityofqueso.options.blacklisted_servers.tooltip"), context, this.textRenderer, mouseX, mouseY);
         }
     }
 

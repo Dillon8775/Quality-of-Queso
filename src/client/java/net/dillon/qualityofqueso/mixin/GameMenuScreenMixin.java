@@ -53,7 +53,7 @@ public class GameMenuScreenMixin extends Screen {
                     } else {
                         options().blacklistedServers.add(address);
                     }
-                    save();
+                    saveAll();
                 }).dimensions(this.width / 2 + 106, isFlashbackLoaded() ? this.height / 4 + 120 - 16 : this.height / 4 + 96 - 16, 20, 20).build());
             }
         }
@@ -77,15 +77,13 @@ public class GameMenuScreenMixin extends Screen {
                     String address = this.getServerAddress();
 
                     if (this.blacklistServerButton.isHovered()) {
-                        if (this.isServerBlacklisted(address)) {
-                            ButtonUtil.drawTexture(context, ButtonUtil.ENABLED, this.blacklistServerButton);
-                            ButtonUtil.drawTooltip(this.tooltipWithPrefix(Text.translatable("qualityofqueso.gui.remove_blacklisted_server")), context, this.textRenderer, mouseX, mouseY);
-                        } else {
-                            ButtonUtil.drawTexture(context, ButtonUtil.DISABLED, this.blacklistServerButton);
-                            ButtonUtil.drawTooltip(this.tooltipWithPrefix(Text.translatable("qualityofqueso.gui.add_blacklisted_server")), context, this.textRenderer, mouseX, mouseY);
-                        }
+                        ButtonUtil.drawTexture(context, this.blacklistServerButton.isHovered() ? ButtonUtil.ENABLED_TEXTURE : ButtonUtil.DISABLED_TEXTURE, this.blacklistServerButton);
+                        ButtonUtil.drawTooltip(this.tooltipWithPrefix(this.blacklistServerButton.isHovered() ?
+                                Text.translatable("qualityofqueso.gui.remove_blacklisted_server") :
+                                Text.translatable("qualityofqueso.gui.add_blacklisted_server")),
+                                context, this.textRenderer, mouseX, mouseY);
                     } else {
-                        ButtonUtil.drawTexture(context, this.isServerBlacklisted(address) ? ButtonUtil.DISABLED : ButtonUtil.ENABLED, this.blacklistServerButton);
+                        ButtonUtil.drawTexture(context, this.isServerBlacklisted(address) ? ButtonUtil.DISABLED_TEXTURE : ButtonUtil.ENABLED_TEXTURE, this.blacklistServerButton);
                     }
                 }
             }

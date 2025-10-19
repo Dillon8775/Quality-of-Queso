@@ -2,7 +2,8 @@ package net.dillon.qualityofqueso.main;
 
 import net.dillon.qualityofqueso.command.ItemFrameSearcherCommand;
 import net.dillon.qualityofqueso.keybind.ModKeybinds;
-import net.dillon.qualityofqueso.option.ModOptions;
+import net.dillon.qualityofqueso.option.ModClientOptions;
+import net.dillon.qualityofqueso.option.ModCommonOptions;
 import net.dillon.qualityofqueso.util.ModUtil;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -19,8 +20,8 @@ import java.util.Objects;
 public class QoQ implements ClientModInitializer {
 	public static String SAVED_TEXT = "";
 	public static String SAVED_ITEM_FRAME_TEXT = "";
-	public static final List<Integer> keys = List.of(GLFW.GLFW_KEY_T, GLFW.GLFW_KEY_E);
-	public static final List<Integer> disallowedKeys = List.of(
+	public static final List<Integer> popularKeys = List.of(GLFW.GLFW_KEY_T, GLFW.GLFW_KEY_E);
+	public static final List<Integer> allDisallowedKeys = List.of(
 			GLFW.GLFW_KEY_1,
 			GLFW.GLFW_KEY_2,
 			GLFW.GLFW_KEY_3,
@@ -40,6 +41,17 @@ public class QoQ implements ClientModInitializer {
 			GLFW.GLFW_KEY_LEFT_SUPER,
 			GLFW.GLFW_KEY_RIGHT_SUPER
 	);
+    public static final List<Integer> disallowedKeys = List.of(
+            GLFW.GLFW_KEY_ESCAPE,
+            GLFW.GLFW_KEY_LEFT_SHIFT,
+            GLFW.GLFW_KEY_RIGHT_SHIFT,
+            GLFW.GLFW_KEY_LEFT_CONTROL,
+            GLFW.GLFW_KEY_RIGHT_CONTROL,
+            GLFW.GLFW_KEY_LEFT_ALT,
+            GLFW.GLFW_KEY_RIGHT_ALT,
+            GLFW.GLFW_KEY_LEFT_SUPER,
+            GLFW.GLFW_KEY_RIGHT_SUPER
+    );
 
 	@Override
 	public void onInitializeClient() {
@@ -52,7 +64,7 @@ public class QoQ implements ClientModInitializer {
 	 * Registers the {@code Quality of Queso} commands.
 	 */
 	private static void registerCommands() {
-		if (options().itemFrameSearching) {
+		if (coptions().itemFrameSearching) {
 			CommandRegistrationCallback.EVENT.register((commandDispatcher, commandRegistryAccess, registrationEnvironment) -> {
 				ItemFrameSearcherCommand.register(commandDispatcher, commandRegistryAccess);
 			});
@@ -60,17 +72,25 @@ public class QoQ implements ClientModInitializer {
 	}
 
 	/**
-	 * Returns the options.
+	 * @return the client-options.
 	 */
-	public static ModOptions options() {
-		return ModOptions.OPTIONS.getInstance();
+	public static ModClientOptions options() {
+		return ModClientOptions.CLIENT_OPTIONS.getInstance();
 	}
 
+    /**
+     * @return the common-options.
+     */
+    public static ModCommonOptions coptions() {
+        return ModCommonOptions.COMMON_OPTIONS.getInstance();
+    }
+
 	/**
-	 * Saves the configuration.
+	 * Saves all configurations.
 	 */
-	public static void save() {
-		ModOptions.OPTIONS.save();
+	public static void saveAll() {
+		ModClientOptions.CLIENT_OPTIONS.save();
+        ModCommonOptions.COMMON_OPTIONS.save();
 	}
 
 	/**
