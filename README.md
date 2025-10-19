@@ -1,8 +1,22 @@
-# [![Requires Fabric API](https://cdn.modrinth.com/data/cached_images/8bd6d7ff822dc33ffb55af6cc0c7062cec53e9e3.png)](https://modrinth.com/mod/fabric-api)
-
 # A quality of life mod, with a bunch of cool _QOL_ features.
 
-### Currently compatible with Minecraft versions ***1.21.6-1.21.10.***
+###
+
+<a href="https://files.minecraftforge.net/" target="_blank">
+  <img src="https://i.imgur.com/gbZFxKU.png" width="427" height="115" alt="Compatible with Forge">
+</a>
+
+####
+
+<a href="https://fabricmc.net/" target="_blank">
+  <img src="https://i.imgur.com/vIbuVv8.png" width="433" height="149" alt="Compatible with Forge">
+</a>
+
+####
+
+<a href="https://modrinth.com/mod/fabric-api/versions" target="_blank">
+  <img src="https://i.imgur.com/yFnszAw.png" width="286" height="96" alt="Compatible with Forge">
+</a>
 
 ---
 
@@ -61,8 +75,8 @@
 
 ## Please note: this mod must be installed on the server-side, _and_ enabled on the server side in order for players to use this feature.
 ### There is also a command to use this feature if you don't want to use the GUI screen. However, the command will _only work_ in singleplayer.
-#### To disable this feature on the server-side, either don't install the mod on the server, or go to the "config" directory in your server files and look for "qualityofqueso-server_config.json". Open that file and set "itemFrameSearchingOnServer" to "false".
-#### If you are in a singleplayer world and have the mod installed, the feature will work as long as you have "Item Frame Searching" enabled in your client options.
+#### To disable this feature on the server-side, either don't install the mod on the server, or go to the "config" directory in your server files and look for "qualityofqueso-common_config.json" (if you are on forge, the file will be called "qualityofqueso-common.toml". Open that file and set "itemFrameSearching" to "false".
+#### If you are in a singleplayer world and have the mod installed, the feature will work as long as you have "Item Frame Searching" enabled.
 
 #### (since v1.3)
 
