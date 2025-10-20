@@ -6,10 +6,10 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.option.SimpleOption;
 import net.minecraft.text.Text;
 
-public class ChestSearchingOptionsScreen extends AbstractModOptionsScreen {
+public class InventorySearchingOptionsScreen extends AbstractModOptionsScreen {
 
-    public ChestSearchingOptionsScreen(Screen parent) {
-        super(parent, Text.translatable("qualityofqueso.gui.title.chest_searching_options"));
+    public InventorySearchingOptionsScreen(Screen parent) {
+        super(parent, Text.translatable("qualityofqueso.gui.title.inventory_searching_options"));
     }
 
     @Override
@@ -17,6 +17,7 @@ public class ChestSearchingOptionsScreen extends AbstractModOptionsScreen {
         return new SimpleOption[]{
                 ModListOptions.CHEST_SEARCHING,
                 ModListOptions.SEARCH_INVENTORY,
+                ModListOptions.INVENTORY_SEARCHING,
                 ModListOptions.SAVE_SEARCH_TEXT
         };
     }

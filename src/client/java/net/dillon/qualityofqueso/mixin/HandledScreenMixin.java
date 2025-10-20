@@ -73,16 +73,26 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     protected int y;
     @Shadow
     protected int titleY;
+
     @Shadow
     public abstract T getScreenHandler();
-    @Shadow @Nullable
+
+    @Shadow
+    @Nullable
     public Slot focusedSlot;
-    @Shadow @Nullable
+
+    @Shadow
+    @Nullable
     protected abstract Slot getSlotAt(double mouseX, double mouseY);
+
+    @Shadow
+    protected int x;
     @Unique
-    private final HandledScreen<?> screen = (HandledScreen<?>)(Object)this;
+    private final HandledScreen<?> screen = (HandledScreen<?>) (Object) this;
     @Unique
-    private TextFieldWidget searchField;
+    private TextFieldWidget containerSearchField;
+    @Unique
+    private TextFieldWidget inventorySearchField;
     @Unique
     private ClickableWidget transferContainerButton, transferInventoryButton;
     @Unique
@@ -106,45 +116,66 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
      */
     @Inject(method = "init", at = @At("TAIL"))
     private void init(CallbackInfo ci) {
-        if (modEnabled(this.client) && this.isValidScreen()) {
-            // Determine inventory variable; if instance ShulkerBoxScreen, inventory is the shulker box's inventory
-            if (this.screen instanceof ShulkerBoxScreen shulkerBoxScreen) {
-                this.inventory = shulkerBoxScreen.getScreenHandler().inventory;
-            }
-            // If it's GenericContainerScreen, it's the generic container (or most likely chest/barrel)'s inventory
-            else if (this.screen instanceof GenericContainerScreen genericContainerScreen) {
-                this.inventory = genericContainerScreen.getScreenHandler().getInventory();
-            }
-            // Otherwise, inventory is null
-            else {
-                this.inventory = null;
-            }
-
-            if (options().chestSearching) {
-                int barWidth = (int)((double)this.backgroundWidth * 0.6);
-                this.searchField = new TextFieldWidget(this.textRenderer, this.width / 2 + barWidth / 2 - 64, this.y + this.titleY - 2, 90, 12, null);
-                if (options().saveSearchText) {
-                    this.searchField.setText(QoQ.SAVED_TEXT);
+        if (modEnabled(this.client)) {
+            if (this.isValidScreen()) {
+                // Determine inventory variable; if instance ShulkerBoxScreen, inventory is the shulker box's inventory
+                if (this.screen instanceof ShulkerBoxScreen shulkerBoxScreen) {
+                    this.inventory = shulkerBoxScreen.getScreenHandler().inventory;
                 }
-                this.searchField.setMaxLength(50);
-                this.searchField.setPlaceholder(Text.translatable("qualityofqueso.gui.search.placeholder").formatted(Formatting.ITALIC).formatted(Formatting.GRAY));
-                this.addSelectableChild(this.searchField);
-            }
-            if (options().inventoryManagement) {
-                this.transferContainerButton = this.addSelectableChild(
-                        new SensitiveButton(
-                                this.getTransferButtonX(true),
-                                this.getTransferButtonY(),
-                                10,
-                                10,
-                                ModTexts.BLANK,
-                                b -> this.transferItems(this.screen, true),
-                                () -> this.transferContainerButton.active
-                        )
-                );
-                this.transferContainerButton.active = false;
+                // If it's GenericContainerScreen, it's the generic container (or most likely chest/barrel)'s inventory
+                else if (this.screen instanceof GenericContainerScreen genericContainerScreen) {
+                    this.inventory = genericContainerScreen.getScreenHandler().getInventory();
+                }
+                // Otherwise, inventory is null
+                else {
+                    this.inventory = null;
+                }
+
+                if (options().chestSearching) {
+                    this.containerSearchField = this.initializeSearchField(false);
+                    this.addSelectableChild(this.containerSearchField);
+                }
+                if (options().inventoryManagement) {
+                    this.transferContainerButton = this.addSelectableChild(
+                            new SensitiveButton(
+                                    this.getTransferButtonX(true),
+                                    this.getTransferButtonY(),
+                                    10,
+                                    10,
+                                    ModTexts.BLANK,
+                                    b -> this.transferItems(this.screen, true, false),
+                                    () -> this.transferContainerButton.active
+                            )
+                    );
+                    this.transferContainerButton.active = false;
+                }
+            } else if (options().inventorySearching && this.screen instanceof InventoryScreen) {
+                this.inventorySearchField = this.initializeSearchField(true);
+                this.addSelectableChild(this.inventorySearchField);
             }
         }
+    }
+
+    /**
+     * Initializes a search field widget.
+     */
+    @Unique
+    private TextFieldWidget initializeSearchField(boolean inventory) {
+        TextFieldWidget searchField = new TextFieldWidget(this.textRenderer, this.width / 2 + this.getBarWidth() / 2 - (inventory ? 60 : 64), this.y + this.titleY - 2, 90, 12, null);
+        if (options().saveSearchText) {
+            searchField.setText(QoQ.SAVED_TEXT);
+        }
+        searchField.setMaxLength(50);
+        searchField.setPlaceholder(Text.translatable("qualityofqueso.gui.search.placeholder").formatted(Formatting.ITALIC).formatted(Formatting.GRAY));
+        return searchField;
+    }
+
+    /**
+     * @return A special int to get the bar width.
+     */
+    @Unique
+    private int getBarWidth() {
+        return (int) ((double) this.backgroundWidth * 0.6);
     }
 
     /**
@@ -152,7 +183,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
      * <p>boolean variable {@code reverse} should be {@code true} if {@code chest -> inventory,} otherwise {@code inventory -> chest.}</p>
      */
     @Unique
-    private void transferItems(HandledScreen<?> screen, boolean reverse) {
+    private void transferItems(HandledScreen<?> screen, boolean reverse, boolean drop) {
         int containerSize = this.inventory.size();
         int totalSlotSize = screen.getScreenHandler().slots.size();
 
@@ -167,7 +198,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
 
             if (!options().includeHotbar && !reverse && this.isValidSlot(screen, fromSlot.id)) {
                 continue; // skip slot if exclude hotbar is on and slot is in hotbar
-            } else if (this.searchField != null && !this.getSearchFieldText().isEmpty() && !this.search(this.getSearchFieldText(), fromSlot)) {
+            } else if ((this.containerSearchField != null || this.inventorySearchField != null) && !this.getSearchFieldText().isEmpty() && !this.search(this.getSearchFieldText(), fromSlot)) {
                 continue; // skip container slot if query not found via search
             }
 
@@ -178,13 +209,13 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                         // Only transfer items if the query matches whatever the cursor is holding
                         if (!this.getScreenHandler().getCursorStack().isEmpty()) {
                             if (fromStack.isOf(this.getScreenHandler().getCursorStack().getItem())) {
-                                this.sendClickSlotPacket(i, SlotActionType.QUICK_MOVE);
+                                this.sendClickSlotPacket(i, drop ? SlotActionType.THROW : SlotActionType.QUICK_MOVE);
                                 break;
                             }
                         }
                         // If cursor has nothing in it, move all items over
                         else {
-                            this.sendClickSlotPacket(i, SlotActionType.QUICK_MOVE);
+                            this.sendClickSlotPacket(i, drop ? SlotActionType.THROW : SlotActionType.QUICK_MOVE);
                             break;
                         }
                     }
@@ -193,6 +224,9 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
         }
     }
 
+    /**
+     * Sends a click slot packet.
+     */
     @Unique
     private void sendClickSlotPacket(int slotIndex, SlotActionType slotActionType) {
         MinecraftClient client = MinecraftClient.getInstance();
@@ -209,6 +243,10 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
         ItemStack cursorStack = handler.getCursorStack();
         ItemStack clickedStack = handler.getSlot(slotIndex).getStack();
 
+        if (slotActionType == SlotActionType.THROW && handler.getSlot(slotIndex).getStack().isEmpty()) {
+            return;
+        }
+
         ComponentChangesHash.ComponentHasher hasher = networkHandler.getComponentHasher();
 
         ItemStackHash cursorHash = ItemStackHash.fromItemStack(cursorStack, hasher);
@@ -221,7 +259,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                 syncId,
                 revision,
                 (short) slotIndex,
-                (byte) 0,
+                slotActionType == SlotActionType.THROW ? (byte) 1 : (byte) 0,
                 slotActionType,
                 modifiedStacks,
                 cursorHash
@@ -235,12 +273,17 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
      */
     @Inject(method = "renderMain", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ingame/HandledScreen;drawSlotHighlightFront(Lnet/minecraft/client/gui/DrawContext;)V", shift = At.Shift.AFTER))
     private void grayOutSlot(DrawContext context, int mouseX, int mouseY, float deltaTicks, CallbackInfo ci) {
-        if (this.searchField != null && !this.getSearchFieldText().isEmpty()) {
+        if ((this.containerSearchField != null || this.inventorySearchField != null)) {
             for (int i = 0; i < this.getInventorySize(); i++) {
                 Slot slot = this.getScreenHandler().getSlot(i);
-                // If query not found from search result, the slot becomes unavailable
-                if (!this.search(this.getSearchFieldText(), slot)) {
-                    this.makeSlotUnavailable(context, slot);
+                // Grayout hotbar slots
+                if (!options().includeHotbar && this.isValidSlot(this.screen, i) && this.isValidScreen()) {
+                    this.makeSlotUnavailable(context, slot, true);
+                    continue; // skip normal search logic for hotbar slots
+                }
+                // Otherwise, gray out slots that don't match the search
+                if (!this.getSearchFieldText().isEmpty() && !this.search(this.getSearchFieldText(), slot)) {
+                    this.makeSlotUnavailable(context, slot, false);
                 }
             }
         }
@@ -252,11 +295,18 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     @Inject(method = "renderMain", at = @At("TAIL"))
     private void renderWidgets(DrawContext context, int mouseX, int mouseY, float deltaTicks, CallbackInfo ci) {
         // Render the search field
-        if (this.searchField != null) {
-            this.searchField.render(context, mouseX, mouseY, deltaTicks);
-            if (options().helpfulTooltips && this.searchField.isHovered() && this.searchField.getText().isEmpty()) {
+        if (this.containerSearchField != null) {
+            this.containerSearchField.render(context, mouseX, mouseY, deltaTicks);
+            if (options().helpfulTooltips && this.containerSearchField.isHovered() && this.containerSearchField.getText().isEmpty()) {
                 ButtonUtil.drawTooltip(Text.translatable("qualityofqueso.gui.chest_search.search_filtering"), context, this.textRenderer, mouseX, mouseY);
             }
+        }
+        // Render inventory search field
+        if (this.inventorySearchField != null) {
+            this.inventorySearchField.setX(this.width / 2 + this.getBarWidth() / 2 - (
+                    this.screen instanceof RecipeBookScreen<?> recipeBookScreen && recipeBookScreen.recipeBook.isOpen() ? -16 : 60
+            ));
+            this.inventorySearchField.render(context, mouseX, mouseY, deltaTicks);
         }
         if (modEnabled(this.client) && options().inventoryManagement && this.isValidScreen()) {
             // Determine if transfer container button should be active
@@ -270,10 +320,8 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                             10,
                             10,
                             ModTexts.BLANK,
-                            b -> this.transferItems(this.screen, false),
-                            () -> (this.altDown() || this.keepInventoryButtonActive) && !this.isPlayerInventoryEmpty(playerInventory)
-                    )
-            );
+                            b -> this.transferItems(this.screen, false, false),
+                            () -> (this.altDown() || this.keepInventoryButtonActive) && this.shouldButtonBeActive(true, playerInventory, this.transferInventoryButton)));
             // Transfer inventory button is only active if it is already active and hovered, otherwise only becomes active if ALT is pressed
             boolean isTransferInventoryButtonHovered = this.transferInventoryButton.isMouseOver(mouseX, mouseY);
             if (this.shouldButtonBeActive(true, playerInventory, this.transferInventoryButton)) {
@@ -340,19 +388,12 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
 
             // Handles rendering textures and tooltips for include hotbar
             if (includeHotbarButton.isMouseOver(mouseX, mouseY)) {
-                if (options().includeHotbar) {
-                    this.renderButtonTexture("include_hotbar_button_hovered", false, includeHotbarButton, context);
-                    ButtonUtil.drawTooltip(Text.translatable("qualityofqueso.gui.include_hotbar"), context, this.textRenderer, mouseX, mouseY);
-                } else {
-                    this.renderButtonTexture("exclude_hotbar_button_hovered", false, includeHotbarButton, context);
-                    ButtonUtil.drawTooltip(Text.translatable("qualityofqueso.gui.exclude_hotbar"), context, this.textRenderer, mouseX, mouseY);
-                }
+                this.renderButtonTexture(options().includeHotbar ? "include_hotbar_button_hovered" : "exclude_hotbar_button_hovered", false, includeHotbarButton, context);
+                ButtonUtil.drawTooltip(options().includeHotbar ?
+                        Text.translatable("qualityofqueso.gui.include_hotbar") :
+                        Text.translatable("qualityofqueso.gui.exclude_hotbar"), context, this.textRenderer, mouseX, mouseY);
             } else {
-                if (options().includeHotbar) {
-                    this.renderButtonTexture("include_hotbar_button", false, includeHotbarButton, context);
-                } else {
-                    this.renderButtonTexture("exclude_hotbar_button", false, includeHotbarButton, context);
-                }
+                this.renderButtonTexture(options().includeHotbar ? "include_hotbar_button" : "exclude_hotbar_button", false, includeHotbarButton, context);
             }
 
             // Render tooltip if cursor stack has an item and button is hovered
@@ -383,7 +424,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
      */
     @Unique
     private String getSearchFieldText() {
-        return this.searchField != null ? this.searchField.getText() : "";
+        return this.inventorySearchField != null ? this.inventorySearchField.getText() : this.containerSearchField != null ? this.containerSearchField.getText() : "";
     }
 
     /**
@@ -415,7 +456,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
      */
     @Unique
     private int getTransferButtonX(boolean chestToInventory) {
-        int barWidth = (int)((double)this.backgroundWidth * 0.6);
+        int barWidth = (int) ((double) this.backgroundWidth * 0.6);
         return chestToInventory ? this.width / 2 + barWidth / 2 + 16 : this.width / 2 + barWidth / 2 + 4;
     }
 
@@ -439,28 +480,31 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
      * Grays out a containerSlot.
      */
     @Unique
-    private void makeSlotUnavailable(DrawContext context, Slot slot) {
-        context.fillGradient(slot.x, slot.y, slot.x + 16, slot.y + 16, -1275068416, -1275068416);
+    private void makeSlotUnavailable(DrawContext context, Slot slot, boolean hotbar) {
+        int color = hotbar ? -2139062148 : -1275068416;
+        context.fillGradient(slot.x, slot.y, slot.x + 16, slot.y + 16, color, color);
     }
 
     /**
      * Renders a transfer button texture.
      */
     @Unique
-    private void renderButtonTexture(String id, boolean transferable, ClickableWidget buttonReference, DrawContext context) {
+    private void renderButtonTexture(String id, boolean transferable, ClickableWidget buttonReference, DrawContext
+            context) {
         String transferableString = !this.getScreenHandler().getCursorStack().isEmpty() ?
                 "_with_stack.png" : this.getSearchFieldText().startsWith("!") ?
                 "_exclude.png" : this.getSearchFieldText().startsWith("#") ?
                 "_with_tag.png" : ".png";
         String appended = transferable ? transferableString : ".png";
-        context.drawTexture(RenderPipelines.GUI_TEXTURED, Identifier.of("qualityofqueso:textures/gui/"+id+appended), buttonReference.getX() - 1, buttonReference.getY() - 1, 0.0F, 0.0F, 12, 12, 12, 12);
+        context.drawTexture(RenderPipelines.GUI_TEXTURED, Identifier.of("qualityofqueso:textures/gui/" + id + appended), buttonReference.getX() - 1, buttonReference.getY() - 1, 0.0F, 0.0F, 12, 12, 12, 12);
     }
 
     /**
      * @return {@code true} if the {@code inventory} has a match with the search query.
      */
     @Unique
-    private boolean shouldButtonBeActive(boolean isPlayerInventory, @Nullable PlayerInventory playerInventory, ClickableWidget button) {
+    private boolean shouldButtonBeActive(boolean isPlayerInventory,
+                                         @Nullable PlayerInventory playerInventory, ClickableWidget button) {
         // If button is null, return false because there is no button to be checked
         if (button == null) {
             return false;
@@ -609,7 +653,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     @Inject(method = "drawMouseoverTooltip", at = @At("HEAD"), cancellable = true)
     private void addAllItemTagsToTooltip(DrawContext drawContext, int x, int y, CallbackInfo ci) {
         String searchQuery = this.getSearchFieldText();
-        if (this.searchField != null) {
+        if (this.containerSearchField != null) {
             // Exit if search query doesn't start with #
             if (!searchQuery.startsWith("#")) {
                 return;
@@ -646,13 +690,19 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     }
 
     /**
-     * Implements functionality for the {@code Quick Equip right-click feature.}
+     * Implements functionality for the {@code Quick Equip right-click feature,} and handles inventory search field.
      */
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
     private void handleMouseClicking(Click click, boolean doubled, CallbackInfoReturnable<Boolean> cir) {
-        if (modEnabled(this.client) && click.button() == InputUtil.GLFW_MOUSE_BUTTON_RIGHT && this.focusedSlot != null && this.isQuicklyEquippable(this.focusedSlot.getStack())) {
-            this.quickEquip();
-            cir.setReturnValue(true);
+        if (modEnabled(this.client)) {
+            if (click.button() == InputUtil.GLFW_MOUSE_BUTTON_RIGHT && this.focusedSlot != null && this.isQuicklyEquippable(this.focusedSlot.getStack())) {
+                this.quickEquip();
+                cir.setReturnValue(true);
+            }
+            // Refocus inventory search field if clicked.
+            if (this.inventorySearchField != null && this.inventorySearchField.mouseClicked(click, doubled)) {
+                this.inventorySearchField.setFocused(true);
+            }
         }
     }
 
@@ -664,11 +714,11 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
         if (modEnabled(this.client)) {
             if (MinecraftClient.getInstance().isCtrlPressed()) {
                 if (this.transferContainerButton != null && this.transferContainerButton.active && input.key() == ModKeybinds.MOVE_TO_INVENTORY.boundKey.getCode()) {
-                    this.transferItems(this.screen, true);
+                    this.transferItems(this.screen, true, false);
                 }
 
                 if (this.transferInventoryButton != null && this.transferInventoryButton.active && input.key() == ModKeybinds.MOVE_TO_CONTAINER.boundKey.getCode()) {
-                    this.transferItems(this.screen, false);
+                    this.transferItems(this.screen, false, false);
                 }
             }
 
@@ -697,7 +747,8 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             // If a "disallowed key" is pressed, ignoreTyping and secondaryIgnoreTyping become true.
             for (int key : QoQ.allDisallowedKeys) {
                 if (input.key() == key) {
-                    ignoreTyping = true; secondaryIgnoreTyping = true;
+                    ignoreTyping = true;
+                    secondaryIgnoreTyping = true;
                     break;
                 }
             }
@@ -706,7 +757,9 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             if (this.getScreenHandler().getCursorStack().isEmpty() && this.focusedSlot != null) {
                 for (int i = 0; i < 9; i++) {
                     if (this.client.options.hotbarKeys[i].matchesKey(input)) {
-                        ignoreTyping = true; secondaryIgnoreTyping = true; hotbarKeyPressed = true;
+                        ignoreTyping = true;
+                        secondaryIgnoreTyping = true;
+                        hotbarKeyPressed = true;
                         break;
                     }
                 }
@@ -757,26 +810,57 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
 
             // Recipe book search field logic
             if (options().betterSearching && this.screen instanceof RecipeBookScreen<?> recipeScreen && !MinecraftClient.getInstance().isCtrlPressed()) {
-                if (!ignoreTyping && !recipeScreen.recipeBook.isOpen()) {
+                if (!ignoreTyping && !recipeScreen.recipeBook.isOpen() && (this.inventorySearchField == null || !this.inventorySearchField.isFocused())) {
                     recipeScreen.recipeBook.toggleOpen();
                     this.refreshWidgetPositions();
                 }
                 if (recipeScreen.recipeBook.searchField != null) {
-                    recipeScreen.recipeBook.searchField.setFocused(!ignoreTyping);
+                    System.out.println("what");
+                    recipeScreen.recipeBook.searchField.setFocused(!cannotType);
+
                     if (recipeScreen.recipeBook.searchField.isFocused()) {
                         cir.setReturnValue(recipeScreen.recipeBook.keyPressed(input) || super.keyPressed(input));
                     }
                 }
             }
-            // Chest search field logic
-            else if (options().chestSearching && isValidScreen()) {
-                if (!secondaryIgnoreTyping && !MinecraftClient.getInstance().isCtrlPressed()) {
-                    this.searchField.setFocused(true);
-                } else if (this.searchField.isFocused() && cannotType) {
-                    this.searchField.setFocused(false);
+            // Inventory search field logic
+            if (options().inventorySearching && this.inventorySearchField != null) {
+                if (!MinecraftClient.getInstance().isCtrlPressed()) {
+                    if (this.screen instanceof RecipeBookScreen<?> recipeScreen && recipeScreen.recipeBook.isOpen() && !this.inventorySearchField.isFocused()) {
+                        recipeScreen.recipeBook.searchField.setFocused(!cannotType);
+                        System.out.println("ok");
+                    } else if (!secondaryIgnoreTyping) {
+                        this.inventorySearchField.setFocused(true);
+                    } else if (this.inventorySearchField.isFocused() && cannotType) {
+                        this.inventorySearchField.setFocused(false);
+                    }
                 }
 
-                if (this.searchField.isFocused() && this.searchField.keyPressed(input)) {
+                // Unfocus recipe book search field when inventory search field is focused
+                if (this.screen instanceof RecipeBookScreen<?> recipeScreen && recipeScreen.recipeBook.searchField != null) {
+                    if (this.inventorySearchField.isFocused()) {
+                        recipeScreen.recipeBook.searchField.setFocused(false);
+                    }
+                    // Unfocus inventory search field when recipe book search field is focused
+                    else if (recipeScreen.recipeBook.searchField.isFocused() && this.inventorySearchField != null) {
+                        this.inventorySearchField.setFocused(false);
+                    }
+                }
+
+                if (this.inventorySearchField.isFocused() && this.inventorySearchField.keyPressed(input)) {
+                    cir.setReturnValue(true);
+                }
+            }
+
+            // Chest search field logic
+            if (options().chestSearching && isValidScreen()) {
+                if (!secondaryIgnoreTyping && !MinecraftClient.getInstance().isCtrlPressed()) {
+                    this.containerSearchField.setFocused(true);
+                } else if (this.containerSearchField.isFocused() && cannotType) {
+                    this.containerSearchField.setFocused(false);
+                }
+
+                if (this.containerSearchField.isFocused() && this.containerSearchField.keyPressed(input)) {
                     cir.setReturnValue(true);
                 }
             }
@@ -852,7 +936,8 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
      * Closes the screen when clicking outside of menu.
      */
     @Inject(method = "onMouseClick(Lnet/minecraft/screen/slot/Slot;IILnet/minecraft/screen/slot/SlotActionType;)V", at = @At("HEAD"))
-    private void closeButtonOnClickOutOfBounds(Slot slot, int slotId, int button, SlotActionType actionType, CallbackInfo ci) {
+    private void closeButtonOnClickOutOfBounds(Slot slot, int slotId, int button, SlotActionType
+            actionType, CallbackInfo ci) {
         if (modEnabled(this.client) && options().betterGuiExit && this.getScreenHandler().getCursorStack().isEmpty() && button == 0 && slot == null) {
             this.close();
         }
@@ -863,8 +948,12 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
      */
     @Inject(method = "close", at = @At("TAIL"))
     private void saveSearchText(CallbackInfo ci) {
-        if (options().chestSearching && options().saveSearchText && this.searchField != null && this.isValidScreen()) {
-            QoQ.SAVED_TEXT = this.searchField.getText();
+        if (options().saveSearchText) {
+            if (this.screen instanceof InventoryScreen && this.inventorySearchField != null) {
+                QoQ.SAVED_TEXT = this.inventorySearchField.getText();
+            } else if (this.isValidScreen() && this.containerSearchField != null) {
+                QoQ.SAVED_TEXT = this.containerSearchField.getText();
+            }
         }
     }
 
@@ -873,8 +962,8 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
      */
     @Override
     public boolean charTyped(CharInput input) {
-        if (options().chestSearching && this.searchField != null && this.searchField.isFocused()) {
-            return this.searchField.charTyped(input);
+        if (options().chestSearching && this.containerSearchField != null && this.containerSearchField.isFocused()) {
+            return this.containerSearchField.charTyped(input);
         }
         return super.charTyped(input);
     }
@@ -884,15 +973,15 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
      */
     @Override
     public void resize(MinecraftClient client, int width, int height) {
-        if (this.searchField != null) {
+        if (this.containerSearchField != null) {
             // Get current text and focused status
             String text = this.getSearchFieldText();
-            boolean refocus = this.searchField.isFocused();
+            boolean refocus = this.containerSearchField.isFocused();
             // Refresh screen (or resize)
             this.init(client, width, height);
             // Reset text and focused status
-            this.searchField.setText(text);
-            this.searchField.setFocused(refocus);
+            this.containerSearchField.setText(text);
+            this.containerSearchField.setFocused(refocus);
         }
     }
 

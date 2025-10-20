@@ -1,1 +1,3 @@
-- Fixed bug where an extra "s" appears at the end of an item name when moving items with the cursor.
+- Added Inventory Searching! You can now search items in your inventory just like you can in chests (this is toggleable).
+- Renamed "Chest Searching Options" to "Inventory Searching Options".
+- Bug fixes and optimizations.

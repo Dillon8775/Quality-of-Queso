@@ -16,6 +16,7 @@ public class ModClientOptions {
     public boolean betterSearching = true;
     public boolean chestSearching = true;
     public boolean searchInventory = true;
+    public boolean inventorySearching = true;
     public boolean saveSearchText = false;
     public boolean inventoryManagement = true;
     public boolean requireAltToMove = false;

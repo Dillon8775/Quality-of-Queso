@@ -1,8 +1,8 @@
 package net.dillon.qualityofqueso.option;
 
 import net.dillon.qualityofqueso.main.QoQ;
-import net.dillon.qualityofqueso.option.options.ChestSearchingOptionsScreen;
 import net.dillon.qualityofqueso.option.options.InventoryManagementOptionsScreen;
+import net.dillon.qualityofqueso.option.options.InventorySearchingOptionsScreen;
 import net.dillon.qualityofqueso.option.options.ItemFrameSearchingOptionsScreen;
 import net.dillon.qualityofqueso.option.options.MiscOptionsScreen;
 import net.dillon.qualityofqueso.screen.ItemFrameSearchScreen;
@@ -31,8 +31,8 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
     protected void init() {
         super.init();
         List<ClickableWidget> buttons = new ArrayList<>();
-        this.chestSearchingOptions = this.addDrawableChild(ButtonWidget.builder(Text.translatable("qualityofqueso.gui.chest_searching_options"), button -> {
-            this.client.setScreen(new ChestSearchingOptionsScreen(this));
+        this.chestSearchingOptions = this.addDrawableChild(ButtonWidget.builder(Text.translatable("qualityofqueso.gui.inventory_searching_options"), button -> {
+            this.client.setScreen(new InventorySearchingOptionsScreen(this));
         }).build());
         buttons.add(this.chestSearchingOptions);
         this.inventoryManagementOptions = this.addDrawableChild(ButtonWidget.builder(Text.translatable("qualityofqueso.gui.inventory_management_options"), button -> {
