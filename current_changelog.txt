@@ -1,3 +1,13 @@
+Main Changes:
 - Added Inventory Searching! You can now search items in your inventory just like you can in chests (this is toggleable).
+- Added a "Quick Drop" button, which allows you to drop all items in a container, or your inventory. You can also do this by pressing CTRL + ALT + Q.
+- You can also utilize the search field to filter which items you want to drop, exclude/include hotbar items, and also drop via cursor stack (just like the other inventory management buttons).
+
 - Renamed "Chest Searching Options" to "Inventory Searching Options".
-- Bug fixes and optimizations.
+- Added option to allow use of the CTRL + C and CTRL + I quick move keys for inventory management.
+- Increased maximum search distance for item frame searching to 500 blocks (note that this could cause some lag and is only recommended to go this high if you are on a high render distance setting).
+
+Slight Changes:
+- Removed "Require ALT to move" option.
+- Hovering over any inventory management button now displays the correct cursor, matching with the new 1.21.9 update.
+- Bug fixes, optimizations and tweaks.

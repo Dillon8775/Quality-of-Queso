@@ -23,9 +23,11 @@ import static net.dillon.qualityofqueso.main.QoQ.*;
 @Environment(EnvType.CLIENT)
 @Mixin(GameMenuScreen.class)
 public class GameMenuScreenMixin extends Screen {
-    @Shadow @Final
+    @Shadow
+    @Final
     private boolean showMenu;
-    @Shadow private @Nullable ButtonWidget exitButton;
+    @Shadow
+    private @Nullable ButtonWidget exitButton;
     @Unique
     private ButtonWidget settingsButton, blacklistServerButton;
 
@@ -79,8 +81,8 @@ public class GameMenuScreenMixin extends Screen {
                     if (this.blacklistServerButton.isHovered()) {
                         ButtonUtil.drawTexture(context, this.isServerBlacklisted(address) ? ButtonUtil.ENABLED_TEXTURE : ButtonUtil.DISABLED_TEXTURE, this.blacklistServerButton);
                         ButtonUtil.drawTooltip(this.tooltipWithPrefix(this.isServerBlacklisted(address) ?
-                                Text.translatable("qualityofqueso.gui.remove_blacklisted_server") :
-                                Text.translatable("qualityofqueso.gui.add_blacklisted_server")),
+                                        Text.translatable("qualityofqueso.gui.remove_blacklisted_server") :
+                                        Text.translatable("qualityofqueso.gui.add_blacklisted_server")),
                                 context, this.textRenderer, mouseX, mouseY);
                     } else {
                         ButtonUtil.drawTexture(context, this.isServerBlacklisted(address) ? ButtonUtil.DISABLED_TEXTURE : ButtonUtil.ENABLED_TEXTURE, this.blacklistServerButton);

@@ -75,8 +75,8 @@ public class ItemFrameSearchScreen extends Screen {
         this.searchButton.active = !this.searchField.getText().isEmpty();
         if (!this.searchField.getText().isEmpty() && this.searchButton.isHovered()) {
             ButtonUtil.drawTooltip(!MinecraftClient.getInstance().isCtrlPressed() ?
-                    Text.translatable("qualityofqueso.gui.search.tooltip", this.searchField.getText()) :
-                    Text.translatable("qualityofqueso.gui.search.match_case.tooltip", this.searchField.getText()),
+                            Text.translatable("qualityofqueso.gui.search.tooltip", this.searchField.getText()) :
+                            Text.translatable("qualityofqueso.gui.search.match_case.tooltip", this.searchField.getText()),
                     context, this.textRenderer, mouseX, mouseY);
         }
         if (this.clearButton.isHovered()) {

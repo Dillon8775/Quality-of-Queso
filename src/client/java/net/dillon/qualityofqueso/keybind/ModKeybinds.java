@@ -22,5 +22,6 @@ public class ModKeybinds {
     /**
      * Initialize mod keybinds.
      */
-    public static void init() {}
+    public static void init() {
+    }
 }

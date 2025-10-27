@@ -31,80 +31,82 @@ import static net.dillon.qualityofqueso.main.QoQ.options;
 @Environment(EnvType.CLIENT)
 @Mixin(CreativeInventoryScreen.class)
 public abstract class CreativeInventoryScreenMixin extends HandledScreen<CreativeInventoryScreen.CreativeScreenHandler> {
-	@Shadow
-	private static ItemGroup selectedTab;
-	@Shadow
-	private boolean ignoreTypedCharacter;
-	@Shadow
-	private TextFieldWidget searchBox;
-	@Shadow
-	protected abstract void search();
-	@Shadow
-	protected abstract void setSelectedTab(ItemGroup group);
+    @Shadow
+    private static ItemGroup selectedTab;
+    @Shadow
+    private boolean ignoreTypedCharacter;
+    @Shadow
+    private TextFieldWidget searchBox;
 
-	public CreativeInventoryScreenMixin(CreativeInventoryScreen.CreativeScreenHandler handler, PlayerInventory inventory, Text title) {
-		super(handler, inventory, title);
-	}
+    @Shadow
+    protected abstract void search();
 
-	/**
-	 * Closes the screen when clicking outside of the menu.
-	 */
-	@Inject(method = "onMouseClick(Lnet/minecraft/screen/slot/Slot;IILnet/minecraft/screen/slot/SlotActionType;)V", at = @At("HEAD"))
-	private void closeButtonOnClickOutOfBounds(Slot slot, int slotId, int button, SlotActionType actionType, CallbackInfo ci) {
-		if (modEnabled(this.client) && options().betterGuiExit && this.handler.getCursorStack().isEmpty() && button == 0 && slot == null) {
-			this.close();
-		}
-	}
+    @Shadow
+    protected abstract void setSelectedTab(ItemGroup group);
 
-	/**
-	 * @author Dillon8775
-	 * @reason Allow typing in creative menu regardless of what menu.
-	 */
-	@Overwrite
-	public boolean charTyped(CharInput input) {
-		if (this.ignoreTypedCharacter || (!(options().betterSearching) && selectedTab.getType() != ItemGroup.Type.SEARCH)) {
-			return false;
-		} else {
-			if (modEnabled(this.client) && options().betterSearching) {
-				this.setSelectedTab(ItemGroups.getSearchGroup());
-			}
-			String string = this.searchBox.getText();
-			if (this.searchBox.charTyped(input)) {
-				if (!Objects.equals(string, this.searchBox.getText())) {
-					this.search();
-				}
+    public CreativeInventoryScreenMixin(CreativeInventoryScreen.CreativeScreenHandler handler, PlayerInventory inventory, Text title) {
+        super(handler, inventory, title);
+    }
 
-				return true;
-			} else {
-				return false;
-			}
-		}
-	}
+    /**
+     * Closes the screen when clicking outside of the menu.
+     */
+    @Inject(method = "onMouseClick(Lnet/minecraft/screen/slot/Slot;IILnet/minecraft/screen/slot/SlotActionType;)V", at = @At("HEAD"))
+    private void closeButtonOnClickOutOfBounds(Slot slot, int slotId, int button, SlotActionType actionType, CallbackInfo ci) {
+        if (modEnabled(this.client) && options().betterGuiExit && this.handler.getCursorStack().isEmpty() && button == 0 && slot == null) {
+            this.close();
+        }
+    }
 
-	/**
-	 * Fixes certain characters not being inputted when typing.
-	 */
-	@Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
-	private void allowCertainChars(KeyInput input, CallbackInfoReturnable<Boolean> cir) {
-		if (modEnabled(this.client) && options().betterSearching) {
-			if (this.focusedSlot != null && this.focusedSlot.getStack() != ItemStack.EMPTY && !this.searchBox.isFocused()) {
-				this.ignoreTypedCharacter = true;
-				cir.setReturnValue(super.keyPressed(input));
-			}
+    /**
+     * @author Dillon8775
+     * @reason Allow typing in creative menu regardless of what menu.
+     */
+    @Overwrite
+    public boolean charTyped(CharInput input) {
+        if (this.ignoreTypedCharacter || (!(options().betterSearching) && selectedTab.getType() != ItemGroup.Type.SEARCH)) {
+            return false;
+        } else {
+            if (modEnabled(this.client) && options().betterSearching) {
+                this.setSelectedTab(ItemGroups.getSearchGroup());
+            }
+            String string = this.searchBox.getText();
+            if (this.searchBox.charTyped(input)) {
+                if (!Objects.equals(string, this.searchBox.getText())) {
+                    this.search();
+                }
 
-			for (int key : QoQ.popularKeys) {
-				if (input.key() == key) {
-					this.ignoreTypedCharacter = false;
-					cir.setReturnValue(true);
-				}
-			}
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
 
-			for (int key : QoQ.disallowedKeys) {
-				if (input.key() == key) {
-					this.ignoreTypedCharacter = true;
-					cir.setReturnValue(super.keyPressed(input));
-				}
-			}
-		}
-	}
+    /**
+     * Fixes certain characters not being inputted when typing.
+     */
+    @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
+    private void allowCertainChars(KeyInput input, CallbackInfoReturnable<Boolean> cir) {
+        if (modEnabled(this.client) && options().betterSearching) {
+            if (this.focusedSlot != null && this.focusedSlot.getStack() != ItemStack.EMPTY && !this.searchBox.isFocused()) {
+                this.ignoreTypedCharacter = true;
+                cir.setReturnValue(super.keyPressed(input));
+            }
+
+            for (int key : QoQ.popularKeys) {
+                if (input.key() == key) {
+                    this.ignoreTypedCharacter = false;
+                    cir.setReturnValue(true);
+                }
+            }
+
+            for (int key : QoQ.disallowedKeys) {
+                if (input.key() == key) {
+                    this.ignoreTypedCharacter = true;
+                    cir.setReturnValue(super.keyPressed(input));
+                }
+            }
+        }
+    }
 }
