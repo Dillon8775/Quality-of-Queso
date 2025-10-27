@@ -82,6 +82,11 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
     }
 
     @Override
+    public void close() {
+        super.close();
+    }
+
+    @Override
     protected SimpleOption<?>[] options() {
         return new SimpleOption[0];
     }
