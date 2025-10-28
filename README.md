@@ -29,22 +29,61 @@
     - Searching by tag will make all items display what tag(s) they are in if you hover over them. [since: v1.2.1]
 - #### Exclude item from search (begin search query with a !, ex. searching "log" will display any item that does _not_ contain "log" in its name) [since: v1.2.1]
 
+## You can also do this in your inventory!
+[since: v1.2, inventory searching since v1.4]
+
 ![Chest searching feature.](https://i.imgur.com/wrOeB2D.gif)
 
 ---
 
 # _Inventory Management!_
+<img src="https://i.imgur.com/WxGOap3.png" width="36" height="36" alt="Swap button.">
+<img src="https://i.imgur.com/uErcaYu.png" width="36" height="36" alt="Swap button.">
+
 #### Adds two small buttons to chests and shulker boxes, which allow the player to transfer the items in the chest to the inventory, and vice-versa.
 - #### By utilizing the Chest Search feature, you can transfer _only_ the searched items.
 - #### If you hover over the button with an item in the cursor, only items which are equal to the cursor's item will be moved. [since: v1.2.1]
     - The transfer button will have a hint of green to represent stack filtering. [since: v1.3.6]
     - The transfer button will have a hint of red when searching by exclude (!) [since: v1.3.6]
     - The transfer button will have a hint of blue when searching by tag (#) [since: v1.3.6]
-- #### You can also quickly transfer items by using CTRL + C (move items from container -> inventory) and CTRL + I (move items from inventory -> container) [since: v1.3.6].
-- #### Note: You can prevent accidentally moving items from the player's inventory to the container by enabling the "Require ALT to move" option in the Quality of Queso options.
+- #### You can also quickly transfer items by using CTRL + C (move items from container -> inventory) and CTRL + I (move items from inventory -> container) [since: v1.4].
 
 ![Chest transferring feature.](https://i.imgur.com/91vGfnG.gif)
-#### (since: v1.2)
+
+## Along with these buttons, we have:
+
+---
+
+<img src="https://i.imgur.com/glqaxnv.png" width="36" height="36" alt="Swap button.">
+
+### The ***Quick Drop*** button, which allows you to drop ***all*** highlighted items in a chest (or your inventory).
+- If you use this button in a container screen, it will drop selected items in the container. Using the button while your inventory is open will drop selected items in your inventory.
+- You can quickly do this by pressing *CTRL + ALT + Q.*
+
+---
+
+<img src="https://i.imgur.com/OSQdEuo.png" width="36" height="36" alt="Swap button.">
+
+### The ***Swap*** button, which swaps all items in the container and inventory to the other container's respective slot
+- You can quickly do this as well by pressing *CTRL + S* (you can change or disable this).
+- You cannot utilize the search feature with this button.
+
+---
+
+<img src="https://i.imgur.com/0KM5Wsx.png" width="36" height="36" alt="Include hotbar">
+<img src="https://i.imgur.com/DFAlF1R.png" width="36" height="36" alt="Exclude hotbar">
+
+### The ***Include/Exclude Hotbar*** button, which blocks any hotbar items from being highlighted via search, or moved when transferring, swapping, or dropping.
+- When searching items, if you press the exclude hotbar button, all hotbar items will be grayed out, even if the item matches the search query.
+- When transferring items *(via moving, quick dropping, or swapping),* the hotbar slots **will not** be affected *(this doesn't include when moving items from container -> inventory).*
+
+---
+
+## Below is an example of all these buttons in action.
+### You can disable any of these buttons if you would like.
+
+![Other buttons.](https://i.imgur.com/4XBrfP0.gif)
+#### (since: v1.2, quick drop and swap button since v1.4)
 
 ---
 

@@ -19,8 +19,9 @@ public class ModClientOptions {
     public boolean inventorySearching = true;
     public boolean saveSearchText = false;
     public boolean inventoryManagement = true;
-    public boolean quickMoveKeys = true;
+    public boolean shortcutKeys = true;
     public boolean quickDrop = true;
+    public boolean swapping = true;
     public boolean includeHotbar = true;
     public boolean quickEquip = true;
     public boolean preventRageQuitting = false;

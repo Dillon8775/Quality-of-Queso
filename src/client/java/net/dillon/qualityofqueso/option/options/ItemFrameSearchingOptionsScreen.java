@@ -15,7 +15,7 @@ public class ItemFrameSearchingOptionsScreen extends AbstractModOptionsScreen {
     @Override
     protected SimpleOption<?>[] options() {
         return new SimpleOption[]{
-                ModListOptions.ITEM_FRAME_SEARCHING,
+                ModListOptions.itemFrameSearching(),
                 ModListOptions.ITEM_FRAME_SEARCH_TIMER,
                 ModListOptions.ITEM_FRAME_SEARCH_RADIUS,
                 ModListOptions.SAVE_SEARCH_TEXT

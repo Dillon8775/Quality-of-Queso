@@ -15,8 +15,9 @@ public class ModKeybinds {
     public static final KeyBinding.Category QOQ = KeyBinding.Category.create(Identifier.of("qualityofqueso", "quality_of_queso"));
 
     public static final KeyBinding QUICK_EQUIP = KeyBindingHelper.registerKeyBinding(new KeyBinding("qualityofqueso.quick_equip", InputUtil.GLFW_KEY_B, QOQ));
-    public static final KeyBinding MOVE_TO_CONTAINER = KeyBindingHelper.registerKeyBinding(new KeyBinding("qualityofqueso.move_to_container", InputUtil.GLFW_KEY_C, QOQ));
-    public static final KeyBinding MOVE_TO_INVENTORY = KeyBindingHelper.registerKeyBinding(new KeyBinding("qualityofqueso.move_to_inventory", InputUtil.GLFW_KEY_I, QOQ));
+    public static final KeyBinding MOVE_CONTAINER = KeyBindingHelper.registerKeyBinding(new KeyBinding("qualityofqueso.move_container", InputUtil.GLFW_KEY_C, QOQ));
+    public static final KeyBinding MOVE_INVENTORY = KeyBindingHelper.registerKeyBinding(new KeyBinding("qualityofqueso.move_inventory", InputUtil.GLFW_KEY_I, QOQ));
+    public static final KeyBinding SWAP_ITEMS = KeyBindingHelper.registerKeyBinding(new KeyBinding("qualityofqueso.swap_items", InputUtil.GLFW_KEY_S, QOQ));
     public static final KeyBinding OPEN_SEARCH_ITEM_FRAMES_GUI = KeyBindingHelper.registerKeyBinding(new KeyBinding("qualityofqueso.open_item_frame_search_gui", InputUtil.GLFW_KEY_I, QOQ));
 
     /**

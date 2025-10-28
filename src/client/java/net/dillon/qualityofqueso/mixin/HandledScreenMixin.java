@@ -1,6 +1,5 @@
 package net.dillon.qualityofqueso.mixin;
 
-import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.dillon.qualityofqueso.keybind.ModKeybinds;
 import net.dillon.qualityofqueso.main.QoQ;
 import net.dillon.qualityofqueso.option.ModClientOptions;
@@ -16,19 +15,16 @@ import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.input.CharInput;
 import net.minecraft.client.input.KeyInput;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.component.type.ItemEnchantmentsComponent;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.network.packet.c2s.play.ClickSlotC2SPacket;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.entry.RegistryEntry;
@@ -37,8 +33,6 @@ import net.minecraft.registry.tag.TagKey;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
-import net.minecraft.screen.sync.ComponentChangesHash;
-import net.minecraft.screen.sync.ItemStackHash;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
@@ -55,11 +49,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import static net.dillon.qualityofqueso.main.QoQ.modEnabled;
 import static net.dillon.qualityofqueso.main.QoQ.options;
+import static net.dillon.qualityofqueso.util.ButtonUtil.*;
 
 @Environment(EnvType.CLIENT)
 @Mixin(HandledScreen.class)
@@ -72,9 +66,6 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     protected int titleY;
 
     @Shadow
-    public abstract T getScreenHandler();
-
-    @Shadow
     @Nullable
     public Slot focusedSlot;
 
@@ -82,8 +73,6 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     @Nullable
     protected abstract Slot getSlotAt(double mouseX, double mouseY);
 
-    @Shadow
-    protected int x;
     @Shadow
     @Final
     protected T handler;
@@ -104,14 +93,9 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     @Unique
     private TransferButton swapButton;
     @Unique
-    private Inventory inventory;
+    private int swapCooldown = 0;
     @Unique
-    private final Map<TagKey<Item>, EquipmentSlot> quicklyEquippables = Map.of(
-            ItemTags.HEAD_ARMOR, EquipmentSlot.HEAD,
-            ItemTags.CHEST_ARMOR, EquipmentSlot.CHEST,
-            ItemTags.LEG_ARMOR, EquipmentSlot.LEGS,
-            ItemTags.FOOT_ARMOR, EquipmentSlot.FEET
-    );
+    private Inventory inventory;
 
     public HandledScreenMixin(Text title) {
         super(title);
@@ -123,16 +107,16 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     @Inject(method = "init", at = @At("TAIL"))
     private void init(CallbackInfo ci) {
         if (modEnabled(this.client)) {
-            if (this.isContainerScreen()) {
-                // Determine inventory variable; if instance ShulkerBoxScreen, inventory is the shulker box's inventory
+            if (isContainerScreen(this.screen)) {
+                // Determine fromInventory variable; if instance ShulkerBoxScreen, fromInventory is the shulker box's fromInventory
                 if (this.screen instanceof ShulkerBoxScreen shulkerBoxScreen) {
                     this.inventory = shulkerBoxScreen.getScreenHandler().inventory;
                 }
-                // If it's GenericContainerScreen, it's the generic container (or most likely chest/barrel)'s inventory
+                // If it's GenericContainerScreen, it's the generic container (or most likely chest/barrel)'s fromInventory
                 else if (this.screen instanceof GenericContainerScreen genericContainerScreen) {
                     this.inventory = genericContainerScreen.getScreenHandler().getInventory();
                 }
-                // Otherwise, inventory is null
+                // Otherwise, fromInventory is null
                 else {
                     this.inventory = null;
                 }
@@ -141,10 +125,12 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                     this.containerSearchField = this.initializeSearchField(false);
                     this.addSelectableChild(this.containerSearchField);
                 }
-            } else if (options().inventorySearching && this.isInventoryScreen()) {
+            } else if (isInventoryScreen(this.screen)) {
                 this.inventory = this.client.player.getInventory();
-                this.inventorySearchField = this.initializeSearchField(true);
-                this.addSelectableChild(this.inventorySearchField);
+                if (options().inventorySearching) {
+                    this.inventorySearchField = this.initializeSearchField(true);
+                    this.addSelectableChild(this.inventorySearchField);
+                }
             }
         }
     }
@@ -154,304 +140,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
      */
     @Unique
     private SearchField initializeSearchField(boolean inventory) {
-        return new SearchField(this.textRenderer, this.width / 2 + this.getBarWidth() / 2 - (inventory ? 60 : 64), this.y + this.titleY - 2);
-    }
-
-    /**
-     * @return A special int to get the bar width.
-     */
-    @Unique
-    private int getBarWidth() {
-        return (int) ((double) this.backgroundWidth * 0.6);
-    }
-
-    /**
-     * Swaps all items in a container.
-     */
-    @Unique
-    private void swapItems(HandledScreen<?> screen) {
-        this.transferItems(screen, false, false, false, true);
-    }
-
-    /**
-     * Drops all highlighted items.
-     */
-    @Unique
-    private void dropItems(HandledScreen<?> screen, boolean fromInventory) {
-        this.transferItems(screen, true, true, fromInventory, false);
-    }
-
-    /**
-     * Transfers items the original way.
-     */
-    @Unique
-    private void transferItems(HandledScreen<?> screen, boolean reverse) {
-        this.transferItems(screen, reverse, false, false, false);
-    }
-
-    /**
-     * Transfers items from one container to another.
-     * <p>boolean variable {@code reverse} should be {@code true} if {@code chest -> inventory,} otherwise {@code inventory -> chest.}</p>
-     */
-    @Unique
-    private void transferItems(HandledScreen<?> screen, boolean reverse, boolean drop, boolean inventory, boolean swap) {
-        int containerSize = this.inventory.size();
-        int totalSlotSize = screen.getScreenHandler().slots.size();
-
-        int fromStart = reverse ? 0 : containerSize;
-        if (drop && inventory) {
-            fromStart = 9;
-        }
-        int fromEnd = reverse ? containerSize : totalSlotSize;
-        if (drop && inventory) {
-            fromEnd = 45;
-        }
-        int toStart = reverse ? containerSize : 0;
-        int toEnd = reverse ? totalSlotSize : containerSize;
-
-        for (int i = fromStart; i < fromEnd; i++) {
-            Slot fromSlot = screen.getScreenHandler().getSlot(i);
-            ItemStack fromStack = fromSlot.getStack();
-
-            if (!options().includeHotbar) {
-                if (drop) {
-                    if (this.isExcludedSlot(fromSlot.id) || this.isInventoryHotbarSlot(fromSlot.id)) {
-                        continue; // If dropping from InventoryScreen, and it's an excluded slot AND inventory hotbar slot, skip slot and continue
-                    }
-                } else if (!reverse && this.isHotbarSlot(fromEnd, fromSlot.id)) {
-                    continue; // Otherwise, check if it's a hotbar slot in normal container
-                }
-            } else if ((this.containerSearchField != null || this.inventorySearchField != null) && !this.getSearchFieldText().isEmpty() && !this.search(this.getSearchFieldText(), fromSlot, false)) {
-                continue; // Then skip container slot if query not found via search
-            }
-
-            if (!fromStack.isEmpty()) {
-                for (int j = toStart; j < toEnd; j++) {
-                    Slot toSlot = screen.getScreenHandler().getSlot(j);
-                    // Quickly swap items in container
-                    /*if (swap) { // try putting inside normal for loop (not multiple one)
-                        this.client.interactionManager.clickSlot(this.handler.syncId, j, toSlot.id, SlotActionType.SWAP, this.client.player);
-//                        this.sendClickSlotPacket(i, SlotActionType.PICKUP);
-//                        this.sendClickSlotPacket(j, SlotActionType.PICKUP);
-//                        this.sendClickSlotPacket(i, SlotActionType.PICKUP);
-                    } else */if (drop || toSlot.getStack().isEmpty()) {
-                        // Only transfer items if the query matches whatever the cursor is holding
-                        // IF DROP, CANNOT THROW ITEMS IF CURSOR STACK ISN'T EMPTY. VANILLA FEATURE, CAN'T WORK AROUND IT (for now, anyone know a solution?)
-                        SlotActionType slotActionType = drop ? SlotActionType.THROW : SlotActionType.QUICK_MOVE;
-                        if (!this.getScreenHandler().getCursorStack().isEmpty()) {
-                            if (fromStack.isOf(this.getScreenHandler().getCursorStack().getItem())) {
-                                this.sendClickSlotPacket(i, 0, slotActionType);
-                                break;
-                            }
-                        }
-                        // If cursor has nothing in it, move all items over
-                        else {
-                            this.sendClickSlotPacket(i, 0, slotActionType);
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * Sends a click slot packet.
-     */
-    @Unique
-    private void sendClickSlotPacket(int slotIndex, int button, SlotActionType slotActionType) {
-        MinecraftClient client = MinecraftClient.getInstance();
-        ClientPlayNetworkHandler networkHandler = client.getNetworkHandler();
-
-        if (client.player == null || networkHandler == null || client.player.currentScreenHandler == null) {
-            return;
-        }
-
-        var handler = client.player.currentScreenHandler;
-        int syncId = handler.syncId;
-        int revision = handler.getRevision();
-
-        ItemStack cursorStack = handler.getCursorStack() ;
-        ItemStack clickedStack = handler.getSlot(slotIndex).getStack();
-
-        if (slotActionType == SlotActionType.THROW) {
-            if (!handler.getSlot(slotIndex).getStack().isEmpty()) {
-                this.client.interactionManager.clickSlot(syncId, slotIndex, 1, slotActionType, this.client.player);
-            }
-            return;
-        }
-
-        ComponentChangesHash.ComponentHasher hasher = networkHandler.getComponentHasher();
-
-        ItemStackHash cursorHash = ItemStackHash.fromItemStack(cursorStack, hasher);
-        ItemStackHash clickedHash = ItemStackHash.fromItemStack(clickedStack, hasher);
-
-        Int2ObjectOpenHashMap<ItemStackHash> modifiedStacks = new Int2ObjectOpenHashMap<>();
-        modifiedStacks.put(slotIndex, clickedHash);
-
-        ClickSlotC2SPacket packet = new ClickSlotC2SPacket(
-                syncId,
-                revision,
-                (short) slotIndex,
-                (byte) button,
-                slotActionType,
-                modifiedStacks,
-                cursorHash
-        );
-
-        networkHandler.sendPacket(packet);
-    }
-
-    /**
-     * Grays out any containerSlot which doesn't contain the query name being searched.
-     */
-    @Inject(method = "renderMain", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ingame/HandledScreen;drawSlotHighlightFront(Lnet/minecraft/client/gui/DrawContext;)V", shift = At.Shift.AFTER))
-    private void grayOutSlot(DrawContext context, int mouseX, int mouseY, float deltaTicks, CallbackInfo ci) {
-        boolean inventorySearchFieldPresent = this.inventorySearchField != null;
-        if ((this.containerSearchField != null || inventorySearchFieldPresent)) {
-            for (int i = 0; i < this.getInventorySize(); i++) {
-                Slot slot = this.getScreenHandler().getSlot(i);
-                // Otherwise, gray out slots that don't match the search
-                if (!this.getSearchFieldText().isEmpty() && !this.search(this.getSearchFieldText(), slot, this.inventorySearchField != null)) {
-                    this.makeSlotUnavailable(context, slot, false);
-                }
-            }
-        }
-    }
-
-    /**
-     * Handles rendering, such as the search field and transferring inventory button textures.
-     */
-    @Inject(method = "renderMain", at = @At("TAIL"))
-    private void renderWidgets(DrawContext context, int mouseX, int mouseY, float deltaTicks, CallbackInfo ci) {
-        // Render the search field
-        if (this.containerSearchField != null) {
-            this.containerSearchField.render(context, mouseX, mouseY, deltaTicks);
-        }
-        // Render inventory search field
-        if (this.inventorySearchField != null) {
-            this.inventorySearchField.setX(this.width / 2 + this.getBarWidth() / 2 - (
-                    this.screen instanceof RecipeBookScreen<?> recipeBookScreen && recipeBookScreen.recipeBook.isOpen() ? -16 : 60
-            ));
-            this.inventorySearchField.render(context, mouseX, mouseY, deltaTicks);
-        }
-        if (modEnabled(this.client)) {
-            if (options().inventoryManagement) {
-                PlayerInventory playerInventory = this.client.player.getInventory();
-                if (this.isContainerScreen()) {
-
-                    // TRANSFER CONTAINER BUTTON
-                    this.transferContainerButton = this.addSelectableChild(
-                            new TransferButton(
-                                    this.getScreenHandler(),
-                                    this.textRenderer,
-                                    this.getSearchFieldText(),
-                                    this.getTransferButtonPosition(true),
-                                    this.getTransferButtonY(),
-                                    "transfer_container",
-                                    b -> this.transferItems(this.screen, true),
-                                    () -> this.shouldButtonBeActive(false, null, this.transferContainerButton)));
-
-                    this.transferContainerButton.render(context, mouseX, mouseY, deltaTicks);
-
-                    /* --- */
-
-                    // TRANSFER INVENTORY BUTTON
-                    this.transferInventoryButton = this.addSelectableChild(
-                            new TransferButton(
-                                    this.getScreenHandler(),
-                                    this.textRenderer,
-                                    this.getSearchFieldText(),
-                                    this.getTransferButtonPosition(false),
-                                    this.getTransferButtonY(),
-                                    "transfer_inventory",
-                                    b -> this.transferItems(this.screen, false),
-                                    () -> this.shouldButtonBeActive(true, playerInventory, this.transferInventoryButton)
-                            ));
-
-                    this.transferInventoryButton.render(context, mouseX, mouseY, deltaTicks);
-                }
-
-                boolean containerScreen = this.isContainerScreen();
-                boolean inventoryScreen = this.isInventoryScreen();
-                boolean validScreen = containerScreen || inventoryScreen;
-                if (validScreen) {
-                    // INCLUDE HOTBAR BUTTON
-                    if ((options().quickDrop && inventoryScreen) || containerScreen) {
-                        this.includeHotbarButton = this.addSelectableChild(
-                                new IncludeHotbarButton(
-                                        this.getScreenHandler(),
-                                        this.textRenderer,
-                                        this.getSearchFieldText(),
-                                        containerScreen ?
-                                                this.getTransferButtonPosition(false) - 12 :
-                                                this.width / 2 + this.getBarWidth() / 2 + (this.screen instanceof RecipeBookScreen<?> recipeBookScreen && recipeBookScreen.recipeBook.isOpen() ? 92 : 16),
-                                        containerScreen ?
-                                                this.getTransferButtonY() :
-                                                this.y + this.titleY + 64,
-                                        "include_hotbar",
-                                        b -> {
-                                            options().includeHotbar = !options().includeHotbar;
-                                            ModClientOptions.CLIENT_OPTIONS.save();
-                                        }));
-                        this.includeHotbarButton.render(context, mouseX, mouseY, deltaTicks);
-                    }
-
-                    if (containerScreen) {
-                        this.swapButton = this.addSelectableChild(
-                                new SwapButton(
-                                        this.getScreenHandler(),
-                                        this.getTextRenderer(),
-                                        this.getSearchFieldText(),
-                                        this.getTransferButtonPosition(false) - 24,
-                                        this.getTransferButtonY(),
-                                        "swap",
-                                        b -> this.swapItems(this.screen),
-                                        () -> this.getScreenHandler().getCursorStack().isEmpty() && this.getSearchFieldText().isEmpty()
-                                                && this.shouldButtonBeActive(false, null, this.swapButton)
-                                                && this.shouldButtonBeActive(true, playerInventory, this.swapButton)
-                                ));
-
-                        this.swapButton.render(context, mouseX, mouseY, deltaTicks);
-                    }
-
-                    // QUICK DROP BUTTON
-                    if (options().quickDrop) {
-                        this.quickDropButton = this.addSelectableChild(
-                                new QuickDropButton(
-                                        this.getScreenHandler(),
-                                        this.getTextRenderer(),
-                                        this.getSearchFieldText(),
-                                        this.getIncludeHotbarButtonX() - (containerScreen ? 24 : 12),
-                                        containerScreen ?
-                                                this.getTransferButtonY() :
-                                                this.y + this.titleY + 64,
-                                        "drop_all",
-                                        b -> this.dropItems(this.screen, !containerScreen),
-                                        () -> {
-                                            // Separate loop to loop through and get slot IDS
-                                            boolean canStayActive = true;
-                                            if (!options().includeHotbar && this.isInventoryScreen()) {
-                                                for (int i = 0; i < this.getScreenHandler().slots.size(); i++) {
-                                                    Slot slot = this.getScreenHandler().getSlot(i);
-                                                    if ((slot.id >= 9 && slot.id <= 35) && slot.hasStack()) {
-                                                        break;
-                                                    } else if (slot.id == 36 && slot.hasStack()) {
-                                                        canStayActive = false;
-                                                        break;
-                                                    }
-                                                }
-                                            }
-                                            return canStayActive && this.getScreenHandler().getCursorStack().isEmpty() &&
-                                                    this.shouldButtonBeActive(!containerScreen, containerScreen ? null : playerInventory, this.quickDropButton);
-                                        }
-                                ));
-
-                        this.quickDropButton.render(context, mouseX, mouseY, deltaTicks);
-                    }
-                }
-            }
-        }
+        return new SearchField(this.textRenderer, this.width / 2 + getBarWidth(this.backgroundWidth) / 2 - (inventory ? 60 : 64), this.y + this.titleY - 2);
     }
 
     /**
@@ -463,65 +152,83 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     }
 
     /**
-     * @return the inventory (size) that should be searched.
+     * Drops all highlighted items.
      */
     @Unique
-    private int getInventorySize() {
-        return options().searchInventory ? this.getScreenHandler().slots.size() : this.inventory.size();
+    private void dropItems(boolean fromInventory) {
+        this.moveItems(true, true, fromInventory);
     }
 
     /**
-     * @return {@code true} if the hovered slot has an query (assuming hovered slot isn't {@code null}).
+     * Transfers items the original way.
      */
     @Unique
-    private boolean hoveredSlotHasItem() {
-        return this.focusedSlot != null && this.focusedSlot.getStack() != ItemStack.EMPTY;
+    private void transferItems(boolean toInventory) {
+        this.moveItems(toInventory, false, false);
     }
 
     /**
-     * @return the {@code X} value for transferring query buttons.
+     * Transfers items from one container to another.
      */
     @Unique
-    private int getTransferButtonPosition(boolean chestToInventory) {
-        int barWidth = (int) ((double) this.backgroundWidth * 0.6);
-        return chestToInventory ? this.width / 2 + barWidth / 2 + 16 : this.width / 2 + barWidth / 2 + 4;
-    }
+    private void moveItems(boolean toInventory, boolean drop, boolean fromInventory) {
+        int containerSize = getContainerSize(this.inventory);
+        int totalSlots = getTotalSlots(this.handler);
 
-    /**
-     * @return the {@code Y} value for transferring query buttons.
-     */
-    @Unique
-    private int getTransferButtonY() {
-        int y = 120; // 6 rows
-        if (this.inventory.size() == 27) { // 3 rows
-            y = 66;
-        } else if (this.inventory.size() == 36) { // 4 rows
-            y = 84;
-        } else if (this.inventory.size() == 45) { // 5 rows
-            y = 102;
+        int fromStart = toInventory ? 0 : containerSize;
+        int fromEnd = toInventory ? containerSize : totalSlots;
+        int toStart = toInventory ? containerSize : 0;
+        int toEnd = toInventory ? totalSlots : containerSize;
+
+        if (drop && fromInventory) {
+            fromStart = 9;
+            fromEnd = 45;
         }
-        return this.y + this.titleY + y;
+
+        // Normal logic (dropping and quick move)
+        for (int i = fromStart; i < fromEnd; i++) {
+            Slot fromSlot = this.handler.getSlot(i);
+            ItemStack fromStack = fromSlot.getStack();
+
+            if (!options().includeHotbar) {
+                if (drop) {
+                    if (isExcludedSlot(this.screen, fromSlot.id) || isInventoryHotbarSlot(isInventoryScreen(this.screen), fromSlot.id)) {
+                        continue; // If dropping from InventoryScreen, and it's an excluded slot AND fromInventory hotbar slot, skip slot and continue
+                    }
+                } else if (!toInventory && isHotbarSlot(fromEnd, fromSlot.id)) {
+                    continue; // Otherwise, check if it's a hotbar slot in normal container
+                }
+            } else if ((this.containerSearchField != null || this.inventorySearchField != null) && !this.getSearchFieldText().isEmpty() && !this.search(this.getSearchFieldText(), fromSlot, false)) {
+                continue; // Then skip container slot if query not found via search
+            }
+
+            if (!fromStack.isEmpty()) {
+                for (int j = toStart; j < toEnd; j++) {
+                    Slot toSlot = this.handler.getSlot(j);
+                    // Quickly swap items in container
+                    if (drop || toSlot.getStack().isEmpty()) {
+                        // Only transfer items if the query matches whatever the cursor is holding
+                        // IF DROP, CANNOT THROW ITEMS IF CURSOR STACK ISN'T EMPTY. VANILLA FEATURE, CAN'T WORK AROUND IT (for now, anyone know a solution?)
+                        SlotActionType slotActionType = drop ? SlotActionType.THROW : SlotActionType.QUICK_MOVE;
+                        if (!this.handler.getCursorStack().isEmpty()) {
+                            if (fromStack.isOf(this.handler.getCursorStack().getItem())) {
+                                sendClickSlotPacket(i, slotActionType);
+                                break;
+                            }
+                        }
+                        // If cursor has nothing in it, move all items over
+                        else {
+                            sendClickSlotPacket(i, slotActionType);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     /**
-     * @return the {@code x} position of the {@code inventory transfer button.}
-     */
-    @Unique
-    private int getIncludeHotbarButtonX() {
-        return this.includeHotbarButton.getX();
-    }
-
-    /**
-     * Grays out a containerSlot.
-     */
-    @Unique
-    private void makeSlotUnavailable(DrawContext context, Slot slot, boolean hotbar) {
-        int color = hotbar ? -2139062148 : -1275068416;
-        context.fillGradient(slot.x, slot.y, slot.x + 16, slot.y + 16, color, color);
-    }
-
-    /**
-     * @return {@code true} if the {@code inventory} has a match with the search query.
+     * @return {@code true} if the {@code fromInventory} has a match with the search query.
      */
     @Unique
     private boolean shouldButtonBeActive(boolean isPlayerInventory,
@@ -530,19 +237,19 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
         if (button == null) {
             return false;
         }
-        // Determine inventory size to run through
+        // Determine fromInventory size to run through
         int size = isPlayerInventory ? playerInventory.size() : this.inventory.size();
         int filledSlots = 0;
         for (int i = 0; i < size; i++) {
             // If slot is not empty, the button should be active
             // Increment J and make button active
-            ItemStack stack = isPlayerInventory ? playerInventory.getStack(i) : this.getScreenHandler().getSlot(i).getStack();
+            ItemStack stack = isPlayerInventory ? playerInventory.getStack(i) : this.handler.getSlot(i).getStack();
             // Handle cursor stack
             boolean isShulkerScreen = this.screen instanceof ShulkerBoxScreen;
-            boolean isCursorShulker = isShulkerScreen && this.getScreenHandler().getCursorStack().isIn(ItemTags.SHULKER_BOXES);
+            boolean isCursorShulker = isShulkerScreen && this.handler.getCursorStack().isIn(ItemTags.SHULKER_BOXES);
             boolean isStackShulker = isShulkerScreen && stack.isIn(ItemTags.SHULKER_BOXES);
-            if (!this.getScreenHandler().getCursorStack().isEmpty()) {
-                if (stack.isOf(this.getScreenHandler().getCursorStack().getItem()) && !isCursorShulker) {
+            if (!this.handler.getCursorStack().isEmpty()) {
+                if (stack.isOf(this.handler.getCursorStack().getItem()) && !isCursorShulker) {
                     filledSlots++;
                 }
             } else {
@@ -561,9 +268,9 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     private boolean areAllSlotsUnavailable(boolean isPlayerInventory, @Nullable PlayerInventory playerInventory) {
         int foundQuerys = 0;
         List<Slot> playerSlots = new ArrayList<>();
-        // If checking player inventory, loop through all player inventory slots to determine if slot is unavailable
+        // If checking player fromInventory, loop through all player fromInventory slots to determine if slot is unavailable
         if (isPlayerInventory) {
-            for (Slot s : this.getScreenHandler().slots) {
+            for (Slot s : this.handler.slots) {
                 if (s.inventory == playerInventory) {
                     playerSlots.add(s);
                 }
@@ -574,15 +281,15 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                 }
             }
         } else {
-            // Otherwise, loop through the container inventory and increment J if query found inside
+            // Otherwise, loop through the container fromInventory and increment J if query found inside
             for (int i = 0; i < this.inventory.size(); i++) {
-                Slot slot = this.getScreenHandler().getSlot(i);
+                Slot slot = this.handler.getSlot(i);
                 if (this.search(this.getSearchFieldText(), slot, false)) {
                     foundQuerys++;
                 }
             }
         }
-        // If J == 0 then no query was found (OR if ALL slots are filled in inventory/container), returning true for all slots are unavailable
+        // If J == 0 then no query was found (OR if ALL slots are filled in fromInventory/container), returning true for all slots are unavailable
         return foundQuerys == 0;
     }
 
@@ -592,15 +299,12 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     @Unique
     private boolean search(String searchQuery, Slot slot, boolean dropping) {
         ItemStack stack = slot.getStack();
-        if (this.focusedSlot != null) {
-            System.out.println(this.focusedSlot.id);
-        }
 
         // If slot is empty, return false (slot is unavailable)
         // If include hotbar is off, return false if hotbar slot
         if (stack.isEmpty() ||
-                !options().includeHotbar && options().searchInventory && this.isHotbarSlot(this.screen.getScreenHandler().slots.size(), dropping ? slot.id + 1 : slot.id) &&
-                        (!dropping || !this.isInventoryScreen() || slot.id != 45)) {
+                !options().includeHotbar && options().searchInventory && isHotbarSlot(this.handler.slots.size(), dropping ? slot.id + 1 : slot.id) &&
+                        (!dropping || !isInventoryScreen(this.screen) || slot.id != 45)) {
             return false;
         }
 
@@ -655,6 +359,158 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     }
 
     /**
+     * Grays out any containerSlot which doesn't contain the query name being searched.
+     */
+    @Inject(method = "renderMain", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ingame/HandledScreen;drawSlotHighlightFront(Lnet/minecraft/client/gui/DrawContext;)V", shift = At.Shift.AFTER))
+    private void grayOutSlot(DrawContext context, int mouseX, int mouseY, float deltaTicks, CallbackInfo ci) {
+        boolean inventorySearchFieldPresent = this.inventorySearchField != null;
+        if ((this.containerSearchField != null || inventorySearchFieldPresent)) {
+            for (int i = 0; i < getInventorySize(this.handler, this.inventory); i++) {
+                Slot slot = this.handler.getSlot(i);
+                // Otherwise, gray out slots that don't match the search
+                if (!this.getSearchFieldText().isEmpty() && !this.search(this.getSearchFieldText(), slot, this.inventorySearchField != null)) {
+                    makeSlotUnavailable(context, slot, false);
+                }
+            }
+        }
+    }
+
+    /**
+     * Handles rendering, such as the search field and transferring fromInventory button textures.
+     */
+    @Inject(method = "renderMain", at = @At("TAIL"))
+    private void renderWidgets(DrawContext context, int mouseX, int mouseY, float deltaTicks, CallbackInfo ci) {
+        // Render the search field
+        if (this.containerSearchField != null) {
+            this.containerSearchField.render(context, mouseX, mouseY, deltaTicks);
+        }
+        // Render fromInventory search field
+        if (this.inventorySearchField != null) {
+            this.inventorySearchField.setX(this.width / 2 + getBarWidth(this.backgroundWidth) / 2 - (
+                    this.screen instanceof RecipeBookScreen<?> recipeBookScreen && recipeBookScreen.recipeBook.isOpen() ? -16 : 60
+            ));
+            this.inventorySearchField.render(context, mouseX, mouseY, deltaTicks);
+        }
+        if (modEnabled(this.client)) {
+            if (options().inventoryManagement) {
+                PlayerInventory playerInventory = this.client.player.getInventory();
+                boolean containerScreen = isContainerScreen(this.screen);
+                boolean inventoryScreen = isInventoryScreen(this.screen);
+                boolean validScreen = containerScreen || inventoryScreen;
+                if (containerScreen) {
+
+                    /* --- */
+
+                    // TRANSFER CONTAINER BUTTON (container -> inventory)
+                    this.transferContainerButton = this.addSelectableChild(
+                            new TransferButton(
+                                    this.handler,
+                                    this.textRenderer,
+                                    this.getSearchFieldText(),
+                                    getManagementButtonX(this.screen, this.backgroundWidth, this.width),
+                                    getManagementButtonY(this.screen, this.inventory, this.y, this.titleY),
+                                    "transfer_container",
+                                    b -> this.transferItems(true),
+                                    () -> !isContainerFull(this.handler, this.inventory, true) && this.shouldButtonBeActive(false, null, this.transferContainerButton)));
+
+                    this.transferContainerButton.render(context, mouseX, mouseY, deltaTicks);
+
+                    /* --- */
+
+                    // TRANSFER INVENTORY BUTTON (inventory -> container)
+                    this.transferInventoryButton = this.addSelectableChild(
+                            new TransferButton(
+                                    this.handler,
+                                    this.textRenderer,
+                                    this.getSearchFieldText(),
+                                    getButtonX(this.transferContainerButton) - 12,
+                                    getManagementButtonY(this.screen, this.inventory, this.y, titleY),
+                                    "transfer_inventory",
+                                    b -> this.transferItems(false),
+                                    () -> !isContainerFull(this.handler, this.inventory, false) && this.shouldButtonBeActive(true, playerInventory, this.transferInventoryButton)
+                            ));
+
+                    this.transferInventoryButton.render(context, mouseX, mouseY, deltaTicks);
+                }
+
+                /* --- */
+
+                if (validScreen) {
+
+                    // INCLUDE HOTBAR BUTTON
+                    if (options().inventorySearching || options().quickDrop) {
+                        this.includeHotbarButton = this.addSelectableChild(
+                                new IncludeHotbarButton(
+                                        this.handler,
+                                        this.textRenderer,
+                                        this.getSearchFieldText(),
+                                        getManagementButtonX(this.screen, this.backgroundWidth, this.width) - 24,
+                                        getManagementButtonY(this.screen, this.inventory, this.y, this.titleY),
+                                        "include_hotbar",
+                                        b -> {
+                                            options().includeHotbar = !options().includeHotbar;
+                                            ModClientOptions.CLIENT_OPTIONS.save();
+                                        }));
+
+                        this.includeHotbarButton.render(context, mouseX, mouseY, deltaTicks);
+                    }
+
+                    /* --- */
+
+                    // SWAP BUTTON
+                    if (options().swapping && containerScreen) {
+                        this.swapButton = this.addSelectableChild(
+                                new SwapButton(
+                                        this.handler,
+                                        this.textRenderer,
+                                        this.getSearchFieldText(),
+                                        getButtonX(this.includeHotbarButton) - 12,
+                                        getManagementButtonY(this.screen, this.inventory, this.y, this.titleY),
+                                        "swap",
+                                        b -> swapItems(this.handler, this.inventory),
+                                        () -> {
+                                            // Decrement swap cooldown
+                                            if (swapCooldown > 0) {
+                                                swapCooldown--;
+                                            }
+                                            return (getContainerSize(this.inventory) != 27 || isAnySlotFilled(this.handler, false, 27, 54))
+                                                    && this.handler.getCursorStack().isEmpty() && this.getSearchFieldText().isEmpty()
+                                                    && this.shouldButtonBeActive(false, null, this.swapButton)
+                                                    && this.shouldButtonBeActive(true, playerInventory, this.swapButton);
+                                        }
+                                ));
+
+                        this.swapButton.render(context, mouseX, mouseY, deltaTicks);
+                    }
+
+                    /* --- */
+
+                    // QUICK DROP BUTTON
+                    if (options().quickDrop) {
+                        this.quickDropButton = this.addSelectableChild(
+                                new QuickDropButton(
+                                        this.handler,
+                                        this.textRenderer,
+                                        this.getSearchFieldText(),
+                                        getButtonX(this.includeHotbarButton) - (containerScreen && options().swapping ? 24 : 12),
+                                        getManagementButtonY(this.screen, this.inventory, this.y, this.titleY),
+                                        "quick_drop",
+                                        b -> this.dropItems(!containerScreen),
+                                        () -> (isInventoryScreen(this.screen) ?
+                                                isAnySlotFilled(this.handler, true, 9, 36) :
+                                                isAnySlotFilled(this.handler, false, 0, getContainerSize(this.inventory)))
+                                                && this.handler.getCursorStack().isEmpty()
+                                                && this.shouldButtonBeActive(!containerScreen, containerScreen ? null : playerInventory, this.quickDropButton)
+                                ));
+
+                        this.quickDropButton.render(context, mouseX, mouseY, deltaTicks);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
      * Renders tag tooltips to all slots if searching by tag {@code searchQuery.startsWith(#)}.
      */
     @Inject(method = "drawMouseoverTooltip", at = @At("HEAD"), cancellable = true)
@@ -697,16 +553,27 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     }
 
     /**
-     * Implements functionality for the {@code Quick Equip right-click feature,} and handles inventory search field.
+     * Closes the screen when clicking outside of menu.
+     */
+    @Inject(method = "onMouseClick(Lnet/minecraft/screen/slot/Slot;IILnet/minecraft/screen/slot/SlotActionType;)V", at = @At("HEAD"))
+    private void closeButtonOnClickOutOfBounds(Slot slot, int slotId, int button, SlotActionType
+            actionType, CallbackInfo ci) {
+        if (modEnabled(this.client) && options().betterGuiExit && this.handler.getCursorStack().isEmpty() && button == 0 && slot == null) {
+            this.close();
+        }
+    }
+
+    /**
+     * Implements functionality for the {@code Quick Equip right-click feature,} and handles fromInventory search field.
      */
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
     private void handleMouseClicking(Click click, boolean doubled, CallbackInfoReturnable<Boolean> cir) {
         if (modEnabled(this.client)) {
-            if (click.button() == InputUtil.GLFW_MOUSE_BUTTON_RIGHT && this.focusedSlot != null && this.isQuicklyEquippable(this.focusedSlot.getStack())) {
-                this.quickEquip();
+            if (click.button() == InputUtil.GLFW_MOUSE_BUTTON_RIGHT && this.focusedSlot != null && isQuicklyEquippable(this.focusedSlot.getStack())) {
+                quickEquip(this.screen, this.focusedSlot);
                 cir.setReturnValue(true);
             }
-            // Refocus inventory search field if clicked.
+            // Refocus fromInventory search field if clicked.
             if (this.inventorySearchField != null && this.inventorySearchField.mouseClicked(click, doubled)) {
                 this.inventorySearchField.setFocused(true);
             }
@@ -720,34 +587,39 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     private void handleKeyPressing(KeyInput input, CallbackInfoReturnable<Boolean> cir) {
         if (modEnabled(this.client)) {
             if (MinecraftClient.getInstance().isCtrlPressed()) {
-                if (options().quickMoveKeys) {
-                    if (this.transferContainerButton != null && this.transferContainerButton.active && input.key() == ModKeybinds.MOVE_TO_INVENTORY.boundKey.getCode()) {
-                        this.transferItems(this.screen, true);
+                if (options().shortcutKeys) {
+                    if (this.transferContainerButton != null && this.transferContainerButton.active && input.key() == ModKeybinds.MOVE_CONTAINER.boundKey.getCode()) {
+                        this.transferItems(true);
                     }
 
-                    if (this.transferInventoryButton != null && this.transferInventoryButton.active && input.key() == ModKeybinds.MOVE_TO_CONTAINER.boundKey.getCode()) {
-                        this.transferItems(this.screen, false);
+                    if (this.transferInventoryButton != null && this.transferInventoryButton.active && input.key() == ModKeybinds.MOVE_INVENTORY.boundKey.getCode()) {
+                        this.transferItems(false);
+                    }
+
+                    if (this.swapCooldown == 0 && this.swapButton != null && this.swapButton.active && input.key() == ModKeybinds.SWAP_ITEMS.boundKey.getCode()) {
+                        swapItems(this.handler, this.inventory);
+                        this.swapCooldown = 120;
                     }
                 }
                 if (MinecraftClient.getInstance().isAltPressed() && input.key() == GLFW.GLFW_KEY_Q) {
-                    this.dropItems(this.screen, !this.isContainerScreen());
+                    this.dropItems(!isContainerScreen(this.screen));
                 }
             }
 
             // Quick equip logic
             if (input.key() == ModKeybinds.QUICK_EQUIP.boundKey.getCode()) {
-                this.quickEquip();
+                quickEquip(this.screen, this.focusedSlot);
             }
 
-            // Prevent E from typing entirely in inventory screens
-            if (input.key() == GLFW.GLFW_KEY_E && options().preventEFromTyping && (this.isInventoryScreen() || this.isCreativeInventoryScreen())) {
+            // Prevent E from typing entirely in fromInventory screens
+            if (input.key() == GLFW.GLFW_KEY_E && options().preventEFromTyping && (isInventoryScreen(this.screen) || isCreativeInventoryScreen(this.screen))) {
                 this.close();
                 cir.setReturnValue(true);
             }
 
             // Declare typing variables
             // Both of these variables apply to disallowed keys and hotbar switching
-            boolean ignoreTyping = this.hoveredSlotHasItem(); // Basic ignore typing variable; applies to recipe book screens only.
+            boolean ignoreTyping = hoveredSlotHasItem(this.focusedSlot); // Basic ignore typing variable; applies to recipe book screens only.
             boolean secondaryIgnoreTyping = false; // Secondary ignore typing variable; applies to "T" and "E" keys and chest searching screens only.
 
             // These variables only apply to the chest search bar
@@ -765,8 +637,8 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                 }
             }
 
-            // handle switching items from hotbar to another containerSlot in inventory; cancel out typing if an query can be moved
-            if (this.getScreenHandler().getCursorStack().isEmpty() && this.focusedSlot != null) {
+            // handle switching items from hotbar to another containerSlot in fromInventory; cancel out typing if an query can be moved
+            if (this.handler.getCursorStack().isEmpty() && this.focusedSlot != null) {
                 for (int i = 0; i < 9; i++) {
                     if (this.client.options.hotbarKeys[i].matchesKey(input)) {
                         ignoreTyping = true;
@@ -818,11 +690,12 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             }
 
             // If any of these are true, the user cannot type in the search field
-            boolean cannotType = (numberKeyPressed || hotbarKeyPressed || dropKeyPressed || swapKeyPressed) && this.hoveredSlotHasItem();
+            boolean cannotType = (numberKeyPressed || hotbarKeyPressed || dropKeyPressed || swapKeyPressed) && hoveredSlotHasItem(this.focusedSlot);
 
             // Recipe book search field logic
             if (options().betterSearching && this.screen instanceof RecipeBookScreen<?> recipeScreen && !MinecraftClient.getInstance().isCtrlPressed()) {
-                if (!ignoreTyping && !recipeScreen.recipeBook.isOpen() && (this.inventorySearchField == null || !this.inventorySearchField.isFocused())) {
+                boolean swapKeyValid = hoveredSlotHasItem(this.focusedSlot) || this.handler.getSlot(45).hasStack();
+                if (!ignoreTyping && !swapKeyValid && !recipeScreen.recipeBook.isOpen() && (this.inventorySearchField == null || !this.inventorySearchField.isFocused())) {
                     recipeScreen.recipeBook.toggleOpen();
                     this.refreshWidgetPositions();
                 }
@@ -847,12 +720,12 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                     this.inventorySearchField.setFocused(false);
                 }
 
-                // Unfocus recipe book search field when inventory search field is focused
+                // Unfocus recipe book search field when fromInventory search field is focused
                 if (this.screen instanceof RecipeBookScreen<?> recipeScreen && recipeScreen.recipeBook.searchField != null) {
                     if (this.inventorySearchField.isFocused()) {
                         recipeScreen.recipeBook.searchField.setFocused(false);
                     }
-                    // Unfocus inventory search field when recipe book search field is focused
+                    // Unfocus fromInventory search field when recipe book search field is focused
                     else if (recipeScreen.recipeBook.searchField.isFocused() && this.inventorySearchField != null) {
                         this.inventorySearchField.setFocused(false);
                     }
@@ -864,7 +737,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             }
 
             // Chest search field logic
-            if (options().chestSearching && isContainerScreen()) {
+            if (options().chestSearching && isContainerScreen(this.screen)) {
                 if (!secondaryIgnoreTyping && (!MinecraftClient.getInstance().isCtrlPressed() || (MinecraftClient.getInstance().isCtrlPressed() && input.key() == GLFW.GLFW_KEY_A))) {
                     this.containerSearchField.setFocused(true);
                 } else if (this.containerSearchField.isFocused() && cannotType) {
@@ -879,113 +752,6 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     }
 
     /**
-     * @return {@code true} if the slot is valid to move.
-     */
-    @Unique
-    private boolean isHotbarSlot(int totalSlots, int slotIndex) {
-        // If we're in the last 9 slots and hotbar is disabled, return false
-        return slotIndex >= totalSlots - 9;
-    }
-
-    /**
-     * @return {@code true} if the slot is a hotbar slot in the inventory.
-     */
-    @Unique
-    private boolean isInventoryHotbarSlot(int slotIndex) {
-        // Index 36-44 are hotbar slots in INVENTORY screen.
-        return this.isInventoryScreen() && slotIndex <= 44 && slotIndex >= 36;
-    }
-
-    /**
-     * @return {@code true} if the slot should be excluded entirely.
-     */
-    @Unique
-    private boolean isExcludedSlot(int slotIndex) {
-        // Index 5-8 are armor slots. Index 45 is offhand slot. NEVER drop those items.
-        return this.isInventoryScreen() && (slotIndex <= 8 && slotIndex >= 5 || slotIndex == 45);
-    }
-
-    /**
-     * @return {@code true} if the hovered item is a {@code quickly equippable item.}
-     */
-    @Unique
-    private boolean isQuicklyEquippable(ItemStack stack) {
-        for (TagKey<Item> quicklyEquippable : this.quicklyEquippables.keySet()) {
-            if (stack.isIn(quicklyEquippable) || stack.isOf(Items.ELYTRA)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Quickly swaps two items in the player's inventory.
-     */
-    @Unique
-    private void quickSwap(int sourceSlot, EquipmentSlot slot) {
-        // Slot index for armor - see PlayerScreenHandler for proof of these values
-        int slotIndex = slot == EquipmentSlot.HEAD ? 5 : slot == EquipmentSlot.CHEST ? 6 : slot == EquipmentSlot.LEGS ? 7 : slot == EquipmentSlot.FEET ? 8 : 6;
-        this.sendClickSlotPacket(sourceSlot, 0, SlotActionType.SWAP);
-        this.sendClickSlotPacket(slotIndex, 0, SlotActionType.PICKUP);
-        this.sendClickSlotPacket(sourceSlot, 0, SlotActionType.PICKUP);
-    }
-
-    /**
-     * Quickly equips an item.
-     */
-    @Unique
-    private void quickEquip() {
-        if (options().quickEquip && this.focusedSlot != null && (this.focusedSlot.id >= 5) && (this.isInventoryScreen() || this.isCreativeInventoryScreen())) {
-            ItemStack stack = this.focusedSlot.getStack();
-            EquipmentSlot targetSlot = null;
-
-            for (TagKey<Item> quicklyEquippable : this.quicklyEquippables.keySet()) {
-                if (stack.isIn(quicklyEquippable)) {
-                    targetSlot = this.quicklyEquippables.get(quicklyEquippable);
-                }
-            }
-
-            if (stack.isOf(Items.ELYTRA)) {
-                targetSlot = EquipmentSlot.CHEST;
-            }
-
-            if (targetSlot != null) {
-                ItemStack equippedStack = this.client.player.getEquippedStack(targetSlot);
-                if (equippedStack.isEmpty()) {
-                    this.sendClickSlotPacket(this.focusedSlot.id, 0, SlotActionType.QUICK_MOVE);
-                } else {
-                    this.quickSwap(this.focusedSlot.id, targetSlot);
-                }
-            }
-        }
-    }
-
-    /**
-     * Closes the screen when clicking outside of menu.
-     */
-    @Inject(method = "onMouseClick(Lnet/minecraft/screen/slot/Slot;IILnet/minecraft/screen/slot/SlotActionType;)V", at = @At("HEAD"))
-    private void closeButtonOnClickOutOfBounds(Slot slot, int slotId, int button, SlotActionType
-            actionType, CallbackInfo ci) {
-        if (modEnabled(this.client) && options().betterGuiExit && this.getScreenHandler().getCursorStack().isEmpty() && button == 0 && slot == null) {
-            this.close();
-        }
-    }
-
-    /**
-     * Saves the current text in {@code searchField.getText()} to memory so it can be referenced when opening a container screen again.
-     */
-    @Inject(method = "close", at = @At("TAIL"))
-    private void saveSearchText(CallbackInfo ci) {
-        if (options().saveSearchText) {
-            if (this.isInventoryScreen() && this.inventorySearchField != null) {
-                QoQ.SAVED_TEXT = this.inventorySearchField.getText();
-            } else if (this.isContainerScreen() && this.containerSearchField != null) {
-                QoQ.SAVED_TEXT = this.containerSearchField.getText();
-            }
-        }
-    }
-
-    /**
      * Allows correct functionality for typing into search field without clicking on it.
      */
     @Override
@@ -994,6 +760,20 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             return this.containerSearchField.charTyped(input);
         }
         return super.charTyped(input);
+    }
+
+    /**
+     * Saves the current text in {@code searchField.getText()} to memory so it can be referenced when opening a container screen again.
+     */
+    @Inject(method = "close", at = @At("TAIL"))
+    private void saveSearchText(CallbackInfo ci) {
+        if (options().saveSearchText) {
+            if (isInventoryScreen(this.screen) && this.inventorySearchField != null) {
+                QoQ.SAVED_TEXT = this.inventorySearchField.getText();
+            } else if (isContainerScreen(this.screen) && this.containerSearchField != null) {
+                QoQ.SAVED_TEXT = this.containerSearchField.getText();
+            }
+        }
     }
 
     /**
@@ -1011,29 +791,5 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             this.containerSearchField.setText(text);
             this.containerSearchField.setFocused(refocus);
         }
-    }
-
-    /**
-     * @return valid handled screens which can use the container search feature.
-     */
-    @Unique
-    private boolean isContainerScreen() {
-        return this.screen instanceof GenericContainerScreen || this.screen instanceof ShulkerBoxScreen;
-    }
-
-    /**
-     * @return valid inventory screen.
-     */
-    @Unique
-    private boolean isInventoryScreen() {
-        return this.screen instanceof InventoryScreen;
-    }
-
-    /**
-     * @return valid creative inventory screen.
-     */
-    @Unique
-    private boolean isCreativeInventoryScreen() {
-        return this.screen instanceof CreativeInventoryScreen;
     }
 }

@@ -15,10 +15,11 @@ public class InventoryManagementOptionsScreen extends AbstractModOptionsScreen {
     @Override
     protected SimpleOption<?>[] options() {
         return new SimpleOption[]{
-                ModListOptions.INVENTORY_MANAGEMENT,
+                ModListOptions.inventoryManagement(),
+                ModListOptions.SHORTCUT_KEYS,
+                ModListOptions.QUICK_DROP,
+                ModListOptions.swapping(),
                 ModListOptions.INCLUDE_HOTBAR,
-                ModListOptions.QUICK_MOVE_KEYS,
-                ModListOptions.QUICK_DROP
         };
     }
 }

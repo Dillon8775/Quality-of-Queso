@@ -11,9 +11,14 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.item.Item;
+import net.minecraft.registry.tag.ItemTags;
+import net.minecraft.registry.tag.TagKey;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @Environment(EnvType.CLIENT)
@@ -51,6 +56,12 @@ public class QoQ implements ClientModInitializer {
             GLFW.GLFW_KEY_RIGHT_ALT,
             GLFW.GLFW_KEY_LEFT_SUPER,
             GLFW.GLFW_KEY_RIGHT_SUPER
+    );
+    public static final Map<TagKey<Item>, EquipmentSlot> quicklyEquippables = Map.of(
+            ItemTags.HEAD_ARMOR, EquipmentSlot.HEAD,
+            ItemTags.CHEST_ARMOR, EquipmentSlot.CHEST,
+            ItemTags.LEG_ARMOR, EquipmentSlot.LEGS,
+            ItemTags.FOOT_ARMOR, EquipmentSlot.FEET
     );
 
     @Override
