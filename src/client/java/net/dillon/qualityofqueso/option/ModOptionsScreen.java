@@ -83,7 +83,7 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
 
     @Override
     public void close() {
-        super.close();
+        this.client.setScreen(this.parent);
     }
 
     @Override

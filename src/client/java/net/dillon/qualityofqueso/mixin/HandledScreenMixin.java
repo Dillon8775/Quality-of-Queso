@@ -600,9 +600,9 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                         swapItems(this.handler, this.inventory);
                         this.swapCooldown = 120;
                     }
-                }
-                if (MinecraftClient.getInstance().isAltPressed() && input.key() == GLFW.GLFW_KEY_Q) {
-                    this.dropItems(!isContainerScreen(this.screen));
+                    if (this.quickDropButton != null && this.quickDropButton.active && MinecraftClient.getInstance().isAltPressed() && input.key() == GLFW.GLFW_KEY_Q) {
+                        this.dropItems(!isContainerScreen(this.screen));
+                    }
                 }
             }
 
