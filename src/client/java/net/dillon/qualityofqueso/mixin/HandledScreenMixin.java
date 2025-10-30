@@ -238,7 +238,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             return false;
         }
         // Determine fromInventory size to run through
-        int size = isPlayerInventory ? playerInventory.size() : this.inventory.size();
+        int size = isPlayerInventory ? playerInventory.getMainStacks().size() : this.inventory.size();
         int filledSlots = 0;
         for (int i = 0; i < size; i++) {
             // If slot is not empty, the button should be active
@@ -694,7 +694,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
 
             // Recipe book search field logic
             if (options().betterSearching && this.screen instanceof RecipeBookScreen<?> recipeScreen && !MinecraftClient.getInstance().isCtrlPressed()) {
-                boolean swapKeyValid = hoveredSlotHasItem(this.focusedSlot) || this.handler.getSlot(45).hasStack();
+                boolean swapKeyValid = swapKeyPressed && (hoveredSlotHasItem(this.focusedSlot) || this.handler.getSlot(45).hasStack());
                 if (!ignoreTyping && !swapKeyValid && !recipeScreen.recipeBook.isOpen() && (this.inventorySearchField == null || !this.inventorySearchField.isFocused())) {
                     recipeScreen.recipeBook.toggleOpen();
                     this.refreshWidgetPositions();

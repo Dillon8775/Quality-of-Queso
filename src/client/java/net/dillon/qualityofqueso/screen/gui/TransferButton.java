@@ -26,7 +26,6 @@ public class TransferButton extends ButtonWidget {
     protected final String searchFieldText;
     protected final TextRenderer textRenderer;
     private final String buttonName;
-    private final boolean tooltipHasParameter;
     private final Supplier<Boolean> canBeActive;
 
     /**
@@ -38,7 +37,6 @@ public class TransferButton extends ButtonWidget {
         this.textRenderer = textRenderer;
         this.searchFieldText = searchFieldText;
         this.buttonName = buttonName;
-        this.tooltipHasParameter = false;
         this.canBeActive = () -> this.active;
     }
 
@@ -51,7 +49,6 @@ public class TransferButton extends ButtonWidget {
         this.screenHandler = screenHandler;
         this.textRenderer = textRenderer;
         this.searchFieldText = searchFieldText;
-        this.tooltipHasParameter = false;
         this.canBeActive = canBeActive;
     }
 
