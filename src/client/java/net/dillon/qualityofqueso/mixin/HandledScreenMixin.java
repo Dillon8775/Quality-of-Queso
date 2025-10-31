@@ -709,10 +709,8 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             }
             // Inventory search field logic
             if (options().inventorySearching && this.inventorySearchField != null) {
-                if (!MinecraftClient.getInstance().isCtrlPressed()) {
-                    if (this.screen instanceof RecipeBookScreen<?> recipeScreen && recipeScreen.recipeBook.isOpen() && !this.inventorySearchField.isFocused()) {
-                        recipeScreen.recipeBook.searchField.setFocused(!cannotType);
-                    }
+                if (!MinecraftClient.getInstance().isCtrlPressed() && this.screen instanceof RecipeBookScreen<?> recipeScreen && recipeScreen.recipeBook.isOpen() && !this.inventorySearchField.isFocused()) {
+                    recipeScreen.recipeBook.searchField.setFocused(!cannotType);
                 } else if (!secondaryIgnoreTyping && (!MinecraftClient.getInstance().isCtrlPressed() || (MinecraftClient.getInstance().isCtrlPressed() && input.key() == GLFW.GLFW_KEY_A))) {
                     this.inventorySearchField.setFocused(true);
                     this.setFocused(this.inventorySearchField);

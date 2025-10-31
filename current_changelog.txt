@@ -19,3 +19,6 @@ Slight Changes:
 - Removed "Require ALT to move" option.
 - Hovering over any inventory management button now displays the correct cursor, matching with the new 1.21.9 update.
 - A lot of bug fixes, optimizations, and other tweaks.
+
+- Released a showcase / release trailer video for the mod!
+https://youtu.be/_tPKgpBcTg4

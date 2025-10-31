@@ -18,6 +18,8 @@
   <img src="https://i.imgur.com/yFnszAw.png" width="286" height="96" alt="Compatible with Forge">
 </a>
 
+<iframe width="560" height="315" src="https://youtu.be/_tPKgpBcTg4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
 ---
 
 # _Chest Searching!_
