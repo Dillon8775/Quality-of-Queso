@@ -10,6 +10,7 @@ import net.dillon.qualityofqueso.util.ButtonUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.screen.ConfirmLinkScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
@@ -21,7 +22,7 @@ import java.util.List;
 
 @Environment(EnvType.CLIENT)
 public class ModOptionsScreen extends AbstractModOptionsScreen {
-    private ButtonWidget chestSearchingOptions, inventoryManagementOptions, itemFrameSearchingOptions, openItemFrameSearchGUI, otherOptions;
+    private ButtonWidget chestSearchingOptions, inventoryManagementOptions, itemFrameSearchingOptions, openItemFrameSearchGUI, otherOptions, reportBugs;
 
     public ModOptionsScreen(Screen parent) {
         super(parent, Text.translatable("qualityofqueso.gui.options.title"));
@@ -53,6 +54,10 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
             this.client.setScreen(new MiscOptionsScreen(this));
         }).build());
         buttons.add(this.otherOptions);
+        this.reportBugs = this.addDrawableChild(ButtonWidget.builder(Text.translatable("qualityofqueso.gui.report_bugs"),
+                ConfirmLinkScreen.opening(this, "https://github.com/Dillon8775/Quality-of-Queso/issues", false)
+        ).build());
+        buttons.add(this.reportBugs);
         this.body.addAll(buttons);
     }
 
@@ -76,8 +81,13 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
                 ButtonUtil.drawTooltip(Text.translatable("qualityofqueso.gui.open_item_frame_search_gui.null_world"), context, this.textRenderer, mouseX, mouseY);
             }
         }
-        if (this.otherOptions.isHovered() && QoQ.options().helpfulTooltips) {
-            ButtonUtil.drawTooltip(Text.translatable("qualityofqueso.gui.misc_options.tooltip"), context, this.textRenderer, mouseX, mouseY);
+        if (QoQ.options().helpfulTooltips) {
+            if (this.otherOptions.isHovered()) {
+                ButtonUtil.drawTooltip(Text.translatable("qualityofqueso.gui.misc_options.tooltip"), context, this.textRenderer, mouseX, mouseY);
+            }
+            if (this.reportBugs.isHovered()) {
+                ButtonUtil.drawTooltip(Text.translatable("qualityofqueso.gui.report_bugs.tooltip"), context, this.textRenderer, mouseX, mouseY);
+            }
         }
     }
 

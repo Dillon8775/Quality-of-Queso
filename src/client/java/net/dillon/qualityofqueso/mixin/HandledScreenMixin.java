@@ -190,7 +190,9 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             Slot fromSlot = this.handler.getSlot(i);
             ItemStack fromStack = fromSlot.getStack();
 
-            if (!options().includeHotbar) {
+            if ((this.containerSearchField != null || this.inventorySearchField != null) && !this.getSearchFieldText().isEmpty() && !this.search(this.getSearchFieldText(), fromSlot, false)) {
+                continue; // Skip container slot if query not found via search
+            } else if (!options().includeHotbar) {
                 if (drop) {
                     if (isExcludedSlot(this.screen, fromSlot.id) || isInventoryHotbarSlot(isInventoryScreen(this.screen), fromSlot.id)) {
                         continue; // If dropping from InventoryScreen, and it's an excluded slot AND fromInventory hotbar slot, skip slot and continue
@@ -198,8 +200,6 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                 } else if (!toInventory && isHotbarSlot(fromEnd, fromSlot.id)) {
                     continue; // Otherwise, check if it's a hotbar slot in normal container
                 }
-            } else if ((this.containerSearchField != null || this.inventorySearchField != null) && !this.getSearchFieldText().isEmpty() && !this.search(this.getSearchFieldText(), fromSlot, false)) {
-                continue; // Then skip container slot if query not found via search
             }
 
             if (!fromStack.isEmpty()) {

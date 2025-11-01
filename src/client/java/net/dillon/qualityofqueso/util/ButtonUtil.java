@@ -219,6 +219,10 @@ public class ButtonUtil {
             Slot chestSlot = handler.getSlot(i);
             Slot playerSlot = handler.getSlot(playerSlotIndex);
 
+            if (!options().includeHotbar && isHotbarSlot(handler.slots.size(), playerSlot.id)) {
+                continue;
+            }
+
             ItemStack chestStack = chestSlot.getStack();
             ItemStack playerStack = playerSlot.getStack();
 

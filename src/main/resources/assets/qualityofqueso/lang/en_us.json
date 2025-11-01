@@ -29,6 +29,8 @@
   "qualityofqueso.gui.misc_options": "Misc...",
   "qualityofqueso.gui.title.misc_options": "Miscellaneous Options",
   "qualityofqueso.gui.misc_options.tooltip": "Configure other Quality of Queso features...",
+  "qualityofqueso.gui.report_bugs": "Report a bug...",
+  "qualityofqueso.gui.report_bugs.tooltip": "Report a bug or suggest something...",
   "qualityofqueso.gui.on": "ON",
   "qualityofqueso.gui.off": "OFF",
   "qualityofqueso.gui.yes": "YES",

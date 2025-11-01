@@ -1,24 +1,7 @@
-Main Changes:
-- Added Inventory Searching! You can now search items in your inventory just like you can in chests (this is toggleable).
+- Added a "Report a bug..." button in the main Quality of Queso menu.
 
-- Added a "Quick Drop" button, which allows you to drop all items in a container, or your inventory. You can also do this by pressing CTRL + ALT + Q.
-You can also utilize the search field to filter which items you want to drop, exclude/include hotbar items, but you cannot use it if the cursor is holding something.
+Swap button changes:
+- Fixed bug where if exclude hotbar is on, hotbar items are still affected by the swap.
 
-- Added a "Swap" button, which allows you to swap all items in a container -> inventory with the respective corresponding slot.
-Note: you cannot use this button if the search field is filled.
-
-- Renamed "Chest Searching Options" to "Inventory Searching Options".
-- Added option to allow use of the CTRL + C, CTRL + I and CTRL + S quick move keys for inventory management.
-CTRL + C moves the container -> inventory.
-CTRL + I moves the inventory -> container.
-CTRL + S swaps all items in inventory -> container.
-You can disable these keybinds in the Quality of Queso configuration menu, and change the keybinds in the default Minecraft control settings.
-- Increased maximum search distance for item frame searching to 500 blocks (note that this could cause some lag and is only recommended to go this high if you are on a high render distance setting).
-
-Slight Changes:
-- Removed "Require ALT to move" option.
-- Hovering over any inventory management button now displays the correct cursor, matching with the new 1.21.9 update.
-- A lot of bug fixes, optimizations, and other tweaks.
-
-- Released a showcase / release trailer video for the mod!
-https://youtu.be/_tPKgpBcTg4
+Transfer button changes:
+- Fixed bug where transfer button transfers all items (regardless of search query) if exclude hotbar is on.
