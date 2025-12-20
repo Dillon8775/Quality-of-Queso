@@ -11,6 +11,7 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.*;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.TextIconButtonWidget;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.inventory.Inventory;
@@ -28,7 +29,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Colors;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.ColorHelper;
-import org.jetbrains.annotations.Nullable;
 
 import static net.dillon.qualityofqueso.main.QoQ.options;
 import static net.dillon.qualityofqueso.main.QoQ.quicklyEquippables;
@@ -45,18 +45,11 @@ public class ButtonUtil {
     /**
      * Initializes the settings button.
      */
-    public static ButtonWidget initializeButton(MinecraftClient client, Screen parent, int width, int height) {
-        return new ButtonWidget.Builder(ModTexts.BLANK, button -> client.setScreen(new ModOptionsScreen(parent))).dimensions(width, height, 20, 20).build();
-    }
-
-    /**
-     * Draws the tooltip and texture for the settings button.
-     */
-    public static void drawTooltipAndTexture(Text tooltip, String name, DrawContext context, TextRenderer renderer, ButtonWidget button, int mouseX, int mouseY, @Nullable Float f) {
-        if (options().helpfulTooltips && button.isHovered()) {
-            drawTooltip(tooltip, context, renderer, mouseX, mouseY);
-        }
-        drawTexture(context, name, button, f == null ? 1.0F : f);
+    public static TextIconButtonWidget initializeButton(MinecraftClient client, Screen parent) {
+        return TextIconButtonWidget.builder(ModTexts.BLANK, (onPress) -> client.setScreen(new ModOptionsScreen(parent)), false)
+                .width(20)
+                .texture(Identifier.of("qualityofqueso", "cheese_wheel"), 16, 16)
+                .build();
     }
 
     /**

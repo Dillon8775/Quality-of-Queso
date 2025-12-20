@@ -778,13 +778,13 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
      * Ensures that the search field text isn't cleared when resizing.
      */
     @Override
-    public void resize(MinecraftClient client, int width, int height) {
+    public void resize(int width, int height) {
         if (this.containerSearchField != null) {
             // Get current text and focused status
             String text = this.getSearchFieldText();
             boolean refocus = this.containerSearchField.isFocused();
             // Refresh screen (or resize)
-            this.init(client, width, height);
+            this.init(width, height);
             // Reset text and focused status
             this.containerSearchField.setText(text);
             this.containerSearchField.setFocused(refocus);

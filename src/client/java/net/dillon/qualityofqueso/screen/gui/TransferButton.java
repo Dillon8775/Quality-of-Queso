@@ -6,17 +6,16 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.cursor.StandardCursors;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.screen.ScreenHandler;
-import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Unique;
 
 import java.util.function.Supplier;
 
 import static net.dillon.qualityofqueso.main.QoQ.options;
+import static net.minecraft.text.Text.translatable;
 
 /**
  * A representation of a transfer button.
@@ -81,7 +80,7 @@ public class TransferButton extends ButtonWidget {
      * Renders the textures and tooltips for the button.
      */
     @Override
-    protected void renderWidget(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
+    protected void drawIcon(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
         this.active = this.canBeActive.get();
 
         if (this.canBeActive.get()) {
@@ -95,27 +94,19 @@ public class TransferButton extends ButtonWidget {
         if (this.isHovered()) {
             if (this.active) {
                 if (!this.screenHandler.getCursorStack().isEmpty()) {
-                    ButtonUtil.drawTooltip(Text.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_cursor_stack", this.screenHandler.getCursorStack().getItemName()), context, this.textRenderer, mouseX, mouseY);
+                    ButtonUtil.drawTooltip(translatable("qualityofqueso.gui." + this.buttonName + "_button.with_cursor_stack", this.screenHandler.getCursorStack().getItemName()), context, this.textRenderer, mouseX, mouseY);
                 } else if (!this.searchFieldText.isEmpty()) {
                     ButtonUtil.drawTooltip(this.searchFieldText.startsWith("#") ?
-                            Text.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query.tag", this.searchFieldText.substring(1)) :
+                            translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query.tag", this.searchFieldText.substring(1)) :
                             this.searchFieldText.startsWith("!") ?
-                                    Text.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query.exclude", this.searchFieldText.substring(1)) :
-                                    Text.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query", this.searchFieldText), context, this.textRenderer, mouseX, mouseY);
+                                    translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query.exclude", this.searchFieldText.substring(1)) :
+                                    translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query", this.searchFieldText), context, this.textRenderer, mouseX, mouseY);
                 } else {
                     if (options().helpfulTooltips) {
-                        ButtonUtil.drawTooltip(Text.translatable("qualityofqueso.gui." + this.buttonName + "_button"), context, this.textRenderer, mouseX, mouseY);
+                        ButtonUtil.drawTooltip(translatable("qualityofqueso.gui." + this.buttonName + "_button"), context, this.textRenderer, mouseX, mouseY);
                     }
                 }
             }
-            this.renderCursor(context);
         }
-    }
-
-    /**
-     * Renders the cursor correctly.
-     */
-    protected void renderCursor(DrawContext context) {
-        context.setCursor(this.isInteractable() ? StandardCursors.POINTING_HAND : StandardCursors.NOT_ALLOWED);
     }
 }

@@ -15,7 +15,6 @@ import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -128,10 +127,10 @@ public final class ServerHandler implements ModInitializer {
                         player.sendMessage(payload.matchCase() ?
                                 Text.translatable("qualityofqueso.item_frame_searcher.executed.found_none.match_case", searched, payload.query()) :
                                 Text.translatable("qualityofqueso.item_frame_searcher.executed.found_none", searched, payload.query()), false);
-                        player.playSoundToPlayer(SoundEvents.BLOCK_NOTE_BLOCK_BASS.value(), SoundCategory.AMBIENT, 2.0F, 1.0F);
+                        player.playSound(SoundEvents.BLOCK_NOTE_BLOCK_BASS.value(), 2.0F, 1.0F);
                     } else if (payload.clear()) {
                         player.sendMessage(Text.translatable("qualityofqueso.item_frame_searcher.executed.cleared", searched), false);
-                        player.playSoundToPlayer(SoundEvents.ENTITY_PLAYER_SPLASH, SoundCategory.AMBIENT, 1.0F, 1.0F);
+                        player.playSound(SoundEvents.ENTITY_PLAYER_SPLASH, 1.0F, 1.0F);
                     } else {
                         if (payload.timer() == 0) {
                             player.sendMessage(payload.matchCase() ?
@@ -142,7 +141,7 @@ public final class ServerHandler implements ModInitializer {
                                     Text.translatable("qualityofqueso.item_frame_searcher.executed.with_timer.match_case", searched, payload.query(), payload.timer()) :
                                     Text.translatable("qualityofqueso.item_frame_searcher.executed.with_timer", searched, payload.query(), payload.timer()), false);
                         }
-                        player.playSoundToPlayer(SoundEvents.ENTITY_ARROW_HIT_PLAYER, SoundCategory.AMBIENT, 1.0F, 1.0F);
+                        player.playSound(SoundEvents.ENTITY_ARROW_HIT_PLAYER, 1.0F, 1.0F);
                     }
                 }
         );

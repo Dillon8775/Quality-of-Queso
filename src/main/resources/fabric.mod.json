@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "qualityofqueso",
-  "version": "1.4.1+mc1.21.9x",
+  "version": "1.4.3+mc1.21.11",
   "name": "Quality of Queso",
   "description": "Chest searching, inventory management, and more quality-of-life features!",
   "accessWidener": "qualityofqueso.accessWidener",
@@ -35,8 +35,8 @@
     }
   ],
   "depends": {
-    "fabricloader": ">=0.16.14",
-    "minecraft": ">=1.21.6",
+    "fabricloader": ">=0.17.2",
+    "minecraft": "1.21.11",
     "java": ">=21",
     "fabric-api": "*"
   }

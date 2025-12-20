@@ -8,6 +8,7 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.GameMenuScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.TextIconButtonWidget;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
@@ -29,7 +30,7 @@ public class GameMenuScreenMixin extends Screen {
     @Shadow
     private @Nullable ButtonWidget exitButton;
     @Unique
-    private ButtonWidget settingsButton, blacklistServerButton;
+    private ButtonWidget blacklistServerButton;
 
     public GameMenuScreenMixin(Text title) {
         super(title);
@@ -42,7 +43,8 @@ public class GameMenuScreenMixin extends Screen {
     private void init(CallbackInfo ci) {
         if (this.showMenu) {
             if (options().showQoQButtons) {
-                this.settingsButton = this.addDrawableChild(ButtonUtil.initializeButton(this.client, this, this.width / 2 + 106, this.height / 4 + 72 - 16));
+                TextIconButtonWidget settingsButton = this.addDrawableChild(ButtonUtil.initializeButton(this.client, this));
+                settingsButton.setPosition(this.width / 2 + 106, this.height / 4 + 72 - 16);
             }
             if (this.exitButton != null && options().preventRageQuitting) {
                 this.exitButton.active = false;
@@ -67,9 +69,6 @@ public class GameMenuScreenMixin extends Screen {
     @Inject(method = "render", at = @At("TAIL"))
     private void renderTooltipsAndTextures(DrawContext context, int mouseX, int mouseY, float deltaTicks, CallbackInfo ci) {
         if (this.showMenu) {
-            if (options().showQoQButtons) {
-                ButtonUtil.drawTooltipAndTexture(ModTexts.CONFIGURE_QOQ, ButtonUtil.CHEESE_WHEEL, context, this.textRenderer, this.settingsButton, mouseX, mouseY, null);
-            }
             if (options().preventRageQuitting && options().helpfulTooltips && this.exitButton != null && this.exitButton.isHovered()) {
                 ButtonUtil.drawTooltip(Text.translatable("qualityofqueso.gui.disconnect"), context, this.textRenderer, mouseX, mouseY);
             }

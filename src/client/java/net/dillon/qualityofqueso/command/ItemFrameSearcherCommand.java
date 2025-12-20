@@ -21,7 +21,7 @@ public class ItemFrameSearcherCommand {
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess commandRegistryAccess) {
         dispatcher.register(
                 CommandManager.literal("itemframesearcher")
-                        .requires(source -> options().enableMod && source.hasPermissionLevel(0))
+                        .requires(CommandManager.requirePermissionLevel(CommandManager.ALWAYS_PASS_CHECK))
                         .then(
                                 CommandManager.literal("clear")
                                         .executes(
