@@ -63,7 +63,7 @@ public class ButtonUtil {
      * Draws a texture over a button.
      */
     public static void drawTexture(DrawContext context, String name, ButtonWidget button, float f) {
-        context.drawTexture(RenderPipelines.GUI_TEXTURED, Identifier.of("qualityofqueso:textures/gui/" + name + ".png"), button.getX() + 1, button.getY() + 1, 0.0F, 0.0F, 18, 18, 18, 18, ColorHelper.withAlpha(f, Colors.WHITE));
+        context.drawTexture(RenderPipelines.GUI_TEXTURED, Identifier.of("qualityofqueso:textures/gui/" + name + ".png"), button.getX() + 2, button.getY() + 2, 0.0F, 0.0F, 16, 16, 16, 16, ColorHelper.withAlpha(f, Colors.WHITE));
     }
 
     /**

@@ -700,6 +700,10 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                     this.refreshWidgetPositions();
                 }
                 if (recipeScreen.recipeBook.searchField != null) {
+                    if (MinecraftClient.getInstance().isShiftPressed()) {
+                        recipeScreen.recipeBook.searchField.setFocused(false);
+                        return;
+                    }
                     recipeScreen.recipeBook.searchField.setFocused(!cannotType);
 
                     if (recipeScreen.recipeBook.searchField.isFocused()) {

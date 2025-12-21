@@ -1,7 +1,9 @@
+Version 1.4.2:
+- "Quick Dropping" and "Swapping" buttons and keybinds are now disabled by default. You can manually enable them in the configuration menu.
 - Added a "Report a bug..." button in the main Quality of Queso menu.
 
-Swap button changes:
 - Fixed bug where if exclude hotbar is on, hotbar items are still affected by the swap.
-
-Transfer button changes:
 - Fixed bug where transfer button transfers all items (regardless of search query) if exclude hotbar is on.
+- Fixed bug where pressing shift activates the recipe book search bar.
+- Fixed Forge 1.20.1 bug where utilizing management buttons aggressively causes increased lag spikes overtime.
+- Fixed Forge bug where certain features simply do not work.
