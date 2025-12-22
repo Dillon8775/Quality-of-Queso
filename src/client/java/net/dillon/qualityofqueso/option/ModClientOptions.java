@@ -30,7 +30,7 @@ public class ModClientOptions {
     public List<String> blacklistedServers = new ArrayList<>();
     public int itemFrameSearchTimer = 0;
     public int itemFrameSearchRadius = 150;
-    public boolean showQoQButtons = true;
+    public QoQButtons qoqButtons = QoQButtons.EVERYWHERE;
 
     public static final ModOptionsHandler CLIENT_OPTIONS = new ModOptionsHandler();
 

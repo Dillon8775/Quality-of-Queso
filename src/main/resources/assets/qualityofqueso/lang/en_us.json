@@ -120,6 +120,11 @@
   "qualityofqueso.options.item_frame_search_radius.tooltip": "Determines the radius for finding item frames.\n\n1m = 1 block.",
   "qualityofqueso.options.item_frame_search_timer": "Timer",
   "qualityofqueso.options.item_frame_search_timer.tooltip": "Specifies how long item frames will remain glowing.\n\n§aNo Timer §r§fmeans item frames will remain glowing until cleared.",
-  "qualityofqueso.options.show_qoq_buttons": "Show QoQ Buttons",
-  "qualityofqueso.options.show_qoq_buttons.tooltip": "Displays all Quality of Queso buttons on the game menu screen."
+  "qualityofqueso.options.qoq_buttons": "Show QoQ Buttons",
+  "qualityofqueso.options.qoq_buttons.everywhere": "§a§lEVERYWHERE",
+  "qualityofqueso.options.qoq_buttons.everywhere.tooltip": "Display all Quality of Queso configuration buttons on title §oand pause screen.",
+  "qualityofqueso.options.qoq_buttons.title_only": "§b§lTITLE ONLY",
+  "qualityofqueso.options.qoq_buttons.title_only.tooltip": "Only display the Quality of Queso settings button on title screen.\nThis will not display the blacklisted server button on the pause screen.",
+  "qualityofqueso.options.qoq_buttons.off": "§c§lOFF",
+  "qualityofqueso.options.qoq_buttons.off.tooltip": "Do not display any of Quality of Queso configuration buttons.\nNote: The only way to change this option back is to change this option in the .json/.toml file (depending if you are on forge/fabric)"
 }

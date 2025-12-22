@@ -5,11 +5,14 @@ import net.dillon.qualityofqueso.main.QoQ;
 import net.dillon.qualityofqueso.util.ModTexts;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.option.GameOptions;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.option.SimpleOption;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+
+import java.util.Arrays;
 
 /**
  * Options displayed on {@link ModOptionsScreen}.
@@ -80,8 +83,19 @@ public class ModListOptions {
                 (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, QoQ.coptions().itemFrameSearching, value -> QoQ.coptions().itemFrameSearching = value);
     }
 
-    public static final SimpleOption<Boolean> SHOW_QOQ_BUTTONS = new SimpleOption<>("qualityofqueso.options.show_qoq_buttons", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.show_qoq_buttons.tooltip")),
-            (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, QoQ.options().showQoQButtons, value -> QoQ.options().showQoQButtons = value);
+    public static final SimpleOption<QoQButtons> QOQ_BUTTONS = new SimpleOption<>(
+            "qualityofqueso.options.qoq_buttons",
+            option -> {
+                return switch (option) {
+                    case EVERYWHERE -> Tooltip.of(Text.translatable("qualityofqueso.options.qoq_buttons.everywhere.tooltip"));
+                    case TITLE_ONLY -> Tooltip.of(Text.translatable("qualityofqueso.options.qoq_buttons.title_only.tooltip"));
+                    case OFF -> Tooltip.of(Text.translatable("qualityofqueso.options.qoq_buttons.off.tooltip"));
+                };
+            },
+            (optionText, value) -> value.getText(),
+            new SimpleOption.PotentialValuesBasedCallbacks<>(Arrays.asList(QoQButtons.values()), QoQButtons.Codec),
+            QoQ.options().qoqButtons,
+            value -> QoQ.options().qoqButtons = value);
 
     public static final SimpleOption<Integer> ITEM_FRAME_SEARCH_TIMER =
             new SimpleOption<>("qualityofqueso.options.item_frame_search_timer", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.item_frame_search_timer.tooltip")),

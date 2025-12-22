@@ -42,23 +42,23 @@ public class GameMenuScreenMixin extends Screen {
     @Inject(method = "init", at = @At("TAIL"))
     private void init(CallbackInfo ci) {
         if (this.showMenu) {
-            if (options().showQoQButtons) {
-                TextIconButtonWidget settingsButton = this.addDrawableChild(ButtonUtil.initializeButton(this.client, this));
-                settingsButton.setPosition(this.width / 2 + 106, this.height / 4 + 72 - 16);
-            }
             if (this.exitButton != null && options().preventRageQuitting) {
                 this.exitButton.active = false;
             }
-            if (!(this.client.getCurrentServerEntry() == null)) {
-                String address = this.getServerAddress();
-                this.blacklistServerButton = this.addDrawableChild(ButtonWidget.builder(ModTexts.BLANK, button -> {
-                    if (options().blacklistedServers.contains(address)) {
-                        options().blacklistedServers.remove(address);
-                    } else {
-                        options().blacklistedServers.add(address);
-                    }
-                    saveAll();
-                }).dimensions(this.width / 2 + 106, isFlashbackLoaded() ? this.height / 4 + 120 - 16 : this.height / 4 + 96 - 16, 20, 20).build());
+            if (options().qoqButtons.everywhere()) {
+                TextIconButtonWidget settingsButton = this.addDrawableChild(ButtonUtil.initializeButton(this.client, this));
+                settingsButton.setPosition(this.width / 2 + 106, this.height / 4 + 72 - 16);
+                if (!(this.client.getCurrentServerEntry() == null)) {
+                    String address = this.getServerAddress();
+                    this.blacklistServerButton = this.addDrawableChild(ButtonWidget.builder(ModTexts.BLANK, button -> {
+                        if (options().blacklistedServers.contains(address)) {
+                            options().blacklistedServers.remove(address);
+                        } else {
+                            options().blacklistedServers.add(address);
+                        }
+                        saveAll();
+                    }).dimensions(this.width / 2 + 106, isFlashbackLoaded() ? this.height / 4 + 120 - 16 : this.height / 4 + 96 - 16, 20, 20).build());
+                }
             }
         }
     }
@@ -72,7 +72,7 @@ public class GameMenuScreenMixin extends Screen {
             if (options().preventRageQuitting && options().helpfulTooltips && this.exitButton != null && this.exitButton.isHovered()) {
                 ButtonUtil.drawTooltip(Text.translatable("qualityofqueso.gui.disconnect"), context, this.textRenderer, mouseX, mouseY);
             }
-            if (!(this.client.getCurrentServerEntry() == null)) {
+            if (options().qoqButtons.everywhere() && !(this.client.getCurrentServerEntry() == null)) {
                 if (this.blacklistServerButton != null) {
                     this.blacklistServerButton.active = isOnServer(this.client);
                     String address = this.getServerAddress();

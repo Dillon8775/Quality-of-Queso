@@ -34,7 +34,7 @@ public class MiscOptionsScreen extends AbstractModOptionsScreen {
                 ModListOptions.PREVENT_RAGE_QUITTING,
                 ModListOptions.PREVENT_E_FROM_TYPING,
                 ModListOptions.HELPFUL_TOOLTIPS,
-                ModListOptions.SHOW_QOQ_BUTTONS
+                ModListOptions.QOQ_BUTTONS
         };
     }
 
