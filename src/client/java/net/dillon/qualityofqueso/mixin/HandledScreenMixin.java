@@ -313,9 +313,17 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
 
         String[] terms = searchQuery.split(",");
         // If slot contains a comma, for each query searched (separated by each comma), return true if search query'namespace find an query (make slot available)
-        for (String term : terms) {
-            if (itemName.contains(term.trim().toLowerCase()) || customName.contains(term.trim().toLowerCase())) {
-                return true;
+        for (int i = 0; i < terms.length; i++) {
+            String term = terms[i];
+            if (searchQuery.startsWith(":")) {
+                String query = term.substring(i == 0 ? 1 : 0);
+                if (itemName.matches(query.trim().toLowerCase()) || customName.matches(query.trim().toLowerCase())) {
+                    return true;
+                }
+            } else {
+                if (itemName.contains(term.trim().toLowerCase()) || customName.contains(term.trim().toLowerCase())) {
+                    return true;
+                }
             }
         }
 
