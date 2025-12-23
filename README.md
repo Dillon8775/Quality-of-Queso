@@ -27,6 +27,7 @@
 ## Searching Features:
 - #### Search by item name (just type the item name in the search bar, ex. grass) [since: v1.2]
 - #### Search for multiple items (separate each item with a command, ex. "grass,dirt,iron") [since: v1.2.1]
+- #### Match case with a colon :, ex. ":chest" (will display all "Chest"s) [since: v1.4.2]
 - #### Search by tag (begin search query with a #, ex. "#logs", works with all vanilla and non-vanilla tags) [since: v1.2, full tag support since v1.2.1]
     - Searching by tag will make all items display what tag(s) they are in if you hover over them. [since: v1.2.1]
 - #### Exclude item from search (begin search query with a !, ex. searching "log" will display any item that does _not_ contain "log" in its name) [since: v1.2.1]

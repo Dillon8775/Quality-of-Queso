@@ -1,9 +1,15 @@
 Version 1.4.2:
-- "Quick Dropping" and "Swapping" buttons and keybinds are now disabled by default. You can manually enable them in the configuration menu.
+- Added "Match Case" search filter! Use a colon : to match search query.
+- "Quick Drop" and "Swapping" buttons and keybinds are now disabled by default. You can manually enable them in the configuration menu.
 - Added a "Report a bug..." button in the main Quality of Queso menu.
 
 - Fixed bug where if exclude hotbar is on, hotbar items are still affected by the swap.
 - Fixed bug where transfer button transfers all items (regardless of search query) if exclude hotbar is on.
 - Fixed bug where pressing shift activates the recipe book search bar.
-- Fixed Forge 1.20.1 bug where utilizing management buttons aggressively causes increased lag spikes overtime.
-- Fixed Forge bug where certain features simply do not work.
+
+- Fixed Forge 1.20.1-1.21.1 exclusive bug where utilizing management buttons aggressively causes increased lag spikes overtime.
+- Fixed Forge 1.21.9-1.21.10 exclusive bug where the cursor does not use Minecraft's new cursor rendering system when hovering over inventory management buttons.
+- Fixed Forge exclusive bug where certain features simply do not work.
+- Fixed Forge exclusive bug where certain Minecraft versions were not compatible (all are compatible now, 1.20.1-1.21.11)
+
+- Tweaks and optimizations.
