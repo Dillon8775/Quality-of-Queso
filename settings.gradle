@@ -1,10 +1,51 @@
 pluginManagement {
-	repositories {
-		maven {
-			name = 'Fabric'
-			url = 'https://maven.fabricmc.net/'
-		}
-		mavenCentral()
-		gradlePluginPortal()
-	}
+    repositories {
+        gradlePluginPortal()
+        maven {
+            name = 'MinecraftForge'
+            url = 'https://maven.minecraftforge.net'
+        }
+        maven {
+            name = 'Parchment'
+            url = 'https://maven.parchmentmc.org'
+        }
+        maven {
+            name = 'Fabric'
+            url = 'https://maven.fabricmc.net/'
+        }
+    }
 }
+
+rootProject.name = 'QoQ'
+
+// === COMMON ===
+include "modules:universal"
+
+// === FABRIC ===
+//include "modules:fabric-mc1.21.11"
+//include "modules:fabric-mc1.21.9x"
+include "modules:fabric-mc1.21.6x"
+
+// === FORGE ===
+//include "modules:forge-mc1.21.11"
+//include "modules:forge-mc1.21.9x"
+include "modules:forge-mc1.21.6x"
+//include "modules:forge-mc1.21.1"
+//include "modules:forge-mc1.20.1"
+// ----------
+
+// You can add as many modules as you want, for this copy the content of "example_module" to each new module!
+//include "modules:example_module"
+
+// Example how to use multiple modules within a module:
+
+// include "modules:MODULE_NAME",
+//      "modules:MODULE_NAME:SUB_MODULE_NAME",
+//      "modules:MODULE_NAME:SUB_MODULE_NAME"
+
+// You can even add a Multi-Loader project ! (using Architectury may require some extra steps)
+
+//include "modules:multiproject_module",
+//        "modules:multiproject_module:common",
+//        "modules:multiproject_module:fabric",
+//        "modules:multiproject_module:forge"

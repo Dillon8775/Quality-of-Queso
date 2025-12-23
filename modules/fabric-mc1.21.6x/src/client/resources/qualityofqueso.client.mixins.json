@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "package": "net.dillon.qualityofqueso.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "CreativeInventoryScreenMixin",
+    "GameMenuScreenMixin",
+    "HandledScreenMixin",
+    "MinecraftClientMixin",
+    "RecipeBookWidgetMixin",
+    "TitleScreenMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
