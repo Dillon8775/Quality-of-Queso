@@ -1,6 +1,6 @@
 package net.dillon.qualityofqueso.packet;
 
-import net.dillon.qualityofqueso.option.ModCommonOptions;
+import net.dillon.qualityofqueso.option.CommonOptions;
 import net.dillon.qualityofqueso.util.GlowCountdown;
 import net.dillon.qualityofqueso.util.ModUtil;
 import net.fabricmc.api.ModInitializer;
@@ -30,7 +30,7 @@ public final class ServerHandler implements ModInitializer {
      */
     @Override
     public void onInitialize() {
-        if (ModCommonOptions.COMMON_OPTIONS.getInstance().itemFrameSearching) {
+        if (CommonOptions.COMMON_OPTIONS.getInstance().itemFrameSearching) {
             registerGlowSearchPacketReceiver();
             ModUtil.debug("Registered glowing packet on server.");
         } else {

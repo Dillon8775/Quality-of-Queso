@@ -2,8 +2,8 @@ package net.dillon.qualityofqueso.main;
 
 import net.dillon.qualityofqueso.command.ItemFrameSearcherCommand;
 import net.dillon.qualityofqueso.keybind.ModKeybinds;
+import net.dillon.qualityofqueso.option.CommonOptions;
 import net.dillon.qualityofqueso.option.ModClientOptions;
-import net.dillon.qualityofqueso.option.ModCommonOptions;
 import net.dillon.qualityofqueso.util.ModUtil;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -92,8 +92,8 @@ public class QoQ implements ClientModInitializer {
     /**
      * @return the common-options.
      */
-    public static ModCommonOptions coptions() {
-        return ModCommonOptions.COMMON_OPTIONS.getInstance();
+    public static CommonOptions coptions() {
+        return CommonOptions.COMMON_OPTIONS.getInstance();
     }
 
     /**
@@ -101,7 +101,7 @@ public class QoQ implements ClientModInitializer {
      */
     public static void saveAll() {
         ModClientOptions.CLIENT_OPTIONS.save();
-        ModCommonOptions.COMMON_OPTIONS.save();
+        CommonOptions.COMMON_OPTIONS.save();
     }
 
     /**
