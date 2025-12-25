@@ -25,7 +25,8 @@ public class QuickDropButton extends TransferButton {
             context) {
         String transferableString = this.searchFieldText.startsWith("!") ?
                 "_exclude.png" : this.searchFieldText.startsWith("#") ?
-                "_with_tag.png" : ".png";
+                "_with_tag.png" : this.searchFieldText.startsWith(":") ?
+                "_match.png" : ".png";
         String appended = transferable ? transferableString : ".png";
         context.blit(ResourceLocation.parse("qualityofqueso:textures/gui/" + id + appended), buttonReference.getX() - 1, buttonReference.getY() - 1, 0.0F, 0.0F, 12, 12, 12, 12);
     }

@@ -62,7 +62,7 @@ minecraft {
     runs {
         // applies to all the run configs below
         configureEach {
-            workingDirectory project.file('run')
+            workingDirectory = "../run"
 
             // Optional additional logging. The markers can be added/remove as needed, separated by commas.
             // "SCAN": For mods scan.

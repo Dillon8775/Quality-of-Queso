@@ -18,18 +18,8 @@ subprojects {
 
     sourceSets {
         main {
-            java {
-                srcDir project(':modules:universal').file('common/src/main/java')
-            }
             resources {
-                srcDir project(':modules:universal').file('common/src/main/resources')
-            }
-
-            if (project.name.startsWith("fabric")) {
-                java.srcDir project(':modules:universal').file('fabric/src/main/java')
-            }
-            if (project.name.startsWith("forge")) {
-                java.srcDir project(':modules:universal').file('forge/src/main/java')
+                srcDir project(':modules:common').file('src/main/resources')
             }
         }
     }

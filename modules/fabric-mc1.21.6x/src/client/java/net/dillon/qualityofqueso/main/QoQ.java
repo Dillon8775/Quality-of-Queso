@@ -2,8 +2,8 @@ package net.dillon.qualityofqueso.main;
 
 import net.dillon.qualityofqueso.command.ItemFrameSearcherCommand;
 import net.dillon.qualityofqueso.keybind.ModKeybinds;
-import net.dillon.qualityofqueso.option.ModClientOptions;
 import net.dillon.qualityofqueso.option.CommonOptions;
+import net.dillon.qualityofqueso.option.ModClientOptions;
 import net.dillon.qualityofqueso.util.ModUtil;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;

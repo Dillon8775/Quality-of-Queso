@@ -71,7 +71,8 @@ public class TransferButton extends ButtonWidget {
         String transferableString = !this.screenHandler.getCursorStack().isEmpty() ?
                 "_with_stack.png" : this.searchFieldText.startsWith("!") ?
                 "_exclude.png" : this.searchFieldText.startsWith("#") ?
-                "_with_tag.png" : ".png";
+                "_with_tag.png" : this.searchFieldText.startsWith(":") ?
+                "_match.png" : ".png";
         String appended = transferable ? transferableString : ".png";
         context.drawTexture(RenderPipelines.GUI_TEXTURED, Identifier.of("qualityofqueso:textures/gui/" + id + appended), buttonReference.getX() - 1, buttonReference.getY() - 1, 0.0F, 0.0F, 12, 12, 12, 12);
     }
@@ -100,7 +101,9 @@ public class TransferButton extends ButtonWidget {
                             translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query.tag", this.searchFieldText.substring(1)) :
                             this.searchFieldText.startsWith("!") ?
                                     translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query.exclude", this.searchFieldText.substring(1)) :
-                                    translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query", this.searchFieldText), context, this.textRenderer, mouseX, mouseY);
+                                    this.searchFieldText.startsWith(":") ?
+                                            translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query.match", this.searchFieldText.substring(1)) :
+                                            translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query", this.searchFieldText), context, this.textRenderer, mouseX, mouseY);
                 } else {
                     if (options().helpfulTooltips) {
                         ButtonUtil.drawTooltip(translatable("qualityofqueso.gui." + this.buttonName + "_button"), context, this.textRenderer, mouseX, mouseY);

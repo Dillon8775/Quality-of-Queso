@@ -70,7 +70,8 @@ public class TransferButton extends Button {
         String transferableString = !this.screenHandler.getCarried().isEmpty() ?
                 "_with_stack.png" : this.searchFieldText.startsWith("!") ?
                 "_exclude.png" : this.searchFieldText.startsWith("#") ?
-                "_with_tag.png" : ".png";
+                "_with_tag.png" : this.searchFieldText.startsWith(":") ?
+                "_match.png" : ".png";
         String appended = transferable ? transferableString : ".png";
         context.blit(RenderPipelines.GUI_TEXTURED, Identifier.parse("qualityofqueso:textures/gui/" + id + appended), buttonReference.getX() - 1, buttonReference.getY() - 1, 0.0F, 0.0F, 12, 12, 12, 12);
     }
@@ -99,7 +100,9 @@ public class TransferButton extends Button {
                             Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query.tag", this.searchFieldText.substring(1)) :
                             this.searchFieldText.startsWith("!") ?
                                     Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query.exclude", this.searchFieldText.substring(1)) :
-                                    Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query", this.searchFieldText), graphics, this.font, mouseX, mouseY);
+                                    this.searchFieldText.startsWith(":") ?
+                                            Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query.match", this.searchFieldText.substring(1)) :
+                                            Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query", this.searchFieldText), graphics, this.font, mouseX, mouseY);
                 } else {
                     if (ModClientOptions.HELPFUL_TOOLTIPS.get()) {
                         ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui." + this.buttonName + "_button"), graphics, this.font, mouseX, mouseY);

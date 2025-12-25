@@ -19,7 +19,7 @@ pluginManagement {
 rootProject.name = 'QoQ'
 
 // === COMMON ===
-include "modules:universal"
+include "modules:common"
 
 // === FABRIC ===
 include "modules:fabric-mc1.21.11"

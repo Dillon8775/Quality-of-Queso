@@ -125,6 +125,8 @@ public class ItemFrameSearchScreen extends Screen {
      */
     private void sendPacket(boolean clear, int timer, int radius) {
         this.onClose();
-        ServerHandler.sendToServer(new GlowSearchC2SPayload(this.searchField.getValue(), Minecraft.getInstance().hasControlDown(), clear, timer, radius));
+        String text = this.searchField.getValue();
+        boolean matchCase = text.startsWith(":");
+        ServerHandler.sendToServer(new GlowSearchC2SPayload(text.substring(matchCase ? 1 : 0), matchCase, clear, timer, radius));
     }
 }

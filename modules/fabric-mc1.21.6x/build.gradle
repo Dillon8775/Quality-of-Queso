@@ -26,6 +26,15 @@ loom {
 		}
 	}
 
+	runs {
+		client {
+			runDir = "../run"
+		}
+		server {
+			runDir = "../run"
+		}
+	}
+
 	accessWidenerPath = file("src/main/resources/qualityofqueso.accessWidener")
 }
 

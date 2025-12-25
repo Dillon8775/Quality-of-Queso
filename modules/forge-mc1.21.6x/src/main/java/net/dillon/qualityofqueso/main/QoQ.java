@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import static net.dillon.qualityofqueso.util.ModUtil.isOnServer;
+
 @Mod(QoQ.MOD_ID)
 public final class QoQ {
     public static final String MOD_ID = "qualityofqueso";
@@ -110,14 +112,6 @@ public final class QoQ {
 			}
 		}
 		return ModClientOptions.ENABLE_MOD.get();
-    }
-
-    /**
-     * @return if the player is on a server.
-     */
-    @OnlyIn(Dist.CLIENT)
-    public static boolean isOnServer(Minecraft client) {
-        return !client.isSingleplayer() && !(client.getCurrentServer() == null);
     }
 
     // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent

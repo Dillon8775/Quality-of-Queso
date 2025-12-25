@@ -64,7 +64,7 @@ minecraft {
     runs {
         // applies to all the run configs below
         configureEach {
-            workingDirectory project.file('run')
+            workingDirectory = "../run"
 
             // Recommended logging data for a userdev environment
             // The markers can be added/remove as needed separated by commas.

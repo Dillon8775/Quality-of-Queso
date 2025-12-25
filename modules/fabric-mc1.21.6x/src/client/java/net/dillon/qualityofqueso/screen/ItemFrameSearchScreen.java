@@ -126,6 +126,8 @@ public class ItemFrameSearchScreen extends Screen {
      */
     private void sendPacket(boolean clear, int timer, int radius) {
         this.close();
-        ClientPlayNetworking.send(new GlowSearchC2SPayload(this.searchField.getText(), Screen.hasControlDown(), clear, timer, radius));
+        String text = this.searchField.getText();
+        boolean matchCase = text.startsWith(":");
+        ClientPlayNetworking.send(new GlowSearchC2SPayload(text.substring(matchCase ? 1 : 0), matchCase, clear, timer, radius));
     }
 }

@@ -23,7 +23,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static net.dillon.qualityofqueso.main.QoQ.isOnServer;
+import static net.dillon.qualityofqueso.util.ModUtil.isOnServer;
 
 @OnlyIn(Dist.CLIENT)
 @Mixin(PauseScreen.class)

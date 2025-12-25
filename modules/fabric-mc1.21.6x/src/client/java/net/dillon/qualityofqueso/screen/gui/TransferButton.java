@@ -15,6 +15,7 @@ import org.spongepowered.asm.mixin.Unique;
 import java.util.function.Supplier;
 
 import static net.dillon.qualityofqueso.main.QoQ.options;
+import static net.minecraft.text.Text.translatable;
 
 /**
  * A representation of a transfer button.
@@ -96,10 +97,12 @@ public class TransferButton extends ButtonWidget {
                     ButtonUtil.drawTooltip(Text.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_cursor_stack", this.screenHandler.getCursorStack().getItemName()), context, this.textRenderer, mouseX, mouseY);
                 } else if (!this.searchFieldText.isEmpty()) {
                     ButtonUtil.drawTooltip(this.searchFieldText.startsWith("#") ?
-                            Text.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query.tag", this.searchFieldText.substring(1)) :
+                            translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query.tag", this.searchFieldText.substring(1)) :
                             this.searchFieldText.startsWith("!") ?
-                                    Text.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query.exclude", this.searchFieldText.substring(1)) :
-                                    Text.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query", this.searchFieldText), context, this.textRenderer, mouseX, mouseY);
+                                    translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query.exclude", this.searchFieldText.substring(1)) :
+                                    this.searchFieldText.startsWith(":") ?
+                                            translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query.match", this.searchFieldText.substring(1)) :
+                                            translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query", this.searchFieldText), context, this.textRenderer, mouseX, mouseY);
                 } else {
                     if (options().helpfulTooltips) {
                         ButtonUtil.drawTooltip(Text.translatable("qualityofqueso.gui." + this.buttonName + "_button"), context, this.textRenderer, mouseX, mouseY);

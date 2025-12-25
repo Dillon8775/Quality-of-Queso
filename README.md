@@ -49,6 +49,7 @@
     - The transfer button will have a hint of green to represent stack filtering. [since: v1.3.6]
     - The transfer button will have a hint of red when searching by exclude (!) [since: v1.3.6]
     - The transfer button will have a hint of blue when searching by tag (#) [since: v1.3.6]
+    - The transfer button will have a hint of light green when searching with match case (:) [since: v1.4.2]
 - #### You can also quickly transfer items by using CTRL + C (move items from container -> inventory) and CTRL + I (move items from inventory -> container) [since: v1.4].
 
 ![Chest transferring feature.](https://i.imgur.com/91vGfnG.gif)

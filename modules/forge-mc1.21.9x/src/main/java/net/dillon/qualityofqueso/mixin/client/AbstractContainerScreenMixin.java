@@ -314,57 +314,68 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
 
         String[] terms = searchQuery.split(",");
         // If slot contains a comma, for each query searched (separated by each comma), return true if search query'namespace find an query (make slot available)
-        for (int i = 0; i < terms.length; i++) {
-            String term = terms[i];
-            if (searchQuery.startsWith(":")) {
-                String query = term.substring(i == 0 ? 1 : 0);
-                if (itemName.matches(query.trim().toLowerCase()) || customName.matches(query.trim().toLowerCase())) {
-                    return true;
+        boolean hasPositiveTerm = false;
+        for (String s : terms) {
+            // Initialize term variable
+            String term = s;
+            term = term.trim().toLowerCase();
+
+            // As long as slot doesn't contain whatever is searched (beginning after "!"), return true (slot is available)
+            if (!term.startsWith("!")) {
+                hasPositiveTerm = true;
+            }
+            if (term.startsWith("!")) {
+                String forbidden = term.substring(1);
+                if (itemName.contains(forbidden) || customName.contains(forbidden)) {
+                    return false;
                 }
-            } else {
-                if (itemName.contains(term.trim().toLowerCase()) || customName.contains(term.trim().toLowerCase())) {
-                    return true;
+                continue; // Continue searching for the rest
+            }
+
+            // If tag contains search query and stack is in returned tag, slot is available
+            if (term.startsWith("#")) {
+                String tagSearch = term.substring(1);
+                RegistryAccess lookup = Minecraft.getInstance().level.registryAccess();
+                Registry<Item> itemRegistry = lookup.lookupOrThrow(Registries.ITEM);
+
+                for (HolderSet.Named<Item> tag : itemRegistry.getTags().toList()) {
+                    ResourceLocation location = tag.key().location();
+                    if (location.getPath().toLowerCase().contains(tagSearch) || location.toString().toLowerCase().contains(tagSearch)) {
+                        if (stack.is(tag.key())) {
+                            return true;
+                        }
+                    }
                 }
             }
-        }
 
-        // As long as slot doesn't contain whatever is searched (beginning after "!"), return true (slot is available)
-        if (searchQuery.startsWith("!")) {
-            return !itemName.contains(searchQuery.substring(1)) && !customName.contains(searchQuery.substring(1));
-        }
+            // Enchanted book searching logic
+            if (stack.isEnchanted() || stack.is(Items.ENCHANTED_BOOK)) {
+                ItemEnchantments enchantments = EnchantmentHelper.getEnchantmentsForCrafting(stack);
+                for (Holder<Enchantment> enchantment : enchantments.keySet()) {
+                    String encName = enchantment.value().description().getString();
+                    String fullName = encName + " " + enchantments.getLevel(enchantment);
 
-        // If tag contains search query and stack is in returned tag, slot is available
-        if (searchQuery.startsWith("#")) {
-            String tagSearch = searchQuery.substring(1);
-            RegistryAccess lookup = Minecraft.getInstance().level.registryAccess();
-            Registry<Item> itemRegistry = lookup.lookupOrThrow(Registries.ITEM);
-
-            for (HolderSet.Named<Item> tag : itemRegistry.getTags().toList()) {
-                ResourceLocation location = tag.key().location();
-                if (location.getPath().toLowerCase().contains(tagSearch) || location.toString().toLowerCase().contains(tagSearch)) {
-                    if (stack.is(tag.key())) {
+                    // If slot contains enchantments searched, return true (slot is available)
+                    if (fullName.toLowerCase().contains(term)) {
                         return true;
                     }
                 }
             }
-        }
 
-        // Enchanted book searching logic
-        if (stack.isEnchanted() || stack.is(Items.ENCHANTED_BOOK)) {
-            ItemEnchantments enchantments = EnchantmentHelper.getEnchantmentsForCrafting(stack);
-            for (Holder<Enchantment> enchantment : enchantments.keySet()) {
-                String encName = enchantment.value().description().getString();
-                String fullName = encName + " " + enchantments.getLevel(enchantment);
-
-                // If slot contains enchantments searched, return true (slot is available)
-                if (fullName.toLowerCase().contains(searchQuery)) {
+            if (term.startsWith(":")) {
+                String query = term.substring(1);
+                if (itemName.matches(query) || customName.matches(query)) {
+                    return true;
+                }
+            } else {
+                if (itemName.contains(term) || customName.contains(term)) {
                     return true;
                 }
             }
         }
 
         // If slot contains whatever is searched, return true (slot is available)
-        return itemName.contains(searchQuery) || customName.contains(searchQuery);
+        return !hasPositiveTerm;
     }
 
     /**
@@ -618,6 +629,12 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             // Quick equip logic
             if (input.key() == ModKeybinds.QUICK_EQUIP.getKey().getValue()) {
                 quickEquip(this.screen, this.hoveredSlot);
+                if (hoveredSlotHasItem(this.hoveredSlot) && this.inventorySearchField != null && this.inventorySearchField.isFocused()) {
+                    this.inventorySearchField.setFocused(false);
+                }
+                if (isInventoryScreen(this.screen)) {
+                    return;
+                }
             }
 
             // Prevent E from typing entirely in fromInventory screens
@@ -735,6 +752,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                 if (this.screen instanceof AbstractRecipeBookScreen<?> recipeScreen && recipeScreen.recipeBookComponent.searchBox != null) {
                     if (this.inventorySearchField.isFocused()) {
                         recipeScreen.recipeBookComponent.searchBox.setFocused(false);
+                        return;
                     }
                     // Unfocus fromInventory search field when recipe book search field is focused
                     else if (recipeScreen.recipeBookComponent.searchBox.isFocused() && this.inventorySearchField != null) {
@@ -769,6 +787,18 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
     public boolean charTyped(CharacterEvent input) {
         if (ModClientOptions.CHEST_SEARCHING.get() && this.containerSearchField != null && this.containerSearchField.isFocused()) {
             return this.containerSearchField.charTyped(input);
+        }
+        if (isInventoryScreen(this.screen)) {
+            if (this.screen instanceof AbstractRecipeBookScreen<?> recipeScreen
+                    && recipeScreen.recipeBookComponent.isVisible()
+                    && this.inventorySearchField != null
+                    && this.inventorySearchField.isFocused()) {
+                String text = this.getSearchFieldText();
+                recipeScreen.recipeBookComponent.toggleVisibility();
+                this.repositionElements();
+                this.inventorySearchField.setValue(text + input.codepointAsString());
+                this.inventorySearchField.setFocused(true);
+            }
         }
         return super.charTyped(input);
     }
