@@ -23,17 +23,11 @@ include "modules:common"
 
 // === FABRIC ===
 include "modules:fabric-mc1.21.11"
-
 include "modules:fabric-mc1.21.9x"
-include "modules:fabric-mc1.21.6x"
 
 // === FORGE ===
 include "modules:forge-mc1.21.11"
-include "modules:forge-mc1.21.1"
 include "modules:forge-mc1.20.1"
-
-include "modules:forge-mc1.21.9x"
-include "modules:forge-mc1.21.6x"
 // ----------
 
 // You can add as many modules as you want, for this copy the content of "example_module" to each new module!

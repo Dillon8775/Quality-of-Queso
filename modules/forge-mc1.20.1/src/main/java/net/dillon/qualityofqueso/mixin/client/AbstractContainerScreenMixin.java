@@ -744,6 +744,17 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                     this.repositionElements();
                 }
                 if (recipeScreen.getRecipeBookComponent().searchBox != null) {
+                    boolean unfocus = false;
+                    for (int i = 0; i < 9; i++) {
+                        if (this.hoveredSlot != null && this.minecraft.options.keyHotbarSlots[i].matches(keyCode, scanCode)) {
+                            unfocus = true;
+                            break;
+                        }
+                    }
+                    if (Screen.hasShiftDown() || unfocus) {
+                        recipeScreen.getRecipeBookComponent().searchBox.setFocused(false);
+                        return;
+                    }
                     recipeScreen.getRecipeBookComponent().searchBox.setFocused(!cannotType);
 
                     if (recipeScreen.getRecipeBookComponent().searchBox.isFocused()) {

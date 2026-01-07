@@ -662,7 +662,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                 }
             }
 
-            // handle switching items from hotbar to another containerSlot in fromInventory; cancel out typing if an query can be moved
+            // handle switching items from hotbar to another containerSlot in fromInventory; cancel out typing if a query can be moved
             if (this.handler.getCursorStack().isEmpty() && this.focusedSlot != null) {
                 for (int i = 0; i < 9; i++) {
                     if (this.client.options.hotbarKeys[i].matchesKey(input)) {
@@ -725,7 +725,14 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                     this.refreshWidgetPositions();
                 }
                 if (recipeScreen.recipeBook.searchField != null) {
-                    if (MinecraftClient.getInstance().isShiftPressed()) {
+                    boolean unfocus = false;
+                    for (int i = 0; i < 9; i++) {
+                        if (this.focusedSlot != null && this.client.options.hotbarKeys[i].matchesKey(input)) {
+                            unfocus = true;
+                            break;
+                        }
+                    }
+                    if (MinecraftClient.getInstance().isShiftPressed() || unfocus) {
                         recipeScreen.recipeBook.searchField.setFocused(false);
                         return;
                     }

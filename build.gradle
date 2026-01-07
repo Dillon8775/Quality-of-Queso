@@ -1,3 +1,7 @@
+//allprojects {
+//    buildDir = "../build"
+//}
+
 subprojects {
     apply plugin: 'java'
     java.withSourcesJar()

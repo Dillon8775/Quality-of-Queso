@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "qualityofqueso",
-  "version": "1.4.2+mc1.21.9x",
+  "version": "1.4.3+mc1.21.9x",
   "name": "Quality of Queso",
   "description": "Chest searching, inventory management, and more quality-of-life features!",
   "accessWidener": "qualityofqueso.accessWidener",
