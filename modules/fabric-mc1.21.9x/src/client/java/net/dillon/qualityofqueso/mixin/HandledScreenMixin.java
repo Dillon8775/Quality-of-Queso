@@ -383,12 +383,23 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     @Inject(method = "renderMain", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ingame/HandledScreen;drawSlotHighlightFront(Lnet/minecraft/client/gui/DrawContext;)V", shift = At.Shift.AFTER))
     private void grayOutSlot(DrawContext context, int mouseX, int mouseY, float deltaTicks, CallbackInfo ci) {
         boolean inventorySearchFieldPresent = this.inventorySearchField != null;
-        if ((this.containerSearchField != null || inventorySearchFieldPresent)) {
-            for (int i = 0; i < getInventorySize(this.handler, this.inventory); i++) {
-                Slot slot = this.handler.getSlot(i);
-                // Otherwise, gray out slots that don't match the search
-                if (!this.getSearchFieldText().isEmpty() && !this.search(this.getSearchFieldText(), slot, this.inventorySearchField != null)) {
-                    makeSlotUnavailable(context, slot, false);
+        for (int i = 0; i < getInventorySize(this.handler, this.inventory); i++) {
+            Slot slot = this.handler.getSlot(i);
+            // Gray out hotbar slots if include hotbar is off and one of the transfer buttons are hovered
+            if ((this.containerSearchField != null || inventorySearchFieldPresent)
+                    && !this.getSearchFieldText().isEmpty()
+                    && !this.search(this.getSearchFieldText(), slot, inventorySearchFieldPresent)) {
+                makeSlotUnavailable(context, slot, false);
+            }
+            // Otherwise, gray out slots that don't match the search
+            else if (!options().includeHotbar
+                    && isHotbarSlot(this.handler.slots.size(), slot.id)
+                    && this.transferContainerButton != null
+                    && this.transferInventoryButton != null) {
+                boolean transferInventoryButtonHovered = this.transferInventoryButton.isHovered();
+                boolean transferContainerButtonHovered = this.transferContainerButton.isHovered();
+                if ((transferInventoryButtonHovered && slot.hasStack()) || transferContainerButtonHovered) {
+                    makeSlotUnavailable(context, slot, transferInventoryButtonHovered);
                 }
             }
         }
@@ -758,6 +769,14 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                 if (this.screen instanceof RecipeBookScreen<?> recipeScreen && recipeScreen.recipeBook.searchField != null) {
                     if (this.inventorySearchField.isFocused()) {
                         recipeScreen.recipeBook.searchField.setFocused(false);
+                        if (input.key() == GLFW.GLFW_KEY_BACKSPACE && recipeScreen.recipeBook.isOpen()) {
+                            String text = this.getSearchFieldText();
+                            recipeScreen.recipeBook.toggleOpen();
+                            this.refreshWidgetPositions();
+                            this.inventorySearchField.setText(text.substring(0, text.length() - 1));
+                            this.inventorySearchField.setFocused(true);
+                            this.setFocused(this.inventorySearchField);
+                        }
                         return;
                     }
                     // Unfocus fromInventory search field when recipe book search field is focused

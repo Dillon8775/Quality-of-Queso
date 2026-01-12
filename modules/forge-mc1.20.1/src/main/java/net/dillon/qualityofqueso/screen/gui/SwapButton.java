@@ -1,8 +1,11 @@
 package net.dillon.qualityofqueso.screen.gui;
 
+import net.dillon.qualityofqueso.option.ModClientOptions;
+import net.dillon.qualityofqueso.util.ButtonUtil;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 
@@ -24,5 +27,13 @@ public class SwapButton extends TransferButton {
     protected void renderButtonTexture(String id, boolean transferable, AbstractWidget buttonReference, GuiGraphics
             context) {
         context.blit(ResourceLocation.parse("qualityofqueso:textures/gui/" + id + ".png"), buttonReference.getX() - 1, buttonReference.getY() - 1, 0.0F, 0.0F, 12, 12, 12, 12);
+        if (Screen.hasControlDown()) {
+            if (ModClientOptions.SHOW_BUTTON_OUTLINES.get()) {
+                ButtonUtil.drawButtonTexture(context, "swap_button_outline", this);
+            }
+            if (ModClientOptions.SHOW_BUTTON_SHORTCUTS.get() && ModClientOptions.SHORTCUT_KEYS.get() && this.buttonName.equals("swap")) {
+                ButtonUtil.drawButtonTexture(context, "swap_button_shortcut_key", this);
+            }
+        }
     }
 }

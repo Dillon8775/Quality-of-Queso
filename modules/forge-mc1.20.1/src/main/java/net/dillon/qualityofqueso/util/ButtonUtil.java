@@ -37,7 +37,6 @@ import static net.dillon.qualityofqueso.main.QoQ.quicklyEquippables;
  */
 @OnlyIn(Dist.CLIENT)
 public class ButtonUtil {
-    public static final String CHEESE_WHEEL = "cheese_wheel";
     public static final String ENABLED_TEXTURE = "qoq_enabled";
     public static final String DISABLED_TEXTURE = "qoq_disabled";
 
@@ -62,6 +61,13 @@ public class ButtonUtil {
      */
     public static void drawTexture(GuiGraphics graphics, String name, Button button, float f) {
         graphics.blit(ResourceLocation.parse("qualityofqueso:textures/gui/" + name + ".png"), button.getX() + 2, button.getY() + 2, 0.0F, 0.0F, 16, 16, 16, 16);
+    }
+
+    /**
+     * Draws the texture for a {@code inventory management button.}
+     */
+    public static void drawButtonTexture(GuiGraphics graphics, String name, Button button) {
+        graphics.blit(ResourceLocation.parse("qualityofqueso:textures/gui/" + name + ".png"), button.getX() - 1, button.getY() - 1, 0.0F, 0.0F, 12, 12, 12, 12);
     }
 
     public static void drawTexture(GuiGraphics graphics, String name, Button button) {
@@ -170,13 +176,14 @@ public class ButtonUtil {
     public static boolean isContainerFull(AbstractContainerMenu handler, Container inv, boolean inventory) {
         int j = 0;
         int containerSize = getContainerSize(inv);
-        for (int i = inventory ? containerSize : 0; i < (inventory ? containerSize + 36 : containerSize); i++) {
+        int size = ModClientOptions.INCLUDE_HOTBAR.get() ? 36 : 27;
+        for (int i = inventory ? containerSize : 0; i < (inventory ? containerSize + size : containerSize); i++) {
             Slot slot = handler.getSlot(i);
             if (slot.hasItem()) {
                 j++;
             }
         }
-        return j == (inventory ? 36 : containerSize);
+        return j == (inventory ? size : containerSize);
     }
 
     /**
@@ -252,7 +259,7 @@ public class ButtonUtil {
 
         if (clickType == ClickType.THROW) {
             if (!handler.getSlot(slotIndex).getItem().isEmpty()) {
-                client.gameMode.handleInventoryMouseClick(syncId, slotIndex, 1, clickType, client.player);
+                client.gameMode.handleInventoryMouseClick(syncId, slotIndex, Screen.hasShiftDown() ? 0 : 1, clickType, client.player);
             }
             return;
         }

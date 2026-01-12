@@ -1,5 +1,7 @@
 package net.dillon.qualityofqueso.screen.gui;
 
+import net.dillon.qualityofqueso.util.ButtonUtil;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -30,5 +32,11 @@ public class QuickDropButton extends TransferButton {
                 "_match.png" : ".png";
         String appended = transferable ? transferableString : ".png";
         context.blit(RenderPipelines.GUI_TEXTURED, Identifier.parse("qualityofqueso:textures/gui/" + id + appended), buttonReference.getX() - 1, buttonReference.getY() - 1, 0.0F, 0.0F, 12, 12, 12, 12);
+        if (Minecraft.getInstance().hasControlDown() && Minecraft.getInstance().hasAltDown()) {
+            ButtonUtil.drawButtonTexture(context, "quick_drop_outline", this);
+        }
+        if (Minecraft.getInstance().hasShiftDown()) {
+            ButtonUtil.drawButtonTexture(context, "quick_drop_one", this);
+        }
     }
 }

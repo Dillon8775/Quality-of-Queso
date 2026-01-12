@@ -1,7 +1,9 @@
 package net.dillon.qualityofqueso.screen.gui;
 
+import net.dillon.qualityofqueso.keybind.ModKeybinds;
 import net.dillon.qualityofqueso.util.ButtonUtil;
 import net.dillon.qualityofqueso.util.ModTexts;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.Click;
@@ -24,7 +26,7 @@ public class TransferButton extends ButtonWidget {
     private final ScreenHandler screenHandler;
     protected final String searchFieldText;
     protected final TextRenderer textRenderer;
-    private final String buttonName;
+    protected final String buttonName;
     private final Supplier<Boolean> canBeActive;
 
     /**
@@ -75,6 +77,23 @@ public class TransferButton extends ButtonWidget {
                 "_match.png" : ".png";
         String appended = transferable ? transferableString : ".png";
         context.drawTexture(RenderPipelines.GUI_TEXTURED, Identifier.of("qualityofqueso:textures/gui/" + id + appended), buttonReference.getX() - 1, buttonReference.getY() - 1, 0.0F, 0.0F, 12, 12, 12, 12);
+        if (MinecraftClient.getInstance().isCtrlPressed()) {
+            boolean inventoryButton = this.buttonName.equals("transfer_inventory");
+            boolean containerButton = this.buttonName.equals("transfer_container");
+            boolean validName = inventoryButton || containerButton;
+            if (validName) {
+                if (options().showButtonOutlines) {
+                    ButtonUtil.drawButtonTexture(context, "transfer_button_outline", this);
+                }
+                if (options().showButtonShortcuts && options().shortcutKeys) {
+                    if (inventoryButton && ModKeybinds.MOVE_INVENTORY.boundKey == ModKeybinds.MOVE_INVENTORY.getDefaultKey()) {
+                        ButtonUtil.drawButtonTexture(context, "transfer_inventory_button_shortcut_key", this);
+                    } else if (containerButton && ModKeybinds.MOVE_CONTAINER.boundKey == ModKeybinds.MOVE_CONTAINER.getDefaultKey()) {
+                        ButtonUtil.drawButtonTexture(context, "transfer_container_button_shortcut_key", this);
+                    }
+                }
+            }
+        }
     }
 
     /**

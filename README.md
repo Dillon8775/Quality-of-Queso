@@ -1,4 +1,4 @@
-# A quality of life mod, with a bunch of cool _QOL_ features.
+# A quality of life mod.
 
 ###
 
@@ -64,8 +64,9 @@
 <img src="https://i.imgur.com/glqaxnv.png" width="36" height="36" alt="Swap button.">
 
 ### The ***Quick Drop*** button, which allows you to drop ***all*** highlighted items in a chest (or your inventory).
-- If you use this button in a container screen, it will drop selected items in the container. Using the button while your inventory is open will drop selected items in your inventory.
+- If you use this button in a container screen, it will drop the full stack of selected items in the container. Using the button while your inventory is open will drop selected items in your inventory.
 - You can quickly do this by pressing *CTRL + ALT + Q.*
+- If you hold "shift", you can drop one of each item, instead of the full stack (since: v1.4.4)
 
 ---
 
@@ -82,7 +83,10 @@
 
 ### The ***Include/Exclude Hotbar*** button, which blocks any hotbar items from being highlighted via search, or moved when transferring, swapping, or dropping.
 - When searching items, if you press the exclude hotbar button, all hotbar items will be grayed out, even if the item matches the search query.
-- When transferring items *(via moving, quick dropping, or swapping),* the hotbar slots **will not** be affected *(this doesn't include when moving items from container -> inventory).*
+- When transferring items *(via moving, quick dropping, or swapping),* the hotbar slots **will not** be affected.
+
+### This changes how Minecraft's default "quick moving" system works (when you Shift + Left Click an item, since: v1.4.4).
+- The item will move to the next perpendicular slot, rather than going across the entire inventory. You can disable this by enabling the "Legacy Quick Move" option. Note that this system still applies when transferring items from inventory -> container if "Include Hotbar" is OFF.
 
 ---
 

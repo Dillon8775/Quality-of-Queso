@@ -21,9 +21,12 @@ public class ModListOptions {
     public static final OptionInstance.CaptionBasedToString<Boolean> ON_OFF_TEXT = (p_231544_, p_231545_) -> p_231545_
         ? ModTexts.ON
         : ModTexts.OFF;
+    public static final OptionInstance.CaptionBasedToString<Boolean> YES_NO_TEXT = (p_231544_, p_231545_) -> p_231545_
+            ? ModTexts.YES
+            : ModTexts.NO;
 
     public static final OptionInstance<Boolean> ENABLE_MOD = OptionInstance.createBoolean("qualityofqueso.options.enable_mod", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.enable_mod.tooltip")),
-            ON_OFF_TEXT, ModClientOptions.ENABLE_MOD.get(), ModClientOptions.ENABLE_MOD::set);
+            YES_NO_TEXT, ModClientOptions.ENABLE_MOD.get(), ModClientOptions.ENABLE_MOD::set);
 
     public static final OptionInstance<Boolean> BETTER_GUI_EXIT = OptionInstance.createBoolean("qualityofqueso.options.better_gui_exit", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.better_gui_exit.tooltip")),
             ON_OFF_TEXT, ModClientOptions.BETTER_GUI_EXIT.get(), ModClientOptions.BETTER_GUI_EXIT::set);
@@ -35,13 +38,13 @@ public class ModListOptions {
             ON_OFF_TEXT, ModClientOptions.CHEST_SEARCHING.get(), ModClientOptions.CHEST_SEARCHING::set);
 
     public static final OptionInstance<Boolean> SEARCH_INVENTORY = OptionInstance.createBoolean("qualityofqueso.options.search_inventory", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.search_inventory.tooltip")),
-            ON_OFF_TEXT, ModClientOptions.SEARCH_INVENTORY.get(), ModClientOptions.SEARCH_INVENTORY::set);
+            YES_NO_TEXT, ModClientOptions.SEARCH_INVENTORY.get(), ModClientOptions.SEARCH_INVENTORY::set);
 
     public static final OptionInstance<Boolean> INVENTORY_SEARCHING = OptionInstance.createBoolean("qualityofqueso.options.inventory_searching", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.inventory_searching.tooltip")),
             ON_OFF_TEXT, ModClientOptions.INVENTORY_SEARCHING.get(), ModClientOptions.INVENTORY_SEARCHING::set);
 
     public static final OptionInstance<Boolean> SAVE_SEARCH_TEXT = OptionInstance.createBoolean("qualityofqueso.options.save_search_text", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.save_search_text.tooltip")),
-            ON_OFF_TEXT, ModClientOptions.SAVE_SEARCH_TEXT.get(), ModClientOptions.SAVE_SEARCH_TEXT::set);
+            YES_NO_TEXT, ModClientOptions.SAVE_SEARCH_TEXT.get(), ModClientOptions.SAVE_SEARCH_TEXT::set);
 
     public static OptionInstance<Boolean> inventoryManagement() {
         return OptionInstance.createBoolean("qualityofqueso.options.inventory_management", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.inventory_management.tooltip",
@@ -63,7 +66,16 @@ public class ModListOptions {
     }
 
     public static final OptionInstance<Boolean> INCLUDE_HOTBAR = OptionInstance.createBoolean("qualityofqueso.options.include_hotbar", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.include_hotbar.tooltip")),
-            ON_OFF_TEXT, ModClientOptions.INCLUDE_HOTBAR.get(), ModClientOptions.INCLUDE_HOTBAR::set);
+            YES_NO_TEXT, ModClientOptions.INCLUDE_HOTBAR.get(), ModClientOptions.INCLUDE_HOTBAR::set);
+
+    public static final OptionInstance<Boolean> LEGACY_QUICK_MOVE = OptionInstance.createBoolean("qualityofqueso.options.legacy_quick_move", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.legacy_quick_move.tooltip")),
+            ON_OFF_TEXT, ModClientOptions.LEGACY_QUICK_MOVE.get(), ModClientOptions.LEGACY_QUICK_MOVE::set);
+
+    public static final OptionInstance<Boolean> SHOW_BUTTON_OUTLINES = OptionInstance.createBoolean("qualityofqueso.options.show_button_outlines", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.show_button_outlines.tooltip")),
+            YES_NO_TEXT, ModClientOptions.SHOW_BUTTON_OUTLINES.get(), ModClientOptions.SHOW_BUTTON_OUTLINES::set);
+
+    public static final OptionInstance<Boolean> SHOW_BUTTON_SHORTCUTS = OptionInstance.createBoolean("qualityofqueso.options.show_button_shortcuts", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.show_button_shortcuts.tooltip")),
+            YES_NO_TEXT, ModClientOptions.SHOW_BUTTON_SHORTCUTS.get(), ModClientOptions.SHOW_BUTTON_SHORTCUTS::set);
 
     public static OptionInstance<Boolean> quickEquip() {
         return OptionInstance.createBoolean("qualityofqueso.options.quick_equip", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.quick_equip.tooltip",
@@ -72,10 +84,10 @@ public class ModListOptions {
     }
 
     public static final OptionInstance<Boolean> PREVENT_RAGE_QUITTING = OptionInstance.createBoolean("qualityofqueso.options.prevent_rage_quitting", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.prevent_rage_quitting.tooltip")),
-            ON_OFF_TEXT, ModClientOptions.PREVENT_RAGE_QUITTING.get(), ModClientOptions.PREVENT_RAGE_QUITTING::set);
+            YES_NO_TEXT, ModClientOptions.PREVENT_RAGE_QUITTING.get(), ModClientOptions.PREVENT_RAGE_QUITTING::set);
 
     public static final OptionInstance<Boolean> PREVENT_E_FROM_TYPING = OptionInstance.createBoolean("qualityofqueso.options.prevent_e_from_typing", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.prevent_e_from_typing.tooltip")),
-            ON_OFF_TEXT, ModClientOptions.PREVENT_E_FROM_TYPING.get(), ModClientOptions.PREVENT_E_FROM_TYPING::set);
+            YES_NO_TEXT, ModClientOptions.PREVENT_E_FROM_TYPING.get(), ModClientOptions.PREVENT_E_FROM_TYPING::set);
 
     public static final OptionInstance<Boolean> HELPFUL_TOOLTIPS = OptionInstance.createBoolean("qualityofqueso.options.helpful_tooltips", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.helpful_tooltips.tooltip")),
             ON_OFF_TEXT, ModClientOptions.HELPFUL_TOOLTIPS.get(), ModClientOptions.HELPFUL_TOOLTIPS::set);

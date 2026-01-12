@@ -38,7 +38,6 @@ import static net.dillon.qualityofqueso.main.QoQ.quicklyEquippables;
  */
 @Environment(EnvType.CLIENT)
 public class ButtonUtil {
-    public static final String CHEESE_WHEEL = "cheese_wheel";
     public static final String ENABLED_TEXTURE = "qoq_enabled";
     public static final String DISABLED_TEXTURE = "qoq_disabled";
 
@@ -64,6 +63,13 @@ public class ButtonUtil {
      */
     public static void drawTexture(DrawContext context, String name, ButtonWidget button, float f) {
         context.drawTexture(RenderPipelines.GUI_TEXTURED, Identifier.of("qualityofqueso:textures/gui/" + name + ".png"), button.getX() + 2, button.getY() + 2, 0.0F, 0.0F, 16, 16, 16, 16, ColorHelper.withAlpha(f, Colors.WHITE));
+    }
+
+    /**
+     * Draws the texture for a {@code inventory management button.}
+     */
+    public static void drawButtonTexture(DrawContext context, String name, ButtonWidget button) {
+        context.drawTexture(RenderPipelines.GUI_TEXTURED, Identifier.of("qualityofqueso:textures/gui/" + name + ".png"), button.getX() - 1, button.getY() - 1, 0.0F, 0.0F, 12, 12, 12, 12);
     }
 
     /**
@@ -175,13 +181,14 @@ public class ButtonUtil {
     public static boolean isContainerFull(ScreenHandler handler, Inventory inv, boolean inventory) {
         int j = 0;
         int containerSize = getContainerSize(inv);
-        for (int i = inventory ? containerSize : 0; i < (inventory ? containerSize + 36 : containerSize); i++) {
+        int size = options().includeHotbar ? 36 : 27;
+        for (int i = inventory ? containerSize : 0; i < (inventory ? containerSize + size : containerSize); i++) {
             Slot slot = handler.getSlot(i);
             if (slot.hasStack()) {
                 j++;
             }
         }
-        return j == (inventory ? 36 : containerSize);
+        return j == (inventory ? size : containerSize);
     }
 
     /**
@@ -257,7 +264,7 @@ public class ButtonUtil {
 
         if (slotActionType == SlotActionType.THROW) {
             if (!handler.getSlot(slotIndex).getStack().isEmpty()) {
-                client.interactionManager.clickSlot(syncId, slotIndex, 1, slotActionType, client.player);
+                client.interactionManager.clickSlot(syncId, slotIndex, MinecraftClient.getInstance().isShiftPressed() ? 0 : 1, slotActionType, client.player);
             }
             return;
         }

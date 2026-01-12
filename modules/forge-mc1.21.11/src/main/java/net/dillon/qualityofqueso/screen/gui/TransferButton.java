@@ -1,8 +1,10 @@
 package net.dillon.qualityofqueso.screen.gui;
 
+import net.dillon.qualityofqueso.keybind.ModKeybinds;
 import net.dillon.qualityofqueso.option.ModClientOptions;
 import net.dillon.qualityofqueso.util.ButtonUtil;
 import net.dillon.qualityofqueso.util.ModTexts;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -23,7 +25,7 @@ public class TransferButton extends Button {
     private final AbstractContainerMenu screenHandler;
     protected final String searchFieldText;
     protected final Font font;
-    private final String buttonName;
+    protected final String buttonName;
     private final Supplier<Boolean> canBeActive;
 
     /**
@@ -74,6 +76,23 @@ public class TransferButton extends Button {
                 "_match.png" : ".png";
         String appended = transferable ? transferableString : ".png";
         context.blit(RenderPipelines.GUI_TEXTURED, Identifier.parse("qualityofqueso:textures/gui/" + id + appended), buttonReference.getX() - 1, buttonReference.getY() - 1, 0.0F, 0.0F, 12, 12, 12, 12);
+        if (Minecraft.getInstance().hasControlDown()) {
+            boolean inventoryButton = this.buttonName.equals("transfer_inventory");
+            boolean containerButton = this.buttonName.equals("transfer_container");
+            boolean validName = inventoryButton || containerButton;
+            if (validName) {
+                if (ModClientOptions.SHOW_BUTTON_OUTLINES.get()) {
+                    ButtonUtil.drawButtonTexture(context, "transfer_button_outline", this);
+                }
+                if (ModClientOptions.SHOW_BUTTON_SHORTCUTS.get() && ModClientOptions.SHORTCUT_KEYS.get()) {
+                    if (inventoryButton && ModKeybinds.MOVE_INVENTORY.getKey() == ModKeybinds.MOVE_INVENTORY.getDefaultKey()) {
+                        ButtonUtil.drawButtonTexture(context, "transfer_inventory_button_shortcut_key", this);
+                    } else if (containerButton && ModKeybinds.MOVE_CONTAINER.getKey() == ModKeybinds.MOVE_CONTAINER.getDefaultKey()) {
+                        ButtonUtil.drawButtonTexture(context, "transfer_container_button_shortcut_key", this);
+                    }
+                }
+            }
+        }
     }
 
     /**

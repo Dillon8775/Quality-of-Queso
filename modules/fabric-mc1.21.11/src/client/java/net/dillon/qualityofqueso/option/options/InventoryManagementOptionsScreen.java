@@ -20,6 +20,9 @@ public class InventoryManagementOptionsScreen extends AbstractModOptionsScreen {
                 ModListOptions.QUICK_DROP,
                 ModListOptions.swapping(),
                 ModListOptions.INCLUDE_HOTBAR,
+                ModListOptions.LEGACY_QUICK_MOVE,
+                ModListOptions.SHOW_BUTTON_OUTLINES,
+                ModListOptions.SHOW_BUTTON_SHORTCUTS
         };
     }
 }

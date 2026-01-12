@@ -26,6 +26,9 @@ public class ModClientOptions {
     public static final ForgeConfigSpec.BooleanValue QUICK_DROP;
     public static final ForgeConfigSpec.BooleanValue SWAPPING;
     public static final ForgeConfigSpec.BooleanValue INCLUDE_HOTBAR;
+    public static final ForgeConfigSpec.BooleanValue LEGACY_QUICK_MOVE;
+    public static final ForgeConfigSpec.BooleanValue SHOW_BUTTON_OUTLINES;
+    public static final ForgeConfigSpec.BooleanValue SHOW_BUTTON_SHORTCUTS;
     public static final ForgeConfigSpec.BooleanValue QUICK_EQUIP;
     public static final ForgeConfigSpec.BooleanValue PREVENT_RAGE_QUITTING;
     public static final ForgeConfigSpec.BooleanValue PREVENT_E_FROM_TYPING;
@@ -77,6 +80,15 @@ public class ModClientOptions {
         INCLUDE_HOTBAR = BUILDER
                 .comment("Allows you to include/exclude all items from the hotbar when transferring items from inventory -> container.")
                 .define("includeHotbar", true);
+        LEGACY_QUICK_MOVE = BUILDER
+                .comment("Uses Minecraft's default \"quick moving item\" (Shift + left click) system.")
+                .define("legacyQuickMove", false);
+        SHOW_BUTTON_OUTLINES = BUILDER
+                .comment("Shows inventory management button outlines when holding down the CTRL key.")
+                .define("showButtonOutlines", false);
+        SHOW_BUTTON_SHORTCUTS = BUILDER
+                .comment("Shows inventory management button shortcut keys when holding down the CTRL key (only shows if keybind is bounded to the default key).")
+                .define("showButtonShortcuts", true);
         PREVENT_RAGE_QUITTING = BUILDER
                 .comment("Prevents the player from quickly pressing the \"disconnect\" button.")
                 .define("preventRageQuitting", false);

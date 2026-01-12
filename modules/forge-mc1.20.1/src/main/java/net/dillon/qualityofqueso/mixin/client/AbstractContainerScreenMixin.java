@@ -386,12 +386,23 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;renderLabels(Lnet/minecraft/client/gui/GuiGraphics;II)V", shift = At.Shift.AFTER))
     private void grayOutSlot(GuiGraphics graphics, int mouseX, int mouseY, float deltaTicks, CallbackInfo ci) {
         boolean inventorySearchFieldPresent = this.inventorySearchField != null;
-        if ((this.containerSearchField != null || inventorySearchFieldPresent)) {
-            for (int i = 0; i < getInventorySize(this.menu, this.container); i++) {
-                Slot slot = this.menu.getSlot(i);
-                // Otherwise, gray out slots that don't match the search
-                if (!this.getSearchFieldText().isEmpty() && !this.search(this.getSearchFieldText(), slot, this.inventorySearchField != null)) {
-                    makeSlotUnavailable(graphics, slot, false);
+        for (int i = 0; i < getInventorySize(this.menu, this.container); i++) {
+            Slot slot = this.menu.getSlot(i);
+            // Gray out hotbar slots if include hotbar is off and one of the transfer buttons are hovered
+            if ((this.containerSearchField != null || inventorySearchFieldPresent)
+                    && !this.getSearchFieldText().isEmpty()
+                    && !this.search(this.getSearchFieldText(), slot, inventorySearchFieldPresent)) {
+                makeSlotUnavailable(graphics, slot, false);
+            }
+            // Otherwise, gray out slots that don't match the search
+            else if (!ModClientOptions.INCLUDE_HOTBAR.get()
+                    && isHotbarSlot(this.menu.slots.size(), slot.index)
+                    && this.transferContainerButton != null
+                    && this.transferInventoryButton != null) {
+                boolean transferInventoryButtonHovered = this.transferInventoryButton.isHovered();
+                boolean transferContainerButtonHovered = this.transferContainerButton.isHovered();
+                if ((transferInventoryButtonHovered && slot.hasItem()) || transferContainerButtonHovered) {
+                    makeSlotUnavailable(graphics, slot, transferInventoryButtonHovered);
                 }
             }
         }
@@ -777,6 +788,14 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                 if (this.screen instanceof InventoryScreen recipeScreen && recipeScreen.getRecipeBookComponent().searchBox != null) {
                     if (this.inventorySearchField.isFocused()) {
                         recipeScreen.getRecipeBookComponent().searchBox.setFocused(false);
+                        if (keyCode == GLFW.GLFW_KEY_BACKSPACE && recipeScreen.getRecipeBookComponent().isVisible()) {
+                            String text = this.getSearchFieldText();
+                            recipeScreen.getRecipeBookComponent().toggleVisibility();
+                            this.repositionElements();
+                            this.inventorySearchField.setValue(text.substring(0, text.length() - 1));
+                            this.inventorySearchField.setFocused(true);
+                            this.setFocused(this.inventorySearchField);
+                        }
                         return;
                     }
                     // Unfocus fromInventory search field when recipe book search field is focused

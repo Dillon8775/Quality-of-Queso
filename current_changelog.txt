@@ -1,4 +1,20 @@
-Version 1.4.3:
-- Fixed bug where using a hotbar key on an empty slot to move from another slot begins typing in the crafting recipe search field.
-- Fixed Forge 1.20.1 bug where certain new features were not working correctly.
-- Small optimizations and tweaks.
+Version 1.4.4 (MC Fabric 1.21.9-1.21.11, Forge 1.20.1 and 1.21.11):
+Major changes:
+- Moving items from container -> inventory now blocks out the hotbar if "Include Hotbar" is OFF.
+- With this change, quick moving items using the transfer buttons is different now. Items now move to perpendicular slot in the container/inventory. You can disable this by enabling "Legacy Quick Move", which brings back Minecraft's traditional quick moving, where items are moved perpendicularly. Enabling this option and moving items from container -> inventory will use the new system regardless.
+- Hotbar slots are now grayed out when "Include Hotbar" is OFF (only if one of the transfer buttons are hovered, to give a sense of what transfer will look like).
+
+- (Disabled by default) Holding down "CTRL" now displays a special outline around all transfer button (each with their own specified color).
+- Holding down "CTRL" also displays the assigned keybind for it's shortcut key (as long as it's bound to the default key).
+- You can disable these two features if you'd like.
+
+Quick Drop Modifications:
+- Holding shift when using the "Quick Drop" button will now only drop 1 of the item, instead of the full stack.
+- You can also press CTRL + ALT + SHIFT + Q to drop one of all items in the container.
+- This will also render the number "1" over top of the Quick Drop button.
+
+Other changes:
+- Renamed "Show QoQ Buttons" option to "QoQ Buttons"
+- (Fixed bug) Pressing backspace in the inventory search field doesn't work when the recipe book screen is/was open.
+- Optimized language.
+- Added link to Discord server.

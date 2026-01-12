@@ -1,13 +1,16 @@
 package net.dillon.qualityofqueso.screen.gui;
 
+import net.dillon.qualityofqueso.keybind.ModKeybinds;
+import net.dillon.qualityofqueso.util.ButtonUtil;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.screen.ScreenHandler;
-import net.minecraft.util.Identifier;
 
 import java.util.function.Supplier;
+
+import static net.dillon.qualityofqueso.main.QoQ.options;
 
 /**
  * A button which swaps inventories.
@@ -24,6 +27,14 @@ public class SwapButton extends TransferButton {
     @Override
     protected void renderButtonTexture(String id, boolean transferable, ClickableWidget buttonReference, DrawContext
             context) {
-        context.drawTexture(RenderPipelines.GUI_TEXTURED, Identifier.of("qualityofqueso:textures/gui/" + id + ".png"), buttonReference.getX() - 1, buttonReference.getY() - 1, 0.0F, 0.0F, 12, 12, 12, 12);
+        ButtonUtil.drawButtonTexture(context, id, this);
+        if (MinecraftClient.getInstance().isCtrlPressed()) {
+            if (options().showButtonOutlines) {
+                ButtonUtil.drawButtonTexture(context, "swap_button_outline", this);
+            }
+            if (options().showButtonShortcuts && options().shortcutKeys && this.buttonName.equals("swap") && ModKeybinds.SWAP_ITEMS.boundKey == ModKeybinds.SWAP_ITEMS.getDefaultKey()) {
+                ButtonUtil.drawButtonTexture(context, "swap_button_shortcut_key", this);
+            }
+        }
     }
 }

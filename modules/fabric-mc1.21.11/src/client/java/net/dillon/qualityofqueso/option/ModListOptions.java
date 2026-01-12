@@ -20,7 +20,7 @@ import java.util.Arrays;
 @Environment(EnvType.CLIENT)
 public class ModListOptions {
     public static final SimpleOption<Boolean> ENABLE_MOD = new SimpleOption<>("qualityofqueso.options.enable_mod", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.enable_mod.tooltip")),
-            (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, QoQ.options().enableMod, value -> QoQ.options().enableMod = value);
+            (optionText, value) -> !value ? ModTexts.NO : ModTexts.YES, SimpleOption.BOOLEAN, QoQ.options().enableMod, value -> QoQ.options().enableMod = value);
 
     public static final SimpleOption<Boolean> BETTER_GUI_EXIT = new SimpleOption<>("qualityofqueso.options.better_gui_exit", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.better_gui_exit.tooltip")),
             (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, QoQ.options().betterGuiExit, value -> QoQ.options().betterGuiExit = value);
@@ -32,13 +32,13 @@ public class ModListOptions {
             (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, QoQ.options().chestSearching, value -> QoQ.options().chestSearching = value);
 
     public static final SimpleOption<Boolean> SEARCH_INVENTORY = new SimpleOption<>("qualityofqueso.options.search_inventory", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.search_inventory.tooltip")),
-            (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, QoQ.options().searchInventory, value -> QoQ.options().searchInventory = value);
+            (optionText, value) -> !value ? ModTexts.NO : ModTexts.YES, SimpleOption.BOOLEAN, QoQ.options().searchInventory, value -> QoQ.options().searchInventory = value);
 
     public static final SimpleOption<Boolean> INVENTORY_SEARCHING = new SimpleOption<>("qualityofqueso.options.inventory_searching", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.inventory_searching.tooltip")),
             (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, QoQ.options().inventorySearching, value -> QoQ.options().inventorySearching = value);
 
     public static final SimpleOption<Boolean> SAVE_SEARCH_TEXT = new SimpleOption<>("qualityofqueso.options.save_search_text", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.save_search_text.tooltip")),
-            (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, QoQ.options().saveSearchText, value -> QoQ.options().saveSearchText = value);
+            (optionText, value) -> !value ? ModTexts.NO : ModTexts.YES, SimpleOption.BOOLEAN, QoQ.options().saveSearchText, value -> QoQ.options().saveSearchText = value);
 
     public static SimpleOption<Boolean> inventoryManagement() {
         return new SimpleOption<>("qualityofqueso.options.inventory_management", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.inventory_management.tooltip",
@@ -60,7 +60,16 @@ public class ModListOptions {
     }
 
     public static final SimpleOption<Boolean> INCLUDE_HOTBAR = new SimpleOption<>("qualityofqueso.options.include_hotbar", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.include_hotbar.tooltip")),
-            (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, QoQ.options().includeHotbar, value -> QoQ.options().includeHotbar = value);
+            (optionText, value) -> !value ? ModTexts.NO : ModTexts.YES, SimpleOption.BOOLEAN, QoQ.options().includeHotbar, value -> QoQ.options().includeHotbar = value);
+
+    public static final SimpleOption<Boolean> LEGACY_QUICK_MOVE = new SimpleOption<>("qualityofqueso.options.legacy_quick_move", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.legacy_quick_move.tooltip")),
+            (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, QoQ.options().legacyQuickMove, value -> QoQ.options().legacyQuickMove = value);
+
+    public static final SimpleOption<Boolean> SHOW_BUTTON_OUTLINES = new SimpleOption<>("qualityofqueso.options.show_button_outlines", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.show_button_outlines.tooltip")),
+            (optionText, value) -> !value ? ModTexts.NO : ModTexts.YES, SimpleOption.BOOLEAN, QoQ.options().showButtonOutlines, value -> QoQ.options().showButtonOutlines = value);
+
+    public static final SimpleOption<Boolean> SHOW_BUTTON_SHORTCUTS = new SimpleOption<>("qualityofqueso.options.show_button_shortcuts", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.show_button_shortcuts.tooltip")),
+            (optionText, value) -> !value ? ModTexts.NO : ModTexts.YES, SimpleOption.BOOLEAN, QoQ.options().showButtonShortcuts, value -> QoQ.options().showButtonShortcuts = value);
 
     public static SimpleOption<Boolean> quickEquip() {
         return new SimpleOption<>("qualityofqueso.options.quick_equip", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.quick_equip.tooltip",
@@ -69,10 +78,10 @@ public class ModListOptions {
     }
 
     public static final SimpleOption<Boolean> PREVENT_RAGE_QUITTING = new SimpleOption<>("qualityofqueso.options.prevent_rage_quitting", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.prevent_rage_quitting.tooltip")),
-            (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, QoQ.options().preventRageQuitting, value -> QoQ.options().preventRageQuitting = value);
+            (optionText, value) -> !value ? ModTexts.NO : ModTexts.YES, SimpleOption.BOOLEAN, QoQ.options().preventRageQuitting, value -> QoQ.options().preventRageQuitting = value);
 
     public static final SimpleOption<Boolean> PREVENT_E_FROM_TYPING = new SimpleOption<>("qualityofqueso.options.prevent_e_from_typing", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.prevent_e_from_typing.tooltip")),
-            (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, QoQ.options().preventEFromTyping, value -> QoQ.options().preventEFromTyping = value);
+            (optionText, value) -> !value ? ModTexts.NO : ModTexts.YES, SimpleOption.BOOLEAN, QoQ.options().preventEFromTyping, value -> QoQ.options().preventEFromTyping = value);
 
     public static final SimpleOption<Boolean> HELPFUL_TOOLTIPS = new SimpleOption<>("qualityofqueso.options.helpful_tooltips", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.helpful_tooltips.tooltip")),
             (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, QoQ.options().helpfulTooltips, value -> QoQ.options().helpfulTooltips = value);

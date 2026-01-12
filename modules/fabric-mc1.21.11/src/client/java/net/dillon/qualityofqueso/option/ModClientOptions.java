@@ -23,6 +23,9 @@ public class ModClientOptions {
     public boolean quickDrop = false;
     public boolean swapping = false;
     public boolean includeHotbar = true;
+    public boolean legacyQuickMove = false;
+    public boolean showButtonOutlines = false;
+    public boolean showButtonShortcuts = true;
     public boolean quickEquip = true;
     public boolean preventRageQuitting = false;
     public boolean preventEFromTyping = false;
