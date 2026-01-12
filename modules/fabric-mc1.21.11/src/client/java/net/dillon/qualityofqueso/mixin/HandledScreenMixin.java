@@ -397,8 +397,8 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                     && this.transferContainerButton != null
                     && this.transferInventoryButton != null) {
                 boolean transferInventoryButtonHovered = this.transferInventoryButton.isHovered();
-                boolean transferContainerButtonHovered = this.transferContainerButton.isHovered();
-                if ((transferInventoryButtonHovered && slot.hasStack()) || transferContainerButtonHovered) {
+                boolean transferContainerButton = this.transferContainerButton.isHovered() && this.transferContainerButton.active;
+                if ((transferInventoryButtonHovered && slot.hasStack()) || transferContainerButton) {
                     makeSlotUnavailable(context, slot, transferInventoryButtonHovered);
                 }
             }

@@ -400,8 +400,8 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                     && this.transferContainerButton != null
                     && this.transferInventoryButton != null) {
                 boolean transferInventoryButtonHovered = this.transferInventoryButton.isHovered();
-                boolean transferContainerButtonHovered = this.transferContainerButton.isHovered();
-                if ((transferInventoryButtonHovered && slot.hasItem()) || transferContainerButtonHovered) {
+                boolean transferContainerButton = this.transferContainerButton.isHovered() && this.transferContainerButton.active;
+                if ((transferInventoryButtonHovered && slot.hasItem()) || transferContainerButton) {
                     makeSlotUnavailable(graphics, slot, transferInventoryButtonHovered);
                 }
             }
