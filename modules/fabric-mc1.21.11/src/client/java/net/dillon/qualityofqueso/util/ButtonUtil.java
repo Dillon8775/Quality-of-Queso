@@ -33,6 +33,8 @@ import net.minecraft.util.math.ColorHelper;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 
+import java.util.Set;
+
 import static net.dillon.qualityofqueso.main.QoQ.*;
 
 /**
@@ -210,7 +212,7 @@ public class ButtonUtil {
     /**
      * Swaps all items in a container.
      */
-    public static void swapItems(ScreenHandler handler, Inventory inventory) {
+    public static void swapItems(ScreenHandler handler, Inventory inventory, Set<Integer> excludedSlots) {
         int totalSlots = getTotalSlots(handler);
         int containerSize = getContainerSize(inventory);
         int offset = totalSlots - 27 - 9;
@@ -227,6 +229,18 @@ public class ButtonUtil {
 
             Slot chestSlot = handler.getSlot(i);
             Slot playerSlot = handler.getSlot(playerSlotIndex);
+
+            // Skip player-chosen excluded slots
+            boolean skip = false;
+            for (int id : excludedSlots) {
+                if (chestSlot.id == id || playerSlot.id == id) {
+                    skip = true;
+                    break;
+                }
+            }
+            if (skip) {
+                continue;
+            }
 
             if (!options().includeHotbar && isHotbarSlot(handler.slots.size(), playerSlot.id)) {
                 continue;

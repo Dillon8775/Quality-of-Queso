@@ -47,9 +47,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static net.dillon.qualityofqueso.main.QoQ.modEnabled;
 import static net.dillon.qualityofqueso.main.QoQ.options;
@@ -97,7 +95,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     @Unique
     private Inventory inventory;
     @Unique
-    private final List<Integer> excludedSlots = new ArrayList<>();
+    private final Set<Integer> excludedSlots = new HashSet<>();
 
     public HandledScreenMixin(Text title) {
         super(title);
@@ -192,15 +190,15 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             Slot fromSlot = this.handler.getSlot(i);
             ItemStack fromStack = fromSlot.getStack();
 
-            // Ignore manually excluded slots
-            boolean fromExcluded = false;
+            // Skip player-chosen excluded slots
+            boolean skip = false;
             for (int id : this.excludedSlots) {
                 if (fromSlot.id == id) {
-                    fromExcluded = true;
+                    skip = true;
                     break;
                 }
             }
-            if (fromExcluded) {
+            if (skip) {
                 continue;
             }
 
@@ -217,22 +215,8 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             }
 
             if (!fromStack.isEmpty()) {
-                boolean moved = false;
                 for (int j = toStart; j < toEnd; j++) {
                     Slot toSlot = this.handler.getSlot(j);
-
-                    // Skip move if target slot is excluded
-                    boolean toExcluded = false;
-                    for (int id : this.excludedSlots) {
-                        if (toSlot.id == id) {
-                            toExcluded = true;
-                            break;
-                        }
-                    }
-                    if (toExcluded) {
-                        continue; // Try next slot
-                    }
-
                     // Quickly swap items in container
                     if (drop || toSlot.getStack().isEmpty()) {
                         // Only transfer items if the query matches whatever the cursor is holding
@@ -250,13 +234,6 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                             break;
                         }
                     }
-
-                    moved = true;
-                    break;
-                }
-
-                if (!moved) {
-                    return;
                 }
             }
         }
@@ -325,7 +302,8 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             }
         }
         // If J == 0 then no query was found (OR if ALL slots are filled in fromInventory/container), returning true for all slots are unavailable
-        return foundQuerys == 0;
+        // Also if player manually excluded all slots for whatever reason, then all slots are unavailable
+        return foundQuerys == 0 || this.excludedSlots.size() == this.handler.slots.size();
     }
 
     /**
@@ -419,7 +397,11 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     private void excludeSlot(Click click, CallbackInfoReturnable<Boolean> cir) {
         Slot slot = this.getSlotAt(click.x(), click.y());
         if (slot != null) {
-            this.excludedSlots.add(slot.id);
+            if (click.button() == 1) {
+                this.excludedSlots.remove(Integer.valueOf(slot.id));
+            } else {
+                this.excludedSlots.add(slot.id);
+            }
             cir.setReturnValue(true);
         }
     }
@@ -435,7 +417,17 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             // Gray out hotbar slots if include hotbar is off and one of the transfer buttons are hovered
             for (int id : this.excludedSlots) {
                 if (slot.id == id) {
-                    makeSlotUnavailable(context, slot, false);
+                    if (this.transferContainerButton.isHovered()) {
+                        if (slot.id <= getTotalSlots(this.handler) - 37) {
+                            makeSlotUnavailable(context, slot, false);
+                        }
+                    } else if (this.transferInventoryButton.isHovered()) {
+                        if (slot.id >= getTotalSlots(this.handler) - 36) {
+                            makeSlotUnavailable(context, slot, false);
+                        }
+                    } else {
+                        makeSlotUnavailable(context, slot, false);
+                    }
                     break;
                 }
             }
@@ -559,7 +551,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                                         getButtonX(this.includeHotbarButton) - 12,
                                         getManagementButtonY(this.screen, this.inventory, this.y, this.titleY),
                                         "swap",
-                                        b -> swapItems(this.handler, this.inventory),
+                                        b -> swapItems(this.handler, this.inventory, this.excludedSlots),
                                         () -> {
                                             // Decrement swap cooldown
                                             if (swapCooldown > 0) {
@@ -715,7 +707,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                     }
 
                     if (this.swapCooldown == 0 && this.swapButton != null && this.swapButton.active && input.key() == ModKeybinds.SWAP_ITEMS.boundKey.getCode()) {
-                        swapItems(this.handler, this.inventory);
+                        swapItems(this.handler, this.inventory, this.excludedSlots);
                         this.swapCooldown = 120;
                     }
                     if (this.quickDropButton != null && this.quickDropButton.active && MinecraftClient.getInstance().isAltPressed() && input.key() == GLFW.GLFW_KEY_Q) {
