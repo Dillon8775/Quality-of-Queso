@@ -19,6 +19,7 @@ public class ModKeybinds {
     public static final KeyBinding MOVE_INVENTORY = KeyBindingHelper.registerKeyBinding(new KeyBinding("qualityofqueso.move_inventory", InputUtil.GLFW_KEY_I, QOQ));
     public static final KeyBinding SWAP_ITEMS = KeyBindingHelper.registerKeyBinding(new KeyBinding("qualityofqueso.swap_items", InputUtil.GLFW_KEY_S, QOQ));
     public static final KeyBinding OPEN_SEARCH_ITEM_FRAMES_GUI = KeyBindingHelper.registerKeyBinding(new KeyBinding("qualityofqueso.open_item_frame_search_gui", InputUtil.GLFW_KEY_I, QOQ));
+    public static final KeyBinding HIDE_RECIPE_BOOK = KeyBindingHelper.registerKeyBinding(new KeyBinding("qualityofqueso.hide_recipe_book", InputUtil.GLFW_KEY_R, QOQ));
 
     /**
      * Initialize mod keybinds.

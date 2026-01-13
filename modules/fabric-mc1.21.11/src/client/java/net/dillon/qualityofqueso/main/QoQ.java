@@ -2,12 +2,14 @@ package net.dillon.qualityofqueso.main;
 
 import net.dillon.qualityofqueso.command.ItemFrameSearcherCommand;
 import net.dillon.qualityofqueso.keybind.ModKeybinds;
+import net.dillon.qualityofqueso.option.BaseOptions;
 import net.dillon.qualityofqueso.option.CommonOptions;
 import net.dillon.qualityofqueso.option.ModClientOptions;
 import net.dillon.qualityofqueso.util.ModUtil;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
@@ -15,8 +17,11 @@ import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.registry.tag.TagKey;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import org.lwjgl.glfw.GLFW;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -68,7 +73,60 @@ public class QoQ implements ClientModInitializer {
     public void onInitializeClient() {
         ModKeybinds.init();
         registerCommands();
+
+        ClientPlayConnectionEvents.JOIN.register((handler, packet, client) -> {
+            if (options().serverSpecificConfigs) {
+                loadServerConfig(client);
+            }
+        });
+
+        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
+            ModClientOptions.CLIENT_OPTIONS.clearCustomDirectory();
+            ModClientOptions.CLIENT_OPTIONS.setFileName(BaseOptions.DEFAULT_FILE_NAME);
+            ModClientOptions.CLIENT_OPTIONS.load();
+            if (options().serverSpecificConfigs) {
+                ModUtil.info("Reverting back to global QoQ config.");
+            }
+        });
+
         ModUtil.info("Quality of Queso has successfully loaded!");
+    }
+
+    /**
+     * Saves server-specific config.
+     */
+    public static void loadServerConfig(MinecraftClient client) {
+        if (client.getCurrentServerEntry() == null) {
+            return;
+        } else if (client.getCurrentServerEntry().address == null) {
+            return;
+        }
+
+        String address = client.getCurrentServerEntry().address;
+        String safe = address.replace(":", "_").replace(".", "-");
+
+        File serverDir = FabricLoader.getInstance()
+                .getConfigDir()
+                .resolve("qoq/server-configs")
+                .toFile();
+
+        String serverConfig = safe + ".json";
+        File serverFile = new File(serverDir, serverConfig);
+
+        ModClientOptions cachedInstance = ModClientOptions.CLIENT_OPTIONS.getInstance();
+        final boolean configExists = serverFile.exists();
+        ModClientOptions.CLIENT_OPTIONS.setCustomDirectory(serverDir);
+        ModClientOptions.CLIENT_OPTIONS.setFileName(serverConfig);
+        if (!configExists) {
+            ModClientOptions.CLIENT_OPTIONS.setInstance(cachedInstance);
+            ModClientOptions.CLIENT_OPTIONS.save();
+            ModUtil.info("Creating new QoQ server config instance... (" + address + ")");
+        }
+        ModClientOptions.CLIENT_OPTIONS.load();
+
+        String message = !configExists ? "qualityofqueso.created_server_config" : "qualityofqueso.loaded_server_config";
+        client.player.sendMessage(Text.translatable(message).formatted(Formatting.GOLD), false);
+        ModUtil.info("Loaded QoQ config for " + address + ".");
     }
 
     /**

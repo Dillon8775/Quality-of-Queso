@@ -31,6 +31,7 @@ public class ModClientOptions {
     public boolean preventEFromTyping = false;
     public boolean helpfulTooltips = true;
     public List<String> blacklistedServers = new ArrayList<>();
+    public boolean serverSpecificConfigs = true;
     public int itemFrameSearchTimer = 0;
     public int itemFrameSearchRadius = 150;
     public QoQButtons qoqButtons = QoQButtons.EVERYWHERE;
@@ -40,7 +41,7 @@ public class ModClientOptions {
     public static class ModOptionsHandler extends BaseOptions<ModClientOptions> {
 
         protected ModOptionsHandler() {
-            super("qualityofqueso-client_config.json");
+            super(BaseOptions.DEFAULT_FILE_NAME);
             this.load();
         }
 

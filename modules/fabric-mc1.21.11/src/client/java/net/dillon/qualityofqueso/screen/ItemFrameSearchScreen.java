@@ -47,9 +47,9 @@ public class ItemFrameSearchScreen extends Screen {
         this.searchButton = this.addDrawableChild(ButtonWidget.builder(Text.translatable("qualityofqueso.gui.search"), button -> {
             this.sendPacket(false, options().itemFrameSearchTimer != 0 ? options().itemFrameSearchTimer : 0, options().itemFrameSearchRadius);
         }).dimensions(this.width / 2 + 115, this.height / 2 + 24, 100, 20).build());
-        ClickableWidget itemFrameSearchTimer = this.addDrawableChild(ModListOptions.ITEM_FRAME_SEARCH_TIMER.createWidget(MinecraftClient.getInstance().options));
+        ClickableWidget itemFrameSearchTimer = this.addDrawableChild(ModListOptions.itemFrameSearchTimer().createWidget(MinecraftClient.getInstance().options));
         itemFrameSearchTimer.setDimensionsAndPosition(100, 20, this.width / 2 + 5, this.height / 2 + 24);
-        ClickableWidget itemFrameSearchRadius = this.addDrawableChild(ModListOptions.ITEM_FRAME_SEARCH_RADIUS.createWidget(MinecraftClient.getInstance().options));
+        ClickableWidget itemFrameSearchRadius = this.addDrawableChild(ModListOptions.itemFrameSearchRadius().createWidget(MinecraftClient.getInstance().options));
         itemFrameSearchRadius.setDimensionsAndPosition(100, 20, itemFrameSearchTimer.getX(), itemFrameSearchTimer.getY() + 32);
         this.clearButton = this.addDrawableChild(ButtonWidget.builder(Text.translatable("qualityofqueso.gui.clear"), button -> {
             this.searchField.setText("");

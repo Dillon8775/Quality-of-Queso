@@ -32,10 +32,11 @@ public class QuickDropButton extends TransferButton {
                 "_match.png" : ".png";
         String appended = transferable ? transferableString : ".png";
         context.drawTexture(RenderPipelines.GUI_TEXTURED, Identifier.of("qualityofqueso:textures/gui/" + id + appended), buttonReference.getX() - 1, buttonReference.getY() - 1, 0.0F, 0.0F, 12, 12, 12, 12);
-        if (MinecraftClient.getInstance().isCtrlPressed() && MinecraftClient.getInstance().isAltPressed()) {
+        boolean shortcutKeyPressed = MinecraftClient.getInstance().isCtrlPressed() && MinecraftClient.getInstance().isAltPressed();
+        if (shortcutKeyPressed) {
             ButtonUtil.drawButtonTexture(context, "quick_drop_outline", this);
         }
-        if (MinecraftClient.getInstance().isShiftPressed()) {
+        if (MinecraftClient.getInstance().isShiftPressed() && (this.isHovered() || shortcutKeyPressed)) {
             ButtonUtil.drawButtonTexture(context, "quick_drop_one", this);
         }
     }

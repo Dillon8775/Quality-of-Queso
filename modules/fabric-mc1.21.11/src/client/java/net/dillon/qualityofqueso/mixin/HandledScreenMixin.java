@@ -96,6 +96,8 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     private int swapCooldown = 0;
     @Unique
     private Inventory inventory;
+    @Unique
+    private final List<Integer> excludedSlots = new ArrayList<>();
 
     public HandledScreenMixin(Text title) {
         super(title);
@@ -190,6 +192,18 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             Slot fromSlot = this.handler.getSlot(i);
             ItemStack fromStack = fromSlot.getStack();
 
+            // Ignore manually excluded slots
+            boolean fromExcluded = false;
+            for (int id : this.excludedSlots) {
+                if (fromSlot.id == id) {
+                    fromExcluded = true;
+                    break;
+                }
+            }
+            if (fromExcluded) {
+                continue;
+            }
+
             if ((this.containerSearchField != null || this.inventorySearchField != null) && !this.getSearchFieldText().isEmpty() && !this.search(this.getSearchFieldText(), fromSlot, false)) {
                 continue; // Skip container slot if query not found via search
             } else if (!options().includeHotbar) {
@@ -203,8 +217,22 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             }
 
             if (!fromStack.isEmpty()) {
+                boolean moved = false;
                 for (int j = toStart; j < toEnd; j++) {
                     Slot toSlot = this.handler.getSlot(j);
+
+                    // Skip move if target slot is excluded
+                    boolean toExcluded = false;
+                    for (int id : this.excludedSlots) {
+                        if (toSlot.id == id) {
+                            toExcluded = true;
+                            break;
+                        }
+                    }
+                    if (toExcluded) {
+                        continue; // Try next slot
+                    }
+
                     // Quickly swap items in container
                     if (drop || toSlot.getStack().isEmpty()) {
                         // Only transfer items if the query matches whatever the cursor is holding
@@ -222,6 +250,13 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                             break;
                         }
                     }
+
+                    moved = true;
+                    break;
+                }
+
+                if (!moved) {
+                    return;
                 }
             }
         }
@@ -378,6 +413,18 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     }
 
     /**
+     * Excludes selected slots.
+     */
+    @Unique
+    private void excludeSlot(Click click, CallbackInfoReturnable<Boolean> cir) {
+        Slot slot = this.getSlotAt(click.x(), click.y());
+        if (slot != null) {
+            this.excludedSlots.add(slot.id);
+            cir.setReturnValue(true);
+        }
+    }
+
+    /**
      * Grays out any containerSlot which doesn't contain the query name being searched.
      */
     @Inject(method = "renderMain", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ingame/HandledScreen;drawSlotHighlightFront(Lnet/minecraft/client/gui/DrawContext;)V", shift = At.Shift.AFTER))
@@ -386,6 +433,12 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
         for (int i = 0; i < getInventorySize(this.handler, this.inventory); i++) {
             Slot slot = this.handler.getSlot(i);
             // Gray out hotbar slots if include hotbar is off and one of the transfer buttons are hovered
+            for (int id : this.excludedSlots) {
+                if (slot.id == id) {
+                    makeSlotUnavailable(context, slot, false);
+                    break;
+                }
+            }
             if ((this.containerSearchField != null || inventorySearchFieldPresent)
                     && !this.getSearchFieldText().isEmpty()
                     && !this.search(this.getSearchFieldText(), slot, inventorySearchFieldPresent)) {
@@ -395,11 +448,20 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             else if (!options().includeHotbar
                     && isHotbarSlot(this.handler.slots.size(), slot.id)
                     && this.transferContainerButton != null
-                    && this.transferInventoryButton != null) {
+                    && this.transferInventoryButton != null
+                    && this.includeHotbarButton != null) {
                 boolean transferInventoryButtonHovered = this.transferInventoryButton.isHovered();
-                boolean transferContainerButton = this.transferContainerButton.isHovered() && this.transferContainerButton.active;
-                if ((transferInventoryButtonHovered && slot.hasStack()) || transferContainerButton) {
-                    makeSlotUnavailable(context, slot, transferInventoryButtonHovered);
+                boolean shortcutKeyReady = options().shortcutKeys && MinecraftClient.getInstance().isCtrlPressed();
+                boolean shiftHeld = MinecraftClient.getInstance().isShiftPressed()
+                        && this.focusedSlot != null
+                        && this.focusedSlot.hasStack()
+                        && this.focusedSlot.id <= getTotalSlots(this.handler) - 37;
+                if (shortcutKeyReady
+                        || shiftHeld
+                        || (transferInventoryButtonHovered && slot.hasStack())
+                        || this.transferContainerButton.isHovered()
+                        || this.includeHotbarButton.isHovered()) {
+                    makeSlotUnavailable(context, slot, slot.hasStack());
                 }
             }
         }
@@ -599,6 +661,9 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
     private void handleMouseClicking(Click click, boolean doubled, CallbackInfoReturnable<Boolean> cir) {
         if (modEnabled(this.client)) {
+            if (isExcludingSlots((HandledScreen<?>)(Object)this)) {
+                this.excludeSlot(click, cir);
+            }
             if (click.button() == InputUtil.GLFW_MOUSE_BUTTON_RIGHT && this.focusedSlot != null && isQuicklyEquippable(this.focusedSlot.getStack())) {
                 quickEquip(this.screen, this.focusedSlot);
                 cir.setReturnValue(true);
@@ -611,12 +676,35 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     }
 
     /**
+     * Drag-sort feature, where you can exclude slots by clicking on them.
+     */
+    @Inject(method = "mouseDragged", at = @At("HEAD"), cancellable = true)
+    private void dragToExclude(Click click, double offsetX, double offsetY, CallbackInfoReturnable<Boolean> cir) {
+        if (modEnabled(this.client)) {
+            if (isExcludingSlots((HandledScreen<?>)(Object)this)) {
+                this.excludeSlot(click, cir);
+            }
+        }
+    }
+
+    /**
      * Handles key pressing correctly and implements functionality for the {@link ModKeybinds#QUICK_EQUIP} keybind.
      */
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
     private void handleKeyPressing(KeyInput input, CallbackInfoReturnable<Boolean> cir) {
         if (modEnabled(this.client)) {
             if (MinecraftClient.getInstance().isCtrlPressed()) {
+                if (this.screen instanceof RecipeBookScreen<?> recipeScreen
+                        && input.key() == ModKeybinds.HIDE_RECIPE_BOOK.boundKey.getCode()
+                        && recipeScreen.recipeBook.isOpen()) {
+                    String text = this.getSearchFieldText();
+                    recipeScreen.recipeBook.toggleOpen();
+                    this.refreshWidgetPositions();
+                    if (this.inventorySearchField != null) {
+                        this.inventorySearchField.setText(text);
+                    }
+                    return;
+                }
                 if (options().shortcutKeys) {
                     if (this.transferContainerButton != null && this.transferContainerButton.active && input.key() == ModKeybinds.MOVE_CONTAINER.boundKey.getCode()) {
                         this.transferItems(true);

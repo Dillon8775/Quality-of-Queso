@@ -7,6 +7,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gl.RenderPipelines;
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.*;
@@ -29,9 +30,10 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Colors;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.ColorHelper;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 
-import static net.dillon.qualityofqueso.main.QoQ.options;
-import static net.dillon.qualityofqueso.main.QoQ.quicklyEquippables;
+import static net.dillon.qualityofqueso.main.QoQ.*;
 
 /**
  * Utility class for handling buttons.
@@ -135,6 +137,13 @@ public class ButtonUtil {
      */
     public static int getInventorySize(ScreenHandler handler, Inventory inventory) {
         return options().searchInventory ? handler.slots.size() : inventory.size();
+    }
+
+    /**
+     * @return if the user is attempting to exclude slots.
+     */
+    public static boolean isExcludingSlots(HandledScreen<?> handledScreen) {
+        return MinecraftClient.getInstance().isAltPressed() && handledScreen.focusedSlot != null && handledScreen.getScreenHandler().getCursorStack().isEmpty();
     }
 
     /**
