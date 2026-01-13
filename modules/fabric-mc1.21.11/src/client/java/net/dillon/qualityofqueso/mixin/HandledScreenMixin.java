@@ -191,14 +191,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             ItemStack fromStack = fromSlot.getStack();
 
             // Skip player-chosen excluded slots
-            boolean skip = false;
-            for (int id : this.excludedSlots) {
-                if (fromSlot.id == id) {
-                    skip = true;
-                    break;
-                }
-            }
-            if (skip) {
+            if (shouldSkipSlot(fromSlot, this.excludedSlots)) {
                 continue;
             }
 
@@ -255,7 +248,8 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
         for (int i = 0; i < size; i++) {
             // If slot is not empty, the button should be active
             // Increment J and make button active
-            ItemStack stack = isPlayerInventory ? playerInventory.getStack(i) : this.handler.getSlot(i).getStack();
+            Slot slot = this.handler.getSlot(i);
+            ItemStack stack = isPlayerInventory ? playerInventory.getStack(i) : slot.getStack();
             // Handle cursor stack
             boolean isShulkerScreen = this.screen instanceof ShulkerBoxScreen;
             boolean isCursorShulker = isShulkerScreen && this.handler.getCursorStack().isIn(ItemTags.SHULKER_BOXES);
@@ -279,6 +273,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     @Unique
     private boolean areAllSlotsUnavailable(boolean isPlayerInventory, @Nullable PlayerInventory playerInventory) {
         int foundQuerys = 0;
+        boolean skip = false;
         List<Slot> playerSlots = new ArrayList<>();
         // If checking player fromInventory, loop through all player fromInventory slots to determine if slot is unavailable
         if (isPlayerInventory) {
@@ -288,6 +283,10 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                 }
             }
             for (Slot slot : playerSlots) {
+                // Skip checking player-chosen excluded slots
+                if (shouldSkipSlot(slot, this.excludedSlots)) {
+                    continue;
+                }
                 if (this.search(this.getSearchFieldText(), slot, false)) {
                     foundQuerys++; // increment J if query found in slot
                 }
@@ -296,6 +295,10 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             // Otherwise, loop through the container fromInventory and increment J if query found inside
             for (int i = 0; i < this.inventory.size(); i++) {
                 Slot slot = this.handler.getSlot(i);
+                // Skip checking player-chosen excluded slots
+                if (shouldSkipSlot(slot, this.excludedSlots)) {
+                    continue;
+                }
                 if (this.search(this.getSearchFieldText(), slot, false)) {
                     foundQuerys++;
                 }
@@ -415,26 +418,12 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
         for (int i = 0; i < getInventorySize(this.handler, this.inventory); i++) {
             Slot slot = this.handler.getSlot(i);
             // Gray out hotbar slots if include hotbar is off and one of the transfer buttons are hovered
-            for (int id : this.excludedSlots) {
-                if (slot.id == id) {
-                    if (this.transferContainerButton.isHovered()) {
-                        if (slot.id <= getTotalSlots(this.handler) - 37) {
-                            makeSlotUnavailable(context, slot, false);
-                        }
-                    } else if (this.transferInventoryButton.isHovered()) {
-                        if (slot.id >= getTotalSlots(this.handler) - 36) {
-                            makeSlotUnavailable(context, slot, false);
-                        }
-                    } else {
-                        makeSlotUnavailable(context, slot, false);
-                    }
-                    break;
-                }
-            }
+            boolean alreadyExcluded = false;
             if ((this.containerSearchField != null || inventorySearchFieldPresent)
                     && !this.getSearchFieldText().isEmpty()
                     && !this.search(this.getSearchFieldText(), slot, inventorySearchFieldPresent)) {
-                makeSlotUnavailable(context, slot, false);
+                renderSlotUnavailable(context, slot, false);
+                alreadyExcluded = true;
             }
             // Otherwise, gray out slots that don't match the search
             else if (!options().includeHotbar
@@ -453,7 +442,30 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                         || (transferInventoryButtonHovered && slot.hasStack())
                         || this.transferContainerButton.isHovered()
                         || this.includeHotbarButton.isHovered()) {
-                    makeSlotUnavailable(context, slot, slot.hasStack());
+                    renderSlotUnavailable(context, slot, slot.hasStack());
+                    alreadyExcluded = true;
+                }
+            }
+            // Gray out player-chosen excluded slots
+            if (!alreadyExcluded && options().dragToSort) {
+                for (int id : this.excludedSlots) {
+                    if (slot.id == id) {
+                        if (isContainerScreen(this.screen)) {
+                            if (this.transferContainerButton.isHovered()) {
+                                if (slot.id <= getTotalSlots(this.handler) - 37) {
+                                    renderSlotUnavailable(context, slot, false);
+                                }
+                            } else if (this.transferInventoryButton.isHovered()) {
+                                if (slot.id >= getTotalSlots(this.handler) - 36) {
+                                    renderSlotUnavailable(context, slot, false);
+                                }
+                            } else {
+                                renderSlotUnavailable(context, slot, false);
+                            }
+                        } else {
+                            renderSlotUnavailable(context, slot, false);
+                        }
+                    }
                 }
             }
         }
@@ -522,7 +534,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                 if (validScreen) {
 
                     // INCLUDE HOTBAR BUTTON
-                    if (options().inventorySearching || options().quickDrop) {
+                    if (options().inventorySearching || options().quickDrop.all()) {
                         this.includeHotbarButton = this.addSelectableChild(
                                 new IncludeHotbarButton(
                                         this.handler,
@@ -570,7 +582,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                     /* --- */
 
                     // QUICK DROP BUTTON
-                    if (options().quickDrop) {
+                    if (options().quickDrop.all()) {
                         this.quickDropButton = this.addSelectableChild(
                                 new QuickDropButton(
                                         this.handler,
@@ -624,6 +636,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                     String tagString = tagKey.id().getNamespace().equals("c") ? "#fabric:" + tagKey.id().getPath() : "#" + tagKey.id();
                     originalTooltip.add(1, Text.literal(tagString).formatted(Formatting.LIGHT_PURPLE));
                     foundTags = true;
+                    break;
                 }
             }
 
@@ -710,7 +723,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                         swapItems(this.handler, this.inventory, this.excludedSlots);
                         this.swapCooldown = 120;
                     }
-                    if (this.quickDropButton != null && this.quickDropButton.active && MinecraftClient.getInstance().isAltPressed() && input.key() == GLFW.GLFW_KEY_Q) {
+                    if (options().quickDrop.either() && MinecraftClient.getInstance().isAltPressed() && input.key() == GLFW.GLFW_KEY_Q) {
                         this.dropItems(!isContainerScreen(this.screen));
                     }
                 }

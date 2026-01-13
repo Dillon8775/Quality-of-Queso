@@ -19,10 +19,11 @@ public class InventoryManagementOptionsScreen extends AbstractModOptionsScreen {
                 ModListOptions.shortcutKeys(),
                 ModListOptions.quickDrop(),
                 ModListOptions.swapping(),
+                ModListOptions.dragToSort(),
                 ModListOptions.includeHotbar(),
-                ModListOptions.legacyQuickMove(),
                 ModListOptions.showButtonOutlines(),
-                ModListOptions.showButtonShortcuts()
+                ModListOptions.showButtonShortcuts(),
+                ModListOptions.legacyQuickMove()
         };
     }
 }

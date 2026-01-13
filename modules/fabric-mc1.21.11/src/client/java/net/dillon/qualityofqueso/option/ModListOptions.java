@@ -66,9 +66,30 @@ public class ModListOptions {
                 (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, QoQ.options().shortcutKeys, value -> QoQ.options().shortcutKeys = value);
     }
 
-    public static SimpleOption<Boolean> quickDrop() {
-        return new SimpleOption<>("qualityofqueso.options.quick_drop", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.quick_drop.tooltip")),
-                (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, QoQ.options().quickDrop, value -> QoQ.options().quickDrop = value);
+    public static SimpleOption<QuickDrop> quickDrop() {
+        return new SimpleOption<>(
+                "qualityofqueso.options.quick_drop",
+                option -> {
+                    Text text = ModTexts.BLANK;
+                    switch (option) {
+                        case ON -> text = Text.translatable("qualityofqueso.options.quick_drop.on.tooltip");
+                        case SHORTCUT_KEY -> text = Text.translatable("qualityofqueso.options.quick_drop.shortcut_key.tooltip");
+                    }
+                    String appended = !text.equals(ModTexts.BLANK) ? "\n\n" : "";
+                    return Tooltip.of(Text.translatable("qualityofqueso.options.quick_drop.tooltip").append(appended).append(text));
+                },
+                (optionText, value) -> {
+                    Formatting formatting;
+                    switch (value) {
+                        case ON -> formatting = Formatting.YELLOW;
+                        case SHORTCUT_KEY -> formatting = Formatting.AQUA;
+                        default -> formatting = Formatting.RED;
+                    }
+                    return value.getText().copy().formatted(formatting == Formatting.AQUA ? Formatting.AQUA : Formatting.BOLD).formatted(formatting);
+                },
+                new SimpleOption.PotentialValuesBasedCallbacks<>(Arrays.asList(QuickDrop.values()), QuickDrop.Codec),
+                QoQ.options().quickDrop,
+                value -> QoQ.options().quickDrop = value);
     }
 
     public static SimpleOption<Boolean> swapping() {
@@ -85,6 +106,11 @@ public class ModListOptions {
     public static SimpleOption<Boolean> legacyQuickMove() {
         return new SimpleOption<>("qualityofqueso.options.legacy_quick_move", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.legacy_quick_move.tooltip")),
                 (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, QoQ.options().legacyQuickMove, value -> QoQ.options().legacyQuickMove = value);
+    }
+
+    public static SimpleOption<Boolean> dragToSort() {
+        return new SimpleOption<>("qualityofqueso.options.drag_to_sort", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.drag_to_sort.tooltip")),
+                (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, QoQ.options().dragToSort, value -> QoQ.options().dragToSort = value);
     }
 
     public static SimpleOption<Boolean> showButtonOutlines() {

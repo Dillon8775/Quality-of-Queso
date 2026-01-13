@@ -1,10 +1,15 @@
 Version 1.5 (MC Fabric 1.21.9-1.21.11, Forge 1.20.1 and 1.21.11):
 Main changes:
-- Added a keybind to hide the recipe search book, by pressing CTRL + the keybind (default = R).
+- Added a "Drag-To-Sort" feature! Hold ALT and drag click on any slot in your inventory/container to manually exclude a slot from transferring or from being searched.
+- Added Server-Config presets, where each server that you join has its own Quality of Queso configuration. You can disable this if you'd like by turning off the option "Server-Config Presets"
+- "Quick Drop" option now can be toggled to shortcut key only (meaning CTRL + ALT + Q will still work, but the button will be invisible). By default, this is set to "Shortcut Key".
 
 Other changes:
 - Hotbar slots are grayed out if the player hovers over the "include/exclude hotbar" button, and are also grayed out if CTRL is held down.
 - Holding "shift" over a stack in a container will grayout hotbar slots if excluding hotbar.
 - Hotbar slots are now grayed out even if a transfer button is inactive but hovered.
+- Added a keybind to hide the recipe search book, by pressing CTRL + the keybind (default = R).
 - The "1" only appears over the Quick Drop button if it's hovered.
 - Optimized language (again).
+- Fixed bug where Quick Equip has to be on in order to quick drop using shortcut key (no longer checks for Quick Equip, checks the Quick Drop option first).
+- Optimizations.

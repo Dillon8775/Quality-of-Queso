@@ -7,7 +7,6 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gl.RenderPipelines;
-import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.*;
@@ -30,8 +29,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Colors;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.ColorHelper;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
 
 import java.util.Set;
 
@@ -145,7 +142,19 @@ public class ButtonUtil {
      * @return if the user is attempting to exclude slots.
      */
     public static boolean isExcludingSlots(HandledScreen<?> handledScreen) {
-        return MinecraftClient.getInstance().isAltPressed() && handledScreen.focusedSlot != null && handledScreen.getScreenHandler().getCursorStack().isEmpty();
+        return options().dragToSort && MinecraftClient.getInstance().isAltPressed() && handledScreen.focusedSlot != null && handledScreen.getScreenHandler().getCursorStack().isEmpty();
+    }
+
+    /**
+     * @return if a slot should be skipped.
+     */
+    public static boolean shouldSkipSlot(Slot slot, Set<Integer> excludedSlots) {
+        for (int id : excludedSlots) {
+            if (slot.id == id) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -367,7 +376,7 @@ public class ButtonUtil {
     /**
      * Grays out a containerSlot.
      */
-    public static void makeSlotUnavailable(DrawContext context, Slot slot, boolean hotbar) {
+    public static void renderSlotUnavailable(DrawContext context, Slot slot, boolean hotbar) {
         int color = hotbar ? -2139062148 : -1275068416;
         context.fillGradient(slot.x, slot.y, slot.x + 16, slot.y + 16, color, color);
     }

@@ -20,10 +20,11 @@ public class ModClientOptions {
     public boolean saveSearchText = false;
     public boolean inventoryManagement = true;
     public boolean shortcutKeys = true;
-    public boolean quickDrop = false;
+    public QuickDrop quickDrop = QuickDrop.SHORTCUT_KEY;
     public boolean swapping = false;
     public boolean includeHotbar = true;
     public boolean legacyQuickMove = false;
+    public boolean dragToSort = true;
     public boolean showButtonOutlines = false;
     public boolean showButtonShortcuts = true;
     public boolean quickEquip = true;
