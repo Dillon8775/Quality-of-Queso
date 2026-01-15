@@ -13,7 +13,7 @@ import org.lwjgl.glfw.GLFW;
 /**
  * Keybindings for the {@code Quality of Queso} mod.
  */
-@Mod.EventBusSubscriber(modid = QoQ.MOD_ID, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = QoQ.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModKeybinds {
     private static final String QOQ = "qualityofqueso.gui.options.title";
 
@@ -41,6 +41,13 @@ public class ModKeybinds {
     public static final KeyMapping SWAP_ITEMS = new KeyMapping(
             "qualityofqueso.swap_items",
             InputConstants.Type.KEYSYM,
+            InputConstants.UNKNOWN.getValue(),
+            QOQ
+    );
+
+    public static final KeyMapping SORT_CONTAINER = new KeyMapping(
+            "qualityofqueso.sort_container",
+            InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_S,
             QOQ
     );
@@ -53,11 +60,21 @@ public class ModKeybinds {
             QOQ
     );
 
+    public static final KeyMapping HIDE_RECIPE_BOOK = new KeyMapping(
+            "qualityofqueso.hide_recipe_book",
+            InputConstants.Type.KEYSYM,
+            GLFW.GLFW_KEY_R,
+            QOQ
+    );
+
     @SubscribeEvent
     public static void registerKeys(RegisterKeyMappingsEvent event) {
         event.register(ModKeybinds.QUICK_EQUIP);
         event.register(ModKeybinds.MOVE_CONTAINER);
         event.register(ModKeybinds.MOVE_INVENTORY);
+        event.register(ModKeybinds.SORT_CONTAINER);
+        event.register(ModKeybinds.SWAP_ITEMS);
         event.register(ModKeybinds.OPEN_SEARCH_ITEM_FRAMES_GUI);
+        event.register(ModKeybinds.HIDE_RECIPE_BOOK);
     }
 }

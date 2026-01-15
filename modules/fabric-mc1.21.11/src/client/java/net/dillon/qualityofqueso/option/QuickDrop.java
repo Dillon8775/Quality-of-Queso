@@ -5,9 +5,9 @@ import net.minecraft.text.Text;
 import net.minecraft.util.StringIdentifiable;
 
 public enum QuickDrop implements StringIdentifiable {
-    ON(0, "on", "qualityofqueso.gui.on"),
-    SHORTCUT_KEY(1, "shortcut_key", "qualityofqueso.options.quick_drop.shortcut_key"),
-    OFF(2, "off", "qualityofqueso.gui.off");
+    SHORTCUT_KEY_OR_BUTTON(0, "shortcut_key_or_button", "qualityofqueso.options.shortcut_key_or_button"),
+    SHORTCUT_KEY_ONLY(1, "shortcut_key_only", "qualityofqueso.options.shortcut_key_only"),
+    OFF(2, "off", "qualityofqueso.options.management_button.off");
 
     public static final Codec<QuickDrop> Codec = StringIdentifiable.createCodec(QuickDrop::values);
     private final int ordinal;
@@ -20,12 +20,12 @@ public enum QuickDrop implements StringIdentifiable {
         this.translationKey = Text.translatable(translationKey);
     }
 
-    public boolean all() {
-        return this == ON;
+    public boolean shortcutOrButton() {
+        return this == SHORTCUT_KEY_OR_BUTTON;
     }
 
-    public boolean either() {
-        return this.all() || this == SHORTCUT_KEY;
+    public boolean orKeyOnly() {
+        return this == SHORTCUT_KEY_OR_BUTTON || this == SHORTCUT_KEY_ONLY;
     }
 
     public int getId() {

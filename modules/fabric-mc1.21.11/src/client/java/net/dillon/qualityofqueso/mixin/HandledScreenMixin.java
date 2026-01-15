@@ -91,6 +91,8 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     @Unique
     private TransferButton swapButton;
     @Unique
+    private TransferButton sortButton;
+    @Unique
     private int swapCooldown = 0;
     @Unique
     private Inventory inventory;
@@ -191,7 +193,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             ItemStack fromStack = fromSlot.getStack();
 
             // Skip player-chosen excluded slots
-            if (shouldSkipSlot(fromSlot, this.excludedSlots)) {
+            if (shouldSkipSlot(fromSlot.id, this.excludedSlots)) {
                 continue;
             }
 
@@ -213,10 +215,10 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                     // Quickly swap items in container
                     if (drop || toSlot.getStack().isEmpty()) {
                         // Only transfer items if the query matches whatever the cursor is holding
-                        // IF DROP, CANNOT THROW ITEMS IF CURSOR STACK ISN'T EMPTY. VANILLA FEATURE, CAN'T WORK AROUND IT (for now, anyone know a solution?)
                         SlotActionType slotActionType = drop ? SlotActionType.THROW : SlotActionType.QUICK_MOVE;
-                        if (!this.handler.getCursorStack().isEmpty()) {
-                            if (fromStack.isOf(this.handler.getCursorStack().getItem())) {
+                        ItemStack cursorStack = getCursorStack(this.screen);
+                        if (!cursorStack.isEmpty()) {
+                            if (canMoveCursorItem(fromStack, cursorStack)) {
                                 sendClickSlotPacket(i, slotActionType);
                                 break;
                             }
@@ -250,12 +252,13 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             // Increment J and make button active
             Slot slot = this.handler.getSlot(i);
             ItemStack stack = isPlayerInventory ? playerInventory.getStack(i) : slot.getStack();
+            ItemStack cursorStack = getCursorStack(this.screen);
             // Handle cursor stack
             boolean isShulkerScreen = this.screen instanceof ShulkerBoxScreen;
-            boolean isCursorShulker = isShulkerScreen && this.handler.getCursorStack().isIn(ItemTags.SHULKER_BOXES);
+            boolean isCursorShulker = isShulkerScreen && cursorStack.isIn(ItemTags.SHULKER_BOXES);
             boolean isStackShulker = isShulkerScreen && stack.isIn(ItemTags.SHULKER_BOXES);
-            if (!this.handler.getCursorStack().isEmpty()) {
-                if (stack.isOf(this.handler.getCursorStack().getItem()) && !isCursorShulker) {
+            if (!cursorStack.isEmpty()) {
+                if (canMoveCursorItem(stack, cursorStack) && !isCursorShulker) {
                     filledSlots++;
                 }
             } else {
@@ -273,7 +276,6 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     @Unique
     private boolean areAllSlotsUnavailable(boolean isPlayerInventory, @Nullable PlayerInventory playerInventory) {
         int foundQuerys = 0;
-        boolean skip = false;
         List<Slot> playerSlots = new ArrayList<>();
         // If checking player fromInventory, loop through all player fromInventory slots to determine if slot is unavailable
         if (isPlayerInventory) {
@@ -284,7 +286,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             }
             for (Slot slot : playerSlots) {
                 // Skip checking player-chosen excluded slots
-                if (shouldSkipSlot(slot, this.excludedSlots)) {
+                if (shouldSkipSlot(slot.id, this.excludedSlots)) {
                     continue;
                 }
                 if (this.search(this.getSearchFieldText(), slot, false)) {
@@ -296,7 +298,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             for (int i = 0; i < this.inventory.size(); i++) {
                 Slot slot = this.handler.getSlot(i);
                 // Skip checking player-chosen excluded slots
-                if (shouldSkipSlot(slot, this.excludedSlots)) {
+                if (shouldSkipSlot(slot.id, this.excludedSlots)) {
                     continue;
                 }
                 if (this.search(this.getSearchFieldText(), slot, false)) {
@@ -401,7 +403,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
         Slot slot = this.getSlotAt(click.x(), click.y());
         if (slot != null) {
             if (click.button() == 1) {
-                this.excludedSlots.remove(Integer.valueOf(slot.id));
+                this.excludedSlots.remove(slot.id);
             } else {
                 this.excludedSlots.add(slot.id);
             }
@@ -431,8 +433,8 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                     && this.transferContainerButton != null
                     && this.transferInventoryButton != null
                     && this.includeHotbarButton != null) {
-                boolean transferInventoryButtonHovered = this.transferInventoryButton.isHovered();
-                boolean shortcutKeyReady = options().shortcutKeys && MinecraftClient.getInstance().isCtrlPressed();
+                boolean transferInventoryButtonHovered = this.transferInventoryButton.isHovered() && this.transferInventoryButton.active;
+                boolean shortcutKeyReady = MinecraftClient.getInstance().isCtrlPressed();
                 boolean shiftHeld = MinecraftClient.getInstance().isShiftPressed()
                         && this.focusedSlot != null
                         && this.focusedSlot.hasStack()
@@ -440,7 +442,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                 if (shortcutKeyReady
                         || shiftHeld
                         || (transferInventoryButtonHovered && slot.hasStack())
-                        || this.transferContainerButton.isHovered()
+                        || (this.transferContainerButton.isHovered() && this.transferContainerButton.active)
                         || this.includeHotbarButton.isHovered()) {
                     renderSlotUnavailable(context, slot, slot.hasStack());
                     alreadyExcluded = true;
@@ -451,11 +453,11 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                 for (int id : this.excludedSlots) {
                     if (slot.id == id) {
                         if (isContainerScreen(this.screen)) {
-                            if (this.transferContainerButton.isHovered()) {
+                            if (this.transferContainerButton.isHovered() && this.transferContainerButton.active) {
                                 if (slot.id <= getTotalSlots(this.handler) - 37) {
                                     renderSlotUnavailable(context, slot, false);
                                 }
-                            } else if (this.transferInventoryButton.isHovered()) {
+                            } else if (this.transferInventoryButton.isHovered() && this.transferInventoryButton.active) {
                                 if (slot.id >= getTotalSlots(this.handler) - 36) {
                                     renderSlotUnavailable(context, slot, false);
                                 }
@@ -476,6 +478,10 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
      */
     @Inject(method = "renderMain", at = @At("TAIL"))
     private void renderWidgets(DrawContext context, int mouseX, int mouseY, float deltaTicks, CallbackInfo ci) {
+        // Decrement swap cooldown
+        if (this.swapCooldown > 0) {
+            this.swapCooldown--;
+        }
         // Render the search field
         if (this.containerSearchField != null) {
             this.containerSearchField.render(context, mouseX, mouseY, deltaTicks);
@@ -534,7 +540,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                 if (validScreen) {
 
                     // INCLUDE HOTBAR BUTTON
-                    if (options().inventorySearching || options().quickDrop.all()) {
+                    if (containerScreen || (options().inventorySearching || options().quickDrop.shortcutOrButton())) {
                         this.includeHotbarButton = this.addSelectableChild(
                                 new IncludeHotbarButton(
                                         this.handler,
@@ -554,7 +560,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                     /* --- */
 
                     // SWAP BUTTON
-                    if (options().swapping && containerScreen) {
+                    if (options().swapping.shortcutOrButton() && containerScreen) {
                         this.swapButton = this.addSelectableChild(
                                 new SwapButton(
                                         this.handler,
@@ -565,12 +571,8 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                                         "swap",
                                         b -> swapItems(this.handler, this.inventory, this.excludedSlots),
                                         () -> {
-                                            // Decrement swap cooldown
-                                            if (swapCooldown > 0) {
-                                                swapCooldown--;
-                                            }
                                             return (getContainerSize(this.inventory) != 27 || isAnySlotFilled(this.handler, false, 27, 54))
-                                                    && this.handler.getCursorStack().isEmpty() && this.getSearchFieldText().isEmpty()
+                                                    && getCursorStack(this.screen).isEmpty() && this.getSearchFieldText().isEmpty()
                                                     && this.shouldButtonBeActive(false, null, this.swapButton)
                                                     && this.shouldButtonBeActive(true, playerInventory, this.swapButton);
                                         }
@@ -581,21 +583,56 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
 
                     /* --- */
 
+                    // SORT BUTTON
+                    if (options().containerSorting.shortcutOrButton() && containerScreen) {
+                        this.sortButton = this.addSelectableChild(
+                                new SortButton(
+                                        this.handler,
+                                        this.textRenderer,
+                                        this.getSearchFieldText(),
+                                        getButtonX(this.includeHotbarButton) - (options().swapping.shortcutOrButton() ? 24 : 12),
+                                        getManagementButtonY(this.screen, this.inventory, this.y, this.titleY),
+                                        "sort",
+                                        b -> sortItems(this.client),
+                                        () -> {
+                                            boolean excludedContainerSlot = false;
+                                            for (int id : this.excludedSlots) {
+                                                if (id <= getTotalSlots(this.handler) - 37) {
+                                                    excludedContainerSlot = true;
+                                                    break;
+                                                }
+                                            }
+                                            return isAnySlotFilled(this.handler, false, 0, getContainerSize(this.inventory))
+                                                    && this.getSearchFieldText().isEmpty()
+                                                    && !excludedContainerSlot
+                                                    && getCursorStack(this.screen).isEmpty()
+                                                    && this.shouldButtonBeActive(false, null, this.sortButton);
+                                        }
+                                ));
+
+                        this.sortButton.render(context, mouseX, mouseY, deltaTicks);
+                    }
+
+                    /* --- */
+
                     // QUICK DROP BUTTON
-                    if (options().quickDrop.all()) {
+                    if (options().quickDrop.shortcutOrButton()) {
                         this.quickDropButton = this.addSelectableChild(
                                 new QuickDropButton(
                                         this.handler,
                                         this.textRenderer,
                                         this.getSearchFieldText(),
-                                        getButtonX(this.includeHotbarButton) - (containerScreen && options().swapping ? 24 : 12),
+                                        getButtonX(this.includeHotbarButton) -
+                                                (containerScreen && (options().containerSorting.shortcutOrButton() && options().swapping.shortcutOrButton()) ? 36
+                                                        : containerScreen && (options().swapping.shortcutOrButton() || options().containerSorting.shortcutOrButton()) ? 24
+                                                        : 12),
                                         getManagementButtonY(this.screen, this.inventory, this.y, this.titleY),
                                         "quick_drop",
                                         b -> this.dropItems(!containerScreen),
                                         () -> (isInventoryScreen(this.screen) ?
                                                 isAnySlotFilled(this.handler, true, 9, 36) :
                                                 isAnySlotFilled(this.handler, false, 0, getContainerSize(this.inventory)))
-                                                && this.handler.getCursorStack().isEmpty()
+                                                && getCursorStack(this.screen).isEmpty()
                                                 && this.shouldButtonBeActive(!containerScreen, containerScreen ? null : playerInventory, this.quickDropButton)
                                 ));
 
@@ -655,7 +692,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     @Inject(method = "onMouseClick(Lnet/minecraft/screen/slot/Slot;IILnet/minecraft/screen/slot/SlotActionType;)V", at = @At("HEAD"))
     private void closeButtonOnClickOutOfBounds(Slot slot, int slotId, int button, SlotActionType
             actionType, CallbackInfo ci) {
-        if (modEnabled(this.client) && options().betterGuiExit && this.handler.getCursorStack().isEmpty() && button == 0 && slot == null) {
+        if (modEnabled(this.client) && options().betterGuiExit && getCursorStack(this.screen).isEmpty() && button == 0 && slot == null) {
             this.close();
         }
     }
@@ -710,22 +747,21 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                     }
                     return;
                 }
-                if (options().shortcutKeys) {
-                    if (this.transferContainerButton != null && this.transferContainerButton.active && input.key() == ModKeybinds.MOVE_CONTAINER.boundKey.getCode()) {
-                        this.transferItems(true);
-                    }
-
-                    if (this.transferInventoryButton != null && this.transferInventoryButton.active && input.key() == ModKeybinds.MOVE_INVENTORY.boundKey.getCode()) {
-                        this.transferItems(false);
-                    }
-
-                    if (this.swapCooldown == 0 && this.swapButton != null && this.swapButton.active && input.key() == ModKeybinds.SWAP_ITEMS.boundKey.getCode()) {
-                        swapItems(this.handler, this.inventory, this.excludedSlots);
-                        this.swapCooldown = 120;
-                    }
-                    if (options().quickDrop.either() && MinecraftClient.getInstance().isAltPressed() && input.key() == GLFW.GLFW_KEY_Q) {
-                        this.dropItems(!isContainerScreen(this.screen));
-                    }
+                if (this.transferContainerButton != null && this.transferContainerButton.active && input.key() == ModKeybinds.MOVE_CONTAINER.boundKey.getCode()) {
+                    this.transferItems(true);
+                }
+                if (this.transferInventoryButton != null && this.transferInventoryButton.active && input.key() == ModKeybinds.MOVE_INVENTORY.boundKey.getCode()) {
+                    this.transferItems(false);
+                }
+                if (options().containerSorting.orKeyOnly() && input.key() == ModKeybinds.SORT_CONTAINER.boundKey.getCode()) {
+                    sortItems(this.client);
+                }
+                if (this.swapCooldown == 0 && options().swapping.orKeyOnly() && input.key() == ModKeybinds.SWAP_ITEMS.boundKey.getCode()) {
+                    swapItems(this.handler, this.inventory, this.excludedSlots);
+                    this.swapCooldown = 120;
+                }
+                if (options().quickDrop.orKeyOnly() && MinecraftClient.getInstance().isAltPressed() && input.key() == GLFW.GLFW_KEY_Q) {
+                    this.dropItems(!isContainerScreen(this.screen));
                 }
             }
 
@@ -767,7 +803,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             }
 
             // handle switching items from hotbar to another containerSlot in fromInventory; cancel out typing if a query can be moved
-            if (this.handler.getCursorStack().isEmpty() && this.focusedSlot != null) {
+            if (getCursorStack(this.screen).isEmpty() && this.focusedSlot != null) {
                 for (int i = 0; i < 9; i++) {
                     if (this.client.options.hotbarKeys[i].matchesKey(input)) {
                         ignoreTyping = true;

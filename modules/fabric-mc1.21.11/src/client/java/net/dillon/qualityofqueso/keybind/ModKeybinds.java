@@ -17,13 +17,14 @@ public class ModKeybinds {
     public static final KeyBinding QUICK_EQUIP = KeyBindingHelper.registerKeyBinding(new KeyBinding("qualityofqueso.quick_equip", InputUtil.GLFW_KEY_B, QOQ));
     public static final KeyBinding MOVE_CONTAINER = KeyBindingHelper.registerKeyBinding(new KeyBinding("qualityofqueso.move_container", InputUtil.GLFW_KEY_C, QOQ));
     public static final KeyBinding MOVE_INVENTORY = KeyBindingHelper.registerKeyBinding(new KeyBinding("qualityofqueso.move_inventory", InputUtil.GLFW_KEY_I, QOQ));
-    public static final KeyBinding SWAP_ITEMS = KeyBindingHelper.registerKeyBinding(new KeyBinding("qualityofqueso.swap_items", InputUtil.GLFW_KEY_S, QOQ));
+    public static final KeyBinding SORT_CONTAINER = KeyBindingHelper.registerKeyBinding(new KeyBinding("qualityofqueso.sort_container", InputUtil.GLFW_KEY_S, QOQ));
+    public static final KeyBinding SWAP_ITEMS = KeyBindingHelper.registerKeyBinding(new KeyBinding("qualityofqueso.swap_items", InputUtil.UNKNOWN_KEY.getCode(), QOQ));
     public static final KeyBinding OPEN_SEARCH_ITEM_FRAMES_GUI = KeyBindingHelper.registerKeyBinding(new KeyBinding("qualityofqueso.open_item_frame_search_gui", InputUtil.GLFW_KEY_I, QOQ));
     public static final KeyBinding HIDE_RECIPE_BOOK = KeyBindingHelper.registerKeyBinding(new KeyBinding("qualityofqueso.hide_recipe_book", InputUtil.GLFW_KEY_R, QOQ));
 
     /**
      * Initialize mod keybinds.
      */
-    public static void init() {
+    public static void initializeKeybinds() {
     }
 }

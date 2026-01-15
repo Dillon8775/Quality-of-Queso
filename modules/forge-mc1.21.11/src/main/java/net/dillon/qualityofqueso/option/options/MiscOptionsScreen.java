@@ -1,8 +1,8 @@
 package net.dillon.qualityofqueso.option.options;
 
 import com.google.common.collect.ImmutableList;
+import net.dillon.qualityofqueso.main.QoQ;
 import net.dillon.qualityofqueso.option.AbstractModOptionsScreen;
-import net.dillon.qualityofqueso.option.ModClientOptions;
 import net.dillon.qualityofqueso.option.ModListOptions;
 import net.dillon.qualityofqueso.util.ButtonUtil;
 import net.minecraft.ChatFormatting;
@@ -30,14 +30,15 @@ public class MiscOptionsScreen extends AbstractModOptionsScreen {
     @Override
     protected OptionInstance<?>[] options() {
         return new OptionInstance[]{
-                ModListOptions.ENABLE_MOD,
+                ModListOptions.enableMod(),
                 ModListOptions.quickEquip(),
-                ModListOptions.BETTER_SEARCHING,
-                ModListOptions.BETTER_GUI_EXIT,
-                ModListOptions.PREVENT_RAGE_QUITTING,
-                ModListOptions.PREVENT_E_FROM_TYPING,
-                ModListOptions.HELPFUL_TOOLTIPS,
-                ModListOptions.QOQ_BUTTONS
+                ModListOptions.betterSearching(),
+                ModListOptions.betterGuiExit(),
+                ModListOptions.preventRageQuitting(),
+                ModListOptions.preventEFromTyping(),
+                ModListOptions.helpfulTooltips(),
+                ModListOptions.qoqButtons(),
+                ModListOptions.serverConfigPresets()
         };
     }
 
@@ -47,7 +48,7 @@ public class MiscOptionsScreen extends AbstractModOptionsScreen {
         this.list.addSmall(this.options());
 
         // Initialize the list from current options
-        this.blacklistedServers = new ArrayList<>(ModClientOptions.BLACKLISTED_SERVERS.get());
+        this.blacklistedServers = new ArrayList<>(QoQ.options().blacklistedServers);
 
         // Create the position and text field
         this.blacklistedServersField = new EditBox(
@@ -99,9 +100,8 @@ public class MiscOptionsScreen extends AbstractModOptionsScreen {
 
     @Override
     public void onClose() {
-        ModClientOptions.BLACKLISTED_SERVERS.set(List.of());
-        List<String> updated = new ArrayList<>(this.blacklistedServers);
-        ModClientOptions.BLACKLISTED_SERVERS.set(updated);
+        QoQ.options().blacklistedServers.clear();
+        QoQ.options().blacklistedServers.addAll(this.blacklistedServers);
         super.onClose();
     }
 

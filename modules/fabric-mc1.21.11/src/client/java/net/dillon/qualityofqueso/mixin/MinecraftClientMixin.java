@@ -21,7 +21,7 @@ public class MinecraftClientMixin {
     private void handleKeyPressing(CallbackInfo ci) {
         if (modEnabled((MinecraftClient) (Object) this) && coptions().itemFrameSearching) {
             while (ModKeybinds.OPEN_SEARCH_ITEM_FRAMES_GUI.wasPressed()) {
-                MinecraftClient.getInstance().setScreen(new ItemFrameSearchScreen());
+                MinecraftClient.getInstance().setScreen(new ItemFrameSearchScreen(null));
             }
         }
     }

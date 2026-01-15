@@ -1,5 +1,6 @@
 package net.dillon.qualityofqueso.option;
 
+import net.dillon.qualityofqueso.main.QoQ;
 import net.dillon.qualityofqueso.option.options.InventoryManagementOptionsScreen;
 import net.dillon.qualityofqueso.option.options.InventorySearchingOptionsScreen;
 import net.dillon.qualityofqueso.option.options.ItemFrameSearchingOptionsScreen;
@@ -16,6 +17,8 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import static net.dillon.qualityofqueso.main.QoQ.coptions;
 
 @OnlyIn(Dist.CLIENT)
 public class ModOptionsScreen extends AbstractModOptionsScreen {
@@ -38,8 +41,8 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
             this.minecraft.setScreen(new ItemFrameSearchingOptionsScreen(this));
         }).build();
         this.openItemFrameSearchGUIOptions = Button.builder(Component.translatable("qualityofqueso.gui.open_item_frame_search_gui"), button -> {
-            if (ModCommonOptions.ITEM_FRAME_SEARCHING.get() && this.minecraft.level != null) {
-                this.minecraft.setScreen(new ItemFrameSearchScreen());
+            if (coptions().itemFrameSearching && this.minecraft.level != null) {
+                this.minecraft.setScreen(new ItemFrameSearchScreen(this));
             }
         }).build();
         this.otherOptions = Button.builder(Component.translatable("qualityofqueso.gui.misc_options"), button -> {
@@ -68,7 +71,7 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float deltaTicks) {
         super.render(graphics, mouseX, mouseY, deltaTicks);
-        this.openItemFrameSearchGUIOptions.active = ModCommonOptions.ITEM_FRAME_SEARCHING.get() && this.minecraft.level != null;
+        this.openItemFrameSearchGUIOptions.active = coptions().itemFrameSearching && this.minecraft.level != null;
         if (this.chestSearchingOptions.isHovered()) {
             ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.chest_searching_options.tooltip"), graphics, this.font, mouseX, mouseY);
         }
@@ -79,13 +82,13 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
             ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.item_frame_searching_options.tooltip"), graphics, this.font, mouseX, mouseY);
         }
         if (this.openItemFrameSearchGUIOptions.isHovered()) {
-            if (!ModCommonOptions.ITEM_FRAME_SEARCHING.get()) {
+            if (!coptions().itemFrameSearching) {
                 ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.open_item_frame_search_gui.disabled"), graphics, this.font, mouseX, mouseY);
             } else if (this.minecraft.level == null) {
                 ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.open_item_frame_search_gui.null_world"), graphics, this.font, mouseX, mouseY);
             }
         }
-        if (ModClientOptions.HELPFUL_TOOLTIPS.get()) {
+        if (QoQ.options().helpfulTooltips) {
             if (this.otherOptions.isHovered()) {
                 ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.misc_options.tooltip"), graphics, this.font, mouseX, mouseY);
             }

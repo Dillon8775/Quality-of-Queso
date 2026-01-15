@@ -34,7 +34,7 @@ public class ItemFrameSearcherCommand {
                                                 )
                                         )
                                         .then(
-                                                CommandManager.argument("radius", IntegerArgumentType.integer(25, 300))
+                                                CommandManager.argument("radius", IntegerArgumentType.integer(1, 300))
                                                         .executes(
                                                                 context -> execute(
                                                                         context,
@@ -60,7 +60,7 @@ public class ItemFrameSearcherCommand {
                                                                 )
                                                         )
                                                         .then(
-                                                                CommandManager.argument("radius", IntegerArgumentType.integer(25, 300))
+                                                                CommandManager.argument("radius", IntegerArgumentType.integer(1, 300))
                                                                         .executes(
                                                                                 context -> execute(
                                                                                         context,

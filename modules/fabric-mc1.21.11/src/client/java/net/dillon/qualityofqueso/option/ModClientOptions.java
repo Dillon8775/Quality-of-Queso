@@ -11,6 +11,7 @@ import java.util.List;
  */
 @Environment(EnvType.CLIENT)
 public class ModClientOptions {
+    // Main options
     public boolean enableMod = true;
     public boolean betterGuiExit = true;
     public boolean betterSearching = true;
@@ -18,21 +19,24 @@ public class ModClientOptions {
     public boolean searchInventory = true;
     public boolean inventorySearching = true;
     public boolean saveSearchText = false;
+
+    // Inventory management options
     public boolean inventoryManagement = true;
-    public boolean shortcutKeys = true;
-    public QuickDrop quickDrop = QuickDrop.SHORTCUT_KEY;
-    public boolean swapping = false;
-    public boolean includeHotbar = true;
-    public boolean legacyQuickMove = false;
+    public ContainerSorting containerSorting = ContainerSorting.SHORTCUT_KEY_OR_BUTTON;
+    public QuickDrop quickDrop = QuickDrop.SHORTCUT_KEY_ONLY;
+    public Swapping swapping = Swapping.SHORTCUT_KEY_ONLY;
     public boolean dragToSort = true;
-    public boolean showButtonOutlines = false;
+    public boolean includeHotbar = true;
     public boolean showButtonShortcuts = true;
+
+    // Misc options
+    public boolean legacyQuickMove = false;
     public boolean quickEquip = true;
     public boolean preventRageQuitting = false;
     public boolean preventEFromTyping = false;
     public boolean helpfulTooltips = true;
     public List<String> blacklistedServers = new ArrayList<>();
-    public boolean serverSpecificConfigs = true;
+    public boolean serverConfigPresets = true;
     public int itemFrameSearchTimer = 0;
     public int itemFrameSearchRadius = 150;
     public QoQButtons qoqButtons = QoQButtons.EVERYWHERE;
@@ -42,7 +46,7 @@ public class ModClientOptions {
     public static class ModOptionsHandler extends BaseOptions<ModClientOptions> {
 
         protected ModOptionsHandler() {
-            super(BaseOptions.DEFAULT_FILE_NAME);
+            super(BaseOptions.DEFAULT_CLIENT_FILE_NAME);
             this.load();
         }
 

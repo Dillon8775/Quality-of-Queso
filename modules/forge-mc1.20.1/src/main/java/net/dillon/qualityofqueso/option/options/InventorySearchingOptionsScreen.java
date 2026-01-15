@@ -18,10 +18,10 @@ public class InventorySearchingOptionsScreen extends AbstractModOptionsScreen {
     @Override
     protected OptionInstance<?>[] options() {
         return new OptionInstance[]{
-                ModListOptions.CHEST_SEARCHING,
-                ModListOptions.SEARCH_INVENTORY,
-                ModListOptions.INVENTORY_SEARCHING,
-                ModListOptions.SAVE_SEARCH_TEXT
+                ModListOptions.chestSearching(),
+                ModListOptions.searchInventory(),
+                ModListOptions.inventorySearching(),
+                ModListOptions.saveSearchText()
         };
     }
 }

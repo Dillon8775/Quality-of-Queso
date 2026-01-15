@@ -1,12 +1,13 @@
 package net.dillon.qualityofqueso.screen.gui;
 
-import net.dillon.qualityofqueso.option.ModClientOptions;
 import net.dillon.qualityofqueso.util.ButtonUtil;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+
+import static net.dillon.qualityofqueso.main.QoQ.options;
 
 /**
  * A separate class for the include hotbar button.
@@ -23,12 +24,12 @@ public class IncludeHotbarButton extends TransferButton {
     @Override
     protected void renderWidget(GuiGraphics context, int mouseX, int mouseY, float deltaTicks) {
         if (this.isHovered()) {
-            this.renderButtonTexture(ModClientOptions.INCLUDE_HOTBAR.get() ? "include_hotbar_button_hovered" : "exclude_hotbar_button_hovered", false, this, context);
-            ButtonUtil.drawTooltip(ModClientOptions.INCLUDE_HOTBAR.get() ?
+            this.renderButtonTexture(options().includeHotbar ? "include_hotbar_button_hovered" : "exclude_hotbar_button_hovered", false, this, context);
+            ButtonUtil.drawTooltip(options().includeHotbar ?
                     Component.translatable("qualityofqueso.gui.include_hotbar") :
                     Component.translatable("qualityofqueso.gui.exclude_hotbar"), context, this.font, mouseX, mouseY);
         } else {
-            this.renderButtonTexture(ModClientOptions.INCLUDE_HOTBAR.get() ? "include_hotbar_button" : "exclude_hotbar_button", false, this, context);
+            this.renderButtonTexture(options().includeHotbar ? "include_hotbar_button" : "exclude_hotbar_button", false, this, context);
         }
     }
 }

@@ -3,19 +3,19 @@
 ###
 
 <a href="https://files.minecraftforge.net/" target="_blank">
-  <img src="https://i.imgur.com/gbZFxKU.png" width="427" height="115" alt="Compatible with Forge">
+  <img src="https://i.imgur.com/gbZFxKU.png" width="285" height="77" alt="Compatible with Forge">
 </a>
 
 ####
 
 <a href="https://fabricmc.net/" target="_blank">
-  <img src="https://i.imgur.com/vIbuVv8.png" width="433" height="149" alt="Compatible with Forge">
+  <img src="https://i.imgur.com/vIbuVv8.png" width="289" height="99" alt="Compatible with Forge">
 </a>
 
 ####
 
 <a href="https://modrinth.com/mod/fabric-api/versions" target="_blank">
-  <img src="https://i.imgur.com/yFnszAw.png" width="286" height="96" alt="Compatible with Forge">
+  <img src="https://i.imgur.com/yFnszAw.png" width="191" height="64" alt="Compatible with Forge">
 </a>
 
 ### Please report *any* bugs you may find <a href="https://github.com/Dillon8775/Quality-of-Queso/issues" target="_blank">here.</a>
@@ -55,9 +55,24 @@
     - The transfer button will have a hint of light green when searching with match case (:) [since: v1.4.2]
 - #### You can also quickly transfer items by using CTRL + C (move items from container -> inventory) and CTRL + I (move items from inventory -> container) [since: v1.4].
 
+### Smart-moving
+- Moving certain items that have similar components, ex. an enchanted book with sharpness on it, you can choose to move *only enchanted books with sharpness on them.*
+- Just hover over the transfer button with your desired item, hold shift and it will move all items with the same components.
+- This applies to **enchanted books, potions, tipped arrows, and firework rockets** (rockets use flight duration to move).
+
+[smart moving since: v1.5]
+
 ![Chest transferring feature.](https://i.imgur.com/91vGfnG.gif)
 
 ## Along with these buttons, we have:
+
+---
+
+<img src="https://i.imgur.com/AG9Ygkj.png" width="36" height="36" alt="Sort button.">
+
+## The ***Sort*** button, which alphabetically sorts all items in a container!
+- Shortcut keybind = *CTRL + S*.
+- You cannot utilize the search feature with this button.
 
 ---
 
@@ -65,15 +80,15 @@
 
 ### The ***Quick Drop*** button, which allows you to drop ***all*** highlighted items in a chest (or your inventory).
 - If you use this button in a container screen, it will drop the full stack of selected items in the container. Using the button while your inventory is open will drop selected items in your inventory.
-- You can quickly do this by pressing *CTRL + ALT + Q.*
 - If you hold "shift", you can drop one of each item, instead of the full stack (since: v1.4.4)
+- Shortcut keybind = *CTRL + ALT + Q + (SHIFT, only if you are dropping one of each item)*
 
 ---
 
 <img src="https://i.imgur.com/OSQdEuo.png" width="36" height="36" alt="Swap button.">
 
 ### The ***Swap*** button, which swaps all items in the container and inventory to the other container's respective slot
-- You can quickly do this as well by pressing *CTRL + S* (you can change or disable this).
+- You can set a keybind to do this.
 - You cannot utilize the search feature with this button.
 
 ---
@@ -94,7 +109,21 @@
 ### You can disable any of these buttons if you would like.
 
 ![Other buttons.](https://i.imgur.com/4XBrfP0.gif)
-#### (since: v1.2, quick drop and swap button since v1.4)
+![Sorting button.](https://i.imgur.com/IJLQ1Ss.gif)
+#### (since: v1.2, quick drop and swap button since v1.4, sort since v1.5)
+
+---
+
+# _Drag Sorting!_
+### Hold ALT and drag-click across slots to "exclude" them from being transferred or searched!
+
+- ### Left-click to exclude slot
+- ### Right-click to remove excluded slot
+Note: when attempting to transfer to an excluded slot, that slot will still be affected. This feature only applies to *selecting slots to move/search.*
+
+![Drag sorting in action.](https://i.imgur.com/Q2d9ojS.gif)
+
+#### (since: v1.5)
 
 ---
 
@@ -132,6 +161,18 @@
 
 ---
 
+# _Show Time In-Game!_
+
+### Display your real-life time and/or Minecraft's in-game time!
+
+### To enable these, press F3 + F6, and search for "time".
+- You can choose to always display them *or* only in the debug menu.
+- If you are playing 1.20.1, you can just enable these via the mod's configuration, under "Misc...".
+
+![Show Time In-Game.](https://i.imgur.com/bfWrzxc.png)
+
+---
+
 # _Better GUI Closing!_
 Clicking off of any GUI screen (as long as your cursor isn't holding anything) will close the screen.
 
@@ -152,6 +193,10 @@ Note: if your cursor is hovered over a slot with an item that is bound to a hotb
 If you want, without removing the mod from your mods folder entirely, there is an option to disable the mod entirely from functioning, and you can also add blacklisted servers to make the mod not work on those specific servers. Just go to the Quality of Queso options GUI to configure that.
 
 #### (since: v1.3.2)
+
+---
+# Multi-Server Configs
+By default, each server that you join will have its own Quality of Queso configuration, meaning each server that you play on can have different settings. You can disable this if you'd like (search for "Server-Config Presets" under "Misc..." options.)
 
 ---
 

@@ -1,6 +1,5 @@
 package net.dillon.qualityofqueso.mixin.client;
 
-import net.dillon.qualityofqueso.option.ModClientOptions;
 import net.dillon.qualityofqueso.util.ButtonUtil;
 import net.dillon.qualityofqueso.util.ModTexts;
 import net.minecraft.client.gui.GuiGraphics;
@@ -23,6 +22,8 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+import static net.dillon.qualityofqueso.main.QoQ.options;
+import static net.dillon.qualityofqueso.main.QoQ.saveAll;
 import static net.dillon.qualityofqueso.util.ModUtil.isOnServer;
 
 @OnlyIn(Dist.CLIENT)
@@ -45,23 +46,22 @@ public class PauseScreenMixin extends Screen {
     @Inject(method = "init", at = @At("TAIL"))
     private void init(CallbackInfo ci) {
         if (this.showPauseMenu) {
-            if (this.disconnectButton != null && ModClientOptions.PREVENT_RAGE_QUITTING.get()) {
+            if (this.disconnectButton != null && options().preventRageQuitting) {
                 this.disconnectButton.active = false;
             }
-            if (ModClientOptions.QOQ_BUTTONS.get().everywhere()) {
+            if (options().qoqButtons.everywhere()) {
                 SpriteIconButton settingsButton = this.addRenderableWidget(ButtonUtil.initializeButton(this.minecraft, this));
                 settingsButton.setPosition(this.width / 2 + 106, this.height / 4 + 72 - 16);
                 if (!(this.minecraft.getCurrentServer() == null)) {
                     String address = this.getServerAddress();
                     this.blacklistServerButton = this.addRenderableWidget(Button.builder(ModTexts.BLANK, button -> {
-                        List<String> servers = new ArrayList<>(ModClientOptions.BLACKLISTED_SERVERS.get());
-                        if (ModClientOptions.BLACKLISTED_SERVERS.get().contains(address)) {
+                        List<String> servers = new ArrayList<>(options().blacklistedServers);
+                        if (options().blacklistedServers.contains(address)) {
                             servers.remove(address);
                         } else {
                             servers.add(address);
                         }
-                        ModClientOptions.BLACKLISTED_SERVERS.set(servers);
-                        ModClientOptions.SPEC.save();
+                        saveAll();
                     }).bounds(this.width / 2 + 106, this.height / 4 + 96 - 16, 20, 20).build());
                 }
             }
@@ -74,10 +74,10 @@ public class PauseScreenMixin extends Screen {
     @Inject(method = "render", at = @At("TAIL"))
     private void renderTooltipsAndTextures(GuiGraphics graphics, int mouseX, int mouseY, float deltaTicks, CallbackInfo ci) {
         if (this.showPauseMenu) {
-            if (ModClientOptions.PREVENT_RAGE_QUITTING.get() && ModClientOptions.HELPFUL_TOOLTIPS.get() && this.disconnectButton != null && this.disconnectButton.isHovered()) {
+            if (options().preventRageQuitting && options().helpfulTooltips && this.disconnectButton != null && this.disconnectButton.isHovered()) {
                 ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.disconnect"), graphics, this.font, mouseX, mouseY);
             }
-            if (ModClientOptions.QOQ_BUTTONS.get().everywhere() && !(this.minecraft.getCurrentServer() == null)) {
+            if (options().qoqButtons.everywhere() && !(this.minecraft.getCurrentServer() == null)) {
                 if (this.blacklistServerButton != null) {
                     this.blacklistServerButton.active = isOnServer(this.minecraft);
                     String address = this.getServerAddress();
@@ -117,6 +117,6 @@ public class PauseScreenMixin extends Screen {
      */
     @Unique
     private boolean isServerBlacklisted(String serverAddress) {
-        return ModClientOptions.BLACKLISTED_SERVERS.get().contains(serverAddress);
+        return options().blacklistedServers.contains(serverAddress);
     }
 }

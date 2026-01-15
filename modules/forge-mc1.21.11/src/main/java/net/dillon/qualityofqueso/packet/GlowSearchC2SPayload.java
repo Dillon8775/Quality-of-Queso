@@ -1,6 +1,5 @@
 package net.dillon.qualityofqueso.packet;
 
-import net.dillon.qualityofqueso.option.ModCommonOptions;
 import net.dillon.qualityofqueso.util.GlowCountdown;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
@@ -20,6 +19,8 @@ import net.minecraftforge.event.network.CustomPayloadEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
+
+import static net.dillon.qualityofqueso.main.QoQ.coptions;
 
 /**
  * The payload (or packet) for taking in the data required to make item frames glow.
@@ -48,7 +49,7 @@ public record GlowSearchC2SPayload(String query, boolean matchCase, boolean clea
      * Handles the item frame search glow packet.
      */
     public void handle(CustomPayloadEvent.Context context) {
-        if (ModCommonOptions.ITEM_FRAME_SEARCHING.get()) {
+        if (coptions().itemFrameSearching) {
             ServerPlayer player = context.getSender();
             ServerLevel world = player.level();
 

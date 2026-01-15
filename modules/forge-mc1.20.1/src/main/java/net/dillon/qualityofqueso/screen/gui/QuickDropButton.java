@@ -31,10 +31,11 @@ public class QuickDropButton extends TransferButton {
                 "_match.png" : ".png";
         String appended = transferable ? transferableString : ".png";
         context.blit(ResourceLocation.parse("qualityofqueso:textures/gui/" + id + appended), buttonReference.getX() - 1, buttonReference.getY() - 1, 0.0F, 0.0F, 12, 12, 12, 12);
-        if (Screen.hasControlDown() && Screen.hasAltDown()) {
+        boolean shortcutKeyPressed = Screen.hasControlDown() && Screen.hasAltDown();
+        if (shortcutKeyPressed) {
             ButtonUtil.drawButtonTexture(context, "quick_drop_outline", this);
         }
-        if (Screen.hasShiftDown()) {
+        if (Screen.hasShiftDown() && (this.isHovered() || shortcutKeyPressed)) {
             ButtonUtil.drawButtonTexture(context, "quick_drop_one", this);
         }
     }

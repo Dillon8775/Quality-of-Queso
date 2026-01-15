@@ -1,7 +1,6 @@
 package net.dillon.qualityofqueso.screen.gui;
 
 import net.dillon.qualityofqueso.main.QoQ;
-import net.dillon.qualityofqueso.option.ModClientOptions;
 import net.dillon.qualityofqueso.util.ButtonUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
@@ -10,6 +9,8 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import static net.dillon.qualityofqueso.main.QoQ.options;
 
 /**
  * An representation of a search field.
@@ -21,7 +22,7 @@ public class SearchField extends EditBox {
     public SearchField(Font font, int x, int y) {
         super(font, x, y, 90, 12, null);
         this.font = font;
-        if (ModClientOptions.SAVE_SEARCH_TEXT.get()) {
+        if (options().saveSearchText) {
             this.setValue(QoQ.SAVED_TEXT);
         }
         this.setMaxLength(50);
@@ -31,7 +32,7 @@ public class SearchField extends EditBox {
     @Override
     public void renderWidget(GuiGraphics context, int mouseX, int mouseY, float deltaTicks) {
         super.renderWidget(context, mouseX, mouseY, deltaTicks);
-        if (ModClientOptions.HELPFUL_TOOLTIPS.get() && this.isHovered() && this.getValue().isEmpty()) {
+        if (options().helpfulTooltips && this.isHovered() && this.getValue().isEmpty()) {
             ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.chest_search.search_filtering"), context, this.font, mouseX, mouseY);
         }
     }

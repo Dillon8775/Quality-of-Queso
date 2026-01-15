@@ -18,14 +18,17 @@ public class MiscOptionsScreen extends AbstractModOptionsScreen {
     @Override
     protected OptionInstance<?>[] options() {
         return new OptionInstance[]{
-                ModListOptions.ENABLE_MOD,
+                ModListOptions.enableMod(),
                 ModListOptions.quickEquip(),
-                ModListOptions.BETTER_SEARCHING,
-                ModListOptions.BETTER_GUI_EXIT,
-                ModListOptions.PREVENT_RAGE_QUITTING,
-                ModListOptions.PREVENT_E_FROM_TYPING,
-                ModListOptions.HELPFUL_TOOLTIPS,
-                ModListOptions.QOQ_BUTTONS
+                ModListOptions.betterSearching(),
+                ModListOptions.betterGuiExit(),
+                ModListOptions.preventRageQuitting(),
+                ModListOptions.preventEFromTyping(),
+                ModListOptions.helpfulTooltips(),
+                ModListOptions.qoqButtons(),
+                ModListOptions.showInGameTime(),
+                ModListOptions.showIrlTime(),
+                ModListOptions.serverConfigPresets()
         };
     }
 }

@@ -23,7 +23,6 @@ include "modules:common"
 
 // === FABRIC ===
 include "modules:fabric-mc1.21.11"
-include "modules:fabric-mc1.21.9x"
 
 // === FORGE ===
 include "modules:forge-mc1.21.11"

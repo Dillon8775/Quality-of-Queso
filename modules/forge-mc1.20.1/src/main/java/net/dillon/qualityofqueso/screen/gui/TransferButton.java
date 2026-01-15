@@ -1,20 +1,31 @@
 package net.dillon.qualityofqueso.screen.gui;
 
 import net.dillon.qualityofqueso.keybind.ModKeybinds;
-import net.dillon.qualityofqueso.option.ModClientOptions;
 import net.dillon.qualityofqueso.util.ButtonUtil;
 import net.dillon.qualityofqueso.util.ModTexts;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import org.spongepowered.asm.mixin.Unique;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
+
+import static net.dillon.qualityofqueso.main.QoQ.options;
+import static net.dillon.qualityofqueso.util.ButtonUtil.getEnchantmentName;
 
 /**
  * A representation of a transfer button.
@@ -79,10 +90,7 @@ public class TransferButton extends Button {
             boolean containerButton = this.buttonName.equals("transfer_container");
             boolean validName = inventoryButton || containerButton;
             if (validName) {
-                if (ModClientOptions.SHOW_BUTTON_OUTLINES.get()) {
-                    ButtonUtil.drawButtonTexture(context, "transfer_button_outline", this);
-                }
-                if (ModClientOptions.SHOW_BUTTON_SHORTCUTS.get() && ModClientOptions.SHORTCUT_KEYS.get()) {
+                if (options().showButtonShortcuts) {
                     if (inventoryButton && ModKeybinds.MOVE_INVENTORY.getKey() == ModKeybinds.MOVE_INVENTORY.getDefaultKey()) {
                         ButtonUtil.drawButtonTexture(context, "transfer_inventory_button_shortcut_key", this);
                     } else if (containerButton && ModKeybinds.MOVE_CONTAINER.getKey() == ModKeybinds.MOVE_CONTAINER.getDefaultKey()) {
@@ -110,8 +118,34 @@ public class TransferButton extends Button {
 
         if (this.isHovered()) {
             if (this.active) {
-                if (!this.screenHandler.getCarried().isEmpty()) {
-                    ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_cursor_stack", this.screenHandler.getCarried().getHoverName()), graphics, this.font, mouseX, mouseY);
+                ItemStack cursorStack = this.screenHandler.getCarried();
+                if (!cursorStack.isEmpty()) {
+                    String tooltip = "_button.with_cursor_stack";
+                    Component itemName = cursorStack.getHoverName();
+                    if (cursorStack.is(Items.ENCHANTED_BOOK)) {
+                        List<String> cursorEnchantments = new ArrayList<>();
+                        for (Map.Entry<Enchantment, Integer> cursorEntry : EnchantmentHelper.getEnchantments(cursorStack).entrySet()) {
+                            cursorEnchantments.add(getEnchantmentName(cursorEntry));
+                        }
+                        String collection = String.join(",", cursorEnchantments);
+                        tooltip = "_button.with_cursor_enchantment_stack";
+                        itemName = Component.literal(collection);
+                    } else if (cursorStack.is(Items.FIREWORK_ROCKET)) {
+                        CompoundTag tag = cursorStack.getTag();
+                        if (tag != null && tag.contains("Fireworks")) {
+                            CompoundTag fireworks = tag.getCompound("Fireworks");
+                            if (fireworks.contains("Flight")) {
+                                int flight = fireworks.getByte("Flight");
+                                itemName = Component.literal(String.valueOf(flight)).withStyle(ChatFormatting.BOLD);
+                                tooltip = "_button.with_cursor_firework_stack";
+                            }
+                        }
+                    } else if (cursorStack.is(Items.POTION) || cursorStack.is(Items.SPLASH_POTION) || cursorStack.is(Items.LINGERING_POTION)) {
+                        tooltip = "_button.with_cursor_potion_stack";
+                    } else if (cursorStack.is(Items.TIPPED_ARROW)) {
+                        tooltip = "_button.with_cursor_tipped_arrow_stack";
+                    }
+                    ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui." + this.buttonName + tooltip, itemName), graphics, this.font, mouseX, mouseY);
                 } else if (!this.searchFieldText.isEmpty()) {
                     ButtonUtil.drawTooltip(this.searchFieldText.startsWith("#") ?
                             Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query.tag", this.searchFieldText.substring(1)) :
@@ -121,7 +155,7 @@ public class TransferButton extends Button {
                                             Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query.match", this.searchFieldText.substring(1)) :
                                             Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query", this.searchFieldText), graphics, this.font, mouseX, mouseY);
                 } else {
-                    if (ModClientOptions.HELPFUL_TOOLTIPS.get()) {
+                    if (options().helpfulTooltips) {
                         ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui." + this.buttonName + "_button"), graphics, this.font, mouseX, mouseY);
                     }
                 }

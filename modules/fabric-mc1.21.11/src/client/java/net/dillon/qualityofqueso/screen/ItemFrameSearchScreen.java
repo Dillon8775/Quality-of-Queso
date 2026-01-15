@@ -17,6 +17,7 @@ import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.input.KeyInput;
 import net.minecraft.text.Text;
+import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
 import static net.dillon.qualityofqueso.main.QoQ.options;
@@ -28,10 +29,12 @@ import static net.dillon.qualityofqueso.main.QoQ.options;
 public class ItemFrameSearchScreen extends Screen {
     private TextFieldWidget searchField;
     private ButtonWidget searchButton, clearButton;
+    private final Screen parent;
 
     // Basic constructor; no title text.
-    public ItemFrameSearchScreen() {
+    public ItemFrameSearchScreen(@Nullable Screen parent) {
         super(ModTexts.BLANK);
+        this.parent = parent;
     }
 
     /**
@@ -119,7 +122,11 @@ public class ItemFrameSearchScreen extends Screen {
     public void close() {
         QoQ.SAVED_ITEM_FRAME_TEXT = this.searchField.getText();
         ModClientOptions.CLIENT_OPTIONS.save();
-        super.close();
+        if (this.parent != null) {
+            this.client.setScreen(this.parent);
+        } else {
+            super.close();
+        }
     }
 
     /**

@@ -46,7 +46,7 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
         buttons.add(this.itemFrameSearchingOptions);
         this.openItemFrameSearchGUI = this.addDrawableChild(ButtonWidget.builder(Text.translatable("qualityofqueso.gui.open_item_frame_search_gui"), button -> {
             if (QoQ.coptions().itemFrameSearching && this.client.world != null) {
-                this.client.setScreen(new ItemFrameSearchScreen());
+                this.client.setScreen(new ItemFrameSearchScreen(this));
             }
         }).build());
         buttons.add(this.openItemFrameSearchGUI);

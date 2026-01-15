@@ -13,7 +13,8 @@ import java.io.FileWriter;
  * The base class for registering options on enivronment sides.
  */
 public abstract class BaseOptions<T> {
-    public static final String DEFAULT_FILE_NAME = "qualityofqueso-client_config.json";
+    public static final String DEFAULT_CLIENT_FILE_NAME = "qualityofqueso-client_config.json";
+    public static final String DEFAULT_COMMON_FILE_NAME = "qualityofqueso-common_config.json";
     private final Gson GSON = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).setPrettyPrinting().create();
     private String fileName;
     private File file;

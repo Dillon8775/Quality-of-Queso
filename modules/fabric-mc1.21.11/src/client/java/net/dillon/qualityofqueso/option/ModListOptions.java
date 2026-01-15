@@ -61,9 +61,22 @@ public class ModListOptions {
                 (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, QoQ.options().inventoryManagement, value -> QoQ.options().inventoryManagement = value);
     }
 
-    public static  SimpleOption<Boolean> shortcutKeys() {
-        return new SimpleOption<>("qualityofqueso.options.shortcut_keys", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.shortcut_keys.tooltip")),
-                (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, QoQ.options().shortcutKeys, value -> QoQ.options().shortcutKeys = value);
+    public static SimpleOption<ContainerSorting> containerSorting() {
+        return new SimpleOption<>(
+                "qualityofqueso.options.container_sorting",
+                option -> {
+                    Text text = ModTexts.BLANK;
+                    switch (option) {
+                        case SHORTCUT_KEY_OR_BUTTON -> text = Text.translatable("qualityofqueso.options.container_sorting.shortcut_key_or_button.tooltip");
+                        case SHORTCUT_KEY_ONLY -> text = Text.translatable("qualityofqueso.options.container_sorting.shortcut_key_only.tooltip");
+                    }
+                    String appended = !text.equals(ModTexts.BLANK) ? "\n\n" : "";
+                    return Tooltip.of(Text.translatable("qualityofqueso.options.container_sorting.tooltip", keyBindingAsString(ModKeybinds.SORT_CONTAINER)).append(appended).append(text));
+                },
+                (optionText, value) -> value.getText(),
+                new SimpleOption.PotentialValuesBasedCallbacks<>(Arrays.asList(ContainerSorting.values()), ContainerSorting.Codec),
+                QoQ.options().containerSorting,
+                value -> QoQ.options().containerSorting = value);
     }
 
     public static SimpleOption<QuickDrop> quickDrop() {
@@ -72,30 +85,34 @@ public class ModListOptions {
                 option -> {
                     Text text = ModTexts.BLANK;
                     switch (option) {
-                        case ON -> text = Text.translatable("qualityofqueso.options.quick_drop.on.tooltip");
-                        case SHORTCUT_KEY -> text = Text.translatable("qualityofqueso.options.quick_drop.shortcut_key.tooltip");
+                        case SHORTCUT_KEY_OR_BUTTON -> text = Text.translatable("qualityofqueso.options.quick_drop.shortcut_key_or_button.tooltip");
+                        case SHORTCUT_KEY_ONLY -> text = Text.translatable("qualityofqueso.options.quick_drop.shortcut_key_only.tooltip");
                     }
                     String appended = !text.equals(ModTexts.BLANK) ? "\n\n" : "";
                     return Tooltip.of(Text.translatable("qualityofqueso.options.quick_drop.tooltip").append(appended).append(text));
                 },
-                (optionText, value) -> {
-                    Formatting formatting;
-                    switch (value) {
-                        case ON -> formatting = Formatting.YELLOW;
-                        case SHORTCUT_KEY -> formatting = Formatting.AQUA;
-                        default -> formatting = Formatting.RED;
-                    }
-                    return value.getText().copy().formatted(formatting == Formatting.AQUA ? Formatting.AQUA : Formatting.BOLD).formatted(formatting);
-                },
+                (optionText, value) -> value.getText(),
                 new SimpleOption.PotentialValuesBasedCallbacks<>(Arrays.asList(QuickDrop.values()), QuickDrop.Codec),
                 QoQ.options().quickDrop,
                 value -> QoQ.options().quickDrop = value);
     }
 
-    public static SimpleOption<Boolean> swapping() {
-        return new SimpleOption<>("qualityofqueso.options.swapping", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.swapping.tooltip",
-                keyBindingAsString(ModKeybinds.SWAP_ITEMS))),
-                (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, QoQ.options().swapping, value -> QoQ.options().swapping = value);
+    public static SimpleOption<Swapping> swapping() {
+        return new SimpleOption<>(
+                "qualityofqueso.options.swapping",
+                option -> {
+                    Text text = ModTexts.BLANK;
+                    switch (option) {
+                        case SHORTCUT_KEY_OR_BUTTON -> text = Text.translatable("qualityofqueso.options.swapping.shortcut_key_or_button.tooltip");
+                        case SHORTCUT_KEY_ONLY -> text = Text.translatable("qualityofqueso.options.swapping.shortcut_key_only.tooltip");
+                    }
+                    String appended = !text.equals(ModTexts.BLANK) ? "\n\n" : "";
+                    return Tooltip.of(Text.translatable("qualityofqueso.options.swapping.tooltip", keyBindingAsString(ModKeybinds.SWAP_ITEMS)).append(appended).append(text));
+                },
+                (optionText, value) -> value.getText(),
+                new SimpleOption.PotentialValuesBasedCallbacks<>(Arrays.asList(Swapping.values()), Swapping.Codec),
+                QoQ.options().swapping,
+                value -> QoQ.options().swapping = value);
     }
 
     public static SimpleOption<Boolean> includeHotbar() {
@@ -111,11 +128,6 @@ public class ModListOptions {
     public static SimpleOption<Boolean> dragToSort() {
         return new SimpleOption<>("qualityofqueso.options.drag_to_sort", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.drag_to_sort.tooltip")),
                 (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, QoQ.options().dragToSort, value -> QoQ.options().dragToSort = value);
-    }
-
-    public static SimpleOption<Boolean> showButtonOutlines() {
-        return new SimpleOption<>("qualityofqueso.options.show_button_outlines", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.show_button_outlines.tooltip")),
-                (optionText, value) -> !value ? ModTexts.NO : ModTexts.YES, SimpleOption.BOOLEAN, QoQ.options().showButtonOutlines, value -> QoQ.options().showButtonOutlines = value);
     }
 
     public static SimpleOption<Boolean> showButtonShortcuts() {
@@ -152,7 +164,7 @@ public class ModListOptions {
 
     public static SimpleOption<Boolean> serverConfigPresets() {
         return new SimpleOption<>("qualityofqueso.options.server_config_presets", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.server_config_presets.tooltip")),
-                (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, QoQ.options().serverSpecificConfigs, value -> QoQ.options().serverSpecificConfigs = value);
+                (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, QoQ.options().serverConfigPresets, value -> QoQ.options().serverConfigPresets = value);
     }
 
     public static SimpleOption<QoQButtons> qoqButtons() {

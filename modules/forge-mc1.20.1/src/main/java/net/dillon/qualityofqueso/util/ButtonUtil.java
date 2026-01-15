@@ -1,7 +1,6 @@
 package net.dillon.qualityofqueso.util;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import net.dillon.qualityofqueso.option.ModClientOptions;
 import net.dillon.qualityofqueso.option.ModOptionsScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -9,17 +8,16 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.inventory.ContainerScreen;
-import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
-import net.minecraft.client.gui.screens.inventory.InventoryScreen;
-import net.minecraft.client.gui.screens.inventory.ShulkerBoxScreen;
+import net.minecraft.client.gui.screens.inventory.*;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ServerboundContainerClickPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.Container;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ClickType;
@@ -27,9 +25,16 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.spongepowered.asm.mixin.Unique;
 
+import java.util.*;
+
+import static net.dillon.qualityofqueso.main.QoQ.options;
 import static net.dillon.qualityofqueso.main.QoQ.quicklyEquippables;
 
 /**
@@ -115,7 +120,7 @@ public class ButtonUtil {
      * @return the current {@code container size.}
      */
     public static int getContainerSize(Container inventory) {
-        return inventory.getContainerSize();
+        return inventory == null ? 0 : inventory.getContainerSize();
     }
 
     /**
@@ -129,7 +134,42 @@ public class ButtonUtil {
      * @return the fromInventory (size) that should be searched.
      */
     public static int getInventorySize(AbstractContainerMenu handler, Container inventory) {
-        return ModClientOptions.SEARCH_INVENTORY.get() ? handler.slots.size() : inventory.getContainerSize();
+        return options().searchInventory ? handler.slots.size() : inventory.getContainerSize();
+    }
+
+    /**
+     * @return if the user is attempting to exclude slots.
+     */
+    public static boolean isExcludingSlots(AbstractContainerScreen<?> handledScreen) {
+        return options().dragToSort && Screen.hasAltDown() && handledScreen.hoveredSlot != null && handledScreen.getMenu().getCarried().isEmpty();
+    }
+
+    /**
+     * @return if a slot should be skipped.
+     */
+    public static boolean shouldSkipSlot(int slotId, Set<Integer> excludedSlots) {
+        for (int id : excludedSlots) {
+            if (slotId == id) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @return if a stack can be combined/merged.
+     */
+    private static boolean canCombine(ItemStack a, ItemStack b) {
+        if (a.isEmpty() || b.isEmpty()) {
+            return false;
+        }
+        if (!a.isStackable()) {
+            return false;
+        }
+        if (!ItemStack.isSameItem(a, b)) {
+            return false;
+        }
+        return ItemStack.isSameItemSameTags(a, b);
     }
 
     /**
@@ -161,7 +201,7 @@ public class ButtonUtil {
      * <p>{@code default start = 9, default end = 36}</p>
      */
     public static boolean isAnySlotFilled(AbstractContainerMenu handler, boolean checkHotbar, int start, int end) {
-        for (int i = start; i < (ModClientOptions.INCLUDE_HOTBAR.get() && checkHotbar ? end + 9 : end); i++) {
+        for (int i = start; i < (options().includeHotbar && checkHotbar ? end + 9 : end); i++) {
             Slot slot = handler.getSlot(i);
             if (slot.hasItem()) {
                 return true;
@@ -176,7 +216,7 @@ public class ButtonUtil {
     public static boolean isContainerFull(AbstractContainerMenu handler, Container inv, boolean inventory) {
         int j = 0;
         int containerSize = getContainerSize(inv);
-        int size = ModClientOptions.INCLUDE_HOTBAR.get() ? 36 : 27;
+        int size = options().includeHotbar ? 36 : 27;
         for (int i = inventory ? containerSize : 0; i < (inventory ? containerSize + size : containerSize); i++) {
             Slot slot = handler.getSlot(i);
             if (slot.hasItem()) {
@@ -194,9 +234,111 @@ public class ButtonUtil {
     }
 
     /**
+     * Handles smart-moving actions.
+     */
+    public static boolean canMoveCursorItem(ItemStack fromStack, ItemStack cursorStack) {
+        boolean isEnchantedBook = cursorStack.is(Items.ENCHANTED_BOOK);
+        boolean isPotion = cursorStack.is(Items.POTION) || cursorStack.is(Items.SPLASH_POTION) || cursorStack.is(Items.LINGERING_POTION);
+        boolean isTippedArrow = cursorStack.is(Items.TIPPED_ARROW);
+        boolean isFirework = cursorStack.is(Items.FIREWORK_ROCKET);
+
+        if ((isEnchantedBook || isPotion || isTippedArrow || isFirework) && Screen.hasShiftDown()) {
+            return (isEnchantedBook && enchantmentMatches(fromStack, cursorStack))
+                    || (isPotion && statusEffectMatches(fromStack, cursorStack))
+                    || (isTippedArrow && statusEffectMatches(fromStack, cursorStack))
+                    || (isFirework && flightDurationMatches(fromStack, cursorStack));
+        }
+
+        return fromStack.is(cursorStack.getItem());
+    }
+
+    /**
+     * @return if a firework rockets flight duration is the same as cursor stack's.
+     */
+    public static boolean flightDurationMatches(ItemStack slotStack, ItemStack cursorStack) {
+        CompoundTag slotNbt = slotStack.getTag();
+        CompoundTag cursorNbt = cursorStack.getTag();
+
+        if (slotNbt == null || cursorNbt == null) {
+            return false;
+        }
+
+        if (!slotNbt.contains("Fireworks") || !cursorNbt.contains("Fireworks")) {
+            return false;
+        }
+
+        CompoundTag slotFireworks = slotNbt.getCompound("Fireworks");
+        CompoundTag cursorFireworks = cursorNbt.getCompound("Fireworks");
+
+        if (!slotFireworks.contains("Flight") || !cursorFireworks.contains("Flight")) {
+            return false;
+        }
+
+        return slotFireworks.getByte("Flight") == cursorFireworks.getByte("Flight");
+    }
+
+    /**
+     * @return if slot potion effect matches any cursor's potion effects.
+     */
+    public static boolean statusEffectMatches(ItemStack slotStack, ItemStack cursorStack) {
+        List<MobEffectInstance> slotEffects = PotionUtils.getMobEffects(slotStack);
+        List<MobEffectInstance> cursorEffects = PotionUtils.getMobEffects(cursorStack);
+
+        if (slotEffects.isEmpty() || cursorEffects.isEmpty()) {
+            return false;
+        }
+
+        // Ensure no cross-over items
+        if (!ItemStack.isSameItem(slotStack, cursorStack)) {
+            return false;
+        }
+
+        for (MobEffectInstance slotEffect : slotEffects) {
+            for (MobEffectInstance cursorEffect : cursorEffects) {
+                System.out.println(slotEffect.getEffect().getDescriptionId());
+                System.out.println(cursorEffect.getEffect().getDescriptionId());
+                if (slotEffect.getEffect().getDescriptionId().equals(cursorEffect.getEffect().getDescriptionId())) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @return if slot enchantment matches cursor's enchantment.
+     */
+    public static boolean enchantmentMatches(ItemStack slotStack, ItemStack cursorStack) {
+        for (Map.Entry<Enchantment, Integer> slotEntry : EnchantmentHelper.getEnchantments(slotStack).entrySet()) {
+            for (Map.Entry<Enchantment, Integer> heldEntry : EnchantmentHelper.getEnchantments(cursorStack).entrySet()) {
+                if (getEnchantmentName(slotEntry).contains(getEnchantmentName(heldEntry))) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @return enchantment name as a string.
+     */
+    public static String getEnchantmentName(Map.Entry<Enchantment, Integer> enchantment) {
+        String enchantmentKey = enchantment.getKey().getDescriptionId().toLowerCase();
+        return enchantmentKey.substring(enchantmentKey.lastIndexOf('.') + 1).replace('_', ' ');
+    }
+
+    /**
+     * @return current screen's cursor stack.
+     */
+    public static ItemStack getCursorStack(AbstractContainerScreen<?> screen) {
+        return screen.getMenu().getCarried();
+    }
+
+    /**
      * Swaps all items in a container.
      */
-    public static void swapItems(AbstractContainerMenu handler, Container inventory) {
+    public static void swapItems(AbstractContainerMenu handler, Container inventory, Set<Integer> excludedSlots) {
         int totalSlots = getTotalSlots(handler);
         int containerSize = getContainerSize(inventory);
         int offset = totalSlots - 27 - 9;
@@ -214,7 +356,19 @@ public class ButtonUtil {
             Slot chestSlot = handler.getSlot(i);
             Slot playerSlot = handler.getSlot(playerSlotIndex);
 
-            if (!ModClientOptions.INCLUDE_HOTBAR.get() && isHotbarSlot(handler.slots.size(), playerSlot.index)) {
+            // Skip player-chosen excluded slots
+            boolean skip = false;
+            for (int id : excludedSlots) {
+                if (chestSlot.index == id || playerSlot.index == id) {
+                    skip = true;
+                    break;
+                }
+            }
+            if (skip) {
+                continue;
+            }
+
+            if (!options().includeHotbar && isHotbarSlot(handler.slots.size(), playerSlot.index)) {
                 continue;
             }
 
@@ -228,6 +382,149 @@ public class ButtonUtil {
 
             sendSwapSlotPacket(playerSlot.index, chestSlot.index);
         }
+    }
+
+    /**
+     * Sorts all items in a container.
+     */
+    @Unique
+    public static void sortItems(Minecraft client) {
+        if (client.player == null || client.getConnection() == null) {
+            return;
+        }
+        if (!(client.screen instanceof AbstractContainerScreen<?> screen)) {
+            return;
+        }
+
+        AbstractContainerMenu handler = screen.getMenu();
+        int totalSlots = handler.slots.size();
+        int containerSize = totalSlots - 36;
+
+        if (containerSize <= 0) {
+            return;
+        }
+
+        // Merge all stacks
+        for (int i = 0; i < containerSize; i++) {
+            Slot source = handler.slots.get(i);
+            if (!source.hasItem()) {
+                continue;
+            }
+
+            ItemStack sourceStack = source.getItem();
+
+            // Already full, skip
+            if (sourceStack.getCount() >= sourceStack.getMaxStackSize()) {
+                continue;
+            }
+
+            for (int j = i + 1; j < containerSize; j++) {
+                Slot target = handler.slots.get(j);
+                if (!target.hasItem()) {
+                    continue;
+                }
+
+                ItemStack targetStack = target.getItem();
+
+                if (!canCombine(sourceStack, targetStack)) {
+                    continue;
+                }
+
+                // Pick up target
+                clickSlot(client, handler, j);
+                // Click source to merge
+                clickSlot(client, handler, i);
+
+                // If cursor still has items, put them back
+                if (!client.player.containerMenu.getCarried().isEmpty()) {
+                    clickSlot(client, handler, j);
+                }
+
+                // Stop if source is now full
+                if (source.getItem().getCount() >= sourceStack.getMaxStackSize()) {
+                    break;
+                }
+            }
+        }
+
+        // Build list from LIVE slots AFTER merge
+        List<ItemStack> stacks = new ArrayList<>();
+        for (int i = 0; i < containerSize; i++) {
+            ItemStack stack = handler.slots.get(i).getItem();
+            if (!stack.isEmpty()) {
+                stacks.add(stack.copy());
+            }
+        }
+
+        // Unified alphabetical sort (no stackability logic)
+        stacks.sort(Comparator.comparing(
+                stack -> stack.getHoverName().getString()
+        ));
+
+        // Pad with empties
+        while (stacks.size() < containerSize) {
+            stacks.add(ItemStack.EMPTY);
+        }
+
+        // Perform swap-based sorting
+        for (int target = 0; target < containerSize; target++) {
+            ItemStack desired = stacks.get(target);
+            ItemStack actual = handler.slots.get(target).getItem();
+
+            if (ItemStack.isSameItem(actual, desired)) {
+                continue;
+            }
+
+            int source = findMatchingSlot(handler, desired, target, containerSize);
+            if (source == -1) {
+                continue;
+            }
+
+            swapSlots(client, handler, source, target);
+        }
+    }
+
+    /**
+     * Finds a slot matching the target merging slot.
+     * @return the slot index.
+     */
+    private static int findMatchingSlot(AbstractContainerMenu handler, ItemStack target, int start, int limit) {
+        if (target.isEmpty()) {
+            return -1;
+        }
+
+        for (int i = start + 1; i < limit; i++) {
+            ItemStack stack = handler.slots.get(i).getItem();
+            if (ItemStack.isSameItem(stack, target)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * Calls {@link ButtonUtil#clickSlot(Minecraft, AbstractContainerMenu, int)} to sort items.
+     */
+    private static void swapSlots(Minecraft client, AbstractContainerMenu handler, int a, int b) {
+        // Pick up A
+        clickSlot(client, handler, a);
+        // Pick up B (places A, picks up B)
+        clickSlot(client, handler, b);
+        // Place B into A
+        clickSlot(client, handler, a);
+    }
+
+    /**
+     * Performs the {@code click action} to sort items.
+     */
+    private static void clickSlot(Minecraft client, AbstractContainerMenu handler, int slot) {
+        client.gameMode.handleInventoryMouseClick(
+                handler.containerId,
+                slot,
+                0,
+                ClickType.PICKUP,
+                client.player
+        );
     }
 
     /**
@@ -305,7 +602,7 @@ public class ButtonUtil {
      * Quickly equips an item.
      */
     public static void quickEquip(Screen screen, Slot focusedSlot) {
-        if (ModClientOptions.QUICK_EQUIP.get() && focusedSlot != null && (focusedSlot.index >= 5) && (screen instanceof InventoryScreen || screen instanceof CreativeModeInventoryScreen)) {
+        if (options().quickEquip && focusedSlot != null && (focusedSlot.index >= 5) && (screen instanceof InventoryScreen || screen instanceof CreativeModeInventoryScreen)) {
             ItemStack stack = focusedSlot.getItem();
             EquipmentSlot targetSlot = null;
 
@@ -334,7 +631,7 @@ public class ButtonUtil {
     /**
      * Grays out a containerSlot.
      */
-    public static void makeSlotUnavailable(GuiGraphics graphics, Slot slot, boolean hotbar) {
+    public static void renderSlotUnavailable(GuiGraphics graphics, Slot slot, boolean hotbar) {
         int color = hotbar ? -2139062148 : -1275068416;
         graphics.fillGradient(RenderType.guiOverlay(), slot.x, slot.y, slot.x + 16, slot.y + 16, color, color, 0);
     }

@@ -1,6 +1,7 @@
 package net.dillon.qualityofqueso.option;
 
 import com.mojang.serialization.Codec;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.OptionEnum;
 import net.minecraft.util.StringRepresentable;
 
@@ -15,12 +16,12 @@ public enum QoQButtons implements OptionEnum, StringRepresentable {
     public static final Codec<QoQButtons> Codec = StringRepresentable.fromEnum(QoQButtons::values);
     private final int ordinal;
     private final String name;
-    private final String translationKey;
+    private final Component translationKey;
 
     QoQButtons(final int ordinal, final String name, final String translationKey) {
         this.ordinal = ordinal;
         this.name = name;
-        this.translationKey = translationKey;
+        this.translationKey = Component.translatable(translationKey);
     }
 
     public boolean everywhere() {
@@ -35,11 +36,16 @@ public enum QoQButtons implements OptionEnum, StringRepresentable {
         return this.ordinal;
     }
 
-    public String getSerializedName() {
+    public String getKey() {
         return this.name;
     }
 
-    public String getKey() {
+    public Component getCaption() {
         return this.translationKey;
+    }
+
+    @Override
+    public String getSerializedName() {
+        return this.name;
     }
 }

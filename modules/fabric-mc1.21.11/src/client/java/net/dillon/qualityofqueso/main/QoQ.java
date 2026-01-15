@@ -1,6 +1,7 @@
 package net.dillon.qualityofqueso.main;
 
 import net.dillon.qualityofqueso.command.ItemFrameSearcherCommand;
+import net.dillon.qualityofqueso.debug.ModHudEntries;
 import net.dillon.qualityofqueso.keybind.ModKeybinds;
 import net.dillon.qualityofqueso.option.BaseOptions;
 import net.dillon.qualityofqueso.option.CommonOptions;
@@ -71,20 +72,28 @@ public class QoQ implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        ModKeybinds.init();
+        if (ModClientOptions.CLIENT_OPTIONS.getInstance() == null) {
+            ModClientOptions.CLIENT_OPTIONS.setInstance(new ModClientOptions());
+        }
+
+        ModHudEntries.initializeDebugHudEntries();
+        ModKeybinds.initializeKeybinds();
         registerCommands();
 
         ClientPlayConnectionEvents.JOIN.register((handler, packet, client) -> {
-            if (options().serverSpecificConfigs) {
+            if (options().serverConfigPresets) {
                 loadServerConfig(client);
             }
         });
 
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
             ModClientOptions.CLIENT_OPTIONS.clearCustomDirectory();
-            ModClientOptions.CLIENT_OPTIONS.setFileName(BaseOptions.DEFAULT_FILE_NAME);
+            ModClientOptions.CLIENT_OPTIONS.setFileName(BaseOptions.DEFAULT_CLIENT_FILE_NAME);
             ModClientOptions.CLIENT_OPTIONS.load();
-            if (options().serverSpecificConfigs) {
+            CommonOptions.COMMON_OPTIONS.clearCustomDirectory();
+            CommonOptions.COMMON_OPTIONS.setFileName(BaseOptions.DEFAULT_COMMON_FILE_NAME);
+            CommonOptions.COMMON_OPTIONS.load();
+            if (options().serverConfigPresets) {
                 ModUtil.info("Reverting back to global QoQ config.");
             }
         });
@@ -110,19 +119,27 @@ public class QoQ implements ClientModInitializer {
                 .resolve("qoq/server-configs")
                 .toFile();
 
-        String serverConfig = safe + ".json";
-        File serverFile = new File(serverDir, serverConfig);
+        String clientServerConfig = safe + "_client.json";
+        String commonServerConfig = safe + "_common.json";
+        File clientServerFile = new File(serverDir, clientServerConfig);
+        File commonServerFile = new File(serverDir, commonServerConfig);
 
-        ModClientOptions cachedInstance = ModClientOptions.CLIENT_OPTIONS.getInstance();
-        final boolean configExists = serverFile.exists();
+        ModClientOptions cachedClientInstance = ModClientOptions.CLIENT_OPTIONS.getInstance();
+        CommonOptions cachedCommonInstance = CommonOptions.COMMON_OPTIONS.getInstance();
+        final boolean configExists = clientServerFile.exists() && commonServerFile.exists();
         ModClientOptions.CLIENT_OPTIONS.setCustomDirectory(serverDir);
-        ModClientOptions.CLIENT_OPTIONS.setFileName(serverConfig);
+        ModClientOptions.CLIENT_OPTIONS.setFileName(clientServerConfig);
+        CommonOptions.COMMON_OPTIONS.setCustomDirectory(serverDir);
+        CommonOptions.COMMON_OPTIONS.setFileName(commonServerConfig);
         if (!configExists) {
-            ModClientOptions.CLIENT_OPTIONS.setInstance(cachedInstance);
+            ModClientOptions.CLIENT_OPTIONS.setInstance(cachedClientInstance);
             ModClientOptions.CLIENT_OPTIONS.save();
+            CommonOptions.COMMON_OPTIONS.setInstance(cachedCommonInstance);
+            CommonOptions.COMMON_OPTIONS.save();
             ModUtil.info("Creating new QoQ server config instance... (" + address + ")");
         }
         ModClientOptions.CLIENT_OPTIONS.load();
+        CommonOptions.COMMON_OPTIONS.load();
 
         String message = !configExists ? "qualityofqueso.created_server_config" : "qualityofqueso.loaded_server_config";
         client.player.sendMessage(Text.translatable(message).formatted(Formatting.GOLD), false);

@@ -10,13 +10,26 @@ import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.FireworksComponent;
+import net.minecraft.component.type.ItemEnchantmentsComponent;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Unique;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
 
 import static net.dillon.qualityofqueso.main.QoQ.options;
+import static net.dillon.qualityofqueso.util.ButtonUtil.getEnchantmentName;
+import static net.minecraft.text.Text.literal;
 import static net.minecraft.text.Text.translatable;
 
 /**
@@ -82,10 +95,7 @@ public class TransferButton extends ButtonWidget {
             boolean containerButton = this.buttonName.equals("transfer_container");
             boolean validName = inventoryButton || containerButton;
             if (validName) {
-                if (options().showButtonOutlines) {
-                    ButtonUtil.drawButtonTexture(context, "transfer_button_outline", this);
-                }
-                if (options().showButtonShortcuts && options().shortcutKeys) {
+                if (options().showButtonShortcuts) {
                     if (inventoryButton && ModKeybinds.MOVE_INVENTORY.boundKey == ModKeybinds.MOVE_INVENTORY.getDefaultKey()) {
                         ButtonUtil.drawButtonTexture(context, "transfer_inventory_button_shortcut_key", this);
                     } else if (containerButton && ModKeybinds.MOVE_CONTAINER.boundKey == ModKeybinds.MOVE_CONTAINER.getDefaultKey()) {
@@ -113,8 +123,31 @@ public class TransferButton extends ButtonWidget {
 
         if (this.isHovered()) {
             if (this.active) {
-                if (!this.screenHandler.getCursorStack().isEmpty()) {
-                    ButtonUtil.drawTooltip(translatable("qualityofqueso.gui." + this.buttonName + "_button.with_cursor_stack", this.screenHandler.getCursorStack().getItemName()), context, this.textRenderer, mouseX, mouseY);
+                ItemStack cursorStack = this.screenHandler.getCursorStack();
+                if (!cursorStack.isEmpty()) {
+                    String tooltip = "_button.with_cursor_stack";
+                    net.minecraft.text.Text itemName = cursorStack.getItemName();
+                    if (cursorStack.isOf(Items.ENCHANTED_BOOK)) {
+                        ItemEnchantmentsComponent enchantments = EnchantmentHelper.getEnchantments(cursorStack);
+                        List<String> cursorEnchantments = new ArrayList<>();
+                        for (RegistryEntry<Enchantment> enchantment : enchantments.getEnchantments()) {
+                            cursorEnchantments.add(getEnchantmentName(enchantment));
+                        }
+                        String collection = String.join(",", cursorEnchantments);
+                        tooltip = "_button.with_cursor_enchantment_stack";
+                        itemName = literal(collection);
+                    } else if (cursorStack.isOf(Items.FIREWORK_ROCKET)) {
+                        FireworksComponent firework = cursorStack.get(DataComponentTypes.FIREWORKS);
+                        if (firework != null) {
+                            itemName = literal(String.valueOf(firework.flightDuration())).formatted(Formatting.BOLD);
+                            tooltip = "_button.with_cursor_firework_stack";
+                        }
+                    } else if (cursorStack.isOf(Items.POTION) || cursorStack.isOf(Items.SPLASH_POTION) || cursorStack.isOf(Items.LINGERING_POTION)) {
+                        tooltip = "_button.with_cursor_potion_stack";
+                    } else if (cursorStack.isOf(Items.TIPPED_ARROW)) {
+                        tooltip = "_button.with_cursor_tipped_arrow_stack";
+                    }
+                    ButtonUtil.drawTooltip(translatable("qualityofqueso.gui." + this.buttonName + tooltip, itemName), context, this.textRenderer, mouseX, mouseY);
                 } else if (!this.searchFieldText.isEmpty()) {
                     ButtonUtil.drawTooltip(this.searchFieldText.startsWith("#") ?
                             translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query.tag", this.searchFieldText.substring(1)) :

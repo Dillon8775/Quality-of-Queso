@@ -1,7 +1,6 @@
 package net.dillon.qualityofqueso.mixin.client;
 
 import net.dillon.qualityofqueso.main.QoQ;
-import net.dillon.qualityofqueso.option.ModClientOptions;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
@@ -25,6 +24,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.Objects;
 
 import static net.dillon.qualityofqueso.main.QoQ.modEnabled;
+import static net.dillon.qualityofqueso.main.QoQ.options;
 
 @OnlyIn(Dist.CLIENT)
 @Mixin(CreativeModeInventoryScreen.class)
@@ -49,7 +49,7 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
 	 */
     @Inject(method = "slotClicked", at = @At("HEAD"))
     private void closeButtonOnClickOutOfBounds(Slot slot, int slotId, int mouseButton, ClickType type, CallbackInfo ci) {
-        if (modEnabled(this.minecraft) && ModClientOptions.BETTER_GUI_EXIT.get() && this.menu.getCarried().isEmpty() && mouseButton == 0 && slot == null) {
+        if (modEnabled(this.minecraft) && options().betterGuiExit && this.menu.getCarried().isEmpty() && mouseButton == 0 && slot == null) {
             this.onClose();
         }
     }
@@ -60,10 +60,10 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
 	 */
     @Overwrite
     public boolean charTyped(char codePoint, int modifiers) {
-        if (this.ignoreTextInput || (!(ModClientOptions.BETTER_SEARCHING.get()) && selectedTab.getType() != CreativeModeTab.Type.SEARCH)) {
+        if (this.ignoreTextInput || (!(options().betterSearching) && selectedTab.getType() != CreativeModeTab.Type.SEARCH)) {
             return false;
         } else {
-            if (modEnabled(this.minecraft) && ModClientOptions.BETTER_SEARCHING.get()) {
+            if (modEnabled(this.minecraft) && options().betterSearching) {
                 this.selectTab(CreativeModeTabs.searchTab());
             }
             String s = this.searchBox.getValue();
@@ -81,7 +81,7 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
 
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
     private void allowCertainChars(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-        if (modEnabled(this.minecraft) && ModClientOptions.BETTER_SEARCHING.get()) {
+        if (modEnabled(this.minecraft) && options().betterSearching) {
             if (this.hoveredSlot != null && this.hoveredSlot.getItem() != ItemStack.EMPTY && !this.searchBox.isFocused()) {
                 this.ignoreTextInput = true;
                 cir.setReturnValue(super.keyPressed(keyCode, scanCode, modifiers));

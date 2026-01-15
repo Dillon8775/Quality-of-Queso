@@ -18,14 +18,25 @@ public class InventoryManagementOptionsScreen extends AbstractModOptionsScreen {
     @Override
     protected OptionInstance<?>[] options() {
         return new OptionInstance[]{
-                ModListOptions.inventoryManagement(),
-                ModListOptions.SHORTCUT_KEYS,
-                ModListOptions.QUICK_DROP,
-                ModListOptions.swapping(),
-                ModListOptions.INCLUDE_HOTBAR,
-                ModListOptions.LEGACY_QUICK_MOVE,
-                ModListOptions.SHOW_BUTTON_OUTLINES,
-                ModListOptions.SHOW_BUTTON_SHORTCUTS
+                ModListOptions.dragToSort(),
+                ModListOptions.includeHotbar(),
+                ModListOptions.showButtonShortcuts(),
+                ModListOptions.legacyQuickMove()
         };
+    }
+
+    @Override
+    protected void init() {
+        super.init();
+        this.list.addBig(ModListOptions.inventoryManagement());
+        this.list.addBig(ModListOptions.containerSorting());
+        this.list.addBig(ModListOptions.quickDrop());
+        this.list.addBig(ModListOptions.swapping());
+        this.list.addSmall(this.options());
+    }
+
+    @Override
+    protected boolean addOptionsByDefault() {
+        return false;
     }
 }

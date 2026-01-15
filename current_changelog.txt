@@ -1,15 +1,35 @@
-Version 1.5 (MC Fabric 1.21.9-1.21.11, Forge 1.20.1 and 1.21.11):
-Main changes:
+Version 1.5 (MC Fabric 1.21.11, Forge 1.20.1 and 1.21.11):
+<!> IMPORTANT NOTE <!>: If this isn't your first time using this mod, I recommend deleting your old QoQ configuration file before installing this version. It may cause your game to crash if you don't. But don't worry, just delete it and launch the game. :)
+
+Major changes:
+- Added a sort container button! This sorts all items in a container, alphabetically. By default, the shortcut key is set to "S".
 - Added a "Drag-To-Sort" feature! Hold ALT and drag click on any slot in your inventory/container to manually exclude a slot from transferring or from being searched.
 - Added Server-Config presets, where each server that you join has its own Quality of Queso configuration. You can disable this if you'd like by turning off the option "Server-Config Presets"
-- "Quick Drop" option now can be toggled to shortcut key only (meaning CTRL + ALT + Q will still work, but the button will be invisible). By default, this is set to "Shortcut Key".
+
+- Added debug hud entries for Minecraft's in-game time AND real-life time.
+
+Smart transferring:
+- Added smart transferring for enchanted books, potions, tipped arrows and firework rockets.
+- This means that if you have transfer enchanted books with the cursor, any enchanted book in container/inventory with any of the cursor's enchantment will be moved. You can press shift to move all items regardless of their component.
+- Same applies to potions and tipped arrows: just with their effects. For firework rockets, it checks the flight duration.
 
 Other changes:
+- "Quick Drop", "Swapping", and "Sort Container" options can now can be toggled to shortcut key only (meaning you can either use its button to perform its action, OR its shortcut key, or shortcut key ONLY).
+- Removed "Shortcut Keys" option. You can now configure each inventory management button to use it's shortcut key.
+- Removed "Show Button Outlines" option (it was pointless and confusing).
+- "Swapping" keybind is now unbounded by default (you must bound it yourself, due to the new "Sort Container" feature).
+- Added a keybind to hide the recipe search book, by pressing CTRL + the keybind (default = R).
+
 - Hotbar slots are grayed out if the player hovers over the "include/exclude hotbar" button, and are also grayed out if CTRL is held down.
 - Holding "shift" over a stack in a container will grayout hotbar slots if excluding hotbar.
 - Hotbar slots are now grayed out even if a transfer button is inactive but hovered.
-- Added a keybind to hide the recipe search book, by pressing CTRL + the keybind (default = R).
 - The "1" only appears over the Quick Drop button if it's hovered.
-- Optimized language (again).
+
+- Forge no longer uses .toml configuration files, they now use the traditional .json files (like fabric does) due to the support for multi-server configs.
+
+- Optimized language (again), and other optimizations.
+- Removed minimum requirement for radius = 25 blocks for itemframesearcher command. Minimum requirement is now 1 block (to remove confusion).
+- Fixed critical crash where if inventory searching is off and opening a container screen, the game crashes.
 - Fixed bug where Quick Equip has to be on in order to quick drop using shortcut key (no longer checks for Quick Equip, checks the Quick Drop option first).
-- Optimizations.
+- Fixed bug where swapping cooldown does not apply if using shortcut key.
+- Fixed bug where closing Item Frame Search screen doesn't go back to the options screen (if opened from the options screen).

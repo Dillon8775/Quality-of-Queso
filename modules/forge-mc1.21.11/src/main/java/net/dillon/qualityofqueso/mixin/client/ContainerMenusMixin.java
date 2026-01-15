@@ -1,6 +1,5 @@
 package net.dillon.qualityofqueso.mixin.client;
 
-import net.dillon.qualityofqueso.option.ModClientOptions;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ChestMenu;
@@ -12,6 +11,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import static net.dillon.qualityofqueso.main.QoQ.options;
+
 @Mixin(value = {ChestMenu.class, ShulkerBoxMenu.class})
 public class ContainerMenusMixin {
 
@@ -20,7 +21,7 @@ public class ContainerMenusMixin {
      */
     @Inject(method = "quickMoveStack", at = @At("HEAD"), cancellable = true)
     private void redirectQuickMove(Player player, int slotIndex, CallbackInfoReturnable<ItemStack> cir) {
-        if (!ModClientOptions.LEGACY_QUICK_MOVE.get() || !ModClientOptions.INCLUDE_HOTBAR.get()) {
+        if (!options().legacyQuickMove || !options().includeHotbar) {
             AbstractContainerMenu menu = (AbstractContainerMenu)(Object)this;
 
             Slot slot = menu.slots.get(slotIndex);
@@ -32,7 +33,7 @@ public class ContainerMenusMixin {
             ItemStack original = stack.copy();
 
             int containerSize = menu.slots.size() - 36;
-            int playerInvEnd = containerSize + (!ModClientOptions.INCLUDE_HOTBAR.get() ? 27 : 36); // inventory only, no hotbar
+            int playerInvEnd = containerSize + (!options().includeHotbar ? 27 : 36); // inventory only, no hotbar
 
             // FROM container → player inventory (NO hotbar)
             if (slotIndex < containerSize) {

@@ -30,6 +30,10 @@ public final class ServerHandler implements ModInitializer {
      */
     @Override
     public void onInitialize() {
+        if (CommonOptions.COMMON_OPTIONS.getInstance() == null) {
+            CommonOptions.COMMON_OPTIONS.setInstance(new CommonOptions());
+        }
+
         if (CommonOptions.COMMON_OPTIONS.getInstance().itemFrameSearching) {
             registerGlowSearchPacketReceiver();
             ModUtil.debug("Registered glowing packet on server.");

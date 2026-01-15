@@ -1,7 +1,7 @@
 package net.dillon.qualityofqueso.main;
 
+import net.dillon.qualityofqueso.option.CommonOptions;
 import net.dillon.qualityofqueso.option.ModClientOptions;
-import net.dillon.qualityofqueso.option.ModCommonOptions;
 import net.dillon.qualityofqueso.packet.ServerHandler;
 import net.dillon.qualityofqueso.util.ModUtil;
 import net.minecraft.client.Minecraft;
@@ -15,7 +15,6 @@ import net.minecraftforge.common.Tags;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLDedicatedServerSetupEvent;
@@ -94,9 +93,13 @@ public final class QoQ {
         IEventBus modEventBus = context.getModEventBus();
 
         if (FMLEnvironment.dist.isClient()) {
-            context.registerConfig(ModConfig.Type.CLIENT, ModClientOptions.SPEC);
+            if (ModClientOptions.CLIENT_OPTIONS.getInstance() == null) {
+                ModClientOptions.CLIENT_OPTIONS.setInstance(new ModClientOptions());
+            }
         }
-        context.registerConfig(ModConfig.Type.COMMON, ModCommonOptions.SPEC);
+        if (CommonOptions.COMMON_OPTIONS.getInstance() == null) {
+            CommonOptions.COMMON_OPTIONS.setInstance(new CommonOptions());
+        }
 
         modEventBus.addListener(this::commonSetup);
     }
@@ -109,11 +112,25 @@ public final class QoQ {
     }
 
     /**
+     * @return the client-options.
+     */
+    public static ModClientOptions options() {
+        return ModClientOptions.CLIENT_OPTIONS.getInstance();
+    }
+
+    /**
+     * @return the common-options.
+     */
+    public static CommonOptions coptions() {
+        return CommonOptions.COMMON_OPTIONS.getInstance();
+    }
+
+    /**
      * Saves all configurations.
      */
     public static void saveAll() {
-        ModClientOptions.SPEC.save();
-        ModCommonOptions.SPEC.save();
+        ModClientOptions.CLIENT_OPTIONS.save();
+        CommonOptions.COMMON_OPTIONS.save();
     }
 
     /**
@@ -124,13 +141,13 @@ public final class QoQ {
 		Objects.requireNonNull(client, "\"client\" cannot be null.");
 
 		if (ModUtil.isOnServer(client)) {
-			for (String blacklistedServer : ModClientOptions.BLACKLISTED_SERVERS.get()) {
+			for (String blacklistedServer : options().blacklistedServers) {
 				if (client.getCurrentServer().ip.equals(blacklistedServer)) {
 					return false;
 				}
 			}
 		}
-		return ModClientOptions.ENABLE_MOD.get();
+		return options().enableMod;
     }
 
     // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent

@@ -2,7 +2,6 @@ package net.dillon.qualityofqueso.command;
 
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import net.dillon.qualityofqueso.main.QoQ;
-import net.dillon.qualityofqueso.option.ModClientOptions;
 import net.dillon.qualityofqueso.packet.GlowSearchC2SPayload;
 import net.dillon.qualityofqueso.packet.ServerHandler;
 import net.minecraft.client.gui.screens.Screen;
@@ -15,6 +14,8 @@ import net.minecraftforge.client.event.RegisterClientCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import static net.dillon.qualityofqueso.main.QoQ.options;
+
 @Mod.EventBusSubscriber(modid = QoQ.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ItemFrameSearcherCommand {
 
@@ -25,7 +26,7 @@ public class ItemFrameSearcherCommand {
     public static void register(RegisterClientCommandsEvent clientCommandsEvent) {
         clientCommandsEvent.getDispatcher().register(
                 Commands.literal("itemframesearcher")
-                        .requires(source -> ModClientOptions.ENABLE_MOD.get() && source.hasPermission(0))
+                        .requires(source -> options().enableMod && source.hasPermission(0))
                         .then(
                                 Commands.literal("clear")
                                         .executes(
@@ -34,11 +35,11 @@ public class ItemFrameSearcherCommand {
                                                         "",
                                                         true,
                                                         0,
-                                                        ModClientOptions.ITEM_FRAME_SEARCH_RADIUS.get()
+                                                        options().itemFrameSearchRadius
                                                 )
                                         )
                                         .then(
-                                                Commands.argument("radius", IntegerArgumentType.integer(25, 300))
+                                                Commands.argument("radius", IntegerArgumentType.integer(1, 300))
                                                         .executes(
                                                                 context -> execute(
                                                                         context.getSource(),
@@ -60,11 +61,11 @@ public class ItemFrameSearcherCommand {
                                                                         ItemArgument.getItem(context, "item").getItem().toString(),
                                                                         false,
                                                                         0,
-                                                                        ModClientOptions.ITEM_FRAME_SEARCH_RADIUS.get()
+                                                                        options().itemFrameSearchRadius
                                                                 )
                                                         )
                                                         .then(
-                                                                Commands.argument("radius", IntegerArgumentType.integer(25, 300))
+                                                                Commands.argument("radius", IntegerArgumentType.integer(1, 300))
                                                                         .executes(
                                                                                 context -> execute(
                                                                                         context.getSource(),
