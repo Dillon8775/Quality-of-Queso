@@ -2,6 +2,7 @@ package net.dillon.qualityofqueso.util;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.dillon.qualityofqueso.option.ModOptionsScreen;
+import net.dillon.qualityofqueso.screen.gui.TransferButton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -87,25 +88,15 @@ public class ButtonUtil {
     }
 
     /**
-     * @return the {@code x-value} for the specified button.
-     */
-    public static int getButtonX(Button button) {
-        return button.getX();
-    }
-
-    /**
      * @return the {@code X} value for transferring query buttons.
      */
-    public static int getManagementButtonX(Screen screen, int backgroundWidth, int width) {
+    public static int getManagementButtonX(Screen screen, int backgroundWidth, int width, int amount) {
         int barWidth = getBarWidth(backgroundWidth);
         int modifier = 18;
-        if (screen instanceof InventoryScreen recipeBookScreen) {
-            modifier = 42;
-            if (recipeBookScreen.getRecipeBookComponent().isVisible()) {
-                modifier = 119;
-            }
+        if (screen instanceof InventoryScreen recipeBookScreen && recipeBookScreen.getRecipeBookComponent().isVisible()) {
+            modifier += 77;
         }
-        return width / 2 + barWidth / 2 + modifier;
+        return (width / 2 + barWidth / 2 + modifier) - (amount * 12);
     }
 
     /**
@@ -634,6 +625,43 @@ public class ButtonUtil {
     public static void renderSlotUnavailable(GuiGraphics graphics, Slot slot, boolean hotbar) {
         int color = hotbar ? -2139062148 : -1275068416;
         graphics.fillGradient(RenderType.guiOverlay(), slot.x, slot.y, slot.x + 16, slot.y + 16, color, color, 0);
+    }
+
+    /**
+     * @return if a button is hovered and active.
+     */
+    public static boolean buttonHoveredAndActive(Button button) {
+        return button != null && button.isHovered() && button.active;
+    }
+
+    /**
+     * @return if a button is hovered and active and shift is held.
+     */
+    public static boolean buttonHoveredActiveOrShiftHeld(AbstractContainerScreen<?> screen, Button button, boolean inventory) {
+        return buttonHoveredAndActive(button) || shiftHeld(screen, inventory);
+    }
+
+    /**
+     * @return whether a slot should be grayed out.
+     */
+    public static boolean shouldGrayout(AbstractContainerScreen<?> screen, TransferButton inventoryButton, TransferButton containerButton, TransferButton hotbarButton, boolean checkForStack) {
+        boolean shortcutKeyReady = Screen.hasControlDown();
+        return shortcutKeyReady
+                || shiftHeld(screen, false)
+                || (buttonHoveredAndActive(inventoryButton) && (checkForStack))
+                || buttonHoveredAndActive(containerButton)
+                || buttonHoveredAndActive(hotbarButton);
+    }
+
+    /**
+     * @return if shift is held and a slot is hovered.
+     */
+    public static boolean shiftHeld(AbstractContainerScreen<?> screen, boolean inventory) {
+        int totalSlots = getTotalSlots(screen.getMenu());
+        return Screen.hasShiftDown()
+                && screen.hoveredSlot != null
+                && screen.hoveredSlot.hasItem()
+                && (inventory ? screen.hoveredSlot.index >= totalSlots - 36 : screen.hoveredSlot.index <= totalSlots - 37);
     }
 
     /**

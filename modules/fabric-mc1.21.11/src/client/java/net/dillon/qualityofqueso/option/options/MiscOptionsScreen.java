@@ -35,7 +35,7 @@ public class MiscOptionsScreen extends AbstractModOptionsScreen {
                 ModListOptions.preventEFromTyping(),
                 ModListOptions.helpfulTooltips(),
                 ModListOptions.qoqButtons(),
-                ModListOptions.serverConfigPresets()
+                ModListOptions.multiServerConfigs()
         };
     }
 

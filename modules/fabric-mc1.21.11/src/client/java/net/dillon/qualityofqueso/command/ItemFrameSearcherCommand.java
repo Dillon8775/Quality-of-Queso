@@ -14,6 +14,8 @@ import net.minecraft.text.Text;
 import static net.dillon.qualityofqueso.main.QoQ.options;
 
 public class ItemFrameSearcherCommand {
+    private static final String RADIUS = "radius (1-300)";
+    private static final String GLOW_DURATION = "glow duration (seconds, max 180)";
 
     /**
      * Registers the {@code /itemframesearcher} command.
@@ -34,14 +36,14 @@ public class ItemFrameSearcherCommand {
                                                 )
                                         )
                                         .then(
-                                                CommandManager.argument("radius", IntegerArgumentType.integer(1, 300))
+                                                CommandManager.argument(RADIUS, IntegerArgumentType.integer(1, 300))
                                                         .executes(
                                                                 context -> execute(
                                                                         context,
                                                                         "",
                                                                         true,
                                                                         0,
-                                                                        IntegerArgumentType.getInteger(context, "radius")
+                                                                        IntegerArgumentType.getInteger(context, RADIUS)
                                                                 )
                                                         )
                                         )
@@ -60,25 +62,25 @@ public class ItemFrameSearcherCommand {
                                                                 )
                                                         )
                                                         .then(
-                                                                CommandManager.argument("radius", IntegerArgumentType.integer(1, 300))
+                                                                CommandManager.argument(RADIUS, IntegerArgumentType.integer(1, 300))
                                                                         .executes(
                                                                                 context -> execute(
                                                                                         context,
                                                                                         ItemStackArgumentType.getItemStackArgument(context, "item").getItem().toString(),
                                                                                         false,
                                                                                         0,
-                                                                                        IntegerArgumentType.getInteger(context, "radius")
+                                                                                        IntegerArgumentType.getInteger(context, RADIUS)
                                                                                 )
                                                                         )
                                                                         .then(
-                                                                                CommandManager.argument("timer", IntegerArgumentType.integer(0, 180))
+                                                                                CommandManager.argument(GLOW_DURATION, IntegerArgumentType.integer(0, 180))
                                                                                         .executes(
                                                                                                 context -> execute(
                                                                                                         context,
                                                                                                         ItemStackArgumentType.getItemStackArgument(context, "item").getItem().toString(),
                                                                                                         false,
-                                                                                                        IntegerArgumentType.getInteger(context, "timer"),
-                                                                                                        IntegerArgumentType.getInteger(context, "radius")
+                                                                                                        IntegerArgumentType.getInteger(context, GLOW_DURATION),
+                                                                                                        IntegerArgumentType.getInteger(context, RADIUS)
                                                                                                 )
                                                                                         )
                                                                         )

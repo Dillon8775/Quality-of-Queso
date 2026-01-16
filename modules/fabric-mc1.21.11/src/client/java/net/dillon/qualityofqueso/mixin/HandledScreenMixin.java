@@ -430,20 +430,8 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             // Otherwise, gray out slots that don't match the search
             else if (!options().includeHotbar
                     && isHotbarSlot(this.handler.slots.size(), slot.id)
-                    && this.transferContainerButton != null
-                    && this.transferInventoryButton != null
-                    && this.includeHotbarButton != null) {
-                boolean transferInventoryButtonHovered = this.transferInventoryButton.isHovered() && this.transferInventoryButton.active;
-                boolean shortcutKeyReady = MinecraftClient.getInstance().isCtrlPressed();
-                boolean shiftHeld = MinecraftClient.getInstance().isShiftPressed()
-                        && this.focusedSlot != null
-                        && this.focusedSlot.hasStack()
-                        && this.focusedSlot.id <= getTotalSlots(this.handler) - 37;
-                if (shortcutKeyReady
-                        || shiftHeld
-                        || (transferInventoryButtonHovered && slot.hasStack())
-                        || (this.transferContainerButton.isHovered() && this.transferContainerButton.active)
-                        || this.includeHotbarButton.isHovered()) {
+                    && options().transferring.orKeyOnly()) {
+                if (shouldGrayout(this.screen, this.transferInventoryButton, this.transferContainerButton, this.includeHotbarButton, true)) {
                     renderSlotUnavailable(context, slot, slot.hasStack());
                     alreadyExcluded = true;
                 }
@@ -453,11 +441,16 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                 for (int id : this.excludedSlots) {
                     if (slot.id == id) {
                         if (isContainerScreen(this.screen)) {
-                            if (this.transferContainerButton.isHovered() && this.transferContainerButton.active) {
+                            // Don't grayout if CTRL is pressed and transfer keys are bounded
+                            if (MinecraftClient.getInstance().isCtrlPressed()
+                                    && ModKeybinds.MOVE_CONTAINER.boundKey.getCode() != InputUtil.UNKNOWN_KEY.getCode()
+                                    && ModKeybinds.MOVE_INVENTORY.boundKey.getCode() != InputUtil.UNKNOWN_KEY.getCode()) {
+                                break;
+                            } else if (buttonHoveredActiveOrShiftHeld(this.screen, this.transferContainerButton, false)) {
                                 if (slot.id <= getTotalSlots(this.handler) - 37) {
                                     renderSlotUnavailable(context, slot, false);
                                 }
-                            } else if (this.transferInventoryButton.isHovered() && this.transferInventoryButton.active) {
+                            } else if (buttonHoveredActiveOrShiftHeld(this.screen, this.transferInventoryButton, true)) {
                                 if (slot.id >= getTotalSlots(this.handler) - 36) {
                                     renderSlotUnavailable(context, slot, false);
                                 }
@@ -494,150 +487,151 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             this.inventorySearchField.render(context, mouseX, mouseY, deltaTicks);
         }
         if (modEnabled(this.client)) {
-            if (options().inventoryManagement) {
-                PlayerInventory playerInventory = this.client.player.getInventory();
-                boolean containerScreen = isContainerScreen(this.screen);
-                boolean inventoryScreen = isInventoryScreen(this.screen);
-                boolean validScreen = containerScreen || inventoryScreen;
-                if (containerScreen) {
+            PlayerInventory playerInventory = this.client.player.getInventory();
+            boolean containerScreen = isContainerScreen(this.screen);
+            boolean inventoryScreen = isInventoryScreen(this.screen);
+            boolean validScreen = containerScreen || inventoryScreen;
+            int buttons = 0;
+            if (containerScreen && options().transferring.shortcutOrButton()) {
 
-                    /* --- */
+                /* --- */
 
-                    // TRANSFER CONTAINER BUTTON (container -> inventory)
-                    this.transferContainerButton = this.addSelectableChild(
-                            new TransferButton(
+                // TRANSFER CONTAINER BUTTON (container -> inventory)
+                this.transferContainerButton = this.addSelectableChild(
+                        new TransferButton(
+                                this.handler,
+                                this.textRenderer,
+                                this.getSearchFieldText(),
+                                getManagementButtonX(this.screen, this.backgroundWidth, this.width, buttons),
+                                getManagementButtonY(this.screen, this.inventory, this.y, this.titleY),
+                                "transfer_container",
+                                b -> this.transferItems(true),
+                                () -> !isContainerFull(this.handler, this.inventory, true) && this.shouldButtonBeActive(false, null, this.transferContainerButton)));
+
+                this.transferContainerButton.render(context, mouseX, mouseY, deltaTicks);
+                buttons++;
+
+                /* --- */
+
+                // TRANSFER INVENTORY BUTTON (inventory -> container)
+                this.transferInventoryButton = this.addSelectableChild(
+                        new TransferButton(
+                                this.handler,
+                                this.textRenderer,
+                                this.getSearchFieldText(),
+                                getManagementButtonX(this.screen, this.backgroundWidth, this.width, buttons),
+                                getManagementButtonY(this.screen, this.inventory, this.y, titleY),
+                                "transfer_inventory",
+                                b -> this.transferItems(false),
+                                () -> !isContainerFull(this.handler, this.inventory, false) && this.shouldButtonBeActive(true, playerInventory, this.transferInventoryButton)
+                        ));
+
+                this.transferInventoryButton.render(context, mouseX, mouseY, deltaTicks);
+                buttons++;
+            }
+
+            /* --- */
+
+            if (validScreen) {
+
+                // INCLUDE HOTBAR BUTTON
+                if ((containerScreen && options().transferring.orKeyOnly()) || ((inventoryScreen && options().inventorySearching) || options().quickDrop.orKeyOnly())) {
+                    this.includeHotbarButton = this.addSelectableChild(
+                            new IncludeHotbarButton(
                                     this.handler,
                                     this.textRenderer,
                                     this.getSearchFieldText(),
-                                    getManagementButtonX(this.screen, this.backgroundWidth, this.width),
+                                    getManagementButtonX(this.screen, this.backgroundWidth, this.width, buttons),
                                     getManagementButtonY(this.screen, this.inventory, this.y, this.titleY),
-                                    "transfer_container",
-                                    b -> this.transferItems(true),
-                                    () -> !isContainerFull(this.handler, this.inventory, true) && this.shouldButtonBeActive(false, null, this.transferContainerButton)));
+                                    "include_hotbar",
+                                    b -> {
+                                        options().includeHotbar = !options().includeHotbar;
+                                        ModClientOptions.CLIENT_OPTIONS.save();
+                                    }));
 
-                    this.transferContainerButton.render(context, mouseX, mouseY, deltaTicks);
-
-                    /* --- */
-
-                    // TRANSFER INVENTORY BUTTON (inventory -> container)
-                    this.transferInventoryButton = this.addSelectableChild(
-                            new TransferButton(
-                                    this.handler,
-                                    this.textRenderer,
-                                    this.getSearchFieldText(),
-                                    getButtonX(this.transferContainerButton) - 12,
-                                    getManagementButtonY(this.screen, this.inventory, this.y, titleY),
-                                    "transfer_inventory",
-                                    b -> this.transferItems(false),
-                                    () -> !isContainerFull(this.handler, this.inventory, false) && this.shouldButtonBeActive(true, playerInventory, this.transferInventoryButton)
-                            ));
-
-                    this.transferInventoryButton.render(context, mouseX, mouseY, deltaTicks);
+                    this.includeHotbarButton.render(context, mouseX, mouseY, deltaTicks);
+                    buttons++;
                 }
 
                 /* --- */
 
-                if (validScreen) {
+                // SWAP BUTTON
+                if (options().swapping.shortcutOrButton() && containerScreen) {
+                    this.swapButton = this.addSelectableChild(
+                            new SwapButton(
+                                    this.handler,
+                                    this.textRenderer,
+                                    this.getSearchFieldText(),
+                                    getManagementButtonX(this.screen, this.backgroundWidth, this.width, buttons),
+                                    getManagementButtonY(this.screen, this.inventory, this.y, this.titleY),
+                                    "swap",
+                                    b -> swapItems(this.handler, this.inventory, this.excludedSlots),
+                                    () -> {
+                                        return (getContainerSize(this.inventory) != 27 || isAnySlotFilled(this.handler, false, 27, 54))
+                                                && getCursorStack(this.screen).isEmpty() && this.getSearchFieldText().isEmpty()
+                                                && this.shouldButtonBeActive(false, null, this.swapButton)
+                                                && this.shouldButtonBeActive(true, playerInventory, this.swapButton);
+                                    }
+                            ));
 
-                    // INCLUDE HOTBAR BUTTON
-                    if (containerScreen || (options().inventorySearching || options().quickDrop.shortcutOrButton())) {
-                        this.includeHotbarButton = this.addSelectableChild(
-                                new IncludeHotbarButton(
-                                        this.handler,
-                                        this.textRenderer,
-                                        this.getSearchFieldText(),
-                                        getManagementButtonX(this.screen, this.backgroundWidth, this.width) - 24,
-                                        getManagementButtonY(this.screen, this.inventory, this.y, this.titleY),
-                                        "include_hotbar",
-                                        b -> {
-                                            options().includeHotbar = !options().includeHotbar;
-                                            ModClientOptions.CLIENT_OPTIONS.save();
-                                        }));
+                    this.swapButton.render(context, mouseX, mouseY, deltaTicks);
+                    buttons++;
+                }
 
-                        this.includeHotbarButton.render(context, mouseX, mouseY, deltaTicks);
-                    }
+                /* --- */
 
-                    /* --- */
-
-                    // SWAP BUTTON
-                    if (options().swapping.shortcutOrButton() && containerScreen) {
-                        this.swapButton = this.addSelectableChild(
-                                new SwapButton(
-                                        this.handler,
-                                        this.textRenderer,
-                                        this.getSearchFieldText(),
-                                        getButtonX(this.includeHotbarButton) - 12,
-                                        getManagementButtonY(this.screen, this.inventory, this.y, this.titleY),
-                                        "swap",
-                                        b -> swapItems(this.handler, this.inventory, this.excludedSlots),
-                                        () -> {
-                                            return (getContainerSize(this.inventory) != 27 || isAnySlotFilled(this.handler, false, 27, 54))
-                                                    && getCursorStack(this.screen).isEmpty() && this.getSearchFieldText().isEmpty()
-                                                    && this.shouldButtonBeActive(false, null, this.swapButton)
-                                                    && this.shouldButtonBeActive(true, playerInventory, this.swapButton);
-                                        }
-                                ));
-
-                        this.swapButton.render(context, mouseX, mouseY, deltaTicks);
-                    }
-
-                    /* --- */
-
-                    // SORT BUTTON
-                    if (options().containerSorting.shortcutOrButton() && containerScreen) {
-                        this.sortButton = this.addSelectableChild(
-                                new SortButton(
-                                        this.handler,
-                                        this.textRenderer,
-                                        this.getSearchFieldText(),
-                                        getButtonX(this.includeHotbarButton) - (options().swapping.shortcutOrButton() ? 24 : 12),
-                                        getManagementButtonY(this.screen, this.inventory, this.y, this.titleY),
-                                        "sort",
-                                        b -> sortItems(this.client),
-                                        () -> {
-                                            boolean excludedContainerSlot = false;
-                                            for (int id : this.excludedSlots) {
-                                                if (id <= getTotalSlots(this.handler) - 37) {
-                                                    excludedContainerSlot = true;
-                                                    break;
-                                                }
+                // SORT BUTTON
+                if (options().containerSorting.shortcutOrButton() && containerScreen) {
+                    this.sortButton = this.addSelectableChild(
+                            new SortButton(
+                                    this.handler,
+                                    this.textRenderer,
+                                    this.getSearchFieldText(),
+                                    getManagementButtonX(this.screen, this.backgroundWidth, this.width, buttons),
+                                    getManagementButtonY(this.screen, this.inventory, this.y, this.titleY),
+                                    "sort",
+                                    b -> sortItems(this.client),
+                                    () -> {
+                                        boolean excludedContainerSlot = false;
+                                        for (int id : this.excludedSlots) {
+                                            if (id <= getTotalSlots(this.handler) - 37) {
+                                                excludedContainerSlot = true;
+                                                break;
                                             }
-                                            return isAnySlotFilled(this.handler, false, 0, getContainerSize(this.inventory))
-                                                    && this.getSearchFieldText().isEmpty()
-                                                    && !excludedContainerSlot
-                                                    && getCursorStack(this.screen).isEmpty()
-                                                    && this.shouldButtonBeActive(false, null, this.sortButton);
                                         }
-                                ));
-
-                        this.sortButton.render(context, mouseX, mouseY, deltaTicks);
-                    }
-
-                    /* --- */
-
-                    // QUICK DROP BUTTON
-                    if (options().quickDrop.shortcutOrButton()) {
-                        this.quickDropButton = this.addSelectableChild(
-                                new QuickDropButton(
-                                        this.handler,
-                                        this.textRenderer,
-                                        this.getSearchFieldText(),
-                                        getButtonX(this.includeHotbarButton) -
-                                                (containerScreen && (options().containerSorting.shortcutOrButton() && options().swapping.shortcutOrButton()) ? 36
-                                                        : containerScreen && (options().swapping.shortcutOrButton() || options().containerSorting.shortcutOrButton()) ? 24
-                                                        : 12),
-                                        getManagementButtonY(this.screen, this.inventory, this.y, this.titleY),
-                                        "quick_drop",
-                                        b -> this.dropItems(!containerScreen),
-                                        () -> (isInventoryScreen(this.screen) ?
-                                                isAnySlotFilled(this.handler, true, 9, 36) :
-                                                isAnySlotFilled(this.handler, false, 0, getContainerSize(this.inventory)))
+                                        return isAnySlotFilled(this.handler, false, 0, getContainerSize(this.inventory))
+                                                && this.getSearchFieldText().isEmpty()
+                                                && !excludedContainerSlot
                                                 && getCursorStack(this.screen).isEmpty()
-                                                && this.shouldButtonBeActive(!containerScreen, containerScreen ? null : playerInventory, this.quickDropButton)
-                                ));
+                                                && this.shouldButtonBeActive(false, null, this.sortButton);
+                                    }
+                            ));
 
-                        this.quickDropButton.render(context, mouseX, mouseY, deltaTicks);
-                    }
+                    this.sortButton.render(context, mouseX, mouseY, deltaTicks);
+                    buttons++;
+                }
+
+                /* --- */
+
+                // QUICK DROP BUTTON
+                if (options().quickDrop.shortcutOrButton()) {
+                    this.quickDropButton = this.addSelectableChild(
+                            new QuickDropButton(
+                                    this.handler,
+                                    this.textRenderer,
+                                    this.getSearchFieldText(),
+                                    getManagementButtonX(this.screen, this.backgroundWidth, this.width, buttons),
+                                    getManagementButtonY(this.screen, this.inventory, this.y, this.titleY),
+                                    "quick_drop",
+                                    b -> this.dropItems(!containerScreen),
+                                    () -> (isInventoryScreen(this.screen) ?
+                                            isAnySlotFilled(this.handler, true, 9, 36) :
+                                            isAnySlotFilled(this.handler, false, 0, getContainerSize(this.inventory)))
+                                            && getCursorStack(this.screen).isEmpty()
+                                            && this.shouldButtonBeActive(!containerScreen, containerScreen ? null : playerInventory, this.quickDropButton)
+                            ));
+
+                    this.quickDropButton.render(context, mouseX, mouseY, deltaTicks);
                 }
             }
         }
@@ -649,7 +643,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     @Inject(method = "drawMouseoverTooltip", at = @At("HEAD"), cancellable = true)
     private void addAllItemTagsToTooltip(DrawContext drawContext, int x, int y, CallbackInfo ci) {
         String searchQuery = this.getSearchFieldText();
-        if (this.containerSearchField != null) {
+        if (this.containerSearchField != null || this.inventorySearchField != null) {
             // Exit if search query doesn't start with #
             if (!searchQuery.startsWith("#")) {
                 return;
@@ -745,13 +739,15 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                     if (this.inventorySearchField != null) {
                         this.inventorySearchField.setText(text);
                     }
-                    return;
+                    cir.setReturnValue(true);
                 }
-                if (this.transferContainerButton != null && this.transferContainerButton.active && input.key() == ModKeybinds.MOVE_CONTAINER.boundKey.getCode()) {
-                    this.transferItems(true);
-                }
-                if (this.transferInventoryButton != null && this.transferInventoryButton.active && input.key() == ModKeybinds.MOVE_INVENTORY.boundKey.getCode()) {
-                    this.transferItems(false);
+                if (options().transferring.orKeyOnly()) {
+                    if (input.key() == ModKeybinds.MOVE_CONTAINER.boundKey.getCode()) {
+                        this.transferItems(true);
+                    }
+                    if (input.key() == ModKeybinds.MOVE_INVENTORY.boundKey.getCode()) {
+                        this.transferItems(false);
+                    }
                 }
                 if (options().containerSorting.orKeyOnly() && input.key() == ModKeybinds.SORT_CONTAINER.boundKey.getCode()) {
                     sortItems(this.client);

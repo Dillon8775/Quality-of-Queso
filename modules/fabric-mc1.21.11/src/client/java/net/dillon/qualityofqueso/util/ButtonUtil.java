@@ -2,6 +2,7 @@ package net.dillon.qualityofqueso.util;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.dillon.qualityofqueso.option.ModOptionsScreen;
+import net.dillon.qualityofqueso.screen.gui.TransferButton;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -101,25 +102,15 @@ public class ButtonUtil {
     }
 
     /**
-     * @return the {@code x-value} for the specified button.
-     */
-    public static int getButtonX(ButtonWidget button) {
-        return button.getX();
-    }
-
-    /**
      * @return the {@code X} value for transferring query buttons.
      */
-    public static int getManagementButtonX(Screen screen, int backgroundWidth, int width) {
+    public static int getManagementButtonX(Screen screen, int backgroundWidth, int width, int amount) {
         int barWidth = getBarWidth(backgroundWidth);
         int modifier = 18;
-        if (screen instanceof RecipeBookScreen<?> recipeBookScreen) {
-            modifier = 42;
-            if (recipeBookScreen.recipeBook.isOpen()) {
-                modifier = 119;
-            }
+        if (screen instanceof RecipeBookScreen<?> recipeBookScreen && recipeBookScreen.recipeBook.isOpen()) {
+            modifier += 77;
         }
-        return width / 2 + barWidth / 2 + modifier;
+        return (width / 2 + barWidth / 2 + modifier) - (amount * 12);
     }
 
     /**
@@ -642,6 +633,43 @@ public class ButtonUtil {
     public static void renderSlotUnavailable(DrawContext context, Slot slot, boolean hotbar) {
         int color = hotbar ? -2139062148 : -1275068416;
         context.fillGradient(slot.x, slot.y, slot.x + 16, slot.y + 16, color, color);
+    }
+
+    /**
+     * @return if a button is hovered and active.
+     */
+    public static boolean buttonHoveredAndActive(ButtonWidget button) {
+        return button != null && button.isHovered() && button.active;
+    }
+
+    /**
+     * @return if a button is hovered and active and shift is held.
+     */
+    public static boolean buttonHoveredActiveOrShiftHeld(HandledScreen<?> screen, ButtonWidget button, boolean inventory) {
+        return buttonHoveredAndActive(button) || shiftHeld(screen, inventory);
+    }
+
+    /**
+     * @return whether a slot should be grayed out.
+     */
+    public static boolean shouldGrayout(HandledScreen<?> screen, TransferButton inventoryButton, TransferButton containerButton, TransferButton hotbarButton, boolean checkForStack) {
+        boolean shortcutKeyReady = MinecraftClient.getInstance().isCtrlPressed();
+        return shortcutKeyReady
+                || shiftHeld(screen, false)
+                || (buttonHoveredAndActive(inventoryButton) && (checkForStack))
+                || buttonHoveredAndActive(containerButton)
+                || buttonHoveredAndActive(hotbarButton);
+    }
+
+    /**
+     * @return if shift is held and a slot is hovered.
+     */
+    public static boolean shiftHeld(HandledScreen<?> screen, boolean inventory) {
+        int totalSlots = getTotalSlots(screen.getScreenHandler());
+        return MinecraftClient.getInstance().isShiftPressed()
+                && screen.focusedSlot != null
+                && screen.focusedSlot.hasStack()
+                && (inventory ? screen.focusedSlot.id >= totalSlots - 36 : screen.focusedSlot.id <= totalSlots - 37);
     }
 
     /**

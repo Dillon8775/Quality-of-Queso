@@ -21,7 +21,7 @@ public class ModClientOptions {
     public boolean saveSearchText = false;
 
     // Inventory management options
-    public boolean inventoryManagement = true;
+    public Transferring transferring = Transferring.SHORTCUT_KEY_OR_BUTTON;
     public ContainerSorting containerSorting = ContainerSorting.SHORTCUT_KEY_OR_BUTTON;
     public QuickDrop quickDrop = QuickDrop.SHORTCUT_KEY_ONLY;
     public Swapping swapping = Swapping.SHORTCUT_KEY_ONLY;
@@ -38,8 +38,8 @@ public class ModClientOptions {
     public List<String> blacklistedServers = new ArrayList<>();
     public boolean showInGameTime = false;
     public boolean showIrlTime = false;
-    public boolean serverConfigPresets = true;
-    public int itemFrameSearchTimer = 0;
+    public boolean multiServerConfigs = true;
+    public int itemFrameSearchGlowDuration = 0;
     public int itemFrameSearchRadius = 150;
     public QoQButtons qoqButtons = QoQButtons.EVERYWHERE;
 

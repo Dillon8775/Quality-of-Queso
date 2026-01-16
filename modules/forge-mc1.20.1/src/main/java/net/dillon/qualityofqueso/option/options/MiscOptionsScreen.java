@@ -28,7 +28,7 @@ public class MiscOptionsScreen extends AbstractModOptionsScreen {
                 ModListOptions.qoqButtons(),
                 ModListOptions.showInGameTime(),
                 ModListOptions.showIrlTime(),
-                ModListOptions.serverConfigPresets()
+                ModListOptions.multiServerConfigs()
         };
     }
 }

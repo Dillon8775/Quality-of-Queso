@@ -25,7 +25,7 @@ public class InventoryManagementOptionsScreen extends AbstractModOptionsScreen {
     @Override
     protected void init() {
         super.init();
-        this.body.addSingleOptionEntry(ModListOptions.inventoryManagement());
+        this.body.addSingleOptionEntry(ModListOptions.transferring());
         this.body.addSingleOptionEntry(ModListOptions.containerSorting());
         this.body.addSingleOptionEntry(ModListOptions.quickDrop());
         this.body.addSingleOptionEntry(ModListOptions.swapping());

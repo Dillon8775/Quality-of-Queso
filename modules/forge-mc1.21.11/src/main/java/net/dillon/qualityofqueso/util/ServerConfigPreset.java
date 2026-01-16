@@ -22,7 +22,7 @@ public class ServerConfigPreset {
 
     @SubscribeEvent
     public static void onClientJoin(ClientPlayerNetworkEvent.LoggingIn event) {
-        if (!options().serverConfigPresets) {
+        if (!options().multiServerConfigs) {
             return;
         }
 
@@ -77,7 +77,7 @@ public class ServerConfigPreset {
         CommonOptions.COMMON_OPTIONS.clearCustomDirectory();
         CommonOptions.COMMON_OPTIONS.setFileName(BaseOptions.DEFAULT_COMMON_FILE_NAME);
         CommonOptions.COMMON_OPTIONS.load();
-        if (options().serverConfigPresets) {
+        if (options().multiServerConfigs) {
             ModUtil.info("Reverting back to global QoQ config.");
         }
     }

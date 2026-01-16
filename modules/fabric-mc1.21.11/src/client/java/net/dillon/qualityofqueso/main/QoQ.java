@@ -81,7 +81,7 @@ public class QoQ implements ClientModInitializer {
         registerCommands();
 
         ClientPlayConnectionEvents.JOIN.register((handler, packet, client) -> {
-            if (options().serverConfigPresets) {
+            if (options().multiServerConfigs) {
                 loadServerConfig(client);
             }
         });
@@ -93,7 +93,7 @@ public class QoQ implements ClientModInitializer {
             CommonOptions.COMMON_OPTIONS.clearCustomDirectory();
             CommonOptions.COMMON_OPTIONS.setFileName(BaseOptions.DEFAULT_COMMON_FILE_NAME);
             CommonOptions.COMMON_OPTIONS.load();
-            if (options().serverConfigPresets) {
+            if (options().multiServerConfigs) {
                 ModUtil.info("Reverting back to global QoQ config.");
             }
         });

@@ -63,11 +63,24 @@ public class ModListOptions {
                 YES_NO_TEXT, options().saveSearchText, value -> options().saveSearchText = value);
     }
 
-    public static OptionInstance<Boolean> inventoryManagement() {
-        return OptionInstance.createBoolean("qualityofqueso.options.inventory_management", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.inventory_management.tooltip",
-                        keyBindingAsString(ModKeybinds.MOVE_CONTAINER),
-                        keyBindingAsString(ModKeybinds.MOVE_INVENTORY))),
-                ON_OFF_TEXT, options().inventoryManagement, value -> options().inventoryManagement = value);
+    public static OptionInstance<Transferring> transferring() {
+        return new OptionInstance<>(
+                "qualityofqueso.options.transferring",
+                option -> {
+                    Component text = ModTexts.BLANK;
+                    switch (option) {
+                        case SHORTCUT_KEY_OR_BUTTON ->
+                                text = Component.translatable("qualityofqueso.options.transferring.shortcut_key_or_button.tooltip");
+                        case SHORTCUT_KEY_ONLY ->
+                                text = Component.translatable("qualityofqueso.options.transferring.shortcut_key_only.tooltip");
+                    }
+                    String appended = !text.equals(ModTexts.BLANK) ? "\n\n" : "";
+                    return Tooltip.create(Component.translatable("qualityofqueso.options.transferring.tooltip", keyBindingAsString(ModKeybinds.MOVE_INVENTORY), keyBindingAsString(ModKeybinds.MOVE_CONTAINER)).append(appended).append(text));
+                },
+                (optionText, value) -> value.getText(),
+                new OptionInstance.Enum<>(Arrays.asList(Transferring.values()), Transferring.Codec),
+                options().transferring,
+                value -> options().transferring = value);
     }
 
     public static OptionInstance<ContainerSorting> containerSorting() {
@@ -173,9 +186,9 @@ public class ModListOptions {
                 ON_OFF_TEXT, coptions().itemFrameSearching, value -> coptions().itemFrameSearching = value);
     }
 
-    public static OptionInstance<Boolean> serverConfigPresets() {
-        return OptionInstance.createBoolean("qualityofqueso.options.server_config_presets", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.server_config_presets.tooltip")),
-                ON_OFF_TEXT, options().serverConfigPresets, value -> options().serverConfigPresets = value);
+    public static OptionInstance<Boolean> multiServerConfigs() {
+        return OptionInstance.createBoolean("qualityofqueso.options.multi_server_configs", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.multi_server_configs.tooltip")),
+                ON_OFF_TEXT, options().multiServerConfigs, value -> options().multiServerConfigs = value);
     }
 
     public static OptionInstance<QoQButtons> qoqButtons() {
@@ -194,12 +207,12 @@ public class ModListOptions {
                 value -> options().qoqButtons = value);
     }
 
-    public static OptionInstance<Integer> itemFrameSearchTimer() {
+    public static OptionInstance<Integer> itemFrameSearchGlowDuration() {
         return new OptionInstance<>("qualityofqueso.options.item_frame_search_timer",
                 OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.item_frame_search_timer.tooltip")),
                 (optionText, value) -> {
                     if (value == 0) {
-                        return Options.genericValueLabel(optionText, Component.literal("No Timer").withStyle(ChatFormatting.GREEN));
+                        return Options.genericValueLabel(optionText, Component.literal("Indefinite").withStyle(ChatFormatting.RED));
                     } else if (value < 60) {
                         return Options.genericValueLabel(optionText, Component.literal(value + "s"));
                     } else {
@@ -212,7 +225,7 @@ public class ModListOptions {
                         }
                     }
                 },
-                new OptionInstance.IntRange(0, 180), options().itemFrameSearchTimer, value -> options().itemFrameSearchTimer = value);
+                new OptionInstance.IntRange(0, 180), options().itemFrameSearchGlowDuration, value -> options().itemFrameSearchGlowDuration = value);
     }
 
     public static OptionInstance<Integer> itemFrameSearchRadius() {

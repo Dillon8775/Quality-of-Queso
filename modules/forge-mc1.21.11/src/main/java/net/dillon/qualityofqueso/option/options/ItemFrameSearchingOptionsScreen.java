@@ -19,7 +19,7 @@ public class ItemFrameSearchingOptionsScreen extends AbstractModOptionsScreen {
     protected OptionInstance<?>[] options() {
         return new OptionInstance[]{
                 ModListOptions.itemFrameSearching(),
-                ModListOptions.itemFrameSearchTimer(),
+                ModListOptions.itemFrameSearchGlowDuration(),
                 ModListOptions.itemFrameSearchRadius(),
                 ModListOptions.saveSearchText()
         };

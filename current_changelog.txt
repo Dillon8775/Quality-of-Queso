@@ -4,7 +4,7 @@ Version 1.5 (MC Fabric 1.21.11, Forge 1.20.1 and 1.21.11):
 Major changes:
 - Added a sort container button! This sorts all items in a container, alphabetically. By default, the shortcut key is set to "S".
 - Added a "Drag-To-Sort" feature! Hold ALT and drag click on any slot in your inventory/container to manually exclude a slot from transferring or from being searched.
-- Added Server-Config presets, where each server that you join has its own Quality of Queso configuration. You can disable this if you'd like by turning off the option "Server-Config Presets"
+- Added Multi-Server configs, where each server that you join has its own Quality of Queso configuration. You can disable this if you'd like by turning off the option "Server-Config Presets"
 
 - Added debug hud entries for Minecraft's in-game time AND real-life time.
 
@@ -14,7 +14,7 @@ Smart transferring:
 - Same applies to potions and tipped arrows: just with their effects. For firework rockets, it checks the flight duration.
 
 Other changes:
-- "Quick Drop", "Swapping", and "Sort Container" options can now can be toggled to shortcut key only (meaning you can either use its button to perform its action, OR its shortcut key, or shortcut key ONLY).
+- All inventory management options can now can be toggled to shortcut key only (meaning you can either use its button to perform its action, OR its shortcut key, or shortcut key ONLY).
 - Removed "Shortcut Keys" option. You can now configure each inventory management button to use it's shortcut key.
 - Removed "Show Button Outlines" option (it was pointless and confusing).
 - "Swapping" keybind is now unbounded by default (you must bound it yourself, due to the new "Sort Container" feature).
@@ -28,8 +28,13 @@ Other changes:
 - Forge no longer uses .toml configuration files, they now use the traditional .json files (like fabric does) due to the support for multi-server configs.
 
 - Optimized language (again), and other optimizations.
+- Tag searching in inventory screen now displays all tags on items (just like containers).
+- Renamed "Timer" (for item frame searching) to "Glow Duration".
+- Added more descriptive tooltips to the /itemframesearcher command's parameters.
 - Removed minimum requirement for radius = 25 blocks for itemframesearcher command. Minimum requirement is now 1 block (to remove confusion).
-- Fixed critical crash where if inventory searching is off and opening a container screen, the game crashes.
+- Fixed bug where holding control in the item frame searching menu does not search items by match case.
 - Fixed bug where Quick Equip has to be on in order to quick drop using shortcut key (no longer checks for Quick Equip, checks the Quick Drop option first).
 - Fixed bug where swapping cooldown does not apply if using shortcut key.
 - Fixed bug where closing Item Frame Search screen doesn't go back to the options screen (if opened from the options screen).
+- Fixed critical crash where if inventory searching is off and opening a container screen, the game crashes.
+- (Technical) optimizations and code improvements (not the best but more optimized).

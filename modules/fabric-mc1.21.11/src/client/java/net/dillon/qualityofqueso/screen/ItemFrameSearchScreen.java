@@ -48,12 +48,12 @@ public class ItemFrameSearchScreen extends Screen {
         }
         this.searchField.setMaxLength(50);
         this.searchButton = this.addDrawableChild(ButtonWidget.builder(Text.translatable("qualityofqueso.gui.search"), button -> {
-            this.sendPacket(false, options().itemFrameSearchTimer != 0 ? options().itemFrameSearchTimer : 0, options().itemFrameSearchRadius);
+            this.sendPacket(false, options().itemFrameSearchGlowDuration != 0 ? options().itemFrameSearchGlowDuration : 0, options().itemFrameSearchRadius);
         }).dimensions(this.width / 2 + 115, this.height / 2 + 24, 100, 20).build());
-        ClickableWidget itemFrameSearchTimer = this.addDrawableChild(ModListOptions.itemFrameSearchTimer().createWidget(MinecraftClient.getInstance().options));
-        itemFrameSearchTimer.setDimensionsAndPosition(100, 20, this.width / 2 + 5, this.height / 2 + 24);
         ClickableWidget itemFrameSearchRadius = this.addDrawableChild(ModListOptions.itemFrameSearchRadius().createWidget(MinecraftClient.getInstance().options));
-        itemFrameSearchRadius.setDimensionsAndPosition(100, 20, itemFrameSearchTimer.getX(), itemFrameSearchTimer.getY() + 32);
+        itemFrameSearchRadius.setDimensionsAndPosition(100, 20, this.width / 2 + 5, this.height / 2 + 24);
+        ClickableWidget itemFrameSearchGlowDuration = this.addDrawableChild(ModListOptions.itemFrameSearchGlowDuration().createWidget(MinecraftClient.getInstance().options));
+        itemFrameSearchGlowDuration.setDimensionsAndPosition(150, 20, this.width / 2 - 75, itemFrameSearchRadius.getY() + 32);
         this.clearButton = this.addDrawableChild(ButtonWidget.builder(Text.translatable("qualityofqueso.gui.clear"), button -> {
             this.searchField.setText("");
             this.sendPacket(true, 0, options().itemFrameSearchRadius);
@@ -72,9 +72,10 @@ public class ItemFrameSearchScreen extends Screen {
     public void render(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
         this.searchField.render(context, mouseX, mouseY, deltaTicks);
         super.render(context, mouseX, mouseY, deltaTicks);
-        context.drawTextWithShadow(this.textRenderer, Text.translatable("qualityofqueso.gui.search_item_frames"), this.width / 2 - 135, this.height / 2 - 104, -2039584);
-        context.drawTextWithShadow(this.textRenderer, Text.translatable("qualityofqueso.gui.search_item_frames.warning.line1"), this.width / 2 - 175, this.height / 2 - 80, -2039584);
-        context.drawTextWithShadow(this.textRenderer, Text.translatable("qualityofqueso.gui.search_item_frames.warning.line2"), this.width / 2 - 110, this.height / 2 - 56, -2039584);
+        context.drawTextWithShadow(this.textRenderer, Text.translatable("qualityofqueso.gui.search_item_frames"), this.width / 2 - 135, this.height / 2 - 110, -2039584);
+        context.drawTextWithShadow(this.textRenderer, Text.translatable("qualityofqueso.gui.search_item_frames.warning.line1"), this.width / 2 - 175, this.height / 2 - 90 , -2039584);
+        context.drawTextWithShadow(this.textRenderer, Text.translatable("qualityofqueso.gui.search_item_frames.warning.line2"), this.width / 2 - 110, this.height / 2 - 70, -2039584);
+        context.drawTextWithShadow(this.textRenderer, Text.translatable("qualityofqueso.gui.search_item_frames.line3"), this.width / 2 - 155, this.height / 2 - 50, -2039584);
         this.searchButton.active = !this.searchField.getText().isEmpty();
         if (!this.searchField.getText().isEmpty() && this.searchButton.isHovered()) {
             ButtonUtil.drawTooltip(!MinecraftClient.getInstance().isCtrlPressed() ?
@@ -110,7 +111,7 @@ public class ItemFrameSearchScreen extends Screen {
     public boolean keyPressed(KeyInput input) {
         // Send packet upon pressing enter.
         if (input.key() == GLFW.GLFW_KEY_ENTER && !this.searchField.getText().isEmpty()) {
-            this.sendPacket(false, options().itemFrameSearchTimer != 0 ? options().itemFrameSearchTimer : 0, options().itemFrameSearchRadius);
+            this.sendPacket(false, options().itemFrameSearchGlowDuration != 0 ? options().itemFrameSearchGlowDuration : 0, options().itemFrameSearchRadius);
         }
         return super.keyPressed(input);
     }
@@ -135,7 +136,7 @@ public class ItemFrameSearchScreen extends Screen {
     private void sendPacket(boolean clear, int timer, int radius) {
         this.close();
         String text = this.searchField.getText();
-        boolean matchCase = text.startsWith(":");
+        boolean matchCase = text.startsWith(":") || MinecraftClient.getInstance().isCtrlPressed();
         ClientPlayNetworking.send(new GlowSearchC2SPayload(text.substring(matchCase ? 1 : 0), matchCase, clear, timer, radius));
     }
 }
