@@ -51,12 +51,12 @@ public class GameMenuScreenMixin extends Screen {
                 if (!(this.client.getCurrentServerEntry() == null)) {
                     String address = this.getServerAddress();
                     this.blacklistServerButton = this.addDrawableChild(ButtonWidget.builder(ModTexts.BLANK, button -> {
-                        if (options().blacklistedServers.contains(address)) {
-                            options().blacklistedServers.remove(address);
+                        if (uoptions().blacklistedServers.contains(address)) {
+                            uoptions().blacklistedServers.remove(address);
                         } else {
-                            options().blacklistedServers.add(address);
+                            uoptions().blacklistedServers.add(address);
                         }
-                        saveAll();
+                        saveAll(this.client);
                     }).dimensions(this.width / 2 + 106, isFlashbackLoaded() ? this.height / 4 + 120 - 16 : this.height / 4 + 96 - 16, 20, 20).build());
                 }
             }
@@ -112,6 +112,6 @@ public class GameMenuScreenMixin extends Screen {
      */
     @Unique
     private boolean isServerBlacklisted(String serverAddress) {
-        return options().blacklistedServers.contains(serverAddress);
+        return uoptions().blacklistedServers.contains(serverAddress);
     }
 }

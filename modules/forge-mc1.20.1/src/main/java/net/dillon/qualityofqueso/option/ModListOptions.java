@@ -13,8 +13,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.Arrays;
 
-import static net.dillon.qualityofqueso.main.QoQ.coptions;
-import static net.dillon.qualityofqueso.main.QoQ.options;
+import static net.dillon.qualityofqueso.main.QoQ.*;
 
 /**
  * Options displayed on ModOptionsScreen.
@@ -188,7 +187,7 @@ public class ModListOptions {
 
     public static OptionInstance<Boolean> multiServerConfigs() {
         return OptionInstance.createBoolean("qualityofqueso.options.multi_server_configs", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.multi_server_configs.tooltip")),
-                ON_OFF_TEXT, options().multiServerConfigs, value -> options().multiServerConfigs = value);
+                ON_OFF_TEXT, uoptions().multiServerConfigs, value -> uoptions().multiServerConfigs = value);
     }
 
     public static OptionInstance<Boolean> showInGameTime() {
@@ -218,8 +217,8 @@ public class ModListOptions {
     }
 
     public static OptionInstance<Integer> itemFrameSearchGlowDuration() {
-        return new OptionInstance<>("qualityofqueso.options.item_frame_search_timer",
-                OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.item_frame_search_timer.tooltip")),
+        return new OptionInstance<>("qualityofqueso.options.item_frame_search_glow_duration",
+                OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.item_frame_search_glow_duration.tooltip")),
                 (optionText, value) -> {
                     if (value == 0) {
                         return Options.genericValueLabel(optionText, Component.literal("Indefinite").withStyle(ChatFormatting.RED));

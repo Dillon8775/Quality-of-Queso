@@ -3,9 +3,10 @@ package net.dillon.qualityofqueso.main;
 import net.dillon.qualityofqueso.command.ItemFrameSearcherCommand;
 import net.dillon.qualityofqueso.debug.ModHudEntries;
 import net.dillon.qualityofqueso.keybind.ModKeybinds;
-import net.dillon.qualityofqueso.option.BaseOptions;
-import net.dillon.qualityofqueso.option.CommonOptions;
-import net.dillon.qualityofqueso.option.ModClientOptions;
+import net.dillon.qualityofqueso.option.base.BaseOptions;
+import net.dillon.qualityofqueso.option.instance.ModClientOptions;
+import net.dillon.qualityofqueso.option.instance.ModCommonOptions;
+import net.dillon.qualityofqueso.option.instance.UniversalOptions;
 import net.dillon.qualityofqueso.util.ModUtil;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -31,6 +32,9 @@ import java.util.Objects;
 public class QoQ implements ClientModInitializer {
     public static String SAVED_TEXT = "";
     public static String SAVED_ITEM_FRAME_TEXT = "";
+    private static boolean LOADED = false;
+    private static boolean UNLOADED = false;
+    private static boolean CONTINUE = true;
     public static final List<Integer> popularKeys = List.of(GLFW.GLFW_KEY_T, GLFW.GLFW_KEY_E);
     public static final List<Integer> allDisallowedKeys = List.of(
             GLFW.GLFW_KEY_1,
@@ -72,8 +76,8 @@ public class QoQ implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        if (ModClientOptions.CLIENT_OPTIONS.getInstance() == null) {
-            ModClientOptions.CLIENT_OPTIONS.setInstance(new ModClientOptions());
+        if (ModClientOptions.CLIENT.getInstance() == null) {
+            ModClientOptions.CLIENT.setInstance(new ModClientOptions());
         }
 
         ModHudEntries.initializeDebugHudEntries();
@@ -81,30 +85,44 @@ public class QoQ implements ClientModInitializer {
         registerCommands();
 
         ClientPlayConnectionEvents.JOIN.register((handler, packet, client) -> {
-            if (options().multiServerConfigs) {
+            if (uoptions().multiServerConfigs) {
                 loadServerConfig(client);
             }
         });
 
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
-            ModClientOptions.CLIENT_OPTIONS.clearCustomDirectory();
-            ModClientOptions.CLIENT_OPTIONS.setFileName(BaseOptions.DEFAULT_CLIENT_FILE_NAME);
-            ModClientOptions.CLIENT_OPTIONS.load();
-            CommonOptions.COMMON_OPTIONS.clearCustomDirectory();
-            CommonOptions.COMMON_OPTIONS.setFileName(BaseOptions.DEFAULT_COMMON_FILE_NAME);
-            CommonOptions.COMMON_OPTIONS.load();
-            if (options().multiServerConfigs) {
-                ModUtil.info("Reverting back to global QoQ config.");
-            }
+            unloadServerConfig(client);
         });
 
         ModUtil.info("Quality of Queso has successfully loaded!");
     }
 
     /**
-     * Saves server-specific config.
+     * Unloads server config and reloads universal one.
+     */
+    public static void unloadServerConfig(MinecraftClient client) {
+        ModClientOptions.CLIENT.clearCustomDirectory();
+        ModClientOptions.CLIENT.setFileName(BaseOptions.DEFAULT_CLIENT_FILE_NAME);
+        ModClientOptions.CLIENT.load();
+        ModCommonOptions.COMMON.clearCustomDirectory();
+        ModCommonOptions.COMMON.setFileName(BaseOptions.DEFAULT_COMMON_FILE_NAME);
+        ModCommonOptions.COMMON.load();
+        if (client.player != null) {
+            client.player.sendMessage(Text.translatable("qualityofqueso.unloaded_server_config").formatted(Formatting.GOLD), false);
+        }
+        if (uoptions().multiServerConfigs) {
+            ModUtil.info("Reverting back to global QoQ config.");
+        }
+    }
+
+    /**
+     * Loads and saves server-specific config.
      */
     public static void loadServerConfig(MinecraftClient client) {
+        if (!uoptions().multiServerConfigs) {
+            return;
+        }
+
         if (client.getCurrentServerEntry() == null) {
             return;
         } else if (client.getCurrentServerEntry().address == null) {
@@ -112,6 +130,14 @@ public class QoQ implements ClientModInitializer {
         }
 
         String address = client.getCurrentServerEntry().address;
+
+        // Ignore loading on blacklisted server
+        for (String blacklistedServer : uoptions().blacklistedServers) {
+            if (client.getCurrentServerEntry().address.equals(blacklistedServer)) {
+                return;
+            }
+        }
+
         String safe = address.replace(":", "_").replace(".", "-");
 
         File serverDir = FabricLoader.getInstance()
@@ -124,22 +150,22 @@ public class QoQ implements ClientModInitializer {
         File clientServerFile = new File(serverDir, clientServerConfig);
         File commonServerFile = new File(serverDir, commonServerConfig);
 
-        ModClientOptions cachedClientInstance = ModClientOptions.CLIENT_OPTIONS.getInstance();
-        CommonOptions cachedCommonInstance = CommonOptions.COMMON_OPTIONS.getInstance();
+        ModClientOptions cachedClientInstance = ModClientOptions.CLIENT.getInstance();
+        ModCommonOptions cachedCommonInstance = ModCommonOptions.COMMON.getInstance();
         final boolean configExists = clientServerFile.exists() && commonServerFile.exists();
-        ModClientOptions.CLIENT_OPTIONS.setCustomDirectory(serverDir);
-        ModClientOptions.CLIENT_OPTIONS.setFileName(clientServerConfig);
-        CommonOptions.COMMON_OPTIONS.setCustomDirectory(serverDir);
-        CommonOptions.COMMON_OPTIONS.setFileName(commonServerConfig);
+        ModClientOptions.CLIENT.setCustomDirectory(serverDir);
+        ModClientOptions.CLIENT.setFileName(clientServerConfig);
+        ModCommonOptions.COMMON.setCustomDirectory(serverDir);
+        ModCommonOptions.COMMON.setFileName(commonServerConfig);
         if (!configExists) {
-            ModClientOptions.CLIENT_OPTIONS.setInstance(cachedClientInstance);
-            ModClientOptions.CLIENT_OPTIONS.save();
-            CommonOptions.COMMON_OPTIONS.setInstance(cachedCommonInstance);
-            CommonOptions.COMMON_OPTIONS.save();
+            ModClientOptions.CLIENT.setInstance(cachedClientInstance);
+            ModClientOptions.CLIENT.save();
+            ModCommonOptions.COMMON.setInstance(cachedCommonInstance);
+            ModCommonOptions.COMMON.save();
             ModUtil.info("Creating new QoQ server config instance... (" + address + ")");
         }
-        ModClientOptions.CLIENT_OPTIONS.load();
-        CommonOptions.COMMON_OPTIONS.load();
+        ModClientOptions.CLIENT.load();
+        ModCommonOptions.COMMON.load();
 
         String message = !configExists ? "qualityofqueso.created_server_config" : "qualityofqueso.loaded_server_config";
         client.player.sendMessage(Text.translatable(message).formatted(Formatting.GOLD), false);
@@ -161,22 +187,63 @@ public class QoQ implements ClientModInitializer {
      * @return the client-options.
      */
     public static ModClientOptions options() {
-        return ModClientOptions.CLIENT_OPTIONS.getInstance();
+        return ModClientOptions.CLIENT.getInstance();
     }
 
     /**
      * @return the common-options.
      */
-    public static CommonOptions coptions() {
-        return CommonOptions.COMMON_OPTIONS.getInstance();
+    public static ModCommonOptions coptions() {
+        return ModCommonOptions.COMMON.getInstance();
+    }
+
+    /**
+     * @return universal options, unaffected by server configs.
+     */
+    public static UniversalOptions uoptions() {
+        return UniversalOptions.UNIVERSAL.getInstance();
     }
 
     /**
      * Saves all configurations.
      */
-    public static void saveAll() {
-        ModClientOptions.CLIENT_OPTIONS.save();
-        CommonOptions.COMMON_OPTIONS.save();
+    public static void saveAll(MinecraftClient client) {
+        UniversalOptions.UNIVERSAL.save();
+        if (uoptions().multiServerConfigs) {
+            CONTINUE = true;
+        }
+        if (client.getCurrentServerEntry() != null && client.getCurrentServerEntry().address != null) {
+            if (isServerBlacklisted(client) && !uoptions().multiServerConfigs && !UNLOADED) {
+                unload(client, true);
+            } else if (!uoptions().multiServerConfigs && !UNLOADED) {
+                unload(client, true);
+            }
+            if (CONTINUE) {
+                if (isServerBlacklisted(client)) {
+                    if (!UNLOADED) {
+                        unload(client, false);
+                    }
+                } else {
+                    if (!LOADED) {
+                        loadServerConfig(client);
+                        LOADED = true;
+                        UNLOADED = false;
+                    }
+                }
+            }
+        }
+        ModClientOptions.CLIENT.save();
+        ModCommonOptions.COMMON.save();
+    }
+
+    /**
+     * Unloads a config properly.
+     */
+    private static void unload(MinecraftClient client, boolean preventContinuation) {
+        unloadServerConfig(client);
+        UNLOADED = true;
+        LOADED = false;
+        CONTINUE = !preventContinuation;
     }
 
     /**
@@ -185,14 +252,24 @@ public class QoQ implements ClientModInitializer {
     public static boolean modEnabled(MinecraftClient client) {
         Objects.requireNonNull(client, "\"client\" cannot be null.");
 
-        if (isOnServer(client)) {
-            for (String blacklistedServer : options().blacklistedServers) {
-                if (client.getCurrentServerEntry().address.equals(blacklistedServer)) {
-                    return false;
-                }
-            }
+        if (isOnServer(client) && isServerBlacklisted(client)) {
+            return false;
         }
+
         return options().enableMod;
+    }
+
+    /**
+     * @return true if a server is blacklisted.
+     */
+    public static boolean isServerBlacklisted(MinecraftClient client) {
+        if (client.getCurrentServerEntry() == null) {
+            return false;
+        } else if (client.getCurrentServerEntry().address == null) {
+            return false;
+        }
+
+        return uoptions().blacklistedServers.contains(client.getCurrentServerEntry().address);
     }
 
     /**

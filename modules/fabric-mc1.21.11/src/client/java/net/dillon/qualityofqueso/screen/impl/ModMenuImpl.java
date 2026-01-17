@@ -2,7 +2,7 @@ package net.dillon.qualityofqueso.screen.impl;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
-import net.dillon.qualityofqueso.option.ModOptionsScreen;
+import net.dillon.qualityofqueso.option.screen.ModOptionsScreen;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 

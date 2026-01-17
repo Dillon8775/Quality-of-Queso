@@ -3,12 +3,11 @@ package net.dillon.qualityofqueso.mixin.client;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.dillon.qualityofqueso.keybind.ModKeybinds;
 import net.dillon.qualityofqueso.main.QoQ;
-import net.dillon.qualityofqueso.option.ModClientOptions;
+import net.dillon.qualityofqueso.option.instance.ModClientOptions;
 import net.dillon.qualityofqueso.screen.gui.*;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.*;
@@ -241,15 +240,41 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
     }
 
     /**
+     * @return if a container can swap with inventory.
+     */
+    @Unique
+    private boolean canSwap() {
+        Inventory playerInventory = this.minecraft.player.getInventory();
+        return (getContainerSize(this.container) != 27 || isAnySlotFilled(this.menu, false, 27, 54))
+                && this.menu.getCarried().isEmpty() && this.getSearchFieldText().isEmpty()
+                && this.shouldButtonBeActive(false, null)
+                && this.shouldButtonBeActive(true, playerInventory);
+    }
+
+    /**
+     * @return if a container can be sorted.
+     */
+    @Unique
+    private boolean canSort(boolean checkForButton) {
+        boolean excludedContainerSlot = false;
+        for (int id : this.excludedSlots) {
+            if (id <= getTotalSlots(this.menu) - 37) {
+                excludedContainerSlot = true;
+                break;
+            }
+        }
+        return isAnySlotFilled(this.menu, false, 0, getContainerSize(this.container))
+                && this.getSearchFieldText().isEmpty()
+                && !excludedContainerSlot
+                && getCursorStack(this.screen).isEmpty()
+                && (!checkForButton || this.shouldButtonBeActive(false, null));
+    }
+
+    /**
      * @return {@code true} if the {@code fromInventory} has a match with the search query.
      */
     @Unique
-    private boolean shouldButtonBeActive(boolean isPlayerInventory,
-                                         @Nullable Inventory playerInventory, AbstractWidget button) {
-        // If button is null, return false because there is no button to be checked
-        if (button == null) {
-            return false;
-        }
+    private boolean shouldButtonBeActive(boolean isPlayerInventory, @Nullable Inventory playerInventory) {
         // Determine fromInventory size to run through
         int size = isPlayerInventory ? playerInventory.getNonEquipmentItems().size() : this.container.getContainerSize();
         int filledSlots = 0;
@@ -433,7 +458,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             }
             // Otherwise, gray out slots that don't match the search
             else if (!options().includeHotbar
-                    && isHotbarSlot(this.menu.slots.size(), slot.index)
+                    && (isInventoryScreen(this.screen) ? isInventoryHotbarSlot(true, slot.index) : isHotbarSlot(this.menu.slots.size(), slot.index))
                     && options().transferring.orKeyOnly()) {
                 if (shouldGrayout(this.screen, this.transferInventoryButton, this.transferContainerButton, this.includeHotbarButton, true)) {
                     renderSlotUnavailable(graphics, slot, slot.hasItem());
@@ -510,7 +535,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                                 getManagementButtonY(this.screen, this.container, this.topPos, this.titleLabelY),
                                 "transfer_container",
                                 b -> this.transferItems(true),
-                                () -> !isContainerFull(this.menu, this.container, true) && this.shouldButtonBeActive(false, null, this.transferContainerButton)));
+                                () -> !isContainerFull(this.menu, this.container, true) && this.shouldButtonBeActive(false, null)));
 
                 this.transferContainerButton.render(graphics, mouseX, mouseY, deltaTicks);
                 buttons++;
@@ -527,7 +552,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                                 getManagementButtonY(this.screen, this.container, this.topPos, this.titleLabelY),
                                 "transfer_inventory",
                                 b -> this.transferItems(false),
-                                () -> !isContainerFull(this.menu, this.container, false) && this.shouldButtonBeActive(true, playerInventory, this.transferInventoryButton)
+                                () -> !isContainerFull(this.menu, this.container, false) && this.shouldButtonBeActive(true, playerInventory)
                         ));
 
                 this.transferInventoryButton.render(graphics, mouseX, mouseY, deltaTicks);
@@ -550,7 +575,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                                     "include_hotbar",
                                     b -> {
                                         options().includeHotbar = !options().includeHotbar;
-                                        ModClientOptions.CLIENT_OPTIONS.save();
+                                        ModClientOptions.CLIENT.save();
                                     }));
 
                     this.includeHotbarButton.render(graphics, mouseX, mouseY, deltaTicks);
@@ -569,13 +594,13 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                                     getManagementButtonX(this.screen, this.imageWidth, this.width, buttons),
                                     getManagementButtonY(this.screen, this.container, this.topPos, this.titleLabelY),
                                     "swap",
-                                    b -> swapItems(this.menu, this.container, this.excludedSlots),
-                                    () -> {
-                                        return (getContainerSize(this.container) != 27 || isAnySlotFilled(this.menu, false, 27, 54))
-                                                && this.menu.getCarried().isEmpty() && this.getSearchFieldText().isEmpty()
-                                                && this.shouldButtonBeActive(false, null, this.swapButton)
-                                                && this.shouldButtonBeActive(true, playerInventory, this.swapButton);
-                                    }
+                                    b -> {
+                                        if (this.swapCooldown == 0) {
+                                            swapItems(this.menu, this.container, this.excludedSlots);
+                                            this.swapCooldown = 200;
+                                        }
+                                    },
+                                    this::canSwap
                             ));
 
                     this.swapButton.render(graphics, mouseX, mouseY, deltaTicks);
@@ -595,20 +620,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                                     getManagementButtonY(this.screen, this.container, this.topPos, this.titleLabelY),
                                     "sort",
                                     b -> sortItems(this.minecraft),
-                                    () -> {
-                                        boolean excludedContainerSlot = false;
-                                        for (int id : this.excludedSlots) {
-                                            if (id <= getTotalSlots(this.menu) - 37) {
-                                                excludedContainerSlot = true;
-                                                break;
-                                            }
-                                        }
-                                        return isAnySlotFilled(this.menu, false, 0, getContainerSize(this.container))
-                                                && this.getSearchFieldText().isEmpty()
-                                                && !excludedContainerSlot
-                                                && getCursorStack(this.screen).isEmpty()
-                                                && this.shouldButtonBeActive(false, null, this.sortButton);
-                                    }
+                                    () -> this.canSort(true)
                             ));
 
                     this.sortButton.render(graphics, mouseX, mouseY, deltaTicks);
@@ -632,7 +644,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                                             isAnySlotFilled(this.menu, true, 9, 36) :
                                             isAnySlotFilled(this.menu, false, 0, getContainerSize(this.container)))
                                             && this.menu.getCarried().isEmpty()
-                                            && this.shouldButtonBeActive(!containerScreen, containerScreen ? null : playerInventory, this.quickDropButton)
+                                            && this.shouldButtonBeActive(!containerScreen, containerScreen ? null : playerInventory)
                             ));
 
                     this.quickDropButton.render(graphics, mouseX, mouseY, deltaTicks);
@@ -733,7 +745,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
     private void handleKeyPressing(KeyEvent input, CallbackInfoReturnable<Boolean> cir) {
         if (modEnabled(this.minecraft)) {
-            if (Minecraft.getInstance().hasControlDown()) {
+            if (Minecraft.getInstance().hasControlDown() && (isContainerScreen(this.screen) || isInventoryScreen(this.screen))) {
                 if (this.screen instanceof AbstractRecipeBookScreen<?> recipeScreen
                         && input.key() == ModKeybinds.HIDE_RECIPE_BOOK.getKey().getValue()
                         && recipeScreen.recipeBookComponent.isVisible()) {
@@ -753,12 +765,12 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                         this.transferItems(false);
                     }
                 }
-                if (options().containerSorting.orKeyOnly() && input.key() == ModKeybinds.SORT_CONTAINER.getKey().getValue()) {
+                if (this.canSort(false) && options().containerSorting.orKeyOnly() && input.key() == ModKeybinds.SORT_CONTAINER.getKey().getValue()) {
                     sortItems(this.minecraft);
                 }
-                if (this.swapCooldown == 0 && options().swapping.orKeyOnly() && input.key() == ModKeybinds.SWAP_ITEMS.getKey().getValue()) {
+                if (this.canSwap() && this.swapCooldown == 0 && options().swapping.orKeyOnly() && input.key() == ModKeybinds.SWAP_ITEMS.getKey().getValue()) {
                     swapItems(this.menu, this.container, this.excludedSlots);
-                    this.swapCooldown = 120;
+                    this.swapCooldown = 200;
                 }
                 if (options().quickDrop.orKeyOnly() && Minecraft.getInstance().hasAltDown() && input.key() == GLFW.GLFW_KEY_Q) {
                     this.dropItems(!isContainerScreen(this.screen));

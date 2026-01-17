@@ -4,9 +4,13 @@ Version 1.5 (MC Fabric 1.21.11, Forge 1.20.1 and 1.21.11):
 Major changes:
 - Added a sort container button! This sorts all items in a container, alphabetically. By default, the shortcut key is set to "S".
 - Added a "Drag-To-Sort" feature! Hold ALT and drag click on any slot in your inventory/container to manually exclude a slot from transferring or from being searched.
-- Added Multi-Server configs, where each server that you join has its own Quality of Queso configuration. You can disable this if you'd like by turning off the option "Server-Config Presets"
 
+Time display:
 - Added debug hud entries for Minecraft's in-game time AND real-life time.
+
+Multi-Server configs
+- Added Multi-Server configs, where each server that you join has its own Quality of Queso configuration. You can disable this if you'd like by turning off the option "Multi-Server Configs"
+- If you blacklist a server while the server config is loaded, that server config will be unloaded, and your universal one will be loaded. Any changes you make will effect your universal QoQ config. If you remove the blacklisted server that you are currently on, your server config will be reloaded, and any changes you make while on the server will be applied to that server's QoQ configuration.
 
 Smart transferring:
 - Added smart transferring for enchanted books, potions, tipped arrows and firework rockets.
@@ -32,9 +36,14 @@ Other changes:
 - Renamed "Timer" (for item frame searching) to "Glow Duration".
 - Added more descriptive tooltips to the /itemframesearcher command's parameters.
 - Removed minimum requirement for radius = 25 blocks for itemframesearcher command. Minimum requirement is now 1 block (to remove confusion).
+- You can now press "CTRL + C" in the item frame search screen to automatically clear all item frames.
 - Fixed bug where holding control in the item frame searching menu does not search items by match case.
+- Fixed bug where holding control in the item frame searching menu with no colon in the search field removes the first character of the query when it searches.
+- Fixed Forge 1.20.1 bug where searching by match case never finds an item frame.
 - Fixed bug where Quick Equip has to be on in order to quick drop using shortcut key (no longer checks for Quick Equip, checks the Quick Drop option first).
+- Fixed bug where you can still swap even if you are not supposed to be able to swap.
 - Fixed bug where swapping cooldown does not apply if using shortcut key.
+- Fixed swapping cooldown not working correctly (it's now 2 seconds when pressing the button and/or using shortcut key).
 - Fixed bug where closing Item Frame Search screen doesn't go back to the options screen (if opened from the options screen).
 - Fixed critical crash where if inventory searching is off and opening a container screen, the game crashes.
 - (Technical) optimizations and code improvements (not the best but more optimized).

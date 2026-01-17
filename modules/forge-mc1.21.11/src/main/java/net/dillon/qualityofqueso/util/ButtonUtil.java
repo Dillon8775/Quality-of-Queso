@@ -1,7 +1,7 @@
 package net.dillon.qualityofqueso.util;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import net.dillon.qualityofqueso.option.ModOptionsScreen;
+import net.dillon.qualityofqueso.option.screen.ModOptionsScreen;
 import net.dillon.qualityofqueso.screen.gui.TransferButton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;

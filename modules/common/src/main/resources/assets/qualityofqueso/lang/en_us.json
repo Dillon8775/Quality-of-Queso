@@ -38,10 +38,10 @@
   "qualityofqueso.gui.no": "NO",
 
   "qualityofqueso.gui.transfer_container_button.with_cursor_stack": "Move all \"%s\" to inventory",
-  "qualityofqueso.gui.transfer_container_button.with_cursor_enchantment_stack": "Move all enchanted books to inventory\nHold shift to move all books with enchantments \"%s\"",
-  "qualityofqueso.gui.transfer_container_button.with_cursor_potion_stack": "Move all potions to inventory\nHold shift to move all \"%s\" §oonly",
-  "qualityofqueso.gui.transfer_container_button.with_cursor_tipped_arrow_stack": "Move all tipped arrows to inventory\nHold shift to move all \"%s\" §oonly",
-  "qualityofqueso.gui.transfer_container_button.with_cursor_firework_stack": "Move all firework rockets to inventory\nHold shift to move all flight duration \"%s\" rockets §oonly",
+  "qualityofqueso.gui.transfer_container_button.with_cursor_enchantment_stack": "Move all enchanted books to inventory\nHold shift to move books with enchantments \"%s\" §oonly",
+  "qualityofqueso.gui.transfer_container_button.with_cursor_potion_stack": "Move all potions to inventory\nHold shift to move \"%s\" §oonly",
+  "qualityofqueso.gui.transfer_container_button.with_cursor_tipped_arrow_stack": "Move all tipped arrows to inventory\nHold shift to move \"%s\" §oonly",
+  "qualityofqueso.gui.transfer_container_button.with_cursor_firework_stack": "Move all firework rockets to inventory\nHold shift to move flight duration \"%s\" rockets §oonly",
   "qualityofqueso.gui.transfer_container_button.with_search_query.exclude": "Move all items §onot§r containing \"%s\" to inventory",
   "qualityofqueso.gui.transfer_container_button.with_search_query.tag": "Move all items with tag \"%s\" to inventory",
   "qualityofqueso.gui.transfer_container_button.with_search_query.match": "Move all \"%s\" to inventory",
@@ -84,6 +84,7 @@
 
   "qualityofqueso.created_server_config": "(QoQ) New configuration preset has been created for this server.",
   "qualityofqueso.loaded_server_config": "QoQ server-config loaded.",
+  "qualityofqueso.unloaded_server_config": "QoQ config for server has been unloaded. Now using universal config.",
 
   "qualityofqueso.item_frame_searcher_command.executed.without_timer": "Searched item frames containing \"%s\" within a %s block radius.",
   "qualityofqueso.item_frame_searcher_command.executed.with_timer": "Searched item frames containing \"%s\" within a %s block radius, removing glow after %s second(s).",
@@ -155,8 +156,8 @@
   "qualityofqueso.options.item_frame_searching.tooltip": "Search for an item frame with a specific item inside of it and make it glow.\n\nShortcut key = %s",
   "qualityofqueso.options.item_frame_search_radius": "Radius",
   "qualityofqueso.options.item_frame_search_radius.tooltip": "Determines the radius for finding item frames.\n\n1m = 1 block.",
-  "qualityofqueso.options.item_frame_search_timer": "§eGlow Duration",
-  "qualityofqueso.options.item_frame_search_timer.tooltip": "Specifies how long item frames will remain glowing.\n\n§cIndefinite §r§fmeans item frames will remain glowing forever, or until cleared by the player.",
+  "qualityofqueso.options.item_frame_search_glow_duration": "§eGlow Duration",
+  "qualityofqueso.options.item_frame_search_glow_duration.tooltip": "Specifies how long item frames will remain glowing.\n\n§cIndefinite §r§fmeans item frames will remain glowing forever, or until cleared by the player.",
   "qualityofqueso.options.show_in_game_time": "Show In-Game Time",
   "qualityofqueso.options.show_in_game_time.tooltip": "Displays Minecraft's in-game time in the debug screen.",
   "qualityofqueso.options.show_irl_time": "Show IRL Time",

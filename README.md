@@ -3,19 +3,19 @@
 ###
 
 <a href="https://files.minecraftforge.net/" target="_blank">
-  <img src="https://i.imgur.com/gbZFxKU.png" width="285" height="77" alt="Compatible with Forge">
+  <img src="https://i.imgur.com/gbZFxKU.png" width="356" height="96" alt="Compatible with Forge">
 </a>
 
 ####
 
 <a href="https://fabricmc.net/" target="_blank">
-  <img src="https://i.imgur.com/vIbuVv8.png" width="289" height="99" alt="Compatible with Forge">
+  <img src="https://i.imgur.com/vIbuVv8.png" width="361" height="124" alt="Compatible with Forge">
 </a>
 
 ####
 
 <a href="https://modrinth.com/mod/fabric-api/versions" target="_blank">
-  <img src="https://i.imgur.com/yFnszAw.png" width="191" height="64" alt="Compatible with Forge">
+  <img src="https://i.imgur.com/yFnszAw.png" width="287" height="96" alt="Compatible with Forge">
 </a>
 
 ### Please report *any* bugs you may find <a href="https://github.com/Dillon8775/Quality-of-Queso/issues" target="_blank">here.</a>
@@ -57,7 +57,7 @@
 
 ### Smart-moving
 - Moving certain items that have similar components, ex. an enchanted book with sharpness on it, you can choose to move *only enchanted books with sharpness on them.*
-- Just hover over the transfer button with your desired item, hold shift and it will move all items with the same components.
+- Just hover over the transfer button with your desired item, hold shift and it will move all items *only* that have matching components.
 - This applies to **enchanted books, potions, tipped arrows, and firework rockets** (rockets use flight duration to move).
 
 [smart moving since: v1.5]
@@ -88,8 +88,9 @@
 <img src="https://i.imgur.com/OSQdEuo.png" width="36" height="36" alt="Swap button.">
 
 ### The ***Swap*** button, which swaps all items in the container and inventory to the other container's respective slot
-- You can set a keybind to do this.
+- You can set a keybind to do this (CTRL + your desired keybind).
 - You cannot utilize the search feature with this button.
+- There is a 2-second cooldown between uses with this button.
 
 ---
 
@@ -153,7 +154,7 @@ Note: when attempting to transfer to an excluded slot, that slot will still be a
 ![Item frame searching in action.](https://i.imgur.com/6hF7F73.gif)
 
 ## Please note: this mod must be installed on the server-side, _and_ enabled on the server side in order for players to use this feature.
-### There is also a command to use this feature if you don't want to use the GUI screen. However, the command will _only work_ in singleplayer.
+### There is also a command to use this feature if you don't want to use the GUI screen.
 #### To disable this feature on the server-side, either don't install the mod on the server, or go to the "config" directory in your server files and look for "qualityofqueso-common_config.json" (if you are on forge, the file will be called "qualityofqueso-common.toml". Open that file and set "itemFrameSearching" to "false".
 #### If you are in a singleplayer world and have the mod installed, the feature will work as long as you have "Item Frame Searching" enabled.
 
@@ -170,6 +171,8 @@ Note: when attempting to transfer to an excluded slot, that slot will still be a
 - If you are playing 1.20.1, you can just enable these via the mod's configuration, under "Misc...".
 
 ![Show Time In-Game.](https://i.imgur.com/bfWrzxc.png)
+
+#### (since: v1.5)
 
 ---
 
@@ -197,6 +200,8 @@ If you want, without removing the mod from your mods folder entirely, there is a
 ---
 # Multi-Server Configs
 By default, each server that you join will have its own Quality of Queso configuration, meaning each server that you play on can have different settings. You can disable this if you'd like (search for "Server-Config Presets" under "Misc..." options.)
+
+#### (since: v1.5)
 
 ---
 

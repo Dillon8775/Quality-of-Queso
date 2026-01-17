@@ -76,7 +76,7 @@ public record GlowSearchC2SPayload(String query, boolean matchCase, boolean clea
                                 return false;
                             }
 
-                            String itemName = stack.getDisplayName().getString().toLowerCase();
+                            String itemName = stack.getHoverName().getString().toLowerCase();
                             String itemId = ForgeRegistries.ITEMS.getResourceKey(stack.getItem()).toString().toLowerCase();
 
                             // Check all searched queries (separated by comma)

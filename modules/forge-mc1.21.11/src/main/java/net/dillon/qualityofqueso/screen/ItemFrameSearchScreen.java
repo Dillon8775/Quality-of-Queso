@@ -2,6 +2,7 @@ package net.dillon.qualityofqueso.screen;
 
 import net.dillon.qualityofqueso.main.QoQ;
 import net.dillon.qualityofqueso.option.ModListOptions;
+import net.dillon.qualityofqueso.option.instance.ModClientOptions;
 import net.dillon.qualityofqueso.packet.GlowSearchC2SPayload;
 import net.dillon.qualityofqueso.packet.ServerHandler;
 import net.dillon.qualityofqueso.util.ButtonUtil;
@@ -55,8 +56,7 @@ public class ItemFrameSearchScreen extends Screen {
         AbstractWidget itemFrameSearchGlowDuration = this.addRenderableWidget(ModListOptions.itemFrameSearchGlowDuration().createButton(Minecraft.getInstance().options, this.width / 2 - 75, 20, 150));
         itemFrameSearchGlowDuration.setY(itemFrameSearchRadius.getY() + 32);
         this.clearButton = this.addRenderableWidget(Button.builder(Component.translatable("qualityofqueso.gui.clear"), button -> {
-            this.searchField.setValue("");
-            this.sendPacket(true, 0, options().itemFrameSearchRadius);
+            this.clear();
         }).bounds(this.width / 2 - 105, this.height / 2 + 24, 100, 20).build());
         this.addRenderableWidget(Button.builder(Component.translatable("qualityofqueso.gui.close"), button -> {
             this.onClose();
@@ -99,7 +99,6 @@ public class ItemFrameSearchScreen extends Screen {
         if (this.minecraft.level == null) {
             this.renderPanorama(graphics, deltaTicks);
         }
-
         this.renderMenuBackground(graphics);
     }
 
@@ -112,6 +111,9 @@ public class ItemFrameSearchScreen extends Screen {
         if (input.key() == GLFW.GLFW_KEY_ENTER && !this.searchField.getValue().isEmpty()) {
             this.sendPacket(false, options().itemFrameSearchGlowDuration != 0 ? options().itemFrameSearchGlowDuration : 0, options().itemFrameSearchRadius);
         }
+        if (Minecraft.getInstance().hasControlDown() && input.key() == GLFW.GLFW_KEY_C) {
+            this.clear();
+        }
         return super.keyPressed(input);
     }
 
@@ -121,7 +123,7 @@ public class ItemFrameSearchScreen extends Screen {
     @Override
     public void onClose() {
         QoQ.SAVED_ITEM_FRAME_TEXT = this.searchField.getValue();
-        QoQ.saveAll();
+        ModClientOptions.CLIENT.save();
         if (this.parent != null) {
             this.minecraft.setScreen(this.parent);
         } else {
@@ -130,12 +132,22 @@ public class ItemFrameSearchScreen extends Screen {
     }
 
     /**
+     * Clears glow from item frames.
+     */
+    private void clear() {
+        this.searchField.setValue("");
+        this.sendPacket(true, 0, options().itemFrameSearchRadius);
+    }
+
+    /**
      * Closes the screen and sends the glowing packet.
      */
     private void sendPacket(boolean clear, int timer, int radius) {
         this.onClose();
         String text = this.searchField.getValue();
-        boolean matchCase = text.startsWith(":") || Minecraft.getInstance().hasControlDown();
-        ServerHandler.sendToServer(new GlowSearchC2SPayload(text.substring(matchCase ? 1 : 0), matchCase, clear, timer, radius));
+        boolean colon = text.startsWith(":");
+        boolean matchCase = colon || Minecraft.getInstance().hasControlDown();
+        boolean shouldSubstring = (Minecraft.getInstance().hasControlDown() && colon) || colon;
+        ServerHandler.sendToServer(new GlowSearchC2SPayload(text.substring(shouldSubstring ? 1 : 0), matchCase, clear, timer, radius));
     }
 }

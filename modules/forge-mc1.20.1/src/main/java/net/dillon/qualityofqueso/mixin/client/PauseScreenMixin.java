@@ -18,12 +18,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
 
-import static net.dillon.qualityofqueso.main.QoQ.options;
-import static net.dillon.qualityofqueso.main.QoQ.saveAll;
-import static net.dillon.qualityofqueso.util.ModUtil.isOnServer;
+import static net.dillon.qualityofqueso.main.QoQ.*;
 
 @OnlyIn(Dist.CLIENT)
 @Mixin(PauseScreen.class)
@@ -53,13 +49,12 @@ public class PauseScreenMixin extends Screen {
                 if (!(this.minecraft.getCurrentServer() == null)) {
                     String address = this.getServerAddress();
                     this.blacklistServerButton = this.addRenderableWidget(Button.builder(ModTexts.BLANK, button -> {
-                        List<String> servers = new ArrayList<>(options().blacklistedServers);
-                        if (options().blacklistedServers.contains(address)) {
-                            servers.remove(address);
+                        if (uoptions().blacklistedServers.contains(address)) {
+                            uoptions().blacklistedServers.remove(address);
                         } else {
-                            servers.add(address);
+                            uoptions().blacklistedServers.add(address);
                         }
-                        saveAll();
+                        saveAll(this.minecraft);
                     }).bounds(this.width / 2 + 106, this.height / 4 + 96 - 16, 20, 20).build());
                 }
             }
@@ -115,6 +110,6 @@ public class PauseScreenMixin extends Screen {
      */
     @Unique
     private boolean isServerBlacklisted(String serverAddress) {
-        return options().blacklistedServers.contains(serverAddress);
+        return uoptions().blacklistedServers.contains(serverAddress);
     }
 }

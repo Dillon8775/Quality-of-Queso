@@ -1,7 +1,7 @@
 package net.dillon.qualityofqueso.option;
 
 import net.dillon.qualityofqueso.keybind.ModKeybinds;
-import net.dillon.qualityofqueso.main.QoQ;
+import net.dillon.qualityofqueso.option.screen.ModOptionsScreen;
 import net.dillon.qualityofqueso.util.ModTexts;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -14,6 +14,8 @@ import net.minecraft.util.Formatting;
 
 import java.util.Arrays;
 
+import static net.dillon.qualityofqueso.main.QoQ.*;
+
 /**
  * Options displayed on {@link ModOptionsScreen}.
  */
@@ -21,37 +23,37 @@ import java.util.Arrays;
 public class ModListOptions {
     public static SimpleOption<Boolean> enableMod() {
         return new SimpleOption<>("qualityofqueso.options.enable_mod", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.enable_mod.tooltip")),
-                (optionText, value) -> !value ? ModTexts.NO : ModTexts.YES, SimpleOption.BOOLEAN, QoQ.options().enableMod, value -> QoQ.options().enableMod = value);
+                (optionText, value) -> !value ? ModTexts.NO : ModTexts.YES, SimpleOption.BOOLEAN, options().enableMod, value -> options().enableMod = value);
     }
 
     public static SimpleOption<Boolean> betterGuiExit() {
         return new SimpleOption<>("qualityofqueso.options.better_gui_exit", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.better_gui_exit.tooltip")),
-                (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, QoQ.options().betterGuiExit, value -> QoQ.options().betterGuiExit = value);
+                (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, options().betterGuiExit, value -> options().betterGuiExit = value);
     }
 
     public static SimpleOption<Boolean> betterSearching() {
         return new SimpleOption<>("qualityofqueso.options.better_searching", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.better_searching.tooltip")),
-                (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, QoQ.options().betterSearching, value -> QoQ.options().betterSearching = value);
+                (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, options().betterSearching, value -> options().betterSearching = value);
     }
 
     public static SimpleOption<Boolean> chestSearching() {
         return new SimpleOption<>("qualityofqueso.options.chest_searching", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.chest_searching.tooltip")),
-                (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, QoQ.options().chestSearching, value -> QoQ.options().chestSearching = value);
+                (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, options().chestSearching, value -> options().chestSearching = value);
     }
 
     public static  SimpleOption<Boolean> searchInventory() {
         return new SimpleOption<>("qualityofqueso.options.search_inventory", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.search_inventory.tooltip")),
-                (optionText, value) -> !value ? ModTexts.NO : ModTexts.YES, SimpleOption.BOOLEAN, QoQ.options().searchInventory, value -> QoQ.options().searchInventory = value);
+                (optionText, value) -> !value ? ModTexts.NO : ModTexts.YES, SimpleOption.BOOLEAN, options().searchInventory, value -> options().searchInventory = value);
     }
 
     public static SimpleOption<Boolean> inventorySearching() {
         return new SimpleOption<>("qualityofqueso.options.inventory_searching", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.inventory_searching.tooltip")),
-                (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, QoQ.options().inventorySearching, value -> QoQ.options().inventorySearching = value);
+                (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, options().inventorySearching, value -> options().inventorySearching = value);
     }
 
     public static SimpleOption<Boolean> saveSearchText() {
         return new SimpleOption<>("qualityofqueso.options.save_search_text", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.save_search_text.tooltip")),
-                (optionText, value) -> !value ? ModTexts.NO : ModTexts.YES, SimpleOption.BOOLEAN, QoQ.options().saveSearchText, value -> QoQ.options().saveSearchText = value);
+                (optionText, value) -> !value ? ModTexts.NO : ModTexts.YES, SimpleOption.BOOLEAN, options().saveSearchText, value -> options().saveSearchText = value);
     }
 
     public static SimpleOption<Transferring> transferring() {
@@ -68,8 +70,8 @@ public class ModListOptions {
                 },
                 (optionText, value) -> value.getText(),
                 new SimpleOption.PotentialValuesBasedCallbacks<>(Arrays.asList(Transferring.values()), Transferring.Codec),
-                QoQ.options().transferring,
-                value -> QoQ.options().transferring = value);
+                options().transferring,
+                value -> options().transferring = value);
     }
 
     public static SimpleOption<ContainerSorting> containerSorting() {
@@ -86,8 +88,8 @@ public class ModListOptions {
                 },
                 (optionText, value) -> value.getText(),
                 new SimpleOption.PotentialValuesBasedCallbacks<>(Arrays.asList(ContainerSorting.values()), ContainerSorting.Codec),
-                QoQ.options().containerSorting,
-                value -> QoQ.options().containerSorting = value);
+                options().containerSorting,
+                value -> options().containerSorting = value);
     }
 
     public static SimpleOption<QuickDrop> quickDrop() {
@@ -104,8 +106,8 @@ public class ModListOptions {
                 },
                 (optionText, value) -> value.getText(),
                 new SimpleOption.PotentialValuesBasedCallbacks<>(Arrays.asList(QuickDrop.values()), QuickDrop.Codec),
-                QoQ.options().quickDrop,
-                value -> QoQ.options().quickDrop = value);
+                options().quickDrop,
+                value -> options().quickDrop = value);
     }
 
     public static SimpleOption<Swapping> swapping() {
@@ -122,60 +124,60 @@ public class ModListOptions {
                 },
                 (optionText, value) -> value.getText(),
                 new SimpleOption.PotentialValuesBasedCallbacks<>(Arrays.asList(Swapping.values()), Swapping.Codec),
-                QoQ.options().swapping,
-                value -> QoQ.options().swapping = value);
+                options().swapping,
+                value -> options().swapping = value);
     }
 
     public static SimpleOption<Boolean> includeHotbar() {
         return new SimpleOption<>("qualityofqueso.options.include_hotbar", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.include_hotbar.tooltip")),
-                (optionText, value) -> !value ? ModTexts.NO : ModTexts.YES, SimpleOption.BOOLEAN, QoQ.options().includeHotbar, value -> QoQ.options().includeHotbar = value);
+                (optionText, value) -> !value ? ModTexts.NO : ModTexts.YES, SimpleOption.BOOLEAN, options().includeHotbar, value -> options().includeHotbar = value);
     }
 
     public static SimpleOption<Boolean> legacyQuickMove() {
         return new SimpleOption<>("qualityofqueso.options.legacy_quick_move", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.legacy_quick_move.tooltip")),
-                (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, QoQ.options().legacyQuickMove, value -> QoQ.options().legacyQuickMove = value);
+                (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, options().legacyQuickMove, value -> options().legacyQuickMove = value);
     }
 
     public static SimpleOption<Boolean> dragToSort() {
         return new SimpleOption<>("qualityofqueso.options.drag_to_sort", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.drag_to_sort.tooltip")),
-                (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, QoQ.options().dragToSort, value -> QoQ.options().dragToSort = value);
+                (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, options().dragToSort, value -> options().dragToSort = value);
     }
 
     public static SimpleOption<Boolean> showButtonShortcuts() {
         return new SimpleOption<>("qualityofqueso.options.show_button_shortcuts", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.show_button_shortcuts.tooltip")),
-                (optionText, value) -> !value ? ModTexts.NO : ModTexts.YES, SimpleOption.BOOLEAN, QoQ.options().showButtonShortcuts, value -> QoQ.options().showButtonShortcuts = value);
+                (optionText, value) -> !value ? ModTexts.NO : ModTexts.YES, SimpleOption.BOOLEAN, options().showButtonShortcuts, value -> options().showButtonShortcuts = value);
     }
 
     public static SimpleOption<Boolean> quickEquip() {
         return new SimpleOption<>("qualityofqueso.options.quick_equip", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.quick_equip.tooltip",
                 keyBindingAsString(ModKeybinds.QUICK_EQUIP))),
-                (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, QoQ.options().quickEquip, value -> QoQ.options().quickEquip = value);
+                (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, options().quickEquip, value -> options().quickEquip = value);
     }
 
     public static SimpleOption<Boolean> preventRageQuitting() {
         return new SimpleOption<>("qualityofqueso.options.prevent_rage_quitting", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.prevent_rage_quitting.tooltip")),
-                (optionText, value) -> !value ? ModTexts.NO : ModTexts.YES, SimpleOption.BOOLEAN, QoQ.options().preventRageQuitting, value -> QoQ.options().preventRageQuitting = value);
+                (optionText, value) -> !value ? ModTexts.NO : ModTexts.YES, SimpleOption.BOOLEAN, options().preventRageQuitting, value -> options().preventRageQuitting = value);
     }
 
     public static SimpleOption<Boolean> preventEFromTyping() {
         return new SimpleOption<>("qualityofqueso.options.prevent_e_from_typing", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.prevent_e_from_typing.tooltip")),
-                (optionText, value) -> !value ? ModTexts.NO : ModTexts.YES, SimpleOption.BOOLEAN, QoQ.options().preventEFromTyping, value -> QoQ.options().preventEFromTyping = value);
+                (optionText, value) -> !value ? ModTexts.NO : ModTexts.YES, SimpleOption.BOOLEAN, options().preventEFromTyping, value -> options().preventEFromTyping = value);
     }
 
     public static SimpleOption<Boolean> helpfulTooltips() {
         return new SimpleOption<>("qualityofqueso.options.helpful_tooltips", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.helpful_tooltips.tooltip")),
-                (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, QoQ.options().helpfulTooltips, value -> QoQ.options().helpfulTooltips = value);
+                (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, options().helpfulTooltips, value -> options().helpfulTooltips = value);
     }
 
     public static SimpleOption<Boolean> itemFrameSearching() {
         return new SimpleOption<>("qualityofqueso.options.item_frame_searching", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.item_frame_searching.tooltip",
                 keyBindingAsString(ModKeybinds.OPEN_SEARCH_ITEM_FRAMES_GUI))),
-                (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, QoQ.coptions().itemFrameSearching, value -> QoQ.coptions().itemFrameSearching = value);
+                (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, coptions().itemFrameSearching, value -> coptions().itemFrameSearching = value);
     }
 
     public static SimpleOption<Boolean> multiServerConfigs() {
         return new SimpleOption<>("qualityofqueso.options.multi_server_configs", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.multi_server_configs.tooltip")),
-                (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, QoQ.options().multiServerConfigs, value -> QoQ.options().multiServerConfigs = value);
+                (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, uoptions().multiServerConfigs, value -> uoptions().multiServerConfigs = value);
     }
 
     public static SimpleOption<QoQButtons> qoqButtons() {
@@ -190,12 +192,12 @@ public class ModListOptions {
                 },
                 (optionText, value) -> value.getText(),
                 new SimpleOption.PotentialValuesBasedCallbacks<>(Arrays.asList(QoQButtons.values()), QoQButtons.Codec),
-                QoQ.options().qoqButtons,
-                value -> QoQ.options().qoqButtons = value);
+                options().qoqButtons,
+                value -> options().qoqButtons = value);
     }
 
     public static SimpleOption<Integer> itemFrameSearchGlowDuration() {
-        return new SimpleOption<>("qualityofqueso.options.item_frame_search_timer", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.item_frame_search_timer.tooltip")),
+        return new SimpleOption<>("qualityofqueso.options.item_frame_search_glow_duration", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.item_frame_search_glow_duration.tooltip")),
                 (optionText, value) -> {
                     if (value == 0) {
                         return GameOptions.getGenericValueText(optionText, Text.literal("Indefinite").formatted(Formatting.RED));
@@ -211,13 +213,13 @@ public class ModListOptions {
                         }
                     }
                 },
-                new SimpleOption.ValidatingIntSliderCallbacks(0, 180), QoQ.options().itemFrameSearchGlowDuration, value -> QoQ.options().itemFrameSearchGlowDuration = value);
+                new SimpleOption.ValidatingIntSliderCallbacks(0, 180), options().itemFrameSearchGlowDuration, value -> options().itemFrameSearchGlowDuration = value);
     }
 
     public static SimpleOption<Integer> itemFrameSearchRadius() {
         return new SimpleOption<>("qualityofqueso.options.item_frame_search_radius", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.item_frame_search_radius.tooltip")),
                 (optionText, value) -> GameOptions.getGenericValueText(optionText, Text.literal(value + "m")),
-                new SimpleOption.ValidatingIntSliderCallbacks(25, 500), QoQ.options().itemFrameSearchRadius, value -> QoQ.options().itemFrameSearchRadius = value);
+                new SimpleOption.ValidatingIntSliderCallbacks(25, 500), options().itemFrameSearchRadius, value -> options().itemFrameSearchRadius = value);
     }
 
     /**
