@@ -315,7 +315,10 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                     continue;
                 }
                 if (this.search(this.getSearchFieldText(), slot, false)) {
-                    foundQuerys++; // increment J if query found in slot
+                    // prevent shulker boxes from counting as a found query when in a shulker box screen
+                    if (!(this.screen instanceof ShulkerBoxScreen && slot.getStack().isIn(ItemTags.SHULKER_BOXES))) {
+                        foundQuerys++; // increment J if query found in slot
+                    }
                 }
             }
         } else {
@@ -745,7 +748,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
     private void handleKeyPressing(KeyInput input, CallbackInfoReturnable<Boolean> cir) {
         if (modEnabled(this.client)) {
-            if (MinecraftClient.getInstance().isCtrlPressed() && (isContainerScreen(this.screen) || isInventoryScreen(this.screen))) {
+            if (MinecraftClient.getInstance().isCtrlPressed()) {
                 if (this.screen instanceof RecipeBookScreen<?> recipeScreen
                         && input.key() == ModKeybinds.HIDE_RECIPE_BOOK.boundKey.getCode()
                         && recipeScreen.recipeBook.isOpen()) {
@@ -757,23 +760,25 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                     }
                     cir.setReturnValue(true);
                 }
-                if (options().transferring.orKeyOnly()) {
-                    if (input.key() == ModKeybinds.MOVE_CONTAINER.boundKey.getCode()) {
-                        this.transferItems(true);
+                if (isValidScreen(this.screen)) {
+                    if (options().transferring.orKeyOnly()) {
+                        if (input.key() == ModKeybinds.MOVE_CONTAINER.boundKey.getCode()) {
+                            this.transferItems(true);
+                        }
+                        if (input.key() == ModKeybinds.MOVE_INVENTORY.boundKey.getCode()) {
+                            this.transferItems(false);
+                        }
                     }
-                    if (input.key() == ModKeybinds.MOVE_INVENTORY.boundKey.getCode()) {
-                        this.transferItems(false);
+                    if (this.canSort(false) && options().containerSorting.orKeyOnly() && input.key() == ModKeybinds.SORT_CONTAINER.boundKey.getCode()) {
+                        sortItems(this.client);
                     }
-                }
-                if (this.canSort(false) && options().containerSorting.orKeyOnly() && input.key() == ModKeybinds.SORT_CONTAINER.boundKey.getCode()) {
-                    sortItems(this.client);
-                }
-                if (this.canSwap() && this.swapCooldown == 0 && options().swapping.orKeyOnly() && input.key() == ModKeybinds.SWAP_ITEMS.boundKey.getCode()) {
-                    swapItems(this.handler, this.inventory, this.excludedSlots);
-                    this.swapCooldown = 200;
-                }
-                if (options().quickDrop.orKeyOnly() && MinecraftClient.getInstance().isAltPressed() && input.key() == GLFW.GLFW_KEY_Q) {
-                    this.dropItems(!isContainerScreen(this.screen));
+                    if (this.canSwap() && this.swapCooldown == 0 && options().swapping.orKeyOnly() && input.key() == ModKeybinds.SWAP_ITEMS.boundKey.getCode()) {
+                        swapItems(this.handler, this.inventory, this.excludedSlots);
+                        this.swapCooldown = 200;
+                    }
+                    if (options().quickDrop.orKeyOnly() && MinecraftClient.getInstance().isAltPressed() && input.key() == GLFW.GLFW_KEY_Q) {
+                        this.dropItems(!isContainerScreen(this.screen));
+                    }
                 }
             }
 

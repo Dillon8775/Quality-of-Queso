@@ -35,8 +35,7 @@ import org.spongepowered.asm.mixin.Unique;
 
 import java.util.*;
 
-import static net.dillon.qualityofqueso.main.QoQ.options;
-import static net.dillon.qualityofqueso.main.QoQ.quicklyEquippables;
+import static net.dillon.qualityofqueso.main.QoQ.*;
 
 /**
  * Utility class.
@@ -690,5 +689,17 @@ public class ButtonUtil {
      */
     public static boolean isCreativeInventoryScreen(Screen screen) {
         return screen instanceof CreativeModeInventoryScreen;
+    }
+
+    /**
+     * @return if the stack is a shulker box.
+     */
+    public static boolean isStackShulker(ItemStack stack) {
+        for (Item shulker : shulkerBoxes) {
+            if (stack.is(shulker)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
