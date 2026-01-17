@@ -443,6 +443,10 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
      */
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;renderLabels(Lnet/minecraft/client/gui/GuiGraphics;II)V", shift = At.Shift.AFTER))
     private void grayOutSlot(GuiGraphics graphics, int mouseX, int mouseY, float deltaTicks, CallbackInfo ci) {
+        if (!isValidScreen(this.screen)) {
+            return;
+        }
+
         boolean inventorySearchFieldPresent = this.inventorySearchField != null;
         for (int i = 0; i < getInventorySize(this.menu, this.container); i++) {
             Slot slot = this.menu.getSlot(i);

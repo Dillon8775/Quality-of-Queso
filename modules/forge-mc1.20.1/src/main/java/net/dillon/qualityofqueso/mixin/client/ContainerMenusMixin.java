@@ -21,7 +21,7 @@ public class ContainerMenusMixin {
      */
     @Inject(method = "quickMoveStack", at = @At("HEAD"), cancellable = true)
     private void redirectQuickMove(Player player, int slotIndex, CallbackInfoReturnable<ItemStack> cir) {
-        if (!options().legacyQuickMove || !options().includeHotbar) {
+        if (options().perpendicularQuickMoving || !options().includeHotbar) {
             AbstractContainerMenu menu = (AbstractContainerMenu)(Object)this;
 
             Slot slot = menu.slots.get(slotIndex);

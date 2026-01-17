@@ -132,7 +132,7 @@ public class ButtonUtil {
      * @return if the user is attempting to exclude slots.
      */
     public static boolean isExcludingSlots(AbstractContainerScreen<?> handledScreen) {
-        return options().dragToSort && Screen.hasAltDown() && handledScreen.hoveredSlot != null && handledScreen.getMenu().getCarried().isEmpty();
+        return isValidScreen(handledScreen) && options().dragToSort && Screen.hasAltDown() && handledScreen.hoveredSlot != null && handledScreen.getMenu().getCarried().isEmpty();
     }
 
     /**
@@ -676,6 +676,13 @@ public class ButtonUtil {
      */
     public static boolean isInventoryScreen(Screen screen) {
         return screen instanceof InventoryScreen;
+    }
+
+    /**
+     * @return valid screen for mod to work.
+     */
+    public static boolean isValidScreen(Screen screen) {
+        return isContainerScreen(screen) || isInventoryScreen(screen);
     }
 
     /**

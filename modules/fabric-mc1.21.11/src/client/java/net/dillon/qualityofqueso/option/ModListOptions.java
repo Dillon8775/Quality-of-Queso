@@ -133,9 +133,9 @@ public class ModListOptions {
                 (optionText, value) -> !value ? ModTexts.NO : ModTexts.YES, SimpleOption.BOOLEAN, options().includeHotbar, value -> options().includeHotbar = value);
     }
 
-    public static SimpleOption<Boolean> legacyQuickMove() {
-        return new SimpleOption<>("qualityofqueso.options.legacy_quick_move", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.legacy_quick_move.tooltip")),
-                (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, options().legacyQuickMove, value -> options().legacyQuickMove = value);
+    public static SimpleOption<Boolean> perpendicularQuickMoving() {
+        return new SimpleOption<>("qualityofqueso.options.perpendicular_quick_moving", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.perpendicular_quick_moving.tooltip")),
+                (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, options().perpendicularQuickMoving, value -> options().perpendicularQuickMoving = value);
     }
 
     public static SimpleOption<Boolean> dragToSort() {

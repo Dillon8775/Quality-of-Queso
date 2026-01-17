@@ -441,6 +441,10 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
      */
     @Inject(method = "renderMain", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ingame/HandledScreen;drawSlotHighlightFront(Lnet/minecraft/client/gui/DrawContext;)V", shift = At.Shift.AFTER))
     private void grayOutSlot(DrawContext context, int mouseX, int mouseY, float deltaTicks, CallbackInfo ci) {
+        if (!isValidScreen(this.screen)) {
+            return;
+        }
+
         boolean inventorySearchFieldPresent = this.inventorySearchField != null;
         for (int i = 0; i < getInventorySize(this.handler, this.inventory); i++) {
             Slot slot = this.handler.getSlot(i);

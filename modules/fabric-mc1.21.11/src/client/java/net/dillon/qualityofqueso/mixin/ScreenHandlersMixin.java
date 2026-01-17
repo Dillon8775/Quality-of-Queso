@@ -21,7 +21,7 @@ public class ScreenHandlersMixin {
      */
     @Inject(method = "quickMove", at = @At("HEAD"), cancellable = true)
     private void redirectQuickMove(PlayerEntity player, int slotIndex, CallbackInfoReturnable<ItemStack> cir) {
-        if (!options().legacyQuickMove || !options().includeHotbar) {
+        if (options().perpendicularQuickMoving || !options().includeHotbar) {
             ScreenHandler handler = (ScreenHandler)(Object)this;
 
             Slot slot = handler.slots.get(slotIndex);

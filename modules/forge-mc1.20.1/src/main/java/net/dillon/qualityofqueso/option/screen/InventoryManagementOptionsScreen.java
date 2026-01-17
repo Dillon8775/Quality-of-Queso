@@ -19,8 +19,7 @@ public class InventoryManagementOptionsScreen extends AbstractModOptionsScreen {
         return new OptionInstance[]{
                 ModListOptions.dragToSort(),
                 ModListOptions.includeHotbar(),
-                ModListOptions.showButtonShortcuts(),
-                ModListOptions.legacyQuickMove()
+                ModListOptions.showButtonShortcuts()
         };
     }
 
@@ -31,6 +30,7 @@ public class InventoryManagementOptionsScreen extends AbstractModOptionsScreen {
         this.list.addBig(ModListOptions.containerSorting());
         this.list.addBig(ModListOptions.quickDrop());
         this.list.addBig(ModListOptions.swapping());
+        this.list.addBig(ModListOptions.perpendicularQuickMoving());
         this.list.addSmall(this.options());
     }
 

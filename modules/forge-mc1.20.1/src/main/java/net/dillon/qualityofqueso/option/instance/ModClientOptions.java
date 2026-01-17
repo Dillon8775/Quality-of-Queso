@@ -29,7 +29,7 @@ public class ModClientOptions {
     public boolean showButtonShortcuts = true;
 
     // Misc options
-    public boolean legacyQuickMove = true;
+    public boolean perpendicularQuickMoving = false;
     public boolean quickEquip = true;
     public boolean preventRageQuitting = false;
     public boolean preventEFromTyping = false;
