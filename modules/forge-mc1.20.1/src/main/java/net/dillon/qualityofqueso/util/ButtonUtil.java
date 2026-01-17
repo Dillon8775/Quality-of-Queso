@@ -644,13 +644,13 @@ public class ButtonUtil {
     /**
      * @return whether a slot should be grayed out.
      */
-    public static boolean shouldGrayout(AbstractContainerScreen<?> screen, TransferButton inventoryButton, TransferButton containerButton, TransferButton hotbarButton, boolean checkForStack) {
+    public static boolean shouldGrayout(AbstractContainerScreen<?> screen, TransferButton inventoryButton, TransferButton containerButton, TransferButton hotbarButton, Slot slot) {
         boolean shortcutKeyReady = isInventoryScreen(screen) ? Screen.hasControlDown() && Screen.hasAltDown() : Screen.hasControlDown();
         return shortcutKeyReady
                 || shiftHeld(screen, false)
-                || (buttonHoveredAndActive(inventoryButton) && (checkForStack))
+                || (buttonHoveredAndActive(inventoryButton) && slot.hasItem())
                 || buttonHoveredAndActive(containerButton)
-                || buttonHoveredAndActive(hotbarButton);
+                || (buttonHoveredAndActive(hotbarButton) && slot.hasItem());
     }
 
     /**

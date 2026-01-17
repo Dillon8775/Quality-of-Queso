@@ -464,7 +464,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             else if (!options().includeHotbar
                     && (isInventoryScreen(this.screen) ? isInventoryHotbarSlot(true, slot.index) : isHotbarSlot(this.menu.slots.size(), slot.index))
                     && options().transferring.orKeyOnly()) {
-                if (shouldGrayout(this.screen, this.transferInventoryButton, this.transferContainerButton, this.includeHotbarButton, true)) {
+                if (shouldGrayout(this.screen, this.transferInventoryButton, this.transferContainerButton, this.includeHotbarButton, slot)) {
                     renderSlotUnavailable(graphics, slot, slot.hasItem());
                     alreadyExcluded = true;
                 }

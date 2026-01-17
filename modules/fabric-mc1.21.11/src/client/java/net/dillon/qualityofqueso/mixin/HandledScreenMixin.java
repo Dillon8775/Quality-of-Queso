@@ -460,7 +460,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             else if (!options().includeHotbar
                     && (isInventoryScreen(this.screen) ? isInventoryHotbarSlot(true, slot.id) : isHotbarSlot(this.handler.slots.size(), slot.id))
                     && options().transferring.orKeyOnly()) {
-                if (shouldGrayout(this.screen, this.transferInventoryButton, this.transferContainerButton, this.includeHotbarButton, true)) {
+                if (shouldGrayout(this.screen, this.transferInventoryButton, this.transferContainerButton, this.includeHotbarButton, slot)) {
                     renderSlotUnavailable(context, slot, slot.hasStack());
                     alreadyExcluded = true;
                 }
