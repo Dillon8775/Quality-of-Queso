@@ -645,7 +645,7 @@ public class ButtonUtil {
      * @return whether a slot should be grayed out.
      */
     public static boolean shouldGrayout(AbstractContainerScreen<?> screen, TransferButton inventoryButton, TransferButton containerButton, TransferButton hotbarButton, boolean checkForStack) {
-        boolean shortcutKeyReady = Screen.hasControlDown();
+        boolean shortcutKeyReady = isInventoryScreen(screen) ? Screen.hasControlDown() && Screen.hasAltDown() : Screen.hasControlDown();
         return shortcutKeyReady
                 || shiftHeld(screen, false)
                 || (buttonHoveredAndActive(inventoryButton) && (checkForStack))

@@ -653,7 +653,7 @@ public class ButtonUtil {
      * @return whether a slot should be grayed out.
      */
     public static boolean shouldGrayout(HandledScreen<?> screen, TransferButton inventoryButton, TransferButton containerButton, TransferButton hotbarButton, boolean checkForStack) {
-        boolean shortcutKeyReady = MinecraftClient.getInstance().isCtrlPressed();
+        boolean shortcutKeyReady = isInventoryScreen(screen) ? MinecraftClient.getInstance().isCtrlPressed() && MinecraftClient.getInstance().isAltPressed() : MinecraftClient.getInstance().isCtrlPressed();
         return shortcutKeyReady
                 || shiftHeld(screen, false)
                 || (buttonHoveredAndActive(inventoryButton) && (checkForStack))
