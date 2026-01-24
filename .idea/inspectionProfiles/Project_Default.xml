@@ -1,0 +1,10 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="AddedMixinMembersNamePattern" enabled="false" level="WARNING" enabled_by_default="false" validNameFormat=".+[_$].+" validNameFixSearch="^.+$" />
+    <inspection_tool class="BooleanMethodIsAlwaysInverted" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="CommentedOutCode" enabled="true" level="WEAK WARNING" enabled_by_default="true">
+      <option name="minLines" value="44" />
+    </inspection_tool>
+  </profile>
+</component>

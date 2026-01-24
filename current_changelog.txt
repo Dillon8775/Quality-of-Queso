@@ -1,0 +1,47 @@
+Version 1.5.1 (MC Fabric 1.21.11, Forge 1.20.1 and 1.21.11):
+Armor Status:
+- Added "Armor Status" feature, which displays your armor HUD beside your hotbar, allowing you to see it's durability.
+- "ALWAYS" - Always show armor.
+- "ON CHANGE" - Show armor when it's durability is changed or item is changed.
+- "OFF" - Don't show armor.
+
+Item Count:
+- See how many of the item that you are holding in your inventory, which displays beside your hotbar.
+- Configuration options:
+- We will use ender pearls for this example.
+- "TOTAL" - display the total amount of ender pearls in your inventory.
+- "STACKS" - displays the amount of perfect stacks you have (ex. "5 x64", meaning 5 stacks of ender pearls). If amount of stacks aren't perfect then it just displays the total amount.
+- "REMAINDER" - displays the amount of perfect stacks you have (ex. "7 x64") + any additional stacks you have (final result: "7x64 & 12", meaning 7 stacks and 12 additional ender pearls).
+
+- You can find "Armor Status" and "Item Count" configuration settings in the "HUD Options...".
+
+Drag-Sorting Changes:
+- In v1.5, drag-sorting was introduced, where you can hold ALT to exclude slots.
+- With this, you can now hold ALT+SHIFT, and you can manually pick which slots to transfer/search (so it will exclude all slots, except the ones that you pick).
+- You can now save your "excluded slots"! Just enable the "Save Excluded Slots" option, and when you re-open a container of that size, your excluded slots will be restored.
+
+"Move Items If":
+- You can now move items if an item is matching what is being moved, and this is configurable.
+- "CONTAINER ISN'T FULL" (this is what it was previously): as long as every slot in the container isn't filled, allow moving.
+- "LESS THAN MAX ITEM COUNT": if the item being moved + the slot it's being moved to is less than the max item count, allow moving.
+- "CAN MOVE AT ALL": if the slot being moved to's stack is less than 64, allow moving.
+- This feature is a little confusing, but just trust me. It helps a lot when transferring large containers.
+
+Mob hit ding:
+- Plays the ding sound effect when you hit a mob from at least 15 blocks away (toggleable).
+
+Remove fog:
+- Added the option to remove fog! (yes)
+- If you run into issues with the fog feature (like mod compatibility), go into the universal quality of queso configuration .json file, and set "applyFogFunction" to false.
+- The fog feature will not work if the Simple Keybinds mod is loaded. You will need to use the keybind in Simple Keybinds if you combine these mods.
+
+Other changes:
+- Added the transfer button to brewing stand, so you can move all potions out at once.
+- You can hold "SHIFT" on the done button in the Quality of Queso configuration screen to open your configuration directory.
+
+- Added path to forge for configuration screen (click "Mods" on Forge title screen/pause screen, find Quality of Queso and configure from there).
+
+Bug fixes:
+- Fixed bug where if drag sorting and holding ALT, you can still quick equip.
+- Fixed 1.20.1 bug where inventory management buttons do not display properly when searching.
+- Fixed other Forge 1.20.1 bugs.
