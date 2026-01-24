@@ -4,18 +4,21 @@
   "plugin": "net.dillon.qualityofqueso.mixin.ConditionalMixinPlugin",
   "compatibilityLevel": "JAVA_21",
   "client": [
-    "ClientPlayNetworkHandlerMixin",
-    "CreativeInventoryScreenMixin",
-    "FogRendererMixin",
-    "GameMenuScreenMixin",
-    "HandledScreenMixin",
-    "InGameHudMixin",
-    "MinecraftClientMixin",
-    "PlayerInventoryMixin",
-    "ProjectileEntityMixin",
-    "RecipeBookWidgetMixin",
-    "ScreenHandlersMixin",
-    "TitleScreenMixin"
+    "gui.HandledScreenMixin",
+    "gui.InGameHudMixin",
+    "gui.RecipeBookWidgetMixin",
+    "gui.ScreenHandlersMixin",
+
+    "render.FogRendererMixin",
+
+    "screen.CreativeInventoryScreenMixin",
+    "screen.GameMenuScreenMixin",
+    "screen.TitleScreenMixin",
+
+    "util.ClientPlayNetworkHandlerMixin",
+    "util.MinecraftClientMixin",
+    "util.PlayerInventoryMixin",
+    "util.ProjectileEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1

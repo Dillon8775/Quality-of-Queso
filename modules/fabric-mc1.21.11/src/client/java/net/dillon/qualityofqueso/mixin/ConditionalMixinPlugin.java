@@ -23,7 +23,7 @@ public class ConditionalMixinPlugin implements IMixinConfigPlugin {
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
         if (FabricLoader.getInstance().isModLoaded("simplekeybinds") || !UniversalOptions.UNIVERSAL.getInstance().applyFogFunction) {
-            return !mixinClassName.equals("net.dillon.qualityofqueso.mixin.FogRendererMixin");
+            return !mixinClassName.equals("net.dillon.qualityofqueso.mixin.render.FogRendererMixin");
         }
         return true;
     }

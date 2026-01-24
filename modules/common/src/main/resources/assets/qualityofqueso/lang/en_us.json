@@ -69,6 +69,7 @@
   "qualityofqueso.gui.quick_drop_button": "Drop all items in this inventory\nIf in container, drops all items in container. Otherwise drops all items in inventory\nDoes not drop armor items or offhand items",
   "qualityofqueso.gui.swap_button": "Swap all items in this inventory with container, with it's respective slot",
   "qualityofqueso.gui.sort_button": "Sort all items in this container",
+  "qualityofqueso.gui.sort_button.bundle_present": "Cannot sort items because there is a bundle inside.",
   "qualityofqueso.gui.include_hotbar": "Including hotbar\nClick to disable",
   "qualityofqueso.gui.exclude_hotbar": "Ignoring hotbar\nClick to include",
 
@@ -208,7 +209,7 @@
   "qualityofqueso.options.fog.disabled": "\n\nThis feature will not work because \"applyFogFunction\" is disabled. Re-enable it by going into the universal QoQ config file.",
   "qualityofqueso.options.fog.simple_keybinds": "\n\nBecause you have the Simple Keybinds mod loaded, you need to use that keybind to toggle fog on/off. Changing this will do nothing.",
   "qualityofqueso.options.mob_hit_ding": "Mob Hit Ding",
-  "qualityofqueso.options.mob_hit_ding.tooltip": "Plays the ding sound effect when hitting a mob with an arrow from at least %s blocks away, similar to when you hit a player.",
+  "qualityofqueso.options.mob_hit_ding.tooltip": "Plays the ding sound effect when hitting a mob with an arrow from at least %s blocks away, similar to when you hit a player.\nIf the arrow fails to do damage, you will instead hear a shield blocking sound.\nIf you kill the mob, you will hear a level-up sound effect.",
   "qualityofqueso.options.min_mob_hit_ding_distance": "Min Distance",
   "qualityofqueso.options.min_mob_hit_ding_distance.tooltip": "Determines the minimum distance (in blocks) that the player must be from a mob in order to play the ding sound effect when hitting it with an arrow (default = 20).",
   "qualityofqueso.options.qoq_buttons": "QoQ Buttons",

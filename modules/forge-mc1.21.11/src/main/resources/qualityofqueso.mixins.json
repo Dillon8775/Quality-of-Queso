@@ -7,18 +7,21 @@
     "main.ItemFrameMixin"
   ],
   "client": [
-    "client.AbstractArrowMixin",
-    "client.AbstractContainerScreenMixin",
-    "client.ClientPacketListenerMixin",
-    "client.ContainerMenusMixin",
-    "client.CreativeModeInventoryScreenMixin",
-    "client.FogRendererMixin",
-    "client.GuiMixin",
-    "client.MinecraftMixin",
-    "client.PauseScreenMixin",
-    "client.PlayerInventoryMixin",
-    "client.RecipeBookComponentMixin",
-    "client.TitleScreenMixin"
+    "client.hud.AbstractContainerScreenMixin",
+    "client.hud.ContainerMenusMixin",
+    "client.hud.GuiMixin",
+    "client.hud.RecipeBookComponentMixin",
+
+    "client.render.FogRendererMixin",
+
+    "client.screen.CreativeModeInventoryScreenMixin",
+    "client.screen.PauseScreenMixin",
+    "client.screen.TitleScreenMixin",
+
+    "client.util.ClientPacketListenerMixin",
+    "client.util.MinecraftMixin",
+    "client.util.PlayerInventoryMixin",
+    "client.util.ProjectileMixin"
   ],
   "injectors": {
     "defaultRequire": 1

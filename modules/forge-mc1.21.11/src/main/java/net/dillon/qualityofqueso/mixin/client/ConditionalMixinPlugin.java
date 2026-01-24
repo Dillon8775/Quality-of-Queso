@@ -22,7 +22,7 @@ public class ConditionalMixinPlugin implements IMixinConfigPlugin {
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
         if (!UniversalOptions.UNIVERSAL.getInstance().applyFogFunction) {
-            return !mixinClassName.equals("net.dillon.qualityofqueso.mixin.client.FogRendererMixin");
+            return !mixinClassName.equals("net.dillon.qualityofqueso.mixin.client.render.FogRendererMixin");
         }
         return true;
     }

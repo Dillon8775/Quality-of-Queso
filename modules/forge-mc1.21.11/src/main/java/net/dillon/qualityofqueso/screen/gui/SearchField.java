@@ -6,6 +6,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -35,5 +36,15 @@ public class SearchField extends EditBox {
         if (options().helpfulTooltips && this.isHovered() && this.getValue().isEmpty()) {
             ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.chest_search.search_filtering"), context, this.font, mouseX, mouseY);
         }
+    }
+
+    @Override
+    public boolean mouseClicked(MouseButtonEvent click, boolean doubled) {
+        if (click.button() == 1) {
+            this.setValue("");
+            this.setFocused(false);
+            return true;
+        }
+        return super.mouseClicked(click, doubled);
     }
 }

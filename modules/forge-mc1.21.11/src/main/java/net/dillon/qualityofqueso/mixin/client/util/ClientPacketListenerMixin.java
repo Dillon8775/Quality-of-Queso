@@ -1,0 +1,37 @@
+package net.dillon.qualityofqueso.mixin.client.util;
+
+import net.dillon.qualityofqueso.util.PickupHudTracker;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.network.protocol.game.ClientboundTakeItemEntityPacket;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+@OnlyIn(Dist.CLIENT)
+@Mixin(ClientPacketListener.class)
+public class ClientPacketListenerMixin {
+    @Shadow
+    private ClientLevel level;
+
+    /**
+     * Tracks the item that was picked up to display near the hotbar.
+     */
+    @Inject(method = "handleTakeItemEntity", at = @At("HEAD"))
+    private void trackPickedUpItem(ClientboundTakeItemEntityPacket packet, CallbackInfo ci) {
+        Entity entity = this.level.getEntity(packet.getItemId());
+        if (!(entity instanceof ItemEntity itemEntity)) {
+            return;
+        }
+
+        ItemStack stack = itemEntity.getItem();
+        PickupHudTracker.onPickup(stack);
+    }
+}

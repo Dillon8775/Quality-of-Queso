@@ -36,4 +36,14 @@ public class SearchField extends EditBox {
             ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.chest_search.search_filtering"), context, this.font, mouseX, mouseY);
         }
     }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (button == 1) {
+            this.setValue("");
+            this.setFocused(false);
+            return true;
+        }
+        return super.mouseClicked(mouseX, mouseY, button);
+    }
 }

@@ -5,6 +5,7 @@ import net.dillon.qualityofqueso.util.ButtonUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.Text;
@@ -35,5 +36,15 @@ public class SearchField extends TextFieldWidget {
         if (options().helpfulTooltips && this.isHovered() && this.getText().isEmpty()) {
             ButtonUtil.drawTooltip(Text.translatable("qualityofqueso.gui.chest_search.search_filtering"), context, this.textRenderer, mouseX, mouseY);
         }
+    }
+
+    @Override
+    public boolean mouseClicked(Click click, boolean doubled) {
+        if (click.button() == 1) {
+            this.setText("");
+            this.setFocused(false);
+            return true;
+        }
+        return super.mouseClicked(click, doubled);
     }
 }

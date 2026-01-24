@@ -38,10 +38,12 @@ Remove fog:
 Other changes:
 - Added the transfer button to brewing stand, so you can move all potions out at once.
 - You can hold "SHIFT" on the done button in the Quality of Queso configuration screen to open your configuration directory.
+- Right-click a search field to clear it.
 
 - Added path to forge for configuration screen (click "Mods" on Forge title screen/pause screen, find Quality of Queso and configure from there).
 
 Bug fixes:
+- Fixed bug where sorting with a bundle inside the container doesn't fully sort (you can no longer sort when a bundle is present in the container).
 - Fixed bug where if drag sorting and holding ALT, you can still quick equip.
 - Fixed 1.20.1 bug where inventory management buttons do not display properly when searching.
 - Fixed other Forge 1.20.1 bugs.
