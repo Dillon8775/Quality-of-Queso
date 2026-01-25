@@ -95,8 +95,9 @@ public class ButtonUtil {
         int modifier = 18;
         if (isBrewingStandScreen(screen)) {
             modifier -= 36;
-        }
-        if (screen instanceof InventoryScreen recipeBookScreen && recipeBookScreen.getRecipeBookComponent().isVisible()) {
+        } else if (isFurnaceScreen(screen)) {
+            modifier -= 16;
+        } else if (screen instanceof InventoryScreen recipeBookScreen && recipeBookScreen.getRecipeBookComponent().isVisible()) {
             modifier += 77;
         }
         return (width / 2 + barWidth / 2 + modifier) - (amount * 12);
@@ -106,9 +107,11 @@ public class ButtonUtil {
      * @return the {@code y-value} for inventory management buttons.
      */
     public static int getManagementButtonY(Screen screen, Container inventory, int screenY, int titleY) {
-        int y = 2 * inventory.getContainerSize() + 12;
+        int y = 2 * (inventory == null ? 0 : inventory.getContainerSize()) + 12;
         if (isBrewingStandScreen(screen)) {
             y += 30;
+        } else if (isFurnaceScreen(screen)) {
+            y += 14;
         }
         return screenY + titleY + (screen instanceof InventoryScreen ? 64 : y);
     }
@@ -131,7 +134,7 @@ public class ButtonUtil {
      * @return the fromInventory (size) that should be searched.
      */
     public static int getInventorySize(AbstractContainerMenu handler, Container inventory) {
-        return options().searchInventory ? handler.slots.size() : inventory.getContainerSize();
+        return options().searchInventory ? handler.slots.size() : inventory == null ? 0 : inventory.getContainerSize();
     }
 
     /**
@@ -752,6 +755,13 @@ public class ButtonUtil {
      */
     public static boolean isBrewingStandScreen(Screen screen) {
         return screen instanceof BrewingStandScreen;
+    }
+
+    /**
+     * @return valid furanceScreen.
+     */
+    public static boolean isFurnaceScreen(Screen screen) {
+        return screen instanceof AbstractFurnaceScreen<?>;
     }
 
     /**

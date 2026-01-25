@@ -113,6 +113,8 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
         // If it's BrewingStandScreen, fromInventory is the brewing stand's inventory
         if (this.screen instanceof BrewingStandScreen brewingStandScreen) {
             this.container = brewingStandScreen.getMenu().brewingStand;
+        } else if (this.screen instanceof AbstractFurnaceScreen<?> abstractFurnaceScreen) {
+            this.container = abstractFurnaceScreen.getMenu().getSlot(2).container;
         }
         if (isContainerScreen(this.screen)) {
             // Determine fromInventory variable; if instance ShulkerBoxScreen, fromInventory is the shulker box's fromInventory
@@ -205,6 +207,11 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             fromEnd = 3;
         }
 
+        if (isFurnaceScreen(this.screen)) {
+            fromStart = 2;
+            fromEnd = 3;
+        }
+
         // Normal logic (dropping and quick move)
         for (int i = fromStart; i < fromEnd; i++) {
             Slot fromSlot = this.menu.getSlot(i);
@@ -289,6 +296,9 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
         int filledSlots = 0;
         if (this.screen instanceof BrewingStandScreen brewingScreen) {
             size = brewingScreen.getMenu().brewingStand.getContainerSize() - 2;
+        } else if (this.screen instanceof AbstractFurnaceScreen<?> abstractFurnaceScreen
+                && !abstractFurnaceScreen.getMenu().getSlot(2).hasItem()) {
+            return false;
         }
         for (int i = 0; i < size; i++) {
             // If slot is not empty, the button should be active
@@ -568,7 +578,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             /* --- */
 
             // TRANSFER CONTAINER BUTTON (container -> inventory)
-            if (containerScreen || isBrewingStandScreen(this.screen)) {
+            if (containerScreen || isBrewingStandScreen(this.screen) || isFurnaceScreen(this.screen)) {
                 if (this.transferContainerButton == null) {
                     this.transferContainerButton = this.addWidget(
                             new TransferButton(
@@ -825,7 +835,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                 }
                 cir.setReturnValue(true);
             }
-            if ((isValidScreen(this.screen) || isBrewingStandScreen(this.screen)) && options().transferring.orKeyOnly()) {
+            if ((isValidScreen(this.screen) || isBrewingStandScreen(this.screen) || isFurnaceScreen(this.screen)) && options().transferring.orKeyOnly()) {
                 if (keyCode == ModKeybinds.MOVE_CONTAINER.getKey().getValue()) {
                     this.transferItems(true);
                 }
@@ -1065,6 +1075,13 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             } else if (isContainerScreen(this.screen) && this.containerSearchField != null) {
                 QoQ.SAVED_TEXT = this.containerSearchField.getValue();
             }
+        }
+
+        if (options().autoCloseRecipeBook
+                && this.screen instanceof InventoryScreen inventoryScreen
+                && inventoryScreen.getRecipeBookComponent().isVisible()) {
+            inventoryScreen.getRecipeBookComponent().toggleVisibility();
+            this.repositionElements();
         }
     }
 

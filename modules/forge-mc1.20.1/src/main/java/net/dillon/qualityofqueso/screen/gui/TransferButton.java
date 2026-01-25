@@ -4,11 +4,13 @@ import net.dillon.qualityofqueso.keybind.ModKeybinds;
 import net.dillon.qualityofqueso.util.ButtonUtil;
 import net.dillon.qualityofqueso.util.ModTexts;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.AbstractFurnaceScreen;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -25,7 +27,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 import static net.dillon.qualityofqueso.main.QoQ.options;
-import static net.dillon.qualityofqueso.util.ButtonUtil.getEnchantmentName;
+import static net.dillon.qualityofqueso.util.ButtonUtil.*;
 
 /**
  * A representation of a transfer button.
@@ -84,6 +86,12 @@ public class TransferButton extends Button {
                 "_with_tag.png" : this.searchFieldText.get().startsWith(":") ?
                 "_match.png" : ".png";
         String appended = transferable ? transferableString : ".png";
+        Screen screen = Minecraft.getInstance().screen;
+        if (screen != null) {
+            if (isBrewingStandScreen(screen) || isFurnaceScreen(screen)) {
+                appended = ".png";
+            }
+        }
         context.blit(ResourceLocation.parse("qualityofqueso:textures/gui/" + id + appended), buttonReference.getX() - 1, buttonReference.getY() - 1, 0.0F, 0.0F, 12, 12, 12, 12);
         if (Screen.hasControlDown()) {
             boolean inventoryButton = this.buttonName.equals("transfer_inventory");
@@ -118,6 +126,16 @@ public class TransferButton extends Button {
 
         if (this.isMouseOver(mouseX, mouseY)) {
             if (this.active) {
+                Screen screen = Minecraft.getInstance().screen;
+                if (screen != null) {
+                    if (isBrewingStandScreen(screen)) {
+                        ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.brewing_stand"), graphics, this.font, mouseX, mouseY);
+                        return;
+                    } else if (screen instanceof AbstractFurnaceScreen<?> abstractFurnaceScreen) {
+                        ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.furnace", abstractFurnaceScreen.getMenu().getSlot(2).getItem().getHoverName()), graphics, this.font, mouseX, mouseY);
+                        return;
+                    }
+                }
                 ItemStack cursorStack = this.screenHandler.getCarried();
                 if (!cursorStack.isEmpty()) {
                     String tooltip = "_button.with_cursor_stack";

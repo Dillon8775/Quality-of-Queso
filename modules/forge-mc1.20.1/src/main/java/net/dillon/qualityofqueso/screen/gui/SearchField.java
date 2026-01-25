@@ -39,7 +39,7 @@ public class SearchField extends EditBox {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (button == 1) {
+        if (this.isMouseOver(mouseX, mouseY) && button == 1) {
             this.setValue("");
             this.setFocused(false);
             return true;

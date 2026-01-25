@@ -43,7 +43,13 @@ public class MiscOptionsScreen extends AbstractModOptionsScreen {
                 ModListOptions.minMobHitDingDistance(),
 
                 ModListOptions.helpfulTooltips(),
-                ModListOptions.multiServerConfigs(),
+                ModListOptions.autoCloseRecipeBook(),
+        };
+    }
+
+    protected SimpleOption<?>[] bottomOptions() {
+        return new SimpleOption[]{
+                ModListOptions.multiServerConfigs()
         };
     }
 
@@ -76,6 +82,7 @@ public class MiscOptionsScreen extends AbstractModOptionsScreen {
 
         List<ClickableWidget> widgets = ImmutableList.of(this.blacklistedServersField);
         this.body.addAll(widgets);
+        this.body.addAll(this.bottomOptions());
     }
 
     /**

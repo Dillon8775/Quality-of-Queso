@@ -279,6 +279,11 @@ public class ModListOptions {
                 ON_OFF_TEXT, options().fog, value -> options().fog = value);
     }
 
+    public static OptionInstance<Boolean> autoCloseRecipeBook() {
+        return OptionInstance.createBoolean("qualityofqueso.options.auto_close_recipe_book", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.auto_close_recipe_book.tooltip", options().autoCloseRecipeBook)),
+                ON_OFF_TEXT, options().autoCloseRecipeBook, value -> options().autoCloseRecipeBook = value);
+    }
+
     public static OptionInstance<Boolean> mobHitDing() {
         return OptionInstance.createBoolean("qualityofqueso.options.mob_hit_ding", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.mob_hit_ding.tooltip", options().minMobHitDingDistance)),
                 ON_OFF_TEXT, options().mobHitDing, value -> options().mobHitDing = value);

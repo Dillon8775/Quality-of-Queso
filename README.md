@@ -32,6 +32,12 @@
   - Unless you are a Fabric user and have the [Mod Menu](https://modrinth.com/mod/modmenu) mod installed. If so, you can navigate to the config screen from there.
   - Or unless you are a Forge user, you can navigate to the config screen by navigating to your "Mods" list.
 
+## Another important note:
+### New Quality of Queso versions will always ***try*** to be kept up-to-date with the latest Minecraft version.
+Whenever a new Minecraft version releases, support for older versions for this mod will be dropped. **It is very difficult to upkeep this mod on multiple Minecraft versions.**
+
+If you decide to play the mod on an older version of the game, please note that *that* version of the mod **may have unknown bugs, outdated features, and/or broken features.** ***It is recommended to stay on the latest version for all features and quality-of-life.***
+
 ---
 
 # _Chest Searching!_
@@ -43,6 +49,10 @@
 - #### Search by tag (begin search query with a #, ex. "#logs", works with all vanilla and non-vanilla tags) [since: v1.2, full tag support since v1.2.1]
     - Searching by tag will make all items display what tag(s) they are in if you hover over them. [since: v1.2.1]
 - #### Exclude item from search (begin search query with a !, ex. searching "log" will display any item that does _not_ contain "log" in its name) [since: v1.2.1]
+
+###
+
+- #### Right-click the search bar to clear it!
 
 ## You can also do this in your inventory!
 [since: v1.2, inventory searching since v1.4]
@@ -281,6 +291,8 @@ Note: if your cursor is hovered over a slot with an item that is bound to a hotb
 (just enable the "Prevent Rage Quitting" option to use this)
 
 <img src="https://i.imgur.com/6O0FGuQ.gif" width="640" height="360" alt="Prevent rage quitting.">
+
+#### (since: v1.3.3)
 
 ---
 # Enable Mod and Blacklisted Servers

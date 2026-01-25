@@ -40,7 +40,7 @@ public class SearchField extends TextFieldWidget {
 
     @Override
     public boolean mouseClicked(Click click, boolean doubled) {
-        if (click.button() == 1) {
+        if (this.isHovered() && click.button() == 1) {
             this.setText("");
             this.setFocused(false);
             return true;

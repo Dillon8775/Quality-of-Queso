@@ -270,6 +270,11 @@ public class ModListOptions {
                 (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, options().fog, value -> options().fog = value);
     }
 
+    public static SimpleOption<Boolean> autoCloseRecipeBook() {
+        return new SimpleOption<>("qualityofqueso.options.auto_close_recipe_book", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.auto_close_recipe_book.tooltip", options().autoCloseRecipeBook)),
+                (optionText, value) -> !value ? ModTexts.NO : ModTexts.YES, SimpleOption.BOOLEAN, options().autoCloseRecipeBook, value -> options().autoCloseRecipeBook = value);
+    }
+
     public static SimpleOption<Boolean> mobHitDing() {
         return new SimpleOption<>("qualityofqueso.options.mob_hit_ding", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.mob_hit_ding.tooltip", options().minMobHitDingDistance)),
                 (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, options().mobHitDing, value -> options().mobHitDing = value);

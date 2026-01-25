@@ -46,6 +46,7 @@ public class ModClientOptions {
     public boolean helpfulTooltips = true;
     public boolean fog = true;
     public boolean mobHitDing = true;
+    public boolean autoCloseRecipeBook = true;
     public int minMobHitDingDistance = 20;
     public int itemFrameSearchGlowDuration = 0;
     public int itemFrameSearchRadius = 150;

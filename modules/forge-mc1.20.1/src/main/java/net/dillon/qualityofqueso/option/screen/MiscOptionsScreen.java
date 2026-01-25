@@ -39,6 +39,8 @@ public class MiscOptionsScreen extends AbstractModOptionsScreen {
                 ModListOptions.minMobHitDingDistance(),
 
                 ModListOptions.helpfulTooltips(),
+                ModListOptions.autoCloseRecipeBook(),
+
                 ModListOptions.multiServerConfigs(),
         };
     }

@@ -13,7 +13,7 @@ import java.util.List;
 @Environment(EnvType.CLIENT)
 public class UniversalOptions {
     public boolean applyFogFunction = true;
-    public boolean multiServerConfigs = true;
+    public boolean multiServerConfigs = false;
     public List<String> blacklistedServers = new ArrayList<>();
 
     public static final ModOptionsHandler UNIVERSAL = new ModOptionsHandler();

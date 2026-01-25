@@ -112,6 +112,8 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
         // If it's BrewingStandScreen, fromInventory is the brewing stand's inventory
         if (this.screen instanceof BrewingStandScreen brewingStandScreen) {
             this.inventory = brewingStandScreen.getScreenHandler().inventory;
+        } else if (this.screen instanceof AbstractFurnaceScreen<?> abstractFurnaceScreen) {
+            this.inventory = abstractFurnaceScreen.getScreenHandler().getOutputSlot().inventory;
         }
         if (isContainerScreen(this.screen)) {
             // Determine fromInventory variable; if instance ShulkerBoxScreen, fromInventory is the shulker box's fromInventory
@@ -201,6 +203,11 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
 
         if (isBrewingStandScreen(this.screen)) {
             fromStart = 0;
+            fromEnd = 3;
+        }
+
+        if (isFurnaceScreen(this.screen)) {
+            fromStart = 2;
             fromEnd = 3;
         }
 
@@ -295,6 +302,9 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
         int filledSlots = 0;
         if (this.screen instanceof BrewingStandScreen brewingScreen) {
             size = brewingScreen.getScreenHandler().inventory.size() - 2;
+        } else if (this.screen instanceof AbstractFurnaceScreen<?> abstractFurnaceScreen
+                && !abstractFurnaceScreen.getScreenHandler().getOutputSlot().hasStack()) {
+            return false;
         }
         for (int i = 0; i < size; i++) {
             // If slot is not empty, the button should be active
@@ -574,7 +584,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             /* --- */
 
             // TRANSFER CONTAINER BUTTON (container -> inventory)
-            if (containerScreen || isBrewingStandScreen(this.screen)) {
+            if (containerScreen || isBrewingStandScreen(this.screen) || isFurnaceScreen(this.screen)) {
                 this.transferContainerButton = this.addSelectableChild(
                         new TransferButton(
                                 this.handler,
@@ -815,7 +825,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                 }
                 cir.setReturnValue(true);
             }
-            if ((isValidScreen(this.screen) || isBrewingStandScreen(this.screen)) && options().transferring.orKeyOnly()) {
+            if ((isValidScreen(this.screen) || isBrewingStandScreen(this.screen) || isFurnaceScreen(this.screen)) && options().transferring.orKeyOnly()) {
                 if (input.key() == ModKeybinds.MOVE_CONTAINER.boundKey.getCode()) {
                     this.transferItems(true);
                 }
@@ -1047,6 +1057,13 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             } else if (isContainerScreen(this.screen) && this.containerSearchField != null) {
                 QoQ.SAVED_TEXT = this.containerSearchField.getText();
             }
+        }
+
+        if (options().autoCloseRecipeBook
+                && this.screen instanceof RecipeBookScreen<?> recipeBookScreen
+                && recipeBookScreen.recipeBook.isOpen()) {
+            recipeBookScreen.recipeBook.toggleOpen();
+            this.refreshWidgetPositions();
         }
     }
 
