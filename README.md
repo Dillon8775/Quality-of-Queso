@@ -86,6 +86,7 @@ If you decide to play the mod on an older version of the game, please note that 
 <a href="https://i.imgur.com/91vGfnG.gif" target="_blank">
   <img src="https://i.imgur.com/91vGfnG.gif" width="872" height="490" alt="Chest transferring feature.">
 </a>
+
 ## Along with these buttons, we have:
 
 ---
@@ -176,6 +177,7 @@ If you decide to play the mod on an older version of the game, please note that 
 <a href="https://i.imgur.com/bfWrzxc.png" target="_blank">
   <img src="https://i.imgur.com/bfWrzxc.png" width="640" height="360" alt="Show in-game time.">
 </a>
+
 #### (since: v1.5)
 
 ---
