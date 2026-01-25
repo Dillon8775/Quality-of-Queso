@@ -12,7 +12,7 @@ public class PickupHudTracker {
     /**
      * Handles the picking-up.
      */
-    public static void onPickup(ItemStack pickedUp) {
+    public static void setStack(ItemStack pickedUp) {
         stack = pickedUp.copy();
         expireTime = System.currentTimeMillis() + 4000;
     }

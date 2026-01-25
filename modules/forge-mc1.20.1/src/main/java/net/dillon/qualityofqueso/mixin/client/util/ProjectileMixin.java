@@ -16,6 +16,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import static net.dillon.qualityofqueso.main.QoQ.modEnabled;
 import static net.dillon.qualityofqueso.main.QoQ.options;
 
 @Mixin(Projectile.class)
@@ -26,7 +27,7 @@ public class ProjectileMixin {
      */
     @Inject(method = "onHitEntity", at = @At("TAIL"))
     private void playHitSoundOnMob(EntityHitResult hitResult, CallbackInfo ci) {
-        if (!options().mobHitDing) {
+        if (!modEnabled(Minecraft.getInstance()) || !options().mobHitDing) {
             return;
         }
 

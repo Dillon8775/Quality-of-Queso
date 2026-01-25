@@ -5,5 +5,7 @@ Version 1.5.2 (MC Fabric 1.21.11, Forge 1.20.1 and 1.21.11):
 - "Multi-Server Configs" is now OFF by default.
 
 - Fixed bug where right-clicking anywhere clears and unfocuses the inventory/container search field.
+- Fixed bug where mod enabled does not disable some of the new features.
+- Fixed bug where moving any item in your inventory displays that item near the hotbar.
 - Fixed a crash.
 - Improved translations.

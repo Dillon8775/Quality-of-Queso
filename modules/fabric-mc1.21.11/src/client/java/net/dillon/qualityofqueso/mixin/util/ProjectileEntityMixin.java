@@ -12,24 +12,22 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import static net.dillon.qualityofqueso.main.QoQ.modEnabled;
 import static net.dillon.qualityofqueso.main.QoQ.options;
 
 @Mixin(ProjectileEntity.class)
 public class ProjectileEntityMixin {
-    @Unique
-    private int ticksToWait = 500;
 
     /**
      * Plays the "ding" sound effect when hitting a mob from at least a certain amount of blocks away.
      */
     @Inject(method = "onEntityHit", at = @At("TAIL"))
     private void playHitSoundOnMob(EntityHitResult hitResult, CallbackInfo ci) {
-        if (!options().mobHitDing) {
+        if (!modEnabled(MinecraftClient.getInstance()) || !options().mobHitDing) {
             return;
         }
 

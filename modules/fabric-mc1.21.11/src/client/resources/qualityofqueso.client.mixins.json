@@ -15,9 +15,10 @@
     "screen.GameMenuScreenMixin",
     "screen.TitleScreenMixin",
 
+    "util.ClientPlayerEntityMixin",
     "util.ClientPlayNetworkHandlerMixin",
     "util.MinecraftClientMixin",
-    "util.PlayerInventoryMixin",
+    "util.PlayerEntityMixin",
     "util.ProjectileEntityMixin"
   ],
   "injectors": {

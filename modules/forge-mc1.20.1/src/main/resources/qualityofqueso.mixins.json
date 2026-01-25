@@ -18,8 +18,9 @@
     "client.screen.TitleScreenMixin",
 
     "client.util.ClientPacketListenerMixin",
+    "client.util.LocalPlayerMixin",
     "client.util.MinecraftMixin",
-    "client.util.PlayerInventoryMixin",
+    "client.util.PlayerMixin",
     "client.util.ProjectileMixin"
   ],
   "injectors": {
