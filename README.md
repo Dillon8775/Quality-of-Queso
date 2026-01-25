@@ -57,7 +57,9 @@ If you decide to play the mod on an older version of the game, please note that 
 ## You can also do this in your inventory!
 [since: v1.2, inventory searching since v1.4]
 
-<img src="https://i.imgur.com/wrOeB2D.gif" width="872" height="490" alt="Chest searching feature.">
+<a href="https://i.imgur.com/wrOeB2D.gif" target="_blank">
+  <img src="https://i.imgur.com/wrOeB2D.gif" width="872" height="490" alt="Chest searching feature.">
+</a>
 
 ---
 
@@ -81,8 +83,9 @@ If you decide to play the mod on an older version of the game, please note that 
 
 [smart moving since: v1.5]
 
-<img src="https://i.imgur.com/91vGfnG.gif" width="872" height="490" alt="Chest transferring feature.">
-
+<a href="https://i.imgur.com/91vGfnG.gif" target="_blank">
+  <img src="https://i.imgur.com/91vGfnG.gif" width="872" height="490" alt="Chest transferring feature.">
+</a>
 ## Along with these buttons, we have:
 
 ---
@@ -128,8 +131,12 @@ If you decide to play the mod on an older version of the game, please note that 
 ## Below is an example of all these buttons in action.
 ### You can disable any of these buttons if you would like.
 
-<img src="https://i.imgur.com/4XBrfP0.gif" width="640" height="360" alt="Other buttons.">
-<img src="https://i.imgur.com/IJLQ1Ss.gif" width="640" height="360" alt="Sort button.">
+<a href="https://i.imgur.com/4XBrfP0.gif" target="_blank">
+  <img src="https://i.imgur.com/4XBrfP0.gif" width="640" height="360" alt="Other buttons.">
+</a>
+<a href="https://i.imgur.com/IJLQ1Ss.gif" target="_blank">
+  <img src="https://i.imgur.com/IJLQ1Ss.gif" width="640" height="360" alt="Sort button.">
+</a>
 
 #### (since: v1.2, quick drop and swap button since v1.4, sort since v1.5)
 
@@ -145,7 +152,9 @@ If you decide to play the mod on an older version of the game, please note that 
 #### You can set how long the item frames will remain glowing after searching (ex. 1 second, 5 seconds, 30 seconds)
 #### You can change the radius to search for item frames (ex. 50 blocks, 100 blocks, 300 blocks)
 
-![Item frame searching in action.](https://i.imgur.com/6hF7F73.gif)
+<a href="https://i.imgur.com/6hF7F73.gif" target="_blank">
+  <img src="https://i.imgur.com/6hF7F73.gif" width="960 " height="540" alt="Item frame searching in action.">
+</a>
 
 ## Please note: this mod must be installed on the server-side, _and_ enabled on the server side in order for players to use this feature.
 ### There is also a command to use this feature if you don't want to use the GUI screen.
@@ -164,8 +173,9 @@ If you decide to play the mod on an older version of the game, please note that 
 - You can choose to always display them *or* only in the debug menu.
 - If you are playing 1.20.1, you can just enable these via the mod's configuration, under "Misc...".
 
-<img src="https://i.imgur.com/bfWrzxc.png" width="640" height="360" alt="Show in-game time.">
-
+<a href="https://i.imgur.com/bfWrzxc.png" target="_blank">
+  <img src="https://i.imgur.com/bfWrzxc.png" width="640" height="360" alt="Show in-game time.">
+</a>
 #### (since: v1.5)
 
 ---
@@ -174,7 +184,9 @@ If you decide to play the mod on an older version of the game, please note that 
 
 ### Turn off Minecraft's extremely annoying and obnoxious fog!
 
-<img src="https://i.imgur.com/7RUZwVB.gif" width="640" height="360" alt="Remove fog.">
+<a href="https://i.imgur.com/7RUZwVB.gif" target="_blank">
+  <img src="https://i.imgur.com/7RUZwVB.gif" width="640" height="360" alt="Remove fog.">
+</a>
 
 Important note: if you experience mod conflicts, you can disable the fog from being changed at all by **disabling the "applyFogFunction"** in the **"qualityofqueso-client_universal.json"** config file.
 
@@ -189,7 +201,9 @@ Side-note: (Fabric only) if the **Simple Keybinds** mod is loaded, this feature 
 #### It automatically hides after a few seconds, but when the durability changes, or the item itself changes, it re-appears!
 - You can choose to make it *always* display by setting the **"Armor Status"** option to **"ALWAYS"**.
 
-<img src="https://i.imgur.com/xCkCBhA.gif" width="640" height="360" alt="Armor status.">
+<a href="https://i.imgur.com/xCkCBhA.gif" target="_blank">
+  <img src="https://i.imgur.com/xCkCBhA.gif" width="640" height="360" alt="Armor status.">
+</a>
 
 #### (since: v1.5.1)
 
@@ -217,7 +231,9 @@ Side-note: (Fabric only) if the **Simple Keybinds** mod is loaded, this feature 
 
 ### Below is an example of all of these settings being used:
 
-<img src="https://i.imgur.com/YQnECn5.gif" width="768" height="432" alt="Item count.">
+<a href="https://i.imgur.com/YQnECn5.gif" target="_blank">
+  <img src="https://i.imgur.com/YQnECn5.gif" width="768" height="432" alt="Item count.">
+</a>
 
 #### (since: v1.5.1)
 
@@ -230,12 +246,18 @@ Side-note: (Fabric only) if the **Simple Keybinds** mod is loaded, this feature 
 
 Note: when attempting to transfer to an excluded slot, that slot will still be affected. This feature only applies to *selecting slots to move/search.*
 
-<img src="https://i.imgur.com/Q2d9ojS.gif" width="640" height="360" alt="ALT Excluding">
-<img src="https://i.imgur.com/RekIaQn.gif" width="640" height="360" alt="ALT + SHIFT Excluding">
+<a href="https://i.imgur.com/Q2d9ojS.gif" target="_blank">
+  <img src="https://i.imgur.com/Q2d9ojS.gif" width="640" height="360" alt="ALT Excluding">
+</a>
+<a href="https://i.imgur.com/RekIaQn.gif" target="_blank">
+  <img src="https://i.imgur.com/RekIaQn.gif" width="640" height="360" alt="ALT + SHIFT Excluding">
+</a>
 
 ### You can also choose to save excluded slots by enabling the "Save Excluded Slots" option:
 
-<img src="https://i.imgur.com/2YCncvz.gif" width="640" height="360" alt="Save excluded slots.">
+<a href="https://i.imgur.com/2YCncvz.gif" target="_blank">
+  <img src="https://i.imgur.com/2YCncvz.gif" width="640" height="360" alt="Save excluded slots.">
+</a>
 
 #### (since: v1.5, shift + alt picking since v1.5.1)
 
@@ -245,7 +267,9 @@ Note: when attempting to transfer to an excluded slot, that slot will still be a
 ### Plays the ding sound when hitting a mob with an arrow!
 - By default, you need to be at least **20** blocks away for it to play the ding sound (you can change this).
 
-<img src="https://i.imgur.com/12f8oFd.gif" width="480" height="270" alt="Mob Hit Ding.">
+<a href="https://i.imgur.com/12f8oFd.gif" target="_blank">
+  <img src="https://i.imgur.com/12f8oFd.gif" width="480" height="270" alt="Mob Hit Ding.">
+</a>
 
 #### (since: v1.5.1)
 
@@ -259,7 +283,9 @@ Note: when attempting to transfer to an excluded slot, that slot will still be a
 
 #### You can also use the hotkey to quick equip. Default Hotkey = _B_, you can change this in the Controls menu.
 
-<img src="https://i.imgur.com/f3yUwAA.gif" width="640" height="360" alt="Quick Equip in action.">
+<a href="https://i.imgur.com/f3yUwAA.gif" target="_blank">
+  <img src="https://i.imgur.com/f3yUwAA.gif" width="640" height="360" alt="Quick Equip in action.">
+</a>
 
 #### (since v1.2.1)
 
@@ -268,7 +294,9 @@ Note: when attempting to transfer to an excluded slot, that slot will still be a
 # _Better GUI Closing!_
 Clicking off of any GUI screen (as long as your cursor isn't holding anything) will close the screen.
 
-<img src="https://i.imgur.com/tMVWv3y.gif" width="640" height="360" alt="Close GUI menu by clicking off.">
+<a href="https://i.imgur.com/tMVWv3y.gif" target="_blank">
+  <img src="https://i.imgur.com/tMVWv3y.gif" width="640" height="360" alt="Close GUI menu by clicking off.">
+</a>
 
 #### (since: v1.0)
 
@@ -278,7 +306,9 @@ Clicking off of any GUI screen (as long as your cursor isn't holding anything) w
 If you are in the creative inventory menu screen, and you want to search for an item, you no longer have to click on the compass to search for an item. Just begin typing and it will begin searching. The same applies to recipe book screens and crafting screens.
 Note: if your cursor is hovered over a slot with an item that is bound to a hotbar key, it will not automatically search. You must move your mouse away from the bounded hotbar slot.
 
-<img src="https://i.imgur.com/kC3tg7B.gif" width="640" height="360" alt="Typing anywhere.">
+<a href="https://i.imgur.com/kC3tg7B.gif" target="_blank">
+  <img src="https://i.imgur.com/kC3tg7B.gif" width="640" height="360" alt="Typing anywhere.">
+</a>
 
 #### (since: v1.0)
 
@@ -290,7 +320,9 @@ Note: if your cursor is hovered over a slot with an item that is bound to a hotb
 
 (just enable the "Prevent Rage Quitting" option to use this)
 
-<img src="https://i.imgur.com/6O0FGuQ.gif" width="640" height="360" alt="Prevent rage quitting.">
+<a href="https://i.imgur.com/6O0FGuQ.gif" target="_blank">
+  <img src="https://i.imgur.com/6O0FGuQ.gif" width="640" height="360" alt="Prevent rage quitting.">
+</a>
 
 #### (since: v1.3.3)
 
@@ -325,7 +357,9 @@ With the transferring buttons, you can choose when you are able to transfer item
 
 ## Below is a GIF that shows all of these options in action, and is easier to understand:
 
-<img src="https://i.imgur.com/4138vz4.gif" width="960" height="540" alt="Typing anywhere.">
+<a href="https://i.imgur.com/4138vz4.gif" target="_blank">
+  <img src="https://i.imgur.com/4138vz4.gif" width="960" height="540" alt="Typing anywhere.">
+</a>
 
 ---
 
