@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "net.dillon.qualityofqueso.mixin",
+  "plugin": "net.dillon.qualityofqueso.mixin.client.ConditionalMixinPlugin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "qualityofqueso.refmap.json",
+  "mixins": [
+  ],
+  "client": [
+    "client.render.FogRendererMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

@@ -18,7 +18,7 @@ import java.util.List;
 
 @Environment(EnvType.CLIENT)
 public class ModOptionsScreen extends AbstractModOptionsScreen {
-    private ButtonWidget chestSearchingOptions, inventoryManagementOptions, itemFrameSearchingOptions, openItemFrameSearchGUI, hudOptions, miscOptions, reportBugs;
+    private ButtonWidget chestSearchingOptions, inventoryManagementOptions, itemFrameSearchingOptions, openItemFrameSearchGUI, hudOptions, miscOptions, reportBugs, joinDiscord;
 
     public ModOptionsScreen(Screen parent) {
         super(parent, Text.translatable("qualityofqueso.gui.options.title"));
@@ -61,6 +61,10 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
                 ConfirmLinkScreen.opening(this, "https://github.com/Dillon8775/Quality-of-Queso/issues", false)
         ).build());
         buttons.add(this.reportBugs);
+        this.joinDiscord = this.addDrawableChild(ButtonWidget.builder(Text.translatable("qualityofqueso.gui.ask_questions"),
+                ConfirmLinkScreen.opening(this, "https://discord.gg/vfqEAn4YFy", false)
+        ).build());
+        buttons.add(this.joinDiscord);
 
         this.body.addAll(buttons);
     }

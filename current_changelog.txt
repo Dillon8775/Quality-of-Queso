@@ -1,11 +1,8 @@
-Version 1.5.2 (MC Fabric 1.21.11, Forge 1.20.1 and 1.21.11):
-- Added "Auto-Close Recipe Book" option, which automatically hides the recipe book when closing the screen (ON by default).
-- The transfer button now appears in furnace screens.
+Version 1.5.3 (MC Fabric 1.21.11, Forge 1.20.1 and 1.21.11):
+- Forge now correctly checks if the simple keybinds mod is loaded, determining which fog setting to use.
+- Fixed 1.20.1 bug where "Show IRL Time" does not appear in the "Misc..." options screen, and also fixed where "Item Count" and "Armor Status" display under "Misc...".
+- Fixed 1.20.1 crash when loading simple keybinds with this mod (must use Simple Keybinds version 1.2.7 or greater)
 
-- "Multi-Server Configs" is now OFF by default.
+- Added Discord link.
 
-- Fixed bug where right-clicking anywhere clears and unfocuses the inventory/container search field.
-- Fixed bug where mod enabled does not disable some of the new features.
-- Fixed bug where moving any item in your inventory displays that item near the hotbar.
-- Fixed a crash.
-- Improved translations.
+- (Technical change) Quality of Queso now has its own refmap.

@@ -20,9 +20,6 @@ public class MiscOptionsScreen extends AbstractModOptionsScreen {
                 ModListOptions.enableMod(),
                 ModListOptions.fog(),
 
-                ModListOptions.armorStatus(),
-                ModListOptions.itemCount(),
-
                 ModListOptions.quickEquip(),
                 ModListOptions.betterSearching(),
 
@@ -33,7 +30,7 @@ public class MiscOptionsScreen extends AbstractModOptionsScreen {
                 ModListOptions.qoqButtons(),
 
                 ModListOptions.showInGameTime(),
-                ModListOptions.showInGameTime(),
+                ModListOptions.showIrlTime(),
 
                 ModListOptions.mobHitDing(),
                 ModListOptions.minMobHitDingDistance(),

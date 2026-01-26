@@ -20,7 +20,7 @@ import static net.dillon.qualityofqueso.main.QoQ.coptions;
 
 @OnlyIn(Dist.CLIENT)
 public class ModOptionsScreen extends AbstractModOptionsScreen {
-    private Button chestSearchingOptions, inventoryManagementOptions, itemFrameSearchingOptions, openItemFrameSearchGUIOptions, hudOptions, otherOptions, reportBugs;
+    private Button chestSearchingOptions, inventoryManagementOptions, itemFrameSearchingOptions, openItemFrameSearchGUIOptions, hudOptions, otherOptions, reportBugs, joinDiscord;
 
     public ModOptionsScreen(Screen parent) {
         super(parent, Component.translatable("qualityofqueso.gui.options.title"));
@@ -63,6 +63,11 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
                 ConfirmLinkScreen.confirmLink(this, "https://github.com/Dillon8775/Quality-of-Queso/issues", false)
         ).build());
         buttons.add(this.reportBugs);
+        this.joinDiscord = this.addWidget(Button.builder(Component.translatable("qualityofqueso.gui.ask_questions"),
+                ConfirmLinkScreen.confirmLink(this, "https://discord.gg/vfqEAn4YFy", false)
+        ).build());
+        buttons.add(this.joinDiscord);
+
         this.list.addSmall(buttons);
     }
 

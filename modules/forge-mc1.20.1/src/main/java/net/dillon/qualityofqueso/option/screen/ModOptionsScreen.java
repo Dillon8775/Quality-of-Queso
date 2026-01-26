@@ -18,7 +18,7 @@ import static net.dillon.qualityofqueso.main.QoQ.coptions;
 
 @OnlyIn(Dist.CLIENT)
 public class ModOptionsScreen extends AbstractModOptionsScreen {
-    private Button chestSearchingOptions, inventoryManagementOptions, itemFrameSearchingOptions, openItemFrameSearchGUIOptions, hudOptions, otherOptions, reportBugs;
+    private Button chestSearchingOptions, inventoryManagementOptions, itemFrameSearchingOptions, openItemFrameSearchGUIOptions, hudOptions, otherOptions, reportBugs, joinDiscord;
 
     public ModOptionsScreen(Screen parent) {
         super(parent, Component.translatable("qualityofqueso.gui.options.title"));
@@ -51,7 +51,10 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
         }).build();
 
         this.reportBugs = this.addWidget(Button.builder(Component.translatable("qualityofqueso.gui.report_bugs"),
-                ConfirmLinkScreen.confirmLink("https://github.com/Dillon8775/Quality-of-Queso/issues", this , false)
+                ConfirmLinkScreen.confirmLink("https://github.com/Dillon8775/Quality-of-Queso/issues", this, false)
+        ).build());
+        this.joinDiscord = this.addWidget(Button.builder(Component.translatable("qualityofqueso.gui.ask_questions"),
+                ConfirmLinkScreen.confirmLink("https://discord.gg/vfqEAn4YFy", this, false)
         ).build());
 
         GridLayout gridlayout = new GridLayout();
@@ -65,6 +68,7 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
         rowHelper.addChild(this.hudOptions);
         rowHelper.addChild(this.otherOptions);
         rowHelper.addChild(this.reportBugs);
+        rowHelper.addChild(this.joinDiscord);
 
         gridlayout.arrangeElements();
         FrameLayout.alignInRectangle(gridlayout, 0, this.height / 6 - 12, this.width, this.height, 0.5F, 0.0F);

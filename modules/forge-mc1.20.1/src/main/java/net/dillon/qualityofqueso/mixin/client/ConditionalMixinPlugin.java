@@ -3,6 +3,7 @@ package net.dillon.qualityofqueso.mixin.client;
 import net.dillon.qualityofqueso.option.instance.UniversalOptions;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.loading.FMLLoader;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
@@ -21,10 +22,7 @@ public class ConditionalMixinPlugin implements IMixinConfigPlugin {
      */
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-        if (!UniversalOptions.UNIVERSAL.getInstance().applyFogFunction) {
-            return !mixinClassName.equals("net.dillon.qualityofqueso.mixin.FogRendererMixin");
-        }
-        return true;
+        return FMLLoader.getLoadingModList().getModFileById("simplekeybinds") == null && UniversalOptions.UNIVERSAL.getInstance().applyFogFunction;
     }
 
     // Other methods...
