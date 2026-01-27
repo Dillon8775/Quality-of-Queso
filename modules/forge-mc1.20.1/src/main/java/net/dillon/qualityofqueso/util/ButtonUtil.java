@@ -370,7 +370,7 @@ public class ButtonUtil {
     public static boolean enchantmentMatches(ItemStack slotStack, ItemStack cursorStack) {
         for (Map.Entry<Enchantment, Integer> slotEntry : EnchantmentHelper.getEnchantments(slotStack).entrySet()) {
             for (Map.Entry<Enchantment, Integer> heldEntry : EnchantmentHelper.getEnchantments(cursorStack).entrySet()) {
-                if (getEnchantmentName(slotEntry).contains(getEnchantmentName(heldEntry))) {
+                if (slotStack.is(cursorStack.getItem()) && getEnchantmentName(slotEntry).contains(getEnchantmentName(heldEntry))) {
                     return true;
                 }
             }

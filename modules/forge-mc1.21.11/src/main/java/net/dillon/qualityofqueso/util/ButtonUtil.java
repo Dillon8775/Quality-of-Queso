@@ -370,7 +370,7 @@ public class ButtonUtil {
         ItemEnchantments cursorEnchantments = EnchantmentHelper.getEnchantmentsForCrafting(cursorStack);
         for (Holder<Enchantment> slotEnchantments : fromStackEnchantments.keySet()) {
             for (Holder<Enchantment> heldEnchantments : cursorEnchantments.keySet()) {
-                if (getEnchantmentName(slotEnchantments).contains(getEnchantmentName(heldEnchantments))) {
+                if (slotStack.is(cursorStack.getItem()) && getEnchantmentName(slotEnchantments).contains(getEnchantmentName(heldEnchantments))) {
                     return true;
                 }
             }

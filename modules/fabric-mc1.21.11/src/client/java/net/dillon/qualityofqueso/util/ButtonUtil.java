@@ -415,7 +415,7 @@ public class ButtonUtil {
         ItemEnchantmentsComponent cursorEnchantments = EnchantmentHelper.getEnchantments(cursorStack);
         for (RegistryEntry<Enchantment> slotEnchantments : fromStackEnchantments.getEnchantments()) {
             for (RegistryEntry<Enchantment> heldEnchantments : cursorEnchantments.getEnchantments()) {
-                if (getEnchantmentName(slotEnchantments).contains(getEnchantmentName(heldEnchantments))) {
+                if (slotStack.isOf(cursorStack.getItem()) && getEnchantmentName(slotEnchantments).contains(getEnchantmentName(heldEnchantments))) {
                     return true;
                 }
             }

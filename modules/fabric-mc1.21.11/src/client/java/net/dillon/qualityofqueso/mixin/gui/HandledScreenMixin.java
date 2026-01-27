@@ -285,7 +285,8 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                 return false;
             }
         }
-        return isAnySlotFilled(this.handler, false, 0, getContainerSize(this.inventory))
+        return isContainerScreen(this.screen)
+                && isAnySlotFilled(this.handler, false, 0, getContainerSize(this.inventory))
                 && this.getSearchFieldText().isEmpty()
                 && !excludedContainerSlot
                 && getCursorStack(this.screen).isEmpty()

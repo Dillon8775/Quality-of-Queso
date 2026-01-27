@@ -292,7 +292,8 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                 return false;
             }
         }
-        return isAnySlotFilled(this.menu, false, 0, getContainerSize(this.container))
+        return isContainerScreen(this.screen)
+                && isAnySlotFilled(this.menu, false, 0, getContainerSize(this.container))
                 && this.getSearchFieldText().isEmpty()
                 && !excludedContainerSlot
                 && getCursorStack(this.screen).isEmpty()

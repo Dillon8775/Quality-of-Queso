@@ -1,8 +1,3 @@
-Version 1.5.3 (MC Fabric 1.21.11, Forge 1.20.1 and 1.21.11):
-- Forge now correctly checks if the simple keybinds mod is loaded, determining which fog setting to use.
-- Fixed 1.20.1 bug where "Show IRL Time" does not appear in the "Misc..." options screen, and also fixed where "Item Count" and "Armor Status" display under "Misc...".
-- Fixed 1.20.1 crash when loading simple keybinds with this mod (must use Simple Keybinds version 1.2.7 or greater)
-
-- Added Discord link.
-
-- (Technical change) Quality of Queso now has its own refmap.
+Version 1.5.4 (MC Fabric 1.21.11, Forge 1.20.1 and 1.21.11):
+- Fixed bug where smart transferring enchanted books transfers all items (even if not enchanted book) with the same enchantments.
+- Fixed bug where you can "sort" in your inventory, using the shortcut key (it moved all armor slots to crafting grid).
