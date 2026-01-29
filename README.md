@@ -3,19 +3,19 @@
 ###
 
 <a href="https://files.minecraftforge.net/" target="_blank">
-  <img src="https://i.imgur.com/gbZFxKU.png" width="356" height="96" alt="Compatible with Forge">
+  <img src="https://github.com/Dillon8775/ImageGIFs/blob/universal/Forge%20Logo.png?raw=true" width="356" height="96" alt="Compatible with Forge">
 </a>
 
 ####
 
 <a href="https://fabricmc.net/" target="_blank">
-  <img src="https://i.imgur.com/vIbuVv8.png" width="361" height="124" alt="Compatible with Forge">
+  <img src="https://github.com/Dillon8775/ImageGIFs/blob/universal/Fabric%20Logo.png?raw=true" width="361" height="124" alt="Compatible with Forge">
 </a>
 
 ####
 
 <a href="https://modrinth.com/mod/fabric-api/versions" target="_blank">
-  <img src="https://i.imgur.com/yFnszAw.png" width="287" height="96" alt="Compatible with Forge">
+  <img src="https://github.com/Dillon8775/ImageGIFs/blob/universal/Requires%20Fabric%20API%20Logo.png?raw=true" width="287" height="96" alt="Compatible with Forge">
 </a>
 
 ### Please report *any* bugs you may find <a href="https://github.com/Dillon8775/Quality-of-Queso/issues" target="_blank">here.</a>
@@ -57,15 +57,13 @@ If you decide to play the mod on an older version of the game, please note that 
 ## You can also do this in your inventory!
 [since: v1.2, inventory searching since v1.4]
 
-<a href="https://i.imgur.com/wrOeB2D.gif" target="_blank">
-  <img src="https://i.imgur.com/wrOeB2D.gif" width="872" height="490" alt="Chest searching feature.">
-</a>
+<img src="https://github.com/Dillon8775/ImageGIFs/blob/qoq/Button%20Functions/container%20searching.gif?raw=true" width="872" height="490" alt="Chest searching feature.">
 
 ---
 
 # _Inventory Management!_
-<img src="https://i.imgur.com/WxGOap3.png" width="36" height="36" alt="Transfer inventory button.">
-<img src="https://i.imgur.com/uErcaYu.png" width="36" height="36" alt="Transfer container button.">
+<img src="https://github.com/Dillon8775/ImageGIFs/blob/qoq/Buttons/Transfer%20to%20container.png?raw=true" width="36" height="36" alt="Transfer inventory button.">
+<img src="https://github.com/Dillon8775/ImageGIFs/blob/qoq/Buttons/Transfer%20to%20inventory.png?raw=true" width="36" height="36" alt="Transfer container button.">
 
 #### Adds two small buttons to chests and shulker boxes, which allow the player to transfer the items in the chest to the inventory, and vice-versa.
 - #### By utilizing the Chest Search feature, you can transfer _only_ the searched items.
@@ -83,15 +81,13 @@ If you decide to play the mod on an older version of the game, please note that 
 
 [smart moving since: v1.5]
 
-<a href="https://i.imgur.com/91vGfnG.gif" target="_blank">
-  <img src="https://i.imgur.com/91vGfnG.gif" width="872" height="490" alt="Chest transferring feature.">
-</a>
+<img src="https://github.com/Dillon8775/ImageGIFs/blob/qoq/Button%20Functions/transferring%20buttons.gif?raw=true" width="872" height="490" alt="Chest transferring feature.">
 
 ## Along with these buttons, we have:
 
 ---
 
-<img src="https://i.imgur.com/AG9Ygkj.png" width="36" height="36" alt="Sort button.">
+<img src="https://github.com/Dillon8775/ImageGIFs/blob/qoq/Buttons/Sort%20button.png?raw=true" width="36" height="36" alt="Sort button.">
 
 ## The ***Sort*** button, which alphabetically sorts all items in a container!
 - Shortcut keybind = *CTRL + S*.
@@ -99,7 +95,7 @@ If you decide to play the mod on an older version of the game, please note that 
 
 ---
 
-<img src="https://i.imgur.com/glqaxnv.png" width="36" height="36" alt="Quick drop button.">
+<img src="https://github.com/Dillon8775/ImageGIFs/blob/qoq/Buttons/Quick%20drop.png?raw=true" width="36" height="36" alt="Quick drop button.">
 
 ### The ***Quick Drop*** button, which allows you to drop ***all*** highlighted items in a chest (or your inventory).
 - If you use this button in a container screen, it will drop the full stack of selected items in the container. Using the button while your inventory is open will drop selected items in your inventory.
@@ -108,7 +104,7 @@ If you decide to play the mod on an older version of the game, please note that 
 
 ---
 
-<img src="https://i.imgur.com/OSQdEuo.png" width="36" height="36" alt="Swap button.">
+<img src="https://github.com/Dillon8775/ImageGIFs/blob/qoq/Buttons/Swap%20containers.png?raw=true" width="36" height="36" alt="Swap button.">
 
 ### The ***Swap*** button, which swaps all items in the container and inventory to the other container's respective slot
 - You can set a keybind to do this (CTRL + your desired keybind).
@@ -117,8 +113,8 @@ If you decide to play the mod on an older version of the game, please note that 
 
 ---
 
-<img src="https://i.imgur.com/0KM5Wsx.png" width="36" height="36" alt="Include hotbar">
-<img src="https://i.imgur.com/DFAlF1R.png" width="36" height="36" alt="Exclude hotbar">
+<img src="https://github.com/Dillon8775/ImageGIFs/blob/qoq/Buttons/Include%20hotbar.png?raw=true" width="36" height="36" alt="Include hotbar">
+<img src="https://github.com/Dillon8775/ImageGIFs/blob/qoq/Buttons/Exclude%20hotbar.png?raw=true" width="36" height="36" alt="Exclude hotbar">
 
 ### The ***Include/Exclude Hotbar*** button, which blocks any hotbar items from being highlighted via search, or moved when transferring, swapping, or dropping.
 - When searching items, if you press the exclude hotbar button, all hotbar items will be grayed out, even if the item matches the search query.
@@ -132,12 +128,8 @@ If you decide to play the mod on an older version of the game, please note that 
 ## Below is an example of all these buttons in action.
 ### You can disable any of these buttons if you would like.
 
-<a href="https://i.imgur.com/4XBrfP0.gif" target="_blank">
-  <img src="https://i.imgur.com/4XBrfP0.gif" width="640" height="360" alt="Other buttons.">
-</a>
-<a href="https://i.imgur.com/IJLQ1Ss.gif" target="_blank">
-  <img src="https://i.imgur.com/IJLQ1Ss.gif" width="640" height="360" alt="Sort button.">
-</a>
+<img src="https://github.com/Dillon8775/ImageGIFs/blob/qoq/Button%20Functions/other%20buttons.gif?raw=true" width="640" height="360" alt="Other buttons.">
+<img src="https://github.com/Dillon8775/ImageGIFs/blob/qoq/Button%20Functions/sort%20container%20button.gif?raw=true" width="640" height="360" alt="Sort button.">
 
 #### (since: v1.2, quick drop and swap button since v1.4, sort since v1.5)
 
@@ -153,9 +145,7 @@ If you decide to play the mod on an older version of the game, please note that 
 #### You can set how long the item frames will remain glowing after searching (ex. 1 second, 5 seconds, 30 seconds)
 #### You can change the radius to search for item frames (ex. 50 blocks, 100 blocks, 300 blocks)
 
-<a href="https://i.imgur.com/6hF7F73.gif" target="_blank">
-  <img src="https://i.imgur.com/6hF7F73.gif" width="960 " height="540" alt="Item frame searching in action.">
-</a>
+<img src="https://github.com/Dillon8775/ImageGIFs/blob/qoq/Item%20frame%20searching.gif?raw=true" width="960 " height="540" alt="Item frame searching in action.">
 
 ## Please note: this mod must be installed on the server-side, _and_ enabled on the server side in order for players to use this feature.
 ### There is also a command to use this feature if you don't want to use the GUI screen.
@@ -174,9 +164,7 @@ If you decide to play the mod on an older version of the game, please note that 
 - You can choose to always display them *or* only in the debug menu.
 - If you are playing 1.20.1, you can just enable these via the mod's configuration, under "Misc...".
 
-<a href="https://i.imgur.com/bfWrzxc.png" target="_blank">
-  <img src="https://i.imgur.com/bfWrzxc.png" width="640" height="360" alt="Show in-game time.">
-</a>
+<img src="https://github.com/Dillon8775/ImageGIFs/blob/qoq/Display%20time.png?raw=true" width="640" height="360" alt="Show in-game time.">
 
 #### (since: v1.5)
 
@@ -186,9 +174,7 @@ If you decide to play the mod on an older version of the game, please note that 
 
 ### Turn off Minecraft's extremely annoying and obnoxious fog!
 
-<a href="https://i.imgur.com/7RUZwVB.gif" target="_blank">
-  <img src="https://i.imgur.com/7RUZwVB.gif" width="640" height="360" alt="Remove fog.">
-</a>
+<img src="https://github.com/Dillon8775/ImageGIFs/blob/qoq/Remove%20fog.gif?raw=true" width="640" height="360" alt="Remove fog.">
 
 Important note: if you experience mod conflicts, you can disable the fog from being changed at all by **disabling the "applyFogFunction"** in the **"qualityofqueso-client_universal.json"** config file.
 
@@ -203,9 +189,7 @@ Side-note: (Fabric only) if the **Simple Keybinds** mod is loaded, this feature 
 #### It automatically hides after a few seconds, but when the durability changes, or the item itself changes, it re-appears!
 - You can choose to make it *always* display by setting the **"Armor Status"** option to **"ALWAYS"**.
 
-<a href="https://i.imgur.com/xCkCBhA.gif" target="_blank">
-  <img src="https://i.imgur.com/xCkCBhA.gif" width="640" height="360" alt="Armor status.">
-</a>
+<img src="https://github.com/Dillon8775/ImageGIFs/blob/qoq/Armor%20status.gif?raw=true" width="640" height="360" alt="Armor status.">
 
 #### (since: v1.5.1)
 
@@ -233,9 +217,7 @@ Side-note: (Fabric only) if the **Simple Keybinds** mod is loaded, this feature 
 
 ### Below is an example of all of these settings being used:
 
-<a href="https://i.imgur.com/YQnECn5.gif" target="_blank">
-  <img src="https://i.imgur.com/YQnECn5.gif" width="768" height="432" alt="Item count.">
-</a>
+<img src="https://github.com/Dillon8775/ImageGIFs/blob/qoq/Item%20count.gif?raw=true" width="768" height="432" alt="Item count.">
 
 #### (since: v1.5.1)
 
@@ -248,18 +230,12 @@ Side-note: (Fabric only) if the **Simple Keybinds** mod is loaded, this feature 
 
 Note: when attempting to transfer to an excluded slot, that slot will still be affected. This feature only applies to *selecting slots to move/search.*
 
-<a href="https://i.imgur.com/Q2d9ojS.gif" target="_blank">
-  <img src="https://i.imgur.com/Q2d9ojS.gif" width="640" height="360" alt="ALT Excluding">
-</a>
-<a href="https://i.imgur.com/RekIaQn.gif" target="_blank">
-  <img src="https://i.imgur.com/RekIaQn.gif" width="640" height="360" alt="ALT + SHIFT Excluding">
-</a>
+<img src="https://github.com/Dillon8775/ImageGIFs/blob/qoq/Drag%20Sorting/Exclude%20slots.gif?raw=true" width="640" height="360" alt="ALT Excluding">
+<img src="https://github.com/Dillon8775/ImageGIFs/blob/qoq/Drag%20Sorting/Select%20slots.gif?raw=true" width="640" height="360" alt="ALT + SHIFT Excluding">
 
 ### You can also choose to save excluded slots by enabling the "Save Excluded Slots" option:
 
-<a href="https://i.imgur.com/2YCncvz.gif" target="_blank">
-  <img src="https://i.imgur.com/2YCncvz.gif" width="640" height="360" alt="Save excluded slots.">
-</a>
+<img src="https://github.com/Dillon8775/ImageGIFs/blob/qoq/Drag%20Sorting/Save%20excluded%20slots.gif?raw=true" width="640" height="360" alt="Save excluded slots.">
 
 #### (since: v1.5, shift + alt picking since v1.5.1)
 
@@ -269,9 +245,7 @@ Note: when attempting to transfer to an excluded slot, that slot will still be a
 ### Plays the ding sound when hitting a mob with an arrow!
 - By default, you need to be at least **20** blocks away for it to play the ding sound (you can change this).
 
-<a href="https://i.imgur.com/12f8oFd.gif" target="_blank">
-  <img src="https://i.imgur.com/12f8oFd.gif" width="480" height="270" alt="Mob Hit Ding.">
-</a>
+<img src="https://github.com/Dillon8775/ImageGIFs/blob/qoq/Mob%20ding%20on%20hit.gif?raw=true" width="640" height="360" alt="Quick Equip in action.">
 
 #### (since: v1.5.1)
 
@@ -285,9 +259,7 @@ Note: when attempting to transfer to an excluded slot, that slot will still be a
 
 #### You can also use the hotkey to quick equip. Default Hotkey = _B_, you can change this in the Controls menu.
 
-<a href="https://i.imgur.com/f3yUwAA.gif" target="_blank">
-  <img src="https://i.imgur.com/f3yUwAA.gif" width="640" height="360" alt="Quick Equip in action.">
-</a>
+<img src="https://github.com/Dillon8775/ImageGIFs/blob/qoq/Quick%20equip.gif?raw=true" width="640" height="360" alt="Quick Equip in action.">
 
 #### (since v1.2.1)
 
@@ -296,9 +268,7 @@ Note: when attempting to transfer to an excluded slot, that slot will still be a
 # _Better GUI Closing!_
 Clicking off of any GUI screen (as long as your cursor isn't holding anything) will close the screen.
 
-<a href="https://i.imgur.com/tMVWv3y.gif" target="_blank">
-  <img src="https://i.imgur.com/tMVWv3y.gif" width="640" height="360" alt="Close GUI menu by clicking off.">
-</a>
+<img src="https://github.com/Dillon8775/ImageGIFs/blob/qoq/Better%20GUI%20closing.gif?raw=true" width="640" height="360" alt="Close GUI menu by clicking off.">
 
 #### (since: v1.0)
 
@@ -308,9 +278,7 @@ Clicking off of any GUI screen (as long as your cursor isn't holding anything) w
 If you are in the creative inventory menu screen, and you want to search for an item, you no longer have to click on the compass to search for an item. Just begin typing and it will begin searching. The same applies to recipe book screens and crafting screens.
 Note: if your cursor is hovered over a slot with an item that is bound to a hotbar key, it will not automatically search. You must move your mouse away from the bounded hotbar slot.
 
-<a href="https://i.imgur.com/kC3tg7B.gif" target="_blank">
-  <img src="https://i.imgur.com/kC3tg7B.gif" width="640" height="360" alt="Typing anywhere.">
-</a>
+<img src="https://github.com/Dillon8775/ImageGIFs/blob/qoq/Better%20searching.gif?raw=true" width="640" height="360" alt="Typing anywhere.">
 
 #### (since: v1.0)
 
@@ -322,9 +290,7 @@ Note: if your cursor is hovered over a slot with an item that is bound to a hotb
 
 (just enable the "Prevent Rage Quitting" option to use this)
 
-<a href="https://i.imgur.com/6O0FGuQ.gif" target="_blank">
-  <img src="https://i.imgur.com/6O0FGuQ.gif" width="640" height="360" alt="Prevent rage quitting.">
-</a>
+<img src="https://github.com/Dillon8775/ImageGIFs/blob/qoq/Prevent%20rage%20quitting.gif?raw=true" width="640" height="360" alt="Prevent rage quitting.">
 
 #### (since: v1.3.3)
 
@@ -359,9 +325,7 @@ With the transferring buttons, you can choose when you are able to transfer item
 
 ## Below is a GIF that shows all of these options in action, and is easier to understand:
 
-<a href="https://i.imgur.com/4138vz4.gif" target="_blank">
-  <img src="https://i.imgur.com/4138vz4.gif" width="960" height="540" alt="Typing anywhere.">
-</a>
+<img src="https://github.com/Dillon8775/ImageGIFs/blob/qoq/Move%20items%20if.gif?raw=true" width="960" height="540" alt="Typing anywhere.">
 
 ---
 
