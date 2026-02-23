@@ -8,6 +8,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
@@ -34,13 +35,16 @@ public class ProjectileMixin {
         Entity hitEntity = hitResult.getEntity();
 
         if (hitEntity instanceof LivingEntity living && !(living instanceof Player)) {
+            Projectile projectile = (Projectile) (Object) this;
+
             Player player = Minecraft.getInstance().player;
+            Entity owner = projectile.getOwner();
             if (player == null) {
                 return;
             }
-
-            Projectile projectile = (Projectile) (Object) this;
-            Entity owner = projectile.getOwner();
+            if (!(projectile instanceof Arrow)) {
+                return;
+            }
             if (owner == null || !owner.getUUID().equals(player.getUUID())) {
                 return;
             }

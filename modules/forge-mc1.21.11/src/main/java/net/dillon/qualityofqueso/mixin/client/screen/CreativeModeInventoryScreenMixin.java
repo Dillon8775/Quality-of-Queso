@@ -62,10 +62,10 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
 	 */
     @Overwrite
     public boolean charTyped(CharacterEvent input) {
-        if (this.ignoreTextInput || (!(options().betterSearching) && selectedTab.getType() != CreativeModeTab.Type.SEARCH)) {
+        if (this.ignoreTextInput || (!(options().quickSearch) && selectedTab.getType() != CreativeModeTab.Type.SEARCH)) {
             return false;
         } else {
-            if (modEnabled(this.minecraft) && options().betterSearching) {
+            if (modEnabled(this.minecraft) && options().quickSearch) {
                 this.selectTab(CreativeModeTabs.searchTab());
             }
             String s = this.searchBox.getValue();
@@ -83,7 +83,7 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
 
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
     private void allowCertainChars(KeyEvent input, CallbackInfoReturnable<Boolean> cir) {
-        if (modEnabled(this.minecraft) && options().betterSearching) {
+        if (modEnabled(this.minecraft) && options().quickSearch) {
             if (this.hoveredSlot != null && this.hoveredSlot.getItem() != ItemStack.EMPTY && !this.searchBox.isFocused()) {
                 this.ignoreTextInput = true;
                 cir.setReturnValue(super.keyPressed(input));

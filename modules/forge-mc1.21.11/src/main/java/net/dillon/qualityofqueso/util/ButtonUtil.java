@@ -13,6 +13,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.*;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.HashedPatchMap;
@@ -20,6 +21,7 @@ import net.minecraft.network.HashedStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ServerboundContainerClickPacket;
 import net.minecraft.resources.Identifier;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.CommonColors;
@@ -390,6 +392,20 @@ public class ButtonUtil {
      */
     public static ItemStack getCursorStack(AbstractContainerScreen<?> screen) {
         return screen.getMenu().getCarried();
+    }
+
+    /**
+     * Plays the bundle sounds when using buttons.
+     */
+    public static void playButtonSound(Minecraft client, boolean drop) {
+        client.getSoundManager().play(SimpleSoundInstance.forUI(drop ? SoundEvents.BUNDLE_DROP_CONTENTS : SoundEvents.BUNDLE_INSERT, 1.0F, 5.0F));
+    }
+
+    /**
+     * Plays the inactive bundle sound.
+     */
+    public static void playButtonInactiveSound(Minecraft client) {
+        client.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.BUNDLE_INSERT_FAIL, 1.0F, 0.6F));
     }
 
     /**

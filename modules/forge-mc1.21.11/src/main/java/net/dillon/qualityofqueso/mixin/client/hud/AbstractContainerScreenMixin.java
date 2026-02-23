@@ -792,6 +792,16 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
         if (this.inventorySearchField != null && this.inventorySearchField.mouseClicked(event, isDouble)) {
             this.inventorySearchField.setFocused(true);
         }
+
+        if (this.transferContainerButton != null && this.transferContainerButton.isHovered() && !this.transferContainerButton.active) {
+            this.transferContainerButton.playInactiveSound(this.minecraft.getSoundManager());
+        } else if (this.transferInventoryButton != null && this.transferInventoryButton.isHovered() && !this.transferInventoryButton.active) {
+            this.transferInventoryButton.playInactiveSound(this.minecraft.getSoundManager());
+        } else if (this.quickDropButton != null && this.quickDropButton.isHovered() && !this.quickDropButton.active) {
+            this.quickDropButton.playInactiveSound(this.minecraft.getSoundManager());
+        } else if (this.sortButton != null && this.sortButton.isHovered() && !this.sortButton.active) {
+            this.sortButton.playInactiveSound(this.minecraft.getSoundManager());
+        }
     }
 
     /**
@@ -831,9 +841,23 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             }
             if ((isValidScreen(this.screen) || isBrewingStandScreen(this.screen) || isFurnaceScreen(this.screen)) && options().transferring.orKeyOnly()) {
                 if (input.key() == ModKeybinds.MOVE_CONTAINER.getKey().getValue()) {
+                    if (this.transferContainerButton != null) {
+                        if (this.transferContainerButton.active) {
+                            playButtonSound(this.minecraft, false);
+                        } else {
+                            playButtonInactiveSound(this.minecraft);
+                        }
+                    }
                     this.transferItems(true);
                 }
                 if (input.key() == ModKeybinds.MOVE_INVENTORY.getKey().getValue()) {
+                    if (this.transferInventoryButton != null) {
+                        if (this.transferInventoryButton.active) {
+                            playButtonSound(this.minecraft, false);
+                        } else {
+                            playButtonInactiveSound(this.minecraft);
+                        }
+                    }
                     this.transferItems(false);
                 }
             }
@@ -846,6 +870,13 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                     this.swapCooldown = 200;
                 }
                 if (options().quickDrop.orKeyOnly() && Minecraft.getInstance().hasAltDown() && input.key() == GLFW.GLFW_KEY_Q) {
+                    if (this.quickDropButton != null) {
+                        if (this.quickDropButton.active) {
+                            playButtonSound(this.minecraft, false);
+                        } else {
+                            playButtonInactiveSound(this.minecraft);
+                        }
+                    }
                     this.dropItems(!isContainerScreen(this.screen));
                 }
             }
@@ -863,7 +894,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
         }
 
         // Prevent E from typing entirely in fromInventory screens
-        if (input.key() == GLFW.GLFW_KEY_E && options().preventEFromTyping && (isInventoryScreen(this.screen) || isCreativeInventoryScreen(this.screen))) {
+        if (input.key() == GLFW.GLFW_KEY_E && options().preventEFromTyping && (isContainerScreen(this.screen) || isInventoryScreen(this.screen) || isCreativeInventoryScreen(this.screen))) {
             this.onClose();
             cir.setReturnValue(true);
         }
@@ -944,9 +975,9 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
         boolean cannotType = (numberKeyPressed || hotbarKeyPressed || dropKeyPressed || swapKeyPressed) && hoveredSlotHasItem(this.hoveredSlot);
 
         // Recipe book search field logic
-        if (options().betterSearching && this.screen instanceof AbstractRecipeBookScreen<?> recipeScreen && !Minecraft.getInstance().hasControlDown()) {
+        if (options().quickSearch && this.screen instanceof AbstractRecipeBookScreen<?> recipeScreen && !Minecraft.getInstance().hasControlDown()) {
             boolean swapKeyValid = swapKeyPressed && (hoveredSlotHasItem(this.hoveredSlot) || this.menu.getSlot(45).hasItem());
-            if (!ignoreTyping && !swapKeyValid && !recipeScreen.recipeBookComponent.isVisible() && (this.inventorySearchField == null || !this.inventorySearchField.isFocused())) {
+            if ((!options().preventEFromTyping && input.key() != GLFW.GLFW_KEY_E) && !ignoreTyping && !swapKeyValid && !recipeScreen.recipeBookComponent.isVisible() && (this.inventorySearchField == null || !this.inventorySearchField.isFocused())) {
                 recipeScreen.recipeBookComponent.toggleVisibility();
                 this.repositionElements();
             }
@@ -973,7 +1004,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
         if (options().inventorySearching && this.inventorySearchField != null) {
             if (!Minecraft.getInstance().hasControlDown() && this.screen instanceof AbstractRecipeBookScreen<?> recipeScreen && recipeScreen.recipeBookComponent.isVisible() && !this.inventorySearchField.isFocused()) {
                 recipeScreen.recipeBookComponent.searchBox.setFocused(!cannotType);
-            } else if (!secondaryIgnoreTyping && (!Minecraft.getInstance().hasControlDown() || (Minecraft.getInstance().hasControlDown() && input.key() == GLFW.GLFW_KEY_A))) {
+            } else if (options().quickSearch && !secondaryIgnoreTyping && (!Minecraft.getInstance().hasControlDown() || (Minecraft.getInstance().hasControlDown() && input.key() == GLFW.GLFW_KEY_A))) {
                 this.inventorySearchField.setFocused(true);
                 this.setFocused(this.inventorySearchField);
             } else if (this.inventorySearchField.isFocused() && cannotType) {
@@ -1007,7 +1038,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
 
         // Chest search field logic
         if (options().chestSearching && isContainerScreen(this.screen)) {
-            if (!secondaryIgnoreTyping && (!Minecraft.getInstance().hasControlDown() || (Minecraft.getInstance().hasControlDown() && input.key() == GLFW.GLFW_KEY_A))) {
+            if (options().quickSearch && !secondaryIgnoreTyping && (!Minecraft.getInstance().hasControlDown() || (Minecraft.getInstance().hasControlDown() && input.key() == GLFW.GLFW_KEY_A))) {
                 this.containerSearchField.setFocused(true);
             } else if (this.containerSearchField.isFocused() && cannotType) {
                 this.containerSearchField.setFocused(false);

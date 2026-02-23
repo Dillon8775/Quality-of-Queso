@@ -13,7 +13,7 @@ public class ModClientOptions {
     // Main options
     public boolean enableMod = true;
     public boolean betterGuiExit = true;
-    public boolean betterSearching = true;
+    public boolean quickSearch = true;
     public boolean chestSearching = true;
     public boolean searchInventory = true;
     public boolean inventorySearching = true;

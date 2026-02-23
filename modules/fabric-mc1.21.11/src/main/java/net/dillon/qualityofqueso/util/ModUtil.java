@@ -17,6 +17,13 @@ public class ModUtil {
     }
 
     /**
+     * Sends a warning message to console.
+     */
+    public static void warn(String message) {
+        LOGGER.warn(message);
+    }
+
+    /**
      * Sends a {@code debug message} to the console.
      */
     public static void debug(String message) {

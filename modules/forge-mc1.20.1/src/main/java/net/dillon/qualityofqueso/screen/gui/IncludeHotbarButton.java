@@ -4,7 +4,10 @@ import net.dillon.qualityofqueso.util.ButtonUtil;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 
 import java.util.function.Supplier;
@@ -18,6 +21,11 @@ public class IncludeHotbarButton extends TransferButton {
 
     public IncludeHotbarButton(AbstractContainerMenu screenHandler, Font font, Supplier<String> searchFieldText, int x, int y, String buttonName, Button.OnPress onPress) {
         super(screenHandler, font, searchFieldText, x, y, buttonName, onPress);
+    }
+
+    @Override
+    public void playDownSound(SoundManager manager) {
+        manager.play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
     }
 
     /**

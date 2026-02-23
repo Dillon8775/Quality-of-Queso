@@ -21,7 +21,7 @@ public class MiscOptionsScreen extends AbstractModOptionsScreen {
                 ModListOptions.fog(),
 
                 ModListOptions.quickEquip(),
-                ModListOptions.betterSearching(),
+                ModListOptions.quickSearch(),
 
                 ModListOptions.preventRageQuitting(),
                 ModListOptions.betterGuiExit(),
@@ -35,8 +35,8 @@ public class MiscOptionsScreen extends AbstractModOptionsScreen {
                 ModListOptions.mobHitDing(),
                 ModListOptions.minMobHitDingDistance(),
 
-                ModListOptions.helpfulTooltips(),
                 ModListOptions.autoCloseRecipeBook(),
+                ModListOptions.helpfulTooltips(),
 
                 ModListOptions.multiServerConfigs(),
         };

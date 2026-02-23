@@ -13,7 +13,7 @@ public class ModClientOptions {
     // Main options
     public boolean enableMod = true;
     public boolean betterGuiExit = true;
-    public boolean betterSearching = true;
+    public boolean quickSearch = true;
     public boolean chestSearching = true;
     public boolean searchInventory = true;
     public boolean inventorySearching = true;
@@ -42,7 +42,7 @@ public class ModClientOptions {
     // Misc options
     public boolean quickEquip = true;
     public boolean preventRageQuitting = false;
-    public boolean preventEFromTyping = false;
+    public boolean preventEFromTyping = true;
     public boolean helpfulTooltips = true;
     public boolean fog = true;
     public boolean mobHitDing = true;

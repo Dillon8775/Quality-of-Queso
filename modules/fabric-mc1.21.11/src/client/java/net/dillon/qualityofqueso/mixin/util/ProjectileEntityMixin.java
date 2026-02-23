@@ -5,6 +5,7 @@ import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -34,17 +35,20 @@ public class ProjectileEntityMixin {
         Entity hitEntity = hitResult.getEntity();
 
         if (hitEntity instanceof LivingEntity living && !(living instanceof PlayerEntity)) {
+            ProjectileEntity projectile = (ProjectileEntity) (Object) this;
+
             PlayerEntity player = MinecraftClient.getInstance().player;
             if (player == null) {
                 return;
             }
-
-            double minDistance = options().minMobHitDingDistance;
-            ProjectileEntity projectile = (ProjectileEntity) (Object) this;
+            if (!(projectile instanceof ArrowEntity)) {
+                return;
+            }
             if (!projectile.isOwner(player)) {
                 return;
             }
 
+            double minDistance = options().minMobHitDingDistance;
             if (player.squaredDistanceTo(hitEntity) >= minDistance * minDistance) {
                 World world = living.getEntityWorld();
                 if (world instanceof ServerWorld serverWorld) {

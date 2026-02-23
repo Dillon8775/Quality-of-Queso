@@ -6,7 +6,10 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.sound.PositionedSoundInstance;
+import net.minecraft.client.sound.SoundManager;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 
 import java.util.function.Supplier;
@@ -39,5 +42,10 @@ public class QuickDropButton extends TransferButton {
         if (MinecraftClient.getInstance().isShiftPressed() && (this.isHovered() || shortcutKeyPressed)) {
             ButtonUtil.drawButtonTexture(context, "quick_drop_one", this);
         }
+    }
+
+    @Override
+    public void playDownSound(SoundManager soundManager) {
+        soundManager.play(PositionedSoundInstance.master(SoundEvents.ITEM_BUNDLE_DROP_CONTENTS, 1.0F, 5.0F));
     }
 }

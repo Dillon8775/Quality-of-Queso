@@ -1,14 +1,18 @@
 package net.dillon.qualityofqueso.screen.gui;
 
 import net.dillon.qualityofqueso.util.ButtonUtil;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 
 import java.util.function.Supplier;
+
+import static net.dillon.qualityofqueso.util.ButtonUtil.playButtonSound;
 
 /**
  * Representation of the quick drop button.
@@ -38,5 +42,10 @@ public class QuickDropButton extends TransferButton {
         if (Screen.hasShiftDown() && (this.isMouseOver(mouseX, mouseY) || shortcutKeyPressed)) {
             ButtonUtil.drawButtonTexture(context, "quick_drop_one", this);
         }
+    }
+
+    @Override
+    public void playDownSound(SoundManager manager) {
+        playButtonSound(Minecraft.getInstance(), true);
     }
 }

@@ -32,9 +32,9 @@ public class ModListOptions {
                 (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, options().betterGuiExit, value -> options().betterGuiExit = value);
     }
 
-    public static SimpleOption<Boolean> betterSearching() {
-        return new SimpleOption<>("qualityofqueso.options.better_searching", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.better_searching.tooltip")),
-                (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, options().betterSearching, value -> options().betterSearching = value);
+    public static SimpleOption<Boolean> quickSearch() {
+        return new SimpleOption<>("qualityofqueso.options.quick_search", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.quick_search.tooltip")),
+                (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, options().quickSearch, value -> options().quickSearch = value);
     }
 
     public static SimpleOption<Boolean> chestSearching() {

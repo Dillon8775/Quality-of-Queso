@@ -37,9 +37,9 @@ public class ModListOptions {
                 ON_OFF_TEXT, options().betterGuiExit, value -> options().betterGuiExit = value);
     }
 
-    public static OptionInstance<Boolean> betterSearching() {
-        return OptionInstance.createBoolean("qualityofqueso.options.better_searching", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.better_searching.tooltip")),
-                ON_OFF_TEXT, options().betterSearching, value -> options().betterSearching = value);
+    public static OptionInstance<Boolean> quickSearch() {
+        return OptionInstance.createBoolean("qualityofqueso.options.quick_search", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.quick_search.tooltip")),
+                ON_OFF_TEXT, options().quickSearch, value -> options().quickSearch = value);
     }
 
     public static OptionInstance<Boolean> chestSearching() {

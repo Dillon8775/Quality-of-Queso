@@ -317,8 +317,6 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             boolean isShulkerScreen = isShulkerBoxScreen(this.screen);
             boolean isCursorShulker = isShulkerScreen && cursorStack.isIn(ItemTags.SHULKER_BOXES);
             boolean isStackShulker = isShulkerScreen && stack.isIn(ItemTags.SHULKER_BOXES);
-            boolean isCursorBundle = !isPlayerInventory && cursorStack.isIn(ItemTags.BUNDLES);
-            boolean isStackBundle = !isPlayerInventory && stack.isIn(ItemTags.BUNDLES);
             if (!cursorStack.isEmpty()) {
                 if (canMoveCursorItem(stack, cursorStack) && !isCursorShulker) {
                     filledSlots++;
@@ -789,6 +787,16 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
         if (this.inventorySearchField != null && this.inventorySearchField.mouseClicked(click, doubled)) {
             this.inventorySearchField.setFocused(true);
         }
+
+        if (this.transferContainerButton != null && this.transferContainerButton.isHovered() && !this.transferContainerButton.active) {
+            this.transferContainerButton.playInactiveSound(this.client.getSoundManager());
+        } else if (this.transferInventoryButton != null && this.transferInventoryButton.isHovered() && !this.transferInventoryButton.active) {
+            this.transferInventoryButton.playInactiveSound(this.client.getSoundManager());
+        } else if (this.quickDropButton != null && this.quickDropButton.isHovered() && !this.quickDropButton.active) {
+            this.quickDropButton.playInactiveSound(this.client.getSoundManager());
+        } else if (this.sortButton != null && this.sortButton.isHovered() && !this.sortButton.active) {
+            this.sortButton.playInactiveSound(this.client.getSoundManager());
+        }
     }
 
     /**
@@ -828,21 +836,44 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             }
             if ((isValidScreen(this.screen) || isBrewingStandScreen(this.screen) || isFurnaceScreen(this.screen)) && options().transferring.orKeyOnly()) {
                 if (input.key() == ModKeybinds.MOVE_CONTAINER.boundKey.getCode()) {
+                    if (this.transferContainerButton != null) {
+                        if (this.transferContainerButton.active) {
+                            playButtonSound(this.client, false);
+                        } else {
+                            playButtonInactiveSound(this.client);
+                        }
+                    }
                     this.transferItems(true);
                 }
                 if (input.key() == ModKeybinds.MOVE_INVENTORY.boundKey.getCode()) {
+                    if (this.transferInventoryButton != null) {
+                        if (this.transferInventoryButton.active) {
+                            playButtonSound(this.client, false);
+                        } else {
+                            playButtonInactiveSound(this.client);
+                        }
+                    }
                     this.transferItems(false);
                 }
             }
             if (isValidScreen(this.screen)) {
                 if (this.canSort(false) && options().containerSorting.orKeyOnly() && input.key() == ModKeybinds.SORT_CONTAINER.boundKey.getCode()) {
+                    playButtonSound(this.client, false);
                     sortItems(this.client);
                 }
                 if (this.canSwap() && this.swapCooldown == 0 && options().swapping.orKeyOnly() && input.key() == ModKeybinds.SWAP_ITEMS.boundKey.getCode()) {
+                    playButtonSound(this.client, false);
                     swapItems(this.handler, this.inventory, this.excludedSlots);
                     this.swapCooldown = 200;
                 }
                 if (options().quickDrop.orKeyOnly() && MinecraftClient.getInstance().isAltPressed() && input.key() == GLFW.GLFW_KEY_Q) {
+                    if (this.quickDropButton != null) {
+                        if (this.quickDropButton.active) {
+                            playButtonSound(this.client, true);
+                        } else {
+                            playButtonInactiveSound(this.client);
+                        }
+                    }
                     this.dropItems(!isContainerScreen(this.screen));
                 }
             }
@@ -859,8 +890,8 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
             }
         }
 
-        // Prevent E from typing entirely in fromInventory screens
-        if (input.key() == GLFW.GLFW_KEY_E && options().preventEFromTyping && (isInventoryScreen(this.screen) || isCreativeInventoryScreen(this.screen))) {
+        // Prevent E from typing entirely in from screens
+        if (input.key() == GLFW.GLFW_KEY_E && options().preventEFromTyping && (isContainerScreen(this.screen) || isInventoryScreen(this.screen) || isCreativeInventoryScreen(this.screen))) {
             this.close();
             cir.setReturnValue(true);
         }
@@ -941,9 +972,9 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
         boolean cannotType = (numberKeyPressed || hotbarKeyPressed || dropKeyPressed || swapKeyPressed) && hoveredSlotHasItem(this.focusedSlot);
 
         // Recipe book search field logic
-        if (options().betterSearching && this.screen instanceof RecipeBookScreen<?> recipeScreen && !MinecraftClient.getInstance().isCtrlPressed()) {
+        if (options().quickSearch && this.screen instanceof RecipeBookScreen<?> recipeScreen && !MinecraftClient.getInstance().isCtrlPressed()) {
             boolean swapKeyValid = swapKeyPressed && (hoveredSlotHasItem(this.focusedSlot) || this.handler.getSlot(45).hasStack());
-            if (!ignoreTyping && !swapKeyValid && !recipeScreen.recipeBook.isOpen() && (this.inventorySearchField == null || !this.inventorySearchField.isFocused())) {
+            if ((!options().preventEFromTyping && input.key() != GLFW.GLFW_KEY_E) && !ignoreTyping && !swapKeyValid && !recipeScreen.recipeBook.isOpen() && (this.inventorySearchField == null || !this.inventorySearchField.isFocused())) {
                 recipeScreen.recipeBook.toggleOpen();
                 this.refreshWidgetPositions();
             }
@@ -970,7 +1001,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
         if (options().inventorySearching && this.inventorySearchField != null) {
             if (!MinecraftClient.getInstance().isCtrlPressed() && this.screen instanceof RecipeBookScreen<?> recipeScreen && recipeScreen.recipeBook.isOpen() && !this.inventorySearchField.isFocused()) {
                 recipeScreen.recipeBook.searchField.setFocused(!cannotType);
-            } else if (!secondaryIgnoreTyping && (!MinecraftClient.getInstance().isCtrlPressed() || (MinecraftClient.getInstance().isCtrlPressed() && input.key() == GLFW.GLFW_KEY_A))) {
+            } else if (options().quickSearch && !secondaryIgnoreTyping && (!MinecraftClient.getInstance().isCtrlPressed() || (MinecraftClient.getInstance().isCtrlPressed() && input.key() == GLFW.GLFW_KEY_A))) {
                 this.inventorySearchField.setFocused(true);
                 this.setFocused(this.inventorySearchField);
             } else if (this.inventorySearchField.isFocused() && cannotType) {
@@ -1004,7 +1035,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
 
         // Chest search field logic
         if (options().chestSearching && isContainerScreen(this.screen)) {
-            if (!secondaryIgnoreTyping && (!MinecraftClient.getInstance().isCtrlPressed() || (MinecraftClient.getInstance().isCtrlPressed() && input.key() == GLFW.GLFW_KEY_A))) {
+            if (options().quickSearch && !secondaryIgnoreTyping && (!MinecraftClient.getInstance().isCtrlPressed() || (MinecraftClient.getInstance().isCtrlPressed() && input.key() == GLFW.GLFW_KEY_A))) {
                 this.containerSearchField.setFocused(true);
             } else if (this.containerSearchField.isFocused() && cannotType) {
                 this.containerSearchField.setFocused(false);

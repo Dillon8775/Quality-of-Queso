@@ -13,6 +13,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractFurnaceScreen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
@@ -76,6 +77,18 @@ public class TransferButton extends Button {
             return false;
         }
         return super.mouseClicked(event, isDouble);
+    }
+
+    @Override
+    public void playDownSound(SoundManager manager) {
+        playButtonSound(Minecraft.getInstance(), false);
+    }
+
+    /**
+     * Plays the inactive sound.
+     */
+    public void playInactiveSound(SoundManager soundManager) {
+        playButtonInactiveSound(Minecraft.getInstance());
     }
 
     /**

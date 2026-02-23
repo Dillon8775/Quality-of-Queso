@@ -12,6 +12,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.AbstractFurnaceScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.sound.SoundManager;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.FireworksComponent;
 import net.minecraft.component.type.ItemEnchantmentsComponent;
@@ -77,6 +78,18 @@ public class TransferButton extends ButtonWidget {
             return false;
         }
         return super.mouseClicked(click, doubled);
+    }
+
+    @Override
+    public void playDownSound(SoundManager soundManager) {
+        playButtonSound(MinecraftClient.getInstance(), false);
+    }
+
+    /**
+     * Plays the inactive sound.
+     */
+    public void playInactiveSound(SoundManager soundManager) {
+        playButtonInactiveSound(MinecraftClient.getInstance());
     }
 
     /**

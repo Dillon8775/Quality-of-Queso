@@ -64,10 +64,10 @@ public abstract class CreativeInventoryScreenMixin extends HandledScreen<Creativ
      */
     @Overwrite
     public boolean charTyped(CharInput input) {
-        if (this.ignoreTypedCharacter || (!(options().betterSearching) && selectedTab.getType() != ItemGroup.Type.SEARCH)) {
+        if (this.ignoreTypedCharacter || (!(options().quickSearch) && selectedTab.getType() != ItemGroup.Type.SEARCH)) {
             return false;
         } else {
-            if (modEnabled(this.client) && options().betterSearching) {
+            if (modEnabled(this.client) && options().quickSearch) {
                 this.setSelectedTab(ItemGroups.getSearchGroup());
             }
             String string = this.searchBox.getText();
@@ -88,7 +88,7 @@ public abstract class CreativeInventoryScreenMixin extends HandledScreen<Creativ
      */
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
     private void allowCertainChars(KeyInput input, CallbackInfoReturnable<Boolean> cir) {
-        if (modEnabled(this.client) && options().betterSearching) {
+        if (modEnabled(this.client) && options().quickSearch) {
             if (this.focusedSlot != null && this.focusedSlot.getStack() != ItemStack.EMPTY && !this.searchBox.isFocused()) {
                 this.ignoreTypedCharacter = true;
                 cir.setReturnValue(super.keyPressed(input));

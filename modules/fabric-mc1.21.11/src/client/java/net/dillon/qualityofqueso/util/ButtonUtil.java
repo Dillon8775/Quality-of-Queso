@@ -15,6 +15,7 @@ import net.minecraft.client.gui.screen.ingame.*;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextIconButtonWidget;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.FireworksComponent;
 import net.minecraft.component.type.ItemEnchantmentsComponent;
@@ -35,6 +36,7 @@ import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.screen.sync.ComponentChangesHash;
 import net.minecraft.screen.sync.ItemStackHash;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Colors;
 import net.minecraft.util.Identifier;
@@ -435,6 +437,20 @@ public class ButtonUtil {
      */
     public static ItemStack getCursorStack(HandledScreen<?> screen) {
         return screen.getScreenHandler().getCursorStack();
+    }
+
+    /**
+     * Plays the bundle sounds when using buttons.
+     */
+    public static void playButtonSound(MinecraftClient client, boolean drop) {
+        client.getSoundManager().play(PositionedSoundInstance.master(drop ? SoundEvents.ITEM_BUNDLE_DROP_CONTENTS : SoundEvents.ITEM_BUNDLE_INSERT, 1.0F, 5.0F));
+    }
+
+    /**
+     * Plays the inactive bundle sound.
+     */
+    public static void playButtonInactiveSound(MinecraftClient client) {
+        client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.ITEM_BUNDLE_INSERT_FAIL, 1.0F, 0.6F));
     }
 
     /**

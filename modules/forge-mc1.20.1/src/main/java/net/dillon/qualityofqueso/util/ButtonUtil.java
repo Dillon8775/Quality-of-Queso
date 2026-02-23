@@ -13,10 +13,12 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.*;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ServerboundContainerClickPacket;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.Container;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -391,6 +393,13 @@ public class ButtonUtil {
      */
     public static ItemStack getCursorStack(AbstractContainerScreen<?> screen) {
         return screen.getMenu().getCarried();
+    }
+
+    /**
+     * Plays the bundle sounds when using buttons.
+     */
+    public static void playButtonSound(Minecraft client, boolean drop) {
+        client.getSoundManager().play(SimpleSoundInstance.forUI(drop ? SoundEvents.BUNDLE_DROP_CONTENTS : SoundEvents.BUNDLE_INSERT, 1.0F, 5.0F));
     }
 
     /**
