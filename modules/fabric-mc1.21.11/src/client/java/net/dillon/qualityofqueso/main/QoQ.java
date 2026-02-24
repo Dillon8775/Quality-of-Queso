@@ -93,12 +93,19 @@ public class QoQ implements ClientModInitializer {
 
         ClientPlayConnectionEvents.JOIN.register((handler, packet, client) -> {
             if (uoptions().multiServerConfigs) {
+                LOADED = true;
                 loadServerConfig(client);
+            }
+            if (isOnServer(client) && options().alwaysPreventRageQuitting) {
+                options().preventRageQuitting = true;
+                saveAll(client);
             }
         });
 
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
-            unloadServerConfig(client);
+            if (isOnServer(client)) {
+                unloadServerConfig(client);
+            }
         });
 
         ModUtil.info("Quality of Queso has successfully loaded!");
@@ -122,11 +129,25 @@ public class QoQ implements ClientModInitializer {
         ModCommonOptions.COMMON.setFileName(BaseOptions.DEFAULT_COMMON_FILE_NAME);
         ModCommonOptions.COMMON.load();
         if (client.player != null) {
-            client.player.sendMessage(Text.translatable("qualityofqueso.unloaded_server_config").formatted(Formatting.GOLD), false);
+            client.player.sendMessage(Text.translatable("qualityofqueso.unloaded_server_config", safeAddress(client.getCurrentServerEntry().address)).formatted(Formatting.GOLD), false);
         }
         if (uoptions().multiServerConfigs) {
             ModUtil.info("Reverting back to global QoQ config.");
         }
+    }
+
+    /**
+     * @return a safe address to display in chat.
+     */
+    private static Text safeAddress(String address) {
+        Text text = Text.literal(address).copy().formatted(Formatting.AQUA);
+        for (char c :  address.toCharArray()) {
+            if (Character.isDigit(c)) {
+                text = text.copy().formatted(Formatting.OBFUSCATED);
+                break;
+            }
+        }
+        return text;
     }
 
     /**
@@ -182,7 +203,7 @@ public class QoQ implements ClientModInitializer {
         ModCommonOptions.COMMON.load();
 
         String message = !configExists ? "qualityofqueso.created_server_config" : "qualityofqueso.loaded_server_config";
-        client.player.sendMessage(Text.translatable(message).formatted(Formatting.GOLD), false);
+        client.player.sendMessage(Text.translatable(message, safeAddress(client.getCurrentServerEntry().address)).formatted(Formatting.GOLD), false);
         ModUtil.info("Loaded QoQ config for " + address + ".");
     }
 

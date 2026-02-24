@@ -156,7 +156,7 @@ public class ButtonUtil {
      */
     public static boolean isExcludingSlots(AbstractContainerScreen<?> handledScreen) {
         return isValidScreen(handledScreen)
-                && options().dragToSort
+                && options().dragSorting
                 && (Minecraft.getInstance().hasAltDown() || (Minecraft.getInstance().hasShiftDown() && Minecraft.getInstance().hasAltDown()))
                 && handledScreen.hoveredSlot != null
                 && handledScreen.getMenu().getCarried().isEmpty();
@@ -682,7 +682,7 @@ public class ButtonUtil {
      * Quickly equips an item.
      */
     public static void quickEquip(Screen screen, Slot focusedSlot) {
-        if (options().dragToSort && Minecraft.getInstance().hasAltDown()) {
+        if (options().dragSorting && Minecraft.getInstance().hasAltDown()) {
             return;
         }
 
@@ -752,7 +752,7 @@ public class ButtonUtil {
     public static boolean shiftHeld(AbstractContainerScreen<?> screen, boolean inventory) {
         int totalSlots = getTotalSlots(screen.getMenu());
         return Minecraft.getInstance().hasShiftDown()
-                && (!options().dragToSort || !Minecraft.getInstance().hasAltDown())
+                && (!options().dragSorting || !Minecraft.getInstance().hasAltDown())
                 && screen.hoveredSlot != null
                 && screen.hoveredSlot.hasItem()
                 && (inventory ? screen.hoveredSlot.index >= totalSlots - 36 : screen.hoveredSlot.index <= totalSlots - 37);

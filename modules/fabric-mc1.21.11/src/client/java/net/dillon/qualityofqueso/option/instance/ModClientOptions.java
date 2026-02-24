@@ -12,7 +12,7 @@ import net.fabricmc.api.Environment;
 public class ModClientOptions {
     // Main options
     public boolean enableMod = true;
-    public boolean betterGuiExit = true;
+    public boolean quickGuiExit = true;
     public boolean quickSearch = true;
     public boolean chestSearching = true;
     public boolean searchInventory = true;
@@ -26,7 +26,7 @@ public class ModClientOptions {
     public Swapping swapping = Swapping.SHORTCUT_KEY_ONLY;
     public boolean perpendicularQuickMoving = false;
     public MoveItemsIf moveItemsIf = MoveItemsIf.CAN_MOVE_AT_ALL;
-    public boolean dragToSort = true;
+    public boolean dragSorting = true;
     public boolean saveExcludedSlots = false;
     public boolean showButtonShortcuts = true;
     public boolean includeHotbar = true;
@@ -42,6 +42,7 @@ public class ModClientOptions {
     // Misc options
     public boolean quickEquip = true;
     public boolean preventRageQuitting = false;
+    public boolean alwaysPreventRageQuitting = false;
     public boolean preventEFromTyping = true;
     public boolean helpfulTooltips = true;
     public boolean fog = true;

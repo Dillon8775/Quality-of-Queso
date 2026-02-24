@@ -40,7 +40,7 @@ public final class QoQ {
     public static String SAVED_TEXT = "";
 	public static String SAVED_ITEM_FRAME_TEXT = "";
     public static Map<Integer, Set<Integer>> SAVED_EXCLUDED_SLOTS = new HashMap<>();
-    private static boolean LOADED = false;
+    public static boolean LOADED = false;
     private static boolean UNLOADED = false;
     private static boolean CONTINUE = true;
 	public static final List<Integer> popularKeys = List.of(GLFW.GLFW_KEY_T, GLFW.GLFW_KEY_E);
@@ -147,11 +147,25 @@ public final class QoQ {
         ModCommonOptions.COMMON.load();
         Minecraft instance = Minecraft.getInstance();
         if (instance.player != null) {
-            instance.player.sendSystemMessage(Component.translatable("qualityofqueso.unloaded_server_config").withStyle(ChatFormatting.GOLD));
+            instance.player.sendSystemMessage(Component.translatable("qualityofqueso.unloaded_server_config", safeAddress(instance.getCurrentServer().ip)).withStyle(ChatFormatting.GOLD));
         }
         if (uoptions().multiServerConfigs) {
             ModUtil.info("Reverting back to global QoQ config.");
         }
+    }
+
+    /**
+     * @return a safe address to display in chat.
+     */
+    private static Component safeAddress(String address) {
+        Component text = Component.literal(address).copy().withStyle(ChatFormatting.AQUA);
+        for (char c :  address.toCharArray()) {
+            if (Character.isDigit(c)) {
+                text = text.copy().withStyle(ChatFormatting.OBFUSCATED);
+                break;
+            }
+        }
+        return text;
     }
 
     /**
@@ -201,7 +215,7 @@ public final class QoQ {
 
         String message = !configExists ? "qualityofqueso.created_server_config" : "qualityofqueso.loaded_server_config";
         if (instance.player != null) {
-            instance.player.displayClientMessage(Component.translatable(message).withStyle(ChatFormatting.GOLD), false);
+            instance.player.displayClientMessage(Component.translatable(message, safeAddress(instance.getCurrentServer().ip)).withStyle(ChatFormatting.GOLD), false);
         }
         ModUtil.info("Loaded QoQ config for " + address + ".");
     }

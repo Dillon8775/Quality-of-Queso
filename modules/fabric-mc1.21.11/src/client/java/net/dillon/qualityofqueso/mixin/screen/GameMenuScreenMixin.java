@@ -47,7 +47,7 @@ public class GameMenuScreenMixin extends Screen {
             }
             if (options().qoqButtons.everywhere()) {
                 TextIconButtonWidget settingsButton = this.addDrawableChild(ButtonUtil.initializeButton(this.client, this));
-                settingsButton.setPosition(this.width / 2 + 106, this.height / 4 + 72 - 16);
+                settingsButton.setPosition(this.width / 2 + (isFlashbackLoaded() ? 130 : 106), this.height / 4 + (isFlashbackLoaded() ? 48 : 72) - 16);
                 if (!(this.client.getCurrentServerEntry() == null)) {
                     String address = this.getServerAddress();
                     this.blacklistServerButton = this.addDrawableChild(ButtonWidget.builder(ModTexts.BLANK, button -> {

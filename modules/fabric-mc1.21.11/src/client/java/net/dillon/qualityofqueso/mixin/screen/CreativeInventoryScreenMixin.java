@@ -53,7 +53,7 @@ public abstract class CreativeInventoryScreenMixin extends HandledScreen<Creativ
      */
     @Inject(method = "onMouseClick(Lnet/minecraft/screen/slot/Slot;IILnet/minecraft/screen/slot/SlotActionType;)V", at = @At("HEAD"))
     private void closeButtonOnClickOutOfBounds(Slot slot, int slotId, int button, SlotActionType actionType, CallbackInfo ci) {
-        if (modEnabled(this.client) && options().betterGuiExit && this.handler.getCursorStack().isEmpty() && button == 0 && slot == null) {
+        if (modEnabled(this.client) && options().quickGuiExit && this.handler.getCursorStack().isEmpty() && button == 0 && slot == null) {
             this.close();
         }
     }

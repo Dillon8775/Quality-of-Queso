@@ -27,9 +27,9 @@ public class ModListOptions {
                 (optionText, value) -> !value ? ModTexts.NO : ModTexts.YES, SimpleOption.BOOLEAN, options().enableMod, value -> options().enableMod = value);
     }
 
-    public static SimpleOption<Boolean> betterGuiExit() {
-        return new SimpleOption<>("qualityofqueso.options.better_gui_exit", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.better_gui_exit.tooltip")),
-                (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, options().betterGuiExit, value -> options().betterGuiExit = value);
+    public static SimpleOption<Boolean> quickGuiExit() {
+        return new SimpleOption<>("qualityofqueso.options.quick_gui_exit", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.quick_gui_exit.tooltip")),
+                (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, options().quickGuiExit, value -> options().quickGuiExit = value);
     }
 
     public static SimpleOption<Boolean> quickSearch() {
@@ -157,9 +157,9 @@ public class ModListOptions {
                 (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, options().perpendicularQuickMoving, value -> options().perpendicularQuickMoving = value);
     }
 
-    public static SimpleOption<Boolean> dragToSort() {
-        return new SimpleOption<>("qualityofqueso.options.drag_to_sort", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.drag_to_sort.tooltip")),
-                (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, options().dragToSort, value -> options().dragToSort = value);
+    public static SimpleOption<Boolean> dragSorting() {
+        return new SimpleOption<>("qualityofqueso.options.drag_sorting", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.drag_sorting.tooltip")),
+                (optionText, value) -> !value ? ModTexts.OFF : ModTexts.ON, SimpleOption.BOOLEAN, options().dragSorting, value -> options().dragSorting = value);
     }
 
     public static SimpleOption<Boolean> saveExcludedSlots() {
@@ -236,6 +236,11 @@ public class ModListOptions {
     public static SimpleOption<Boolean> preventRageQuitting() {
         return new SimpleOption<>("qualityofqueso.options.prevent_rage_quitting", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.prevent_rage_quitting.tooltip")),
                 (optionText, value) -> !value ? ModTexts.NO : ModTexts.YES, SimpleOption.BOOLEAN, options().preventRageQuitting, value -> options().preventRageQuitting = value);
+    }
+
+    public static SimpleOption<Boolean> alwaysPreventRageQuitting() {
+        return new SimpleOption<>("qualityofqueso.options.always_prevent_rage_quitting", SimpleOption.constantTooltip(Text.translatable("qualityofqueso.options.always_prevent_rage_quitting.tooltip")),
+                (optionText, value) -> !value ? ModTexts.NO : ModTexts.YES, SimpleOption.BOOLEAN, options().alwaysPreventRageQuitting, value -> options().alwaysPreventRageQuitting = value);
     }
 
     public static SimpleOption<Boolean> preventEFromTyping() {

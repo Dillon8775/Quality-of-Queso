@@ -524,7 +524,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                 }
             }
             // Gray out player-chosen excluded slots
-            if (!alreadyExcluded && options().dragToSort) {
+            if (!alreadyExcluded && options().dragSorting) {
                 for (int id : this.excludedSlots) {
                     if (slot.index == id) {
                         if (isContainerScreen(this.screen)) {
@@ -767,7 +767,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
     @Inject(method = "slotClicked", at = @At("HEAD"))
     private void closeButtonOnClickOutOfBounds(Slot slot, int slotId, int button, ClickType
             actionType, CallbackInfo ci) {
-        if (modEnabled(this.minecraft) && options().betterGuiExit && this.menu.getCarried().isEmpty() && button == 0 && slot == null) {
+        if (modEnabled(this.minecraft) && options().quickGuiExit && this.menu.getCarried().isEmpty() && button == 0 && slot == null) {
             this.onClose();
         }
     }

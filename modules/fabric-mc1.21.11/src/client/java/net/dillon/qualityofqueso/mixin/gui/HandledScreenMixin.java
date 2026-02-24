@@ -519,7 +519,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
                 }
             }
             // Gray out player-chosen excluded slots
-            if (!alreadyExcluded && options().dragToSort) {
+            if (!alreadyExcluded && options().dragSorting) {
                 for (int id : this.excludedSlots) {
                     if (slot.id == id) {
                         if (isContainerScreen(this.screen)) {
@@ -762,7 +762,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
     @Inject(method = "onMouseClick(Lnet/minecraft/screen/slot/Slot;IILnet/minecraft/screen/slot/SlotActionType;)V", at = @At("HEAD"))
     private void closeButtonOnClickOutOfBounds(Slot slot, int slotId, int button, SlotActionType
             actionType, CallbackInfo ci) {
-        if (modEnabled(this.client) && options().betterGuiExit && getCursorStack(this.screen).isEmpty() && button == 0 && slot == null) {
+        if (modEnabled(this.client) && options().quickGuiExit && getCursorStack(this.screen).isEmpty() && button == 0 && slot == null) {
             this.close();
         }
     }

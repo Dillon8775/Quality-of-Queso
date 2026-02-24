@@ -144,7 +144,7 @@ public class ButtonUtil {
      */
     public static boolean isExcludingSlots(AbstractContainerScreen<?> handledScreen) {
         return isValidScreen(handledScreen)
-                && options().dragToSort
+                && options().dragSorting
                 && (Screen.hasAltDown() || (Screen.hasShiftDown() && Screen.hasAltDown()))
                 && handledScreen.hoveredSlot != null
                 && handledScreen.getMenu().getCarried().isEmpty();
@@ -669,7 +669,7 @@ public class ButtonUtil {
      * Quickly equips an item.
      */
     public static void quickEquip(Screen screen, Slot focusedSlot) {
-        if (options().dragToSort && Screen.hasAltDown()) {
+        if (options().dragSorting && Screen.hasAltDown()) {
             return;
         }
 
@@ -739,7 +739,7 @@ public class ButtonUtil {
     public static boolean shiftHeld(AbstractContainerScreen<?> screen, boolean inventory) {
         int totalSlots = getTotalSlots(screen.getMenu());
         return Screen.hasShiftDown()
-                && (!options().dragToSort || !Screen.hasAltDown())
+                && (!options().dragSorting || !Screen.hasAltDown())
                 && screen.hoveredSlot != null
                 && screen.hoveredSlot.hasItem()
                 && (inventory ? screen.hoveredSlot.index >= totalSlots - 36 : screen.hoveredSlot.index <= totalSlots - 37);

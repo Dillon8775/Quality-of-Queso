@@ -51,7 +51,7 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
 	 */
     @Inject(method = "slotClicked", at = @At("HEAD"))
     private void closeButtonOnClickOutOfBounds(Slot slot, int slotId, int mouseButton, ClickType type, CallbackInfo ci) {
-        if (modEnabled(this.minecraft) && options().betterGuiExit && this.menu.getCarried().isEmpty() && mouseButton == 0 && slot == null) {
+        if (modEnabled(this.minecraft) && options().quickGuiExit && this.menu.getCarried().isEmpty() && mouseButton == 0 && slot == null) {
             this.onClose();
         }
     }

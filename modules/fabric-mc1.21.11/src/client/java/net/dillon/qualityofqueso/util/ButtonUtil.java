@@ -156,7 +156,7 @@ public class ButtonUtil {
      */
     public static boolean isExcludingSlots(HandledScreen<?> handledScreen) {
         return isValidScreen(handledScreen)
-                && options().dragToSort
+                && options().dragSorting
                 && (MinecraftClient.getInstance().isAltPressed() || (MinecraftClient.getInstance().isShiftPressed() && MinecraftClient.getInstance().isAltPressed()))
                 && handledScreen.focusedSlot != null
                 && handledScreen.getScreenHandler().getCursorStack().isEmpty();
@@ -727,7 +727,7 @@ public class ButtonUtil {
      * Quickly equips an item.
      */
     public static void quickEquip(Screen screen, Slot focusedSlot) {
-        if (options().dragToSort && MinecraftClient.getInstance().isAltPressed()) {
+        if (options().dragSorting && MinecraftClient.getInstance().isAltPressed()) {
             return;
         }
 
@@ -796,7 +796,7 @@ public class ButtonUtil {
      */
     public static boolean shiftHeld(HandledScreen<?> screen, boolean inventory) {
         int totalSlots = getTotalSlots(screen.getScreenHandler());
-        return (!options().dragToSort || !MinecraftClient.getInstance().isAltPressed())
+        return (!options().dragSorting || !MinecraftClient.getInstance().isAltPressed())
                 && MinecraftClient.getInstance().isShiftPressed()
                 && screen.focusedSlot != null
                 && screen.focusedSlot.hasStack()

@@ -30,14 +30,14 @@ public class MiscOptionsScreen extends AbstractModOptionsScreen {
                 ModListOptions.enableMod(),
                 ModListOptions.fog(),
 
-                ModListOptions.quickEquip(),
+                ModListOptions.quickGuiExit(),
                 ModListOptions.quickSearch(),
 
                 ModListOptions.preventRageQuitting(),
-                ModListOptions.betterGuiExit(),
+                ModListOptions.alwaysPreventRageQuitting(),
 
                 ModListOptions.preventEFromTyping(),
-                ModListOptions.qoqButtons(),
+                ModListOptions.quickEquip(),
 
                 ModListOptions.mobHitDing(),
                 ModListOptions.minMobHitDingDistance(),
@@ -49,6 +49,7 @@ public class MiscOptionsScreen extends AbstractModOptionsScreen {
 
     protected SimpleOption<?>[] bottomOptions() {
         return new SimpleOption[]{
+                ModListOptions.qoqButtons(),
                 ModListOptions.multiServerConfigs()
         };
     }

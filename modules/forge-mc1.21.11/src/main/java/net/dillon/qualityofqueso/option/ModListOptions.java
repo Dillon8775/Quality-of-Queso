@@ -32,9 +32,9 @@ public class ModListOptions {
                 YES_NO_TEXT, options().enableMod, value -> options().enableMod = value);
     }
 
-    public static OptionInstance<Boolean> betterGuiExit() {
-        return OptionInstance.createBoolean("qualityofqueso.options.better_gui_exit", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.better_gui_exit.tooltip")),
-                ON_OFF_TEXT, options().betterGuiExit, value -> options().betterGuiExit = value);
+    public static OptionInstance<Boolean> quickGuiExit() {
+        return OptionInstance.createBoolean("qualityofqueso.options.quick_gui_exit", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.quick_gui_exit.tooltip")),
+                ON_OFF_TEXT, options().quickGuiExit, value -> options().quickGuiExit = value);
     }
 
     public static OptionInstance<Boolean> quickSearch() {
@@ -166,9 +166,9 @@ public class ModListOptions {
                 ON_OFF_TEXT, options().perpendicularQuickMoving, value -> options().perpendicularQuickMoving = value);
     }
 
-    public static OptionInstance<Boolean> dragToSort() {
-        return OptionInstance.createBoolean("qualityofqueso.options.drag_to_sort", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.drag_to_sort.tooltip")),
-                ON_OFF_TEXT, options().dragToSort, value -> options().dragToSort = value);
+    public static OptionInstance<Boolean> dragSorting() {
+        return OptionInstance.createBoolean("qualityofqueso.options.drag_sorting", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.drag_sorting.tooltip")),
+                ON_OFF_TEXT, options().dragSorting, value -> options().dragSorting = value);
     }
 
     public static OptionInstance<Boolean> saveExcludedSlots() {
@@ -250,6 +250,11 @@ public class ModListOptions {
     public static OptionInstance<Boolean> preventEFromTyping() {
         return OptionInstance.createBoolean("qualityofqueso.options.prevent_e_from_typing", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.prevent_e_from_typing.tooltip")),
                 YES_NO_TEXT, options().preventEFromTyping, value -> options().preventEFromTyping = value);
+    }
+
+    public static OptionInstance<Boolean> alwaysPreventRageQuitting() {
+        return OptionInstance.createBoolean("qualityofqueso.options.always_prevent_rage_quitting", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.always_prevent_rage_quitting.tooltip")),
+                YES_NO_TEXT, options().alwaysPreventRageQuitting, value -> options().alwaysPreventRageQuitting = value);
     }
 
     public static OptionInstance<Boolean> helpfulTooltips() {
