@@ -1,6 +1,7 @@
 package net.dillon.qualityofqueso.command;
 
 import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.dillon.qualityofqueso.packet.GlowSearchC2SPayload;
 import net.dillon.qualityofqueso.platform.MultiLoader;
@@ -8,12 +9,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.commands.arguments.item.ItemArgument;
 import net.minecraft.network.chat.Component;
 
 import static net.dillon.qualityofqueso.util.ModUtil.options;
 
 public class ItemFrameSearcherCommand {
+    private static final String ITEM = "item (string)";
     private static final String RADIUS = "radius (1-300)";
     private static final String GLOW_DURATION = "glow duration (seconds, max 180)";
 
@@ -50,11 +51,11 @@ public class ItemFrameSearcherCommand {
                 .then(
                         Commands.literal("find")
                                 .then(
-                                        Commands.argument("item", ItemArgument.item(commandBuildContext))
+                                        Commands.argument(ITEM, StringArgumentType.string())
                                                 .executes(
                                                         context -> execute(
                                                                 context.getSource(),
-                                                                ItemArgument.getItem(context, "item").item().toString(),
+                                                                StringArgumentType.getString(context, ITEM),
                                                                 false,
                                                                 0,
                                                                 options().itemFrameSearchRadius
@@ -65,7 +66,7 @@ public class ItemFrameSearcherCommand {
                                                                 .executes(
                                                                         context -> execute(
                                                                                 context.getSource(),
-                                                                                ItemArgument.getItem(context, "item").item().toString(),
+                                                                                StringArgumentType.getString(context, ITEM),
                                                                                 false,
                                                                                 0,
                                                                                 IntegerArgumentType.getInteger(context, RADIUS)
@@ -76,7 +77,7 @@ public class ItemFrameSearcherCommand {
                                                                                 .executes(
                                                                                         context -> execute(
                                                                                                 context.getSource(),
-                                                                                                ItemArgument.getItem(context, "item").item().toString(),
+                                                                                                StringArgumentType.getString(context, ITEM),
                                                                                                 false,
                                                                                                 IntegerArgumentType.getInteger(context, GLOW_DURATION),
                                                                                                 IntegerArgumentType.getInteger(context, RADIUS)

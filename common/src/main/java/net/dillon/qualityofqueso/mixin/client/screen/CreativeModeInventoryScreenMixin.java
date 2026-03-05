@@ -52,8 +52,7 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
     }
 
     /**
-	 * @author Dillon8775
-	 * @reason Allow typing in creative menu regardless of what menu.
+	 * Allow typing in creative menu regardless of what menu.
 	 */
     @Overwrite
     public boolean charTyped(CharacterEvent input) {

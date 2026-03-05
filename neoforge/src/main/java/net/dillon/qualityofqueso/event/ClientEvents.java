@@ -1,8 +1,8 @@
 package net.dillon.qualityofqueso.event;
 
+import net.dillon.qualityofqueso.QoQ;
 import net.dillon.qualityofqueso.command.ItemFrameSearcherCommand;
 import net.dillon.qualityofqueso.keybind.ModKeybinds;
-import net.dillon.qualityofqueso.QoQ;
 import net.dillon.qualityofqueso.util.ModUtil;
 import net.minecraft.client.Minecraft;
 import net.neoforged.api.distmarker.Dist;

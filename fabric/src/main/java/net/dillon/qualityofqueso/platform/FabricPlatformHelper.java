@@ -5,7 +5,6 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
-import java.io.File;
 import java.nio.file.Path;
 
 public class FabricPlatformHelper implements IPlatformHelper {

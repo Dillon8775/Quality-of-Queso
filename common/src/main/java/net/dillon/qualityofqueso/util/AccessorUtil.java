@@ -4,7 +4,6 @@ import com.mojang.blaze3d.platform.InputConstants;
 import net.dillon.qualityofqueso.mixin.client.accessor.*;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.components.debug.DebugScreenEntries;
 import net.minecraft.client.gui.components.debug.DebugScreenEntry;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.AbstractRecipeBookScreen;

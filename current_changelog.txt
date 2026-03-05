@@ -1,20 +1,6 @@
-Version 1.5.5 (MC Fabric 1.21.11, Forge 1.20.1 and 1.21.11):
-- Using any inventory management button now plays bundle sounds instead of clicking sounds.
+Version 1.5.6 (MC Fabric 26.1-snapshot, NeoForge 26.1-snapshot):
+- Updated to 26.1!
+- NeoForge support.
 
-- Renamed "Better Searching" to "Quick Search"
-- "Better Searching (now Quick Search)" option now applies to chests and inventories.
-- Renamed "Drag-To-Sort" to "Drag Sorting".
-- Renamed "Better GUI Exit" to "Quick GUI Exit".
-
-- "Prevent E from typing" is now enabled by default.
-- Fixed bug with "Prevent E from typing" and "Better Searching" causing weird screen opening/closing.
-
-- Added "Always Prevent Rage Quitting" option, to force-enable "Prevent Rage Quitting" whenever you join a server.
-
-- Improved compatibility with the Speedrunner Mod.
-- A few other optimizations.
-
-- Fixed bug with Multi-Server Configs where attempting to save options in first join re-loads the config, so no options save.
-- Multi-Server configs now work as intended.
-- Fixed slight incompatibility with the Flashback mod (one of the QoQ buttons overlaps the pause button).
-- Fixed crash with mob hit ding.
+- Item frame searching now only looks at the item name itself, meaning if it has a custom name, you can only search it by custom name.
+- Fixed bug where item frame searching doesn't play sounds.

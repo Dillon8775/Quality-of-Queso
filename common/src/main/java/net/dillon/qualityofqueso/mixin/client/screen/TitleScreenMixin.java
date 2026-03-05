@@ -1,5 +1,6 @@
 package net.dillon.qualityofqueso.mixin.client.screen;
 
+import net.dillon.qualityofqueso.platform.MultiLoader;
 import net.dillon.qualityofqueso.util.ButtonUtil;
 import net.minecraft.client.gui.components.SpriteIconButton;
 import net.minecraft.client.gui.screens.Screen;
@@ -20,6 +21,6 @@ public class TitleScreenMixin extends Screen {
     @Inject(method = "init", at = @At("TAIL"))
     private void init(CallbackInfo ci) {
         SpriteIconButton settingsButton = this.addRenderableWidget(ButtonUtil.initializeButton(this.minecraft, this));
-        settingsButton.setPosition(this.width / 2 + 128, this.height / 4 + 132);
+        settingsButton.setPosition(this.width / 2 + 128, this.height / 4 + 132 + (MultiLoader.PLATFORM.getPlatformName().equals("NeoForge") ? 8 : 0));
     }
 }

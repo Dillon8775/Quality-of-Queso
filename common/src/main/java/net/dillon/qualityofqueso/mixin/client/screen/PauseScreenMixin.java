@@ -1,5 +1,6 @@
 package net.dillon.qualityofqueso.mixin.client.screen;
 
+import net.dillon.qualityofqueso.platform.MultiLoader;
 import net.dillon.qualityofqueso.util.ButtonUtil;
 import net.dillon.qualityofqueso.util.ModTexts;
 import net.minecraft.client.gui.GuiGraphics;
@@ -42,7 +43,7 @@ public class PauseScreenMixin extends Screen {
             }
             if (options().qoqButtons.everywhere()) {
                 SpriteIconButton settingsButton = this.addRenderableWidget(ButtonUtil.initializeButton(this.minecraft, this));
-                settingsButton.setPosition(this.width / 2 + 106, this.height / 4 + 72 - 16);
+                settingsButton.setPosition(this.width / 2 + 106, this.height / 4 + 72 - 16 + (MultiLoader.PLATFORM.getPlatformName().equals("NeoForge") ? -6 : 0));
                 if (!(this.minecraft.getCurrentServer() == null)) {
                     String address = this.getServerAddress();
                     this.blacklistServerButton = this.addRenderableWidget(Button.builder(ModTexts.BLANK, button -> {

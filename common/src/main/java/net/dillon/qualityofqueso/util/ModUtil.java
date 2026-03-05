@@ -16,7 +16,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffects;
@@ -310,16 +312,15 @@ public class ModUtil {
                                 return false;
                             }
 
-                            String itemName = stack.getItem().getName(stack).getString().toLowerCase();
-                            // String itemId = Registries.ITEM.hmm.toString().toLowerCase();
+                            String rawItemName = stack.getHoverName().getString().toLowerCase();
 
                             // Check all searched queries (separated by comma)
                             // If item frame has stack, add it to the list to glow
                             for (String term : terms) {
                                 String trimmed = term.trim().toLowerCase();
                                 if (payload.matchCase() ?
-                                        itemName.matches(trimmed) /*|| itemId.matches(trimmed)*/ :
-                                        itemName.contains(trimmed) /*|| itemId.matches(trimmed)*/) {
+                                        rawItemName.matches(trimmed) :
+                                        rawItemName.contains(trimmed)) {
                                     return true;
                                 }
                             }
@@ -366,10 +367,10 @@ public class ModUtil {
                 player.sendSystemMessage(payload.matchCase() ?
                         Component.translatable("qualityofqueso.item_frame_searcher.executed.found_none.match_case", searched, payload.query()) :
                         Component.translatable("qualityofqueso.item_frame_searcher.executed.found_none", searched, payload.query()), false);
-                player.playSound(SoundEvents.NOTE_BLOCK_BASS.value(), 2.0F, 1.0F);
+                playSound(player, SoundEvents.NOTE_BLOCK_BASS.value(), 2.0F);
             } else if (payload.clear()) {
                 player.sendSystemMessage(Component.translatable("qualityofqueso.item_frame_searcher.executed.cleared", searched), false);
-                player.playSound(SoundEvents.PLAYER_SPLASH, 1.0F, 1.0F);
+                playSound(player, SoundEvents.PLAYER_SPLASH, 1.0F);
             } else {
                 if (payload.timer() == 0) {
                     player.sendSystemMessage(payload.matchCase() ?
@@ -380,9 +381,16 @@ public class ModUtil {
                             Component.translatable("qualityofqueso.item_frame_searcher.executed.with_timer.match_case", searched, payload.query(), payload.timer()) :
                             Component.translatable("qualityofqueso.item_frame_searcher.executed.with_timer", searched, payload.query(), payload.timer()), false);
                 }
-                player.playSound(SoundEvents.ARROW_HIT_PLAYER, 1.0F, 1.0F);
+                playSound(player, SoundEvents.ARROW_HIT_PLAYER, 1.0F);
             }
         }
+    }
+
+    /**
+     * Plays a sound at the correct position.
+     */
+    private static void playSound(ServerPlayer player, SoundEvent sound, float volume) {
+        player.level().playSound(null, player.blockPosition(), sound, SoundSource.PLAYERS, volume, 1.0F);
     }
 
     /**

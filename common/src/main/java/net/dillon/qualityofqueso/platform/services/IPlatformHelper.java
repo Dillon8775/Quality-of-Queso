@@ -2,7 +2,6 @@ package net.dillon.qualityofqueso.platform.services;
 
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
-import java.io.File;
 import java.nio.file.Path;
 
 public interface IPlatformHelper {

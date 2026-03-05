@@ -46,45 +46,45 @@ public class GuiMixin {
     @Unique
     private boolean moveArmorOver = false;
 
-//    /**
-//     * Implements the {@link ArmorStatus} feature.
-//     */
-//    @Inject(method = "renderHotbarAndDecorations", at = @At("HEAD"))
-//    private void renderArmorStatus(GuiGraphics context, DeltaTracker tickCounter, CallbackInfo ci) {
-//        if (!modEnabled(this.minecraft) || this.minecraft.player == null) {
-//            return;
-//        }
-//
-//        ItemStack mainHandItem = this.getItemBySlot(EquipmentSlot.MAINHAND);
-//        ItemStack offHandItem = this.getItemBySlot(EquipmentSlot.OFFHAND);
-//        if (!this.renderItem(context, mainHandItem)) {
-//            if (!this.renderItem(context, offHandItem)) {
-//                ItemStack stack = PickupHudTracker.getStack();
-//                if (!stack.isEmpty()) {
-//                    this.renderItem(context, stack);
-//                }
-//            }
-//        }
-//
-//        if (!options().armorStatus.enabled()) {
-//            return;
-//        }
-//
-//        for (EquipmentSlot slot : this.slots) {
-//            ItemStack current = this.getItemBySlot(slot);
-//
-//            if (this.armorChanged(slot, current)) {
-//                this.armorTimers.put(slot, ARMOR_RENDER_TICKS);
-//                this.lastArmorStacks.put(slot, current.copy());
-//            }
-//
-//            int timer = this.armorTimers.getOrDefault(slot, 0);
-//            if (timer > 0 || options().armorStatus == ArmorStatus.ALWAYS) {
-//                this.drawItem(context, this.getItemBySlot(slot), getArmorX(slot), true);
-//                this.armorTimers.put(slot, timer - 1);
-//            }
-//        }
-//    }
+    /**
+     * Implements the {@link ArmorStatus} feature.
+     */
+    @Inject(method = "renderItemHotbar", at = @At("HEAD"))
+    private void renderArmorStatus(GuiGraphics context, DeltaTracker deltaTracker, CallbackInfo ci) {
+        if (!modEnabled(this.minecraft) || this.minecraft.player == null) {
+            return;
+        }
+
+        ItemStack mainHandItem = this.getItemBySlot(EquipmentSlot.MAINHAND);
+        ItemStack offHandItem = this.getItemBySlot(EquipmentSlot.OFFHAND);
+        if (!this.renderItem(context, mainHandItem)) {
+            if (!this.renderItem(context, offHandItem)) {
+                ItemStack stack = PickupHudTracker.getStack();
+                if (!stack.isEmpty()) {
+                    this.renderItem(context, stack);
+                }
+            }
+        }
+
+        if (!options().armorStatus.enabled()) {
+            return;
+        }
+
+        for (EquipmentSlot slot : this.slots) {
+            ItemStack current = this.getItemBySlot(slot);
+
+            if (this.armorChanged(slot, current)) {
+                this.armorTimers.put(slot, ARMOR_RENDER_TICKS);
+                this.lastArmorStacks.put(slot, current.copy());
+            }
+
+            int timer = this.armorTimers.getOrDefault(slot, 0);
+            if (timer > 0 || options().armorStatus == ArmorStatus.ALWAYS) {
+                this.drawItem(context, this.getItemBySlot(slot), getArmorX(slot), true);
+                this.armorTimers.put(slot, timer - 1);
+            }
+        }
+    }
 
     /**
      * Renders an item.

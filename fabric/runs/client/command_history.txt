@@ -1,4 +1,0 @@
-/itemframesearcher find potion 5
-/itemframesearcher find potion 15
-/itemframesearcher find minecraft:birch_planks
-/itemframesearcher find minecraft:birch_planks 100
