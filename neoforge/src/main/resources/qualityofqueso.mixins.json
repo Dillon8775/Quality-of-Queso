@@ -1,0 +1,39 @@
+{
+  "required": true,
+  "package": "net.dillon.qualityofqueso.mixin",
+  "plugin": "net.dillon.qualityofqueso.mixin.ConditionalMixinPlugin",
+  "compatibilityLevel": "JAVA_25",
+  "client": [
+    "client.accessor.AbstractContainerMenuAccessor",
+    "client.accessor.AbstractContainerScreenAccessor",
+    "client.accessor.AbstractRecipeBookScreenAccessor",
+    "client.accessor.BrewingStandMenuAccessor",
+    "client.accessor.DebugScreenEntriesAccessor",
+    "client.accessor.KeyMappingAccessor",
+    "client.accessor.RecipeBookComponentAccessor",
+    "client.accessor.ShulkerBoxMenuAccessor",
+
+    "client.hud.AbstractContainerScreenMixin",
+    "client.hud.ContainerMenusMixin",
+    "client.hud.GuiMixin",
+    "client.hud.RecipeBookComponentMixin",
+
+    "render.FogRendererMixin",
+
+    "client.screen.CreativeModeInventoryScreenMixin",
+    "client.screen.PauseScreenMixin",
+    "client.screen.TitleScreenMixin",
+
+    "client.util.ClientPacketListenerMixin",
+    "client.util.LocalPlayerMixin",
+    "client.util.MinecraftMixin",
+    "client.util.PlayerMixin",
+    "client.util.ProjectileMixin"
+  ],
+  "mixins": [
+    "main.ItemFrameMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

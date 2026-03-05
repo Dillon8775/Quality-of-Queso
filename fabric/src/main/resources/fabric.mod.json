@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "id": "qualityofqueso",
+  "version": "1.5.5+mc1.21.11",
+  "name": "Quality of Queso",
+  "description": "Chest searching, inventory management, remove fog, and more quality-of-life features!",
+  "authors": [
+    "MannyQUESO",
+	"Dillon8775"
+  ],
+  "contact": {
+    "homepage": "https://modrinth.com/mod/quality-of-queso",
+    "sources": "https://github.com/Dillon8775/Quality-of-Queso",
+    "issues": "https://github.com/Dillon8775/Quality-of-Queso/issues"
+  },
+  "license": "All rights reserved.",
+  "icon": "assets/qualityofqueso/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "net.dillon.qualityofqueso.QoQClient"
+    ],
+    "main": [
+      "net.dillon.qualityofqueso.QoQ"
+    ],
+    "modmenu": [
+      "net.dillon.qualityofqueso.impl.ModMenuImpl"
+    ]
+  },
+  "mixins": [
+    "qualityofqueso.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.18.4",
+    "minecraft": ">=26.1-alpha.10",
+    "java": ">=25",
+    "fabric-api": "*"
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://discord.gg/vfqEAn4YFy"
+      }
+    }
+  }
+}

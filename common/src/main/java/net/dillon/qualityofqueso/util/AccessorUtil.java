@@ -1,0 +1,80 @@
+package net.dillon.qualityofqueso.util;
+
+import com.mojang.blaze3d.platform.InputConstants;
+import net.dillon.qualityofqueso.mixin.client.accessor.*;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.debug.DebugScreenEntries;
+import net.minecraft.client.gui.components.debug.DebugScreenEntry;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.AbstractRecipeBookScreen;
+import net.minecraft.client.gui.screens.inventory.BrewingStandScreen;
+import net.minecraft.client.gui.screens.inventory.ShulkerBoxScreen;
+import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.Container;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+
+/**
+ * A class which allows for easier access of private fields and methods.
+ */
+public class AccessorUtil {
+
+    /**
+     * @return a bounded key.
+     */
+    public static InputConstants.Key key(KeyMapping key) {
+        return ((KeyMappingAccessor)key).getBoundKey();
+    }
+
+    /**
+     * @return a recipe book component on a screen.
+     */
+    public static RecipeBookComponent<?> getRecipeBookComponent(AbstractRecipeBookScreen<?> recipeBookScreen) {
+        return ((AbstractRecipeBookScreenAccessor)recipeBookScreen).getRecipeBookComponent();
+    }
+
+    /**
+     * @return a search box in the recipe book component.
+     */
+    public static EditBox getSearchBoxInsideRecipeBook(AbstractRecipeBookScreen<?> recipeBookScreen) {
+        return ((RecipeBookComponentAccessor)getRecipeBookComponent(recipeBookScreen)).getSearchBox();
+    }
+
+    /**
+     * @return a hovered slot.
+     */
+    public static Slot getHoveredSlot(AbstractContainerScreen<?> screen) {
+        return ((AbstractContainerScreenAccessor)screen).getHoveredSlot();
+    }
+
+    /**
+     * Moves an item stack using the new quick move functionality.
+     */
+    public static boolean moveItemStack(AbstractContainerMenu menu, ItemStack itemStack, int startSlot, int endSlot, boolean backwards) {
+        return ((AbstractContainerMenuAccessor)menu).invokeMoveItemStackTo(itemStack, startSlot, endSlot, backwards);
+    }
+
+    /**
+     * @return the brewing stand screen container.
+     */
+    public static Container brewingStand(BrewingStandScreen brewingStandScreen) {
+        return ((BrewingStandMenuAccessor)brewingStandScreen.getMenu()).getBrewingStandContainer();
+    }
+
+    /**
+     * @return the shulker box screen container.
+     */
+    public static Container shulkerBox(ShulkerBoxScreen shulkerBoxScreen) {
+        return ((ShulkerBoxMenuAccessor)shulkerBoxScreen.getMenu()).getShulkerBoxContainer();
+    }
+
+    /**
+     * @return the registered debug entry.
+     */
+    public static Identifier registerDebugEntry(Identifier identifier, DebugScreenEntry entry) {
+        return DebugScreenEntriesAccessor.invokeRegister(identifier, entry);
+    }
+}

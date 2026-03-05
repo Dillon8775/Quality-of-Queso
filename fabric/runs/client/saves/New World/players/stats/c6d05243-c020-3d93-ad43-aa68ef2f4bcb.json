@@ -1,0 +1,34 @@
+{
+  "stats": {
+    "minecraft:used": {
+      "minecraft:brewing_stand": 1,
+      "minecraft:item_frame": 3,
+      "minecraft:chest": 2,
+      "minecraft:anvil": 1,
+      "minecraft:birch_stairs": 1
+    },
+    "minecraft:dropped": {
+      "minecraft:chest": 64,
+      "minecraft:snow": 2,
+      "minecraft:birch_stairs": 64
+    },
+    "minecraft:custom": {
+      "minecraft:time_since_rest": 3900,
+      "minecraft:walk_one_cm": 3521,
+      "minecraft:leave_game": 1,
+      "minecraft:play_time": 3900,
+      "minecraft:jump": 29,
+      "minecraft:time_since_death": 3900,
+      "minecraft:drop": 4,
+      "minecraft:interact_with_brewingstand": 3,
+      "minecraft:sprint_one_cm": 2682,
+      "minecraft:open_chest": 5,
+      "minecraft:total_world_time": 4613,
+      "minecraft:fly_one_cm": 10621,
+      "minecraft:interact_with_anvil": 1,
+      "minecraft:crouch_one_cm": 82,
+      "minecraft:sneak_time": 92
+    }
+  },
+  "DataVersion": 4778
+}
