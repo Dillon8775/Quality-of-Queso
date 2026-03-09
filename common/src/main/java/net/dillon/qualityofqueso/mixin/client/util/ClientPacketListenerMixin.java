@@ -1,6 +1,6 @@
 package net.dillon.qualityofqueso.mixin.client.util;
 
-import net.dillon.qualityofqueso.util.PickupHudTracker;
+import net.dillon.qualityofqueso.util.ItemHudTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.ClientPacketListener;
@@ -37,6 +37,6 @@ public class ClientPacketListenerMixin {
         }
 
         ItemStack stack = itemEntity.getItem();
-        PickupHudTracker.setStack(stack);
+        ItemHudTracker.setStack(stack);
     }
 }

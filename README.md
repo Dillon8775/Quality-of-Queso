@@ -2,8 +2,8 @@
 
 ###
 
-<a href="https://files.minecraftforge.net/" target="_blank">
-  <img src="https://github.com/Dillon8775/ImageGIFs/blob/universal/Forge%20Logo.png?raw=true" width="356" height="96" alt="Compatible with Forge">
+<a href="https://neoforged.net/" target="_blank">
+  <img src="https://raw.githubusercontent.com/Dillon8775/ImageGIFs/refs/heads/universal/NeoForged%20Logo.png" width="438 " height="90" alt="Compatible with Forge">
 </a>
 
 ####
@@ -47,7 +47,7 @@ If you decide to play the mod on an older version of the game, please note that 
 - #### Search for multiple items (separate each item with a command, ex. "grass,dirt,iron") [since: v1.2.1]
 - #### Match case with a colon :, ex. ":chest" (will display all "Chest"s) [since: v1.4.2]
 - #### Search by tag (begin search query with a #, ex. "#logs", works with all vanilla and non-vanilla tags) [since: v1.2, full tag support since v1.2.1]
-    - Searching by tag will make all items display what tag(s) they are in if you hover over them. [since: v1.2.1]
+  - Searching by tag will make all items display what tag(s) they are in if you hover over them. [since: v1.2.1]
 - #### Exclude item from search (begin search query with a !, ex. searching "log" will display any item that does _not_ contain "log" in its name) [since: v1.2.1]
 
 ###
@@ -68,10 +68,10 @@ If you decide to play the mod on an older version of the game, please note that 
 #### Adds two small buttons to chests and shulker boxes, which allow the player to transfer the items in the chest to the inventory, and vice-versa.
 - #### By utilizing the Chest Search feature, you can transfer _only_ the searched items.
 - #### If you hover over the button with an item in the cursor, only items which are equal to the cursor's item will be moved. [since: v1.2.1]
-    - The transfer button will have a hint of green to represent stack filtering. [since: v1.3.6]
-    - The transfer button will have a hint of red when searching by exclude (!) [since: v1.3.6]
-    - The transfer button will have a hint of blue when searching by tag (#) [since: v1.3.6]
-    - The transfer button will have a hint of light green when searching with match case (:) [since: v1.4.2]
+  - The transfer button will have a hint of green to represent stack filtering. [since: v1.3.6]
+  - The transfer button will have a hint of red when searching by exclude (!) [since: v1.3.6]
+  - The transfer button will have a hint of blue when searching by tag (#) [since: v1.3.6]
+  - The transfer button will have a hint of light green when searching with match case (:) [since: v1.4.2]
 - #### You can also quickly transfer items by using CTRL + C (move items from container -> inventory) and CTRL + I (move items from inventory -> container) [since: v1.4].
 
 ### Smart-moving
@@ -203,9 +203,9 @@ Side-note: (Fabric only) if the **Simple Keybinds** mod is loaded, this feature 
 
 - **"TOTAL"** will display the exact count.
 - **"STACKS"** will display how many stacks of that item you have, if you have a perfect amount of stacks.
-    - For example, if you have **exactly 3 stacks of dirt blocks,** it will display **"3x 64".** If you don't have exactly *said* amount of stacks, it will instead just display the total amount (so **192** in this case).
+  - For example, if you have **exactly 3 stacks of dirt blocks,** it will display **"3x 64".** If you don't have exactly *said* amount of stacks, it will instead just display the total amount (so **192** in this case).
 - **"REMAINDER"** - will display how many perfect stacks you have *PLUS* the additional amount remaining.
-    - For example, if you have **3 stacks** ***and*** **12 additional dirt blocks,** it will display as **"3x64 & 12"**.
+  - For example, if you have **3 stacks** ***and*** **12 additional dirt blocks,** it will display as **"3x64 & 12"**.
 
 
 - If you have some shulker boxes/bundles in your inventory, and the shulker/bundle *contains* the item that you are holding, it will add it to the count! (this is toggleable, look for **"Count Containers"** option)

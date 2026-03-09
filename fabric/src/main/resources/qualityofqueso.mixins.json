@@ -12,18 +12,23 @@
     "client.accessor.KeyMappingAccessor",
     "client.accessor.RecipeBookComponentAccessor",
     "client.accessor.ShulkerBoxMenuAccessor",
+
     "client.hud.AbstractContainerScreenMixin",
     "client.hud.ContainerMenusMixin",
     "client.hud.GuiMixin",
     "client.hud.RecipeBookComponentMixin",
+
     "client.screen.CreativeModeInventoryScreenMixin",
     "client.screen.PauseScreenMixin",
     "client.screen.TitleScreenMixin",
+
     "client.util.ClientPacketListenerMixin",
     "client.util.LocalPlayerMixin",
     "client.util.MinecraftMixin",
+    "client.util.MultiPlayerGameModeMixin",
     "client.util.PlayerMixin",
     "client.util.ProjectileMixin",
+
     "render.FogRendererMixin"
   ],
   "mixins": [

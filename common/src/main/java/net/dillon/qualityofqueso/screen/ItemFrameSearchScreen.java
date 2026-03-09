@@ -75,9 +75,7 @@ public class ItemFrameSearchScreen extends Screen {
         graphics.drawString(this.font, Component.translatable("qualityofqueso.gui.search_item_frames.line3"), this.width / 2 - 155, this.height / 2 - 50, CommonColors.WHITE);
         this.searchButton.active = !this.searchField.getValue().isEmpty();
         if (!this.searchField.getValue().isEmpty() && this.searchButton.isHovered()) {
-            ButtonUtil.drawTooltip(!Minecraft.getInstance().hasControlDown() ?
-                    Component.translatable("qualityofqueso.gui.search.tooltip", this.searchField.getValue()) :
-                    Component.translatable("qualityofqueso.gui.search.match_case.tooltip", this.searchField.getValue()), graphics, this.font, mouseX, mouseY);
+            ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.search.tooltip", this.searchField.getValue()), graphics, this.font, mouseX, mouseY);
         }
         if (this.clearButton.isHovered()) {
             ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.clear.tooltip"), graphics, this.font, mouseX, mouseY);
@@ -142,9 +140,7 @@ public class ItemFrameSearchScreen extends Screen {
     private void sendPacket(boolean clear, int timer, int radius) {
         this.onClose();
         String text = this.searchField.getValue();
-        boolean colon = text.startsWith(":");
-        boolean matchCase = colon || Minecraft.getInstance().hasControlDown();
-        boolean shouldSubstring = (Minecraft.getInstance().hasControlDown() && colon) || colon;
-        MultiLoader.PLATFORM.sendToServer(new GlowSearchC2SPayload(text.substring(shouldSubstring ? 1 : 0), matchCase, clear, timer, radius));
+        boolean matchCase = text.startsWith(":");
+        MultiLoader.PLATFORM.sendToServer(new GlowSearchC2SPayload(text.substring(matchCase ? 1 : 0), matchCase, clear, timer, radius));
     }
 }

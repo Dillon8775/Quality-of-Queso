@@ -15,26 +15,31 @@ public class ModClientOptions {
     public boolean searchInventory = true;
     public boolean inventorySearching = true;
     public boolean saveSearchText = false;
+    public boolean searchTransportables = true;
 
     // Inventory management options
     public Transferring transferring = Transferring.SHORTCUT_KEY_OR_BUTTON;
     public ContainerSorting containerSorting = ContainerSorting.SHORTCUT_KEY_OR_BUTTON;
     public QuickDrop quickDrop = QuickDrop.SHORTCUT_KEY_ONLY;
-    public Swapping swapping = Swapping.SHORTCUT_KEY_ONLY;
+    public Swapping swapping = Swapping.OFF;
     public boolean perpendicularQuickMoving = false;
-    public MoveItemsIf moveItemsIf = MoveItemsIf.CAN_MOVE_AT_ALL;
     public boolean dragSorting = true;
+    public boolean fillWhatsPreset = false;
     public boolean saveExcludedSlots = false;
     public boolean showButtonShortcuts = true;
     public boolean includeHotbar = true;
 
     // HUD options
-    public ArmorStatus armorStatus = ArmorStatus.ON_CHANGE;
+    public boolean armorStatus = true;
     public ItemCount itemCount = ItemCount.STACKS;
     public boolean displayOnThrow = true;
     public boolean displayOnPickup = true;
     public boolean countContainers = true;
     public boolean displayTotalWithStacks = false;
+    public boolean showArrowCount = true;
+    public boolean countAllArrows = true;
+    public boolean coloredHighlighting = true;
+    public boolean warningIndicators = true;
 
     // Misc options
     public boolean quickEquip = true;
@@ -43,12 +48,19 @@ public class ModClientOptions {
     public boolean preventEFromTyping = false;
     public boolean helpfulTooltips = true;
     public boolean fog = true;
+    public boolean elytraAlarm = true;
     public boolean mobHitDing = true;
     public boolean autoCloseRecipeBook = true;
+    public int minElytraFallDistance = 20;
     public int minMobHitDingDistance = 20;
     public int itemFrameSearchGlowDuration = 0;
     public int itemFrameSearchRadius = 150;
     public QoQButtons qoqButtons = QoQButtons.EVERYWHERE;
+    public boolean fortniteBattlePass = false;
+
+    // Advanced options
+    public MoveItemsIf moveItemsIf = MoveItemsIf.CAN_MOVE_AT_ALL;
+    public int elytraAlarmSoundDelay = 1;
 
     public static final ModOptionsHandler CLIENT = new ModOptionsHandler();
 

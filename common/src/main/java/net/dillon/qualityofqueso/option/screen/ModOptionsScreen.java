@@ -17,7 +17,7 @@ import java.util.List;
 import static net.dillon.qualityofqueso.util.ModUtil.coptions;
 
 public class ModOptionsScreen extends AbstractModOptionsScreen {
-    private Button chestSearchingOptions, inventoryManagementOptions, itemFrameSearchingOptions, openItemFrameSearchGUIOptions, hudOptions, otherOptions, reportBugs, joinDiscord;
+    private Button chestSearchingOptions, inventoryManagementOptions, itemFrameSearchingOptions, openItemFrameSearchGUIOptions, hudOptions, otherOptions, reportBugs, joinDiscord, advancedOptions;
 
     public ModOptionsScreen(Screen parent) {
         super(parent, Component.translatable("qualityofqueso.gui.options.title"));
@@ -27,8 +27,8 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
     protected void init() {
         super.init();
         List<AbstractWidget> buttons = new ArrayList<>();
-        this.chestSearchingOptions = this.addWidget(Button.builder(Component.translatable("qualityofqueso.gui.inventory_searching_options"), button -> {
-            this.minecraft.setScreen(new InventorySearchingOptionsScreen(this));
+        this.chestSearchingOptions = this.addWidget(Button.builder(Component.translatable("qualityofqueso.gui.searching_options"), button -> {
+            this.minecraft.setScreen(new SearchingOptionsScreen(this));
         }).build());
         buttons.add(this.chestSearchingOptions);
         this.inventoryManagementOptions = this.addWidget(Button.builder(Component.translatable("qualityofqueso.gui.inventory_management_options"), button -> {
@@ -64,6 +64,11 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
                 ConfirmLinkScreen.confirmLink(this, "https://discord.gg/vfqEAn4YFy", false)
         ).build());
         buttons.add(this.joinDiscord);
+
+        this.advancedOptions = this.addWidget(Button.builder(Component.translatable("qualityofqueso.gui.advanced_options"), button -> {
+            this.minecraft.setScreen(new AdvancedOptionsScreen(this));
+        }).build());
+        buttons.add(this.advancedOptions);
 
         this.list.addSmall(buttons);
     }

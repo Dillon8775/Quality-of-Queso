@@ -17,7 +17,6 @@ import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -33,6 +32,7 @@ import java.util.function.Supplier;
 
 import static net.dillon.qualityofqueso.util.AccessorUtil.key;
 import static net.dillon.qualityofqueso.util.ButtonUtil.*;
+import static net.dillon.qualityofqueso.util.ModUtil.ofQoQ;
 import static net.dillon.qualityofqueso.util.ModUtil.options;
 
 /**
@@ -82,14 +82,6 @@ public class TransferButton extends Button {
 
     @Override
     public void playDownSound(SoundManager manager) {
-        playButtonSound(Minecraft.getInstance(), false);
-    }
-
-    /**
-     * Plays the inactive sound.
-     */
-    public void playInactiveSound(SoundManager soundManager) {
-        playButtonInactiveSound(Minecraft.getInstance());
     }
 
     /**
@@ -110,7 +102,8 @@ public class TransferButton extends Button {
                 appended = ".png";
             }
         }
-        context.blit(RenderPipelines.GUI_TEXTURED, Identifier.parse("qualityofqueso:textures/gui/" + id + appended), buttonReference.getX() - 1, buttonReference.getY() - 1, 0.0F, 0.0F, 12, 12, 12, 12);
+        int xy = getTransferButtonXY(this);
+        context.blit(RenderPipelines.GUI_TEXTURED, ofQoQ("textures/gui/button/" + id + appended), buttonReference.getX() - 1, buttonReference.getY() - 1, 0.0F, 0.0F, xy, xy, xy, xy);
         if (Minecraft.getInstance().hasControlDown()) {
             boolean inventoryButton = this.buttonName.equals("transfer_inventory");
             boolean containerButton = this.buttonName.equals("transfer_container");
@@ -118,9 +111,9 @@ public class TransferButton extends Button {
             if (validName) {
                 if (options().showButtonShortcuts) {
                     if (inventoryButton && key(ModKeybinds.MOVE_INVENTORY) == ModKeybinds.MOVE_INVENTORY.getDefaultKey()) {
-                        ButtonUtil.drawButtonTexture(context, "transfer_inventory_button_shortcut_key", this);
+                        ButtonUtil.drawButtonTexture(context, "shortcut/transfer_inventory_button_shortcut_key", this);
                     } else if (containerButton && key(ModKeybinds.MOVE_CONTAINER) == ModKeybinds.MOVE_CONTAINER.getDefaultKey()) {
-                        ButtonUtil.drawButtonTexture(context, "transfer_container_button_shortcut_key", this);
+                        ButtonUtil.drawButtonTexture(context, "shortcut/transfer_container_button_shortcut_key", this);
                     }
                 }
             }
@@ -135,64 +128,70 @@ public class TransferButton extends Button {
         this.active = this.canBeActive.get();
 
         if (this.canBeActive.get()) {
-            this.renderButtonTexture(this.isHovered() ?
-                    this.buttonName + "_button_hovered" :
-                    this.buttonName + "_button", true, this, graphics);
+            this.renderButtonTexture(this.buttonName + "_button", true, this, graphics);
+            if (this.isHovered()) {
+                ButtonUtil.drawButtonTexture(graphics, "hovered/basic_hovered", this);
+            }
         } else {
             this.renderButtonTexture(this.buttonName + "_button_inactive", true, this, graphics);
         }
 
-        if (this.isHovered()) {
-            if (this.active) {
-                Screen screen = Minecraft.getInstance().screen;
-                if (screen != null) {
-                    if (isBrewingStandScreen(screen)) {
-                        ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.brewing_stand"), graphics, this.font, mouseX, mouseY);
-                        return;
-                    } else if (screen instanceof AbstractFurnaceScreen<?> abstractFurnaceScreen) {
-                        ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.furnace", abstractFurnaceScreen.getMenu().getResultSlot().getItem().getHoverName()), graphics, this.font, mouseX, mouseY);
-                        return;
-                    }
+        if (this.isHovered() && this.active && options().helpfulTooltips) {
+            Screen screen = Minecraft.getInstance().screen;
+            if (screen != null) {
+                if (isBrewingStandScreen(screen)) {
+                    ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.brewing_stand"), graphics, this.font, mouseX, mouseY);
+                    return;
+                } else if (screen instanceof AbstractFurnaceScreen<?> abstractFurnaceScreen) {
+                    ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.furnace", abstractFurnaceScreen.getMenu().getResultSlot().getItem().getHoverName()), graphics, this.font, mouseX, mouseY);
+                    return;
                 }
-                ItemStack cursorStack = this.screenHandler.getCarried();
-                if (!cursorStack.isEmpty()) {
-                    String tooltip = "_button.with_cursor_stack";
-                    Component itemName = cursorStack.getItemName();
-                    if (cursorStack.is(Items.ENCHANTED_BOOK)) {
-                        ItemEnchantments enchantments = EnchantmentHelper.getEnchantmentsForCrafting(cursorStack);
-                        List<String> cursorEnchantments = new ArrayList<>();
-                        for (Holder<Enchantment> enchantment : enchantments.keySet()) {
-                            cursorEnchantments.add(getEnchantmentName(enchantment));
-                        }
-                        String collection = String.join(",", cursorEnchantments);
-                        tooltip = "_button.with_cursor_enchantment_stack";
-                        itemName = Component.literal(collection);
-                    } else if (cursorStack.is(Items.FIREWORK_ROCKET)) {
-                        Fireworks firework = cursorStack.get(DataComponents.FIREWORKS);
-                        if (firework != null) {
-                            itemName = Component.literal(String.valueOf(firework.flightDuration())).withStyle(ChatFormatting.BOLD);
-                            tooltip = "_button.with_cursor_firework_stack";
-                        }
-                    } else if (cursorStack.is(Items.POTION) || cursorStack.is(Items.SPLASH_POTION) || cursorStack.is(Items.LINGERING_POTION)) {
-                        tooltip = "_button.with_cursor_potion_stack";
-                    } else if (cursorStack.is(Items.TIPPED_ARROW)) {
-                        tooltip = "_button.with_cursor_tipped_arrow_stack";
+            }
+            ItemStack cursorStack = this.screenHandler.getCarried();
+            if (!cursorStack.isEmpty()) {
+                String tooltip = "_button.with_cursor_stack";
+                Component itemName = cursorStack.getItemName();
+                if (cursorStack.is(Items.ENCHANTED_BOOK)) {
+                    ItemEnchantments enchantments = EnchantmentHelper.getEnchantmentsForCrafting(cursorStack);
+                    List<String> cursorEnchantments = new ArrayList<>();
+                    for (Holder<Enchantment> enchantment : enchantments.keySet()) {
+                        cursorEnchantments.add(getEnchantmentName(enchantment));
                     }
-                    ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui." + this.buttonName + tooltip, itemName), graphics, this.font, mouseX, mouseY);
-                } else if (!this.searchFieldText.isEmpty()) {
-                    ButtonUtil.drawTooltip(this.searchFieldText.startsWith("#") ?
-                            Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query.tag", this.searchFieldText.substring(1)) :
-                            this.searchFieldText.startsWith("!") ?
-                                    Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query.exclude", this.searchFieldText.substring(1)) :
-                                    this.searchFieldText.startsWith(":") ?
-                                            Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query.match", this.searchFieldText.substring(1)) :
-                                            Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query", this.searchFieldText), graphics, this.font, mouseX, mouseY);
-                } else {
-                    if (options().helpfulTooltips) {
-                        ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui." + this.buttonName + "_button"), graphics, this.font, mouseX, mouseY);
+                    String collection = String.join(",", cursorEnchantments);
+                    tooltip = "_button.with_cursor_enchantment_stack";
+                    itemName = Component.literal(collection);
+                } else if (cursorStack.is(Items.FIREWORK_ROCKET)) {
+                    Fireworks firework = cursorStack.get(DataComponents.FIREWORKS);
+                    if (firework != null) {
+                        itemName = Component.literal(String.valueOf(firework.flightDuration())).withStyle(ChatFormatting.BOLD);
+                        tooltip = "_button.with_cursor_firework_stack";
                     }
+                } else if (cursorStack.is(Items.POTION) || cursorStack.is(Items.SPLASH_POTION) || cursorStack.is(Items.LINGERING_POTION)) {
+                    tooltip = "_button.with_cursor_potion_stack";
+                } else if (cursorStack.is(Items.TIPPED_ARROW)) {
+                    tooltip = "_button.with_cursor_tipped_arrow_stack";
+                }
+                ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui." + this.buttonName + tooltip, itemName), graphics, this.font, mouseX, mouseY);
+            } else if (!this.searchFieldText.isEmpty()) {
+                ButtonUtil.drawTooltip(this.searchFieldText.startsWith("#") ?
+                        Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query.tag", this.searchFieldText.substring(1)) :
+                        this.searchFieldText.startsWith("!") ?
+                                Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query.exclude", this.searchFieldText.substring(1)) :
+                                this.searchFieldText.startsWith(":") ?
+                                        Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query.match", this.searchFieldText.substring(1)) :
+                                        Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query", this.searchFieldText), graphics, this.font, mouseX, mouseY);
+            } else {
+                if (!this.buttonName.equals(ButtonNames.SORT)) {
+                    ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui." + this.buttonName + "_button"), graphics, this.font, mouseX, mouseY);
                 }
             }
         }
+    }
+
+    /**
+     * @return the button hover texture size.
+     */
+    public HoverSize getHoverSize() {
+        return HoverSize.BASIC;
     }
 }

@@ -11,6 +11,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
+import net.neoforged.neoforge.event.level.LevelEvent;
 
 import static net.dillon.qualityofqueso.util.ModUtil.*;
 
@@ -48,9 +49,21 @@ public class ClientEvents {
         }
     }
 
+    @SubscribeEvent
+    public static void onLevelChange(LevelEvent.Load event) {
+        resetArmorHudState();
+    }
+
+    @SubscribeEvent
+    public static void onClientRespawn(ClientPlayerNetworkEvent.Clone event) {
+        resetArmorHudState();
+    }
+
     // Unload multi-server config
     @SubscribeEvent
     public static void onClientDisconnect(ClientPlayerNetworkEvent.LoggingOut event) {
+        resetArmorHudState();
+
         if (isOnServer(Minecraft.getInstance())) {
             unloadServerConfig();
         }

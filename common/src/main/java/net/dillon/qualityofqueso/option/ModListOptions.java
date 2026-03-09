@@ -154,11 +154,6 @@ public class ModListOptions {
                 value -> options().moveItemsIf = value);
     }
 
-    public static OptionInstance<Boolean> includeHotbar() {
-        return OptionInstance.createBoolean("qualityofqueso.options.include_hotbar", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.include_hotbar.tooltip")),
-                YES_NO_TEXT, options().includeHotbar, value -> options().includeHotbar = value);
-    }
-
     public static OptionInstance<Boolean> perpendicularQuickMoving() {
         return OptionInstance.createBoolean("qualityofqueso.options.perpendicular_quick_moving", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.perpendicular_quick_moving.tooltip")),
                 ON_OFF_TEXT, options().perpendicularQuickMoving, value -> options().perpendicularQuickMoving = value);
@@ -174,21 +169,19 @@ public class ModListOptions {
                 ON_OFF_TEXT, options().saveExcludedSlots, value -> options().saveExcludedSlots = value);
     }
 
-    public static OptionInstance<ArmorStatus> armorStatus() {
-        return new OptionInstance<>(
-                "qualityofqueso.options.armor_status",
-                option -> {
-                    Component text = ModTexts.BLANK;
-                    switch (option) {
-                        case ALWAYS -> text = Component.translatable("qualityofqueso.options.armor_status.always.tooltip");
-                        case ON_CHANGE -> text = Component.translatable("qualityofqueso.options.armor_status.on_change.tooltip");
-                    }
-                    return Tooltip.create(Component.translatable("qualityofqueso.options.armor_status.tooltip").copy().append(text != ModTexts.BLANK ? "\n\n" : "").append(text));
-                },
-                (optionText, value) -> value.getText(),
-                new OptionInstance.Enum<>(Arrays.asList(ArmorStatus.values()), ArmorStatus.Codec),
-                options().armorStatus,
-                value -> options().armorStatus = value);
+    public static OptionInstance<Boolean> armorStatus() {
+        return OptionInstance.createBoolean("qualityofqueso.options.armor_status", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.armor_status.tooltip")),
+                ON_OFF_TEXT, options().armorStatus, value -> options().armorStatus = value);
+    }
+
+    public static OptionInstance<Boolean> coloredHighlighting() {
+        return OptionInstance.createBoolean("qualityofqueso.options.colored_highlighting", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.colored_highlighting.tooltip")),
+                ON_OFF_TEXT, options().coloredHighlighting, value -> options().coloredHighlighting = value);
+    }
+
+    public static OptionInstance<Boolean> warningIndicators() {
+        return OptionInstance.createBoolean("qualityofqueso.options.warning_indicators", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.warning_indicators.tooltip")),
+                ON_OFF_TEXT, options().warningIndicators, value -> options().warningIndicators = value);
     }
 
     public static OptionInstance<ItemCount> itemCount() {
@@ -227,6 +220,16 @@ public class ModListOptions {
     public static OptionInstance<Boolean> displayTotalWithStacks() {
         return OptionInstance.createBoolean("qualityofqueso.options.display_total_with_stacks", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.display_total_with_stacks.tooltip")),
                 YES_NO_TEXT, options().displayTotalWithStacks, value -> options().displayTotalWithStacks = value);
+    }
+
+    public static OptionInstance<Boolean> showArrowCount() {
+        return OptionInstance.createBoolean("qualityofqueso.options.show_arrow_count", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.show_arrow_count.tooltip")),
+                YES_NO_TEXT, options().showArrowCount, value -> options().showArrowCount = value);
+    }
+
+    public static OptionInstance<Boolean> countAllArrows() {
+        return OptionInstance.createBoolean("qualityofqueso.options.count_all_arrows", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.count_all_arrows.tooltip")),
+                YES_NO_TEXT, options().countAllArrows, value -> options().countAllArrows = value);
     }
 
     public static OptionInstance<Boolean> showButtonShortcuts() {
@@ -287,9 +290,33 @@ public class ModListOptions {
                 ON_OFF_TEXT, options().autoCloseRecipeBook, value -> options().autoCloseRecipeBook = value);
     }
 
+    public static OptionInstance<Boolean> elytraAlarm() {
+        return OptionInstance.createBoolean("qualityofqueso.options.elytra_alarm", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.elytra_alarm.tooltip", options().minElytraFallDistance)),
+                ON_OFF_TEXT, options().elytraAlarm, value -> options().elytraAlarm = value);
+    }
+
+    public static OptionInstance<Integer> minElytraFallDistance() {
+        return new OptionInstance<>("qualityofqueso.options.min_elytra_fall_distance",
+                OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.min_elytra_fall_distance.tooltip")),
+                (optionText, value) -> Options.genericValueLabel(optionText, Component.literal(value + " blocks")),
+                new OptionInstance.IntRange(10, 100), options().minElytraFallDistance, value -> options().minElytraFallDistance = value);
+    }
+
+    public static OptionInstance<Integer> elytraAlarmSoundDelay() {
+        return new OptionInstance<>("qualityofqueso.options.elytra_alarm_sound_delay",
+                OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.elytra_alarm_sound_delay.tooltip")),
+                (optionText, value) -> Options.genericValueLabel(optionText, Component.literal(value + " tick(s)")),
+                new OptionInstance.IntRange(1, 120), options().elytraAlarmSoundDelay, value -> options().elytraAlarmSoundDelay = value);
+    }
+
     public static OptionInstance<Boolean> mobHitDing() {
         return OptionInstance.createBoolean("qualityofqueso.options.mob_hit_ding", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.mob_hit_ding.tooltip", options().minMobHitDingDistance)),
                 ON_OFF_TEXT, options().mobHitDing, value -> options().mobHitDing = value);
+    }
+
+    public static OptionInstance<Boolean> fortniteBattlePass() {
+        return OptionInstance.createBoolean("qualityofqueso.options.fortnite_battle_pass", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.fortnite_battle_pass.tooltip", options().fortniteBattlePass)),
+                ON_OFF_TEXT, options().fortniteBattlePass, value -> options().fortniteBattlePass = value);
     }
 
     public static OptionInstance<Integer> minMobHitDingDistance() {

@@ -3,15 +3,13 @@ package net.dillon.qualityofqueso.util;
 import net.dillon.qualityofqueso.option.base.BaseOptions;
 import net.dillon.qualityofqueso.option.instance.ModClientOptions;
 import net.dillon.qualityofqueso.option.instance.ModCommonOptions;
+import net.dillon.qualityofqueso.option.instance.TrackedContainers;
 import net.dillon.qualityofqueso.option.instance.UniversalOptions;
 import net.dillon.qualityofqueso.packet.GlowSearchC2SPayload;
 import net.dillon.qualityofqueso.platform.MultiLoader;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.fog.FogData;
-import net.minecraft.core.HolderSet;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
@@ -24,6 +22,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.item.Item;
@@ -37,6 +36,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.*;
+
+import static net.dillon.qualityofqueso.util.GuiUtil.ARMOR_TIMERS;
+import static net.dillon.qualityofqueso.util.GuiUtil.LAST_ARMOR_STACKS;
 
 /**
  * Utility class for the Quality of Queso mod.
@@ -103,12 +105,29 @@ public class ModUtil {
     }
 
     /**
+     * @return an identifier with the quality of queso namespace.
+     */
+    public static Identifier ofQoQ(String name) {
+        return Identifier.fromNamespaceAndPath("qualityofqueso", name);
+    }
+
+    /**
+     * @return if the player is left-handed.
+     */
+    public static boolean isLeftHanded(Minecraft minecraft) {
+        return minecraft.player.getMainArm().getOpposite() == HumanoidArm.RIGHT;
+    }
+
+    /**
      * Unloads server config and reloads universal one.
      */
     public static void unloadServerConfig() {
         ModClientOptions.CLIENT.clearCustomDirectory();
         ModClientOptions.CLIENT.setFileName(BaseOptions.DEFAULT_CLIENT_FILE_NAME);
         ModClientOptions.CLIENT.load();
+        TrackedContainers.TRACKED_CONTAINERS.clearCustomDirectory();
+        TrackedContainers.TRACKED_CONTAINERS.setFileName(BaseOptions.DEFAULT_TRACKED_CONTAINERS_NAME);
+        TrackedContainers.TRACKED_CONTAINERS.load();
         ModCommonOptions.COMMON.clearCustomDirectory();
         ModCommonOptions.COMMON.setFileName(BaseOptions.DEFAULT_COMMON_FILE_NAME);
         ModCommonOptions.COMMON.load();
@@ -158,25 +177,33 @@ public class ModUtil {
                 .toFile();
 
         String clientServerConfig = safe + "_client.json";
+        String trackedContainersServerConfig =  safe + "_tracked-containers.json";
         String commonServerConfig = safe + "_common.json";
         File clientServerFile = new File(serverDir, clientServerConfig);
+        File trackedContainersServerFile = new File(serverDir, trackedContainersServerConfig);
         File commonServerFile = new File(serverDir, commonServerConfig);
 
         ModClientOptions cachedClientInstance = ModClientOptions.CLIENT.getInstance();
+        TrackedContainers cachedTrackedContainers = TrackedContainers.TRACKED_CONTAINERS.getInstance();
         ModCommonOptions cachedCommonInstance = ModCommonOptions.COMMON.getInstance();
-        final boolean configExists = clientServerFile.exists() && commonServerFile.exists();
+        final boolean configExists = clientServerFile.exists() && trackedContainersServerFile.exists() && commonServerFile.exists();
         ModClientOptions.CLIENT.setCustomDirectory(serverDir);
         ModClientOptions.CLIENT.setFileName(clientServerConfig);
+        TrackedContainers.TRACKED_CONTAINERS.setCustomDirectory(serverDir);
+        TrackedContainers.TRACKED_CONTAINERS.setFileName(trackedContainersServerConfig);
         ModCommonOptions.COMMON.setCustomDirectory(serverDir);
         ModCommonOptions.COMMON.setFileName(commonServerConfig);
         if (!configExists) {
             ModClientOptions.CLIENT.setInstance(cachedClientInstance);
             ModClientOptions.CLIENT.save();
+            TrackedContainers.TRACKED_CONTAINERS.setInstance(cachedTrackedContainers);
+            TrackedContainers.TRACKED_CONTAINERS.save();
             ModCommonOptions.COMMON.setInstance(cachedCommonInstance);
             ModCommonOptions.COMMON.save();
             ModUtil.info("Creating new QoQ server config instance... (" + address + ")");
         }
         ModClientOptions.CLIENT.load();
+        TrackedContainers.TRACKED_CONTAINERS.load();
         ModCommonOptions.COMMON.load();
 
         String message = !configExists ? "qualityofqueso.created_server_config" : "qualityofqueso.loaded_server_config";
@@ -194,6 +221,13 @@ public class ModUtil {
     }
 
     /**
+     * @return tracked containers options.
+     */
+    public static TrackedContainers trackedContainers() {
+        return TrackedContainers.TRACKED_CONTAINERS.getInstance();
+    }
+
+    /**
      * @return the common-options.
      */
     public static ModCommonOptions coptions() {
@@ -205,6 +239,14 @@ public class ModUtil {
      */
     public static UniversalOptions uoptions() {
         return UniversalOptions.universalHandler.getInstance();
+    }
+
+    /**
+     * Clears armor HUD timer/cache state.
+     */
+    public static void resetArmorHudState() {
+        Arrays.fill(ARMOR_TIMERS, 0);
+        Arrays.fill(LAST_ARMOR_STACKS, null);
     }
 
     /**
@@ -324,25 +366,6 @@ public class ModUtil {
                                     return true;
                                 }
                             }
-
-                            // Search by tag
-                            // If item in item frame is in the tag searched, add it to the list to glow
-                            if (payload.query().startsWith("#")) {
-                                String tagSearch = payload.query().substring(1);
-                                Registry<Item> itemRegistry = world.registryAccess().lookupOrThrow(Registries.ITEM);
-
-                                for (HolderSet.Named<Item> tag : itemRegistry.getTags().toList()) {
-                                    Identifier id = tag.key().location();
-
-                                    if (payload.matchCase() ?
-                                            id.getPath().toLowerCase().matches(tagSearch) || id.toString().toLowerCase().matches(tagSearch) :
-                                            id.getPath().toLowerCase().contains(tagSearch) || id.toString().toLowerCase().contains(tagSearch)) {
-                                        if (stack.is(tag.key())) {
-                                            return true;
-                                        }
-                                    }
-                                }
-                            }
                         }
 
                         // Otherwise return false and don't add to list
@@ -363,14 +386,14 @@ public class ModUtil {
                     ((GlowCountdown)frame).startGlowCountdown(payload.timer() * 20);
                 }
             }
-            if (nearbyFrames.isEmpty()) {
+            if (payload.clear()) {
+                player.sendSystemMessage(Component.translatable("qualityofqueso.item_frame_searcher.executed.cleared", searched), false);
+                playSound(player, SoundEvents.PLAYER_SPLASH, 1.0F);
+            } else if (nearbyFrames.isEmpty()) {
                 player.sendSystemMessage(payload.matchCase() ?
                         Component.translatable("qualityofqueso.item_frame_searcher.executed.found_none.match_case", searched, payload.query()) :
                         Component.translatable("qualityofqueso.item_frame_searcher.executed.found_none", searched, payload.query()), false);
                 playSound(player, SoundEvents.NOTE_BLOCK_BASS.value(), 2.0F);
-            } else if (payload.clear()) {
-                player.sendSystemMessage(Component.translatable("qualityofqueso.item_frame_searcher.executed.cleared", searched), false);
-                playSound(player, SoundEvents.PLAYER_SPLASH, 1.0F);
             } else {
                 if (payload.timer() == 0) {
                     player.sendSystemMessage(payload.matchCase() ?

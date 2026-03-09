@@ -6,11 +6,13 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
 
+import static net.dillon.qualityofqueso.util.ModUtil.ofQoQ;
+
 /**
  * The payload (or packet) for taking in the data required to make item frames glow.
  */
 public record GlowSearchC2SPayload(String query, boolean matchCase, boolean clear, int timer, int radius) implements CustomPacketPayload {
-    public static final Identifier ID = Identifier.parse("qualityofqueso:glow_search");
+    public static final Identifier ID = ofQoQ("glow_search");
     public static final Type<GlowSearchC2SPayload> PAYLOAD_ID = new Type<>(ID);
     public static final StreamCodec<ByteBuf, GlowSearchC2SPayload> CODEC =
             StreamCodec.composite(

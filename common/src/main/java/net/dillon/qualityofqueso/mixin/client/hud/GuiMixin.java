@@ -1,18 +1,21 @@
 package net.dillon.qualityofqueso.mixin.client.hud;
 
-import net.dillon.qualityofqueso.option.ArmorStatus;
 import net.dillon.qualityofqueso.option.ItemCount;
-import net.dillon.qualityofqueso.util.PickupHudTracker;
+import net.dillon.qualityofqueso.util.ItemHudTracker;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.CommonColors;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.BundleContents;
 import net.minecraft.world.item.component.ItemContainerContents;
 import org.spongepowered.asm.mixin.Final;
@@ -21,33 +24,62 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import static net.dillon.qualityofqueso.util.ModUtil.modEnabled;
-import static net.dillon.qualityofqueso.util.ModUtil.options;
+import static net.dillon.qualityofqueso.util.GuiUtil.*;
+import static net.dillon.qualityofqueso.util.ModUtil.*;
 
 @Mixin(Gui.class)
 public class GuiMixin {
     @Shadow @Final
     private Minecraft minecraft;
-    @Unique
-    private final Map<EquipmentSlot, ItemStack> lastArmorStacks = new HashMap<>();
-    @Unique
-    private final Map<EquipmentSlot, Integer> armorTimers = new HashMap<>();
+    @Shadow @Final
+    private static Identifier HOTBAR_SELECTION_SPRITE;
+    @Shadow
+    @Final
+    private static Identifier HOTBAR_OFFHAND_RIGHT_SPRITE;
     @Unique
     private static final EquipmentSlot[] slots = {EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
     @Unique
-    private static final int ARMOR_RENDER_TICKS = 2000;
+    private static final int DISPLAY_TICKS = 80;
     @Unique
     private boolean moveArmorOver = false;
+    @Unique
+    private boolean isRenderingItem = false;
+    @Unique
+    private boolean isDisplayingExactStack = false;
+    @Unique
+    private boolean isDisplayingRemainder = false;
+    @Unique
+    private boolean renderingHeldItem = false;
 
     /**
-     * Implements the {@link ArmorStatus} feature.
+     * Renders the modified selection slot.
+     */
+    @ModifyArg(method = "renderItemHotbar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIII)V", ordinal = 1), index = 1)
+    private Identifier modifyHighlightedSlot(Identifier original) {
+        if (this.minecraft.player == null) {
+            return original;
+        }
+        return getHighlightedSlotTexture(HOTBAR_SELECTION_SPRITE, this.minecraft.player.getInventory().getItem(this.minecraft.player.getInventory().getSelectedSlot()));
+    }
+
+    @Inject(method = "renderItemHotbar", at = @At("TAIL"))
+    private void renderAWarningIndicator(GuiGraphics context, DeltaTracker deltaTracker, CallbackInfo ci) {
+        for (int i = 0; i < this.minecraft.player.getInventory().getContainerSize() - 34; i++) {
+            ItemStack item = this.minecraft.player.getInventory().getItem(i);
+            if (getItemHealthPercentage(item) < 0.11F) {
+                this.renderWarningIndicator(this.minecraft, context, i, null);
+            }
+        }
+    }
+
+    /**
+     * Implements the {@code armor status} feature.
      */
     @Inject(method = "renderItemHotbar", at = @At("HEAD"))
     private void renderArmorStatus(GuiGraphics context, DeltaTracker deltaTracker, CallbackInfo ci) {
@@ -55,34 +87,58 @@ public class GuiMixin {
             return;
         }
 
-        ItemStack mainHandItem = this.getItemBySlot(EquipmentSlot.MAINHAND);
-        ItemStack offHandItem = this.getItemBySlot(EquipmentSlot.OFFHAND);
-        if (!this.renderItem(context, mainHandItem)) {
-            if (!this.renderItem(context, offHandItem)) {
-                ItemStack stack = PickupHudTracker.getStack();
-                if (!stack.isEmpty()) {
-                    this.renderItem(context, stack);
+        ItemStack mainHandItem = getItemBySlot(this.minecraft, EquipmentSlot.MAINHAND);
+        ItemStack offHandItem = getItemBySlot(this.minecraft, EquipmentSlot.OFFHAND);
+
+        this.tryRenderItem(context, mainHandItem, offHandItem);
+
+        int i = 0;
+        for (EquipmentSlot slot : slots) {
+            ItemStack current = getItemBySlot(this.minecraft, slot);
+            if (LAST_ARMOR_STACKS[i] == null) {
+                LAST_ARMOR_STACKS[i] = current.copy();
+                i++;
+                continue;
+            }
+            if (armorChanged(i, current)) {
+                ARMOR_TIMERS[i] = this.minecraft.player.tickCount + DISPLAY_TICKS;
+                LAST_ARMOR_STACKS[i] = current.copy();
+            }
+            i++;
+        }
+
+        boolean canRenderArmorHotbar = options().armorStatus || (options().elytraAlarm && SHOULD_WARN_OF_ELYTRA);
+
+        if (canRenderArmorHotbar) {
+            context.blitSprite(
+                    RenderPipelines.GUI_TEXTURED,
+                    ofQoQ("hud/armor_hotbar"),
+                    this.getArmorBarX(this.minecraft, context),
+                    getGuiHeight(context) - 2,
+                    82,
+                    22
+            );
+        }
+
+        i = 0;
+        for (EquipmentSlot slot : slots) {
+            if (slot == EquipmentSlot.CHEST && options().elytraAlarm && SHOULD_WARN_OF_ELYTRA) {
+                drawItem(this.minecraft, context, new ItemStack(Items.ELYTRA), this.getArmorX(this.minecraft, EquipmentSlot.CHEST), true);
+                this.renderHighlightedArmorSlot(this.minecraft, HOTBAR_SELECTION_SPRITE, context, slot, true);
+                this.renderWarningIndicator(this.minecraft, context, 0, slot);
+                continue;
+            }
+
+            if (options().armorStatus) {
+                drawItem(this.minecraft, context, getItemBySlot(this.minecraft, slot), this.getArmorX(this.minecraft, slot), true);
+                if (this.minecraft.player.tickCount < ARMOR_TIMERS[i]) {
+                    this.renderHighlightedArmorSlot(this.minecraft, HOTBAR_SELECTION_SPRITE, context, slots[i], false);
+                }
+                if (getItemHealthPercentage(getItemBySlot(this.minecraft, slot)) < 0.11F) {
+                    this.renderWarningIndicator(this.minecraft, context, 0, slot);
                 }
             }
-        }
-
-        if (!options().armorStatus.enabled()) {
-            return;
-        }
-
-        for (EquipmentSlot slot : this.slots) {
-            ItemStack current = this.getItemBySlot(slot);
-
-            if (this.armorChanged(slot, current)) {
-                this.armorTimers.put(slot, ARMOR_RENDER_TICKS);
-                this.lastArmorStacks.put(slot, current.copy());
-            }
-
-            int timer = this.armorTimers.getOrDefault(slot, 0);
-            if (timer > 0 || options().armorStatus == ArmorStatus.ALWAYS) {
-                this.drawItem(context, this.getItemBySlot(slot), getArmorX(slot), true);
-                this.armorTimers.put(slot, timer - 1);
-            }
+            i++;
         }
     }
 
@@ -100,6 +156,7 @@ public class GuiMixin {
         int count = 0;
         List<Integer> items = new ArrayList<>();
         for (ItemStack invStack : this.minecraft.player.getInventory()) {
+
             if (options().countContainers && (invStack.is(ItemTags.SHULKER_BOXES) || invStack.is(ItemTags.BUNDLES))) {
                 ItemContainerContents container = invStack.get(DataComponents.CONTAINER);
                 BundleContents bundleContents = invStack.get(DataComponents.BUNDLE_CONTENTS);
@@ -120,21 +177,31 @@ public class GuiMixin {
                         }
                     }
                 }
-            } else if (invStack.is(stack.getItem())) {
+            } else if (
+                    (options().countAllArrows && options().showArrowCount && isStackArrow(invStack) && isStackArrow(ItemHudTracker.getStack()) && !this.renderingHeldItem)
+                            || invStack.is(stack.getItem())) {
                 count += invStack.getCount();
                 items.add(invStack.getCount());
             }
         }
 
-        if (count <= 0) {
+        int maxCount = stack.getMaxStackSize();
+
+        this.isDisplayingExactStack = false;
+        this.isDisplayingRemainder = false;
+
+        boolean trackedArrow = isStackArrow(ItemHudTracker.getStack());
+        if (count <= 0 && !trackedArrow) {
             return false;
         }
 
-        int maxCount = stack.getMaxStackSize();
-        if (!stack.isEmpty()) {
+        int fullStacks = 0;
+        if (!stack.isEmpty() || trackedArrow) {
             String text = String.valueOf(count);
             String maxItemCount = String.valueOf(maxCount);
-            boolean displayStack = options().itemCount == ItemCount.STACKS && count % maxCount == 0;
+            boolean evenStack = count != 0 && count != 64 && count % maxCount == 0;
+            boolean displayStack = options().itemCount == ItemCount.STACKS && evenStack;
+            this.isDisplayingExactStack = evenStack;
             if (count > maxCount) {
                 if (displayStack) {
                     text = count / maxCount + "x " + maxItemCount;
@@ -144,8 +211,9 @@ public class GuiMixin {
                         totalCount += i;
                     }
 
-                    int fullStacks = totalCount / maxCount;
+                    fullStacks = totalCount / maxCount;
                     int remainder = totalCount % maxCount;
+                    this.isDisplayingRemainder = remainder != 0;
 
                     String additional = remainder > 0 ? " & " + remainder : "";
 
@@ -155,18 +223,71 @@ public class GuiMixin {
                 }
             }
             ItemStack newStack = new ItemStack(stack.getItem(), count);
-            this.drawItem(context, newStack, 100, false);
+            HumanoidArm offhandArm = this.minecraft.player.getMainArm().getOpposite();
+            boolean isArrow = isStackArrow(newStack);
+            boolean arrowDisplayValid = isArrow && options().itemCount == ItemCount.REMAINDER ? count < 65 : count < 100;
+            if (!this.renderingHeldItem && options().showArrowCount && arrowDisplayValid && isStackArrow(ItemHudTracker.getStack())) {
+                context.blitSprite(RenderPipelines.GUI_TEXTURED, HOTBAR_OFFHAND_RIGHT_SPRITE,
+                        getGuiWidth(context) + 90,
+                        getGuiHeight(context) - 3,
+                        29,
+                        24
+                );
+                context.blitSprite(RenderPipelines.GUI_TEXTURED,
+                        options().coloredHighlighting ?
+                                count < 11 ? ofQoQ("hud/slot_bad") : count < 21 ? ofQoQ("hud/slot_ok") : ofQoQ("hud/slot_good")
+                                : HOTBAR_SELECTION_SPRITE,
+                        getGuiWidth(context) + 96,
+                        getGuiHeight(context) - 3,
+                        24,
+                        23
+                );
+            }
+            boolean arrowAndZero = trackedArrow && count == 0;
+            drawItem(this.minecraft, context, arrowAndZero ? ItemHudTracker.getStack() : newStack, offhandArm == HumanoidArm.RIGHT ? -129 : 100, false);
             int x = 105;
             if (count < 10) {
                 x += 6;
             } else if (count > 999) {
                 x -= 8;
-            } else if (count > 99) {
+            } else if (count > 99 || (options().itemCount == ItemCount.REMAINDER && this.isDisplayingRemainder)) {
                 x -= 5;
             }
-            context.drawString(this.minecraft.font, text, ((context.guiWidth() / 2) + x), context.guiHeight() - 11, CommonColors.WHITE, true);
+            if (isLeftHanded(this.minecraft)) {
+                if (count > 64 && options().itemCount == ItemCount.REMAINDER) {
+                    x += 25;
+                    if (fullStacks > 99) {
+                        x += 14;
+                    } else if (fullStacks > 9) {
+                        x += 5;
+                    }
+                } else if (count / maxCount > 9 && options().itemCount == ItemCount.STACKS) {
+                    x += 20;
+                } else if (count > 999) {
+                    x += 8;
+                } else if (count > 99) {
+                    x += 5;
+                }
+            }
+            int color = CommonColors.WHITE;
+            boolean validArrow = isArrow || arrowAndZero;
+            if (!this.renderingHeldItem && options().showArrowCount && validArrow) {
+                if (count < 6) {
+                    color = CommonColors.RED;
+                } else if (count < 11) {
+                    color = CommonColors.SOFT_RED;
+                } else if (count < 21) {
+                    color = CommonColors.YELLOW;
+                } else {
+                    color = CommonColors.GREEN;
+                }
+            }
+            if (!this.renderingHeldItem && options().warningIndicators && validArrow && count < 6) {
+                this.renderWarningIndicator(this.minecraft, context, (int)(9 * 1.01), null);
+            }
+            context.drawString(this.minecraft.font, text, ((context.guiWidth() / 2) + (isLeftHanded(this.minecraft) ? -x - 18 : x)), context.guiHeight() - 10, color, true);
             if (options().displayTotalWithStacks && count > 64 && (displayStack || options().itemCount == ItemCount.REMAINDER)) {
-                context.drawString(this.minecraft.font, "(" + String.format("%,d", count) + ")", ((context.guiWidth() / 2) + (x + 5)), context.guiHeight() - 23, CommonColors.WHITE, true);
+                context.drawString(this.minecraft.font, "(" + String.format("%,d", count) + ")", ((context.guiWidth() / 2) + ((isLeftHanded(this.minecraft) ? -x - 16 : x) + 5)), context.guiHeight() - 22, color, true);
             }
             return true;
         }
@@ -174,35 +295,29 @@ public class GuiMixin {
     }
 
     /**
-     * @return if a armor slot was changed at all.
+     * Tries to render an item on the screen.
      */
     @Unique
-    private boolean armorChanged(EquipmentSlot slot, ItemStack current) {
-        ItemStack previous = this.lastArmorStacks.get(slot);
-
-        if (previous == null) {
-            return true;
-        }
-
-        if (!ItemStack.isSameItem(previous, current)) {
-            return true;
-        }
-
-        return previous.getDamageValue() != current.getDamageValue();
+    private void tryRenderItem(GuiGraphics context, ItemStack mainHandItem, ItemStack offHandItem) {
+        ItemStack stack = ItemHudTracker.getStack();
+        this.renderingHeldItem = this.renderItem(context, mainHandItem) || this.renderItem(context, offHandItem);
+        this.isRenderingItem = this.renderingHeldItem || (!stack.isEmpty() && this.renderItem(context, stack));
     }
 
     /**
      * @return the x-pos for each armor slot.
      */
     @Unique
-    private int getArmorX(EquipmentSlot slot) {
-        int base = !options().itemCount.enabled() ? 0 : 20;
-        if (options().itemCount == ItemCount.STACKS) {
-            base += 14;
-        } else if (options().itemCount == ItemCount.REMAINDER) {
-            base += 36;
-            if (this.moveArmorOver) {
-                base += 4;
+    private int getArmorX(Minecraft minecraft, EquipmentSlot slot) {
+        int base = !options().itemCount.enabled() ? 0 : 32;
+        if (this.isRenderingItem && !isLeftHanded(minecraft)) {
+            if (options().itemCount == ItemCount.STACKS && this.isDisplayingExactStack) {
+                base += 14;
+            } else if (options().itemCount == ItemCount.REMAINDER) {
+                base += this.isDisplayingRemainder ? 32 : this.isDisplayingExactStack ? 14 : 0;
+                if (this.moveArmorOver) {
+                    base += 4;
+                }
             }
         }
         return switch (slot) {
@@ -215,26 +330,52 @@ public class GuiMixin {
     }
 
     /**
-     * Draws an equipped stack item.
+     * @return the x-position that the slot should render under the armor item.
      */
     @Unique
-    private void drawItem(GuiGraphics context, ItemStack stack, int x, boolean overlay) {
-        int i = context.guiWidth() / 2;
-        int y = context.guiHeight() - 20;
-        int fx = i + x;
-        if (!stack.isEmpty()) {
-            context.renderItem(stack, fx, y);
-            if (overlay) {
-                context.renderItemDecorations(this.minecraft.font, stack, fx, y, null);
-            }
-        }
+    private int getArmorBarX(Minecraft minecraft, GuiGraphics context) {
+        return getGuiWidth(context) + this.getArmorX(minecraft, EquipmentSlot.HEAD) - 3;
     }
 
     /**
-     * @return the item in the given slot.
+     * @return the x-position that the highlighted slot should render under the armor item.
      */
     @Unique
-    private ItemStack getItemBySlot(EquipmentSlot slot) {
-        return this.minecraft.player.getItemBySlot(slot);
+    private int getHighlightedSlotX(Minecraft minecraft, GuiGraphics context, EquipmentSlot slot) {
+        return getGuiWidth(context) + this.getArmorX(minecraft, slot) - 4;
+    }
+
+    /**
+     * Renders the highlighted texture around a slot.
+     */
+    @Unique
+    private void renderHighlightedArmorSlot(Minecraft minecraft, Identifier defaultSprite, GuiGraphics context, EquipmentSlot slot, boolean warning) {
+        context.blitSprite(
+                RenderPipelines.GUI_TEXTURED,
+                warning ? ofQoQ("hud/slot_bad") : getHighlightedSlotTexture(defaultSprite, getItemBySlot(minecraft, slot)),
+                this.getHighlightedSlotX(minecraft, context, slot),
+                getGuiHeight(context) - 3,
+                24,
+                23
+        );
+    }
+
+    /**
+     * Renders the {@code warning texture} around armor items.
+     */
+    @Unique
+    private void renderWarningIndicator(Minecraft minecraft, GuiGraphics context, int slot, EquipmentSlot equipmentSlot) {
+        if (!options().warningIndicators) {
+            return;
+        }
+
+        context.blitSprite(
+                RenderPipelines.GUI_TEXTURED,
+                Identifier.withDefaultNamespace("world_list/error_highlighted"),
+                getGuiWidth(context) + (equipmentSlot == null ? -78 + (slot * 20) : this.getArmorX(minecraft, equipmentSlot) + 10),
+                getGuiHeight(context) + 4,
+                16,
+                16
+        );
     }
 }

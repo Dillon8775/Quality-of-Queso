@@ -18,7 +18,7 @@ public class UniversalOptions {
     public static class ModOptionsHandler extends BaseOptions<UniversalOptions> {
 
         protected ModOptionsHandler() {
-            super("qualityofqueso_client-universal.json");
+            super("qualityofqueso-universal_config.json");
             this.load();
         }
 

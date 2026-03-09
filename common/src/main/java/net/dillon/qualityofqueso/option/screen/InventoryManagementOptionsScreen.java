@@ -17,8 +17,7 @@ public class InventoryManagementOptionsScreen extends AbstractModOptionsScreen {
                 ModListOptions.dragSorting(),
                 ModListOptions.saveExcludedSlots(),
 
-                ModListOptions.showButtonShortcuts(),
-                ModListOptions.includeHotbar()
+                ModListOptions.showButtonShortcuts()
         };
     }
 
@@ -29,8 +28,6 @@ public class InventoryManagementOptionsScreen extends AbstractModOptionsScreen {
         this.list.addBig(ModListOptions.containerSorting());
         this.list.addBig(ModListOptions.quickDrop());
         this.list.addBig(ModListOptions.swapping());
-        this.list.addBig(ModListOptions.perpendicularQuickMoving());
-        this.list.addBig(ModListOptions.moveItemsIf());
         this.list.addSmall(this.options());
     }
 

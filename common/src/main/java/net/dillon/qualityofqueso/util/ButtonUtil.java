@@ -14,6 +14,7 @@ import net.minecraft.client.gui.screens.inventory.*;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.HashedPatchMap;
@@ -45,15 +46,14 @@ import java.util.*;
 
 import static net.dillon.qualityofqueso.util.AccessorUtil.getHoveredSlot;
 import static net.dillon.qualityofqueso.util.AccessorUtil.getRecipeBookComponent;
-import static net.dillon.qualityofqueso.util.ModUtil.options;
-import static net.dillon.qualityofqueso.util.ModUtil.quicklyEquippables;
+import static net.dillon.qualityofqueso.util.ModUtil.*;
 
 /**
  * Utility class.
  */
 public class ButtonUtil {
-    public static final String ENABLED_TEXTURE = "qoq_enabled";
-    public static final String DISABLED_TEXTURE = "qoq_disabled";
+    public static final String ENABLED_TEXTURE = "sprites/button/qoq_enabled";
+    public static final String DISABLED_TEXTURE = "sprites/button/qoq_disabled";
 
     /**
      * Initializes the settings button.
@@ -61,7 +61,7 @@ public class ButtonUtil {
     public static SpriteIconButton initializeButton(Minecraft client, Screen parent) {
         return SpriteIconButton.builder(ModTexts.BLANK, (onPress) -> client.setScreen(new ModOptionsScreen(parent)), false)
                 .width(20)
-                .sprite(Identifier.fromNamespaceAndPath("qualityofqueso", "cheese_wheel"), 16, 16)
+                .sprite(ofQoQ("button/cheese_wheel"), 16, 16)
                 .build();
     }
 
@@ -82,8 +82,9 @@ public class ButtonUtil {
     /**
      * Draws the texture for a {@code inventory management button.}
      */
-    public static void drawButtonTexture(GuiGraphics graphics, String name, Button button) {
-        graphics.blit(RenderPipelines.GUI_TEXTURED, Identifier.parse("qualityofqueso:textures/gui/" + name + ".png"), button.getX() - 1, button.getY() - 1, 0.0F, 0.0F, 12, 12, 12, 12);
+    public static void drawButtonTexture(GuiGraphics graphics, String name, TransferButton button) {
+        int xy = getTransferButtonXY(button);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, Identifier.parse("qualityofqueso:textures/gui/button/" + name + ".png"), button.getX() - 1, button.getY() - 1, 0.0F, 0.0F, xy, xy, xy, xy);
     }
 
     /**
@@ -91,6 +92,13 @@ public class ButtonUtil {
      */
     public static void drawTexture(GuiGraphics graphics, String name, Button button) {
         drawTexture(graphics, name, button, 1.0F);
+    }
+
+    /**
+     * @return the width and height for a {@code transfer button.}
+     */
+    public static int getTransferButtonXY(TransferButton button) {
+        return 12;
     }
 
     /**
@@ -394,6 +402,13 @@ public class ButtonUtil {
     }
 
     /**
+     * Plays the default button press sound.
+     */
+    public static void playDefaultSound(SoundManager manager) {
+        manager.play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+    }
+
+    /**
      * Plays the bundle sounds when using buttons.
      */
     public static void playButtonSound(Minecraft client, boolean drop) {
@@ -410,13 +425,14 @@ public class ButtonUtil {
     /**
      * Swaps all items in a container.
      */
-    public static void swapItems(AbstractContainerMenu handler, Container inventory, Set<Integer> excludedSlots) {
+    public static void swapItems(Minecraft minecraft, AbstractContainerMenu handler, Container inventory, Set<Integer> excludedSlots) {
         int totalSlots = getTotalSlots(handler);
         int containerSize = getContainerSize(inventory);
         int offset = totalSlots - 27 - 9;
 
         int swaps = Math.min(totalSlots - containerSize, containerSize);
 
+        boolean swappedItem = false;
         for (int i = 0; i < swaps; i++) {
             int playerSlotIndex = i + offset;
 
@@ -453,6 +469,13 @@ public class ButtonUtil {
             }
 
             sendSwapSlotPacket(playerSlot.index, chestSlot.index);
+            swappedItem = true;
+        }
+
+        if (swappedItem) {
+            playButtonSound(minecraft, false);
+        } else {
+            playButtonInactiveSound(minecraft);
         }
     }
 
@@ -720,10 +743,38 @@ public class ButtonUtil {
     }
 
     /**
+     * @return if a button is active and present.
+     */
+    public static boolean buttonActive(Button button) {
+        return button != null && button.active;
+    }
+
+    /**
+     * @return if a button is inactive, but present.
+     */
+    public static boolean buttonInactive(Button button) {
+        return button != null && !button.active;
+    }
+
+    /**
+     * @return if a button is hovered.
+     */
+    public static boolean buttonHovered(Button button) {
+        return button != null && button.isHovered();
+    }
+
+    /**
+     * @return if a button is currently hovered, but not active.
+     */
+    public static boolean buttonHoveredButInactive(Button button) {
+        return buttonInactive(button) && buttonHovered(button);
+    }
+
+    /**
      * @return if a button is hovered and active.
      */
     public static boolean buttonHoveredAndActive(Button button) {
-        return button != null && button.isHovered() && button.active;
+        return buttonActive(button) && buttonHovered(button);
     }
 
     /**
@@ -736,13 +787,14 @@ public class ButtonUtil {
     /**
      * @return whether a slot should be grayed out.
      */
-    public static boolean shouldGrayout(AbstractContainerScreen<?> screen, TransferButton inventoryButton, TransferButton containerButton, TransferButton hotbarButton, Slot slot) {
+    public static boolean shouldGrayout(AbstractContainerScreen<?> screen, TransferButton inventoryButton, TransferButton containerButton, TransferButton hotbarButton, TransferButton quickDropButton, Slot slot) {
         boolean shortcutKeyReady = isInventoryScreen(screen) ? Minecraft.getInstance().hasControlDown() && Minecraft.getInstance().hasAltDown() : Minecraft.getInstance().hasControlDown();
         return shortcutKeyReady
                 || shiftHeld(screen, false)
                 || (buttonHoveredAndActive(inventoryButton) && slot.hasItem())
                 || buttonHoveredAndActive(containerButton)
-                || (buttonHoveredAndActive(hotbarButton) && slot.hasItem());
+                || (buttonHoveredAndActive(hotbarButton) && slot.hasItem())
+                || (isInventoryScreen(screen) && buttonHoveredAndActive(quickDropButton) && slot.hasItem());
     }
 
     /**
@@ -804,5 +856,12 @@ public class ButtonUtil {
      */
     public static boolean isCreativeInventoryScreen(Screen screen) {
         return screen instanceof CreativeModeInventoryScreen;
+    }
+
+    /**
+     * A class that stores button names.
+     */
+    public static class ButtonNames {
+        public static final String SORT = "sort/sort";
     }
 }

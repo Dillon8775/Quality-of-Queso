@@ -39,6 +39,9 @@ public class MiscOptionsScreen extends AbstractModOptionsScreen {
                 ModListOptions.preventEFromTyping(),
                 ModListOptions.quickEquip(),
 
+                ModListOptions.elytraAlarm(),
+                ModListOptions.minElytraFallDistance(),
+
                 ModListOptions.mobHitDing(),
                 ModListOptions.minMobHitDingDistance(),
 
@@ -50,7 +53,8 @@ public class MiscOptionsScreen extends AbstractModOptionsScreen {
     protected OptionInstance<?>[] bottomOptions() {
         return new OptionInstance[]{
                 ModListOptions.qoqButtons(),
-                ModListOptions.multiServerConfigs()
+                ModListOptions.multiServerConfigs(),
+                ModListOptions.fortniteBattlePass()
         };
     }
 

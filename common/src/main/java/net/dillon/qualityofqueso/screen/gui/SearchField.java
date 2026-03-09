@@ -31,16 +31,28 @@ public class SearchField extends EditBox {
     public void renderWidget(GuiGraphics context, int mouseX, int mouseY, float deltaTicks) {
         super.renderWidget(context, mouseX, mouseY, deltaTicks);
         if (options().helpfulTooltips && this.isHovered() && this.getValue().isEmpty()) {
-            ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.chest_search.search_filtering"), context, this.font, mouseX, mouseY);
+            Component matchCase = Component.literal(":").withStyle(ChatFormatting.BOLD).withColor(0xC4FFD7);
+            Component multiple = Component.literal(",").withStyle(ChatFormatting.ITALIC);
+            Component tag = Component.literal("#").withStyle(ChatFormatting.ITALIC).withColor(0x7FFFFF);
+            Component exclude = Component.literal("!").withStyle(ChatFormatting.BOLD).withColor(0xFF4242);
+            ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.chest_search.search_filtering",
+                    matchCase.copy(), multiple.copy(), tag.copy(), exclude.copy()
+            ), context, this.font, mouseX, mouseY);
         }
     }
 
     @Override
     public boolean mouseClicked(MouseButtonEvent click, boolean doubled) {
-        if (this.isHovered() && click.button() == 1) {
-            this.setValue("");
-            this.setFocused(false);
-            return true;
+        if (this.isHovered()) {
+            if (click.button() == 1) {
+                this.setValue("");
+                this.setFocused(false);
+                return true;
+            } else if (click.button() == 0) {
+                this.setFocused(true);
+                this.onClick(click, doubled);
+                return true;
+            }
         }
         return super.mouseClicked(click, doubled);
     }

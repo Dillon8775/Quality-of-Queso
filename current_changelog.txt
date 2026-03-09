@@ -1,6 +1,54 @@
-Version 1.5.6 (MC Fabric 26.1-snapshot, NeoForge 26.1-snapshot):
-- Updated to 26.1!
-- NeoForge support.
+Version 1.6 (MC Fabric 26.1, NeoForge 26.1):
+Elytra Alarm:
+- If you fall a certain amount of blocks (default = 20) with an elytra in your inventory and it's not equipped, the alarm goes off, indicating that you need to equip your elytra.
+- You can change the amount of blocks in the config, and this feature is entirely toggleable.
 
-- Item frame searching now only looks at the item name itself, meaning if it has a custom name, you can only search it by custom name.
-- Fixed bug where item frame searching doesn't play sounds.
+Container Filtering / Fill What's Present:
+- A new transferring functionality, which will only transfer items that are already present in the container that you are transferring to.
+- For example, lets say your chest has diamonds and planks. And lets say you have wood, emeralds, and diamonds and planks in your inventory. When transferring your inventory -> container, it will only move the diamonds and planks.
+- In addition to this, you can shift + left-click on a container block (chest, shulker box, or barrel) to mark it as a "filtered" chest. Then, whenever you open the container, the "fill what's present" will automatically enable for that chest, making it act almost like an "auto-sorter".
+- It will automatically turn off when you close the chest if it wasn't already on before.
+
+Searching changes:
+- You can now search inside shulker boxes and bundles that are in the container/inventory you are searching. You can toggle this with the new "Search Transportables" that appears next to the search bar if a transportable container is present anywhere.
+- Renamed "Inventory Searching Options" category to "Searching Options".
+
+HUD Changes:
+- Armor status is now simply an on/off option. It displays your armor and highlights it when it's changed. The color of the highlight is also determined by the durability of your armor item.
+- Selected hotbar slots also use this colored highlighting system. You can configure this.
+- Shooting a bow/crossbow now displays how many arrows you have. This can be toggled.
+- Added smart positioning for armor status, depending on if an item is being displayed near the hotbar.
+- Added warning indicators next to the armor, which will display if the armor's durability is 10% or less.
+- Added support for left-handed users.
+
+Drag Sorting Changes:
+- Reverted the logic of drag sorting.
+- Holding ALT + SHIFT now EXCLUDES the slots that you are dragging on.
+- Holding just ALT will SELECT that slot and exclude all other slots.
+- This change was made because it is more useful to select certain slots rather than exclude them, and it's harder to do this when having to use ALT + SHIFT, so now you just have to hold ALT to select slots :).
+- Using the drag sorting feature now hides tooltips from being rendered.
+
+Item Frame Searching Changes:
+- Holding CTRL in item frame search screen to match case no longer works. You must add ":" to the beginning of the query.
+- You can no longer tag search with item frame searching. Item frame searching now only searches the actual item name, like "Diamond" or "Emerald".
+
+Option changes:
+- Added an "advanced options" screen. Moved some technical options to this category.
+- Removed the "Include/Exclude Hotbar" option from the options screen, as it can easily be toggled via a container/inventory.
+
+The Fortnite Battle Pass option:
+- Just, don't...
+
+Technical / small changes:
+- Hovering over the quick drop button in your inventory while excluding hotbar now grays out the hotbar slots if the slot has an item.
+- "Swapping" feature is now OFF by default.
+- Organized assets and updated translations.
+- "Helpful Tooltips" option is now more effective.
+- Renamed "qualityofqueso_client-universal.json" to "qualityofqueso-universal_config.json".
+
+Bug Fixes and Optimizations:
+- Fixed armor status display timers being wrong.
+- Fixed drastic frame drops when tag searching (frames still drop a bit when searching multiple tags).
+- Fixed bug where right-clicking a container search field to clear it makes it start acting weird.
+- Optimized button sounds, so they play accordingly, even when using shortcut keys and buttons are disabled.
+- Other small optimizations and bug fixes.

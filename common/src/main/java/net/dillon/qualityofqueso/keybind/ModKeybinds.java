@@ -2,14 +2,15 @@ package net.dillon.qualityofqueso.keybind;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.KeyMapping;
-import net.minecraft.resources.Identifier;
 import org.lwjgl.glfw.GLFW;
+
+import static net.dillon.qualityofqueso.util.ModUtil.ofQoQ;
 
 /**
  * Keybindings for the {@code Quality of Queso} mod.
  */
 public class ModKeybinds {
-    private static final KeyMapping.Category QOQ = KeyMapping.Category.register(Identifier.fromNamespaceAndPath("qualityofqueso", "quality_of_queso"));
+    private static final KeyMapping.Category QOQ = KeyMapping.Category.register(ofQoQ("quality_of_queso"));
 
     public static final KeyMapping QUICK_EQUIP = new KeyMapping(
             "qualityofqueso.quick_equip",

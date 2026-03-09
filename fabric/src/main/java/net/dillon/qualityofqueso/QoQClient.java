@@ -2,6 +2,7 @@ package net.dillon.qualityofqueso;
 
 import net.dillon.qualityofqueso.debug.ModHudEntries;
 import net.dillon.qualityofqueso.event.ClientEvents;
+import net.dillon.qualityofqueso.sound.ModSoundEvents;
 import net.dillon.qualityofqueso.util.ModUtil;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -20,6 +21,8 @@ public class QoQClient implements ClientModInitializer {
         ClientEvents.registerClientEvents();
         ClientEvents.registerCommands();
         ClientEvents.registerKeybindings();
+
+        ModSoundEvents.initializeSoundEvents();
 
         ModUtil.info("Quality of Queso has successfully loaded!");
     }

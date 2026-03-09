@@ -5,9 +5,12 @@ import net.dillon.qualityofqueso.keybind.ModKeybinds;
 import net.dillon.qualityofqueso.util.ModUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLevelEvents;
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
+import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.minecraft.client.gui.screens.DeathScreen;
 
 import static net.dillon.qualityofqueso.util.ModUtil.*;
 
@@ -42,7 +45,19 @@ public class ClientEvents {
             }
         });
 
+        ClientLevelEvents.AFTER_CLIENT_LEVEL_CHANGE.register((level, client) -> {
+            resetArmorHudState();
+        });
+
+        ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
+            if (screen instanceof DeathScreen) {
+                resetArmorHudState();
+            }
+        });
+
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
+            resetArmorHudState();
+
             if (isOnServer(client)) {
                 unloadServerConfig();
             }

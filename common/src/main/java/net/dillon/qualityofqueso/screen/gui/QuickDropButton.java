@@ -6,13 +6,11 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.client.sounds.SoundManager;
-import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 
 import java.util.function.Supplier;
 
-import static net.dillon.qualityofqueso.util.ButtonUtil.playButtonSound;
+import static net.dillon.qualityofqueso.util.ModUtil.ofQoQ;
 
 /**
  * Representation of the quick drop button.
@@ -34,18 +32,13 @@ public class QuickDropButton extends TransferButton {
                 "_with_tag.png" : this.searchFieldText.startsWith(":") ?
                 "_match.png" : ".png";
         String appended = transferable ? transferableString : ".png";
-        context.blit(RenderPipelines.GUI_TEXTURED, Identifier.parse("qualityofqueso:textures/gui/" + id + appended), buttonReference.getX() - 1, buttonReference.getY() - 1, 0.0F, 0.0F, 12, 12, 12, 12);
+        context.blit(RenderPipelines.GUI_TEXTURED, ofQoQ("textures/gui/button/" + id + appended), buttonReference.getX() - 1, buttonReference.getY() - 1, 0.0F, 0.0F, 12, 12, 12, 12);
         boolean shortcutKeyPressed = Minecraft.getInstance().hasControlDown() && Minecraft.getInstance().hasAltDown();
         if (shortcutKeyPressed) {
-            ButtonUtil.drawButtonTexture(context, "quick_drop_outline", this);
+            ButtonUtil.drawButtonTexture(context, "outline/quick_drop_outline", this);
         }
         if (Minecraft.getInstance().hasShiftDown() && (this.isHovered() || shortcutKeyPressed)) {
-            ButtonUtil.drawButtonTexture(context, "quick_drop_one", this);
+            ButtonUtil.drawButtonTexture(context, "shortcut/quick_drop_one", this);
         }
-    }
-
-    @Override
-    public void playDownSound(SoundManager manager) {
-        playButtonSound(Minecraft.getInstance(), true);
     }
 }

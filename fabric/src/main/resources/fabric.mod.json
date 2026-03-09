@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "id": "qualityofqueso",
-  "version": "1.5.6+mc26.1",
+  "version": "1.6+mc26.1",
   "name": "Quality of Queso",
-  "description": "Chest searching, inventory management, remove fog, and more quality-of-life features!",
+  "description": "Chest searching, inventory management, remove fog/nofog, and more quality-of-life features!",
   "authors": [
     "MannyQUESO",
 	"Dillon8775"

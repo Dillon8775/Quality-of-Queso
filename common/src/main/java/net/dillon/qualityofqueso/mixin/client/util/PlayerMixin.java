@@ -1,6 +1,6 @@
 package net.dillon.qualityofqueso.mixin.client.util;
 
-import net.dillon.qualityofqueso.util.PickupHudTracker;
+import net.dillon.qualityofqueso.util.ItemHudTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -30,6 +30,6 @@ public class PlayerMixin {
             return;
         }
 
-        PickupHudTracker.setStack(itemEntity.getItem().copy());
+        ItemHudTracker.setStack(itemEntity.getItem().copy());
     }
 }
