@@ -1,4 +1,4 @@
-package net.dillon.qualityofqueso.screen.gui;
+package net.dillon.qualityofqueso.screen.gui.search;
 
 import net.dillon.qualityofqueso.util.ButtonUtil;
 import net.dillon.qualityofqueso.util.ModUtil;
@@ -24,7 +24,7 @@ public class SearchField extends EditBox {
             this.setValue(ModUtil.SAVED_TEXT);
         }
         this.setMaxLength(50);
-        this.setHint(Component.translatable("qualityofqueso.gui.search.placeholder").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
+        this.setHint(Component.translatable("qualityofqueso.gui.search.placeholder").withStyle(ChatFormatting.ITALIC));
     }
 
     @Override

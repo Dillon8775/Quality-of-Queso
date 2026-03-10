@@ -1,4 +1,4 @@
-package net.dillon.qualityofqueso.screen.gui;
+package net.dillon.qualityofqueso.util;
 
 /**
  * Determines the type of hovered texture that the button should use.

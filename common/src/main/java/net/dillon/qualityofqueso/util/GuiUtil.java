@@ -5,6 +5,9 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.BowItem;
+import net.minecraft.world.item.CrossbowItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 import static net.dillon.qualityofqueso.util.ModUtil.ofQoQ;
@@ -47,6 +50,32 @@ public class GuiUtil {
      */
     public static boolean isStackArrow(ItemStack stack) {
         return stack.is(ItemTags.ARROWS);
+    }
+
+    /**
+     * @return if projectile from either of the player's hand.
+     */
+    public static ItemStack getProjectileFromActiveHand(Minecraft minecraft) {
+        ItemStack offHandItem = minecraft.player.getOffhandItem();
+        if (isProjectileWeapon(offHandItem.getItem())) {
+            return minecraft.player.getProjectile(offHandItem);
+        } else {
+            return minecraft.player.getProjectile(minecraft.player.getMainHandItem());
+        }
+    }
+
+    /**
+     * @return if stack is a projectile weapon.
+     */
+    public static boolean isProjectileWeapon(Item item) {
+        return item instanceof BowItem || item instanceof CrossbowItem;
+    }
+
+    /**
+     * @return if the arrow count can be displayed at all.
+     */
+    public static boolean holdingArrowDisplayableProjectileWeapon(Minecraft minecraft, ItemStack stack) {
+        return options().showArrowCount && !minecraft.player.isCreative() && (stack.getItem() instanceof BowItem || stack.getItem() instanceof CrossbowItem);
     }
 
     /**

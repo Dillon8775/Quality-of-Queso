@@ -1,7 +1,8 @@
-package net.dillon.qualityofqueso.screen.gui;
+package net.dillon.qualityofqueso.screen.gui.button;
 
 import net.dillon.qualityofqueso.keybind.ModKeybinds;
 import net.dillon.qualityofqueso.util.ButtonUtil;
+import net.dillon.qualityofqueso.util.HoverSize;
 import net.dillon.qualityofqueso.util.ModTexts;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;

@@ -7,6 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.ItemTags;
@@ -68,12 +69,25 @@ public class GuiMixin {
         return getHighlightedSlotTexture(HOTBAR_SELECTION_SPRITE, this.minecraft.player.getInventory().getItem(this.minecraft.player.getInventory().getSelectedSlot()));
     }
 
+    /**
+     * Renders things overtop of everything.
+     */
     @Inject(method = "renderItemHotbar", at = @At("TAIL"))
-    private void renderAWarningIndicator(GuiGraphics context, DeltaTracker deltaTracker, CallbackInfo ci) {
+    private void renderAllWarningIndicators(GuiGraphics context, DeltaTracker deltaTracker, CallbackInfo ci) {
         for (int i = 0; i < this.minecraft.player.getInventory().getContainerSize() - 34; i++) {
             ItemStack item = this.minecraft.player.getInventory().getItem(i);
             if (getItemHealthPercentage(item) < 0.11F) {
                 this.renderWarningIndicator(this.minecraft, context, i, null);
+            }
+        }
+
+        ItemStack offHandItem = this.minecraft.player.getOffhandItem();
+        if (getItemHealthPercentage(offHandItem) < 0.41F) {
+            if (options().coloredHighlighting) {
+                this.renderHighlightedArmorSlot(this.minecraft, HOTBAR_SELECTION_SPRITE, context, EquipmentSlot.OFFHAND, getItemHealthPercentage(offHandItem) < 0.21F);
+            }
+            if (options().warningIndicators && getItemHealthPercentage(offHandItem) < 0.11F) {
+                this.renderWarningIndicator(this.minecraft, context, 0, EquipmentSlot.OFFHAND);
             }
         }
     }
@@ -147,7 +161,8 @@ public class GuiMixin {
      */
     @Unique
     private boolean renderItem(GuiGraphics context, ItemStack stack) {
-        if (!options().itemCount.enabled() || !stack.isStackable()) {
+        boolean holdingArrowDisplayableProjectileWeapon = holdingArrowDisplayableProjectileWeapon(this.minecraft, stack);
+        if (!options().itemCount.enabled() || (!stack.isStackable() && !holdingArrowDisplayableProjectileWeapon)) {
             if (!stack.is(ItemTags.SHULKER_BOXES) && !stack.is(ItemTags.BUNDLES)) {
                 return false;
             }
@@ -178,8 +193,8 @@ public class GuiMixin {
                     }
                 }
             } else if (
-                    (options().countAllArrows && options().showArrowCount && isStackArrow(invStack) && isStackArrow(ItemHudTracker.getStack()) && !this.renderingHeldItem)
-                            || invStack.is(stack.getItem())) {
+                    (options().countAllArrows && options().showArrowCount && (isStackArrow(invStack) && isStackArrow(ItemHudTracker.getStack()) && !this.renderingHeldItem))
+                            || (holdingArrowDisplayableProjectileWeapon ? !options().countAllArrows ? invStack.is(getProjectileFromActiveHand(this.minecraft).getItem()) && isStackArrow(invStack) : isStackArrow(invStack) : invStack.is(stack.getItem()))) {
                 count += invStack.getCount();
                 items.add(invStack.getCount());
             }
@@ -190,7 +205,7 @@ public class GuiMixin {
         this.isDisplayingExactStack = false;
         this.isDisplayingRemainder = false;
 
-        boolean trackedArrow = isStackArrow(ItemHudTracker.getStack());
+        boolean trackedArrow = options().showArrowCount && (holdingArrowDisplayableProjectileWeapon || isStackArrow(ItemHudTracker.getStack()));
         if (count <= 0 && !trackedArrow) {
             return false;
         }
@@ -222,11 +237,15 @@ public class GuiMixin {
                     this.moveArmorOver = fullStacks > 99;
                 }
             }
+            DataComponentMap components = stack.getComponents();
             ItemStack newStack = new ItemStack(stack.getItem(), count);
+            newStack.applyComponents(components);
+
             HumanoidArm offhandArm = this.minecraft.player.getMainArm().getOpposite();
             boolean isArrow = isStackArrow(newStack);
-            boolean arrowDisplayValid = isArrow && options().itemCount == ItemCount.REMAINDER ? count < 65 : count < 100;
-            if (!this.renderingHeldItem && options().showArrowCount && arrowDisplayValid && isStackArrow(ItemHudTracker.getStack())) {
+            boolean arrowDisplayValid = (isArrow || holdingArrowDisplayableProjectileWeapon) && options().itemCount == ItemCount.REMAINDER ? count < 65 : count < 100;
+            boolean shouldRenderArrowUi = options().showArrowCount && arrowDisplayValid && (holdingArrowDisplayableProjectileWeapon || !this.renderingHeldItem);
+            if (shouldRenderArrowUi && (isArrow || holdingArrowDisplayableProjectileWeapon)) {
                 context.blitSprite(RenderPipelines.GUI_TEXTURED, HOTBAR_OFFHAND_RIGHT_SPRITE,
                         getGuiWidth(context) + 90,
                         getGuiHeight(context) - 3,
@@ -243,8 +262,23 @@ public class GuiMixin {
                         23
                 );
             }
+
             boolean arrowAndZero = trackedArrow && count == 0;
-            drawItem(this.minecraft, context, arrowAndZero ? ItemHudTracker.getStack() : newStack, offhandArm == HumanoidArm.RIGHT ? -129 : 100, false);
+            ItemStack playerProjectile = getProjectileFromActiveHand(this.minecraft);
+            ItemStack stackToRender = newStack;
+            if (arrowAndZero) {
+                if (holdingArrowDisplayableProjectileWeapon && !isStackArrow(ItemHudTracker.getStack())) {
+                    stackToRender = new ItemStack(Items.ARROW, 1);
+                } else {
+                    stackToRender = ItemHudTracker.getStack();
+                }
+            } else if (holdingArrowDisplayableProjectileWeapon) {
+                DataComponentMap playerProjectileComponents = playerProjectile.getComponents();
+                stackToRender = new ItemStack(playerProjectile.getItem(), count);
+                stackToRender.applyComponents(playerProjectileComponents);
+            }
+            drawItem(this.minecraft, context, stackToRender, offhandArm == HumanoidArm.RIGHT ? -129 : 100, false);
+
             int x = 105;
             if (count < 10) {
                 x += 6;
@@ -270,8 +304,8 @@ public class GuiMixin {
                 }
             }
             int color = CommonColors.WHITE;
-            boolean validArrow = isArrow || arrowAndZero;
-            if (!this.renderingHeldItem && options().showArrowCount && validArrow) {
+            boolean validArrow = isArrow || arrowAndZero || holdingArrowDisplayableProjectileWeapon;
+            if (shouldRenderArrowUi && validArrow) {
                 if (count < 6) {
                     color = CommonColors.RED;
                 } else if (count < 11) {
@@ -282,7 +316,7 @@ public class GuiMixin {
                     color = CommonColors.GREEN;
                 }
             }
-            if (!this.renderingHeldItem && options().warningIndicators && validArrow && count < 6) {
+            if (shouldRenderArrowUi && options().warningIndicators && validArrow && count < 6) {
                 this.renderWarningIndicator(this.minecraft, context, (int)(9 * 1.01), null);
             }
             context.drawString(this.minecraft.font, text, ((context.guiWidth() / 2) + (isLeftHanded(this.minecraft) ? -x - 18 : x)), context.guiHeight() - 10, color, true);
@@ -325,6 +359,7 @@ public class GuiMixin {
             case CHEST -> base + 120;
             case LEGS -> base + 140;
             case FEET -> base + 160;
+            case OFFHAND -> base + (isLeftHanded(this.minecraft) ? 69 : -149);
             default -> 0;
         };
     }

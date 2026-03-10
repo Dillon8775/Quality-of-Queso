@@ -1,5 +1,6 @@
-package net.dillon.qualityofqueso.screen.gui;
+package net.dillon.qualityofqueso.screen.gui.button;
 
+import net.dillon.qualityofqueso.util.HoverSize;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;

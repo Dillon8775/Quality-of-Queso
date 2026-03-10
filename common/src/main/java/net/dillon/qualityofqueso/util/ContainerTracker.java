@@ -3,6 +3,12 @@ package net.dillon.qualityofqueso.util;
 import net.dillon.qualityofqueso.option.instance.TrackedContainers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.entity.BarrelBlockEntity;
@@ -12,8 +18,7 @@ import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.ChestType;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import static net.dillon.qualityofqueso.util.ModUtil.trackedContainers;
 
@@ -33,6 +38,8 @@ public class ContainerTracker {
     public static final int DEFAULT_COOLDOWN = 1;
     public static int COOLDOWN = DEFAULT_COOLDOWN;
     public static boolean IS_TRACKED_CONTAINER = false;
+    public static boolean OPENING_PLACEHOLDER_SCREEN = false;
+    public static boolean RETURNING_FROM_PLACEHOLDER_SCREEN = false;
     public static FilterMode CURRENT_FILTER_MODE = FilterMode.ITEM;
     private static Set<String> pendingOpenedContainerKeys = null;
     private static Set<String> activeContainerKeys = null;
@@ -41,20 +48,30 @@ public class ContainerTracker {
      * @return the tracked chests list.
      */
     private static Set<String> trackedChests() {
-        if (trackedContainers().trackedFillWhatsPresetChests == null) {
-            trackedContainers().trackedFillWhatsPresetChests = new HashSet<>();
+        if (trackedContainers().trackedFilteredByItemContainers == null) {
+            trackedContainers().trackedFilteredByItemContainers = new HashSet<>();
         }
-        return trackedContainers().trackedFillWhatsPresetChests;
+        return trackedContainers().trackedFilteredByItemContainers;
     }
 
     /**
      * @return the tracked tag-filtered container list.
      */
     private static Set<String> tagFilteredChests() {
-        if (trackedContainers().trackedFillWhatsPresetTagChests == null) {
-            trackedContainers().trackedFillWhatsPresetTagChests = new HashSet<>();
+        if (trackedContainers().trackedFilteredByTagContainers == null) {
+            trackedContainers().trackedFilteredByTagContainers = new HashSet<>();
         }
-        return trackedContainers().trackedFillWhatsPresetTagChests;
+        return trackedContainers().trackedFilteredByTagContainers;
+    }
+
+    /**
+     * @return the tracked placeholder item IDs by container key group.
+     */
+    private static Map<String, List<String>> placeholderItems() {
+        if (trackedContainers().trackedFilteredItems == null) {
+            trackedContainers().trackedFilteredItems = new java.util.HashMap<>();
+        }
+        return trackedContainers().trackedFilteredItems;
     }
 
     /**
@@ -180,6 +197,80 @@ public class ContainerTracker {
         } else {
             tagFilteredChests().removeAll(activeContainerKeys);
             CURRENT_FILTER_MODE = FilterMode.ITEM;
+        }
+        TrackedContainers.TRACKED_CONTAINERS.save();
+    }
+
+    /**
+     * @return current active container key group used for placeholder persistence.
+     */
+    private static String activeContainerGroupKey() {
+        if (activeContainerKeys == null || activeContainerKeys.isEmpty()) {
+            return "";
+        }
+
+        List<String> sorted = new ArrayList<>(activeContainerKeys);
+        sorted.sort(Comparator.naturalOrder());
+        return String.join(";", sorted);
+    }
+
+    /**
+     * @return placeholder stacks for currently active tracked container.
+     */
+    public static List<ItemStack> getCurrentPlaceholderStacks() {
+        List<ItemStack> stacks = new ArrayList<>();
+        String key = activeContainerGroupKey();
+        if (key.isEmpty()) {
+            return stacks;
+        }
+
+        List<String> ids = placeholderItems().get(key);
+        if (ids == null || ids.isEmpty()) {
+            return stacks;
+        }
+
+        for (String id : ids) {
+            if (id == null || id.isBlank()) {
+                continue;
+            }
+
+            try {
+                Identifier identifier = Identifier.parse(id);
+                Optional<Holder.Reference<Item>> item = BuiltInRegistries.ITEM.get(identifier);
+                if (item.isPresent() && item.get().value() != Items.AIR) {
+                    stacks.add(new ItemStack(item.get().value()));
+                }
+            } catch (Exception ignored) {
+            }
+        }
+        return stacks;
+    }
+
+    /**
+     * Saves placeholder stacks for currently active tracked container.
+     */
+    public static void setCurrentPlaceholderStacks(List<ItemStack> stacks) {
+        String key = activeContainerGroupKey();
+        if (key.isEmpty()) {
+            return;
+        }
+
+        Set<String> ids = new java.util.LinkedHashSet<>();
+        for (ItemStack stack : stacks) {
+            if (stack == null || stack.isEmpty()) {
+                continue;
+            }
+
+            Identifier id = BuiltInRegistries.ITEM.getKey(stack.getItem());
+            if (id != null) {
+                ids.add(id.toString());
+            }
+        }
+
+        if (ids.isEmpty()) {
+            placeholderItems().remove(key);
+        } else {
+            placeholderItems().put(key, new ArrayList<>(ids));
         }
         TrackedContainers.TRACKED_CONTAINERS.save();
     }

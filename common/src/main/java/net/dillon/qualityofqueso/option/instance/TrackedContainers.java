@@ -2,15 +2,15 @@ package net.dillon.qualityofqueso.option.instance;
 
 import net.dillon.qualityofqueso.option.base.BaseOptions;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Stores tracked containers in a separate file.
  */
 public class TrackedContainers {
-    public Set<String> trackedFillWhatsPresetChests = new HashSet<>();
-    public Set<String> trackedFillWhatsPresetTagChests = new HashSet<>();
+    public Set<String> trackedFilteredByItemContainers = new HashSet<>();
+    public Set<String> trackedFilteredByTagContainers = new HashSet<>();
+    public Map<String, List<String>> trackedFilteredItems = new HashMap<>();
 
     public static final ModOptionsHandler TRACKED_CONTAINERS = new ModOptionsHandler();
 

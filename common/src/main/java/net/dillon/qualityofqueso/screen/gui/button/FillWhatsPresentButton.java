@@ -1,4 +1,4 @@
-package net.dillon.qualityofqueso.screen.gui;
+package net.dillon.qualityofqueso.screen.gui.button;
 
 import net.dillon.qualityofqueso.util.ContainerTracker;
 import net.minecraft.client.Minecraft;
@@ -12,8 +12,9 @@ import static net.dillon.qualityofqueso.util.ModUtil.options;
  * A button to only transfer what is present in the opposite container.
  */
 public class FillWhatsPresentButton extends ToggleableButton {
+    private final Runnable onShiftRightClick;
 
-    public FillWhatsPresentButton(AbstractContainerMenu screenHandler, Font font, String searchFieldText, int x, int y, String buttonName, OnPress onPress) {
+    public FillWhatsPresentButton(AbstractContainerMenu screenHandler, Font font, String searchFieldText, int x, int y, String buttonName, OnPress onPress, Runnable onShiftRightClick) {
         super(screenHandler, font, searchFieldText, x, y, buttonName, onPress,
                 ContainerTracker.IS_TRACKED_CONTAINER
                         ? ContainerTracker.CURRENT_FILTER_MODE.tag() ? of("filtered_tag") : of("filtered")
@@ -23,11 +24,16 @@ public class FillWhatsPresentButton extends ToggleableButton {
                         : of("move_anything"),
                 new String[]{"qualityofqueso.gui.fill_whats_present/filtered", "qualityofqueso.gui.fill_whats_present/fill_whats_present", "qualityofqueso.gui.fill_whats_present/move_anything"}
         );
+        this.onShiftRightClick = onShiftRightClick;
     }
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDouble) {
         if (event.button() == 1 && ContainerTracker.IS_TRACKED_CONTAINER) {
+            if (Minecraft.getInstance().hasShiftDown() && this.onShiftRightClick != null) {
+                this.onShiftRightClick.run();
+                return true;
+            }
             ContainerTracker.toggleCurrentFilterMode();
             this.playDownSound(Minecraft.getInstance().getSoundManager());
             return true;

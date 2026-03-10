@@ -3,13 +3,20 @@ Elytra Alarm:
 - If you fall a certain amount of blocks (default = 20) with an elytra in your inventory and it's not equipped, the alarm goes off, indicating that you need to equip your elytra.
 - You can change the amount of blocks in the config, and this feature is entirely toggleable.
 
-Container Filtering / Fill What's Present:
+Fill What's Present:
 - A new transferring functionality, which will only transfer items that are already present in the container that you are transferring to.
 - For example, lets say your chest has diamonds and planks. And lets say you have wood, emeralds, and diamonds and planks in your inventory. When transferring your inventory -> container, it will only move the diamonds and planks.
 - In addition to this, you can shift + left-click on a container block (chest, shulker box, or barrel) to mark it as a "filtered" chest. Then, whenever you open the container, the "fill what's present" will automatically enable for that chest, making it act almost like an "auto-sorter".
 - It will automatically turn off when you close the chest if it wasn't already on before.
 
+Container Filtering:
+- In addition to the "Fill What's Present" feature, you can also manually filter containers to only transfer filtered items (or filtered items by tag), by shift + right clicking on the "Fill What's Present" button.
+- This will then open a new GUI screen where you can pick and choose which items you want to be sorted into that container.
+- You can then easily move items into that container, if it's already present in the container, or if that container has that item marked as "filtered".
+- This feature is basically multi-item container sorting, 100% client side, no redstone or special items/blocks required.
+
 Searching changes:
+- New texture for the search bar! It's very vanilla-friendly. You can disable it if you'd like.
 - You can now search inside shulker boxes and bundles that are in the container/inventory you are searching. You can toggle this with the new "Search Transportables" that appears next to the search bar if a transportable container is present anywhere.
 - Renamed "Inventory Searching Options" category to "Searching Options".
 
@@ -27,6 +34,7 @@ Drag Sorting Changes:
 - Holding just ALT will SELECT that slot and exclude all other slots.
 - This change was made because it is more useful to select certain slots rather than exclude them, and it's harder to do this when having to use ALT + SHIFT, so now you just have to hold ALT to select slots :).
 - Using the drag sorting feature now hides tooltips from being rendered.
+- Added a button to clear all excluded slots.
 
 Item Frame Searching Changes:
 - Holding CTRL in item frame search screen to match case no longer works. You must add ":" to the beginning of the query.
@@ -50,5 +58,6 @@ Bug Fixes and Optimizations:
 - Fixed armor status display timers being wrong.
 - Fixed drastic frame drops when tag searching (frames still drop a bit when searching multiple tags).
 - Fixed bug where right-clicking a container search field to clear it makes it start acting weird.
+- Fixed bug where items don't render their components with item count.
 - Optimized button sounds, so they play accordingly, even when using shortcut keys and buttons are disabled.
 - Other small optimizations and bug fixes.

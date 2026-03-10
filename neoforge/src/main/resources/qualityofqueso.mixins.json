@@ -19,6 +19,7 @@
     "client.hud.RecipeBookComponentMixin",
 
     "client.screen.CreativeModeInventoryScreenMixin",
+    "client.screen.EditBoxMixin",
     "client.screen.PauseScreenMixin",
     "client.screen.TitleScreenMixin",
 

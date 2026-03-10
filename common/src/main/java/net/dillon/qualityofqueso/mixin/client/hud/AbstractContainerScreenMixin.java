@@ -3,7 +3,9 @@ package net.dillon.qualityofqueso.mixin.client.hud;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.dillon.qualityofqueso.keybind.ModKeybinds;
 import net.dillon.qualityofqueso.option.instance.ModClientOptions;
-import net.dillon.qualityofqueso.screen.gui.*;
+import net.dillon.qualityofqueso.screen.FilterItemsScreen;
+import net.dillon.qualityofqueso.screen.gui.button.*;
+import net.dillon.qualityofqueso.screen.gui.search.SearchField;
 import net.dillon.qualityofqueso.util.ButtonUtil;
 import net.dillon.qualityofqueso.util.ContainerTracker;
 import net.minecraft.ChatFormatting;
@@ -99,6 +101,8 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
     @Unique
     private TransferButton searchTransportablesButton;
     @Unique
+    private TransferButton clearExcludedSlotsButton;
+    @Unique
     private int swapCooldown = 0;
     @Unique
     private Container container;
@@ -148,7 +152,10 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                 this.container = null;
             }
 
-            if (ContainerTracker.consumePendingOpenIsTracked()) {
+            if (ContainerTracker.RETURNING_FROM_PLACEHOLDER_SCREEN) {
+                ContainerTracker.RETURNING_FROM_PLACEHOLDER_SCREEN = false;
+                ContainerTracker.IS_TRACKED_CONTAINER = true;
+            } else if (ContainerTracker.consumePendingOpenIsTracked()) {
                 ContainerTracker.IS_TRACKED_CONTAINER = true;
                 if (!options().fillWhatsPreset) {
                     options().fillWhatsPreset = true;
@@ -266,10 +273,11 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             }
 
             if (!fromStack.isEmpty()) {
+                boolean placeholderMatch = getCursorStack(this.screen).isEmpty() && !drop && options().fillWhatsPreset && !toInventory && hasPlaceholderMatch(fromStack);
                 for (int j = toStart; j < toEnd; j++) {
                     ItemStack toStack = this.menu.getSlot(j).getItem();
                     // Skip items that aren't already present
-                    if (getCursorStack(this.screen).isEmpty() && !drop && options().fillWhatsPreset && !toInventory && !this.matchesFillFilter(fromStack, toStack)) {
+                    if (getCursorStack(this.screen).isEmpty() && !drop && options().fillWhatsPreset && !toInventory && !matchesFillFilter(fromStack, toStack) && !placeholderMatch) {
                         continue;
                     }
                     // Only transfer items if the query matches whatever the cursor is holding
@@ -297,32 +305,6 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
         } else {
             playButtonInactiveSound(this.minecraft);
         }
-    }
-
-    /**
-     * @return if a stack is in a tag.
-     */
-    @Unique
-    private static boolean areStacksInSameTag(ItemStack fromStack, ItemStack toStack) {
-        RegistryAccess lookup = Minecraft.getInstance().level.registryAccess();
-        Registry<Item> itemRegistry = lookup.lookupOrThrow(Registries.ITEM);
-        for (HolderSet.Named<Item> tag : itemRegistry.getTags().toList()) {
-            if (fromStack.is(tag.key()) && toStack.is(tag.key())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * @return if two stacks match under the current fill filter mode.
-     */
-    @Unique
-    private boolean matchesFillFilter(ItemStack fromStack, ItemStack toStack) {
-        if (ContainerTracker.IS_TRACKED_CONTAINER && ContainerTracker.CURRENT_FILTER_MODE == ContainerTracker.FilterMode.TAG) {
-            return areStacksInSameTag(fromStack, toStack);
-        }
-        return fromStack.getItem() == toStack.getItem();
     }
 
     /**
@@ -429,7 +411,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                 }
             } else {
                 if (!stack.isEmpty() && !isStackShulker) {
-                    if (applyFillWhatsPresentFilter && options().fillWhatsPreset && isPlayerInventory && !this.isPresentInContainer(stack)) {
+                    if (applyFillWhatsPresentFilter && options().fillWhatsPreset && isPlayerInventory && !isPresentInContainer(this.container, this.menu, stack)) {
                         continue;
                     }
                     filledSlots++;
@@ -437,20 +419,6 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             }
         }
         return filledSlots != 0 && !this.areAllSlotsUnavailable(isPlayerInventory, isPlayerInventory ? playerInventory : null);
-    }
-
-    /**
-     * @return true if the item is present in the opposing inventory/container.
-     */
-    @Unique
-    private boolean isPresentInContainer(ItemStack sourceStack) {
-        for (int i = 0; i < getContainerSize(this.container); i++) {
-            ItemStack opposingStack = this.menu.getSlot(i).getItem();
-            if (!opposingStack.isEmpty() && this.matchesFillFilter(sourceStack, opposingStack)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     /**
@@ -804,7 +772,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                 buttons++;
             }
 
-            if (containerScreen && options().transferring.orKeyOnly()) {
+            if (containerScreen && options().containerFiltering && options().transferring.orKeyOnly()) {
                 this.fillWhatsPresentButton = this.addWidget(
                     new FillWhatsPresentButton(
                             this.menu,
@@ -814,8 +782,14 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                             getManagementButtonY(this.screen, this.container, this.topPos, this.titleLabelY),
                             "fill_whats_present/fill_whats_present",
                             b -> {
-                                options().fillWhatsPreset = !options().fillWhatsPreset;
-                                ModClientOptions.CLIENT.save();
+                                if (!Minecraft.getInstance().hasShiftDown()) {
+                                    options().fillWhatsPreset = !options().fillWhatsPreset;
+                                    ModClientOptions.CLIENT.save();
+                                }
+                            },
+                            () -> {
+                                ContainerTracker.OPENING_PLACEHOLDER_SCREEN = true;
+                                this.minecraft.setScreen(new FilterItemsScreen(this.screen));
                             }));
 
                 this.fillWhatsPresentButton.render(graphics, mouseX, mouseY, deltaTicks);
@@ -883,6 +857,26 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                         ));
 
                 this.quickDropButton.render(graphics, mouseX, mouseY, deltaTicks);
+                buttons++;
+            }
+
+            if (options().dragSorting && !this.excludedSlots.isEmpty()) {
+                this.clearExcludedSlotsButton = this.addWidget(
+                        new ClearExcludedSlotsButton(
+                                this.menu,
+                                this.font,
+                                this.getSearchFieldText(),
+                                getManagementButtonX(this.screen, this.imageWidth, this.width, buttons),
+                                getManagementButtonY(this.screen, this.container, this.topPos, this.titleLabelY),
+                                "clear_excluded_slots/clear_excluded_slots",
+                                b -> {
+                                    this.excludedSlots.clear();
+                                    this.excludedAll = false;
+                                }
+                        )
+                );
+
+                this.clearExcludedSlotsButton.render(graphics, mouseX, mouseY, deltaTicks);
             }
 
             if ((options().chestSearching && containerScreen) || (options().inventorySearching && inventoryScreen)) {
@@ -1295,6 +1289,10 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
         }
 
         if (isContainerScreen(this.screen)) {
+            if (ContainerTracker.OPENING_PLACEHOLDER_SCREEN) {
+                ContainerTracker.OPENING_PLACEHOLDER_SCREEN = false;
+                return;
+            }
             ContainerTracker.clearActiveContainer();
             ContainerTracker.IS_TRACKED_CONTAINER = false;
         }

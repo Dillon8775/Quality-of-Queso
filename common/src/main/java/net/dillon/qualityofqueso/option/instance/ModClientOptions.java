@@ -16,10 +16,12 @@ public class ModClientOptions {
     public boolean inventorySearching = true;
     public boolean saveSearchText = false;
     public boolean searchTransportables = true;
+    public boolean useOldSearchBarTexture = false;
 
     // Inventory management options
     public Transferring transferring = Transferring.SHORTCUT_KEY_OR_BUTTON;
     public ContainerSorting containerSorting = ContainerSorting.SHORTCUT_KEY_OR_BUTTON;
+    public boolean containerFiltering = true;
     public QuickDrop quickDrop = QuickDrop.SHORTCUT_KEY_ONLY;
     public Swapping swapping = Swapping.OFF;
     public boolean perpendicularQuickMoving = false;

@@ -3,7 +3,7 @@ package net.dillon.qualityofqueso.util;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.dillon.qualityofqueso.option.MoveItemsIf;
 import net.dillon.qualityofqueso.option.screen.ModOptionsScreen;
-import net.dillon.qualityofqueso.screen.gui.TransferButton;
+import net.dillon.qualityofqueso.screen.gui.button.TransferButton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -16,7 +16,11 @@ import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
+import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.HashedPatchMap;
 import net.minecraft.network.HashedStack;
 import net.minecraft.network.chat.Component;
@@ -402,10 +406,70 @@ public class ButtonUtil {
     }
 
     /**
+     * @return if a stack is in a tag.
+     */
+    public static boolean areStacksInSameTag(ItemStack fromStack, ItemStack toStack) {
+        RegistryAccess lookup = Minecraft.getInstance().level.registryAccess();
+        Registry<Item> itemRegistry = lookup.lookupOrThrow(Registries.ITEM);
+        for (HolderSet.Named<Item> tag : itemRegistry.getTags().toList()) {
+            if (fromStack.is(tag.key()) && toStack.is(tag.key())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @return if two stacks match under the current fill filter mode.
+     */
+    public static boolean matchesFillFilter(ItemStack fromStack, ItemStack toStack) {
+        if (ContainerTracker.IS_TRACKED_CONTAINER && ContainerTracker.CURRENT_FILTER_MODE.tag()) {
+            return areStacksInSameTag(fromStack, toStack);
+        }
+        return fromStack.getItem() == toStack.getItem();
+    }
+
+    /**
+     * @return true if the item is present in the opposing inventory/container.
+     */
+    public static boolean isPresentInContainer(Container container, AbstractContainerMenu menu, ItemStack sourceStack) {
+        for (int i = 0; i < getContainerSize(container); i++) {
+            ItemStack opposingStack = menu.getSlot(i).getItem();
+            if (!opposingStack.isEmpty() && matchesFillFilter(sourceStack, opposingStack)) {
+                return true;
+            }
+        }
+        return hasPlaceholderMatch(sourceStack);
+    }
+
+    /**
+     * @return true if the stack matches any placeholder in the current tracked container.
+     */
+    public static boolean hasPlaceholderMatch(ItemStack sourceStack) {
+        if (!ContainerTracker.IS_TRACKED_CONTAINER) {
+            return false;
+        }
+
+        for (ItemStack placeholderStack : ContainerTracker.getCurrentPlaceholderStacks()) {
+            if (!placeholderStack.isEmpty() && matchesFillFilter(sourceStack, placeholderStack)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Plays the default button press sound.
      */
     public static void playDefaultSound(SoundManager manager) {
         manager.play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+    }
+
+    /**
+     * Plays the bundle sounds without the drop when using buttons.
+     */
+    public static void playButtonSound(Minecraft client) {
+        playButtonSound(client, false);
     }
 
     /**

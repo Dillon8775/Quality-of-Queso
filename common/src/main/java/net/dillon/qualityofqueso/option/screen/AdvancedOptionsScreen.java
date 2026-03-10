@@ -24,8 +24,9 @@ public class AdvancedOptionsScreen extends AbstractModOptionsScreen {
     @Override
     protected void init() {
         super.init();
-        this.list.addBig(ModListOptions.moveItemsIf());
+        this.list.addBig(ModListOptions.useOldSearchBarTexture());
         this.list.addBig(ModListOptions.perpendicularQuickMoving());
+        this.list.addBig(ModListOptions.moveItemsIf());
         this.list.addBig(ModListOptions.elytraAlarmSoundDelay());
         this.list.addSmall(this.options());
     }

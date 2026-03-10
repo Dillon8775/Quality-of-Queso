@@ -40,7 +40,7 @@ public class MultiPlayerGameModeMixin {
     @Inject(method = "startDestroyBlock", at = @At("HEAD"), cancellable = true)
     private void onStartDestroyBlock(BlockPos pos, Direction direction, CallbackInfoReturnable<Boolean> cir) {
         Minecraft minecraft = Minecraft.getInstance();
-        if (!modEnabled(minecraft) || minecraft.player == null || minecraft.level == null || !minecraft.player.isShiftKeyDown() || ContainerTracker.COOLDOWN > 0) {
+        if (!modEnabled(minecraft) || !options().containerFiltering || minecraft.player == null || minecraft.level == null || !minecraft.player.isShiftKeyDown() || ContainerTracker.COOLDOWN > 0) {
             return;
         }
 
@@ -64,6 +64,26 @@ public class MultiPlayerGameModeMixin {
         playButtonSound(minecraft, false);
         ContainerTracker.COOLDOWN = ContainerTracker.DEFAULT_COOLDOWN;
         cir.setReturnValue(false);
+        cir.cancel();
+    }
+
+    /**
+     * Prevents creative instant-break in creative mode when shift + left clicking to toggle container tracking.
+     */
+    @Inject(method = "destroyBlock", at = @At("HEAD"), cancellable = true)
+    private void onDestroyBlock(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
+        Minecraft minecraft = Minecraft.getInstance();
+        if (!modEnabled(minecraft) || !options().containerFiltering || minecraft.player == null || minecraft.level == null || !minecraft.player.isCreative() || !minecraft.player.isShiftKeyDown()) {
+            return;
+        }
+
+        BlockEntity blockEntity = minecraft.level.getBlockEntity(pos);
+        if (!isValidBlockEntity(blockEntity)) {
+            return;
+        }
+
+        cir.setReturnValue(false);
+        cir.cancel();
     }
 
     /**
@@ -71,7 +91,7 @@ public class MultiPlayerGameModeMixin {
      */
     @Inject(method = "useItemOn", at = @At("HEAD"))
     private void onUseItemOn(LocalPlayer player, InteractionHand hand, BlockHitResult hitResult, CallbackInfoReturnable<InteractionResult> cir) {
-        if (!modEnabled(Minecraft.getInstance())) {
+        if (!modEnabled(Minecraft.getInstance()) || !options().containerFiltering) {
             return;
         }
 

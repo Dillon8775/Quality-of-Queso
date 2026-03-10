@@ -60,6 +60,11 @@ public class ModListOptions {
                 YES_NO_TEXT, options().saveSearchText, value -> options().saveSearchText = value);
     }
 
+    public static OptionInstance<Boolean> useOldSearchBarTexture() {
+        return OptionInstance.createBoolean("qualityofqueso.options.use_old_search_bar_texture", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.use_old_search_bar_texture.tooltip")),
+                YES_NO_TEXT, options().useOldSearchBarTexture, value -> options().useOldSearchBarTexture = value);
+    }
+
     public static OptionInstance<Transferring> transferring() {
         return new OptionInstance<>(
                 "qualityofqueso.options.transferring",
@@ -152,6 +157,11 @@ public class ModListOptions {
                 new OptionInstance.Enum<>(Arrays.asList(MoveItemsIf.values()), MoveItemsIf.Codec),
                 options().moveItemsIf,
                 value -> options().moveItemsIf = value);
+    }
+
+    public static OptionInstance<Boolean> containerFiltering() {
+        return OptionInstance.createBoolean("qualityofqueso.options.container_filtering", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.container_filtering.tooltip")),
+                ON_OFF_TEXT, options().containerFiltering, value -> options().containerFiltering = value);
     }
 
     public static OptionInstance<Boolean> perpendicularQuickMoving() {
