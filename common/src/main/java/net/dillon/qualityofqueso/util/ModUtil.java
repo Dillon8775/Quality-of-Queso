@@ -238,7 +238,7 @@ public class ModUtil {
      * @return universal options, unaffected by server configs.
      */
     public static UniversalOptions uoptions() {
-        return UniversalOptions.universalHandler.getInstance();
+        return UniversalOptions.UNIVERSAL.getInstance();
     }
 
     /**
@@ -253,7 +253,7 @@ public class ModUtil {
      * Saves all configurations.
      */
     public static void saveAll(Minecraft instance) {
-        UniversalOptions.universalHandler.save();
+        UniversalOptions.UNIVERSAL.save();
         if (uoptions().multiServerConfigs) {
             CONTINUE = true;
         }
@@ -308,7 +308,7 @@ public class ModUtil {
             return false;
         }
 
-        return options().enableMod;
+        return options().misc.enableMod;
     }
 
     /**
@@ -423,7 +423,7 @@ public class ModUtil {
         if (entity instanceof LivingEntity livingEntity &&
                 !livingEntity.hasEffect(MobEffects.BLINDNESS) &&
                 !livingEntity.hasEffect(MobEffects.DARKNESS) &&
-                !options().fog &&
+                !options().misc.fog &&
                 fogtype != FogType.WATER &&
                 fogtype != FogType.LAVA &&
                 fogtype != FogType.POWDER_SNOW) {

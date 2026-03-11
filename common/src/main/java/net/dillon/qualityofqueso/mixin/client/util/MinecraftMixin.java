@@ -41,7 +41,7 @@ public abstract class MinecraftMixin {
             ContainerTracker.COOLDOWN--;
         }
 
-        if (!options().fortniteBattlePass) {
+        if (!options().misc.fortniteBattlePass) {
             return;
         }
 

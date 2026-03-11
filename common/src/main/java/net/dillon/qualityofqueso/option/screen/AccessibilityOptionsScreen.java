@@ -8,16 +8,17 @@ import net.minecraft.network.chat.Component;
 /**
  * Advanced and technical options.
  */
-public class AdvancedOptionsScreen extends AbstractModOptionsScreen {
+public class AccessibilityOptionsScreen extends AbstractModOptionsScreen {
 
-    public AdvancedOptionsScreen(Screen parent) {
-        super(parent, Component.translatable("qualityofqueso.gui.title.advanced_options"));
+    public AccessibilityOptionsScreen(Screen parent) {
+        super(parent, Component.translatable("qualityofqueso.gui.title.accessibility_options"));
     }
 
     @Override
     protected OptionInstance<?>[] options() {
         return new OptionInstance[]{
-                ModListOptions.displayTotalWithStacks()
+                ModListOptions.displayTotalWithStacks(),
+                ModListOptions.searchInventory()
         };
     }
 
@@ -28,6 +29,7 @@ public class AdvancedOptionsScreen extends AbstractModOptionsScreen {
         this.list.addBig(ModListOptions.perpendicularQuickMoving());
         this.list.addBig(ModListOptions.moveItemsIf());
         this.list.addBig(ModListOptions.elytraAlarmSoundDelay());
+        this.list.addBig(ModListOptions.onlyCountMatchingItems());
         this.list.addSmall(this.options());
     }
 

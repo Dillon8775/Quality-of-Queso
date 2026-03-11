@@ -8,9 +8,9 @@ import java.util.*;
  * Stores tracked containers in a separate file.
  */
 public class TrackedContainers {
-    public Set<String> trackedFilteredByItemContainers = new HashSet<>();
-    public Set<String> trackedFilteredByTagContainers = new HashSet<>();
-    public Map<String, List<String>> trackedFilteredItems = new HashMap<>();
+    public Set<String> itemFilteredContainers = new HashSet<>();
+    public Set<String> tagFilteredContainers = new HashSet<>();
+    public Map<String, List<String>> containerFilterItems = new HashMap<>();
 
     public static final ModOptionsHandler TRACKED_CONTAINERS = new ModOptionsHandler();
 

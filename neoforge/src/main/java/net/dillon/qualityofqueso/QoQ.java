@@ -34,8 +34,8 @@ public final class QoQ {
             if (TrackedContainers.TRACKED_CONTAINERS.getInstance() == null) {
                 TrackedContainers.TRACKED_CONTAINERS.setInstance(new TrackedContainers());
             }
-            if (UniversalOptions.universalHandler.getInstance() == null) {
-                UniversalOptions.universalHandler.setInstance(new UniversalOptions());
+            if (UniversalOptions.UNIVERSAL.getInstance() == null) {
+                UniversalOptions.UNIVERSAL.setInstance(new UniversalOptions());
             }
             ModHudEntries.registerDebugEntries();
 

@@ -23,7 +23,7 @@ public class ItemFrameSearcherCommand {
      */
     public static LiteralArgumentBuilder<CommandSourceStack> getItemFrameSearcherCommand(CommandBuildContext commandBuildContext) {
         return Commands.literal("itemframesearcher")
-                .requires(source -> options().enableMod)
+                .requires(source -> options().misc.enableMod)
                 .then(
                         Commands.literal("clear")
                                 .executes(
@@ -32,7 +32,7 @@ public class ItemFrameSearcherCommand {
                                                 "",
                                                 true,
                                                 0,
-                                                options().itemFrameSearchRadius
+                                                options().misc.itemFrameSearchRadius
                                         )
                                 )
                                 .then(
@@ -58,7 +58,7 @@ public class ItemFrameSearcherCommand {
                                                                 StringArgumentType.getString(context, ITEM),
                                                                 false,
                                                                 0,
-                                                                options().itemFrameSearchRadius
+                                                                options().misc.itemFrameSearchRadius
                                                         )
                                                 )
                                                 .then(

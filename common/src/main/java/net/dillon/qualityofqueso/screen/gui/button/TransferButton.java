@@ -110,7 +110,7 @@ public class TransferButton extends Button {
             boolean containerButton = this.buttonName.equals("transfer_container");
             boolean validName = inventoryButton || containerButton;
             if (validName) {
-                if (options().showButtonShortcuts) {
+                if (options().management.showButtonShortcuts) {
                     if (inventoryButton && key(ModKeybinds.MOVE_INVENTORY) == ModKeybinds.MOVE_INVENTORY.getDefaultKey()) {
                         ButtonUtil.drawButtonTexture(context, "shortcut/transfer_inventory_button_shortcut_key", this);
                     } else if (containerButton && key(ModKeybinds.MOVE_CONTAINER) == ModKeybinds.MOVE_CONTAINER.getDefaultKey()) {
@@ -137,7 +137,7 @@ public class TransferButton extends Button {
             this.renderButtonTexture(this.buttonName + "_button_inactive", true, this, graphics);
         }
 
-        if (this.isHovered() && this.active && options().helpfulTooltips) {
+        if (this.isHovered() && this.active && options().misc.helpfulTooltips) {
             Screen screen = Minecraft.getInstance().screen;
             if (screen != null) {
                 if (isBrewingStandScreen(screen)) {

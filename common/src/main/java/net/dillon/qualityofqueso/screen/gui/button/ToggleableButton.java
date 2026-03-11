@@ -46,7 +46,7 @@ public abstract class ToggleableButton extends TransferButton {
             }
             ButtonUtil.drawButtonTexture(context, "hovered/" + name, this);
 
-            if (options().helpfulTooltips) {
+            if (options().misc.helpfulTooltips) {
                 boolean fillWhatsPresentButton = this.tooltip.length > 2;
                 if (fillWhatsPresentButton && ContainerTracker.IS_TRACKED_CONTAINER) {
                     String filterModeKey = ContainerTracker.CURRENT_FILTER_MODE.tag()
@@ -55,7 +55,6 @@ public abstract class ToggleableButton extends TransferButton {
                     ButtonUtil.drawTooltip(
                             Component.translatable(
                                     "qualityofqueso.gui.fill_whats_present/filtered_mode",
-                                    this.option() ? Component.translatable(this.tooltip[1]) : Component.translatable(this.tooltip[2]),
                                     Component.translatable(filterModeKey).copy()
                                             .withColor(ContainerTracker.CURRENT_FILTER_MODE.tag() ? 0x7FFFFF : 0x96FFB7),
                                     Component.translatable("qualityofqueso.gui.fill_whats_present/right_click_switch")

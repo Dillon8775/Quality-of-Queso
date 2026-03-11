@@ -1,8 +1,10 @@
 package net.dillon.qualityofqueso.mixin;
 
+import net.dillon.qualityofqueso.option.instance.UniversalOptions;
 import net.dillon.qualityofqueso.util.ModUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.loader.api.FabricLoader;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
@@ -32,10 +34,10 @@ public class ConditionalMixinPlugin implements IMixinConfigPlugin {
      * Returns client-side mixins that should not apply based on certain conditions.
      */
     private boolean shouldNotApply(String mixinClassName) {
-//        if (((FabricLoader.getInstance().isModLoaded("simplekeybinds") || FabricLoader.getInstance().isModLoaded("speedrunnermod")) || !UniversalOptions.UNIVERSAL.getInstance().applyFogFunction)
-//                && mixinClassName.equals("net.dillon.qualityofqueso.mixin.render.FogRendererMixin")) {
-//            return true;
-//        }
+        if (((FabricLoader.getInstance().isModLoaded("simplekeybinds") || FabricLoader.getInstance().isModLoaded("speedrunnermod")) || !UniversalOptions.UNIVERSAL.getInstance().applyFogFunction)
+                && mixinClassName.equals("net.dillon.qualityofqueso.mixin.render.FogRendererMixin")) {
+            return true;
+        }
         return false;
     }
 

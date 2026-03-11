@@ -43,8 +43,8 @@ public class ClientEvents {
             ModUtil.LOADED = true;
             loadServerConfig();
         }
-        if (isOnServer(Minecraft.getInstance()) && options().alwaysPreventRageQuitting) {
-            options().preventRageQuitting = true;
+        if (isOnServer(Minecraft.getInstance()) && options().misc.alwaysPreventRageQuitting) {
+            options().misc.preventRageQuitting = true;
             saveAll(Minecraft.getInstance());
         }
     }

@@ -10,6 +10,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.entity.BarrelBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -47,31 +48,31 @@ public class ContainerTracker {
     /**
      * @return the tracked chests list.
      */
-    private static Set<String> trackedChests() {
-        if (trackedContainers().trackedFilteredByItemContainers == null) {
-            trackedContainers().trackedFilteredByItemContainers = new HashSet<>();
+    private static Set<String> itemFilteredContainers() {
+        if (trackedContainers().itemFilteredContainers == null) {
+            trackedContainers().itemFilteredContainers = new HashSet<>();
         }
-        return trackedContainers().trackedFilteredByItemContainers;
+        return trackedContainers().itemFilteredContainers;
     }
 
     /**
      * @return the tracked tag-filtered container list.
      */
-    private static Set<String> tagFilteredChests() {
-        if (trackedContainers().trackedFilteredByTagContainers == null) {
-            trackedContainers().trackedFilteredByTagContainers = new HashSet<>();
+    private static Set<String> tagFilteredContainers() {
+        if (trackedContainers().tagFilteredContainers == null) {
+            trackedContainers().tagFilteredContainers = new HashSet<>();
         }
-        return trackedContainers().trackedFilteredByTagContainers;
+        return trackedContainers().tagFilteredContainers;
     }
 
     /**
      * @return the tracked placeholder item IDs by container key group.
      */
-    private static Map<String, List<String>> placeholderItems() {
-        if (trackedContainers().trackedFilteredItems == null) {
-            trackedContainers().trackedFilteredItems = new java.util.HashMap<>();
+    private static Map<String, List<String>> containerFilterItems() {
+        if (trackedContainers().containerFilterItems == null) {
+            trackedContainers().containerFilterItems = new HashMap<>();
         }
-        return trackedContainers().trackedFilteredItems;
+        return trackedContainers().containerFilterItems;
     }
 
     /**
@@ -85,7 +86,13 @@ public class ContainerTracker {
      * @return the key for the tracked chests.
      */
     private static String key(Level level, BlockPos pos) {
-        return level.dimension().toString() + "|" + pos.asLong();
+        String dimension = level.dimension() == Level.END ? "minecraft:end"
+                : level.dimension() == Level.NETHER ? "minecraft:nether"
+                : level.dimension() == Level.OVERWORLD ? "minecraft:overworld" : level.dimension().toString();
+        String container = level.getBlockState(pos).is(Blocks.SHULKER_BOX) ? "minecraft:shulker_box"
+                : level.getBlockState(pos).is(Blocks.BARREL) ? "minecraft:barrel"
+                : level.getBlockState(pos).is(Blocks.CHEST) ? "minecraft:chest" : "unknown_container";
+        return dimension + " / " + container + " (" + pos.getX() + ", " + pos.getY() + ", " + pos.getZ() + ")";
     }
 
     /**
@@ -142,13 +149,13 @@ public class ContainerTracker {
     public static boolean toggleTracked(Level level, BlockPos pos) {
         Set<String> keys = keysForContainer(level, pos);
         boolean tracked;
-        if (keys.stream().anyMatch(k -> trackedChests().contains(k))) {
-            trackedChests().removeAll(keys);
-            tagFilteredChests().removeAll(keys);
+        if (keys.stream().anyMatch(k -> itemFilteredContainers().contains(k)) || keys.stream().anyMatch(k -> tagFilteredContainers().contains(k))) {
+            itemFilteredContainers().removeAll(keys);
+            tagFilteredContainers().removeAll(keys);
             tracked = false;
         } else {
-            trackedChests().addAll(keys);
-            tagFilteredChests().removeAll(keys); // default newly tracked containers to item-filtered
+            itemFilteredContainers().addAll(keys);
+            tagFilteredContainers().removeAll(keys); // default newly tracked containers to item-filtered
             tracked = true;
         }
         TrackedContainers.TRACKED_CONTAINERS.save();
@@ -178,10 +185,9 @@ public class ContainerTracker {
         }
 
         activeContainerKeys = new HashSet<>(pendingOpenedContainerKeys);
-        boolean tracked = activeContainerKeys.stream().anyMatch(k -> trackedChests().contains(k));
-        CURRENT_FILTER_MODE = tracked && activeContainerKeys.stream().anyMatch(k -> tagFilteredChests().contains(k))
-                ? FilterMode.TAG
-                : FilterMode.ITEM;
+        boolean tag = activeContainerKeys.stream().anyMatch(k -> tagFilteredContainers().contains(k));
+        boolean tracked = activeContainerKeys.stream().anyMatch(k -> itemFilteredContainers().contains(k)) || tag;
+        CURRENT_FILTER_MODE = tag ? FilterMode.TAG : FilterMode.ITEM;
         pendingOpenedContainerKeys = null;
         return tracked;
     }
@@ -192,10 +198,12 @@ public class ContainerTracker {
      */
     public static void toggleCurrentFilterMode() {
         if (CURRENT_FILTER_MODE == FilterMode.ITEM) {
-            tagFilteredChests().addAll(activeContainerKeys);
+            itemFilteredContainers().removeAll(activeContainerKeys);
+            tagFilteredContainers().addAll(activeContainerKeys);
             CURRENT_FILTER_MODE = FilterMode.TAG;
         } else {
-            tagFilteredChests().removeAll(activeContainerKeys);
+            tagFilteredContainers().removeAll(activeContainerKeys);
+            itemFilteredContainers().addAll(activeContainerKeys);
             CURRENT_FILTER_MODE = FilterMode.ITEM;
         }
         TrackedContainers.TRACKED_CONTAINERS.save();
@@ -224,7 +232,7 @@ public class ContainerTracker {
             return stacks;
         }
 
-        List<String> ids = placeholderItems().get(key);
+        List<String> ids = containerFilterItems().get(key);
         if (ids == null || ids.isEmpty()) {
             return stacks;
         }
@@ -255,7 +263,7 @@ public class ContainerTracker {
             return;
         }
 
-        Set<String> ids = new java.util.LinkedHashSet<>();
+        Set<String> ids = new LinkedHashSet<>();
         for (ItemStack stack : stacks) {
             if (stack == null || stack.isEmpty()) {
                 continue;
@@ -268,9 +276,9 @@ public class ContainerTracker {
         }
 
         if (ids.isEmpty()) {
-            placeholderItems().remove(key);
+            containerFilterItems().remove(key);
         } else {
-            placeholderItems().put(key, new ArrayList<>(ids));
+            containerFilterItems().put(key, new ArrayList<>(ids));
         }
         TrackedContainers.TRACKED_CONTAINERS.save();
     }

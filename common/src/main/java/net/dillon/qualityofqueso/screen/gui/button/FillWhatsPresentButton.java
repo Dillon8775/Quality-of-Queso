@@ -1,8 +1,10 @@
 package net.dillon.qualityofqueso.screen.gui.button;
 
+import net.dillon.qualityofqueso.screen.FilterItemsScreen;
 import net.dillon.qualityofqueso.util.ContainerTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 
@@ -12,30 +14,31 @@ import static net.dillon.qualityofqueso.util.ModUtil.options;
  * A button to only transfer what is present in the opposite container.
  */
 public class FillWhatsPresentButton extends ToggleableButton {
-    private final Runnable onShiftRightClick;
+    private final Minecraft minecraft;
+    private final AbstractContainerScreen<?> parent;
 
-    public FillWhatsPresentButton(AbstractContainerMenu screenHandler, Font font, String searchFieldText, int x, int y, String buttonName, OnPress onPress, Runnable onShiftRightClick) {
+    public FillWhatsPresentButton(AbstractContainerMenu screenHandler, Font font, String searchFieldText, int x, int y, String buttonName, OnPress onPress, Minecraft minecraft, AbstractContainerScreen<?> parent) {
         super(screenHandler, font, searchFieldText, x, y, buttonName, onPress,
                 ContainerTracker.IS_TRACKED_CONTAINER
                         ? ContainerTracker.CURRENT_FILTER_MODE.tag() ? of("filtered_tag") : of("filtered")
                         : of("fill_whats_present"),
-                ContainerTracker.IS_TRACKED_CONTAINER
-                        ? ContainerTracker.CURRENT_FILTER_MODE.tag() ? of("filtered_tag_move_anything") : of("filtered_move_anything")
-                        : of("move_anything"),
+                of("move_anything"),
                 new String[]{"qualityofqueso.gui.fill_whats_present/filtered", "qualityofqueso.gui.fill_whats_present/fill_whats_present", "qualityofqueso.gui.fill_whats_present/move_anything"}
         );
-        this.onShiftRightClick = onShiftRightClick;
+        this.minecraft = minecraft;
+        this.parent = parent;
     }
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDouble) {
-        if (event.button() == 1 && ContainerTracker.IS_TRACKED_CONTAINER) {
-            if (Minecraft.getInstance().hasShiftDown() && this.onShiftRightClick != null) {
-                this.onShiftRightClick.run();
-                return true;
+        if (ContainerTracker.IS_TRACKED_CONTAINER) {
+            if (event.button() == 1) {
+                ContainerTracker.OPENING_PLACEHOLDER_SCREEN = true;
+                this.minecraft.setScreen(new FilterItemsScreen(this.parent));
+            } else {
+                ContainerTracker.toggleCurrentFilterMode();
+                this.playDownSound(Minecraft.getInstance().getSoundManager());
             }
-            ContainerTracker.toggleCurrentFilterMode();
-            this.playDownSound(Minecraft.getInstance().getSoundManager());
             return true;
         }
         return super.mouseClicked(event, isDouble);
@@ -43,7 +46,7 @@ public class FillWhatsPresentButton extends ToggleableButton {
 
     @Override
     boolean option() {
-        return options().fillWhatsPreset;
+        return options().management.fillWhatsPreset;
     }
 
     /**

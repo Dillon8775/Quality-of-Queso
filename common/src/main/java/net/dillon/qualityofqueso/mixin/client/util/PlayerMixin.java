@@ -21,7 +21,7 @@ public class PlayerMixin {
      */
     @Inject(method = "drop", at = @At("TAIL"))
     private void onThrowFromGui(ItemStack stack, boolean retainOwnership, CallbackInfoReturnable<ItemEntity> cir) {
-        if (!modEnabled(Minecraft.getInstance()) || !options().displayOnThrow) {
+        if (!modEnabled(Minecraft.getInstance()) || !options().hud.displayOnThrow) {
             return;
         }
 

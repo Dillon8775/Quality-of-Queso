@@ -27,7 +27,7 @@ public class ClientPacketListenerMixin {
      */
     @Inject(method = "handleTakeItemEntity", at = @At("HEAD"))
     private void trackPickedUpItem(ClientboundTakeItemEntityPacket packet, CallbackInfo ci) {
-        if (!modEnabled(Minecraft.getInstance()) || !options().displayOnPickup) {
+        if (!modEnabled(Minecraft.getInstance()) || !options().hud.displayOnPickup) {
             return;
         }
 

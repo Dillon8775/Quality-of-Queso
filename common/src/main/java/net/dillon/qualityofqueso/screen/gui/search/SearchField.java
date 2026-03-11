@@ -9,6 +9,7 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
+import static net.dillon.qualityofqueso.util.ModUtil.SAVED_TEXT;
 import static net.dillon.qualityofqueso.util.ModUtil.options;
 
 /**
@@ -20,7 +21,7 @@ public class SearchField extends EditBox {
     public SearchField(Font font, int x, int y) {
         super(font, x, y, 90, 12, Component.empty());
         this.font = font;
-        if (options().saveSearchText) {
+        if (options().searching.saveSearchText) {
             this.setValue(ModUtil.SAVED_TEXT);
         }
         this.setMaxLength(50);
@@ -30,7 +31,7 @@ public class SearchField extends EditBox {
     @Override
     public void renderWidget(GuiGraphics context, int mouseX, int mouseY, float deltaTicks) {
         super.renderWidget(context, mouseX, mouseY, deltaTicks);
-        if (options().helpfulTooltips && this.isHovered() && this.getValue().isEmpty()) {
+        if (options().misc.helpfulTooltips && this.isHovered() && this.getValue().isEmpty()) {
             Component matchCase = Component.literal(":").withStyle(ChatFormatting.BOLD).withColor(0xC4FFD7);
             Component multiple = Component.literal(",").withStyle(ChatFormatting.ITALIC);
             Component tag = Component.literal("#").withStyle(ChatFormatting.ITALIC).withColor(0x7FFFFF);
@@ -55,5 +56,14 @@ public class SearchField extends EditBox {
             }
         }
         return super.mouseClicked(click, doubled);
+    }
+
+    /**
+     * Updates saved text in real time.
+     */
+    @Override
+    public void insertText(String input) {
+        super.insertText(input);
+        SAVED_TEXT = this.getValue();
     }
 }

@@ -65,8 +65,8 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
         ).build());
         buttons.add(this.joinDiscord);
 
-        this.advancedOptions = this.addWidget(Button.builder(Component.translatable("qualityofqueso.gui.advanced_options"), button -> {
-            this.minecraft.setScreen(new AdvancedOptionsScreen(this));
+        this.advancedOptions = this.addWidget(Button.builder(Component.translatable("qualityofqueso.gui.accessibility_options"), button -> {
+            this.minecraft.setScreen(new AccessibilityOptionsScreen(this));
         }).build());
         buttons.add(this.advancedOptions);
 
@@ -96,7 +96,7 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
         if (this.hudOptions.isHovered()) {
             ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.hud_options.tooltip"), graphics, this.font, mouseX, mouseY);
         }
-        if (ModUtil.options().helpfulTooltips) {
+        if (ModUtil.options().misc.helpfulTooltips) {
             if (this.otherOptions.isHovered()) {
                 ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.misc_options.tooltip"), graphics, this.font, mouseX, mouseY);
             }

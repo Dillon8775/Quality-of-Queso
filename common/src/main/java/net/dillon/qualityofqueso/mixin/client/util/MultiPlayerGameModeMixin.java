@@ -40,7 +40,7 @@ public class MultiPlayerGameModeMixin {
     @Inject(method = "startDestroyBlock", at = @At("HEAD"), cancellable = true)
     private void onStartDestroyBlock(BlockPos pos, Direction direction, CallbackInfoReturnable<Boolean> cir) {
         Minecraft minecraft = Minecraft.getInstance();
-        if (!modEnabled(minecraft) || !options().containerFiltering || minecraft.player == null || minecraft.level == null || !minecraft.player.isShiftKeyDown() || ContainerTracker.COOLDOWN > 0) {
+        if (!modEnabled(minecraft) || !options().management.containerFiltering || minecraft.player == null || minecraft.level == null || !minecraft.player.isShiftKeyDown() || ContainerTracker.COOLDOWN > 0) {
             return;
         }
 
@@ -73,7 +73,7 @@ public class MultiPlayerGameModeMixin {
     @Inject(method = "destroyBlock", at = @At("HEAD"), cancellable = true)
     private void onDestroyBlock(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
         Minecraft minecraft = Minecraft.getInstance();
-        if (!modEnabled(minecraft) || !options().containerFiltering || minecraft.player == null || minecraft.level == null || !minecraft.player.isCreative() || !minecraft.player.isShiftKeyDown()) {
+        if (!modEnabled(minecraft) || !options().management.containerFiltering || minecraft.player == null || minecraft.level == null || !minecraft.player.isCreative() || !minecraft.player.isShiftKeyDown()) {
             return;
         }
 
@@ -91,7 +91,7 @@ public class MultiPlayerGameModeMixin {
      */
     @Inject(method = "useItemOn", at = @At("HEAD"))
     private void onUseItemOn(LocalPlayer player, InteractionHand hand, BlockHitResult hitResult, CallbackInfoReturnable<InteractionResult> cir) {
-        if (!modEnabled(Minecraft.getInstance()) || !options().containerFiltering) {
+        if (!modEnabled(Minecraft.getInstance()) || !options().management.containerFiltering) {
             return;
         }
 
@@ -112,7 +112,7 @@ public class MultiPlayerGameModeMixin {
             return;
         }
 
-        if (!modEnabled(Minecraft.getInstance()) || localPlayer.isCreative() || !localPlayer.level().isClientSide() || !options().showArrowCount) {
+        if (!modEnabled(Minecraft.getInstance()) || localPlayer.isCreative() || !localPlayer.level().isClientSide() || !options().hud.showArrowCount) {
             return;
         }
 

@@ -25,7 +25,7 @@ public class SearchTransportablesButton extends ToggleableButton {
 
     @Override
     boolean option() {
-        return options().searchTransportables;
+        return options().searching.searchTransportables;
     }
 
     @Override
@@ -36,7 +36,7 @@ public class SearchTransportablesButton extends ToggleableButton {
     @Override
     public void playDownSound(SoundManager manager) {
         manager.play(SimpleSoundInstance.forUI(
-                options().searchTransportables ? SoundEvents.SHULKER_BOX_CLOSE : SoundEvents.SHULKER_BOX_OPEN,
+                options().searching.searchTransportables ? SoundEvents.SHULKER_BOX_CLOSE : SoundEvents.SHULKER_BOX_OPEN,
                 1.0F
         ));
     }

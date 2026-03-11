@@ -22,7 +22,7 @@ public class ContainerMenusMixin {
      */
     @Inject(method = "quickMoveStack", at = @At("HEAD"), cancellable = true)
     private void redirectQuickMove(Player player, int slotIndex, CallbackInfoReturnable<ItemStack> cir) {
-        if (options().perpendicularQuickMoving || !options().includeHotbar) {
+        if (options().accessibility.perpendicularQuickMoving || !options().management.includeHotbar) {
             AbstractContainerMenu menu = (AbstractContainerMenu)(Object)this;
 
             Slot slot = menu.slots.get(slotIndex);
@@ -34,7 +34,7 @@ public class ContainerMenusMixin {
             ItemStack original = stack.copy();
 
             int containerSize = menu.slots.size() - 36;
-            boolean allowHotbar = options().includeHotbar;
+            boolean allowHotbar = options().management.includeHotbar;
             int playerInvEnd = containerSize + (allowHotbar ? 36 : 27); // inventory only, no hotbar
 
             // FROM container → player inventory (NO hotbar)

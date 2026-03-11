@@ -18,7 +18,7 @@ public class ConditionalMixinPlugin implements IMixinConfigPlugin {
      */
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-        if (FMLLoader.getCurrent().getLoadingModList().getModFileById("simplekeybinds") != null || !UniversalOptions.universalHandler.getInstance().applyFogFunction) {
+        if (FMLLoader.getCurrent().getLoadingModList().getModFileById("simplekeybinds") != null || !UniversalOptions.UNIVERSAL.getInstance().applyFogFunction) {
             return !mixinClassName.equals("net.dillon.qualityofqueso.mixin.client.render.FogRendererMixin");
         }
         return true;

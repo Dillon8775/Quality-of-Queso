@@ -28,7 +28,7 @@ public class ProjectileMixin {
      */
     @Inject(method = "onHitEntity", at = @At("TAIL"))
     private void playHitSoundOnMob(EntityHitResult hitResult, CallbackInfo ci) {
-        if (!modEnabled(Minecraft.getInstance()) || !options().mobHitDing) {
+        if (!modEnabled(Minecraft.getInstance()) || !options().misc.mobHitDing) {
             return;
         }
 
@@ -49,7 +49,7 @@ public class ProjectileMixin {
                 return;
             }
 
-            double minDistance = options().minMobHitDingDistance;
+            double minDistance = options().misc.minMobHitDingDistance;
             if (player.distanceToSqr(hitEntity) >= minDistance * minDistance) {
                 Level level = living.level();
                 if (level instanceof ServerLevel serverLevel) {

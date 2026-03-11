@@ -16,11 +16,7 @@ import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderSet;
-import net.minecraft.core.Registry;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.HashedPatchMap;
 import net.minecraft.network.HashedStack;
 import net.minecraft.network.chat.Component;
@@ -159,7 +155,7 @@ public class ButtonUtil {
      * @return the fromInventory (size) that should be searched.
      */
     public static int getInventorySize(AbstractContainerMenu handler, Container inventory) {
-        return options().searchInventory ? handler.slots.size() : inventory == null ? 0 : inventory.getContainerSize();
+        return options().searching.searchInventory ? handler.slots.size() : inventory == null ? 0 : inventory.getContainerSize();
     }
 
     /**
@@ -167,7 +163,7 @@ public class ButtonUtil {
      */
     public static boolean isExcludingSlots(AbstractContainerScreen<?> handledScreen) {
         return isValidScreen(handledScreen)
-                && options().dragSorting
+                && options().management.dragSorting
                 && (Minecraft.getInstance().hasAltDown() || (Minecraft.getInstance().hasShiftDown() && Minecraft.getInstance().hasAltDown()))
                 && getHoveredSlot(handledScreen) != null
                 && handledScreen.getMenu().getCarried().isEmpty();
@@ -230,7 +226,7 @@ public class ButtonUtil {
      * <p>{@code default start = 9, default end = 36}</p>
      */
     public static boolean isAnySlotFilled(AbstractContainerMenu handler, boolean checkHotbar, int start, int end) {
-        for (int i = start; i < (options().includeHotbar && checkHotbar ? end + 9 : end); i++) {
+        for (int i = start; i < (options().management.includeHotbar && checkHotbar ? end + 9 : end); i++) {
             Slot slot = handler.getSlot(i);
             if (slot.hasItem()) {
                 return true;
@@ -247,7 +243,7 @@ public class ButtonUtil {
 
         int containerSize = getContainerSize(inv);
 
-        int inventorySize = options.includeHotbar ? 36 : 27;
+        int inventorySize = options.management.includeHotbar ? 36 : 27;
         int inventoryEnd = containerSize + inventorySize;
 
         int fromStart = inventory ? containerSize : 0;
@@ -281,7 +277,7 @@ public class ButtonUtil {
                 filledSlots++;
             }
 
-            if (fromItem.isEmpty() || options.moveItemsIf.containerIsntFilled()) {
+            if (fromItem.isEmpty() || options.accessibility.moveItemsIf.containerIsntFilled()) {
                 continue;
             }
 
@@ -291,14 +287,14 @@ public class ButtonUtil {
                     continue;
                 }
 
-                if (options.moveItemsIf == MoveItemsIf.CAN_MOVE_AT_ALL) {
+                if (options.accessibility.moveItemsIf == MoveItemsIf.CAN_MOVE_AT_ALL) {
                     if (ItemStack.isSameItem(toItem, fromItem)) {
                         Integer free = componentFreeSpace.get(toItem.getComponents());
                         if (free != null && free > 0) {
                             return false;
                         }
                     }
-                } else if (options.moveItemsIf == MoveItemsIf.LESS_THAN_MAX_STACK_SIZE) {
+                } else if (options.accessibility.moveItemsIf == MoveItemsIf.LESS_THAN_MAX_STACK_SIZE) {
                     if (ItemStack.isSameItemSameComponents(toItem, fromItem) && !(toItem.getCount() + fromItem.getCount() > toItem.getMaxStackSize())) {
                         return false;
                     }
@@ -409,43 +405,39 @@ public class ButtonUtil {
      * @return if a stack is in a tag.
      */
     public static boolean areStacksInSameTag(ItemStack fromStack, ItemStack toStack) {
-        RegistryAccess lookup = Minecraft.getInstance().level.registryAccess();
-        Registry<Item> itemRegistry = lookup.lookupOrThrow(Registries.ITEM);
-        for (HolderSet.Named<Item> tag : itemRegistry.getTags().toList()) {
-            if (fromStack.is(tag.key()) && toStack.is(tag.key())) {
-                return true;
-            }
-        }
-        return false;
+        return fromStack.tags().anyMatch(toStack::is);
     }
 
     /**
      * @return if two stacks match under the current fill filter mode.
      */
     public static boolean matchesFillFilter(ItemStack fromStack, ItemStack toStack) {
+        boolean areMatching = fromStack.getItem() == toStack.getItem();
         if (ContainerTracker.IS_TRACKED_CONTAINER && ContainerTracker.CURRENT_FILTER_MODE.tag()) {
-            return areStacksInSameTag(fromStack, toStack);
+            return areStacksInSameTag(fromStack, toStack) || areMatching;
         }
-        return fromStack.getItem() == toStack.getItem();
+        return areMatching;
     }
 
     /**
      * @return true if the item is present in the opposing inventory/container.
      */
     public static boolean isPresentInContainer(Container container, AbstractContainerMenu menu, ItemStack sourceStack) {
-        for (int i = 0; i < getContainerSize(container); i++) {
-            ItemStack opposingStack = menu.getSlot(i).getItem();
-            if (!opposingStack.isEmpty() && matchesFillFilter(sourceStack, opposingStack)) {
-                return true;
+        if (ContainerTracker.getCurrentPlaceholderStacks().isEmpty()) {
+            for (int i = 0; i < getContainerSize(container); i++) {
+                ItemStack opposingStack = menu.getSlot(i).getItem();
+                if (!opposingStack.isEmpty() && matchesFillFilter(sourceStack, opposingStack)) {
+                    return true;
+                }
             }
         }
-        return hasPlaceholderMatch(sourceStack);
+        return itemMatchesPlaceholder(sourceStack);
     }
 
     /**
      * @return true if the stack matches any placeholder in the current tracked container.
      */
-    public static boolean hasPlaceholderMatch(ItemStack sourceStack) {
+    public static boolean itemMatchesPlaceholder(ItemStack sourceStack) {
         if (!ContainerTracker.IS_TRACKED_CONTAINER) {
             return false;
         }
@@ -520,7 +512,7 @@ public class ButtonUtil {
                 continue;
             }
 
-            if (!options().includeHotbar && isHotbarSlot(handler.slots.size(), playerSlot.index)) {
+            if (!options().management.includeHotbar && isHotbarSlot(handler.slots.size(), playerSlot.index)) {
                 continue;
             }
 
@@ -768,11 +760,11 @@ public class ButtonUtil {
      * Quickly equips an item.
      */
     public static void quickEquip(Screen screen, Slot focusedSlot) {
-        if (options().dragSorting && Minecraft.getInstance().hasAltDown()) {
+        if (options().management.dragSorting && Minecraft.getInstance().hasAltDown()) {
             return;
         }
 
-        if (options().quickEquip && focusedSlot != null && (focusedSlot.index >= 5) && (screen instanceof InventoryScreen || screen instanceof CreativeModeInventoryScreen)) {
+        if (options().misc.quickEquip && focusedSlot != null && (focusedSlot.index >= 5) && (screen instanceof InventoryScreen || screen instanceof CreativeModeInventoryScreen)) {
             ItemStack stack = focusedSlot.getItem();
             EquipmentSlot targetSlot = null;
 
@@ -867,7 +859,7 @@ public class ButtonUtil {
     public static boolean shiftHeld(AbstractContainerScreen<?> screen, boolean inventory) {
         int totalSlots = getTotalSlots(screen.getMenu());
         return Minecraft.getInstance().hasShiftDown()
-                && (!options().dragSorting || !Minecraft.getInstance().hasAltDown())
+                && (!options().management.dragSorting || !Minecraft.getInstance().hasAltDown())
                 && getHoveredSlot(screen) != null
                 && getHoveredSlot(screen).hasItem()
                 && (inventory ? getHoveredSlot(screen).index >= totalSlots - 36 : getHoveredSlot(screen).index <= totalSlots - 37);

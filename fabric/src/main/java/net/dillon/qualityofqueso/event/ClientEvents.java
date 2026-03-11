@@ -39,8 +39,8 @@ public class ClientEvents {
                 ModUtil.LOADED = true;
                 loadServerConfig();
             }
-            if (isOnServer(client) && options().alwaysPreventRageQuitting) {
-                options().preventRageQuitting = true;
+            if (isOnServer(client) && options().misc.alwaysPreventRageQuitting) {
+                options().misc.preventRageQuitting = true;
                 saveAll(client);
             }
         });

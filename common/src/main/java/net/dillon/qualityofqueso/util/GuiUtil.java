@@ -38,6 +38,13 @@ public class GuiUtil {
     }
 
     /**
+     * @return if an item and item components equal an item.
+     */
+    public static boolean itemMatchesInventoryItem(ItemStack mainStack, ItemStack otherStack) {
+        return options().accessibility.onlyCountMatchingItems ? ItemStack.isSameItemSameComponents(mainStack, otherStack) : otherStack.is(mainStack.getItem());
+    }
+
+    /**
      * @return if a armor slot was changed at all.
      */
     public static boolean armorChanged(int slotIndex, ItemStack current) {
@@ -75,7 +82,7 @@ public class GuiUtil {
      * @return if the arrow count can be displayed at all.
      */
     public static boolean holdingArrowDisplayableProjectileWeapon(Minecraft minecraft, ItemStack stack) {
-        return options().showArrowCount && !minecraft.player.isCreative() && (stack.getItem() instanceof BowItem || stack.getItem() instanceof CrossbowItem);
+        return options().hud.showArrowCount && !minecraft.player.isCreative() && (stack.getItem() instanceof BowItem || stack.getItem() instanceof CrossbowItem);
     }
 
     /**
@@ -84,7 +91,7 @@ public class GuiUtil {
     public static Identifier getHighlightedSlotTexture(Identifier defaultSprite, ItemStack stack) {
         float healthPercentage = getItemHealthPercentage(stack);
 
-        if (!options().coloredHighlighting) {
+        if (!options().hud.coloredHighlighting) {
             return defaultSprite;
         } else if (healthPercentage < 0.21F) {
             return ofQoQ("hud/slot_bad");

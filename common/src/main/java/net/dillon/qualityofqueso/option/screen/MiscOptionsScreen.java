@@ -31,13 +31,13 @@ public class MiscOptionsScreen extends AbstractModOptionsScreen {
                 ModListOptions.fog(),
 
                 ModListOptions.quickGuiExit(),
-                ModListOptions.quickSearch(),
+                ModListOptions.quickEquip(),
 
                 ModListOptions.preventRageQuitting(),
                 ModListOptions.alwaysPreventRageQuitting(),
 
                 ModListOptions.preventEFromTyping(),
-                ModListOptions.quickEquip(),
+                ModListOptions.autoCloseRecipeBook(),
 
                 ModListOptions.elytraAlarm(),
                 ModListOptions.minElytraFallDistance(),
@@ -45,16 +45,15 @@ public class MiscOptionsScreen extends AbstractModOptionsScreen {
                 ModListOptions.mobHitDing(),
                 ModListOptions.minMobHitDingDistance(),
 
-                ModListOptions.autoCloseRecipeBook(),
                 ModListOptions.helpfulTooltips(),
+                ModListOptions.fortniteBattlePass()
         };
     }
 
     protected OptionInstance<?>[] bottomOptions() {
         return new OptionInstance[]{
                 ModListOptions.qoqButtons(),
-                ModListOptions.multiServerConfigs(),
-                ModListOptions.fortniteBattlePass()
+                ModListOptions.multiServerConfigs()
         };
     }
 

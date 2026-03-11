@@ -41,12 +41,12 @@ public class ItemFrameSearchScreen extends Screen {
     @Override
     protected void init() {
         this.searchField = new EditBox(this.font, this.width / 2 - 100, this.height / 2 - 24, 200, 20, Component.empty());
-        if (options().saveSearchText) {
+        if (options().searching.saveSearchText) {
             this.searchField.setValue(ModUtil.SAVED_ITEM_FRAME_TEXT);
         }
         this.searchField.setMaxLength(50);
         this.searchButton = this.addRenderableWidget(Button.builder(Component.translatable("qualityofqueso.gui.search"), button -> {
-            this.sendPacket(false, options().itemFrameSearchGlowDuration != 0 ? options().itemFrameSearchGlowDuration : 0, options().itemFrameSearchRadius);
+            this.sendPacket(false, options().misc.itemFrameSearchGlowDuration != 0 ? options().misc.itemFrameSearchGlowDuration : 0, options().misc.itemFrameSearchRadius);
         }).bounds(this.width / 2 + 115, this.height / 2 + 24, 100, 20).build());
         AbstractWidget itemFrameSearchRadius = this.addRenderableWidget(ModListOptions.itemFrameSearchRadius().createButton(Minecraft.getInstance().options, this.width / 2 + 5, 20, 100));
         itemFrameSearchRadius.setY(this.height / 2 + 24);
@@ -80,7 +80,7 @@ public class ItemFrameSearchScreen extends Screen {
         if (this.clearButton.isHovered()) {
             ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.clear.tooltip"), graphics, this.font, mouseX, mouseY);
         }
-        if (options().helpfulTooltips && this.searchField.isHovered() && this.searchField.getValue().isEmpty()) {
+        if (options().misc.helpfulTooltips && this.searchField.isHovered() && this.searchField.getValue().isEmpty()) {
             ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.search_item_frames.search_filtering"), graphics, this.font, mouseX, mouseY);
         }
         this.renderBlurredBackground(graphics);
@@ -104,7 +104,7 @@ public class ItemFrameSearchScreen extends Screen {
     public boolean keyPressed(KeyEvent input) {
         // Send the packet upon pressing enter.
         if (input.key() == GLFW.GLFW_KEY_ENTER && !this.searchField.getValue().isEmpty()) {
-            this.sendPacket(false, options().itemFrameSearchGlowDuration != 0 ? options().itemFrameSearchGlowDuration : 0, options().itemFrameSearchRadius);
+            this.sendPacket(false, options().misc.itemFrameSearchGlowDuration != 0 ? options().misc.itemFrameSearchGlowDuration : 0, options().misc.itemFrameSearchRadius);
         }
         if (Minecraft.getInstance().hasControlDown() && input.key() == GLFW.GLFW_KEY_C) {
             this.clear();
@@ -131,7 +131,7 @@ public class ItemFrameSearchScreen extends Screen {
      */
     private void clear() {
         this.searchField.setValue("");
-        this.sendPacket(true, 0, options().itemFrameSearchRadius);
+        this.sendPacket(true, 0, options().misc.itemFrameSearchRadius);
     }
 
     /**

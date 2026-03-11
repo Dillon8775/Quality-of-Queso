@@ -20,6 +20,6 @@ public class IncludeHotbarButton extends ToggleableButton {
 
     @Override
     boolean option() {
-        return options().includeHotbar;
+        return options().management.includeHotbar;
     }
 }

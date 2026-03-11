@@ -19,6 +19,8 @@ Searching changes:
 - New texture for the search bar! It's very vanilla-friendly. You can disable it if you'd like.
 - You can now search inside shulker boxes and bundles that are in the container/inventory you are searching. You can toggle this with the new "Search Transportables" that appears next to the search bar if a transportable container is present anywhere.
 - Renamed "Inventory Searching Options" category to "Searching Options".
+- Moved "Quick Search" from Misc options to "Searching" options.
+- Moved "Search Inventory" to new category of options, "Advanced" options, to allow for easier differentiation between the "Inventory Searching" option and "Search Inventory".
 
 HUD Changes:
 - Armor status is now simply an on/off option. It displays your armor and highlights it when it's changed. The color of the highlight is also determined by the durability of your armor item.
@@ -44,6 +46,12 @@ Option changes:
 - Added an "advanced options" screen. Moved some technical options to this category.
 - Removed the "Include/Exclude Hotbar" option from the options screen, as it can easily be toggled via a container/inventory.
 
+New Accessibility Options:
+- Moved "Perpendicular Quick Moving", "Move Items If", "Display Total w/ Stacks" and "Search Inventory" options to "Accessibility".
+- "Only Count Matching Items", which only adds items to the Item Count display counter if their components match (OFF by default).
+- "Elytra Alarm Sound Delay", the delay for playing the elytra alarm sound.
+- "Use Old Search Bar Texture", which uses the old search bar texture.
+
 The Fortnite Battle Pass option:
 - Just, don't...
 
@@ -53,11 +61,13 @@ Technical / small changes:
 - Organized assets and updated translations.
 - "Helpful Tooltips" option is now more effective.
 - Renamed "qualityofqueso_client-universal.json" to "qualityofqueso-universal_config.json".
+- Organized client-side configuration file.
 
 Bug Fixes and Optimizations:
 - Fixed armor status display timers being wrong.
 - Fixed drastic frame drops when tag searching (frames still drop a bit when searching multiple tags).
 - Fixed bug where right-clicking a container search field to clear it makes it start acting weird.
 - Fixed bug where items don't render their components with item count.
+- Fixed bug where mixins don't apply sometimes.
 - Optimized button sounds, so they play accordingly, even when using shortcut keys and buttons are disabled.
 - Other small optimizations and bug fixes.

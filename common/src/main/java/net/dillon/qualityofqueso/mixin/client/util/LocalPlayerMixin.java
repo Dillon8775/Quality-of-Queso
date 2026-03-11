@@ -35,7 +35,7 @@ public class LocalPlayerMixin {
      */
     @Inject(method = "drop", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientPacketListener;send(Lnet/minecraft/network/protocol/Packet;)V"), locals = LocalCapture.CAPTURE_FAILHARD)
     private void onThrowFromInGame(boolean entireStack, CallbackInfoReturnable<Boolean> cir, ServerboundPlayerActionPacket.Action action, ItemStack itemStack) {
-        if (!modEnabled(Minecraft.getInstance()) || !options().displayOnThrow) {
+        if (!modEnabled(Minecraft.getInstance()) || !options().hud.displayOnThrow) {
             return;
         }
 
@@ -49,7 +49,7 @@ public class LocalPlayerMixin {
     private void playElytraWarningSound(CallbackInfo ci) {
         LocalPlayer player = (LocalPlayer) (Object) this;
 
-        if (!modEnabled(Minecraft.getInstance()) || !options().elytraAlarm) {
+        if (!modEnabled(Minecraft.getInstance()) || !options().misc.elytraAlarm) {
             this.elytraWarningCooldown = 0;
             return;
         }
@@ -70,7 +70,7 @@ public class LocalPlayerMixin {
                 && !player.onGround()
                 && !player.isFallFlying()
                 && (player.gameMode() == GameType.SURVIVAL || player.gameMode() == GameType.ADVENTURE)
-                && PLAYER_FALL_DISTANCE >= options().minElytraFallDistance;
+                && PLAYER_FALL_DISTANCE >= options().misc.minElytraFallDistance;
 
         if (!SHOULD_WARN_OF_ELYTRA) {
             this.elytraWarningCooldown = 0;
@@ -79,7 +79,7 @@ public class LocalPlayerMixin {
 
         if (this.elytraWarningCooldown <= 0) {
             Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.ARROW_HIT_PLAYER, 0.2F, 1.0F));
-            this.elytraWarningCooldown = options().elytraAlarmSoundDelay;
+            this.elytraWarningCooldown = options().accessibility.elytraAlarmSoundDelay;
             return;
         }
 
@@ -92,7 +92,7 @@ public class LocalPlayerMixin {
     @Inject(method = "stopUsingItem", at = @At("HEAD"))
     private void onBowFired(CallbackInfo ci) {
         LocalPlayer player = (LocalPlayer) (Object) this;
-        if (!modEnabled(Minecraft.getInstance()) || player.isCreative() || !player.level().isClientSide() || !options().showArrowCount) {
+        if (!modEnabled(Minecraft.getInstance()) || player.isCreative() || !player.level().isClientSide() || !options().hud.showArrowCount) {
             return;
         }
 
