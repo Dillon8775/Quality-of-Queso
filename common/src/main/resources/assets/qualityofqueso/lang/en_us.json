@@ -37,6 +37,9 @@
   "qualityofqueso.gui.misc_options": "Misc...",
   "qualityofqueso.gui.title.misc_options": "Miscellaneous Options",
   "qualityofqueso.gui.misc_options.tooltip": "Configure other Quality of Queso features...",
+  "qualityofqueso.gui.fov_effects": "FOV Effects...",
+  "qualityofqueso.gui.title.fov_effects": "Field of View Modifiers",
+  "qualityofqueso.gui.fov_effects.tooltip": "Set what can change your FOV...",
   "qualityofqueso.gui.accessibility_options": "Accessibility...",
   "qualityofqueso.gui.title.accessibility_options": "Accessibility Options",
   "qualityofqueso.gui.accessibility_options.tooltip": "Configure Quality of Queso to your liking...",
@@ -274,6 +277,23 @@
   "qualityofqueso.options.elytra_alarm_sound_delay.tooltip": "Determines the time (in ticks) that the elytra alarm can play.",
   "qualityofqueso.options.fortnite_battle_pass": "Fortnite Battle Pass",
   "qualityofqueso.options.fortnite_battle_pass.tooltip": "Just, don't...",
+
+  "qualityofqueso.options.fov_effects.sprinting": "Sprinting",
+  "qualityofqueso.options.fov_effects.sprinting.tooltip": "Toggle sprinting modifying FOV.",
+  "qualityofqueso.options.fov_effects.flying": "Flying",
+  "qualityofqueso.options.fov_effects.flying.tooltip": "Toggle flying (in creative/spectator mode) modifying FOV.",
+  "qualityofqueso.options.fov_effects.potions": "Potions",
+  "qualityofqueso.options.fov_effects.potions.tooltip": "Toggle effects (like speed and slowness) modifying FOV.",
+  "qualityofqueso.options.fov_effects.fluids": "Fluids",
+  "qualityofqueso.options.fov_effects.fluids.tooltip": "Toggle submerged in water/lava to modify FOV.",
+  "qualityofqueso.options.fov_effects.bows": "Bows",
+  "qualityofqueso.options.fov_effects.bows.on": "§6§lON",
+  "qualityofqueso.options.fov_effects.bows.quick": "§b§lQUICK",
+  "qualityofqueso.options.fov_effects.bows.off": "§7OFF",
+  "qualityofqueso.options.fov_effects.bows.on.tooltip": "Use normal bow FOV effect.",
+  "qualityofqueso.options.fov_effects.bows.quick.tooltip": "Quickly zooms in when pulling back a bow.",
+  "qualityofqueso.options.fov_effects.bows.off.tooltip": "No FOV change when using a bow.",
+  "qualityofqueso.options.fov_effects.bows.tooltip": "Toggle pulling back bows modifying FOV.",
 
   "qualityofqueso.fortnite_battle_pass": "Fortnite battle pass..."
 }

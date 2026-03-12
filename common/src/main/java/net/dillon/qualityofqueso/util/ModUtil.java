@@ -36,6 +36,7 @@ import net.minecraft.world.phys.Vec3;
 import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.io.File;
 import java.util.*;
@@ -432,6 +433,15 @@ public class ModUtil {
                 fogtype != FogType.POWDER_SNOW) {
             fogData.renderDistanceEnd = Integer.MAX_VALUE;
             fogData.environmentalEnd = Integer.MAX_VALUE;
+        }
+    }
+
+    /**
+     * Cancels out fluid FOV change.
+     */
+    public static void cancelFluidFov(FogType state, float fov, CallbackInfoReturnable<Float> cir) {
+        if (!options().fovEffects.fluids && (state == FogType.LAVA || state == FogType.WATER)) {
+            cir.setReturnValue(fov);
         }
     }
 

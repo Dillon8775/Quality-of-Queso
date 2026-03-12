@@ -462,12 +462,20 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
     private boolean search(String searchQuery, Slot slot, boolean dropping) {
         ItemStack stack = slot.getItem();
 
-        // If slot is empty, return false (slot is unavailable)
-        // If include hotbar is off, return false if hotbar slot
-        if (stack.isEmpty() ||
-                !options().management.includeHotbar && options().accessibility.searchInventory && isHotbarSlot(this.menu.slots.size(), dropping ? slot.index + 1 : slot.index) &&
-                        (!dropping || !isInventoryScreen(this.screen) || slot.index != 45)) {
+        // Empty slots are never searchable.
+        if (stack.isEmpty()) {
             return false;
+        }
+
+        // The "search inventory" option only gates container-screen player inventory scanning.
+        // InventoryScreen should always keep its own hotbar/include behavior.
+        if (!options().management.includeHotbar
+                && isHotbarSlot(this.menu.slots.size(), dropping ? slot.index + 1 : slot.index)
+                && (!dropping || !isInventoryScreen(this.screen) || slot.index != 45)) {
+            boolean applyHotbarFilter = options().accessibility.searchInventory || isInventoryScreen(this.screen);
+            if (applyHotbarFilter) {
+                return false;
+            }
         }
 
         if (this.matchesQuery(searchQuery, stack)) {
@@ -619,7 +627,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
         }
 
         boolean inventorySearchFieldPresent = this.inventorySearchField != null;
-        for (int i = 0; i < getInventorySize(this.menu, this.container); i++) {
+        for (int i = 0; i < this.getSearchSlotCount(); i++) {
             Slot slot = this.menu.getSlot(i);
             // Gray out hotbar slots if include hotbar is off and one of the transfer buttons are hovered
             boolean alreadyExcluded = false;
@@ -867,7 +875,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
 
             if ((options().searching.containerSearching && containerScreen) || (options().searching.inventorySearching && inventoryScreen)) {
                 boolean canRenderTransportablesButton = false;
-                for (int i = 0; i < getInventorySize(this.menu, this.container); i++) {
+                for (int i = 0; i < this.getSearchSlotCount(); i++) {
                     ItemStack stack = this.menu.getSlot(i).getItem();
                     if (stack.is(ItemTags.SHULKER_BOXES) || stack.is(ItemTags.BUNDLES)) {
                         canRenderTransportablesButton = true;
@@ -897,6 +905,17 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                 this.searchTransportablesButton.render(graphics, mouseX, mouseY, deltaTicks);
             }
         }
+    }
+
+    /**
+     * @return the slot count that should be considered for searching/highlighting on the current screen.
+     */
+    @Unique
+    private int getSearchSlotCount() {
+        if (isInventoryScreen(this.screen)) {
+            return this.menu.slots.size();
+        }
+        return getInventorySize(this.menu, this.container);
     }
 
     /**

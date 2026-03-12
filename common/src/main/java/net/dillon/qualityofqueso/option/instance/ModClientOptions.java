@@ -11,6 +11,7 @@ public class ModClientOptions {
     public InventoryManagement management = new InventoryManagement();
     public Hud hud = new Hud();
     public Miscellaneous misc = new Miscellaneous();
+    public FOVEffects fovEffects = new FOVEffects();
     public Accessibility accessibility = new Accessibility();
 
     public static class Searching {
@@ -70,6 +71,14 @@ public class ModClientOptions {
 
         public int itemFrameSearchGlowDuration = 0;
         public int itemFrameSearchRadius = 150;
+    }
+
+    public static class FOVEffects {
+        public boolean sprinting = true;
+        public boolean flying = true;
+        public boolean potions = true;
+        public Bows bows = Bows.ON;
+        public boolean fluids = true;
     }
 
     public static class Accessibility {

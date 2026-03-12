@@ -335,8 +335,46 @@ public class ModListOptions {
     }
 
     public static OptionInstance<Boolean> fortniteBattlePass() {
-        return OptionInstance.createBoolean("qualityofqueso.options.fortnite_battle_pass", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.fortnite_battle_pass.tooltip", options().misc.fortniteBattlePass)),
+        return OptionInstance.createBoolean("qualityofqueso.options.fortnite_battle_pass", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.fortnite_battle_pass.tooltip")),
                 ON_OFF_TEXT, options().misc.fortniteBattlePass, value -> options().misc.fortniteBattlePass = value);
+    }
+
+    public static OptionInstance<Boolean> sprinting() {
+        return OptionInstance.createBoolean("qualityofqueso.options.fov_effects.sprinting", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.fov_effects.sprinting.tooltip")),
+                ON_OFF_TEXT, options().fovEffects.sprinting, value -> options().fovEffects.sprinting = value);
+    }
+
+    public static OptionInstance<Boolean> flying() {
+        return OptionInstance.createBoolean("qualityofqueso.options.fov_effects.flying", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.fov_effects.flying.tooltip")),
+                ON_OFF_TEXT, options().fovEffects.flying, value -> options().fovEffects.flying = value);
+    }
+
+    public static OptionInstance<Boolean> potions() {
+        return OptionInstance.createBoolean("qualityofqueso.options.fov_effects.potions", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.fov_effects.potions.tooltip")),
+                ON_OFF_TEXT, options().fovEffects.potions, value -> options().fovEffects.potions = value);
+    }
+
+    public static OptionInstance<Boolean> fluids() {
+        return OptionInstance.createBoolean("qualityofqueso.options.fov_effects.fluids", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.fov_effects.fluids.tooltip")),
+                ON_OFF_TEXT, options().fovEffects.fluids, value -> options().fovEffects.fluids = value);
+    }
+
+    public static OptionInstance<Bows> bows() {
+        return new OptionInstance<>(
+                "qualityofqueso.options.fov_effects.bows",
+                option -> {
+                    Component text;
+                    switch (option) {
+                        case QUICK -> text = Component.translatable("qualityofqueso.options.fov_effects.bows.quick.tooltip");
+                        case OFF -> text = Component.translatable("qualityofqueso.options.fov_effects.bows.off.tooltip");
+                        default -> text = Component.translatable("qualityofqueso.options.fov_effects.bows.on.tooltip");
+                    }
+                    return Tooltip.create(Component.translatable("qualityofqueso.options.fov_effects.bows.tooltip").copy().append("\n\n").append(text));
+                },
+                (optionText, value) -> value.getText(),
+                new OptionInstance.Enum<>(Arrays.asList(Bows.values()), Bows.Codec),
+                options().fovEffects.bows,
+                value -> options().fovEffects.bows = value);
     }
 
     public static OptionInstance<Integer> minMobHitDingDistance() {

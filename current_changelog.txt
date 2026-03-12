@@ -46,9 +46,13 @@ Item Frame Searching Changes:
 - You can no longer tag search with item frame searching. Item frame searching now only searches the actual item name, like "Diamond" or "Emerald".
 - The "/itemframesearcher" command is now registered server-side.
 
-Enchantment Helper:
+Enchanting Helper:
 - See more tooltips over enchantment books to see what items the enchanted book can go on!
 - You can toggle this with the "Enchanting Helper" option.
+
+Field of View Modifiers:
+- Set what can change your FOV!
+- You can toggle sprinting, flying, potion effects (like speed and slowness), bow pulling, and fluids!
 
 Option changes:
 - Added an "Accessiblity Options" screen. Moved some technical options to this category.
@@ -88,6 +92,7 @@ Bug Fixes and Optimizations:
 - Fixed bug where right-clicking a container search field to clear it makes it start acting weird.
 - Fixed bug where items don't render their components with item count.
 - Fixed bug where only 1 tag of each item appears when tag searching.
+- Fixed bug where "Search Inventory" applies to the inventory screen as well and causes mis-matches in slots - it no longer does and only applies to containers.
 - Fixed bug where mixins don't apply sometimes.
 - 100% fixed swapping cooldown.
 - Optimized button sounds, so they play accordingly, even when using shortcut keys and buttons are disabled.

@@ -21,11 +21,13 @@
     "client.screen.PauseScreenMixin",
     "client.screen.TitleScreenMixin",
 
+    "client.util.AbstractClientPlayerMixin",
     "client.util.ClientPacketListenerMixin",
     "client.util.LocalPlayerMixin",
     "client.util.MinecraftMixin",
     "client.util.MultiPlayerGameModeMixin",
 
+    "render.CameraMixin",
     "render.FogRendererMixin"
   ],
   "mixins": [

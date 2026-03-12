@@ -18,7 +18,7 @@ import java.util.List;
 import static net.dillon.qualityofqueso.util.ModUtil.coptions;
 
 public class ModOptionsScreen extends AbstractModOptionsScreen {
-    private AbstractWidget searchingOptions, inventoryManagementOptions, itemFrameSearchingOptions, openItemFrameSearchGUIOptions, hudOptions, otherOptions, accessibilityOptions, enableMod, reportBugs, joinDiscord;
+    private AbstractWidget searchingOptions, inventoryManagementOptions, itemFrameSearchingOptions, openItemFrameSearchGUIOptions, hudOptions, otherOptions, fovEffects, accessibilityOptions, enableMod, reportBugs, joinDiscord;
 
     public ModOptionsScreen(Screen parent) {
         super(parent, Component.translatable("qualityofqueso.gui.options.title"));
@@ -61,18 +61,22 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
             this.minecraft.setScreen(new AccessibilityOptionsScreen(this));
         }).build());
         buttons.add(this.accessibilityOptions);
-
         this.enableMod = ModListOptions.enableQoQ().createButton(this.options);
         buttons.add(this.enableMod);
+
+        this.fovEffects = this.addWidget(Button.builder(Component.translatable("qualityofqueso.gui.fov_effects"), button -> {
+            this.minecraft.setScreen(new FOVEffectsScreen(this));
+        }).build());
+        buttons.add(this.fovEffects);
+        this.joinDiscord = this.addWidget(Button.builder(Component.translatable("qualityofqueso.gui.ask_questions"),
+                ConfirmLinkScreen.confirmLink(this, "https://discord.gg/vfqEAn4YFy", false)
+        ).build());
+        buttons.add(this.joinDiscord);
 
         this.reportBugs = this.addWidget(Button.builder(Component.translatable("qualityofqueso.gui.report_bugs"),
                 ConfirmLinkScreen.confirmLink(this, "https://github.com/Dillon8775/Quality-of-Queso/issues", false)
         ).build());
         buttons.add(this.reportBugs);
-        this.joinDiscord = this.addWidget(Button.builder(Component.translatable("qualityofqueso.gui.ask_questions"),
-                ConfirmLinkScreen.confirmLink(this, "https://discord.gg/vfqEAn4YFy", false)
-        ).build());
-        buttons.add(this.joinDiscord);
 
         this.list.addSmall(buttons);
     }
@@ -99,6 +103,9 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
         }
         if (this.hudOptions.isHovered()) {
             ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.hud_options.tooltip"), graphics, this.font, mouseX, mouseY);
+        }
+        if (this.fovEffects.isHovered()) {
+            ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.fov_effects.tooltip"), graphics, this.font, mouseX, mouseY);
         }
         if (this.accessibilityOptions.isHovered()) {
             ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.accessibility_options.tooltip"), graphics, this.font, mouseX, mouseY);
