@@ -1,4 +1,4 @@
-package net.dillon.qualityofqueso.mixin.client.accessor;
+package net.dillon.qualityofqueso.mixin.main;
 
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;

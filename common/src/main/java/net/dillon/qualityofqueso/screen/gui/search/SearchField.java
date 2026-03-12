@@ -31,7 +31,7 @@ public class SearchField extends EditBox {
     @Override
     public void renderWidget(GuiGraphics context, int mouseX, int mouseY, float deltaTicks) {
         super.renderWidget(context, mouseX, mouseY, deltaTicks);
-        if (options().misc.helpfulTooltips && this.isHovered() && this.getValue().isEmpty()) {
+        if (options().accessibility.helpfulTooltips && this.isHovered() && this.getValue().isEmpty()) {
             Component matchCase = Component.literal(":").withStyle(ChatFormatting.BOLD).withColor(0xC4FFD7);
             Component multiple = Component.literal(",").withStyle(ChatFormatting.ITALIC);
             Component tag = Component.literal("#").withStyle(ChatFormatting.ITALIC).withColor(0x7FFFFF);

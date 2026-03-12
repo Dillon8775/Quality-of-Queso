@@ -19,7 +19,6 @@ public class QoQClient implements ClientModInitializer {
         ModHudEntries.registerDebugEntries();
 
         ClientEvents.registerClientEvents();
-        ClientEvents.registerCommands();
         ClientEvents.registerKeybindings();
 
         ModSoundEvents.initializeSoundEvents();

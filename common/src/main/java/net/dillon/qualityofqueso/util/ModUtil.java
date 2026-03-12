@@ -5,8 +5,11 @@ import net.dillon.qualityofqueso.option.instance.ModClientOptions;
 import net.dillon.qualityofqueso.option.instance.ModCommonOptions;
 import net.dillon.qualityofqueso.option.instance.TrackedContainers;
 import net.dillon.qualityofqueso.option.instance.UniversalOptions;
+import net.dillon.qualityofqueso.packet.ClientPreferencesC2SPacket;
 import net.dillon.qualityofqueso.packet.GlowSearchC2SPayload;
 import net.dillon.qualityofqueso.platform.MultiLoader;
+import net.dillon.qualityofqueso.screen.gui.button.SwapButton;
+import net.dillon.qualityofqueso.server.ServerStorage;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.fog.FogData;
@@ -133,7 +136,7 @@ public class ModUtil {
         ModCommonOptions.COMMON.load();
         Minecraft instance = Minecraft.getInstance();
         if (instance.player != null) {
-            instance.player.sendOverlayMessage(Component.translatable("qualityofqueso.unloaded_server_config", safeAddress(instance.getCurrentServer().ip)).withStyle(ChatFormatting.GOLD));
+            instance.player.sendSystemMessage(Component.translatable("qualityofqueso.unloaded_server_config", safeAddress(instance.getCurrentServer().ip)).withStyle(ChatFormatting.GOLD));
         }
         if (uoptions().multiServerConfigs) {
             ModUtil.info("Reverting back to global QoQ config.");
@@ -208,7 +211,7 @@ public class ModUtil {
 
         String message = !configExists ? "qualityofqueso.created_server_config" : "qualityofqueso.loaded_server_config";
         if (instance.player != null) {
-            instance.player.sendOverlayMessage(Component.translatable(message, safeAddress(instance.getCurrentServer().ip)).withStyle(ChatFormatting.GOLD));
+            instance.player.sendSystemMessage(Component.translatable(message, safeAddress(instance.getCurrentServer().ip)).withStyle(ChatFormatting.GOLD));
         }
         ModUtil.info("Loaded QoQ config for " + address + ".");
     }
@@ -308,7 +311,7 @@ public class ModUtil {
             return false;
         }
 
-        return options().misc.enableMod;
+        return options().accessibility.enableMod;
     }
 
     /**
@@ -429,6 +432,34 @@ public class ModUtil {
                 fogtype != FogType.POWDER_SNOW) {
             fogData.renderDistanceEnd = Integer.MAX_VALUE;
             fogData.environmentalEnd = Integer.MAX_VALUE;
+        }
+    }
+
+    /**
+     * The server receives the player's request from the client to the server for their options.
+     */
+    public static void handleClientToServerOptions(ClientPreferencesC2SPacket packet, UUID playerUuid) {
+        ServerStorage.setIncludeHotbar(playerUuid, packet.includeHotbar());
+        ServerStorage.setPerpendicularQuickMoving(playerUuid, packet.perpendicularQuickMoving());
+    }
+
+    /**
+     * Sends client-side options to the server, for storage reference.
+     */
+    public static void sendClientOptionsToServer() {
+        MultiLoader.PLATFORM.sendToServer(new ClientPreferencesC2SPacket(options().management.includeHotbar, !options().management.includeHotbar || options().accessibility.perpendicularQuickMoving));
+    }
+
+    /**
+     * Handles all cooldown-related timers.
+     */
+    public static void handleCooldownTimers() {
+        if (options().management.containerFiltering && ContainerTracker.COOLDOWN > 0) {
+            ContainerTracker.COOLDOWN--;
+        }
+
+        if (options().management.swapping.orKeyOnly() && SwapButton.SWAP_COOLDOWN > 0) {
+            SwapButton.SWAP_COOLDOWN--;
         }
     }
 }

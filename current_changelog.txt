@@ -1,4 +1,7 @@
 Version 1.6 (MC Fabric 26.1, NeoForge 26.1):
+ATTENTION REGULAR QOQ USERS:
+- Be prepared to reconfigure your mod settings with this version!
+
 Elytra Alarm:
 - If you fall a certain amount of blocks (default = 20) with an elytra in your inventory and it's not equipped, the alarm goes off, indicating that you need to equip your elytra.
 - You can change the amount of blocks in the config, and this feature is entirely toggleable.
@@ -41,33 +44,51 @@ Drag Sorting Changes:
 Item Frame Searching Changes:
 - Holding CTRL in item frame search screen to match case no longer works. You must add ":" to the beginning of the query.
 - You can no longer tag search with item frame searching. Item frame searching now only searches the actual item name, like "Diamond" or "Emerald".
+- The "/itemframesearcher" command is now registered server-side.
+
+Enchantment Helper:
+- See more tooltips over enchantment books to see what items the enchanted book can go on!
+- You can toggle this with the "Enchanting Helper" option.
 
 Option changes:
-- Added an "advanced options" screen. Moved some technical options to this category.
+- Added an "Accessiblity Options" screen. Moved some technical options to this category.
 - Removed the "Include/Exclude Hotbar" option from the options screen, as it can easily be toggled via a container/inventory.
+- Renamed "Chest Searching" to "Container Searching".
 
-New Accessibility Options:
+Accessibility Options Category:
 - Moved "Perpendicular Quick Moving", "Move Items If", "Display Total w/ Stacks" and "Search Inventory" options to "Accessibility".
+- Also moved "Prevent E from typing", "Auto-close recipe book" and "Helpful tooltips" options to "Accessibility".
 - "Only Count Matching Items", which only adds items to the Item Count display counter if their components match (OFF by default).
 - "Elytra Alarm Sound Delay", the delay for playing the elytra alarm sound.
 - "Use Old Search Bar Texture", which uses the old search bar texture.
+- Moved the "Enable Mod" option into the main QoQ screen (not under "Misc..." anymore).
 
 The Fortnite Battle Pass option:
 - Just, don't...
 
 Technical / small changes:
+- You can now sort with bundles in a container.
 - Hovering over the quick drop button in your inventory while excluding hotbar now grays out the hotbar slots if the slot has an item.
 - "Swapping" feature is now OFF by default.
 - Organized assets and updated translations.
 - "Helpful Tooltips" option is now more effective.
+- Changed "on/off" and "yes/no" text (upon other option) colors to be orange/gray, giving a more QoQ-vibe.
 - Renamed "qualityofqueso_client-universal.json" to "qualityofqueso-universal_config.json".
 - Organized client-side configuration file.
+- Replaced "c:" tags with "fabric:" for easier understanding (tag searching). "c" tags are from fabric.
+- Lowered minimum distance of "Mob Hit Ding" to 10 (previously 15).
 
 Bug Fixes and Optimizations:
+- "Perpendicular Quick Moving" now works for all players, as long as the mod is installed server-side.
+- Fixed bug where pressing "E" while "Prevent E from typing" is enabled, closes the screen, even if you are focused into a search bar.
 - Fixed armor status display timers being wrong.
 - Fixed drastic frame drops when tag searching (frames still drop a bit when searching multiple tags).
+- Fixed bug where throwing an item on a server doesn't display item count.
+- Fixed bug where "Mob Hit Ding" doesn't work on servers.
 - Fixed bug where right-clicking a container search field to clear it makes it start acting weird.
 - Fixed bug where items don't render their components with item count.
+- Fixed bug where only 1 tag of each item appears when tag searching.
 - Fixed bug where mixins don't apply sometimes.
+- 100% fixed swapping cooldown.
 - Optimized button sounds, so they play accordingly, even when using shortcut keys and buttons are disabled.
 - Other small optimizations and bug fixes.

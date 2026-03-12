@@ -3,7 +3,7 @@ package net.dillon.qualityofqueso.mixin.client.util;
 import net.dillon.qualityofqueso.keybind.ModKeybinds;
 import net.dillon.qualityofqueso.screen.ItemFrameSearchScreen;
 import net.dillon.qualityofqueso.sound.ModSoundEvents;
-import net.dillon.qualityofqueso.util.ContainerTracker;
+import net.dillon.qualityofqueso.util.ModUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
@@ -32,14 +32,12 @@ public abstract class MinecraftMixin {
      * You don't want to know...
      */
     @Inject(method = "tick", at = @At("TAIL"))
-    private void fortniteBattlePass(CallbackInfo ci) {
+    private void tickEvents(CallbackInfo ci) {
         if (!modEnabled(Minecraft.getInstance())) {
             return;
         }
 
-        if (ContainerTracker.COOLDOWN > 0) {
-            ContainerTracker.COOLDOWN--;
-        }
+        ModUtil.handleCooldownTimers();
 
         if (!options().misc.fortniteBattlePass) {
             return;

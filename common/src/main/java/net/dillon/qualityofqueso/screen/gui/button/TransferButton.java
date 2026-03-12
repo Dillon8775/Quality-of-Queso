@@ -110,7 +110,7 @@ public class TransferButton extends Button {
             boolean containerButton = this.buttonName.equals("transfer_container");
             boolean validName = inventoryButton || containerButton;
             if (validName) {
-                if (options().management.showButtonShortcuts) {
+                if (options().accessibility.showButtonShortcuts) {
                     if (inventoryButton && key(ModKeybinds.MOVE_INVENTORY) == ModKeybinds.MOVE_INVENTORY.getDefaultKey()) {
                         ButtonUtil.drawButtonTexture(context, "shortcut/transfer_inventory_button_shortcut_key", this);
                     } else if (containerButton && key(ModKeybinds.MOVE_CONTAINER) == ModKeybinds.MOVE_CONTAINER.getDefaultKey()) {
@@ -137,7 +137,7 @@ public class TransferButton extends Button {
             this.renderButtonTexture(this.buttonName + "_button_inactive", true, this, graphics);
         }
 
-        if (this.isHovered() && this.active && options().misc.helpfulTooltips) {
+        if (this.isHovered() && this.active && options().accessibility.helpfulTooltips) {
             Screen screen = Minecraft.getInstance().screen;
             if (screen != null) {
                 if (isBrewingStandScreen(screen)) {
@@ -182,9 +182,7 @@ public class TransferButton extends Button {
                                         Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query.match", this.searchFieldText.substring(1)) :
                                         Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query", this.searchFieldText), graphics, this.font, mouseX, mouseY);
             } else {
-                if (!this.buttonName.equals(ButtonNames.SORT)) {
-                    ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui." + this.buttonName + "_button"), graphics, this.font, mouseX, mouseY);
-                }
+                ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui." + this.buttonName + "_button"), graphics, this.font, mouseX, mouseY);
             }
         }
     }

@@ -5,7 +5,6 @@ import net.dillon.qualityofqueso.option.instance.ModClientOptions;
 import net.dillon.qualityofqueso.option.instance.ModCommonOptions;
 import net.dillon.qualityofqueso.option.instance.TrackedContainers;
 import net.dillon.qualityofqueso.option.instance.UniversalOptions;
-import net.dillon.qualityofqueso.option.screen.ModOptionsScreen;
 import net.dillon.qualityofqueso.registry.NeoForgeSoundEvents;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -17,12 +16,14 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLDedicatedServerSetupEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
-import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 
 @Mod(QoQ.MOD_ID)
 public final class QoQ {
     public static final String MOD_ID = "qualityofqueso";
 
+    /**
+     * Main entrypoint for QoQ (NeoForge).
+     */
     public QoQ(IEventBus modEventBus, ModContainer container) {
         NeoForgeSoundEvents.register(modEventBus);
         modEventBus.addListener(this::commonSetup);
@@ -38,11 +39,6 @@ public final class QoQ {
                 UniversalOptions.UNIVERSAL.setInstance(new UniversalOptions());
             }
             ModHudEntries.registerDebugEntries();
-
-            container.registerExtensionPoint(
-                    IConfigScreenFactory.class,
-                    (mc, parent) -> new ModOptionsScreen(parent)
-            );
         }
         if (ModCommonOptions.COMMON.getInstance() == null) {
             ModCommonOptions.COMMON.setInstance(new ModCommonOptions());

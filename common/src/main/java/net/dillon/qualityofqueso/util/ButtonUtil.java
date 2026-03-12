@@ -23,6 +23,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ServerboundContainerClickPacket;
 import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.CommonColors;
@@ -155,7 +156,7 @@ public class ButtonUtil {
      * @return the fromInventory (size) that should be searched.
      */
     public static int getInventorySize(AbstractContainerMenu handler, Container inventory) {
-        return options().searching.searchInventory ? handler.slots.size() : inventory == null ? 0 : inventory.getContainerSize();
+        return options().accessibility.searchInventory ? handler.slots.size() : inventory == null ? 0 : inventory.getContainerSize();
     }
 
     /**
@@ -423,7 +424,7 @@ public class ButtonUtil {
      * @return true if the item is present in the opposing inventory/container.
      */
     public static boolean isPresentInContainer(Container container, AbstractContainerMenu menu, ItemStack sourceStack) {
-        if (ContainerTracker.getCurrentPlaceholderStacks().isEmpty()) {
+        if (!ContainerTracker.IS_TRACKED_CONTAINER) {
             for (int i = 0; i < getContainerSize(container); i++) {
                 ItemStack opposingStack = menu.getSlot(i).getItem();
                 if (!opposingStack.isEmpty() && matchesFillFilter(sourceStack, opposingStack)) {
@@ -624,7 +625,7 @@ public class ButtonUtil {
             ItemStack desired = stacks.get(target);
             ItemStack actual = handler.slots.get(target).getItem();
 
-            if (ItemStack.isSameItem(actual, desired)) {
+            if (areEquivalentSortStacks(actual, desired)) {
                 continue;
             }
 
@@ -633,7 +634,7 @@ public class ButtonUtil {
                 continue;
             }
 
-            swapSlots(client, handler, source, target);
+            swapSlots(client, handler, source, target, totalSlots);
         }
     }
 
@@ -648,7 +649,7 @@ public class ButtonUtil {
 
         for (int i = start + 1; i < limit; i++) {
             ItemStack stack = handler.slots.get(i).getItem();
-            if (ItemStack.isSameItem(stack, target)) {
+            if (areEquivalentSortStacks(stack, target)) {
                 return i;
             }
         }
@@ -658,13 +659,66 @@ public class ButtonUtil {
     /**
      * Calls {@link ButtonUtil#clickSlot(Minecraft, AbstractContainerMenu, int)} to sort items.
      */
-    private static void swapSlots(Minecraft client, AbstractContainerMenu handler, int a, int b) {
+    private static void swapSlots(Minecraft client, AbstractContainerMenu handler, int a, int b, int totalSlots) {
+        ItemStack aStack = handler.slots.get(a).getItem();
+        ItemStack bStack = handler.slots.get(b).getItem();
+
+        // Bundle interaction consumes carried items, so route bundle swaps through an empty temp slot.
+        if (isBundle(aStack) || isBundle(bStack)) {
+            int temp = findTemporaryEmptySlot(handler, a, b, totalSlots);
+            if (temp != -1) {
+                clickSlot(client, handler, a);
+                clickSlot(client, handler, temp);
+                clickSlot(client, handler, b);
+                clickSlot(client, handler, a);
+                clickSlot(client, handler, temp);
+                clickSlot(client, handler, b);
+            }
+            return;
+        }
+
         // Pick up A
         clickSlot(client, handler, a);
         // Pick up B (places A, picks up B)
         clickSlot(client, handler, b);
         // Place B into A
         clickSlot(client, handler, a);
+    }
+
+    /**
+     * @return the temporary slots (specifically for bundles).
+     */
+    private static int findTemporaryEmptySlot(AbstractContainerMenu handler, int a, int b, int totalSlots) {
+        for (int i = 0; i < totalSlots; i++) {
+            if (i == a || i == b) {
+                continue;
+            }
+
+            if (!handler.slots.get(i).hasItem()) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * @return if the stack is a bundle.
+     */
+    private static boolean isBundle(ItemStack stack) {
+        return !stack.isEmpty() && stack.is(ItemTags.BUNDLES);
+    }
+
+    /**
+     * @return if stacks match, and handles bundling.
+     */
+    private static boolean areEquivalentSortStacks(ItemStack a, ItemStack b) {
+        if (a.isEmpty() || b.isEmpty()) {
+            return a.isEmpty() && b.isEmpty();
+        }
+        if (isBundle(a) || isBundle(b)) {
+            return ItemStack.isSameItemSameComponents(a, b);
+        }
+        return ItemStack.isSameItem(a, b);
     }
 
     /**
@@ -705,8 +759,14 @@ public class ButtonUtil {
         int stateId = handler.getStateId();
 
         if (containerInput == ContainerInput.THROW) {
-            if (!handler.getSlot(slotIndex).getItem().isEmpty()) {
-                client.gameMode.handleContainerInput(syncId, slotIndex, Minecraft.getInstance().hasShiftDown() ? 0 : 1, containerInput, client.player);
+            ItemStack clickedStack = handler.getSlot(slotIndex).getItem();
+            if (!clickedStack.isEmpty()) {
+                boolean throwSingle = Minecraft.getInstance().hasShiftDown();
+                if (modEnabled(client) && options().hud.displayOnThrow) {
+                    ItemHudTracker.setStack(throwSingle ? clickedStack.copyWithCount(1) : clickedStack.copy());
+                }
+
+                client.gameMode.handleContainerInput(syncId, slotIndex, throwSingle ? 0 : 1, containerInput, client.player);
             }
             return;
         }
@@ -912,12 +972,5 @@ public class ButtonUtil {
      */
     public static boolean isCreativeInventoryScreen(Screen screen) {
         return screen instanceof CreativeModeInventoryScreen;
-    }
-
-    /**
-     * A class that stores button names.
-     */
-    public static class ButtonNames {
-        public static final String SORT = "sort/sort";
     }
 }

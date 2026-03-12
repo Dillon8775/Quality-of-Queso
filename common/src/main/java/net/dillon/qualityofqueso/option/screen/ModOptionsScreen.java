@@ -1,5 +1,6 @@
 package net.dillon.qualityofqueso.option.screen;
 
+import net.dillon.qualityofqueso.option.ModListOptions;
 import net.dillon.qualityofqueso.screen.ItemFrameSearchScreen;
 import net.dillon.qualityofqueso.util.ButtonUtil;
 import net.dillon.qualityofqueso.util.ModUtil;
@@ -17,7 +18,7 @@ import java.util.List;
 import static net.dillon.qualityofqueso.util.ModUtil.coptions;
 
 public class ModOptionsScreen extends AbstractModOptionsScreen {
-    private Button chestSearchingOptions, inventoryManagementOptions, itemFrameSearchingOptions, openItemFrameSearchGUIOptions, hudOptions, otherOptions, reportBugs, joinDiscord, advancedOptions;
+    private AbstractWidget searchingOptions, inventoryManagementOptions, itemFrameSearchingOptions, openItemFrameSearchGUIOptions, hudOptions, otherOptions, accessibilityOptions, enableMod, reportBugs, joinDiscord;
 
     public ModOptionsScreen(Screen parent) {
         super(parent, Component.translatable("qualityofqueso.gui.options.title"));
@@ -27,10 +28,10 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
     protected void init() {
         super.init();
         List<AbstractWidget> buttons = new ArrayList<>();
-        this.chestSearchingOptions = this.addWidget(Button.builder(Component.translatable("qualityofqueso.gui.searching_options"), button -> {
+        this.searchingOptions = this.addWidget(Button.builder(Component.translatable("qualityofqueso.gui.searching_options"), button -> {
             this.minecraft.setScreen(new SearchingOptionsScreen(this));
         }).build());
-        buttons.add(this.chestSearchingOptions);
+        buttons.add(this.searchingOptions);
         this.inventoryManagementOptions = this.addWidget(Button.builder(Component.translatable("qualityofqueso.gui.inventory_management_options"), button -> {
             this.minecraft.setScreen(new InventoryManagementOptionsScreen(this));
         }).build());
@@ -56,6 +57,14 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
         }).build());
         buttons.add(this.otherOptions);
 
+        this.accessibilityOptions = this.addWidget(Button.builder(Component.translatable("qualityofqueso.gui.accessibility_options"), button -> {
+            this.minecraft.setScreen(new AccessibilityOptionsScreen(this));
+        }).build());
+        buttons.add(this.accessibilityOptions);
+
+        this.enableMod = ModListOptions.enableQoQ().createButton(this.options);
+        buttons.add(this.enableMod);
+
         this.reportBugs = this.addWidget(Button.builder(Component.translatable("qualityofqueso.gui.report_bugs"),
                 ConfirmLinkScreen.confirmLink(this, "https://github.com/Dillon8775/Quality-of-Queso/issues", false)
         ).build());
@@ -65,11 +74,6 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
         ).build());
         buttons.add(this.joinDiscord);
 
-        this.advancedOptions = this.addWidget(Button.builder(Component.translatable("qualityofqueso.gui.accessibility_options"), button -> {
-            this.minecraft.setScreen(new AccessibilityOptionsScreen(this));
-        }).build());
-        buttons.add(this.advancedOptions);
-
         this.list.addSmall(buttons);
     }
 
@@ -77,8 +81,8 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float deltaTicks) {
         super.render(graphics, mouseX, mouseY, deltaTicks);
         this.openItemFrameSearchGUIOptions.active = coptions().itemFrameSearching && this.minecraft.level != null;
-        if (this.chestSearchingOptions.isHovered()) {
-            ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.chest_searching_options.tooltip"), graphics, this.font, mouseX, mouseY);
+        if (this.searchingOptions.isHovered()) {
+            ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.searching_options.tooltip"), graphics, this.font, mouseX, mouseY);
         }
         if (this.inventoryManagementOptions.isHovered()) {
             ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.inventory_management_options.tooltip"), graphics, this.font, mouseX, mouseY);
@@ -96,7 +100,10 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
         if (this.hudOptions.isHovered()) {
             ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.hud_options.tooltip"), graphics, this.font, mouseX, mouseY);
         }
-        if (ModUtil.options().misc.helpfulTooltips) {
+        if (this.accessibilityOptions.isHovered()) {
+            ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.accessibility_options.tooltip"), graphics, this.font, mouseX, mouseY);
+        }
+        if (ModUtil.options().accessibility.helpfulTooltips) {
             if (this.otherOptions.isHovered()) {
                 ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.misc_options.tooltip"), graphics, this.font, mouseX, mouseY);
             }

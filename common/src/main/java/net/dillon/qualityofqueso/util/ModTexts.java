@@ -8,8 +8,8 @@ import net.minecraft.network.chat.Component;
  */
 public class ModTexts {
     public static final Component BLANK = Component.literal("");
-    public static final Component YES = Component.translatable("qualityofqueso.gui.yes").withStyle(ChatFormatting.GREEN).withStyle(ChatFormatting.BOLD);
-    public static final Component NO = Component.translatable("qualityofqueso.gui.no").withStyle(ChatFormatting.RED);
-    public static final Component ON = Component.translatable("qualityofqueso.gui.on").withStyle(ChatFormatting.GREEN).withStyle(ChatFormatting.BOLD);
-    public static final Component OFF = Component.translatable("qualityofqueso.gui.off").withStyle(ChatFormatting.RED);
+    public static final Component YES = Component.translatable("qualityofqueso.gui.yes").withStyle(ChatFormatting.GOLD).withStyle(ChatFormatting.BOLD);
+    public static final Component NO = Component.translatable("qualityofqueso.gui.no").withStyle(ChatFormatting.GRAY);
+    public static final Component ON = Component.translatable("qualityofqueso.gui.on").withStyle(ChatFormatting.GOLD).withStyle(ChatFormatting.BOLD);
+    public static final Component OFF = Component.translatable("qualityofqueso.gui.off").withStyle(ChatFormatting.GRAY);
 }

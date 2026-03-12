@@ -80,7 +80,7 @@ public class ItemFrameSearchScreen extends Screen {
         if (this.clearButton.isHovered()) {
             ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.clear.tooltip"), graphics, this.font, mouseX, mouseY);
         }
-        if (options().misc.helpfulTooltips && this.searchField.isHovered() && this.searchField.getValue().isEmpty()) {
+        if (options().accessibility.helpfulTooltips && this.searchField.isHovered() && this.searchField.getValue().isEmpty()) {
             ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.search_item_frames.search_filtering"), graphics, this.font, mouseX, mouseY);
         }
         this.renderBlurredBackground(graphics);

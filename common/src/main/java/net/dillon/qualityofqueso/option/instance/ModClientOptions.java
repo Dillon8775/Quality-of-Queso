@@ -14,8 +14,7 @@ public class ModClientOptions {
     public Accessibility accessibility = new Accessibility();
 
     public static class Searching {
-        public boolean chestSearching = true;
-        public boolean searchInventory = true;
+        public boolean containerSearching = true;
         public boolean inventorySearching = true;
         public boolean saveSearchText = false;
         public boolean quickSearch = true;
@@ -30,9 +29,9 @@ public class ModClientOptions {
         public boolean containerFiltering = true;
         public QuickDrop quickDrop = QuickDrop.SHORTCUT_KEY_ONLY;
         public Swapping swapping = Swapping.OFF;
+
         public boolean dragSorting = true;
         public boolean saveExcludedSlots = false;
-        public boolean showButtonShortcuts = true;
 
         // Config-only
         public boolean fillWhatsPreset = false;
@@ -41,43 +40,59 @@ public class ModClientOptions {
 
     public static class Hud {
         public boolean armorStatus = true;
+        public boolean coloredHighlighting = true;
+        public boolean warningIndicators = true;
+
         public ItemCount itemCount = ItemCount.STACKS;
         public boolean displayOnThrow = true;
         public boolean displayOnPickup = true;
-        public boolean displayTotalWithStacks = false;
         public boolean countContainers = true;
         public boolean showArrowCount = true;
         public boolean countAllArrows = true;
-        public boolean coloredHighlighting = true;
-        public boolean warningIndicators = true;
     }
 
     public static class Miscellaneous {
-        public boolean enableMod = true;
+        public boolean elytraAlarm = true;
+        public int minElytraFallDistance = 20;
+        public boolean mobHitDing = true;
+        public int minMobHitDingDistance = 20;
+
         public boolean quickGuiExit = true;
         public boolean quickEquip = true;
+
+        public boolean enchantingHelper = true;
+        public boolean fog = true;
+
         public boolean preventRageQuitting = false;
         public boolean alwaysPreventRageQuitting = false;
-        public boolean preventEFromTyping = false;
-        public boolean helpfulTooltips = true;
-        public boolean fog = true;
-        public boolean elytraAlarm = true;
-        public boolean mobHitDing = true;
-        public boolean autoCloseRecipeBook = true;
-        public int minElytraFallDistance = 20;
-        public int minMobHitDingDistance = 20;
+
+        public boolean fortniteBattlePass = false;
+
         public int itemFrameSearchGlowDuration = 0;
         public int itemFrameSearchRadius = 150;
-        public QoQButtons qoqButtons = QoQButtons.EVERYWHERE;
-        public boolean fortniteBattlePass = false;
     }
 
     public static class Accessibility {
+        public boolean enableMod = true;
+
+        public boolean helpfulTooltips = true;
+        public boolean preventEFromTyping = false;
+        public boolean searchInventory = true;
+        public boolean showButtonShortcuts = true;
+        public boolean autoCloseRecipeBook = true;
+
         public boolean useOldSearchBarTexture = false;
+
+        public boolean onlyCountMatchingItems = false;
+        public boolean displayTotalWithStacks = false;
+
         public boolean perpendicularQuickMoving = false;
         public MoveItemsIf moveItemsIf = MoveItemsIf.CAN_MOVE_AT_ALL;
+
         public int elytraAlarmSoundDelay = 1;
-        public boolean onlyCountMatchingItems = false;
+
+        public QoQButtons qoqButtons = QoQButtons.EVERYWHERE;
+
     }
 
     public static final ModOptionsHandler CLIENT = new ModOptionsHandler();

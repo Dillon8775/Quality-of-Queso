@@ -1,6 +1,5 @@
 package net.dillon.qualityofqueso.event;
 
-import net.dillon.qualityofqueso.command.ItemFrameSearcherCommand;
 import net.dillon.qualityofqueso.keybind.ModKeybinds;
 import net.dillon.qualityofqueso.util.ModUtil;
 import net.fabricmc.api.EnvType;
@@ -9,7 +8,6 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLevelEvents;
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
-import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.client.gui.screens.DeathScreen;
 
 import static net.dillon.qualityofqueso.util.ModUtil.*;
@@ -43,6 +41,7 @@ public class ClientEvents {
                 options().misc.preventRageQuitting = true;
                 saveAll(client);
             }
+            sendClientOptionsToServer();
         });
 
         ClientLevelEvents.AFTER_CLIENT_LEVEL_CHANGE.register((level, client) -> {
@@ -62,16 +61,5 @@ public class ClientEvents {
                 unloadServerConfig();
             }
         });
-    }
-
-    /**
-     * Registers all {@code QoQ} commands.
-     */
-    public static void registerCommands() {
-        if (coptions().itemFrameSearching) {
-            CommandRegistrationCallback.EVENT.register((commandDispatcher, commandRegistryAccess, registrationEnvironment) -> {
-                commandDispatcher.register(ItemFrameSearcherCommand.getItemFrameSearcherCommand(commandRegistryAccess));
-            });
-        }
     }
 }

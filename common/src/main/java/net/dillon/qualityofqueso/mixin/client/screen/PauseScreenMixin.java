@@ -41,7 +41,7 @@ public class PauseScreenMixin extends Screen {
             if (this.disconnectButton != null && options().misc.preventRageQuitting) {
                 this.disconnectButton.active = false;
             }
-            if (options().misc.qoqButtons.everywhere()) {
+            if (options().accessibility.qoqButtons.everywhere()) {
                 SpriteIconButton settingsButton = this.addRenderableWidget(ButtonUtil.initializeButton(this.minecraft, this));
                 settingsButton.setPosition(this.width / 2 + 106, this.height / 4 + 72 - 16 + (MultiLoader.PLATFORM.getPlatformName().equals("NeoForge") ? -6 : 0));
                 if (!(this.minecraft.getCurrentServer() == null)) {
@@ -65,10 +65,10 @@ public class PauseScreenMixin extends Screen {
     @Inject(method = "render", at = @At("TAIL"))
     private void renderTooltipsAndTextures(GuiGraphics graphics, int mouseX, int mouseY, float deltaTicks, CallbackInfo ci) {
         if (this.showPauseMenu) {
-            if (options().misc.preventRageQuitting && options().misc.helpfulTooltips && this.disconnectButton != null && this.disconnectButton.isHovered()) {
+            if (options().misc.preventRageQuitting && options().accessibility.helpfulTooltips && this.disconnectButton != null && this.disconnectButton.isHovered()) {
                 ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.disconnect"), graphics, this.font, mouseX, mouseY);
             }
-            if (options().misc.qoqButtons.everywhere() && !(this.minecraft.getCurrentServer() == null)) {
+            if (options().accessibility.qoqButtons.everywhere() && !(this.minecraft.getCurrentServer() == null)) {
                 if (this.blacklistServerButton != null) {
                     this.blacklistServerButton.active = isOnServer(this.minecraft);
                     String address = this.getServerAddress();

@@ -4,9 +4,16 @@ import net.dillon.qualityofqueso.util.ItemHudTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.network.protocol.game.ClientboundDamageEventPacket;
 import net.minecraft.network.protocol.game.ClientboundTakeItemEntityPacket;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.arrow.Arrow;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -38,5 +45,33 @@ public class ClientPacketListenerMixin {
 
         ItemStack stack = itemEntity.getItem();
         ItemHudTracker.setStack(stack);
+    }
+
+    /**
+     * Plays the "ding" sound effect when hitting a mob from at least a certain amount of blocks away.
+     */
+    @Inject(method = "handleDamageEvent", at = @At("TAIL"))
+    private void playHitSoundOnMob(ClientboundDamageEventPacket packet, CallbackInfo ci) {
+        Minecraft minecraft = Minecraft.getInstance();
+        if (!modEnabled(minecraft) || !options().misc.mobHitDing || minecraft.player == null) {
+            return;
+        }
+
+        Entity hitEntity = this.level.getEntity(packet.entityId());
+        if (!(hitEntity instanceof LivingEntity living) || living instanceof Player) {
+            return;
+        }
+
+        DamageSource source = packet.getSource(this.level);
+        Entity sourceEntity = source.getEntity();
+        Entity directEntity = source.getDirectEntity();
+        if (!(directEntity instanceof Arrow) || sourceEntity == null || !sourceEntity.getUUID().equals(minecraft.player.getUUID())) {
+            return;
+        }
+
+        double minDistance = options().misc.minMobHitDingDistance;
+        if (minecraft.player.distanceToSqr(hitEntity) >= minDistance * minDistance) {
+            minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.ARROW_HIT_PLAYER, 1.0F));
+        }
     }
 }

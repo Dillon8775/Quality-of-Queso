@@ -1,7 +1,6 @@
 package net.dillon.qualityofqueso.event;
 
 import net.dillon.qualityofqueso.QoQ;
-import net.dillon.qualityofqueso.command.ItemFrameSearcherCommand;
 import net.dillon.qualityofqueso.keybind.ModKeybinds;
 import net.dillon.qualityofqueso.util.ModUtil;
 import net.minecraft.client.Minecraft;
@@ -10,7 +9,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
-import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
 
 import static net.dillon.qualityofqueso.util.ModUtil.*;
@@ -29,13 +27,6 @@ public class ClientEvents {
         event.register(ModKeybinds.HIDE_RECIPE_BOOK);
     }
 
-    @SubscribeEvent
-    public static void register(RegisterCommandsEvent dispatcher) {
-        dispatcher.getDispatcher().register(
-                ItemFrameSearcherCommand.getItemFrameSearcherCommand(dispatcher.getBuildContext())
-        );
-    }
-
     // Load multi-server config
     @SubscribeEvent
     public static void onClientJoin(ClientPlayerNetworkEvent.LoggingIn event) {
@@ -47,6 +38,7 @@ public class ClientEvents {
             options().misc.preventRageQuitting = true;
             saveAll(Minecraft.getInstance());
         }
+        sendClientOptionsToServer();
     }
 
     @SubscribeEvent

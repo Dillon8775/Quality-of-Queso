@@ -12,6 +12,8 @@ import java.util.function.Supplier;
  * A button which swaps inventories.
  */
 public class SwapButton extends TransferButton {
+    private static final int DEFAULT_SWAP_COOLDOWN = 20;
+    public static int SWAP_COOLDOWN = DEFAULT_SWAP_COOLDOWN;
 
     public SwapButton(AbstractContainerMenu screenHandler, Font font, String searchFieldText, int x, int y, String buttonName, OnPress onPress, Supplier<Boolean> canBeActive) {
         super(screenHandler, font, searchFieldText, x, y, buttonName, onPress, canBeActive);
@@ -24,5 +26,12 @@ public class SwapButton extends TransferButton {
     protected void renderButtonTexture(String id, boolean transferable, AbstractWidget buttonReference, GuiGraphics
             context) {
         ButtonUtil.drawButtonTexture(context, id, this);
+    }
+
+    /**
+     * Resets the swapping cooldown.
+     */
+    public static void resetCooldown() {
+        SWAP_COOLDOWN = DEFAULT_SWAP_COOLDOWN;
     }
 }

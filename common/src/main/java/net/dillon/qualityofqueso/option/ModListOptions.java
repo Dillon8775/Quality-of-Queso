@@ -25,9 +25,9 @@ public class ModListOptions {
             ? ModTexts.YES
             : ModTexts.NO;
 
-    public static OptionInstance<Boolean> enableMod() {
+    public static OptionInstance<Boolean> enableQoQ() {
         return OptionInstance.createBoolean("qualityofqueso.options.enable_mod", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.enable_mod.tooltip")),
-                YES_NO_TEXT, options().misc.enableMod, value -> options().misc.enableMod = value);
+                YES_NO_TEXT, options().accessibility.enableMod, value -> options().accessibility.enableMod = value);
     }
 
     public static OptionInstance<Boolean> quickGuiExit() {
@@ -41,13 +41,13 @@ public class ModListOptions {
     }
 
     public static OptionInstance<Boolean> chestSearching() {
-        return OptionInstance.createBoolean("qualityofqueso.options.chest_searching", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.chest_searching.tooltip")),
-                ON_OFF_TEXT, options().searching.chestSearching, value -> options().searching.chestSearching = value);
+        return OptionInstance.createBoolean("qualityofqueso.options.container_searching", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.container_searching.tooltip")),
+                ON_OFF_TEXT, options().searching.containerSearching, value -> options().searching.containerSearching = value);
     }
 
     public static OptionInstance<Boolean> searchInventory() {
         return OptionInstance.createBoolean("qualityofqueso.options.search_inventory", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.search_inventory.tooltip")),
-                YES_NO_TEXT, options().searching.searchInventory, value -> options().searching.searchInventory = value);
+                YES_NO_TEXT, options().accessibility.searchInventory, value -> options().accessibility.searchInventory = value);
     }
 
     public static OptionInstance<Boolean> inventorySearching() {
@@ -229,7 +229,7 @@ public class ModListOptions {
 
     public static OptionInstance<Boolean> displayTotalWithStacks() {
         return OptionInstance.createBoolean("qualityofqueso.options.display_total_with_stacks", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.display_total_with_stacks.tooltip")),
-                YES_NO_TEXT, options().hud.displayTotalWithStacks, value -> options().hud.displayTotalWithStacks = value);
+                YES_NO_TEXT, options().accessibility.displayTotalWithStacks, value -> options().accessibility.displayTotalWithStacks = value);
     }
 
     public static OptionInstance<Boolean> showArrowCount() {
@@ -249,7 +249,7 @@ public class ModListOptions {
 
     public static OptionInstance<Boolean> showButtonShortcuts() {
         return OptionInstance.createBoolean("qualityofqueso.options.show_button_shortcuts", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.show_button_shortcuts.tooltip")),
-                YES_NO_TEXT, options().management.showButtonShortcuts, value -> options().management.showButtonShortcuts = value);
+                YES_NO_TEXT, options().accessibility.showButtonShortcuts, value -> options().accessibility.showButtonShortcuts = value);
     }
 
     public static OptionInstance<Boolean> quickEquip() {
@@ -265,7 +265,7 @@ public class ModListOptions {
 
     public static OptionInstance<Boolean> preventEFromTyping() {
         return OptionInstance.createBoolean("qualityofqueso.options.prevent_e_from_typing", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.prevent_e_from_typing.tooltip")),
-                YES_NO_TEXT, options().misc.preventEFromTyping, value -> options().misc.preventEFromTyping = value);
+                YES_NO_TEXT, options().accessibility.preventEFromTyping, value -> options().accessibility.preventEFromTyping = value);
     }
 
     public static OptionInstance<Boolean> alwaysPreventRageQuitting() {
@@ -275,7 +275,7 @@ public class ModListOptions {
 
     public static OptionInstance<Boolean> helpfulTooltips() {
         return OptionInstance.createBoolean("qualityofqueso.options.helpful_tooltips", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.helpful_tooltips.tooltip")),
-                ON_OFF_TEXT, options().misc.helpfulTooltips, value -> options().misc.helpfulTooltips = value);
+                ON_OFF_TEXT, options().accessibility.helpfulTooltips, value -> options().accessibility.helpfulTooltips = value);
     }
 
     public static OptionInstance<Boolean> itemFrameSearching() {
@@ -287,6 +287,11 @@ public class ModListOptions {
     public static OptionInstance<Boolean> multiServerConfigs() {
         return OptionInstance.createBoolean("qualityofqueso.options.multi_server_configs", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.multi_server_configs.tooltip")),
                 ON_OFF_TEXT, uoptions().multiServerConfigs, value -> uoptions().multiServerConfigs = value);
+    }
+
+    public static OptionInstance<Boolean> enchantingHelper() {
+        return OptionInstance.createBoolean("qualityofqueso.options.enchanting_helper", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.enchanting_helper.tooltip")),
+                ON_OFF_TEXT, options().misc.enchantingHelper, value -> options().misc.enchantingHelper = value);
     }
 
     public static OptionInstance<Boolean> fog() {
@@ -301,8 +306,8 @@ public class ModListOptions {
     }
 
     public static OptionInstance<Boolean> autoCloseRecipeBook() {
-        return OptionInstance.createBoolean("qualityofqueso.options.auto_close_recipe_book", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.auto_close_recipe_book.tooltip", options().misc.autoCloseRecipeBook)),
-                ON_OFF_TEXT, options().misc.autoCloseRecipeBook, value -> options().misc.autoCloseRecipeBook = value);
+        return OptionInstance.createBoolean("qualityofqueso.options.auto_close_recipe_book", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.auto_close_recipe_book.tooltip", options().accessibility.autoCloseRecipeBook)),
+                ON_OFF_TEXT, options().accessibility.autoCloseRecipeBook, value -> options().accessibility.autoCloseRecipeBook = value);
     }
 
     public static OptionInstance<Boolean> elytraAlarm() {
@@ -338,7 +343,7 @@ public class ModListOptions {
         return new OptionInstance<>("qualityofqueso.options.min_mob_hit_ding_distance",
                 OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.min_mob_hit_ding_distance.tooltip")),
                 (optionText, value) -> Options.genericValueLabel(optionText, Component.literal(value + " blocks")),
-                new OptionInstance.IntRange(15, 50), options().misc.minMobHitDingDistance, value -> options().misc.minMobHitDingDistance = value);
+                new OptionInstance.IntRange(10, 50), options().misc.minMobHitDingDistance, value -> options().misc.minMobHitDingDistance = value);
     }
 
     public static OptionInstance<QoQButtons> qoqButtons() {
@@ -353,8 +358,8 @@ public class ModListOptions {
                 },
                 (optionText, value) -> value.getText(),
                 new OptionInstance.Enum<>(Arrays.asList(QoQButtons.values()), QoQButtons.Codec),
-                options().misc.qoqButtons,
-                value -> options().misc.qoqButtons = value);
+                options().accessibility.qoqButtons,
+                value -> options().accessibility.qoqButtons = value);
     }
 
     public static OptionInstance<Integer> itemFrameSearchGlowDuration() {

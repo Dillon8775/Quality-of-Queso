@@ -2,6 +2,7 @@ package net.dillon.qualityofqueso.util;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.dillon.qualityofqueso.mixin.client.accessor.*;
+import net.dillon.qualityofqueso.mixin.main.AbstractContainerMenuAccessor;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.debug.DebugScreenEntry;

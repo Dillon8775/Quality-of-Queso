@@ -195,7 +195,7 @@ public class GuiMixin {
             } else if (
                     (options().hud.countAllArrows && options().hud.showArrowCount && (isStackArrow(invStack) && isStackArrow(ItemHudTracker.getStack()) && !this.renderingHeldItem))
                             || (holdingArrowDisplayableProjectileWeapon ? !options().hud.countAllArrows ? invStack.is(getProjectileFromActiveHand(this.minecraft).getItem()) && isStackArrow(invStack) : isStackArrow(invStack) : invStack.is(stack.getItem()))) {
-                if (itemMatchesInventoryItem(stack, invStack)) {
+                if (itemMatchesInventoryItem(stack, invStack) || holdingArrowDisplayableProjectileWeapon || (options().hud.countAllArrows && isStackArrow(ItemHudTracker.getStack()))) {
                     count += invStack.getCount();
                     items.add(invStack.getCount());
                 }
@@ -215,13 +215,19 @@ public class GuiMixin {
         int fullStacks = 0;
         if (!stack.isEmpty() || trackedArrow) {
             String text = String.valueOf(count);
+
+            boolean hasInfinity = false;
+            if (hasInfinity(stack) && getProjectileFromActiveHand(this.minecraft).is(Items.ARROW) && holdingArrowDisplayableProjectileWeapon && trackedArrow) {
+                text = "∞";
+                hasInfinity = true;
+            }
+
             String maxItemCount = String.valueOf(maxCount);
             boolean evenStack = count != 0 && count != 64 && count % maxCount == 0;
             boolean displayStack = options().hud.itemCount == ItemCount.STACKS && evenStack;
             this.isDisplayingExactStack = evenStack;
-            if (count > maxCount) {
+            if (!hasInfinity && count > maxCount) {
                 if (displayStack) {
-                    System.out.println("ok");
                     text = count / maxCount + "x " + maxItemCount;
                 } else if (options().hud.itemCount == ItemCount.REMAINDER) {
                     int totalCount = 0;
@@ -247,7 +253,7 @@ public class GuiMixin {
             HumanoidArm offhandArm = this.minecraft.player.getMainArm().getOpposite();
             boolean isArrow = isStackArrow(newStack);
             boolean arrowDisplayValid = (isArrow || holdingArrowDisplayableProjectileWeapon) && options().hud.itemCount == ItemCount.REMAINDER ? count < 65 : count < 100;
-            boolean shouldRenderArrowUi = options().hud.showArrowCount && arrowDisplayValid && (holdingArrowDisplayableProjectileWeapon || !this.renderingHeldItem);
+            boolean shouldRenderArrowUi = options().hud.showArrowCount && !hasInfinity && arrowDisplayValid && (holdingArrowDisplayableProjectileWeapon || !this.renderingHeldItem);
             if (shouldRenderArrowUi && (isArrow || holdingArrowDisplayableProjectileWeapon)) {
                 context.blitSprite(RenderPipelines.GUI_TEXTURED, HOTBAR_OFFHAND_RIGHT_SPRITE,
                         getGuiWidth(context) + 90,
@@ -256,8 +262,10 @@ public class GuiMixin {
                         24
                 );
                 context.blitSprite(RenderPipelines.GUI_TEXTURED,
-                        options().hud.coloredHighlighting ?
-                                count < 11 ? ofQoQ("hud/slot_bad") : count < 21 ? ofQoQ("hud/slot_ok") : ofQoQ("hud/slot_good")
+                        options().hud.coloredHighlighting
+                                ? count < 11 ? ofQoQ("hud/slot_bad")
+                                : count < 21 ? ofQoQ("hud/slot_ok")
+                                : ofQoQ("hud/slot_good")
                                 : HOTBAR_SELECTION_SPRITE,
                         getGuiWidth(context) + 96,
                         getGuiHeight(context) - 3,
@@ -283,7 +291,9 @@ public class GuiMixin {
             drawItem(this.minecraft, context, stackToRender, offhandArm == HumanoidArm.RIGHT ? -129 : 100, false);
 
             int x = 105;
-            if (count < 10) {
+            if (hasInfinity) {
+                x += 5;
+            } else if (count < 10) {
                 x += 6;
             } else if (count > 999) {
                 x -= 8;
@@ -306,9 +316,9 @@ public class GuiMixin {
                     x += 5;
                 }
             }
-            int color = CommonColors.WHITE;
+            int color = hasInfinity ? CommonColors.GREEN : CommonColors.WHITE;
             boolean validArrow = isArrow || arrowAndZero || holdingArrowDisplayableProjectileWeapon;
-            if (shouldRenderArrowUi && validArrow) {
+            if (shouldRenderArrowUi && validArrow && !hasInfinity) {
                 if (count < 6) {
                     color = CommonColors.RED;
                 } else if (count < 11) {
@@ -319,11 +329,11 @@ public class GuiMixin {
                     color = CommonColors.GREEN;
                 }
             }
-            if (shouldRenderArrowUi && options().hud.warningIndicators && validArrow && count < 6) {
+            if (!hasInfinity && shouldRenderArrowUi && options().hud.warningIndicators && validArrow && count < 6) {
                 this.renderWarningIndicator(this.minecraft, context, (int)(9 * 1.01), null);
             }
-            context.drawString(this.minecraft.font, text, ((context.guiWidth() / 2) + (isLeftHanded(this.minecraft) ? -x - 18 : x)), context.guiHeight() - 10, color, true);
-            if (options().hud.displayTotalWithStacks && count > 64 && (displayStack || options().hud.itemCount == ItemCount.REMAINDER)) {
+            context.drawString(this.minecraft.font, text, ((context.guiWidth() / 2) + (isLeftHanded(this.minecraft) ? -x - 18 : x)), context.guiHeight() - (hasInfinity ? 9 : 10), color, true);
+            if (options().accessibility.displayTotalWithStacks && count > 64 && (displayStack || options().hud.itemCount == ItemCount.REMAINDER)) {
                 context.drawString(this.minecraft.font, "(" + String.format("%,d", count) + ")", ((context.guiWidth() / 2) + ((isLeftHanded(this.minecraft) ? -x - 16 : x) + 5)), context.guiHeight() - 22, color, true);
             }
             return true;

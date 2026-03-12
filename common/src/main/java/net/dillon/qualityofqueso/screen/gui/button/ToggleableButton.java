@@ -46,7 +46,7 @@ public abstract class ToggleableButton extends TransferButton {
             }
             ButtonUtil.drawButtonTexture(context, "hovered/" + name, this);
 
-            if (options().misc.helpfulTooltips) {
+            if (options().accessibility.helpfulTooltips) {
                 boolean fillWhatsPresentButton = this.tooltip.length > 2;
                 if (fillWhatsPresentButton && ContainerTracker.IS_TRACKED_CONTAINER) {
                     String filterModeKey = ContainerTracker.CURRENT_FILTER_MODE.tag()

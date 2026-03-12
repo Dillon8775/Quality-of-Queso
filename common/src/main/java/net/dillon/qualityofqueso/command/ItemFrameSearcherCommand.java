@@ -11,6 +11,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 
+import static net.dillon.qualityofqueso.util.ModUtil.coptions;
 import static net.dillon.qualityofqueso.util.ModUtil.options;
 
 public class ItemFrameSearcherCommand {
@@ -23,7 +24,7 @@ public class ItemFrameSearcherCommand {
      */
     public static LiteralArgumentBuilder<CommandSourceStack> getItemFrameSearcherCommand(CommandBuildContext commandBuildContext) {
         return Commands.literal("itemframesearcher")
-                .requires(source -> options().misc.enableMod)
+                .requires(source -> coptions().itemFrameSearching && options().accessibility.enableMod)
                 .then(
                         Commands.literal("clear")
                                 .executes(

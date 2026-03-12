@@ -16,6 +16,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.Util;
 
 import static net.dillon.qualityofqueso.util.ModUtil.saveAll;
+import static net.dillon.qualityofqueso.util.ModUtil.sendClientOptionsToServer;
 
 public abstract class AbstractModOptionsScreen extends OptionsSubScreen {
     private Button doneButton;
@@ -58,6 +59,9 @@ public abstract class AbstractModOptionsScreen extends OptionsSubScreen {
     public void onClose() {
         saveAll(this.minecraft);
         ModUtil.info("Saved changes.");
+        if (this.minecraft.level != null) {
+            sendClientOptionsToServer();
+        }
         super.onClose();
     }
 

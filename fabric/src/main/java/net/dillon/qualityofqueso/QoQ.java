@@ -11,5 +11,6 @@ public class QoQ implements ModInitializer {
     @Override
     public void onInitialize() {
         CommonEvents.registerPayloads();
+        CommonEvents.registerCommands();
     }
 }

@@ -1,6 +1,7 @@
 package net.dillon.qualityofqueso.util;
 
 import net.dillon.qualityofqueso.option.instance.TrackedContainers;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -10,7 +11,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.entity.BarrelBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -86,13 +86,31 @@ public class ContainerTracker {
      * @return the key for the tracked chests.
      */
     private static String key(Level level, BlockPos pos) {
+        String world = worldKey(level);
         String dimension = level.dimension() == Level.END ? "minecraft:end"
                 : level.dimension() == Level.NETHER ? "minecraft:nether"
                 : level.dimension() == Level.OVERWORLD ? "minecraft:overworld" : level.dimension().toString();
-        String container = level.getBlockState(pos).is(Blocks.SHULKER_BOX) ? "minecraft:shulker_box"
-                : level.getBlockState(pos).is(Blocks.BARREL) ? "minecraft:barrel"
-                : level.getBlockState(pos).is(Blocks.CHEST) ? "minecraft:chest" : "unknown_container";
-        return dimension + " / " + container + " (" + pos.getX() + ", " + pos.getY() + ", " + pos.getZ() + ")";
+        BlockEntity blockEntity = level.getBlockEntity(pos);
+        String container = blockEntity instanceof ShulkerBoxBlockEntity ? "minecraft:shulker_box"
+                : blockEntity instanceof BarrelBlockEntity ? "minecraft:barrel"
+                : blockEntity instanceof ChestBlockEntity ? "minecraft:chest" : "unknown_container";
+        return world + " / " + dimension + " / " + container + " (" + pos.getX() + ", " + pos.getY() + ", " + pos.getZ() + ")";
+    }
+
+    /**
+     * @return a world/session key so container tracking does not collide across saves/servers.
+     */
+    private static String worldKey(Level level) {
+        Minecraft minecraft = Minecraft.getInstance();
+        if (minecraft.getSingleplayerServer() != null) {
+            return "singleplayer:" + minecraft.getSingleplayerServer().getWorldData().getLevelName();
+        }
+
+        if (minecraft.getCurrentServer() != null && !minecraft.getCurrentServer().ip.isBlank()) {
+            return "server:" + minecraft.getCurrentServer().ip.toLowerCase(Locale.ROOT);
+        }
+
+        return "unknown_world";
     }
 
     /**
@@ -194,7 +212,6 @@ public class ContainerTracker {
 
     /**
      * Toggles filter mode for the currently opened tracked container.
-     * @return the new mode after toggle.
      */
     public static void toggleCurrentFilterMode() {
         if (CURRENT_FILTER_MODE == FilterMode.ITEM) {

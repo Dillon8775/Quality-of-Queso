@@ -13,6 +13,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -24,6 +25,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import static net.dillon.qualityofqueso.util.ButtonUtil.playButtonSound;
@@ -84,6 +86,23 @@ public class MultiPlayerGameModeMixin {
 
         cir.setReturnValue(false);
         cir.cancel();
+    }
+
+    /**
+     * Tracks items to display total count near hotbar (when thrown {@code from a GUI screen}).
+     */
+    @Inject(method = "handleContainerInput", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientPacketListener;send(Lnet/minecraft/network/protocol/Packet;)V"))
+    private void dropOnThrowGUI(int containerId, int slotIndex, int buttonNum, ContainerInput containerInput, Player player, CallbackInfo ci) {
+        if (!modEnabled(Minecraft.getInstance()) || !options().hud.displayOnThrow || containerInput != ContainerInput.THROW) {
+            return;
+        }
+
+        ItemStack stack = player.containerMenu.getSlot(slotIndex).getItem();
+        if (stack.isEmpty()) {
+            return;
+        }
+
+        ItemHudTracker.setStack(stack.copy());
     }
 
     /**

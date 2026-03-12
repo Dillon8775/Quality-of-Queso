@@ -20,8 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-import static net.dillon.qualityofqueso.util.GuiUtil.PLAYER_FALL_DISTANCE;
-import static net.dillon.qualityofqueso.util.GuiUtil.SHOULD_WARN_OF_ELYTRA;
+import static net.dillon.qualityofqueso.util.GuiUtil.*;
 import static net.dillon.qualityofqueso.util.ModUtil.modEnabled;
 import static net.dillon.qualityofqueso.util.ModUtil.options;
 
@@ -102,6 +101,9 @@ public class LocalPlayerMixin {
         }
 
         ItemStack projectile = player.getProjectile(useItem);
-        ItemHudTracker.setStack(projectile.isEmpty() ? new ItemStack(Items.ARROW) : projectile.copyWithCount(1));
+
+        if (!hasInfinity(projectile) || !projectile.is(Items.ARROW)) {
+            ItemHudTracker.setStack(projectile.isEmpty() ? new ItemStack(Items.ARROW) : projectile.copyWithCount(1));
+        }
     }
 }

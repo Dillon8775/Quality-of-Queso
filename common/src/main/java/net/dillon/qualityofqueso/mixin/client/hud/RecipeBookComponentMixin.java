@@ -24,7 +24,7 @@ public class RecipeBookComponentMixin {
      */
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
     private void cancelOutChatKey(KeyEvent input, CallbackInfoReturnable<Boolean> cir) {
-        if (this.minecraft.options.keyChat.matches(input) && !this.searchBox.isFocused()) {
+        if (this.minecraft.options.keyChat.matches(input) && this.searchBox != null && !this.searchBox.isFocused()) {
             cir.setReturnValue(false);
             cir.cancel();
         }

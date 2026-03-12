@@ -1,7 +1,12 @@
 package net.dillon.qualityofqueso.util;
 
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -9,6 +14,9 @@ import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 
 import static net.dillon.qualityofqueso.util.ModUtil.ofQoQ;
 import static net.dillon.qualityofqueso.util.ModUtil.options;
@@ -42,6 +50,22 @@ public class GuiUtil {
      */
     public static boolean itemMatchesInventoryItem(ItemStack mainStack, ItemStack otherStack) {
         return options().accessibility.onlyCountMatchingItems ? ItemStack.isSameItemSameComponents(mainStack, otherStack) : otherStack.is(mainStack.getItem());
+    }
+
+    /**
+     * @return true if the stack has the infinity enchantment.
+     */
+    public static boolean hasInfinity(ItemStack stack) {
+        ItemEnchantments enchantments = stack.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
+        if (!(stack.getItem() instanceof BowItem)) {
+            return false;
+        }
+        for (Object2IntMap.Entry<Holder<Enchantment>> enchantment : enchantments.entrySet()) {
+            if (enchantment.getKey().is(Enchantments.INFINITY)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -83,6 +107,13 @@ public class GuiUtil {
      */
     public static boolean holdingArrowDisplayableProjectileWeapon(Minecraft minecraft, ItemStack stack) {
         return options().hud.showArrowCount && !minecraft.player.isCreative() && (stack.getItem() instanceof BowItem || stack.getItem() instanceof CrossbowItem);
+    }
+
+    /**
+     * @return text with italic and gray.
+     */
+    public static Component ofItalicAndGray(String text) {
+        return Component.literal(text).withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY);
     }
 
     /**

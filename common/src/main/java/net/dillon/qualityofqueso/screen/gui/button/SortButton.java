@@ -24,7 +24,7 @@ public class SortButton extends TransferButton {
             context) {
         ButtonUtil.drawButtonTexture(context, id, this);
         if (Minecraft.getInstance().hasControlDown()) {
-            if (options().management.showButtonShortcuts && this.buttonName.equals("sort") && key(ModKeybinds.SORT_CONTAINER) == ModKeybinds.SORT_CONTAINER.getDefaultKey()) {
+            if (options().accessibility.showButtonShortcuts && this.buttonName.equals("sort") && key(ModKeybinds.SORT_CONTAINER) == ModKeybinds.SORT_CONTAINER.getDefaultKey()) {
                 ButtonUtil.drawButtonTexture(context, "shortcut/sort_button_shortcut_key", this);
             }
         }
