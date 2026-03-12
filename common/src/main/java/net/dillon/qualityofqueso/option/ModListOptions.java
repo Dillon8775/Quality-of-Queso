@@ -334,6 +334,11 @@ public class ModListOptions {
                 ON_OFF_TEXT, options().misc.mobHitDing, value -> options().misc.mobHitDing = value);
     }
 
+    public static OptionInstance<Boolean> ignoreFabricTags() {
+        return OptionInstance.createBoolean("qualityofqueso.options.ignore_fabric_tags", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.ignore_fabric_tags.tooltip")),
+                ON_OFF_TEXT, options().accessibility.ignoreFabricTags, value -> options().accessibility.ignoreFabricTags = value);
+    }
+
     public static OptionInstance<Boolean> fortniteBattlePass() {
         return OptionInstance.createBoolean("qualityofqueso.options.fortnite_battle_pass", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.fortnite_battle_pass.tooltip")),
                 ON_OFF_TEXT, options().misc.fortniteBattlePass, value -> options().misc.fortniteBattlePass = value);

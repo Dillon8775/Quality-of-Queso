@@ -35,6 +35,7 @@ public class ModClientOptions {
         public boolean saveExcludedSlots = false;
 
         // Config-only
+        public boolean tagSorting = false;
         public boolean fillWhatsPreset = false;
         public boolean includeHotbar = true;
     }
@@ -99,6 +100,7 @@ public class ModClientOptions {
         public MoveItemsIf moveItemsIf = MoveItemsIf.CAN_MOVE_AT_ALL;
 
         public int elytraAlarmSoundDelay = 1;
+        public boolean ignoreFabricTags = false;
 
         public QoQButtons qoqButtons = QoQButtons.EVERYWHERE;
 

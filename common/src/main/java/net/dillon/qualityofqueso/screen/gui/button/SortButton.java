@@ -1,18 +1,24 @@
 package net.dillon.qualityofqueso.screen.gui.button;
 
 import net.dillon.qualityofqueso.keybind.ModKeybinds;
+import net.dillon.qualityofqueso.option.instance.ModClientOptions;
 import net.dillon.qualityofqueso.util.ButtonUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 
 import java.util.function.Supplier;
 
 import static net.dillon.qualityofqueso.util.AccessorUtil.key;
+import static net.dillon.qualityofqueso.util.ButtonUtil.playDefaultSound;
 import static net.dillon.qualityofqueso.util.ModUtil.options;
 
+/**
+ * Sorts items in a container, by tag -> alphabetically, or just alphabetically.
+ */
 public class SortButton extends TransferButton {
 
     public SortButton(AbstractContainerMenu screenHandler, Font font, String searchFieldText, int x, int y, String buttonName, OnPress onPress, Supplier<Boolean> canBeActive) {
@@ -22,11 +28,22 @@ public class SortButton extends TransferButton {
     @Override
     protected void renderButtonTexture(String id, boolean transferable, AbstractWidget buttonReference, GuiGraphics
             context) {
-        ButtonUtil.drawButtonTexture(context, id, this);
+        ButtonUtil.drawButtonTexture(context, options().management.tagSorting ? id + "_tag" : id, this);
         if (Minecraft.getInstance().hasControlDown()) {
             if (options().accessibility.showButtonShortcuts && this.buttonName.equals("sort") && key(ModKeybinds.SORT_CONTAINER) == ModKeybinds.SORT_CONTAINER.getDefaultKey()) {
                 ButtonUtil.drawButtonTexture(context, "shortcut/sort_button_shortcut_key", this);
             }
         }
+    }
+
+    @Override
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDouble) {
+        if (this.canBeActive.get() && event.button() == 1) {
+            options().management.tagSorting = !options().management.tagSorting;
+            ModClientOptions.CLIENT.save();
+            playDefaultSound(Minecraft.getInstance().getSoundManager());
+            return true;
+        }
+        return super.mouseClicked(event, isDouble);
     }
 }

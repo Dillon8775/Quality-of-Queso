@@ -84,7 +84,7 @@
 
   "qualityofqueso.gui.swap/swap_button": "Swap all items in this inventory with container, with it's respective slot",
 
-  "qualityofqueso.gui.sort/sort_button": "Sort all items in this container",
+  "qualityofqueso.gui.sort/sort_button": "Sort all items in this container\nSorting %s\nRight-click to change sort mode",
 
   "qualityofqueso.gui.hotbar/include_hotbar": "Including hotbar\nClick to disable",
   "qualityofqueso.gui.hotbar/exclude_hotbar": "Ignoring hotbar\nClick to include",
@@ -275,6 +275,8 @@
   "qualityofqueso.options.qoq_buttons.off.tooltip": "Do not display any Quality of Queso configuration buttons.\n\nNote: The only way to change this option back is to change this option in the config file directly.",
   "qualityofqueso.options.elytra_alarm_sound_delay": "Elytra Alarm Sound Delay",
   "qualityofqueso.options.elytra_alarm_sound_delay.tooltip": "Determines the time (in ticks) that the elytra alarm can play.",
+  "qualityofqueso.options.ignore_fabric_tags": "Ignore Fabric Tags",
+  "qualityofqueso.options.ignore_fabric_tags.tooltip": "Ignores fabric tags when sorting by tag (and searching tag queries), as they can §osometimes §r§fof mess up the order and logic of sorting.",
   "qualityofqueso.options.fortnite_battle_pass": "Fortnite Battle Pass",
   "qualityofqueso.options.fortnite_battle_pass.tooltip": "Just, don't...",
 

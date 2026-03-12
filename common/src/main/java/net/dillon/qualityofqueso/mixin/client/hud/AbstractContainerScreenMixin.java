@@ -1015,7 +1015,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             boolean foundTags = false;
             // Loop through all tags loaded (vanilla and modded)
             for (HolderSet.Named<Item> tag : itemRegistry.getTags().toList()) {
-                if (stack.is(tag.key())) {
+                if (stack.is(tag.key()) && !isFabricTag(tag.key().location().toString())) {
                     // Add each tag to the query hovered
                     String location = tag.key().location().getNamespace().equals("c") ? "fabric:" + tag.key().location().getPath() : tag.key().location().toString();
                     String tagString = "#" + location;

@@ -46,7 +46,7 @@ public class AccessibilityOptionsScreen extends AbstractModOptionsScreen {
                 ModListOptions.moveItemsIf(),
 
                 ModListOptions.elytraAlarmSoundDelay(),
-                ModListOptions.qoqButtons()
+                ModListOptions.ignoreFabricTags()
         };
     }
 
@@ -77,7 +77,11 @@ public class AccessibilityOptionsScreen extends AbstractModOptionsScreen {
         // Add change listener
         this.blacklistedServersField.setResponder(this::onTextChanged);
 
-        List<AbstractWidget> widgets = ImmutableList.of(ModListOptions.multiServerConfigs().createButton(this.options), this.blacklistedServersField);
+        List<AbstractWidget> widgets = ImmutableList.of(
+                ModListOptions.qoqButtons().createButton(this.options),
+                ModListOptions.multiServerConfigs().createButton(this.options),
+                this.blacklistedServersField
+        );
         this.list.addSmall(widgets);
     }
 

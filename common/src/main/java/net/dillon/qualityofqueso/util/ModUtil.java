@@ -48,6 +48,7 @@ import static net.dillon.qualityofqueso.util.GuiUtil.LAST_ARMOR_STACKS;
  * Utility class for the Quality of Queso mod.
  */
 public class ModUtil {
+    public static final Component VERSION = Component.literal("QoQ v1.6").withStyle(ChatFormatting.GOLD);
     private static final Logger LOGGER = LoggerFactory.getLogger("Quality of Queso");
     public static String SAVED_TEXT = "";
     public static String SAVED_ITEM_FRAME_TEXT = "";

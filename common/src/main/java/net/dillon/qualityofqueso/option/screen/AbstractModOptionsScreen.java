@@ -13,6 +13,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.options.OptionsSubScreen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.CommonColors;
 import net.minecraft.util.Util;
 
 import static net.dillon.qualityofqueso.util.ModUtil.saveAll;
@@ -74,6 +75,13 @@ public abstract class AbstractModOptionsScreen extends OptionsSubScreen {
             String tooltip = Minecraft.getInstance().hasShiftDown() ? "qualityofqueso.gui.open_config_directory" : "qualityofqueso.gui.open_config_directory.help";
             ButtonUtil.drawTooltip(Component.translatable(tooltip), context, this.font, mouseX, mouseY);
         }
+
+        int leftSide = this.width / 2 - 155;
+        int rightSide = leftSide + 160;
+        int farRightSide = rightSide + 277;
+        int height = this.height - 20;
+        context.drawCenteredString(this.font, ModUtil.VERSION, farRightSide, height, CommonColors.WHITE);
+
         super.render(context, mouseX, mouseY, deltaTicks);
     }
 

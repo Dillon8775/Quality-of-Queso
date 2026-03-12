@@ -56,7 +56,7 @@ public abstract class ToggleableButton extends TransferButton {
                             Component.translatable(
                                     "qualityofqueso.gui.fill_whats_present/filtered_mode",
                                     Component.translatable(filterModeKey).copy()
-                                            .withColor(ContainerTracker.CURRENT_FILTER_MODE.tag() ? 0x7FFFFF : 0x96FFB7),
+                                            .withColor(ContainerTracker.CURRENT_FILTER_MODE.tag() ? ModTexts.TAG_COLOR : ModTexts.ITEM_COLOR),
                                     Component.translatable("qualityofqueso.gui.fill_whats_present/right_click_switch")
                             ),
                             context, this.font, mouseX, mouseY

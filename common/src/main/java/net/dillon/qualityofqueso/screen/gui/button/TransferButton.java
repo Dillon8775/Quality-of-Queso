@@ -44,7 +44,7 @@ public class TransferButton extends Button {
     protected final String searchFieldText;
     protected final Font font;
     protected final String buttonName;
-    private final Supplier<Boolean> canBeActive;
+    protected final Supplier<Boolean> canBeActive;
 
     /**
      * Constructs a default transfer button.
@@ -182,7 +182,17 @@ public class TransferButton extends Button {
                                         Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query.match", this.searchFieldText.substring(1)) :
                                         Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query", this.searchFieldText), graphics, this.font, mouseX, mouseY);
             } else {
-                ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui." + this.buttonName + "_button"), graphics, this.font, mouseX, mouseY);
+                Component component;
+                if (this.buttonName.equals("sort/sort")) {
+                    component = Component.translatable("qualityofqueso.gui." + this.buttonName + "_button",
+                            options().management.tagSorting
+                                    ? Component.literal("by ").append(Component.literal("tag").withColor(ModTexts.TAG_COLOR))
+                                    : Component.literal("alphabetically").withColor(ModTexts.ITEM_COLOR)
+                    );
+                } else {
+                    component = Component.translatable("qualityofqueso.gui." + this.buttonName + "_button");
+                }
+                ButtonUtil.drawTooltip(component, graphics, this.font, mouseX, mouseY);
             }
         }
     }

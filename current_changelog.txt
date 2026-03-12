@@ -25,6 +25,10 @@ Searching changes:
 - Moved "Quick Search" from Misc options to "Searching" options.
 - Moved "Search Inventory" to new category of options, "Advanced" options, to allow for easier differentiation between the "Inventory Searching" option and "Search Inventory".
 
+Sorting changes:
+- You can now sort by tag!
+- Just right-click the sort button to toggle alphabetical/tag sorting.
+
 HUD Changes:
 - Armor status is now simply an on/off option. It displays your armor and highlights it when it's changed. The color of the highlight is also determined by the durability of your armor item.
 - Selected hotbar slots also use this colored highlighting system. You can configure this.
@@ -65,6 +69,7 @@ Accessibility Options Category:
 - "Only Count Matching Items", which only adds items to the Item Count display counter if their components match (OFF by default).
 - "Elytra Alarm Sound Delay", the delay for playing the elytra alarm sound.
 - "Use Old Search Bar Texture", which uses the old search bar texture.
+- "Ignore Fabric Tags", which will ignore fabric tags when sorting, and transferring by filtered tags. This can be very useful because sometimes fabric tags group together odd items.
 - Moved the "Enable Mod" option into the main QoQ screen (not under "Misc..." anymore).
 
 The Fortnite Battle Pass option:

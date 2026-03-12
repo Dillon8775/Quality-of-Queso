@@ -406,7 +406,7 @@ public class ButtonUtil {
      * @return if a stack is in a tag.
      */
     public static boolean areStacksInSameTag(ItemStack fromStack, ItemStack toStack) {
-        return fromStack.tags().anyMatch(toStack::is);
+        return fromStack.tags().anyMatch(tag -> !isFabricTag(tag.location().toString()) && toStack.is(tag));
     }
 
     /**
@@ -609,11 +609,32 @@ public class ButtonUtil {
         }
 
         // Unified alphabetical sort (no stackability logic)
-        stacks.sort(Comparator.comparing(
-                stack -> {
-                    return stack.getCustomName() != null ? stack.getCustomName().getString() : stack.getItemName().getString();
-                }
-        ));
+        Map<ItemStack, String> tagCache = new HashMap<>();
+
+        for (ItemStack stack : stacks) {
+            String tagKey = "";
+
+            if (options().management.tagSorting) {
+                tagKey = stack.tags()
+                        .map(tag -> {
+                            String location = tag.location().toString();
+                            return !isFabricTag(location) ? location : "";
+                        })
+                        .sorted()
+                        .findFirst()
+                        .orElse("");
+            }
+
+            tagCache.put(stack, tagKey);
+        }
+
+        stacks.sort(Comparator.comparing((ItemStack stack) -> tagCache.get(stack).isEmpty())
+                .thenComparing(tagCache::get)
+                .thenComparing(stack ->
+                        stack.getCustomName() != null
+                                ? stack.getCustomName().getString()
+                                : stack.getItemName().getString()
+                ));
 
         // Pad with empties
         while (stacks.size() < containerSize) {
@@ -636,6 +657,14 @@ public class ButtonUtil {
 
             swapSlots(client, handler, source, target, totalSlots);
         }
+    }
+
+    /**
+     * @return if the tag is a fabric tag.
+     * <p>Automatically returns {@code true} if "ignore fabric tags" is disabled.</p>
+     */
+    public static boolean isFabricTag(String tagLocation) {
+        return options().accessibility.ignoreFabricTags && tagLocation.startsWith("c:");
     }
 
     /**
