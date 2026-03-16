@@ -33,6 +33,7 @@ HUD Changes:
 - Armor status is now simply an on/off option. It displays your armor and highlights it when it's changed. The color of the highlight is also determined by the durability of your armor item.
 - Selected hotbar slots also use this colored highlighting system. You can configure this.
 - Shooting a bow/crossbow now displays how many arrows you have. This can be toggled.
+- You can disable the armor slot outlights displaying by disabling the "Armor Slot Outlines" option under the new "Accessibility..." options.
 - Added smart positioning for armor status, depending on if an item is being displayed near the hotbar.
 - Added warning indicators next to the armor, which will display if the armor's durability is 10% or less.
 - Added support for left-handed users.
@@ -58,6 +59,10 @@ Field of View Modifiers:
 - Set what can change your FOV!
 - You can toggle sprinting, flying, potion effects (like speed and slowness), bow pulling, and fluids!
 
+Fog changes:
+- You can now toggle nether/overworld fog on/off individually (or, just turn all fog off like normal with the "All Fog" option).
+- Additionally, you can set the intensity of the nether fog.
+
 Option changes:
 - Added an "Accessiblity Options" screen. Moved some technical options to this category.
 - Removed the "Include/Exclude Hotbar" option from the options screen, as it can easily be toggled via a container/inventory.
@@ -69,6 +74,7 @@ Accessibility Options Category:
 - "Only Count Matching Items", which only adds items to the Item Count display counter if their components match (OFF by default).
 - "Elytra Alarm Sound Delay", the delay for playing the elytra alarm sound.
 - "Use Old Search Bar Texture", which uses the old search bar texture.
+- "Armor Slot Outlines", which disables armor slot outlines with the armor status feature.
 - "Auto-Focus into Recipe Book", which prioritizes auto-focusing into the recipe book when "Inventory Searching" is enabled. Disable this option if you want to prioritize auto-focusing into the inventory search bar.
 - "Ignore Fabric Tags", which will ignore fabric tags when sorting, and transferring by filtered tags. This can be very useful because sometimes fabric tags group together odd items.
 - Moved the "Enable Mod" option into the main QoQ screen (not under "Misc..." anymore).

@@ -15,6 +15,6 @@ public class PanoramaMixin {
      */
     @ModifyConstant(method = "extractRenderState", constant = @Constant(floatValue = 0.1F))
     private float spin(float original) {
-        return options().misc.fortniteBattlePass ? options().accessibility.chris : 0.1F;
+        return options().misc.fortniteBattlePass ? options().accessibility.doNot : 0.1F;
     }
 }

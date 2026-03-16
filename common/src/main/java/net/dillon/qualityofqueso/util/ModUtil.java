@@ -30,6 +30,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.FogType;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -429,12 +430,22 @@ public class ModUtil {
         if (entity instanceof LivingEntity livingEntity &&
                 !livingEntity.hasEffect(MobEffects.BLINDNESS) &&
                 !livingEntity.hasEffect(MobEffects.DARKNESS) &&
-                !options().misc.fog &&
                 fogtype != FogType.WATER &&
                 fogtype != FogType.LAVA &&
                 fogtype != FogType.POWDER_SNOW) {
-            fogData.renderDistanceEnd = Integer.MAX_VALUE;
-            fogData.environmentalEnd = Integer.MAX_VALUE;
+            if (options().fog.netherFog && entity.level().dimension() == Level.NETHER) {
+                float percent = options().fog.netherFogIntensity;
+                float t = (percent - 10F) / 90F;
+                float fogEnd = 250F + t * (96F - 250F);
+                fogData.renderDistanceEnd = fogEnd;
+                fogData.environmentalEnd = fogEnd;
+            }
+            if (!options().fog.allFog ||
+                    ((!options().fog.overworldFog && entity.level().dimension() == Level.OVERWORLD)
+                            || (!options().fog.netherFog && entity.level().dimension() == Level.NETHER))) {
+                fogData.renderDistanceEnd = Integer.MAX_VALUE;
+                fogData.environmentalEnd = Integer.MAX_VALUE;
+            }
         }
     }
 

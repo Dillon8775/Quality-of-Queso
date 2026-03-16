@@ -11,6 +11,7 @@ public class ModClientOptions {
     public InventoryManagement management = new InventoryManagement();
     public Hud hud = new Hud();
     public Miscellaneous misc = new Miscellaneous();
+    public Fog fog = new Fog();
     public FOVEffects fovEffects = new FOVEffects();
     public Accessibility accessibility = new Accessibility();
 
@@ -63,7 +64,6 @@ public class ModClientOptions {
         public boolean quickEquip = true;
 
         public boolean enchantingHelper = true;
-        public boolean fog = true;
 
         public boolean preventRageQuitting = false;
         public boolean alwaysPreventRageQuitting = false;
@@ -72,6 +72,13 @@ public class ModClientOptions {
 
         public int itemFrameSearchGlowDuration = 0;
         public int itemFrameSearchRadius = 150;
+    }
+
+    public static class Fog {
+        public boolean allFog = true;
+        public boolean overworldFog = true;
+        public boolean netherFog = true;
+        public int netherFogIntensity = 100;
     }
 
     public static class FOVEffects {
@@ -107,7 +114,7 @@ public class ModClientOptions {
         public int elytraAlarmSoundDelay = 1;
 
         public QoQButtons qoqButtons = QoQButtons.EVERYWHERE;
-        public float chris = 2.0F;
+        public float doNot = 2.0F;
     }
 
     public static final ModOptionsHandler CLIENT = new ModOptionsHandler();

@@ -287,15 +287,32 @@ public class ModListOptions {
                 ON_OFF_TEXT, options().misc.quickGuiExit, value -> options().misc.quickGuiExit = value);
     }
 
-    public static OptionInstance<Boolean> fog() {
-        return OptionInstance.createBoolean("qualityofqueso.options.fog", OptionInstance.cachedConstantTooltip(
-                        Component.translatable("qualityofqueso.options.fog.tooltip")
+    public static OptionInstance<Boolean> allFog() {
+        return OptionInstance.createBoolean("qualityofqueso.options.all_fog", OptionInstance.cachedConstantTooltip(
+                        Component.translatable("qualityofqueso.options.all_fog.tooltip")
                                 .copy()
                                 .append(!uoptions().applyFogFunction ?
-                                        Component.translatable("qualityofqueso.options.fog.disabled") :
-                                        isSimpleKeybindsLoaded() ? Component.translatable("qualityofqueso.options.fog.simple_keybinds") : ModTexts.BLANK)
+                                        Component.translatable("qualityofqueso.options.all_fog.disabled") :
+                                        isSimpleKeybindsLoaded() ? Component.translatable("qualityofqueso.options.all_fog.simple_keybinds") : ModTexts.BLANK)
                 ),
-                ON_OFF_TEXT, options().misc.fog, value -> options().misc.fog = value);
+                ON_OFF_TEXT, options().fog.allFog, value -> options().fog.allFog = value);
+    }
+
+    public static OptionInstance<Boolean> overworldFog() {
+        return OptionInstance.createBoolean("qualityofqueso.options.overworld_fog", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.overworld_fog.tooltip")),
+                ON_OFF_TEXT, options().fog.overworldFog, value -> options().fog.overworldFog = value);
+    }
+
+    public static OptionInstance<Boolean> netherFog() {
+        return OptionInstance.createBoolean("qualityofqueso.options.nether_fog", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.nether_fog.tooltip")),
+                ON_OFF_TEXT, options().fog.netherFog, value -> options().fog.netherFog = value);
+    }
+
+    public static OptionInstance<Integer> netherFogIntensity() {
+        return new OptionInstance<>("qualityofqueso.options.nether_fog_intensity",
+                OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.nether_fog_intensity.tooltip")),
+                (optionText, value) -> Options.genericValueLabel(optionText, Component.literal(value + "%")),
+                new OptionInstance.IntRange(10, 100), options().fog.netherFogIntensity, value -> options().fog.netherFogIntensity = value);
     }
 
     public static OptionInstance<Boolean> preventRageQuitting() {
