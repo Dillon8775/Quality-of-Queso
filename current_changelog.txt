@@ -98,6 +98,7 @@ Technical / small changes:
 
 Bug Fixes and Optimizations:
 - "Perpendicular Quick Moving" now works for all players, as long as the mod is installed server-side.
+- Typing in the search bar in the creative menu and pressing any hotbar key (even if it's a letter) with a hovered slot will now actually move it to your hotbar, as it should.
 - Fixed bug where pressing "E" while "Prevent E from typing" is enabled, closes the screen, even if you are focused into a search bar.
 - Fixed bug where "Prevent E from typing" only applies to the E key - if a player has the inventory key bounded to a different key other than E, it works appropriately now.
 - Fixed bug where if "Inventory Searching" is OFF, it doesn't auto-focus into the recipe book search field.
