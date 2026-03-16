@@ -14,14 +14,14 @@
 ## Welcome to Quality of Queso!
 ### A quality-of-life Minecraft mod, adding various different QoL features, including:
 
-- An easy-to-use search bar for your inventory and chests
-- Precise inventory management
-- Display your item count near your hotbar
-- See your arrow count when holding/shooting a bow
-- Armor status
-- Colored highlighting based on item durability
-- Show your real life time in-game
-- Ability to remove Minecraft's annoying fog
+- An easy-to-use [search bar](https://quality-of-queso.fandom.com/wiki/Search_Bar) for your inventory and chests
+- Precise [inventory management](https://quality-of-queso.fandom.com/wiki/Transferring)
+- Display your [item count near](https://quality-of-queso.fandom.com/wiki/Item_Count) your hotbar
+- See your [arrow count](https://quality-of-queso.fandom.com/wiki/Item_Count#Arrow_Count) when holding/shooting a bow
+- [Armor status](https://quality-of-queso.fandom.com/wiki/Armor_Status)
+- [Colored highlighting](https://quality-of-queso.fandom.com/wiki/Colored_Highlighting) based on item durability
+- Show your [real life time](https://quality-of-queso.fandom.com/wiki/Show_Time_In-Game) in-game
+- Ability to [remove Minecraft's annoying fog](https://quality-of-queso.fandom.com/wiki/Remove_Fog)
 - And so much more!
 
 ## Please read through the [Wiki](https://quality-of-queso.fandom.com/wiki/Quality_of_Queso_Wiki) to view all the mod's features, so you can really experience the quality of life that this mod offers.
