@@ -2,7 +2,7 @@ package net.dillon.qualityofqueso.screen;
 
 import net.dillon.qualityofqueso.util.ContainerTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.input.KeyEvent;
@@ -207,7 +207,7 @@ public class FilterItemsScreen extends Screen {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float deltaTicks) {
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks) {
         this.lastMouseX = mouseX;
         this.lastMouseY = mouseY;
 
@@ -222,8 +222,8 @@ public class FilterItemsScreen extends Screen {
         graphics.blit(RenderPipelines.GUI_TEXTURED, CHEST_TEXTURE, panelX, panelY, 0, 0, GUI_WIDTH, TOP_BACKGROUND_HEIGHT, 256, 256);
         graphics.blit(RenderPipelines.GUI_TEXTURED, CHEST_TEXTURE, panelX, panelY + TOP_BACKGROUND_HEIGHT, 0, 126, GUI_WIDTH, BOTTOM_BACKGROUND_HEIGHT, 256, 256);
 
-        graphics.drawString(this.font, Component.translatable("qualityofqueso.gui.fill_whats_present/placeholder_editor"), panelX + 8, panelY + 6, -12566464, false);
-        graphics.drawString(this.font, Component.translatable("container.inventory"), panelX + 8, panelY + (GUI_HEIGHT - 94), -12566464, false);
+        graphics.text(this.font, Component.translatable("qualityofqueso.gui.fill_whats_present/placeholder_editor"), panelX + 8, panelY + 6, -12566464, false);
+        graphics.text(this.font, Component.translatable("container.inventory"), panelX + 8, panelY + (GUI_HEIGHT - 94), -12566464, false);
 
         for (int row = 0; row < PLACEHOLDER_ROWS; row++) {
             for (int col = 0; col < COLUMNS; col++) {
@@ -233,8 +233,8 @@ public class FilterItemsScreen extends Screen {
 
                 ItemStack stack = this.placeholders.get(slot);
                 if (!stack.isEmpty()) {
-                    graphics.renderFakeItem(stack, x, y);
-                    graphics.renderItemDecorations(this.font, stack, x, y);
+                    graphics.fakeItem(stack, x, y);
+                    graphics.itemDecorations(this.font, stack, x, y);
                 }
             }
         }
@@ -252,8 +252,8 @@ public class FilterItemsScreen extends Screen {
 
             ItemStack stack = this.sourceStackAt(i);
             if (!stack.isEmpty()) {
-                graphics.renderFakeItem(stack, x, y);
-                graphics.renderItemDecorations(this.font, stack, x, y);
+                graphics.fakeItem(stack, x, y);
+                graphics.itemDecorations(this.font, stack, x, y);
             }
         }
 
@@ -286,10 +286,10 @@ public class FilterItemsScreen extends Screen {
         }
 
         if (!this.selectedStack.isEmpty()) {
-            graphics.renderFakeItem(this.selectedStack, mouseX - 8, mouseY - 8);
-            graphics.renderItemDecorations(this.font, this.selectedStack, mouseX - 8, mouseY - 8);
+            graphics.fakeItem(this.selectedStack, mouseX - 8, mouseY - 8);
+            graphics.itemDecorations(this.font, this.selectedStack, mouseX - 8, mouseY - 8);
         }
 
-        super.render(graphics, mouseX, mouseY, deltaTicks);
+        super.extractRenderState(graphics, mouseX, mouseY, deltaTicks);
     }
 }

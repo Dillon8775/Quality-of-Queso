@@ -69,6 +69,7 @@ Accessibility Options Category:
 - "Only Count Matching Items", which only adds items to the Item Count display counter if their components match (OFF by default).
 - "Elytra Alarm Sound Delay", the delay for playing the elytra alarm sound.
 - "Use Old Search Bar Texture", which uses the old search bar texture.
+- "Auto-Focus into Recipe Book", which prioritizes auto-focusing into the recipe book when "Inventory Searching" is enabled. Disable this option if you want to prioritize auto-focusing into the inventory search bar.
 - "Ignore Fabric Tags", which will ignore fabric tags when sorting, and transferring by filtered tags. This can be very useful because sometimes fabric tags group together odd items.
 - Moved the "Enable Mod" option into the main QoQ screen (not under "Misc..." anymore).
 
@@ -79,9 +80,10 @@ Technical / small changes:
 - You can now sort with bundles in a container.
 - Hovering over the quick drop button in your inventory while excluding hotbar now grays out the hotbar slots if the slot has an item.
 - "Swapping" feature is now OFF by default.
-- Organized assets and updated translations.
+- Organized assets and updated translations, and simplified translations so all users can read.
 - "Helpful Tooltips" option is now more effective.
 - Changed "on/off" and "yes/no" text (upon other option) colors to be orange/gray, giving a more QoQ-vibe.
+- The "Quick Drop" button now appears if you are using the shortcut key, regardless of what you have the Quick Drop button option set to.
 - Renamed "qualityofqueso_client-universal.json" to "qualityofqueso-universal_config.json".
 - Organized client-side configuration file.
 - Replaced "c:" tags with "fabric:" for easier understanding (tag searching). "c" tags are from fabric.
@@ -90,6 +92,8 @@ Technical / small changes:
 Bug Fixes and Optimizations:
 - "Perpendicular Quick Moving" now works for all players, as long as the mod is installed server-side.
 - Fixed bug where pressing "E" while "Prevent E from typing" is enabled, closes the screen, even if you are focused into a search bar.
+- Fixed bug where "Prevent E from typing" only applies to the E key - if a player has the inventory key bounded to a different key other than E, it works appropriately now.
+- Fixed bug where if "Inventory Searching" is OFF, it doesn't auto-focus into the recipe book search field.
 - Fixed armor status display timers being wrong.
 - Fixed drastic frame drops when tag searching (frames still drop a bit when searching multiple tags).
 - Fixed bug where throwing an item on a server doesn't display item count.

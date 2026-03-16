@@ -5,7 +5,7 @@ import net.dillon.qualityofqueso.util.ButtonUtil;
 import net.dillon.qualityofqueso.util.ModUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.OptionInstance;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.layouts.LinearLayout;
 import net.minecraft.client.gui.screens.ConfirmLinkScreen;
@@ -70,7 +70,7 @@ public abstract class AbstractModOptionsScreen extends OptionsSubScreen {
      * Renders the tooltip for the done button.
      */
     @Override
-    public void render(GuiGraphics context, int mouseX, int mouseY, float deltaTicks) {
+    public void extractRenderState(GuiGraphicsExtractor context, int mouseX, int mouseY, float deltaTicks) {
         if (this.doneButton != null && this.doneButton.isHovered()) {
             String tooltip = Minecraft.getInstance().hasShiftDown() ? "qualityofqueso.gui.open_config_directory" : "qualityofqueso.gui.open_config_directory.help";
             ButtonUtil.drawTooltip(Component.translatable(tooltip), context, this.font, mouseX, mouseY);
@@ -80,9 +80,9 @@ public abstract class AbstractModOptionsScreen extends OptionsSubScreen {
         int rightSide = leftSide + 160;
         int farRightSide = rightSide + 277;
         int height = this.height - 20;
-        context.drawCenteredString(this.font, ModUtil.VERSION, farRightSide, height, CommonColors.WHITE);
+        context.centeredText(this.font, ModUtil.VERSION, farRightSide, height, CommonColors.WHITE);
 
-        super.render(context, mouseX, mouseY, deltaTicks);
+        super.extractRenderState(context, mouseX, mouseY, deltaTicks);
     }
 
     /**

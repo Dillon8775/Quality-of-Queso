@@ -1,18 +1,16 @@
 package net.dillon.qualityofqueso.mixin.client.util;
 
 import com.mojang.authlib.GameProfile;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.util.Mth;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BowItem;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.*;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
+import org.spongepowered.asm.mixin.Overwrite;
 
-import static net.dillon.qualityofqueso.util.ModUtil.modEnabled;
 import static net.dillon.qualityofqueso.util.ModUtil.options;
 
 @Mixin(AbstractClientPlayer.class)
@@ -23,61 +21,56 @@ public abstract class AbstractClientPlayerMixin extends Player {
     }
 
     /**
-     * Removes the FOV modification when flying.
+     * Implements FOV modifiers.
      */
-    @ModifyConstant(method = "getFieldOfViewModifier", constant = @Constant(floatValue = 1.1F))
-    private float removeFlyingSpeedFOVMultiplier(float original) {
-        if (modEnabled(Minecraft.getInstance())) {
-            return !options().fovEffects.flying ? 1.0F : original;
-        }
-        return original;
-    }
-
-    /**
-     * Removes the FOV modification when sprinting.
-     */
-    @ModifyVariable(method = "getFieldOfViewModifier", at = @At("STORE"), ordinal = 1)
-    private float removeSprintingFOVMultiplier(float original) {
-        if (modEnabled(Minecraft.getInstance())) {
-            boolean bl = options().fovEffects.flying && this.getAbilities().flying;
-            float f = bl ? original : 1.0F;
-            return !options().fovEffects.sprinting ? bl ? 1.1F : f : original;
-        }
-        return original;
-    }
-
-    /**
-     * Removes the FOV change when you have a potion effect applied.
-     */
-    @Inject(method = "getFieldOfViewModifier", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Abilities;getWalkingSpeed()F"), locals = LocalCapture.CAPTURE_FAILEXCEPTION, cancellable = true)
-    private void modifyPotionFOVModifier(boolean firstPerson, float effectScale, CallbackInfoReturnable<Float> cir, float modifier) {
-        if (modEnabled(Minecraft.getInstance()) && !(this.getUseItem().getItem() instanceof BowItem) && !options().fovEffects.potions) {
-            float f = options().fovEffects.sprinting && this.isSprinting() ? 1.02F + (effectScale / 10.0F) : 1.0F;
-            cir.setReturnValue(Math.min(Math.max(effectScale, f), f));
-        }
-    }
-
-    /**
-     * Modifies bow FOV multiplier.
-     */
-    @Inject(method = "getFieldOfViewModifier", at = @At(value = "INVOKE", target = "Ljava/lang/Math;min(FF)F"), locals = LocalCapture.CAPTURE_FAILEXCEPTION, cancellable = true)
-    private void modifyBowFOVMultiplier(boolean firstPerson, float effectScale, CallbackInfoReturnable<Float> cir, float modifier) {
-        if (!modEnabled(Minecraft.getInstance())) {
-            return;
+    @Overwrite
+    public float getFieldOfViewModifier(boolean firstPerson, float effectScale) {
+        float modifier = 1.0F;
+        // Disables flying FOV
+        if (this.getAbilities().flying && options().fovEffects.flying) {
+            modifier *= 1.1F;
         }
 
-        if (options().fovEffects.bows.on() && !options().fovEffects.potions) {
-            cir.setReturnValue(1.0F - Mth.square(Math.min(this.getTicksUsingItem() / 20.0F, 1.0F)) * 0.15F);
+        // Potion/sprinting FOV
+        float walkingSpeed = this.getAbilities().getWalkingSpeed();
+        if (walkingSpeed != 0.0F) {
+            float effectiveSpeed = walkingSpeed;
+
+            if (options().fovEffects.sprinting && this.isSprinting()) {
+                effectiveSpeed *= 1.3F;
+            }
+
+            if (options().fovEffects.potions) {
+                if (this.hasEffect(MobEffects.SPEED)) {
+                    MobEffectInstance effect = this.getEffect(MobEffects.SPEED);
+                    if (effect != null) {
+                        effectiveSpeed *= 1.0F + 0.2F * (effect.getAmplifier() + 1);
+                    }
+                }
+
+                if (this.hasEffect(MobEffects.SLOWNESS)) {
+                    MobEffectInstance effect = this.getEffect(MobEffects.SLOWNESS);
+                    if (effect != null) {
+                        effectiveSpeed *= 1.0F - 0.15F * (effect.getAmplifier() + 1);
+                    }
+                }
+            }
+
+            float speedFactor = effectiveSpeed / walkingSpeed;
+            modifier *= (speedFactor + 1.0F) / 2.0F;
         }
 
-        if (options().fovEffects.bows.on()) {
-            return;
+        // Bow FOV
+        if (this.isUsingItem()) {
+            if (this.getUseItem().getItem() instanceof BowItem && options().fovEffects.bows.enabled()) {
+                float scale = options().fovEffects.bows.isQuick() ? 1.0F : Math.min(this.getTicksUsingItem() / 20.0F, 1.0F);
+                modifier *= 1.0F - Mth.square(scale) * 0.15F;
+            } else if (firstPerson && this.isScoping()) {
+                return 0.1F;
+            }
         }
 
-        if (options().fovEffects.bows.isQuick()) {
-            cir.setReturnValue((!options().fovEffects.potions ? 1.0F : modifier) * (1.0F - Mth.square(1.0F) * 0.15F));
-        } else {
-            cir.setReturnValue(1.0F);
-        }
+        // Return original FOV
+        return Mth.lerp(effectScale, 1.0F, modifier);
     }
 }

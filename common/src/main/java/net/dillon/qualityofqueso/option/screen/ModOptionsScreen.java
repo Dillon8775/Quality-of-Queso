@@ -5,7 +5,7 @@ import net.dillon.qualityofqueso.screen.ItemFrameSearchScreen;
 import net.dillon.qualityofqueso.util.ButtonUtil;
 import net.dillon.qualityofqueso.util.ModUtil;
 import net.minecraft.client.OptionInstance;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.ConfirmLinkScreen;
@@ -18,7 +18,7 @@ import java.util.List;
 import static net.dillon.qualityofqueso.util.ModUtil.coptions;
 
 public class ModOptionsScreen extends AbstractModOptionsScreen {
-    private AbstractWidget searchingOptions, inventoryManagementOptions, itemFrameSearchingOptions, openItemFrameSearchGUIOptions, hudOptions, otherOptions, fovEffects, accessibilityOptions, enableMod, reportBugs, joinDiscord;
+    private AbstractWidget searchingOptions, inventoryManagementOptions, itemFrameSearchingOptions, openItemFrameSearchGUIOptions, hudOptions, miscOptions, fovEffects, wiki, accessibilityOptions, enableMod, reportBugs, joinDiscord;
 
     public ModOptionsScreen(Screen parent) {
         super(parent, Component.translatable("qualityofqueso.gui.options.title"));
@@ -52,10 +52,10 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
             this.minecraft.setScreen(new HudOptionsScreen(this));
         }).build());
         buttons.add(this.hudOptions);
-        this.otherOptions = this.addWidget(Button.builder(Component.translatable("qualityofqueso.gui.misc_options"), button -> {
+        this.miscOptions = this.addWidget(Button.builder(Component.translatable("qualityofqueso.gui.misc_options"), button -> {
             this.minecraft.setScreen(new MiscOptionsScreen(this));
         }).build());
-        buttons.add(this.otherOptions);
+        buttons.add(this.miscOptions);
 
         this.accessibilityOptions = this.addWidget(Button.builder(Component.translatable("qualityofqueso.gui.accessibility_options"), button -> {
             this.minecraft.setScreen(new AccessibilityOptionsScreen(this));
@@ -68,11 +68,15 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
             this.minecraft.setScreen(new FOVEffectsScreen(this));
         }).build());
         buttons.add(this.fovEffects);
+        this.wiki = this.addWidget(Button.builder(Component.translatable("qualityofqueso.gui.wiki"),
+            ConfirmLinkScreen.confirmLink(this, "https://quality-of-queso.fandom.com/wiki/Quality_of_Queso_Wiki", false)
+        ).build());
+        buttons.add(this.wiki);
+
         this.joinDiscord = this.addWidget(Button.builder(Component.translatable("qualityofqueso.gui.ask_questions"),
                 ConfirmLinkScreen.confirmLink(this, "https://discord.gg/vfqEAn4YFy", false)
         ).build());
         buttons.add(this.joinDiscord);
-
         this.reportBugs = this.addWidget(Button.builder(Component.translatable("qualityofqueso.gui.report_bugs"),
                 ConfirmLinkScreen.confirmLink(this, "https://github.com/Dillon8775/Quality-of-Queso/issues", false)
         ).build());
@@ -82,8 +86,8 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float deltaTicks) {
-        super.render(graphics, mouseX, mouseY, deltaTicks);
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks) {
+        super.extractRenderState(graphics, mouseX, mouseY, deltaTicks);
         this.openItemFrameSearchGUIOptions.active = coptions().itemFrameSearching && this.minecraft.level != null;
         if (this.searchingOptions.isHovered()) {
             ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.searching_options.tooltip"), graphics, this.font, mouseX, mouseY);
@@ -104,18 +108,24 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
         if (this.hudOptions.isHovered()) {
             ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.hud_options.tooltip"), graphics, this.font, mouseX, mouseY);
         }
-        if (this.fovEffects.isHovered()) {
-            ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.fov_effects.tooltip"), graphics, this.font, mouseX, mouseY);
-        }
-        if (this.accessibilityOptions.isHovered()) {
-            ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.accessibility_options.tooltip"), graphics, this.font, mouseX, mouseY);
+        if (this.wiki.isHovered()) {
+            ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.wiki.tooltip"), graphics, this.font, mouseX, mouseY);
         }
         if (ModUtil.options().accessibility.helpfulTooltips) {
-            if (this.otherOptions.isHovered()) {
+            if (this.fovEffects.isHovered()) {
+                ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.fov_effects.tooltip"), graphics, this.font, mouseX, mouseY);
+            }
+            if (this.miscOptions.isHovered()) {
                 ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.misc_options.tooltip"), graphics, this.font, mouseX, mouseY);
+            }
+            if (this.accessibilityOptions.isHovered()) {
+                ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.accessibility_options.tooltip"), graphics, this.font, mouseX, mouseY);
             }
             if (this.reportBugs.isHovered()) {
                 ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.report_bugs.tooltip"), graphics, this.font, mouseX, mouseY);
+            }
+            if (this.joinDiscord.isHovered()) {
+                ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.ask_questions.tooltip"), graphics, this.font, mouseX, mouseY);
             }
         }
     }

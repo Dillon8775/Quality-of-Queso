@@ -3,7 +3,7 @@ package net.dillon.qualityofqueso.mixin.client.screen;
 import net.dillon.qualityofqueso.platform.MultiLoader;
 import net.dillon.qualityofqueso.util.ButtonUtil;
 import net.dillon.qualityofqueso.util.ModTexts;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.SpriteIconButton;
 import net.minecraft.client.gui.screens.PauseScreen;
@@ -62,8 +62,8 @@ public class PauseScreenMixin extends Screen {
     /**
      * Renders toolips and textures over top of the {@code Quality of Queso buttons.}
      */
-    @Inject(method = "render", at = @At("TAIL"))
-    private void renderTooltipsAndTextures(GuiGraphics graphics, int mouseX, int mouseY, float deltaTicks, CallbackInfo ci) {
+    @Inject(method = "extractRenderState", at = @At("TAIL"))
+    private void renderTooltipsAndTextures(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks, CallbackInfo ci) {
         if (this.showPauseMenu) {
             if (options().misc.preventRageQuitting && options().accessibility.helpfulTooltips && this.disconnectButton != null && this.disconnectButton.isHovered()) {
                 ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.disconnect"), graphics, this.font, mouseX, mouseY);

@@ -14,7 +14,7 @@ public class SearchingOptionsScreen extends AbstractModOptionsScreen {
     @Override
     protected OptionInstance<?>[] options() {
         return new OptionInstance[]{
-                ModListOptions.chestSearching(),
+                ModListOptions.containerSearching(),
                 ModListOptions.inventorySearching(),
                 ModListOptions.quickSearch(),
                 ModListOptions.saveSearchText()

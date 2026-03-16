@@ -90,7 +90,7 @@ public class ModClientOptions {
         public boolean searchInventory = true;
         public boolean showButtonShortcuts = true;
         public boolean autoCloseRecipeBook = true;
-
+        public boolean autoFocusIntoRecipeBook = true;
         public boolean useOldSearchBarTexture = false;
 
         public boolean onlyCountMatchingItems = false;

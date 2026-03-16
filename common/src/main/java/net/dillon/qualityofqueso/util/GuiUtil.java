@@ -3,7 +3,7 @@ package net.dillon.qualityofqueso.util;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
@@ -33,14 +33,14 @@ public class GuiUtil {
     /**
      * Draws an equipped stack item.
      */
-    public static void drawItem(Minecraft minecraft, GuiGraphics context, ItemStack stack, int x, boolean overlay) {
+    public static void drawItem(Minecraft minecraft, GuiGraphicsExtractor context, ItemStack stack, int x, boolean overlay) {
         int i = getGuiWidth(context);
         int y = getGuiHeight(context) + 1;
         int fx = i + x;
         if (!stack.isEmpty()) {
-            context.renderItem(stack, fx, y);
+            context.item(stack, fx, y);
             if (overlay) {
-                context.renderItemDecorations(minecraft.font, stack, fx, y, null);
+                context.itemDecorations(minecraft.font, stack, fx, y, null);
             }
         }
     }
@@ -154,14 +154,14 @@ public class GuiUtil {
     /**
      * @return the GUI width.
      */
-    public static int getGuiWidth(GuiGraphics context) {
+    public static int getGuiWidth(GuiGraphicsExtractor context) {
         return context.guiWidth() / 2;
     }
 
     /**
      * @return the GUI height.
      */
-    public static int getGuiHeight(GuiGraphics context) {
+    public static int getGuiHeight(GuiGraphicsExtractor context) {
         return context.guiHeight() - 20;
     }
 }

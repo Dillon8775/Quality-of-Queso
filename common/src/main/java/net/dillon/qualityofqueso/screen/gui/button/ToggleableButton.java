@@ -4,7 +4,7 @@ import net.dillon.qualityofqueso.util.ButtonUtil;
 import net.dillon.qualityofqueso.util.ContainerTracker;
 import net.dillon.qualityofqueso.util.ModTexts;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -21,7 +21,7 @@ public abstract class ToggleableButton extends TransferButton {
     private final String[] tooltip;
 
     public ToggleableButton(AbstractContainerMenu screenHandler, Font font, String searchFieldText, int x, int y, String buttonName, OnPress onPress, String on, String off, String[] tooltip) {
-        super(screenHandler, font, searchFieldText, x, y, buttonName, onPress);
+        super(screenHandler, font, searchFieldText, x, y, buttonName, false, onPress);
         this.on = on;
         this.off = off;
         this.tooltip = tooltip;
@@ -36,8 +36,8 @@ public abstract class ToggleableButton extends TransferButton {
      * Renders the textures and tooltips for the button.
      */
     @Override
-    protected void renderContents(GuiGraphics context, int mouseX, int mouseY, float deltaTicks) {
-        this.renderButtonTexture(this.option() ? this.on : this.off, false, this, context);
+    protected void extractContents(GuiGraphicsExtractor context, int mouseX, int mouseY, float deltaTicks) {
+        this.renderButtonTexture(this.option() ? this.on : this.off, this, context);
         if (this.isHovered()) {
             String name;
             switch (this.getHoverSize()) {

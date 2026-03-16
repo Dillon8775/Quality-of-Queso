@@ -10,7 +10,7 @@ import net.dillon.qualityofqueso.util.ContainerTracker;
 import net.dillon.qualityofqueso.util.EnchantingHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.*;
@@ -620,8 +620,8 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
     /**
      * Grays out any containerSlot which doesn't contain the query name being searched.
      */
-    @Inject(method = "renderContents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;renderSlotHighlightFront(Lnet/minecraft/client/gui/GuiGraphics;)V", shift = At.Shift.AFTER))
-    private void grayOutSlot(GuiGraphics graphics, int mouseX, int mouseY, float deltaTicks, CallbackInfo ci) {
+    @Inject(method = "extractContents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;extractSlotHighlightFront(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V", shift = At.Shift.AFTER))
+    private void grayOutSlot(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks, CallbackInfo ci) {
         if (!isValidScreen(this.screen)) {
             return;
         }
@@ -679,22 +679,22 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
     /**
      * Handles rendering, such as the search field and transferring fromInventory button textures.
      */
-    @Inject(method = "renderContents", at = @At("TAIL"))
-    private void renderWidgets(GuiGraphics graphics, int mouseX, int mouseY, float deltaTicks, CallbackInfo ci) {
+    @Inject(method = "extractContents", at = @At("TAIL"))
+    private void renderWidgets(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks, CallbackInfo ci) {
         if (!modEnabled(this.minecraft)) {
             return;
         }
 
         // Render the search field
         if (this.containerSearchField != null) {
-            this.containerSearchField.render(graphics, mouseX, mouseY, deltaTicks);
+            this.containerSearchField.extractWidgetRenderState(graphics, mouseX, mouseY, deltaTicks);
         }
         // Render fromInventory search field
         if (this.inventorySearchField != null) {
             this.inventorySearchField.setX(this.width / 2 + getBarWidth(this.imageWidth) / 2 - (
                     this.screen instanceof AbstractRecipeBookScreen<?> recipeBookScreen && getRecipeBookComponent(recipeBookScreen).isVisible() ? -16 : 60
             ));
-            this.inventorySearchField.render(graphics, mouseX, mouseY, deltaTicks);
+            this.inventorySearchField.extractWidgetRenderState(graphics, mouseX, mouseY, deltaTicks);
         }
 
         Inventory playerInventory = this.minecraft.player.getInventory();
@@ -716,10 +716,11 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                                 getManagementButtonX(this.screen, this.imageWidth, this.width, buttons),
                                 getManagementButtonY(this.screen, this.container, this.topPos, this.titleLabelY),
                                 "transfer/container/transfer_container",
+                                true,
                                 b -> this.transferItems(true),
                                 () -> !isContainerFull(this.menu, this.container, true) && this.shouldButtonBeActive(false, null)));
 
-                this.transferContainerButton.render(graphics, mouseX, mouseY, deltaTicks);
+                this.transferContainerButton.extractRenderState(graphics, mouseX, mouseY, deltaTicks);
                 buttons++;
             }
 
@@ -735,11 +736,12 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                                 getManagementButtonX(this.screen, this.imageWidth, this.width, buttons),
                                 getManagementButtonY(this.screen, this.container, this.topPos, this.titleLabelY),
                                 "transfer/inventory/transfer_inventory",
+                                true,
                                 b -> this.transferItems(false),
                                 () -> !isContainerFull(this.menu, this.container, false) && this.shouldButtonBeActive(true, playerInventory)
                         ));
 
-                this.transferInventoryButton.render(graphics, mouseX, mouseY, deltaTicks);
+                this.transferInventoryButton.extractRenderState(graphics, mouseX, mouseY, deltaTicks);
                 buttons++;
             }
         }
@@ -764,7 +766,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                                     sendClientOptionsToServer();
                                 }));
 
-                this.includeHotbarButton.render(graphics, mouseX, mouseY, deltaTicks);
+                this.includeHotbarButton.extractRenderState(graphics, mouseX, mouseY, deltaTicks);
                 buttons++;
             }
 
@@ -786,7 +788,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                             this.minecraft,
                             this.screen));
 
-                this.fillWhatsPresentButton.render(graphics, mouseX, mouseY, deltaTicks);
+                this.fillWhatsPresentButton.extractRenderState(graphics, mouseX, mouseY, deltaTicks);
                 buttons++;
             }
 
@@ -806,7 +808,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                                 this::canSwap
                         ));
 
-                this.swapButton.render(graphics, mouseX, mouseY, deltaTicks);
+                this.swapButton.extractRenderState(graphics, mouseX, mouseY, deltaTicks);
                 buttons++;
             }
 
@@ -826,14 +828,14 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                                 () -> this.canSort(true)
                         ));
 
-                this.sortButton.render(graphics, mouseX, mouseY, deltaTicks);
+                this.sortButton.extractRenderState(graphics, mouseX, mouseY, deltaTicks);
                 buttons++;
             }
 
             /* --- */
 
             // QUICK DROP BUTTON
-            if (options().management.quickDrop.shortcutOrButton()) {
+            if (options().management.quickDrop.shortcutOrButton() || (options().management.quickDrop.orKeyOnly() && Minecraft.getInstance().hasControlDown() && Minecraft.getInstance().hasAltDown())) {
                 this.quickDropButton = this.addWidget(
                         new QuickDropButton(
                                 this.menu,
@@ -850,7 +852,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                                         && this.shouldButtonBeActive(!containerScreen, containerScreen ? null : playerInventory, false)
                         ));
 
-                this.quickDropButton.render(graphics, mouseX, mouseY, deltaTicks);
+                this.quickDropButton.extractRenderState(graphics, mouseX, mouseY, deltaTicks);
                 buttons++;
             }
 
@@ -870,7 +872,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                         )
                 );
 
-                this.clearExcludedSlotsButton.render(graphics, mouseX, mouseY, deltaTicks);
+                this.clearExcludedSlotsButton.extractRenderState(graphics, mouseX, mouseY, deltaTicks);
             }
 
             if ((options().searching.containerSearching && containerScreen) || (options().searching.inventorySearching && inventoryScreen)) {
@@ -902,7 +904,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                                 }
                         ));
 
-                this.searchTransportablesButton.render(graphics, mouseX, mouseY, deltaTicks);
+                this.searchTransportablesButton.extractRenderState(graphics, mouseX, mouseY, deltaTicks);
             }
         }
     }
@@ -921,8 +923,8 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
     /**
      * Renders tag tooltips to all slots if searching by tag {@code searchQuery.startsWith(#)}.
      */
-    @Inject(method = "renderTooltip", at = @At("HEAD"), cancellable = true)
-    private void modifyTooltips(GuiGraphics graphics, int x, int y, CallbackInfo ci) {
+    @Inject(method = "extractTooltip", at = @At("HEAD"), cancellable = true)
+    private void modifyTooltips(GuiGraphicsExtractor graphics, int x, int y, CallbackInfo ci) {
         if (modEnabled(this.minecraft) && isExcludingSlots(this.screen)) {
             ci.cancel();
         }
@@ -937,7 +939,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
 
         if (options().misc.enchantingHelper && stack.is(Items.ENCHANTED_BOOK)) {
             ItemEnchantments enchantments = stack.getOrDefault(DataComponents.STORED_ENCHANTMENTS, ItemEnchantments.EMPTY);
-            List<Component> enchantmentApplicables = new ArrayList<>();
+            Set<Component> enchantmentApplicables = new HashSet<>();
 
             for (Object2IntMap.Entry<Holder<Enchantment>> enchantment : enchantments.entrySet()) {
                 if (isEnchantmentInGroup(EnchantingHelper.ALL_PURPOSE_ENCHANTMENTS, enchantment)) {
@@ -1099,6 +1101,14 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             return;
         }
 
+        // Prevent inventory key from closing automatically if search bar is focused
+        if (input.key() == key(Minecraft.getInstance().options.keyInventory).getValue()) {
+            if ((this.containerSearchField != null && !this.containerSearchField.isFocused()) || (this.inventorySearchField != null && !this.inventorySearchField.isFocused()) || (isInventoryScreen(this.screen) && this.inventorySearchField == null)) {
+                this.onClose();
+                cir.setReturnValue(true);
+            }
+        }
+
         if (Minecraft.getInstance().hasControlDown()) {
             if (this.screen instanceof AbstractRecipeBookScreen<?> recipeScreen
                     && input.key() == key(ModKeybinds.HIDE_RECIPE_BOOK).getValue()
@@ -1145,7 +1155,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
 
         // Prevent E from typing entirely in fromInventory screens
         boolean canCloseFromE = (this.containerSearchField != null && !this.containerSearchField.isFocused()) || (this.inventorySearchField != null && !this.inventorySearchField.isFocused());
-        if ((input.key() == GLFW.GLFW_KEY_E && options().accessibility.preventEFromTyping && canCloseFromE)
+        if ((input.key() == key(Minecraft.getInstance().options.keyInventory).getValue() && options().accessibility.preventEFromTyping && canCloseFromE)
                 && (isContainerScreen(this.screen) || isInventoryScreen(this.screen) || isCreativeInventoryScreen(this.screen))) {
             this.onClose();
             cir.setReturnValue(true);
@@ -1229,26 +1239,32 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
         // Recipe book search field logic
         if (options().searching.quickSearch && this.screen instanceof AbstractRecipeBookScreen<?> recipeScreen && !Minecraft.getInstance().hasControlDown()) {
             boolean swapKeyValid = swapKeyPressed && (hoveredSlotHasItem(this.hoveredSlot) || this.menu.getSlot(45).hasItem());
-            if ((!options().accessibility.preventEFromTyping && input.key() != GLFW.GLFW_KEY_E) && !ignoreTyping && !swapKeyValid && !getRecipeBookComponent(recipeScreen).isVisible() && (this.inventorySearchField == null || !this.inventorySearchField.isFocused())) {
-                getRecipeBookComponent(recipeScreen).toggleVisibility();
-                this.repositionElements();
-            }
-            if (getSearchBoxInsideRecipeBook(recipeScreen) != null) {
-                boolean unfocus = false;
-                for (int i = 0; i < 9; i++) {
-                    if (this.hoveredSlot != null && this.minecraft.options.keyHotbarSlots[i].matches(input)) {
-                        unfocus = true;
-                        break;
+            if (input.key() != key(Minecraft.getInstance().options.keyInventory).getValue()) {
+                if (!ignoreTyping && !swapKeyValid && !getRecipeBookComponent(recipeScreen).isVisible() && (this.inventorySearchField == null || (!this.inventorySearchField.isFocused() && options().accessibility.autoFocusIntoRecipeBook))) {
+                    getRecipeBookComponent(recipeScreen).toggleVisibility();
+                    this.repositionElements();
+                }
+                if (getSearchBoxInsideRecipeBook(recipeScreen) != null) {
+                    boolean unfocus = false;
+                    for (int i = 0; i < 9; i++) {
+                        if (this.hoveredSlot != null && this.minecraft.options.keyHotbarSlots[i].matches(input)) {
+                            unfocus = true;
+                            break;
+                        }
                     }
-                }
-                if (Minecraft.getInstance().hasShiftDown() || unfocus) {
-                    getSearchBoxInsideRecipeBook(recipeScreen).setFocused(false);
-                    return;
-                }
-                getRecipeBookComponent(recipeScreen).setFocused(!cannotType);
+                    if (Minecraft.getInstance().hasShiftDown() || unfocus) {
+                        getSearchBoxInsideRecipeBook(recipeScreen).setFocused(false);
+                        return;
+                    }
+                    if (!cannotType && this.inventorySearchField == null) {
+                        getSearchBoxInsideRecipeBook(recipeScreen).setFocused(true);
+                    } else {
+                        getRecipeBookComponent(recipeScreen).setFocused(!cannotType);
+                    }
 
-                if (getSearchBoxInsideRecipeBook(recipeScreen).isFocused()) {
-                    cir.setReturnValue(getRecipeBookComponent(recipeScreen).keyPressed(input) || super.keyPressed(input));
+                    if (getSearchBoxInsideRecipeBook(recipeScreen).isFocused()) {
+                        cir.setReturnValue(getRecipeBookComponent(recipeScreen).keyPressed(input) || super.keyPressed(input));
+                    }
                 }
             }
         }

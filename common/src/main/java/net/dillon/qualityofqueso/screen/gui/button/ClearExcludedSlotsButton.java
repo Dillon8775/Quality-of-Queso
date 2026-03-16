@@ -1,6 +1,8 @@
 package net.dillon.qualityofqueso.screen.gui.button;
 
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 
@@ -10,7 +12,12 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 public class ClearExcludedSlotsButton extends TransferButton {
 
     public ClearExcludedSlotsButton(AbstractContainerMenu screenHandler, Font font, String searchFieldText, int x, int y, String buttonName, OnPress onPress) {
-        super(screenHandler, font, searchFieldText, x, y, buttonName, onPress);
+        super(screenHandler, font, searchFieldText, x, y, buttonName, false, onPress);
+    }
+
+    @Override
+    protected void renderButtonTexture(String id, AbstractWidget buttonReference, GuiGraphicsExtractor context) {
+        super.renderButtonTexture(id, buttonReference, context);
     }
 
     @Override

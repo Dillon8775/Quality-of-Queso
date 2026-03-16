@@ -6,7 +6,7 @@ import net.dillon.qualityofqueso.option.screen.ModOptionsScreen;
 import net.dillon.qualityofqueso.screen.gui.button.TransferButton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.SpriteIconButton;
 import net.minecraft.client.gui.screens.Screen;
@@ -69,21 +69,21 @@ public class ButtonUtil {
     /**
      * Draws a tooltip.
      */
-    public static void drawTooltip(Component tooltip, GuiGraphics graphics, Font font, int mouseX, int mouseY) {
+    public static void drawTooltip(Component tooltip, GuiGraphicsExtractor graphics, Font font, int mouseX, int mouseY) {
         graphics.setTooltipForNextFrame(font, font.split(tooltip, 200), mouseX, mouseY);
     }
 
     /**
      * Draws a texture over a button.
      */
-    public static void drawTexture(GuiGraphics graphics, String name, Button button, float f) {
+    public static void drawTexture(GuiGraphicsExtractor graphics, String name, Button button, float f) {
         graphics.blit(RenderPipelines.GUI_TEXTURED, Identifier.parse("qualityofqueso:textures/gui/" + name + ".png"), button.getX() + 2, button.getY() + 2, 0.0F, 0.0F, 16, 16, 16, 16, ARGB.color(f, CommonColors.WHITE));
     }
 
     /**
      * Draws the texture for a {@code inventory management button.}
      */
-    public static void drawButtonTexture(GuiGraphics graphics, String name, TransferButton button) {
+    public static void drawButtonTexture(GuiGraphicsExtractor graphics, String name, TransferButton button) {
         int xy = getTransferButtonXY(button);
         graphics.blit(RenderPipelines.GUI_TEXTURED, Identifier.parse("qualityofqueso:textures/gui/button/" + name + ".png"), button.getX() - 1, button.getY() - 1, 0.0F, 0.0F, xy, xy, xy, xy);
     }
@@ -91,7 +91,7 @@ public class ButtonUtil {
     /**
      * Draws a texture over a button without a custom fade.
      */
-    public static void drawTexture(GuiGraphics graphics, String name, Button button) {
+    public static void drawTexture(GuiGraphicsExtractor graphics, String name, Button button) {
         drawTexture(graphics, name, button, 1.0F);
     }
 
@@ -882,7 +882,7 @@ public class ButtonUtil {
     /**
      * Grays out a containerSlot.
      */
-    public static void renderSlotUnavailable(GuiGraphics graphics, Slot slot, boolean hotbar) {
+    public static void renderSlotUnavailable(GuiGraphicsExtractor graphics, Slot slot, boolean hotbar) {
         int color = hotbar ? -2139062148 : -1275068416;
         graphics.fillGradient(slot.x, slot.y, slot.x + 16, slot.y + 16, color, color);
     }

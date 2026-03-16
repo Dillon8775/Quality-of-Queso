@@ -20,6 +20,10 @@ public enum Bows implements StringRepresentable {
         this.translationKey = Component.translatable(translationKey);
     }
 
+    public boolean enabled() {
+        return this == ON || this == QUICK;
+    }
+
     public boolean on() {
         return this == ON;
     }

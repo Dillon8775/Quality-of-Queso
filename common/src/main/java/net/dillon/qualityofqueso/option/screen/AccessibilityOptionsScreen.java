@@ -5,7 +5,7 @@ import net.dillon.qualityofqueso.option.ModListOptions;
 import net.dillon.qualityofqueso.util.ButtonUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.OptionInstance;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
@@ -37,16 +37,19 @@ public class AccessibilityOptionsScreen extends AbstractModOptionsScreen {
                 ModListOptions.showButtonShortcuts(),
 
                 ModListOptions.autoCloseRecipeBook(),
-                ModListOptions.useOldSearchBarTexture(),
+                ModListOptions.autoFocusIntoRecipeBook(),
 
                 ModListOptions.onlyCountMatchingItems(),
                 ModListOptions.displayTotalWithStacks(),
 
+                ModListOptions.tagSorting(),
+                ModListOptions.ignoreFabricTags(),
+
                 ModListOptions.perpendicularQuickMoving(),
                 ModListOptions.moveItemsIf(),
 
-                ModListOptions.elytraAlarmSoundDelay(),
-                ModListOptions.ignoreFabricTags()
+                ModListOptions.useOldSearchBarTexture(),
+                ModListOptions.elytraAlarmSoundDelay()
         };
     }
 
@@ -103,8 +106,8 @@ public class AccessibilityOptionsScreen extends AbstractModOptionsScreen {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float deltaTicks) {
-        super.render(graphics, mouseX, mouseY, deltaTicks);
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks) {
+        super.extractRenderState(graphics, mouseX, mouseY, deltaTicks);
         if (this.blacklistedServersField.isHovered()) {
             ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.options.blacklisted_servers.tooltip"), graphics, this.font, mouseX, mouseY);
         }

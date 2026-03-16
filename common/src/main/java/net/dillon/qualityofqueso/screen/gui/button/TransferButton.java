@@ -7,7 +7,7 @@ import net.dillon.qualityofqueso.util.ModTexts;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
@@ -41,6 +41,7 @@ import static net.dillon.qualityofqueso.util.ModUtil.options;
  */
 public class TransferButton extends Button {
     private final AbstractContainerMenu screenHandler;
+    private final boolean transferrableButton;
     protected final String searchFieldText;
     protected final Font font;
     protected final String buttonName;
@@ -49,11 +50,12 @@ public class TransferButton extends Button {
     /**
      * Constructs a default transfer button.
      */
-    public TransferButton(AbstractContainerMenu screenHandler, Font font, String searchFieldText, int x, int y, String buttonName, OnPress onPress) {
+    public TransferButton(AbstractContainerMenu screenHandler, Font font, String searchFieldText, int x, int y, String buttonName, boolean transferrableButton, OnPress onPress) {
         super(x, y, 10, 10, ModTexts.BLANK, onPress, DEFAULT_NARRATION);
         this.screenHandler = screenHandler;
         this.font = font;
         this.searchFieldText = searchFieldText;
+        this.transferrableButton = transferrableButton;
         this.buttonName = buttonName;
         this.canBeActive = () -> this.active;
     }
@@ -61,9 +63,10 @@ public class TransferButton extends Button {
     /**
      * Constructs a default transfer button with a boolean supplier, determining if the button can be active or not.
      */
-    public TransferButton(AbstractContainerMenu screenHandler, Font font, String searchFieldText, int x, int y, String buttonName, OnPress onPress, Supplier<Boolean> canBeActive) {
+    public TransferButton(AbstractContainerMenu screenHandler, Font font, String searchFieldText, int x, int y, String buttonName, boolean transferrableButton, OnPress onPress, Supplier<Boolean> canBeActive) {
         super(x, y, 10, 10, ModTexts.BLANK, onPress, DEFAULT_NARRATION);
         this.buttonName = buttonName;
+        this.transferrableButton = transferrableButton;
         this.screenHandler = screenHandler;
         this.font = font;
         this.searchFieldText = searchFieldText;
@@ -89,14 +92,13 @@ public class TransferButton extends Button {
      * Renders a transfer button texture.
      */
     @Unique
-    protected void renderButtonTexture(String id, boolean transferable, AbstractWidget buttonReference, GuiGraphics
-            context) {
+    protected void renderButtonTexture(String id, AbstractWidget buttonReference, GuiGraphicsExtractor context) {
         String transferableString = !this.screenHandler.getCarried().isEmpty() ?
                 "_with_stack.png" : this.searchFieldText.startsWith("!") ?
                 "_exclude.png" : this.searchFieldText.startsWith("#") ?
                 "_with_tag.png" : this.searchFieldText.startsWith(":") ?
                 "_match.png" : ".png";
-        String appended = transferable ? transferableString : ".png";
+        String appended = this.transferrableButton ? transferableString : ".png";
         Screen screen = Minecraft.getInstance().screen;
         if (screen != null) {
             if (isBrewingStandScreen(screen) || isFurnaceScreen(screen)) {
@@ -125,16 +127,16 @@ public class TransferButton extends Button {
      * Renders the textures and tooltips for the button.
      */
     @Override
-    protected void renderContents(GuiGraphics graphics, int mouseX, int mouseY, float deltaTicks) {
+    protected void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks) {
         this.active = this.canBeActive.get();
 
         if (this.canBeActive.get()) {
-            this.renderButtonTexture(this.buttonName + "_button", true, this, graphics);
+            this.renderButtonTexture(this.buttonName + "_button", this, graphics);
             if (this.isHovered()) {
                 ButtonUtil.drawButtonTexture(graphics, "hovered/basic_hovered", this);
             }
         } else {
-            this.renderButtonTexture(this.buttonName + "_button_inactive", true, this, graphics);
+            this.renderButtonTexture(this.buttonName + "_button_inactive", this, graphics);
         }
 
         if (this.isHovered() && this.active && options().accessibility.helpfulTooltips) {
@@ -149,7 +151,8 @@ public class TransferButton extends Button {
                 }
             }
             ItemStack cursorStack = this.screenHandler.getCarried();
-            if (!cursorStack.isEmpty()) {
+            String appended = isInventoryScreen(Minecraft.getInstance().screen) && this.buttonName.equals("quick_drop/quick_drop") ? ".inventory" : "";
+            if (this.transferrableButton && !cursorStack.isEmpty()) {
                 String tooltip = "_button.with_cursor_stack";
                 Component itemName = cursorStack.getItemName();
                 if (cursorStack.is(Items.ENCHANTED_BOOK)) {
@@ -173,14 +176,14 @@ public class TransferButton extends Button {
                     tooltip = "_button.with_cursor_tipped_arrow_stack";
                 }
                 ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui." + this.buttonName + tooltip, itemName), graphics, this.font, mouseX, mouseY);
-            } else if (!this.searchFieldText.isEmpty()) {
+            } else if (this.transferrableButton && !this.searchFieldText.isEmpty()) {
                 ButtonUtil.drawTooltip(this.searchFieldText.startsWith("#") ?
-                        Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query.tag", this.searchFieldText.substring(1)) :
+                        Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query.tag" + appended, this.searchFieldText.substring(1)) :
                         this.searchFieldText.startsWith("!") ?
-                                Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query.exclude", this.searchFieldText.substring(1)) :
+                                Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query.exclude" + appended, this.searchFieldText.substring(1)) :
                                 this.searchFieldText.startsWith(":") ?
-                                        Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query.match", this.searchFieldText.substring(1)) :
-                                        Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query", this.searchFieldText), graphics, this.font, mouseX, mouseY);
+                                        Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query.match" + appended, this.searchFieldText.substring(1)) :
+                                        Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query" + appended, this.searchFieldText), graphics, this.font, mouseX, mouseY);
             } else {
                 Component component;
                 if (this.buttonName.equals("sort/sort")) {
@@ -190,7 +193,7 @@ public class TransferButton extends Button {
                                     : Component.literal("alphabetically").withColor(ModTexts.ITEM_COLOR)
                     );
                 } else {
-                    component = Component.translatable("qualityofqueso.gui." + this.buttonName + "_button");
+                    component = Component.translatable("qualityofqueso.gui." + this.buttonName + "_button" + appended);
                 }
                 ButtonUtil.drawTooltip(component, graphics, this.font, mouseX, mouseY);
             }

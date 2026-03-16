@@ -5,7 +5,7 @@ import net.dillon.qualityofqueso.util.ItemHudTracker;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
@@ -61,7 +61,7 @@ public class GuiMixin {
     /**
      * Renders the modified selection slot.
      */
-    @ModifyArg(method = "renderItemHotbar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIII)V", ordinal = 1), index = 1)
+    @ModifyArg(method = "extractItemHotbar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIII)V", ordinal = 1), index = 1)
     private Identifier modifyHighlightedSlot(Identifier original) {
         if (this.minecraft.player == null) {
             return original;
@@ -72,22 +72,22 @@ public class GuiMixin {
     /**
      * Renders things overtop of everything.
      */
-    @Inject(method = "renderItemHotbar", at = @At("TAIL"))
-    private void renderAllWarningIndicators(GuiGraphics context, DeltaTracker deltaTracker, CallbackInfo ci) {
+    @Inject(method = "extractItemHotbar", at = @At("TAIL"))
+    private void renderAllWarningIndicators(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker, CallbackInfo ci) {
         for (int i = 0; i < this.minecraft.player.getInventory().getContainerSize() - 34; i++) {
             ItemStack item = this.minecraft.player.getInventory().getItem(i);
             if (getItemHealthPercentage(item) < 0.11F) {
-                this.renderWarningIndicator(this.minecraft, context, i, null);
+                this.renderWarningIndicator(this.minecraft, graphics, i, null);
             }
         }
 
         ItemStack offHandItem = this.minecraft.player.getOffhandItem();
-        if (getItemHealthPercentage(offHandItem) < 0.41F) {
-            if (options().hud.coloredHighlighting) {
-                this.renderHighlightedArmorSlot(this.minecraft, HOTBAR_SELECTION_SPRITE, context, EquipmentSlot.OFFHAND, getItemHealthPercentage(offHandItem) < 0.21F);
+        if (!offHandItem.isEmpty()) {
+            if (options().hud.coloredHighlighting && getItemHealthPercentage(offHandItem) < 1.0F) {
+                this.renderHighlightedArmorSlot(this.minecraft, HOTBAR_SELECTION_SPRITE, graphics, EquipmentSlot.OFFHAND, false);
             }
             if (options().hud.warningIndicators && getItemHealthPercentage(offHandItem) < 0.11F) {
-                this.renderWarningIndicator(this.minecraft, context, 0, EquipmentSlot.OFFHAND);
+                this.renderWarningIndicator(this.minecraft, graphics, 0, EquipmentSlot.OFFHAND);
             }
         }
     }
@@ -95,8 +95,8 @@ public class GuiMixin {
     /**
      * Implements the {@code armor status} feature.
      */
-    @Inject(method = "renderItemHotbar", at = @At("HEAD"))
-    private void renderArmorStatus(GuiGraphics context, DeltaTracker deltaTracker, CallbackInfo ci) {
+    @Inject(method = "extractItemHotbar", at = @At("HEAD"))
+    private void renderArmorStatus(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker, CallbackInfo ci) {
         if (!modEnabled(this.minecraft) || this.minecraft.player == null) {
             return;
         }
@@ -104,7 +104,7 @@ public class GuiMixin {
         ItemStack mainHandItem = getItemBySlot(this.minecraft, EquipmentSlot.MAINHAND);
         ItemStack offHandItem = getItemBySlot(this.minecraft, EquipmentSlot.OFFHAND);
 
-        this.tryRenderItem(context, mainHandItem, offHandItem);
+        this.tryRenderItem(graphics, mainHandItem, offHandItem);
 
         int i = 0;
         for (EquipmentSlot slot : slots) {
@@ -124,11 +124,11 @@ public class GuiMixin {
         boolean canRenderArmorHotbar = options().hud.armorStatus || (options().misc.elytraAlarm && SHOULD_WARN_OF_ELYTRA);
 
         if (canRenderArmorHotbar) {
-            context.blitSprite(
+            graphics.blitSprite(
                     RenderPipelines.GUI_TEXTURED,
                     ofQoQ("hud/armor_hotbar"),
-                    this.getArmorBarX(this.minecraft, context),
-                    getGuiHeight(context) - 2,
+                    this.getArmorBarX(this.minecraft, graphics),
+                    getGuiHeight(graphics) - 2,
                     82,
                     22
             );
@@ -136,21 +136,23 @@ public class GuiMixin {
 
         i = 0;
         for (EquipmentSlot slot : slots) {
-            if (slot == EquipmentSlot.CHEST && options().misc.elytraAlarm && SHOULD_WARN_OF_ELYTRA) {
-                drawItem(this.minecraft, context, new ItemStack(Items.ELYTRA), this.getArmorX(this.minecraft, EquipmentSlot.CHEST), true);
-                this.renderHighlightedArmorSlot(this.minecraft, HOTBAR_SELECTION_SPRITE, context, slot, true);
-                this.renderWarningIndicator(this.minecraft, context, 0, slot);
-                continue;
+            if (options().hud.armorStatus) {
+                if (slot != EquipmentSlot.CHEST || !SHOULD_WARN_OF_ELYTRA) {
+                    drawItem(this.minecraft, graphics, getItemBySlot(this.minecraft, slot), this.getArmorX(this.minecraft, slot), true);
+                    if (this.minecraft.player.tickCount < ARMOR_TIMERS[i]) {
+                        this.renderHighlightedArmorSlot(this.minecraft, HOTBAR_SELECTION_SPRITE, graphics, slots[i], false);
+                    }
+                    if (getItemHealthPercentage(getItemBySlot(this.minecraft, slot)) < 0.11F) {
+                        this.renderWarningIndicator(this.minecraft, graphics, 0, slot);
+                    }
+                }
             }
 
-            if (options().hud.armorStatus) {
-                drawItem(this.minecraft, context, getItemBySlot(this.minecraft, slot), this.getArmorX(this.minecraft, slot), true);
-                if (this.minecraft.player.tickCount < ARMOR_TIMERS[i]) {
-                    this.renderHighlightedArmorSlot(this.minecraft, HOTBAR_SELECTION_SPRITE, context, slots[i], false);
-                }
-                if (getItemHealthPercentage(getItemBySlot(this.minecraft, slot)) < 0.11F) {
-                    this.renderWarningIndicator(this.minecraft, context, 0, slot);
-                }
+            if (slot == EquipmentSlot.CHEST && options().misc.elytraAlarm && SHOULD_WARN_OF_ELYTRA) {
+                drawItem(this.minecraft, graphics, new ItemStack(Items.ELYTRA), this.getArmorX(this.minecraft, EquipmentSlot.CHEST), true);
+                this.renderHighlightedArmorSlot(this.minecraft, HOTBAR_SELECTION_SPRITE, graphics, slot, true);
+                this.renderWarningIndicator(this.minecraft, graphics, 0, slot);
+                continue;
             }
             i++;
         }
@@ -160,7 +162,7 @@ public class GuiMixin {
      * Renders an item.
      */
     @Unique
-    private boolean renderItem(GuiGraphics context, ItemStack stack) {
+    private boolean renderItem(GuiGraphicsExtractor graphics, ItemStack stack) {
         boolean holdingArrowDisplayableProjectileWeapon = holdingArrowDisplayableProjectileWeapon(this.minecraft, stack);
         if (!options().hud.itemCount.enabled() || (!stack.isStackable() && !holdingArrowDisplayableProjectileWeapon)) {
             if (!stack.is(ItemTags.SHULKER_BOXES) && !stack.is(ItemTags.BUNDLES)) {
@@ -255,20 +257,20 @@ public class GuiMixin {
             boolean arrowDisplayValid = (isArrow || holdingArrowDisplayableProjectileWeapon) && options().hud.itemCount == ItemCount.REMAINDER ? count < 65 : count < 100;
             boolean shouldRenderArrowUi = options().hud.showArrowCount && !hasInfinity && arrowDisplayValid && (holdingArrowDisplayableProjectileWeapon || !this.renderingHeldItem);
             if (shouldRenderArrowUi && (isArrow || holdingArrowDisplayableProjectileWeapon)) {
-                context.blitSprite(RenderPipelines.GUI_TEXTURED, HOTBAR_OFFHAND_RIGHT_SPRITE,
-                        getGuiWidth(context) + 90,
-                        getGuiHeight(context) - 3,
+                graphics.blitSprite(RenderPipelines.GUI_TEXTURED, HOTBAR_OFFHAND_RIGHT_SPRITE,
+                        getGuiWidth(graphics) + 90,
+                        getGuiHeight(graphics) - 3,
                         29,
                         24
                 );
-                context.blitSprite(RenderPipelines.GUI_TEXTURED,
+                graphics.blitSprite(RenderPipelines.GUI_TEXTURED,
                         options().hud.coloredHighlighting
                                 ? count < 11 ? ofQoQ("hud/slot_bad")
                                 : count < 21 ? ofQoQ("hud/slot_ok")
                                 : ofQoQ("hud/slot_good")
                                 : HOTBAR_SELECTION_SPRITE,
-                        getGuiWidth(context) + 96,
-                        getGuiHeight(context) - 3,
+                        getGuiWidth(graphics) + 96,
+                        getGuiHeight(graphics) - 3,
                         24,
                         23
                 );
@@ -277,18 +279,23 @@ public class GuiMixin {
             boolean arrowAndZero = trackedArrow && count == 0;
             ItemStack playerProjectile = getProjectileFromActiveHand(this.minecraft);
             ItemStack stackToRender = newStack;
+            ItemStack arrow = new ItemStack(Items.ARROW, 1);
             if (arrowAndZero) {
                 if (holdingArrowDisplayableProjectileWeapon && !isStackArrow(ItemHudTracker.getStack())) {
-                    stackToRender = new ItemStack(Items.ARROW, 1);
+                    stackToRender = arrow.copy();
                 } else {
                     stackToRender = ItemHudTracker.getStack();
                 }
             } else if (holdingArrowDisplayableProjectileWeapon) {
-                DataComponentMap playerProjectileComponents = playerProjectile.getComponents();
-                stackToRender = new ItemStack(playerProjectile.getItem(), count);
-                stackToRender.applyComponents(playerProjectileComponents);
+                if (isProjectileWeapon(ItemHudTracker.getStack().getItem())) {
+                    stackToRender = arrow.copy();
+                } else {
+                    DataComponentMap playerProjectileComponents = playerProjectile.getComponents();
+                    stackToRender = new ItemStack(playerProjectile.getItem(), count);
+                    stackToRender.applyComponents(playerProjectileComponents);
+                }
             }
-            drawItem(this.minecraft, context, stackToRender, offhandArm == HumanoidArm.RIGHT ? -129 : 100, false);
+            drawItem(this.minecraft, graphics, stackToRender, offhandArm == HumanoidArm.RIGHT ? -129 : 100, false);
 
             int x = 105;
             if (hasInfinity) {
@@ -330,11 +337,11 @@ public class GuiMixin {
                 }
             }
             if (!hasInfinity && shouldRenderArrowUi && options().hud.warningIndicators && validArrow && count < 6) {
-                this.renderWarningIndicator(this.minecraft, context, (int)(9 * 1.01), null);
+                this.renderWarningIndicator(this.minecraft, graphics, (int)(9 * 1.01), null);
             }
-            context.drawString(this.minecraft.font, text, ((context.guiWidth() / 2) + (isLeftHanded(this.minecraft) ? -x - 18 : x)), context.guiHeight() - (hasInfinity ? 9 : 10), color, true);
+            graphics.text(this.minecraft.font, text, ((graphics.guiWidth() / 2) + (isLeftHanded(this.minecraft) ? -x - 18 : x)), graphics.guiHeight() - (hasInfinity ? 9 : 10), color, true);
             if (options().accessibility.displayTotalWithStacks && count > 64 && (displayStack || options().hud.itemCount == ItemCount.REMAINDER)) {
-                context.drawString(this.minecraft.font, "(" + String.format("%,d", count) + ")", ((context.guiWidth() / 2) + ((isLeftHanded(this.minecraft) ? -x - 16 : x) + 5)), context.guiHeight() - 22, color, true);
+                graphics.text(this.minecraft.font, "(" + String.format("%,d", count) + ")", ((graphics.guiWidth() / 2) + ((isLeftHanded(this.minecraft) ? -x - 16 : x) + 5)), graphics.guiHeight() - 22, color, true);
             }
             return true;
         }
@@ -345,10 +352,10 @@ public class GuiMixin {
      * Tries to render an item on the screen.
      */
     @Unique
-    private void tryRenderItem(GuiGraphics context, ItemStack mainHandItem, ItemStack offHandItem) {
+    private void tryRenderItem(GuiGraphicsExtractor graphics, ItemStack mainHandItem, ItemStack offHandItem) {
         ItemStack stack = ItemHudTracker.getStack();
-        this.renderingHeldItem = this.renderItem(context, mainHandItem) || this.renderItem(context, offHandItem);
-        this.isRenderingItem = this.renderingHeldItem || (!stack.isEmpty() && this.renderItem(context, stack));
+        this.renderingHeldItem = this.renderItem(graphics, mainHandItem) || this.renderItem(graphics, offHandItem);
+        this.isRenderingItem = this.renderingHeldItem || (!stack.isEmpty() && this.renderItem(graphics, stack));
     }
 
     /**
@@ -381,28 +388,28 @@ public class GuiMixin {
      * @return the x-position that the slot should render under the armor item.
      */
     @Unique
-    private int getArmorBarX(Minecraft minecraft, GuiGraphics context) {
-        return getGuiWidth(context) + this.getArmorX(minecraft, EquipmentSlot.HEAD) - 3;
+    private int getArmorBarX(Minecraft minecraft, GuiGraphicsExtractor graphics) {
+        return getGuiWidth(graphics) + this.getArmorX(minecraft, EquipmentSlot.HEAD) - 3;
     }
 
     /**
      * @return the x-position that the highlighted slot should render under the armor item.
      */
     @Unique
-    private int getHighlightedSlotX(Minecraft minecraft, GuiGraphics context, EquipmentSlot slot) {
-        return getGuiWidth(context) + this.getArmorX(minecraft, slot) - 4;
+    private int getHighlightedSlotX(Minecraft minecraft, GuiGraphicsExtractor graphics, EquipmentSlot slot) {
+        return getGuiWidth(graphics) + this.getArmorX(minecraft, slot) - 4;
     }
 
     /**
      * Renders the highlighted texture around a slot.
      */
     @Unique
-    private void renderHighlightedArmorSlot(Minecraft minecraft, Identifier defaultSprite, GuiGraphics context, EquipmentSlot slot, boolean warning) {
-        context.blitSprite(
+    private void renderHighlightedArmorSlot(Minecraft minecraft, Identifier defaultSprite, GuiGraphicsExtractor graphics, EquipmentSlot slot, boolean warning) {
+        graphics.blitSprite(
                 RenderPipelines.GUI_TEXTURED,
                 warning ? ofQoQ("hud/slot_bad") : getHighlightedSlotTexture(defaultSprite, getItemBySlot(minecraft, slot)),
-                this.getHighlightedSlotX(minecraft, context, slot),
-                getGuiHeight(context) - 3,
+                this.getHighlightedSlotX(minecraft, graphics, slot),
+                getGuiHeight(graphics) - 3,
                 24,
                 23
         );
@@ -412,16 +419,16 @@ public class GuiMixin {
      * Renders the {@code warning texture} around armor items.
      */
     @Unique
-    private void renderWarningIndicator(Minecraft minecraft, GuiGraphics context, int slot, EquipmentSlot equipmentSlot) {
+    private void renderWarningIndicator(Minecraft minecraft, GuiGraphicsExtractor graphics, int slot, EquipmentSlot equipmentSlot) {
         if (!options().hud.warningIndicators) {
             return;
         }
 
-        context.blitSprite(
+        graphics.blitSprite(
                 RenderPipelines.GUI_TEXTURED,
                 Identifier.withDefaultNamespace("world_list/error_highlighted"),
-                getGuiWidth(context) + (equipmentSlot == null ? -78 + (slot * 20) : this.getArmorX(minecraft, equipmentSlot) + 10),
-                getGuiHeight(context) + 4,
+                getGuiWidth(graphics) + (equipmentSlot == null ? -78 + (slot * 20) : this.getArmorX(minecraft, equipmentSlot) + 10),
+                getGuiHeight(graphics) + 4,
                 16,
                 16
         );
