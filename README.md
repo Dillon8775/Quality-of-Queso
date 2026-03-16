@@ -167,8 +167,4 @@ If you decide to play the mod on an older version of the game, please note that 
 
 ---
 
-## Please read through the [Wiki](https://quality-of-queso.fandom.com/wiki/Quality_of_Queso_Wiki) to view all the mod's features, so you can really experience the quality of life that this mod offers.
-
----
-
 Created and founded by MannyQUESO and Dillon8775. All rights reserved unless explicitly stated.
