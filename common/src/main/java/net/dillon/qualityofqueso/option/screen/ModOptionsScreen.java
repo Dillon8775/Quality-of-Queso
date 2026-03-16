@@ -3,6 +3,7 @@ package net.dillon.qualityofqueso.option.screen;
 import net.dillon.qualityofqueso.option.ModListOptions;
 import net.dillon.qualityofqueso.screen.ItemFrameSearchScreen;
 import net.dillon.qualityofqueso.util.ButtonUtil;
+import net.dillon.qualityofqueso.util.ModTexts;
 import net.dillon.qualityofqueso.util.ModUtil;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -55,11 +56,13 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
         this.fogOptions = Button.builder(Component.translatable("qualityofqueso.gui.fog_options"), button -> {
             this.minecraft.setScreen(new FogOptionsScreen(this));
         }).build();
+        this.fogOptions.active = ModUtil.uoptions().functions.applyFog;
         buttons.add(this.fogOptions);
 
         this.fovEffects = this.addWidget(Button.builder(Component.translatable("qualityofqueso.gui.fov_effects"), button -> {
             this.minecraft.setScreen(new FOVEffectsScreen(this));
         }).build());
+        this.fovEffects.active = ModUtil.uoptions().functions.applyFovEffects;
         buttons.add(this.fovEffects);
         this.miscOptions = this.addWidget(Button.builder(Component.translatable("qualityofqueso.gui.misc_options"), button -> {
             this.minecraft.setScreen(new MiscOptionsScreen(this));
@@ -115,10 +118,18 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
         }
         if (ModUtil.options().accessibility.helpfulTooltips) {
             if (this.fogOptions.isHovered()) {
-                ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.fog_options.tooltip"), graphics, this.font, mouseX, mouseY);
+                ButtonUtil.drawTooltip(this.functionTooltip(
+                        Component.translatable("qualityofqueso.gui.fog_options.tooltip"),
+                        Component.translatable("qualityofqueso.gui.fog_options.disabled"),
+                        ModUtil.uoptions().functions.applyFog
+                ), graphics, this.font, mouseX, mouseY);
             }
             if (this.fovEffects.isHovered()) {
-                ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.fov_effects.tooltip"), graphics, this.font, mouseX, mouseY);
+                ButtonUtil.drawTooltip(this.functionTooltip(
+                        Component.translatable("qualityofqueso.gui.fov_effects.tooltip"),
+                        Component.translatable("qualityofqueso.gui.fov_effects.disabled"),
+                        ModUtil.uoptions().functions.applyFovEffects
+                ), graphics, this.font, mouseX, mouseY);
             }
             if (this.miscOptions.isHovered()) {
                 ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.misc_options.tooltip"), graphics, this.font, mouseX, mouseY);
@@ -136,6 +147,14 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
                 ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.report_bugs.tooltip"), graphics, this.font, mouseX, mouseY);
             }
         }
+    }
+
+    /**
+     * @return a function tooltip.
+     */
+    private Component functionTooltip(Component enabled, Component disabled, boolean function) {
+        Component tooltip = function ? enabled : disabled;
+        return tooltip.copy().append(!function ? Component.translatable("qualityofqueso.gui.function_disabled") : ModTexts.BLANK);
     }
 
     @Override

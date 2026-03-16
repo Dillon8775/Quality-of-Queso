@@ -54,10 +54,14 @@
   "qualityofqueso.gui.fog_options": "§7Fog...",
   "qualityofqueso.gui.title.fog_options": "Fog Options",
   "qualityofqueso.gui.fog_options.tooltip": "Configure fog settings...",
+  "qualityofqueso.gui.fog_options.disabled": "You have disabled fog functions.",
 
   "qualityofqueso.gui.fov_effects": "§aFOV Effects...",
   "qualityofqueso.gui.title.fov_effects": "Field of View Modifiers",
   "qualityofqueso.gui.fov_effects.tooltip": "Set what can change your FOV...",
+  "qualityofqueso.gui.fov_effects.disabled": "You have disabled fov modifications.",
+
+  "qualityofqueso.gui.function_disabled": " You can re-enable them in the universal config file. You will have to restart your game for it to take effect.",
 
   "qualityofqueso.gui.misc_options": "Misc...",
   "qualityofqueso.gui.title.misc_options": "Miscellaneous Options",

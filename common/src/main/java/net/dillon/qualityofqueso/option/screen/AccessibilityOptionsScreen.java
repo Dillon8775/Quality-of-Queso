@@ -59,7 +59,7 @@ public class AccessibilityOptionsScreen extends AbstractModOptionsScreen {
         this.list.addSmall(this.options());
 
         // Initialize the list from current options
-        this.blacklistedServers = new ArrayList<>(uoptions().blacklistedServers);
+        this.blacklistedServers = new ArrayList<>(uoptions().main.blacklistedServers);
 
         // Create the position and text field
         this.blacklistedServersField = new EditBox(
@@ -115,8 +115,8 @@ public class AccessibilityOptionsScreen extends AbstractModOptionsScreen {
 
     @Override
     public void onClose() {
-        uoptions().blacklistedServers.clear();
-        uoptions().blacklistedServers.addAll(this.blacklistedServers);
+        uoptions().main.blacklistedServers.clear();
+        uoptions().main.blacklistedServers.addAll(this.blacklistedServers);
         super.onClose();
     }
 

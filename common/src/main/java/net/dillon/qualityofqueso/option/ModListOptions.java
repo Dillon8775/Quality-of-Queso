@@ -286,10 +286,7 @@ public class ModListOptions {
         return OptionInstance.createBoolean("qualityofqueso.options.all_fog", OptionInstance.cachedConstantTooltip(
                         Component.translatable("qualityofqueso.options.all_fog.tooltip")
                                 .copy()
-                                .append(!uoptions().applyFogFunction ?
-                                        Component.translatable("qualityofqueso.options.all_fog.disabled") :
-                                        isSimpleKeybindsLoaded() ? Component.translatable("qualityofqueso.options.all_fog.simple_keybinds") : ModTexts.BLANK)
-                ),
+                                .append(isSimpleKeybindsLoaded() ? Component.translatable("qualityofqueso.options.all_fog.simple_keybinds") : ModTexts.BLANK)),
                 ON_OFF_TEXT, options().fog.allFog, value -> options().fog.allFog = value);
     }
 
@@ -307,7 +304,7 @@ public class ModListOptions {
         return new OptionInstance<>("qualityofqueso.options.nether_fog_intensity",
                 OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.nether_fog_intensity.tooltip")),
                 (optionText, value) -> Options.genericValueLabel(optionText, Component.literal(value + "%")),
-                new OptionInstance.IntRange(10, 100), options().fog.netherFogIntensity, value -> options().fog.netherFogIntensity = value);
+                new OptionInstance.IntRange(5, 100), options().fog.netherFogIntensity, value -> options().fog.netherFogIntensity = value);
     }
 
     public static OptionInstance<Boolean> preventRageQuitting() {
@@ -449,7 +446,7 @@ public class ModListOptions {
 
     public static OptionInstance<Boolean> multiServerConfigs() {
         return OptionInstance.createBoolean("qualityofqueso.options.multi_server_configs", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.multi_server_configs.tooltip")),
-                ON_OFF_TEXT, uoptions().multiServerConfigs, value -> uoptions().multiServerConfigs = value);
+                ON_OFF_TEXT, uoptions().main.multiServerConfigs, value -> uoptions().main.multiServerConfigs = value);
     }
     // end of accessibility options
 

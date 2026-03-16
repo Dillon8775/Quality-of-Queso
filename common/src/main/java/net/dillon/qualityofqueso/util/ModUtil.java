@@ -142,7 +142,7 @@ public class ModUtil {
         if (instance.player != null) {
             instance.player.sendSystemMessage(Component.translatable("qualityofqueso.unloaded_server_config", safeAddress(instance.getCurrentServer().ip)).withStyle(ChatFormatting.GOLD));
         }
-        if (uoptions().multiServerConfigs) {
+        if (uoptions().main.multiServerConfigs) {
             ModUtil.info("Reverting back to global QoQ config.");
         }
     }
@@ -165,7 +165,7 @@ public class ModUtil {
      * Loads and saves server-specific config.
      */
     public static void loadServerConfig() {
-        if (!uoptions().multiServerConfigs) {
+        if (!uoptions().main.multiServerConfigs) {
             return;
         }
 
@@ -261,13 +261,13 @@ public class ModUtil {
      */
     public static void saveAll(Minecraft instance) {
         UniversalOptions.UNIVERSAL.save();
-        if (uoptions().multiServerConfigs) {
+        if (uoptions().main.multiServerConfigs) {
             CONTINUE = true;
         }
         if (instance.getCurrentServer() != null && instance.getCurrentServer().ip != null) {
-            if (isServerBlacklisted(instance) && !uoptions().multiServerConfigs && !UNLOADED) {
+            if (isServerBlacklisted(instance) && !uoptions().main.multiServerConfigs && !UNLOADED) {
                 unload(true);
-            } else if (!uoptions().multiServerConfigs && !UNLOADED) {
+            } else if (!uoptions().main.multiServerConfigs && !UNLOADED) {
                 unload(true);
             }
             if (CONTINUE) {
@@ -328,7 +328,7 @@ public class ModUtil {
             return false;
         }
 
-        return uoptions().blacklistedServers.contains(instance.getCurrentServer().ip);
+        return uoptions().main.blacklistedServers.contains(instance.getCurrentServer().ip);
     }
 
     /**

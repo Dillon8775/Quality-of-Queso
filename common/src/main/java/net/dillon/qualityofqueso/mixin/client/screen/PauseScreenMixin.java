@@ -47,10 +47,10 @@ public class PauseScreenMixin extends Screen {
                 if (!(this.minecraft.getCurrentServer() == null)) {
                     String address = this.getServerAddress();
                     this.blacklistServerButton = this.addRenderableWidget(Button.builder(ModTexts.BLANK, button -> {
-                        if (uoptions().blacklistedServers.contains(address)) {
-                            uoptions().blacklistedServers.remove(address);
+                        if (uoptions().main.blacklistedServers.contains(address)) {
+                            uoptions().main.blacklistedServers.remove(address);
                         } else {
-                            uoptions().blacklistedServers.add(address);
+                            uoptions().main.blacklistedServers.add(address);
                         }
                         saveAll(this.minecraft);
                     }).bounds(this.width / 2 + 106, this.height / 4 + 96 - 16, 20, 20).build());
@@ -108,6 +108,6 @@ public class PauseScreenMixin extends Screen {
      */
     @Unique
     private boolean isServerBlacklisted(String serverAddress) {
-        return uoptions().blacklistedServers.contains(serverAddress);
+        return uoptions().main.blacklistedServers.contains(serverAddress);
     }
 }

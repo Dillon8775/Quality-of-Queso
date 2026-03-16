@@ -30,7 +30,7 @@ public class ClientEvents {
     // Load multi-server config
     @SubscribeEvent
     public static void onClientJoin(ClientPlayerNetworkEvent.LoggingIn event) {
-        if (uoptions().multiServerConfigs) {
+        if (uoptions().main.multiServerConfigs) {
             ModUtil.LOADED = true;
             loadServerConfig();
         }

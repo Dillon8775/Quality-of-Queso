@@ -1,5 +1,6 @@
 package net.dillon.qualityofqueso.mixin.client.screen;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
@@ -52,6 +53,24 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
     }
 
     /**
+     * Allows pressing of any minecraft hotbar keybind to unfocus search bar and bring item into inventory.
+     */
+    @Inject(method = "keyPressed", at = @At(value = "HEAD"), cancellable = true)
+    private void unfocusSearchBox(KeyEvent event, CallbackInfoReturnable<Boolean> cir) {
+        if (!modEnabled(this.minecraft) || selectedTab.getType() != CreativeModeTab.Type.SEARCH || this.hoveredSlot == null || !this.hoveredSlot.hasItem() || this.searchBox == null || !this.searchBox.isFocused()) {
+            return;
+        }
+
+        for (int i = 0; i < 9; i++) {
+            if (Minecraft.getInstance().options.keyHotbarSlots[i].matches(event)) {
+                this.ignoreTextInput = true;
+                this.searchBox.setFocused(true);
+                cir.setReturnValue(super.keyPressed(event));
+            }
+        }
+    }
+
+    /**
 	 * Allow typing in creative menu regardless of what menu.
 	 */
     @Overwrite
@@ -60,7 +79,17 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
             return false;
         } else {
             if (modEnabled(this.minecraft) && options().searching.quickSearch) {
-                this.selectTab(CreativeModeTabs.searchTab());
+                if (this.hoveredSlot != null && this.hoveredSlot.hasItem() && this.searchBox.isFocused()) {
+                    for (int i = 0; i < 9; i++) {
+                        if (Minecraft.getInstance().options.keyHotbarSlots[i].consumeClick()) {
+                            System.out.println("ok");
+                            this.searchBox.setFocused(false);
+                            return true;
+                        }
+                    }
+                } else {
+                    this.selectTab(CreativeModeTabs.searchTab());
+                }
             }
             String s = this.searchBox.getValue();
             if (this.searchBox.charTyped(input)) {

@@ -33,7 +33,11 @@ public class ConditionalMixinPlugin implements IMixinConfigPlugin {
      * Returns client-side mixins that should not apply based on certain conditions.
      */
     private boolean shouldNotApply(String mixinClassName) {
-        if (!UniversalOptions.UNIVERSAL.getInstance().applyFogFunction && mixinClassName.equals("net.dillon.qualityofqueso.mixin.render.FogRendererMixin")) {
+        if (!UniversalOptions.UNIVERSAL.getInstance().functions.applyFog && mixinClassName.equals("net.dillon.qualityofqueso.mixin.render.FogRendererMixin")) {
+            return true;
+        }
+        if (!UniversalOptions.UNIVERSAL.getInstance().functions.applyFovEffects &&
+                (mixinClassName.equals("net.dillon.qualityofqueso.mixin.client.util.AbstractClientPlayerMixin") || mixinClassName.equals("net.dillon.qualityofqueso.mixin.render.CameraMixin"))) {
             return true;
         }
         return false;

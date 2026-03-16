@@ -1,7 +1,7 @@
 package net.dillon.qualityofqueso.mixin;
 
 import net.dillon.qualityofqueso.option.instance.UniversalOptions;
-import net.neoforged.fml.loading.FMLLoader;
+import net.dillon.qualityofqueso.util.ModUtil;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 
@@ -14,14 +14,29 @@ import java.util.Set;
 public class ConditionalMixinPlugin implements IMixinConfigPlugin {
 
     /**
-     * Determines whether the {@code BackgroundRendererMixin} should be applied.
+     * Determines whether certain mixins should be applied.
      */
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-        if (FMLLoader.getCurrent().getLoadingModList().getModFileById("simplekeybinds") != null || !UniversalOptions.UNIVERSAL.getInstance().applyFogFunction) {
-            return !mixinClassName.equals("net.dillon.qualityofqueso.mixin.client.render.FogRendererMixin");
+        boolean bl = this.shouldNotApply(mixinClassName);
+        if (bl) {
+            ModUtil.warn("Skipping mixin " + mixinClassName + " for target " + targetClassName + " because it should not be applied.");
         }
-        return true;
+        return !bl;
+    }
+
+    /**
+     * Returns client-side mixins that should not apply based on certain conditions.
+     */
+    private boolean shouldNotApply(String mixinClassName) {
+        if (!UniversalOptions.UNIVERSAL.getInstance().functions.applyFog && mixinClassName.equals("net.dillon.qualityofqueso.mixin.render.FogRendererMixin")) {
+            return true;
+        }
+        if (!UniversalOptions.UNIVERSAL.getInstance().functions.applyFovEffects &&
+                (mixinClassName.equals("net.dillon.qualityofqueso.mixin.client.util.AbstractClientPlayerMixin") || mixinClassName.equals("net.dillon.qualityofqueso.mixin.render.CameraMixin"))) {
+            return true;
+        }
+        return false;
     }
 
     // Other methods...

@@ -9,9 +9,18 @@ import java.util.List;
  * A separate option instance, which is not affected by server-configs (client-side only).
  */
 public class UniversalOptions {
-    public boolean applyFogFunction = true;
-    public boolean multiServerConfigs = false;
-    public List<String> blacklistedServers = new ArrayList<>();
+    public Main main = new Main();
+    public Functions functions = new Functions();
+
+    public static class Main {
+        public boolean multiServerConfigs = false;
+        public List<String> blacklistedServers = new ArrayList<>();
+    }
+
+    public static class Functions {
+        public boolean applyFog = true;
+        public boolean applyFovEffects = true;
+    }
 
     public static final ModOptionsHandler UNIVERSAL = new ModOptionsHandler();
     

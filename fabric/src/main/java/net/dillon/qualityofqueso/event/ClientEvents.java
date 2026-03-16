@@ -33,7 +33,7 @@ public class ClientEvents {
      */
     public static void registerClientEvents() {
         ClientPlayConnectionEvents.JOIN.register((handler, packet, client) -> {
-            if (uoptions().multiServerConfigs) {
+            if (uoptions().main.multiServerConfigs) {
                 ModUtil.LOADED = true;
                 loadServerConfig();
             }
