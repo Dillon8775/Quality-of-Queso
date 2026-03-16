@@ -12,10 +12,11 @@
 <img src="https://cdn.modrinth.com/data/cached_images/3f52366fa307bc8b96964e580ea29c0c28c1fc9a.png" width="200" height="200" alt="QoQ logo">
 
 ## Welcome to Quality of Queso!
-### A quality-of-life Minecraft mod, adding various different QoL features, including:
+### A client-side quality-of-life Minecraft mod, adding various different QoL features, including:
 
 - An easy-to-use [search bar](https://quality-of-queso.fandom.com/wiki/Search_Bar) for your inventory and chests
 - Precise [inventory management](https://quality-of-queso.fandom.com/wiki/Transferring)
+- [Container filtering](https://quality-of-queso.fandom.com/wiki/Container_Filtering) and [sorting](https://quality-of-queso.fandom.com/wiki/Container_Sorting)
 - Display your [item count near](https://quality-of-queso.fandom.com/wiki/Item_Count) your hotbar
 - See your [arrow count](https://quality-of-queso.fandom.com/wiki/Item_Count#Arrow_Count) when holding/shooting a bow
 - [Armor status](https://quality-of-queso.fandom.com/wiki/Armor_Status)
