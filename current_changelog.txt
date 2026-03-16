@@ -95,7 +95,7 @@ Bug Fixes and Optimizations:
 - Fixed bug where "Prevent E from typing" only applies to the E key - if a player has the inventory key bounded to a different key other than E, it works appropriately now.
 - Fixed bug where if "Inventory Searching" is OFF, it doesn't auto-focus into the recipe book search field.
 - Fixed armor status display timers being wrong.
-- Fixed drastic frame drops when tag searching (frames still drop a bit when searching multiple tags).
+- Fixed drastic frame dropping when tag searching.
 - Fixed bug where throwing an item on a server doesn't display item count.
 - Fixed bug where "Mob Hit Ding" doesn't work on servers.
 - Fixed bug where right-clicking a container search field to clear it makes it start acting weird.

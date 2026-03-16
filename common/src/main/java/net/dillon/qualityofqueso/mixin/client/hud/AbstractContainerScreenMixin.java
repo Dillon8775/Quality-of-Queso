@@ -18,11 +18,7 @@ import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderSet;
-import net.minecraft.core.Registry;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.EnchantmentTags;
@@ -112,10 +108,6 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
     private boolean excludedAll = false;
     @Unique
     private boolean disableFillWhatsPresentOnClose = false;
-    @Unique
-    private static final List<TagKey<Item>> cachedTagResults = new ArrayList<>();
-    @Unique
-    private static String lastTagSearch = "";
 
     public AbstractContainerScreenMixin(Component title) {
         super(title);
@@ -531,26 +523,17 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             if (term.startsWith("#")) {
                 String tagSearch = term.substring(1).toLowerCase();
 
-                if (!tagSearch.equals(lastTagSearch)) {
-                    lastTagSearch = tagSearch;
-                    cachedTagResults.clear();
-
-                    RegistryAccess lookup = Minecraft.getInstance().level.registryAccess();
-                    Registry<Item> itemRegistry = lookup.lookupOrThrow(Registries.ITEM);
-
-                    for (HolderSet.Named<Item> tag : itemRegistry.getTags().toList()) {
-                        Identifier location = tag.key().location();
-
-                        if (location.getPath().toLowerCase().contains(tagSearch)
-                                || location.toString().toLowerCase().contains(tagSearch)) {
-
-                            cachedTagResults.add(tag.key());
-                        }
-                    }
+                // Return false if tag list is empty
+                if (stack.tags().toList().isEmpty()) {
+                    return false;
                 }
 
-                for (TagKey<Item> tag : cachedTagResults) {
-                    if (stack.is(tag)) {
+                // Then search through all item's tags
+                for (TagKey<Item> tag : stack.tags().toList()) {
+                    Identifier location = tag.location();
+
+                    if (location.getPath().toLowerCase().contains(tagSearch)
+                            || location.toString().toLowerCase().contains(tagSearch)) {
                         return true;
                     }
                 }
@@ -1012,23 +995,17 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                 return;
             }
 
-            Registry<Item> itemRegistry = this.minecraft.level.registryAccess().lookupOrThrow(Registries.ITEM);
-
-            boolean foundTags = false;
-            // Loop through all tags loaded (vanilla and modded)
-            for (HolderSet.Named<Item> tag : itemRegistry.getTags().toList()) {
-                if (stack.is(tag.key()) && !isFabricTag(tag.key().location().toString())) {
-                    // Add each tag to the query hovered
-                    String location = tag.key().location().getNamespace().equals("c") ? "fabric:" + tag.key().location().getPath() : tag.key().location().toString();
-                    String tagString = "#" + location;
-                    originalTooltip.add(1, Component.literal(tagString).withStyle(ChatFormatting.LIGHT_PURPLE));
-                    foundTags = true;
-                }
+            // Loop through item's tags
+            for (TagKey<Item> tag : stack.tags().toList()) {
+                // Add each tag to the query hovered
+                String location = tag.location().getNamespace().equals("c") ? "fabric:" + tag.location().getPath() : tag.location().toString();
+                String tagString = "#" + location;
+                originalTooltip.add(1, Component.literal(tagString).withStyle(ChatFormatting.LIGHT_PURPLE));
             }
 
             // If tags were found in the query add it to the tooltip and render
             // cancel out original method to prevent overlapping tooltips
-            if (!foundTags) {
+            if (stack.tags().toList().isEmpty()) {
                 originalTooltip.add(1, Component.translatable("qualityofqueso.gui.no_tags_found").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
             }
             graphics.setTooltipForNextFrame(this.font, originalTooltip, Optional.empty(), x, y);

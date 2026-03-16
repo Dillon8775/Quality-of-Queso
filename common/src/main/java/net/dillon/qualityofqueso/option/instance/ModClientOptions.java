@@ -87,23 +87,26 @@ public class ModClientOptions {
 
         public boolean helpfulTooltips = true;
         public boolean preventEFromTyping = false;
-        public boolean searchInventory = true;
+
         public boolean showButtonShortcuts = true;
+        public boolean searchInventory = true;
+
         public boolean autoCloseRecipeBook = true;
         public boolean autoFocusIntoRecipeBook = true;
-        public boolean useOldSearchBarTexture = false;
 
         public boolean onlyCountMatchingItems = false;
         public boolean displayTotalWithStacks = false;
 
+        public boolean useOldSearchBarTexture = false;
+        public boolean armorSlotOutlines = true;
+
         public boolean perpendicularQuickMoving = false;
         public MoveItemsIf moveItemsIf = MoveItemsIf.CAN_MOVE_AT_ALL;
 
-        public int elytraAlarmSoundDelay = 1;
         public boolean ignoreFabricTags = false;
+        public int elytraAlarmSoundDelay = 1;
 
         public QoQButtons qoqButtons = QoQButtons.EVERYWHERE;
-
     }
 
     public static final ModOptionsHandler CLIENT = new ModOptionsHandler();

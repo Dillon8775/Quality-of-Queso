@@ -69,7 +69,7 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
         }).build());
         buttons.add(this.fovEffects);
         this.wiki = this.addWidget(Button.builder(Component.translatable("qualityofqueso.gui.wiki"),
-            ConfirmLinkScreen.confirmLink(this, "https://quality-of-queso.fandom.com/wiki/Quality_of_Queso_Wiki", false)
+            ConfirmLinkScreen.confirmLink(this, ModUtil.WIKI_LINK, false)
         ).build());
         buttons.add(this.wiki);
 

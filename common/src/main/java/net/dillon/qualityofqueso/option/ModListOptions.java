@@ -1,6 +1,7 @@
 package net.dillon.qualityofqueso.option;
 
 import net.dillon.qualityofqueso.keybind.ModKeybinds;
+import net.dillon.qualityofqueso.option.instance.ModClientOptions;
 import net.dillon.qualityofqueso.util.ModTexts;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
@@ -309,7 +310,10 @@ public class ModListOptions {
 
     public static OptionInstance<Boolean> fortniteBattlePass() {
         return OptionInstance.createBoolean("qualityofqueso.options.fortnite_battle_pass", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.fortnite_battle_pass.tooltip")),
-                ON_OFF_TEXT, options().misc.fortniteBattlePass, value -> options().misc.fortniteBattlePass = value);
+                ON_OFF_TEXT, options().misc.fortniteBattlePass, value -> {
+            options().misc.fortniteBattlePass = value;
+            ModClientOptions.CLIENT.save();
+        });
     }
     // end of misc options
 
@@ -358,6 +362,11 @@ public class ModListOptions {
     public static OptionInstance<Boolean> useOldSearchBarTexture() {
         return OptionInstance.createBoolean("qualityofqueso.options.use_old_search_bar_texture", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.use_old_search_bar_texture.tooltip")),
                 YES_NO_TEXT, options().accessibility.useOldSearchBarTexture, value -> options().accessibility.useOldSearchBarTexture = value);
+    }
+
+    public static OptionInstance<Boolean> armorSlotOutlines() {
+        return OptionInstance.createBoolean("qualityofqueso.options.armor_slot_outlines", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.armor_slot_outlines.tooltip")),
+                ON_OFF_TEXT, options().accessibility.armorSlotOutlines, value -> options().accessibility.armorSlotOutlines = value);
     }
 
     public static OptionInstance<Boolean> onlyCountMatchingItems() {

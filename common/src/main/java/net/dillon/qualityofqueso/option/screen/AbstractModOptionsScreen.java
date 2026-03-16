@@ -46,7 +46,7 @@ public abstract class AbstractModOptionsScreen extends OptionsSubScreen {
         LinearLayout linearLayout2 = linearLayout.addChild(LinearLayout.horizontal().spacing(8));
         linearLayout2.addChild(
                 Button.builder(Component.translatable("qualityofqueso.gui.learn_more"),
-                        ConfirmLinkScreen.confirmLink(this, "https://modrinth.com/mod/quality-of-queso")).build());
+                        ConfirmLinkScreen.confirmLink(this, ModUtil.WIKI_LINK, false)).build());
         this.doneButton = linearLayout2.addChild(Button.builder(CommonComponents.GUI_DONE, button -> {
             if (Minecraft.getInstance().hasShiftDown()) {
                 Util.getPlatform().openFile(MultiLoader.PLATFORM.getConfigDir().toFile());

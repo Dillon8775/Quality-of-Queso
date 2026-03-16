@@ -42,14 +42,14 @@ public class AccessibilityOptionsScreen extends AbstractModOptionsScreen {
                 ModListOptions.onlyCountMatchingItems(),
                 ModListOptions.displayTotalWithStacks(),
 
-                ModListOptions.tagSorting(),
-                ModListOptions.ignoreFabricTags(),
+                ModListOptions.useOldSearchBarTexture(),
+                ModListOptions.armorSlotOutlines(),
 
                 ModListOptions.perpendicularQuickMoving(),
                 ModListOptions.moveItemsIf(),
 
-                ModListOptions.useOldSearchBarTexture(),
-                ModListOptions.elytraAlarmSoundDelay()
+                ModListOptions.ignoreFabricTags(),
+                ModListOptions.elytraAlarmSoundDelay(),
         };
     }
 
