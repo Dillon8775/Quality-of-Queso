@@ -142,6 +142,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                 this.container = null;
             }
 
+            // Handle tracked containers
             if (ContainerTracker.RETURNING_FROM_PLACEHOLDER_SCREEN) {
                 ContainerTracker.RETURNING_FROM_PLACEHOLDER_SCREEN = false;
                 ContainerTracker.IS_TRACKED_CONTAINER = true;
@@ -168,6 +169,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             }
         }
 
+        // Handle excluded slots
         if (isValidScreen(this.screen) && options().management.saveExcludedSlots && this.container != null) {
             for (int i : this.excludedSlots) {
                 this.excludedSlots.remove(i);
@@ -365,6 +367,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
 
     /**
      * @return if the button should be active.
+     * @param isPlayerInventory means button status is directed towards the transfer inventory button
      */
     @Unique
     private boolean shouldButtonBeActive(boolean isPlayerInventory, @Nullable Inventory playerInventory, boolean applyFillWhatsPresentFilter) {
@@ -698,7 +701,8 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                                 this.getSearchFieldText(),
                                 getManagementButtonX(this.screen, this.imageWidth, this.width, buttons),
                                 getManagementButtonY(this.screen, this.container, this.topPos, this.titleLabelY),
-                                "transfer/container/transfer_container",
+                                "transfer/container/",
+                                "transfer_container",
                                 true,
                                 b -> this.transferItems(true),
                                 () -> !isContainerFull(this.menu, this.container, true) && this.shouldButtonBeActive(false, null)));
@@ -718,7 +722,8 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                                 this.getSearchFieldText(),
                                 getManagementButtonX(this.screen, this.imageWidth, this.width, buttons),
                                 getManagementButtonY(this.screen, this.container, this.topPos, this.titleLabelY),
-                                "transfer/inventory/transfer_inventory",
+                                "transfer/inventory/",
+                                "transfer_inventory",
                                 true,
                                 b -> this.transferItems(false),
                                 () -> !isContainerFull(this.menu, this.container, false) && this.shouldButtonBeActive(true, playerInventory)
@@ -742,7 +747,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                                 this.getSearchFieldText(),
                                 getManagementButtonX(this.screen, this.imageWidth, this.width, buttons),
                                 getManagementButtonY(this.screen, this.container, this.topPos, this.titleLabelY),
-                                "hotbar/include_hotbar",
+                                "include_hotbar",
                                 b -> {
                                     options().management.includeHotbar = !options().management.includeHotbar;
                                     ModClientOptions.CLIENT.save();
@@ -761,7 +766,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                             this.getSearchFieldText(),
                             getManagementButtonX(this.screen, this.imageWidth, this.width, buttons),
                             getManagementButtonY(this.screen, this.container, this.topPos, this.titleLabelY),
-                            "fill_whats_present/fill_whats_present",
+                            "fill_whats_present",
                             b -> {
                                 if (!ContainerTracker.IS_TRACKED_CONTAINER) {
                                     options().management.fillWhatsPreset = !options().management.fillWhatsPreset;
@@ -786,7 +791,8 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                                 this.getSearchFieldText(),
                                 getManagementButtonX(this.screen, this.imageWidth, this.width, buttons),
                                 getManagementButtonY(this.screen, this.container, this.topPos, this.titleLabelY),
-                                "swap/swap",
+                                "swap/",
+                                "swap",
                                 b -> this.trySwap(),
                                 this::canSwap
                         ));
@@ -806,7 +812,8 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                                 this.getSearchFieldText(),
                                 getManagementButtonX(this.screen, this.imageWidth, this.width, buttons),
                                 getManagementButtonY(this.screen, this.container, this.topPos, this.titleLabelY),
-                                "sort/sort",
+                                "sort/",
+                                "sort",
                                 b -> this.trySort(true),
                                 () -> this.canSort(true)
                         ));
@@ -826,7 +833,8 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                                 this.getSearchFieldText(),
                                 getManagementButtonX(this.screen, this.imageWidth, this.width, buttons),
                                 getManagementButtonY(this.screen, this.container, this.topPos, this.titleLabelY),
-                                "quick_drop/quick_drop",
+                                "quick_drop/",
+                                "quick_drop",
                                 b -> this.dropItems(!containerScreen),
                                 () -> (isInventoryScreen(this.screen) ?
                                         isAnySlotFilled(this.menu, true, 9, 36) :
@@ -847,7 +855,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                                 this.getSearchFieldText(),
                                 getManagementButtonX(this.screen, this.imageWidth, this.width, buttons),
                                 getManagementButtonY(this.screen, this.container, this.topPos, this.titleLabelY),
-                                "clear_excluded_slots/clear_excluded_slots",
+                                "clear_excluded_slots",
                                 b -> {
                                     this.excludedSlots.clear();
                                     this.excludedAll = false;
@@ -880,7 +888,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                                 this.getSearchFieldText(),
                                 searchBox.getX() - (inventoryScreen ? -2 : 12),
                                 searchBox.getY() + (inventoryScreen ? 14 : 1),
-                                "transportable/search_transportables",
+                                "search_transportables",
                                 b -> {
                                     options().searching.searchTransportables = !options().searching.searchTransportables;
                                     ModClientOptions.CLIENT.save();

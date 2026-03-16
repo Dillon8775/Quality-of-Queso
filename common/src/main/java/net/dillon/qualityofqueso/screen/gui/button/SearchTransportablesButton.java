@@ -4,6 +4,7 @@ import net.dillon.qualityofqueso.util.HoverSize;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 
@@ -14,18 +15,31 @@ import static net.dillon.qualityofqueso.util.ModUtil.options;
  */
 public class SearchTransportablesButton extends ToggleableButton {
 
-
     public SearchTransportablesButton(AbstractContainerMenu screenHandler, Font font, String searchFieldText, int x, int y, String buttonName, OnPress onPress) {
-        super(screenHandler, font, searchFieldText, x, y, buttonName, onPress,
-                "transportable/include_transportables_button",
-                "transportable/exclude_transportables_button",
-                new String[]{"qualityofqueso.gui.transportable/include_transportables", "qualityofqueso.gui.transportable/exclude_transportables"}
-        );
+        super(screenHandler, font, searchFieldText, x, y, buttonName, onPress);
     }
 
     @Override
-    boolean option() {
+    protected String onTextureId() {
+        return "transportable/include_transportables_button";
+    }
+
+    @Override
+    protected String offTextureId() {
+        return "transportable/exclude_transportables_button";
+    }
+
+    @Override
+    protected boolean option() {
         return options().searching.searchTransportables;
+    }
+
+    @Override
+    protected Component getTooltipToRender() {
+        return Component.translatable(
+                this.option()
+                        ? "qualityofqueso.gui.include_transportables"
+                        : "qualityofqueso.gui.exclude_transportables");
     }
 
     @Override

@@ -49,7 +49,7 @@ import static net.dillon.qualityofqueso.util.GuiUtil.LAST_ARMOR_STACKS;
  * Utility class for the Quality of Queso mod.
  */
 public class ModUtil {
-    public static final Component VERSION = Component.literal("QoQ v1.6").withStyle(ChatFormatting.GOLD);
+    public static final Component VERSION = Component.literal("QoQ " + MultiLoader.PLATFORM.getModVersion()).withStyle(ChatFormatting.GOLD);
     public static final String WIKI_LINK = "https://quality-of-queso.fandom.com/wiki/Quality_of_Queso_Wiki";
     private static final Logger LOGGER = LoggerFactory.getLogger("Quality of Queso");
     public static String SAVED_TEXT = "";
@@ -427,6 +427,10 @@ public class ModUtil {
      * Handles removing fog functionality.
      */
     public static void handleFog(Entity entity, FogType fogtype, FogData fogData) {
+        if (!modEnabled(Minecraft.getInstance())) {
+            return;
+        }
+
         if (entity instanceof LivingEntity livingEntity &&
                 !livingEntity.hasEffect(MobEffects.BLINDNESS) &&
                 !livingEntity.hasEffect(MobEffects.DARKNESS) &&
@@ -441,7 +445,7 @@ public class ModUtil {
                 fogData.environmentalEnd = fogEnd;
             }
             if (!options().fog.allFog ||
-                    ((!options().fog.overworldFog && entity.level().dimension() == Level.OVERWORLD)
+                    ((!options().fog.overworldFog && entity.level().dimension() != Level.NETHER)
                             || (!options().fog.netherFog && entity.level().dimension() == Level.NETHER))) {
                 fogData.renderDistanceEnd = Integer.MAX_VALUE;
                 fogData.environmentalEnd = Integer.MAX_VALUE;

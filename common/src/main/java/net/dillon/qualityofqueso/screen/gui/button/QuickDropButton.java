@@ -10,6 +10,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 
 import java.util.function.Supplier;
 
+import static net.dillon.qualityofqueso.util.ButtonUtil.isInventoryScreen;
 import static net.dillon.qualityofqueso.util.ModUtil.ofQoQ;
 
 /**
@@ -17,26 +18,32 @@ import static net.dillon.qualityofqueso.util.ModUtil.ofQoQ;
  */
 public class QuickDropButton extends TransferButton {
 
-    public QuickDropButton(AbstractContainerMenu screenHandler, Font font, String searchFieldText, int x, int y, String buttonName, OnPress onPress, Supplier<Boolean> canBeActive) {
-        super(screenHandler, font, searchFieldText, x, y, buttonName, true, onPress, canBeActive);
+    public QuickDropButton(AbstractContainerMenu screenHandler, Font font, String searchFieldText, int x, int y, String resourceLocation, String buttonName, OnPress onPress, Supplier<Boolean> canBeActive) {
+        super(screenHandler, font, searchFieldText, x, y, resourceLocation, buttonName, true, onPress, canBeActive);
+    }
+
+    @Override
+    protected String getAppendedTooltip() {
+        return isInventoryScreen(Minecraft.getInstance().screen) ? ".inventory" : super.getAppendedTooltip();
     }
 
     /**
      * Removes the "with stack" option, since it's a vanilla feature we can't work around (for now).
      */
     @Override
-    protected void renderButtonTexture(String id, AbstractWidget buttonReference, GuiGraphicsExtractor context) {
+    protected void renderBaseButtonTexture(String id, AbstractWidget buttonReference, GuiGraphicsExtractor graphics) {
         String transferableString = this.searchFieldText.startsWith("!") ?
                 "_exclude.png" : this.searchFieldText.startsWith("#") ?
                 "_with_tag.png" : this.searchFieldText.startsWith(":") ?
                 "_match.png" : ".png";
-        context.blit(RenderPipelines.GUI_TEXTURED, ofQoQ("textures/gui/button/" + id + transferableString), buttonReference.getX() - 1, buttonReference.getY() - 1, 0.0F, 0.0F, 12, 12, 12, 12);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, ofQoQ("textures/gui/button/" + id + transferableString), buttonReference.getX() - 1, buttonReference.getY() - 1, 0.0F, 0.0F, 12, 12, 12, 12);
+        this.renderHoveredTexture(graphics);
         boolean shortcutKeyPressed = Minecraft.getInstance().hasControlDown() && Minecraft.getInstance().hasAltDown();
         if (shortcutKeyPressed) {
-            ButtonUtil.drawButtonTexture(context, "outline/quick_drop_outline", this);
+            ButtonUtil.drawButtonTexture(graphics, "outline/quick_drop_outline", this);
         }
         if (Minecraft.getInstance().hasShiftDown() && (this.isHovered() || shortcutKeyPressed)) {
-            ButtonUtil.drawButtonTexture(context, "shortcut/quick_drop_one", this);
+            ButtonUtil.drawButtonTexture(graphics, "shortcut/quick_drop_one", this);
         }
     }
 }

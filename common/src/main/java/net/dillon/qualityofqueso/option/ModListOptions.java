@@ -136,11 +136,6 @@ public class ModListOptions {
         return OptionInstance.createBoolean("qualityofqueso.options.drag_sorting", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.drag_sorting.tooltip")),
                 ON_OFF_TEXT, options().management.dragSorting, value -> options().management.dragSorting = value);
     }
-
-    public static OptionInstance<Boolean> saveExcludedSlots() {
-        return OptionInstance.createBoolean("qualityofqueso.options.save_excluded_slots", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.save_excluded_slots.tooltip")),
-                ON_OFF_TEXT, options().management.saveExcludedSlots, value -> options().management.saveExcludedSlots = value);
-    }
     // end of inventory management options
 
     /* ===== */

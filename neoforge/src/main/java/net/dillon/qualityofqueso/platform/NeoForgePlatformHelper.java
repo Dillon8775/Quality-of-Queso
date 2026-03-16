@@ -12,6 +12,11 @@ import java.nio.file.Path;
 public class NeoForgePlatformHelper implements IPlatformHelper {
 
     @Override
+    public String getPlatformName() {
+        return "NeoForged";
+    }
+
+    @Override
     public boolean isModLoaded(String modId) {
         return ModList.get().isLoaded(modId);
     }
@@ -29,10 +34,5 @@ public class NeoForgePlatformHelper implements IPlatformHelper {
     @Override
     public void sendToServer(CustomPacketPayload payload) {
         ClientPacketDistributor.sendToServer(payload);
-    }
-
-    @Override
-    public String getPlatformName() {
-        return "NeoForge";
     }
 }

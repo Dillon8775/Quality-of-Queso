@@ -45,6 +45,7 @@ Drag Sorting Changes:
 - This change was made because it is more useful to select certain slots rather than exclude them, and it's harder to do this when having to use ALT + SHIFT, so now you just have to hold ALT to select slots :).
 - Using the drag sorting feature now hides tooltips from being rendered.
 - Added a button to clear all excluded slots.
+- You can also right-click the button to save excluded slots.
 
 Item Frame Searching Changes:
 - Holding CTRL in item frame search screen to match case no longer works. You must add ":" to the beginning of the query.

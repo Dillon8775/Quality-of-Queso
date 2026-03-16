@@ -1,6 +1,7 @@
 package net.dillon.qualityofqueso.screen.gui.button;
 
 import net.minecraft.client.gui.Font;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 
 import static net.dillon.qualityofqueso.util.ModUtil.options;
@@ -11,15 +12,30 @@ import static net.dillon.qualityofqueso.util.ModUtil.options;
 public class IncludeHotbarButton extends ToggleableButton {
 
     public IncludeHotbarButton(AbstractContainerMenu screenHandler, Font font, String searchFieldText, int x, int y, String buttonName, OnPress onPress) {
-        super(screenHandler, font, searchFieldText, x, y, buttonName, onPress,
-                "hotbar/include_hotbar_button",
-                "hotbar/exclude_hotbar_button",
-                new String[]{"qualityofqueso.gui.hotbar/include_hotbar", "qualityofqueso.gui.hotbar/exclude_hotbar"}
-        );
+        super(screenHandler, font, searchFieldText, x, y, buttonName, onPress);
     }
 
     @Override
-    boolean option() {
+    protected String onTextureId() {
+        return "hotbar/include_hotbar_button";
+    }
+
+    @Override
+    protected String offTextureId() {
+        return "hotbar/exclude_hotbar_button";
+    }
+
+    @Override
+    protected boolean option() {
         return options().management.includeHotbar;
+    }
+
+    @Override
+    protected Component getTooltipToRender() {
+        return Component.translatable(
+                this.option()
+                        ? "qualityofqueso.gui.include_hotbar"
+                        : "qualityofqueso.gui.exclude_hotbar"
+        );
     }
 }

@@ -222,7 +222,7 @@ public class FilterItemsScreen extends Screen {
         graphics.blit(RenderPipelines.GUI_TEXTURED, CHEST_TEXTURE, panelX, panelY, 0, 0, GUI_WIDTH, TOP_BACKGROUND_HEIGHT, 256, 256);
         graphics.blit(RenderPipelines.GUI_TEXTURED, CHEST_TEXTURE, panelX, panelY + TOP_BACKGROUND_HEIGHT, 0, 126, GUI_WIDTH, BOTTOM_BACKGROUND_HEIGHT, 256, 256);
 
-        graphics.text(this.font, Component.translatable("qualityofqueso.gui.fill_whats_present/placeholder_editor"), panelX + 8, panelY + 6, -12566464, false);
+        graphics.text(this.font, Component.translatable("qualityofqueso.gui.placeholder_editor"), panelX + 8, panelY + 6, -12566464, false);
         graphics.text(this.font, Component.translatable("container.inventory"), panelX + 8, panelY + (GUI_HEIGHT - 94), -12566464, false);
 
         for (int row = 0; row < PLACEHOLDER_ROWS; row++) {

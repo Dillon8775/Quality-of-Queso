@@ -15,8 +15,6 @@ public class InventoryManagementOptionsScreen extends AbstractModOptionsScreen {
     protected OptionInstance<?>[] options() {
         return new OptionInstance[]{
                 ModListOptions.dragSorting(),
-                ModListOptions.saveExcludedSlots(),
-
                 ModListOptions.tagSorting(),
         };
     }

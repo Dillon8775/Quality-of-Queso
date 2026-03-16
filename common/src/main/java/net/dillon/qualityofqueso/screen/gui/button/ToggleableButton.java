@@ -1,8 +1,6 @@
 package net.dillon.qualityofqueso.screen.gui.button;
 
 import net.dillon.qualityofqueso.util.ButtonUtil;
-import net.dillon.qualityofqueso.util.ContainerTracker;
-import net.dillon.qualityofqueso.util.ModTexts;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.sounds.SoundManager;
@@ -16,69 +14,40 @@ import static net.dillon.qualityofqueso.util.ModUtil.options;
  * A class for the include hotbar button and transportables button.
  */
 public abstract class ToggleableButton extends TransferButton {
-    private final String on;
-    private final String off;
-    private final String[] tooltip;
 
-    public ToggleableButton(AbstractContainerMenu screenHandler, Font font, String searchFieldText, int x, int y, String buttonName, OnPress onPress, String on, String off, String[] tooltip) {
-        super(screenHandler, font, searchFieldText, x, y, buttonName, false, onPress);
-        this.on = on;
-        this.off = off;
-        this.tooltip = tooltip;
+    public ToggleableButton(AbstractContainerMenu screenHandler, Font font, String searchFieldText, int x, int y, String buttonName, OnPress onPress) {
+        super(screenHandler, font, searchFieldText, x, y, null, buttonName, false, onPress);
     }
+
+    /**
+     * @return the toggled on texture to use.
+     */
+    protected abstract String onTextureId();
+
+    /**
+     * @return the toggled off texture to use.
+     */
+    protected abstract String offTextureId();
 
     /**
      * @return The option to go off of.
      */
-    abstract boolean option();
+    protected abstract boolean option();
+
+    /**
+     * @return the base tooltip to render.
+     */
+    @Override
+    protected abstract Component getTooltipToRender();
 
     /**
      * Renders the textures and tooltips for the button.
      */
     @Override
     protected void extractContents(GuiGraphicsExtractor context, int mouseX, int mouseY, float deltaTicks) {
-        this.renderButtonTexture(this.option() ? this.on : this.off, this, context);
-        if (this.isHovered()) {
-            String name;
-            switch (this.getHoverSize()) {
-                case BIG -> name = "big_hovered";
-                default -> name = "basic_hovered";
-            }
-            ButtonUtil.drawButtonTexture(context, "hovered/" + name, this);
-
-            if (options().accessibility.helpfulTooltips) {
-                boolean fillWhatsPresentButton = this.tooltip.length > 2;
-                if (fillWhatsPresentButton && ContainerTracker.IS_TRACKED_CONTAINER) {
-                    String filterModeKey = ContainerTracker.CURRENT_FILTER_MODE.tag()
-                            ? "qualityofqueso.gui.fill_whats_present/tag_filtered"
-                            : "qualityofqueso.gui.fill_whats_present/item_filtered";
-                    ButtonUtil.drawTooltip(
-                            Component.translatable(
-                                    "qualityofqueso.gui.fill_whats_present/filtered_mode",
-                                    Component.translatable(filterModeKey).copy()
-                                            .withColor(ContainerTracker.CURRENT_FILTER_MODE.tag() ? ModTexts.TAG_COLOR : ModTexts.ITEM_COLOR),
-                                    Component.translatable("qualityofqueso.gui.fill_whats_present/right_click_switch")
-                            ),
-                            context, this.font, mouseX, mouseY
-                    );
-                } else {
-                    ButtonUtil.drawTooltip(this.option() ?
-                            Component.translatable(this.tooltip[fillWhatsPresentButton ? 1 : 0])
-                                    .copy().append(fillWhatsPresentButton
-                                            ? Component.translatable("qualityofqueso.gui.fill_whats_present/disable_fill_whats_present")
-                                            : ModTexts.BLANK)
-                                    .copy().append(fillWhatsPresentButton
-                                            ? Component.translatable("qualityofqueso.gui.fill_whats_present/mark_container")
-                                            : ModTexts.BLANK):
-                            Component.translatable(this.tooltip[fillWhatsPresentButton ? 2 : 1])
-                                    .copy().append(fillWhatsPresentButton
-                                            ? Component.translatable("qualityofqueso.gui.fill_whats_present/disable_move_anything")
-                                            : ModTexts.BLANK)
-                                    .copy().append(fillWhatsPresentButton
-                                            ? Component.translatable("qualityofqueso.gui.fill_whats_present/mark_container")
-                                            : ModTexts.BLANK), context, this.font, mouseX, mouseY);
-                }
-            }
+        this.renderBaseButtonTexture(this.option() ? this.onTextureId() : this.offTextureId(), this, context);
+        if (this.isHovered() && options().accessibility.helpfulTooltips) {
+            ButtonUtil.drawTooltip(this.getTooltipToRender(), context, this.font, mouseX, mouseY);
         }
     }
 

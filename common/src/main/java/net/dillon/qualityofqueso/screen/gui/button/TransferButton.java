@@ -44,18 +44,20 @@ public class TransferButton extends Button {
     private final boolean transferrableButton;
     protected final String searchFieldText;
     protected final Font font;
+    protected final String resourceLocation;
     protected final String buttonName;
     protected final Supplier<Boolean> canBeActive;
 
     /**
      * Constructs a default transfer button.
      */
-    public TransferButton(AbstractContainerMenu screenHandler, Font font, String searchFieldText, int x, int y, String buttonName, boolean transferrableButton, OnPress onPress) {
+    public TransferButton(AbstractContainerMenu screenHandler, Font font, String searchFieldText, int x, int y, String resourceLocation, String buttonName, boolean transferrableButton, OnPress onPress) {
         super(x, y, 10, 10, ModTexts.BLANK, onPress, DEFAULT_NARRATION);
         this.screenHandler = screenHandler;
         this.font = font;
         this.searchFieldText = searchFieldText;
         this.transferrableButton = transferrableButton;
+        this.resourceLocation = resourceLocation;
         this.buttonName = buttonName;
         this.canBeActive = () -> this.active;
     }
@@ -63,13 +65,14 @@ public class TransferButton extends Button {
     /**
      * Constructs a default transfer button with a boolean supplier, determining if the button can be active or not.
      */
-    public TransferButton(AbstractContainerMenu screenHandler, Font font, String searchFieldText, int x, int y, String buttonName, boolean transferrableButton, OnPress onPress, Supplier<Boolean> canBeActive) {
+    public TransferButton(AbstractContainerMenu screenHandler, Font font, String searchFieldText, int x, int y, String resourceLocation, String buttonName, boolean transferrableButton, OnPress onPress, Supplier<Boolean> canBeActive) {
         super(x, y, 10, 10, ModTexts.BLANK, onPress, DEFAULT_NARRATION);
-        this.buttonName = buttonName;
-        this.transferrableButton = transferrableButton;
         this.screenHandler = screenHandler;
         this.font = font;
         this.searchFieldText = searchFieldText;
+        this.resourceLocation = resourceLocation;
+        this.buttonName = buttonName;
+        this.transferrableButton = transferrableButton;
         this.canBeActive = canBeActive;
     }
 
@@ -89,10 +92,9 @@ public class TransferButton extends Button {
     }
 
     /**
-     * Renders a transfer button texture.
+     * @return the appended texture ID to use for the button.
      */
-    @Unique
-    protected void renderButtonTexture(String id, AbstractWidget buttonReference, GuiGraphicsExtractor context) {
+    protected String getAppendedTexture() {
         String transferableString = !this.screenHandler.getCarried().isEmpty() ?
                 "_with_stack.png" : this.searchFieldText.startsWith("!") ?
                 "_exclude.png" : this.searchFieldText.startsWith("#") ?
@@ -105,8 +107,38 @@ public class TransferButton extends Button {
                 appended = ".png";
             }
         }
+        return appended;
+    }
+
+    /**
+     * Renders the button texture.
+     */
+    private void renderButtonTexture(String id, AbstractWidget buttonReference, GuiGraphicsExtractor graphics) {
         int xy = getTransferButtonXY(this);
-        context.blit(RenderPipelines.GUI_TEXTURED, ofQoQ("textures/gui/button/" + id + appended), buttonReference.getX() - 1, buttonReference.getY() - 1, 0.0F, 0.0F, xy, xy, xy, xy);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, ofQoQ("textures/gui/button/" + id + this.getAppendedTexture()), buttonReference.getX() - 1, buttonReference.getY() - 1, 0.0F, 0.0F, xy, xy, xy, xy);
+        this.renderHoveredTexture(graphics);
+    }
+
+    /**
+     * Renders the hovered button texture.
+     */
+    protected void renderHoveredTexture(GuiGraphicsExtractor graphics) {
+        if (this.canBeActive.get() && this.isHovered()) {
+            String name;
+            switch (this.getHoverSize()) {
+                case BIG -> name = "big_hovered";
+                default -> name = "basic_hovered";
+            }
+            ButtonUtil.drawButtonTexture(graphics, "hovered/" + name, this);
+        }
+    }
+
+    /**
+     * Renders a transfer button texture.
+     */
+    @Unique
+    protected void renderBaseButtonTexture(String id, AbstractWidget buttonReference, GuiGraphicsExtractor graphics) {
+        this.renderButtonTexture(id, buttonReference, graphics);
         if (Minecraft.getInstance().hasControlDown()) {
             boolean inventoryButton = this.buttonName.equals("transfer_inventory");
             boolean containerButton = this.buttonName.equals("transfer_container");
@@ -114,13 +146,27 @@ public class TransferButton extends Button {
             if (validName) {
                 if (options().accessibility.showButtonShortcuts) {
                     if (inventoryButton && key(ModKeybinds.MOVE_INVENTORY) == ModKeybinds.MOVE_INVENTORY.getDefaultKey()) {
-                        ButtonUtil.drawButtonTexture(context, "shortcut/transfer_inventory_button_shortcut_key", this);
+                        ButtonUtil.drawButtonTexture(graphics, "shortcut/transfer_inventory_button_shortcut_key", this);
                     } else if (containerButton && key(ModKeybinds.MOVE_CONTAINER) == ModKeybinds.MOVE_CONTAINER.getDefaultKey()) {
-                        ButtonUtil.drawButtonTexture(context, "shortcut/transfer_container_button_shortcut_key", this);
+                        ButtonUtil.drawButtonTexture(graphics, "shortcut/transfer_container_button_shortcut_key", this);
                     }
                 }
             }
         }
+    }
+
+    /**
+     * @return the appended tooltip to use to render.
+     */
+    protected String getAppendedTooltip() {
+        return "";
+    }
+
+    /**
+     * @return the appended tooltip to use to draw.
+     */
+    protected Component getTooltipToRender() {
+        return Component.translatable("qualityofqueso.gui." + this.buttonName + "_button" + this.getAppendedTooltip());
     }
 
     /**
@@ -131,12 +177,9 @@ public class TransferButton extends Button {
         this.active = this.canBeActive.get();
 
         if (this.canBeActive.get()) {
-            this.renderButtonTexture(this.buttonName + "_button", this, graphics);
-            if (this.isHovered()) {
-                ButtonUtil.drawButtonTexture(graphics, "hovered/basic_hovered", this);
-            }
+            this.renderBaseButtonTexture(this.resourceLocation + this.buttonName + "_button", this, graphics);
         } else {
-            this.renderButtonTexture(this.buttonName + "_button_inactive", this, graphics);
+            this.renderBaseButtonTexture(this.resourceLocation + this.buttonName + "_button_inactive", this, graphics);
         }
 
         if (this.isHovered() && this.active && options().accessibility.helpfulTooltips) {
@@ -151,7 +194,6 @@ public class TransferButton extends Button {
                 }
             }
             ItemStack cursorStack = this.screenHandler.getCarried();
-            String appended = isInventoryScreen(Minecraft.getInstance().screen) && this.buttonName.equals("quick_drop/quick_drop") ? ".inventory" : "";
             if (this.transferrableButton && !cursorStack.isEmpty()) {
                 String tooltip = "_button.with_cursor_stack";
                 Component itemName = cursorStack.getItemName();
@@ -178,24 +220,14 @@ public class TransferButton extends Button {
                 ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui." + this.buttonName + tooltip, itemName), graphics, this.font, mouseX, mouseY);
             } else if (this.transferrableButton && !this.searchFieldText.isEmpty()) {
                 ButtonUtil.drawTooltip(this.searchFieldText.startsWith("#") ?
-                        Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query.tag" + appended, this.searchFieldText.substring(1)) :
+                        Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query.tag" + this.getAppendedTooltip(), this.searchFieldText.substring(1)) :
                         this.searchFieldText.startsWith("!") ?
-                                Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query.exclude" + appended, this.searchFieldText.substring(1)) :
+                                Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query.exclude" + this.getAppendedTooltip(), this.searchFieldText.substring(1)) :
                                 this.searchFieldText.startsWith(":") ?
-                                        Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query.match" + appended, this.searchFieldText.substring(1)) :
-                                        Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query" + appended, this.searchFieldText), graphics, this.font, mouseX, mouseY);
+                                        Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query.match" + this.getAppendedTooltip(), this.searchFieldText.substring(1)) :
+                                        Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query" + this.getAppendedTooltip(), this.searchFieldText), graphics, this.font, mouseX, mouseY);
             } else {
-                Component component;
-                if (this.buttonName.equals("sort/sort")) {
-                    component = Component.translatable("qualityofqueso.gui." + this.buttonName + "_button",
-                            options().management.tagSorting
-                                    ? Component.literal("by ").append(Component.literal("tag").withColor(ModTexts.TAG_COLOR))
-                                    : Component.literal("alphabetically").withColor(ModTexts.ITEM_COLOR)
-                    );
-                } else {
-                    component = Component.translatable("qualityofqueso.gui." + this.buttonName + "_button" + appended);
-                }
-                ButtonUtil.drawTooltip(component, graphics, this.font, mouseX, mouseY);
+                ButtonUtil.drawTooltip(this.getTooltipToRender(), graphics, this.font, mouseX, mouseY);
             }
         }
     }

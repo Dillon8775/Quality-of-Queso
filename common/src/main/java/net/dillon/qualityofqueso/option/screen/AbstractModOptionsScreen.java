@@ -70,19 +70,17 @@ public abstract class AbstractModOptionsScreen extends OptionsSubScreen {
      * Renders the tooltip for the done button.
      */
     @Override
-    public void extractRenderState(GuiGraphicsExtractor context, int mouseX, int mouseY, float deltaTicks) {
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks) {
         if (this.doneButton != null && this.doneButton.isHovered()) {
             String tooltip = Minecraft.getInstance().hasShiftDown() ? "qualityofqueso.gui.open_config_directory" : "qualityofqueso.gui.open_config_directory.help";
-            ButtonUtil.drawTooltip(Component.translatable(tooltip), context, this.font, mouseX, mouseY);
+            ButtonUtil.drawTooltip(Component.translatable(tooltip), graphics, this.font, mouseX, mouseY);
         }
 
-        int leftSide = this.width / 2 - 155;
-        int rightSide = leftSide + 160;
-        int farRightSide = rightSide + 277;
-        int height = this.height - 20;
-        context.centeredText(this.font, ModUtil.VERSION, farRightSide, height, CommonColors.WHITE);
+        if (this.doneButton != null) {
+            graphics.centeredText(this.font, ModUtil.VERSION, this.width - 35, this.doneButton.getY() + 5, CommonColors.WHITE);
+        }
 
-        super.extractRenderState(context, mouseX, mouseY, deltaTicks);
+        super.extractRenderState(graphics, mouseX, mouseY, deltaTicks);
     }
 
     /**

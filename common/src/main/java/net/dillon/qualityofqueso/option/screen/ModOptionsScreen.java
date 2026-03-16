@@ -18,7 +18,7 @@ import java.util.List;
 import static net.dillon.qualityofqueso.util.ModUtil.coptions;
 
 public class ModOptionsScreen extends AbstractModOptionsScreen {
-    private AbstractWidget searchingOptions, inventoryManagementOptions, itemFrameSearchingOptions, openItemFrameSearchGUIOptions, hudOptions, miscOptions, fovEffects, wiki, accessibilityOptions, enableMod, reportBugs, joinDiscord;
+    private AbstractWidget searchingOptions, inventoryManagementOptions, itemFrameSearchingOptions, openItemFrameSearchGUIOptions, hudOptions, fogOptions, fovEffects, miscOptions, accessibilityOptions, enableMod, wiki, askQuestions, reportBugs;
 
     public ModOptionsScreen(Screen parent) {
         super(parent, Component.translatable("qualityofqueso.gui.options.title"));
@@ -52,6 +52,15 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
             this.minecraft.setScreen(new HudOptionsScreen(this));
         }).build());
         buttons.add(this.hudOptions);
+        this.fogOptions = Button.builder(Component.translatable("qualityofqueso.gui.fog_options"), button -> {
+            this.minecraft.setScreen(new FogOptionsScreen(this));
+        }).build();
+        buttons.add(this.fogOptions);
+
+        this.fovEffects = this.addWidget(Button.builder(Component.translatable("qualityofqueso.gui.fov_effects"), button -> {
+            this.minecraft.setScreen(new FOVEffectsScreen(this));
+        }).build());
+        buttons.add(this.fovEffects);
         this.miscOptions = this.addWidget(Button.builder(Component.translatable("qualityofqueso.gui.misc_options"), button -> {
             this.minecraft.setScreen(new MiscOptionsScreen(this));
         }).build());
@@ -64,19 +73,15 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
         this.enableMod = ModListOptions.enableQoQ().createButton(this.options);
         buttons.add(this.enableMod);
 
-        this.fovEffects = this.addWidget(Button.builder(Component.translatable("qualityofqueso.gui.fov_effects"), button -> {
-            this.minecraft.setScreen(new FOVEffectsScreen(this));
-        }).build());
-        buttons.add(this.fovEffects);
         this.wiki = this.addWidget(Button.builder(Component.translatable("qualityofqueso.gui.wiki"),
             ConfirmLinkScreen.confirmLink(this, ModUtil.WIKI_LINK, false)
         ).build());
         buttons.add(this.wiki);
-
-        this.joinDiscord = this.addWidget(Button.builder(Component.translatable("qualityofqueso.gui.ask_questions"),
+        this.askQuestions = this.addWidget(Button.builder(Component.translatable("qualityofqueso.gui.ask_questions"),
                 ConfirmLinkScreen.confirmLink(this, "https://discord.gg/vfqEAn4YFy", false)
         ).build());
-        buttons.add(this.joinDiscord);
+        buttons.add(this.askQuestions);
+
         this.reportBugs = this.addWidget(Button.builder(Component.translatable("qualityofqueso.gui.report_bugs"),
                 ConfirmLinkScreen.confirmLink(this, "https://github.com/Dillon8775/Quality-of-Queso/issues", false)
         ).build());
@@ -108,10 +113,10 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
         if (this.hudOptions.isHovered()) {
             ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.hud_options.tooltip"), graphics, this.font, mouseX, mouseY);
         }
-        if (this.wiki.isHovered()) {
-            ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.wiki.tooltip"), graphics, this.font, mouseX, mouseY);
-        }
         if (ModUtil.options().accessibility.helpfulTooltips) {
+            if (this.fogOptions.isHovered()) {
+                ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.fog_options.tooltip"), graphics, this.font, mouseX, mouseY);
+            }
             if (this.fovEffects.isHovered()) {
                 ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.fov_effects.tooltip"), graphics, this.font, mouseX, mouseY);
             }
@@ -121,11 +126,14 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
             if (this.accessibilityOptions.isHovered()) {
                 ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.accessibility_options.tooltip"), graphics, this.font, mouseX, mouseY);
             }
+            if (this.wiki.isHovered()) {
+                ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.wiki.tooltip"), graphics, this.font, mouseX, mouseY);
+            }
+            if (this.askQuestions.isHovered()) {
+                ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.ask_questions.tooltip"), graphics, this.font, mouseX, mouseY);
+            }
             if (this.reportBugs.isHovered()) {
                 ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.report_bugs.tooltip"), graphics, this.font, mouseX, mouseY);
-            }
-            if (this.joinDiscord.isHovered()) {
-                ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.ask_questions.tooltip"), graphics, this.font, mouseX, mouseY);
             }
         }
     }

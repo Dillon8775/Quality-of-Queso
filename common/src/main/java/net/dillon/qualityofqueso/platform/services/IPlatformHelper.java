@@ -7,6 +7,13 @@ import java.nio.file.Path;
 public interface IPlatformHelper {
 
     /**
+     * @return the mod version.
+     */
+    default String getModVersion() {
+        return "v1.6";
+    }
+
+    /**
      * Gets the name of the current platform
      *
      * @return The name of the current platform.
