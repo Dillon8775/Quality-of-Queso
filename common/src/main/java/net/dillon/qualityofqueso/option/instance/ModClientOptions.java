@@ -107,6 +107,7 @@ public class ModClientOptions {
         public int elytraAlarmSoundDelay = 1;
 
         public QoQButtons qoqButtons = QoQButtons.EVERYWHERE;
+        public float chris = 2.0F;
     }
 
     public static final ModOptionsHandler CLIENT = new ModOptionsHandler();
