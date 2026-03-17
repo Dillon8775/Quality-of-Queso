@@ -27,7 +27,7 @@
 
 ## Please read through the [Wiki](https://quality-of-queso.fandom.com/wiki/Quality_of_Queso_Wiki) to view all the mod's features, so you can really experience the quality of life that this mod offers.
 
-## Most features in this mod are 100% client-side, meaning you can use it on servers *and* singleplayer, with no issue.
+## All features (except [one](https://quality-of-queso.fandom.com/wiki/Item_Frame_Searching)) in this mod are 100% client-side, meaning you can use it on servers *and* singleplayer, with no issue.
 
 ### Please report *any* bugs you may find <a href="https://github.com/Dillon8775/Quality-of-Queso/issues" target="_blank">here.</a>
 
