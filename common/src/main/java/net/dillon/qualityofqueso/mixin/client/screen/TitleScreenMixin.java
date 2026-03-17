@@ -21,6 +21,6 @@ public class TitleScreenMixin extends Screen {
     @Inject(method = "init", at = @At("TAIL"))
     private void init(CallbackInfo ci) {
         SpriteIconButton settingsButton = this.addRenderableWidget(ButtonUtil.initializeButton(this.minecraft, this));
-        settingsButton.setPosition(this.width / 2 + 128, this.height / 4 + 132 + (MultiLoader.PLATFORM.getPlatformName().equals("NeoForge") ? 8 : 0));
+        settingsButton.setPosition(this.width / 2 + 128, this.height / 4 + 132 + (MultiLoader.PLATFORM.getPlatformName().equals("NeoForged") ? 8 : 0));
     }
 }

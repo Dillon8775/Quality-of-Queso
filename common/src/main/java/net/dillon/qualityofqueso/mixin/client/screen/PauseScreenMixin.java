@@ -43,7 +43,7 @@ public class PauseScreenMixin extends Screen {
             }
             if (options().accessibility.qoqButtons.everywhere()) {
                 SpriteIconButton settingsButton = this.addRenderableWidget(ButtonUtil.initializeButton(this.minecraft, this));
-                settingsButton.setPosition(this.width / 2 + 106, this.height / 4 + 72 - 16 + (MultiLoader.PLATFORM.getPlatformName().equals("NeoForge") ? -6 : 0));
+                settingsButton.setPosition(this.width / 2 + 106, this.height / 4 + 72 - 16 + (MultiLoader.PLATFORM.getPlatformName().equals("NeoForged") ? -6 : 0));
                 if (!(this.minecraft.getCurrentServer() == null)) {
                     String address = this.getServerAddress();
                     this.blacklistServerButton = this.addRenderableWidget(Button.builder(ModTexts.BLANK, button -> {
