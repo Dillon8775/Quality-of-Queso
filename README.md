@@ -12,7 +12,7 @@
 <img src="https://cdn.modrinth.com/data/cached_images/3f52366fa307bc8b96964e580ea29c0c28c1fc9a.png" width="200" height="200" alt="QoQ logo">
 
 ## Welcome to Quality of Queso!
-### A client-side quality-of-life Minecraft mod, adding various different QoL features, including:
+### A quality-of-life Minecraft mod, adding various different QoL features, including:
 
 - An easy-to-use [search bar](https://quality-of-queso.fandom.com/wiki/Search_Bar) for your inventory and chests
 - Precise [inventory management](https://quality-of-queso.fandom.com/wiki/Transferring)
@@ -26,6 +26,8 @@
 - And so much more!
 
 ## Please read through the [Wiki](https://quality-of-queso.fandom.com/wiki/Quality_of_Queso_Wiki) to view all the mod's features, so you can really experience the quality of life that this mod offers.
+
+## Most features in this mod are 100% client-side, meaning you can use it on servers *and* singleplayer, with no issue.
 
 ### Please report *any* bugs you may find <a href="https://github.com/Dillon8775/Quality-of-Queso/issues" target="_blank">here.</a>
 
