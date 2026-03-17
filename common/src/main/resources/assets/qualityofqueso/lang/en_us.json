@@ -71,6 +71,9 @@
   "qualityofqueso.gui.title.accessibility_options": "Accessibility Options",
   "qualityofqueso.gui.accessibility_options.tooltip": "Configure Quality of Queso to your liking...",
 
+  "qualityofqueso.gui.showcase_video": "§6Showcase Video...",
+  "qualityofqueso.gui.showcase_video.tooltip": "Watch a video that goes over this mod's biggest features!",
+
   "qualityofqueso.gui.wiki": "§6§lOfficial Wiki...",
   "qualityofqueso.gui.wiki.tooltip": "More information of all the mod's features...",
 

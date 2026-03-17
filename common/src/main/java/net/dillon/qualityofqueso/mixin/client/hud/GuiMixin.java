@@ -83,7 +83,7 @@ public class GuiMixin {
 
         ItemStack offHandItem = this.minecraft.player.getOffhandItem();
         if (!offHandItem.isEmpty()) {
-            if (options().hud.coloredHighlighting && getItemHealthPercentage(offHandItem) < 1.0F) {
+            if (options().hud.coloredHighlighting && getItemHealthPercentage(offHandItem) < 0.41F) {
                 this.renderHighlightedArmorSlot(this.minecraft, HOTBAR_SELECTION_SPRITE, graphics, EquipmentSlot.OFFHAND, false);
             }
             if (options().hud.warningIndicators && getItemHealthPercentage(offHandItem) < 0.11F) {
@@ -362,7 +362,8 @@ public class GuiMixin {
      */
     @Unique
     private int getArmorX(Minecraft minecraft, EquipmentSlot slot) {
-        int base = !options().hud.itemCount.enabled() ? 0 : 32;
+        int setBase = !options().hud.itemCount.enabled() ? 0 : 32;
+        int base = setBase;
         if (this.isRenderingItem && !isLeftHanded(minecraft)) {
             if (options().hud.itemCount == ItemCount.STACKS && this.isDisplayingExactStack) {
                 base += 14;
@@ -378,7 +379,7 @@ public class GuiMixin {
             case CHEST -> base + 120;
             case LEGS -> base + 140;
             case FEET -> base + 160;
-            case OFFHAND -> base + (isLeftHanded(this.minecraft) ? 69 : -149);
+            case OFFHAND -> setBase + (isLeftHanded(this.minecraft) ? 69 : -149);
             default -> 0;
         };
     }

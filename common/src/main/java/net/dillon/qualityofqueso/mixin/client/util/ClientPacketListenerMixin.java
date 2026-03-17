@@ -42,6 +42,9 @@ public class ClientPacketListenerMixin {
         if (!(entity instanceof ItemEntity itemEntity)) {
             return;
         }
+        if (this.level.getEntity(packet.getPlayerId()).getId() != Minecraft.getInstance().player.getId()) {
+            return;
+        }
 
         ItemStack stack = itemEntity.getItem();
         ItemHudTracker.setStack(stack);

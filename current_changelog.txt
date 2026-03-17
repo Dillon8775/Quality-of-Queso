@@ -1,6 +1,15 @@
-Version 1.6 (MC Fabric 26.1, NeoForge 26.1):
+Quality of Queso Version 1.6 (MC Fabric 26.1, NeoForge 26.1):
 ATTENTION REGULAR QOQ USERS:
 - Be prepared to reconfigure your mod settings with this version!
+
+- Dropped Forge support. Moving to NeoForge and Fabric only!
+
+OFFICIAL WIKI PAGE
+- There is now a dedicated Wiki page for this mod! Check it out here:
+https://quality-of-queso.fandom.com/wiki/Quality_of_Queso_Wiki
+I highly recommend reading it to really get the quality of life that this mod offers.
+
+=== NEW FEATURES ===
 
 Elytra Alarm:
 - If you fall a certain amount of blocks (default = 20) with an elytra in your inventory and it's not equipped, the alarm goes off, indicating that you need to equip your elytra.
@@ -95,6 +104,7 @@ Technical / small changes:
 - Organized client-side configuration file.
 - Replaced "c:" tags with "fabric:" for easier understanding (tag searching). "c" tags are from fabric.
 - Lowered minimum distance of "Mob Hit Ding" to 10 (previously 15).
+- Added the showcase video link to the QoQ main menu.
 
 Bug Fixes and Optimizations:
 - "Perpendicular Quick Moving" now works for all players, as long as the mod is installed server-side.
@@ -105,6 +115,7 @@ Bug Fixes and Optimizations:
 - Fixed armor status display timers being wrong.
 - Fixed drastic frame dropping when tag searching.
 - Fixed bug where throwing an item on a server doesn't display item count.
+- Fixed bug where picking up an item on a server that has the QoQ mod installed (server-side) displays that item for all users.
 - Fixed bug where "Mob Hit Ding" doesn't work on servers.
 - Fixed bug where right-clicking a container search field to clear it makes it start acting weird.
 - Fixed bug where items don't render their components with item count.

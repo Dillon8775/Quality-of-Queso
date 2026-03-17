@@ -51,6 +51,7 @@ import static net.dillon.qualityofqueso.util.GuiUtil.LAST_ARMOR_STACKS;
 public class ModUtil {
     public static final Component VERSION = Component.literal("QoQ " + MultiLoader.PLATFORM.getModVersion()).withStyle(ChatFormatting.GOLD);
     public static final String WIKI_LINK = "https://quality-of-queso.fandom.com/wiki/Quality_of_Queso_Wiki";
+    public static final String SHOWCASE_VIDEO_LINK = "https://youtu.be/02wfcgHkPmQ";
     private static final Logger LOGGER = LoggerFactory.getLogger("Quality of Queso");
     public static String SAVED_TEXT = "";
     public static String SAVED_ITEM_FRAME_TEXT = "";
