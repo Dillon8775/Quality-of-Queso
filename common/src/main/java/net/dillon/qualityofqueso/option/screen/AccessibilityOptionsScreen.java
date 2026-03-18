@@ -49,7 +49,7 @@ public class AccessibilityOptionsScreen extends AbstractModOptionsScreen {
                 ModListOptions.moveItemsIf(),
 
                 ModListOptions.ignoreFabricTags(),
-                ModListOptions.elytraAlarmSoundDelay(),
+                ModListOptions.buttonClickSounds()
         };
     }
 
@@ -81,6 +81,7 @@ public class AccessibilityOptionsScreen extends AbstractModOptionsScreen {
         this.blacklistedServersField.setResponder(this::onTextChanged);
 
         List<AbstractWidget> widgets = ImmutableList.of(
+                ModListOptions.elytraAlarmSoundDelay().createButton(this.options),
                 ModListOptions.qoqButtons().createButton(this.options),
                 ModListOptions.multiServerConfigs().createButton(this.options),
                 this.blacklistedServersField

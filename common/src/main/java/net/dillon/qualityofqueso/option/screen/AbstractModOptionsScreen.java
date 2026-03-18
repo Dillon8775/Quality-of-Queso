@@ -11,13 +11,13 @@ import net.minecraft.client.gui.layouts.LinearLayout;
 import net.minecraft.client.gui.screens.ConfirmLinkScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.options.OptionsSubScreen;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.CommonColors;
 import net.minecraft.util.Util;
 
-import static net.dillon.qualityofqueso.util.ModUtil.saveAll;
-import static net.dillon.qualityofqueso.util.ModUtil.sendClientOptionsToServer;
+import static net.dillon.qualityofqueso.util.ModUtil.*;
 
 public abstract class AbstractModOptionsScreen extends OptionsSubScreen {
     private Button doneButton;
@@ -77,7 +77,8 @@ public abstract class AbstractModOptionsScreen extends OptionsSubScreen {
         }
 
         if (this.doneButton != null) {
-            graphics.centeredText(this.font, ModUtil.VERSION, this.width - 35, this.doneButton.getY() + 5, CommonColors.WHITE);
+            graphics.centeredText(this.font, ModUtil.VERSION, this.width - 25, this.doneButton.getY() + 5, CommonColors.WHITE);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, ofQoQ("textures/gui/sprites/button/cheese_wheel.png"), this.width - 55, this.doneButton.getY(), 0.0F, 0.0F, 18, 18, 18, 18);
         }
 
         super.extractRenderState(graphics, mouseX, mouseY, deltaTicks);

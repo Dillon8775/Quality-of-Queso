@@ -47,6 +47,9 @@ HUD Changes:
 - Added warning indicators next to the armor, which will display if the armor's durability is 10% or less.
 - Added support for left-handed users.
 
+Transferring changes:
+- "Smart Moving" is now much smarter, where you can shift to transfer only matching components (for ALL items).
+
 Drag Sorting Changes:
 - Reverted the logic of drag sorting.
 - Holding ALT + SHIFT now EXCLUDES the slots that you are dragging on.

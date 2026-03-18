@@ -5,6 +5,7 @@ import net.dillon.qualityofqueso.screen.ItemFrameSearchScreen;
 import net.dillon.qualityofqueso.util.ButtonUtil;
 import net.dillon.qualityofqueso.util.ModTexts;
 import net.dillon.qualityofqueso.util.ModUtil;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -22,7 +23,7 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
     private AbstractWidget searchingOptions, inventoryManagementOptions, itemFrameSearchingOptions, openItemFrameSearchGUIOptions, hudOptions, fogOptions, fovEffects, miscOptions, accessibilityOptions, enableMod, showcaseVideo, wiki, askQuestions, reportBugs;
 
     public ModOptionsScreen(Screen parent) {
-        super(parent, Component.translatable("qualityofqueso.gui.options.title"));
+        super(parent, Component.translatable("qualityofqueso.gui.options.title").withStyle(ChatFormatting.GOLD));
     }
 
     @Override

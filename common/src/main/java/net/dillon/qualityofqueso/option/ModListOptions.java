@@ -428,6 +428,11 @@ public class ModListOptions {
                 ON_OFF_TEXT, options().accessibility.ignoreFabricTags, value -> options().accessibility.ignoreFabricTags = value);
     }
 
+    public static OptionInstance<Boolean> buttonClickSounds() {
+        return OptionInstance.createBoolean("qualityofqueso.options.button_click_sounds", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.button_click_sounds.tooltip")),
+                ON_OFF_TEXT, options().accessibility.buttonClickSounds, value -> options().accessibility.buttonClickSounds = value);
+    }
+
     public static OptionInstance<QoQButtons> qoqButtons() {
         return new OptionInstance<>(
                 "qualityofqueso.options.qoq_buttons",

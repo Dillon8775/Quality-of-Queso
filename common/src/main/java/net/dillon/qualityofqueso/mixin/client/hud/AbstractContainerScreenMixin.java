@@ -275,7 +275,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                     ContainerInput slotActionType = drop ? ContainerInput.THROW : ContainerInput.QUICK_MOVE;
                     ItemStack cursorStack = getCursorStack(this.screen);
                     if (!cursorStack.isEmpty()) {
-                        if (canMoveCursorItem(fromStack, cursorStack)) {
+                        if (canMoveCursorItem(this.menu, fromSlot, cursorStack, false, toInventory)) {
                             sendClickSlotPacket(i, slotActionType);
                             movedItem = true;
                             break;
@@ -380,6 +380,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                 && !abstractFurnaceScreen.getMenu().getResultSlot().hasItem()) {
             return false;
         }
+
         for (int i = 0; i < size; i++) {
             // If slot is not empty, the button should be active
             // Increment J and make button active
@@ -393,7 +394,23 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                 continue;
             }
             if (!cursorStack.isEmpty()) {
-                if (canMoveCursorItem(stack, cursorStack) && !isCursorShulker) {
+                // Check if we can move the cursor stack
+                boolean canMoveCursorItem = false;
+                for (int k = 0; k < getTotalSlots(this.menu); k++) {
+                    // We must iterate through all slots to check for hotbar slot, but we skip container slots because we don't watch to check those slots
+                    // Only check inventory slots
+                    if (isPlayerInventory && this.menu.getSlot(k).index < this.container.getContainerSize()) {
+                        continue;
+                    } else if (!isPlayerInventory && this.menu.getSlot(k).index > this.container.getContainerSize()) {
+                        continue;
+                    }
+                    // Then we check if the cursor item is actually applicable to move, ignoring components
+                    if (canMoveCursorItem(this.menu, this.menu.getSlot(k), cursorStack, true, isPlayerInventory)) {
+                        canMoveCursorItem = true;
+                        break;
+                    }
+                }
+                if (canMoveCursorItem && !isCursorShulker) {
                     filledSlots++;
                 }
             } else {

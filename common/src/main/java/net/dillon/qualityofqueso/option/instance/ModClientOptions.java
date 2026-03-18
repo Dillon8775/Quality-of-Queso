@@ -111,6 +111,8 @@ public class ModClientOptions {
         public MoveItemsIf moveItemsIf = MoveItemsIf.CAN_MOVE_AT_ALL;
 
         public boolean ignoreFabricTags = false;
+        public boolean buttonClickSounds = true;
+
         public int elytraAlarmSoundDelay = 1;
 
         public QoQButtons qoqButtons = QoQButtons.EVERYWHERE;

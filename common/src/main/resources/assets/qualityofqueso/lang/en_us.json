@@ -89,11 +89,7 @@
 
   "qualityofqueso.gui.no_tags_found": "No tags found.",
 
-  "qualityofqueso.gui.transfer_container_button.with_cursor_stack": "Move all \"%s\" to inventory",
-  "qualityofqueso.gui.transfer_container_button.with_cursor_enchantment_stack": "Move all enchanted books to inventory\nHold shift to move books with enchantments \"%s\" §oonly",
-  "qualityofqueso.gui.transfer_container_button.with_cursor_potion_stack": "Move all potions to inventory\nHold shift to move \"%s\" §oonly",
-  "qualityofqueso.gui.transfer_container_button.with_cursor_tipped_arrow_stack": "Move all tipped arrows to inventory\nHold shift to move \"%s\" §oonly",
-  "qualityofqueso.gui.transfer_container_button.with_cursor_firework_stack": "Move all firework rockets to inventory\nHold shift to move flight duration \"%s\" rockets §oonly",
+  "qualityofqueso.gui.transfer_container_button.with_cursor_stack": "Move all \"%s\" to inventory\n%s",
   "qualityofqueso.gui.transfer_container_button.with_search_query.exclude": "Move all items §onot§r containing \"%s\" to inventory",
   "qualityofqueso.gui.transfer_container_button.with_search_query.tag": "Move all items with tag \"%s\" to inventory",
   "qualityofqueso.gui.transfer_container_button.with_search_query.match": "Move all \"%s\" to inventory",
@@ -102,16 +98,15 @@
   "qualityofqueso.gui.transfer_container_button.furnace": "Move \"%s\" to inventory",
   "qualityofqueso.gui.transfer_container_button": "Move all items in this container to inventory",
 
-  "qualityofqueso.gui.transfer_inventory_button.with_cursor_stack": "Move all \"%s\" to this container",
-  "qualityofqueso.gui.transfer_inventory_button.with_cursor_enchantment_stack": "Move all enchanted books to this container\nHold shift to move all books with enchantments \"%s\" §oonly",
-  "qualityofqueso.gui.transfer_inventory_button.with_cursor_potion_stack": "Move all potions to this container\nHold shift to move all \"%s\" §oonly",
-  "qualityofqueso.gui.transfer_inventory_button.with_cursor_tipped_arrow_stack": "Move all tipped arrows to this container\nHold shift to move all \"%s\" §oonly",
-  "qualityofqueso.gui.transfer_inventory_button.with_cursor_firework_stack": "Move all firework rockets to this container\nHold shift to move all flight duration \"%s\" rockets §oonly",
+  "qualityofqueso.gui.transfer_inventory_button.with_cursor_stack": "Move all \"%s\" to this container\n%s",
   "qualityofqueso.gui.transfer_inventory_button.with_search_query.exclude": "Move all items §onot§r containing \"%s\" to this container",
   "qualityofqueso.gui.transfer_inventory_button.with_search_query.tag": "Move all items with tag \"%s\" to this container",
   "qualityofqueso.gui.transfer_inventory_button.with_search_query.match": "Move all \"%s\" to this container",
   "qualityofqueso.gui.transfer_inventory_button.with_search_query": "Move all items containing \"%s\" to this container",
   "qualityofqueso.gui.transfer_inventory_button": "Move all items in inventory to this container",
+
+  "qualityofqueso.gui.transfer_button.match_cursor_stack": "Hold shift to only move items with matching components",
+  "qualityofqueso.gui.transfer_button.matching_cursor_stack": "Only moving items with matching components",
 
   "qualityofqueso.gui.quick_drop_button.with_search_query.exclude": "Throw out all items §onot§r containing \"%s\" in this container",
   "qualityofqueso.gui.quick_drop_button.with_search_query.tag": "Throw out all items with tag \"%s\" in this container",
@@ -301,6 +296,8 @@
   "qualityofqueso.options.tag_sorting.tooltip": "Sorts containers by item tags.\nYou can also change this by right-clicking on the \"sort\" button.",
   "qualityofqueso.options.ignore_fabric_tags": "Ignore Fabric Tags",
   "qualityofqueso.options.ignore_fabric_tags.tooltip": "Ignores fabric tags when sorting by tag, as they can §osometimes §r§fof mess up the order and logic of sorting.",
+  "qualityofqueso.options.button_click_sounds": "Button Click Sounds",
+  "qualityofqueso.options.button_click_sounds.tooltip": "Plays the default button clicking sounds when pressing certain inventory management buttons.\nThis does not affect the bundle sounds.",
   "qualityofqueso.options.perpendicular_quick_moving": "Perpendicular Quick Moving",
   "qualityofqueso.options.perpendicular_quick_moving.tooltip": "When \"quick moving\" (shift+clicking), items are moved straight down, perpendicular to their opposing slot.\n\nDisable this option if you want to use Minecraft's default system, where items move parallel. Please note, when moving items and excluding hotbar, perpendicular quick moving will be used regardless.",
   "qualityofqueso.options.move_items_if": "Move Items If",

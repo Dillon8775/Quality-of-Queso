@@ -16,7 +16,6 @@ import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.core.Holder;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.HashedPatchMap;
 import net.minecraft.network.HashedStack;
 import net.minecraft.network.chat.Component;
@@ -28,7 +27,6 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.CommonColors;
 import net.minecraft.world.Container;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerInput;
@@ -36,11 +34,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.PotionContents;
-import net.minecraft.world.item.component.Fireworks;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.item.enchantment.ItemEnchantments;
 import org.spongepowered.asm.mixin.Unique;
 
 import java.util.*;
@@ -141,22 +135,22 @@ public class ButtonUtil {
     /**
      * @return the current {@code container size.}
      */
-    public static int getContainerSize(Container inventory) {
-        return inventory == null ? 0 : inventory.getContainerSize();
+    public static int getContainerSize(Container container) {
+        return container == null ? 0 : container.getContainerSize();
     }
 
     /**
      * @return the total size of the {@code screen's slots.}
      */
-    public static int getTotalSlots(AbstractContainerMenu handler) {
-        return handler.slots.size();
+    public static int getTotalSlots(AbstractContainerMenu menu) {
+        return menu.slots.size();
     }
 
     /**
      * @return the fromInventory (size) that should be searched.
      */
-    public static int getInventorySize(AbstractContainerMenu handler, Container inventory) {
-        return options().accessibility.searchInventory ? handler.slots.size() : inventory == null ? 0 : inventory.getContainerSize();
+    public static int getInventorySize(AbstractContainerMenu menu, Container container) {
+        return options().accessibility.searchInventory ? menu.slots.size() : container == null ? 0 : container.getContainerSize();
     }
 
     /**
@@ -316,83 +310,17 @@ public class ButtonUtil {
     /**
      * Handles smart-moving actions.
      */
-    public static boolean canMoveCursorItem(ItemStack fromStack, ItemStack cursorStack) {
-        boolean isEnchantedBook = cursorStack.is(Items.ENCHANTED_BOOK);
-        boolean isPotion = cursorStack.is(Items.POTION) || cursorStack.is(Items.SPLASH_POTION) || cursorStack.is(Items.LINGERING_POTION);
-        boolean isTippedArrow = cursorStack.is(Items.TIPPED_ARROW);
-        boolean isFirework = cursorStack.is(Items.FIREWORK_ROCKET);
-
-        if ((isEnchantedBook || isPotion || isTippedArrow || isFirework) && Minecraft.getInstance().hasShiftDown()) {
-            return (isEnchantedBook && enchantmentMatches(fromStack, cursorStack))
-                    || (isPotion && statusEffectMatches(fromStack, cursorStack))
-                    || (isTippedArrow && statusEffectMatches(fromStack, cursorStack))
-                    || (isFirework && flightDurationMatches(fromStack, cursorStack));
-        }
-
-        return fromStack.is(cursorStack.getItem());
-    }
-
-    /**
-     * @return if a firework rockets flight duration is the same as cursor stack's.
-     */
-    public static boolean flightDurationMatches(ItemStack slotStack, ItemStack cursorStack) {
-        Fireworks slotDuration = slotStack.get(DataComponents.FIREWORKS);
-        Fireworks cursorDuration = cursorStack.get(DataComponents.FIREWORKS);
-
-        if (slotDuration == null || cursorDuration == null) {
+    public static boolean canMoveCursorItem(AbstractContainerMenu menu, Slot fromSlot, ItemStack cursorStack, boolean ignoreComponents, boolean isPlayerInventory) {
+        // Cannot move excluded hotbar slot
+        if (!options().management.includeHotbar && isPlayerInventory && isHotbarSlot(getTotalSlots(menu), fromSlot.index)) {
             return false;
         }
 
-        return slotDuration.flightDuration() == cursorDuration.flightDuration();
-    }
-
-    /**
-     * @return if slot potion effect matches any cursor's potion effects.
-     */
-    public static boolean statusEffectMatches(ItemStack slotStack, ItemStack cursorStack) {
-        PotionContents slotEffects = slotStack.get(DataComponents.POTION_CONTENTS);
-        PotionContents cursorEffects = cursorStack.get(DataComponents.POTION_CONTENTS);
-
-        if (slotEffects == null || cursorEffects == null) {
-            return false;
+        ItemStack fromStack = fromSlot.getItem();
+        if (Minecraft.getInstance().hasShiftDown() && !ignoreComponents) {
+            return ItemStack.isSameItemSameComponents(fromStack.copy(), cursorStack);
         }
-
-        // Ensure no cross-over items
-        if (!ItemStack.isSameItem(slotStack, cursorStack)) {
-            return false;
-        }
-
-        for (MobEffectInstance slotEffect : slotEffects.getAllEffects()) {
-            for (MobEffectInstance cursorEffect : cursorEffects.getAllEffects()) {
-                if (slotEffect.getEffect() == cursorEffect.getEffect()) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    /**
-     * @return if slot enchantment matches cursor's enchantment.
-     */
-    public static boolean enchantmentMatches(ItemStack slotStack, ItemStack cursorStack) {
-        ItemEnchantments fromStackEnchantments = EnchantmentHelper.getEnchantmentsForCrafting(slotStack);
-        ItemEnchantments cursorEnchantments = EnchantmentHelper.getEnchantmentsForCrafting(cursorStack);
-        for (Holder<Enchantment> slotEnchantments : fromStackEnchantments.keySet()) {
-            for (Holder<Enchantment> heldEnchantments : cursorEnchantments.keySet()) {
-                if (slotStack.is(cursorStack.getItem()) && getEnchantmentName(slotEnchantments).contains(getEnchantmentName(heldEnchantments))) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    /**
-     * @return enchantment name as a string.
-     */
-    public static String getEnchantmentName(Holder<Enchantment> enchantment) {
-        return enchantment.value().description().getString().toLowerCase();
+        return ItemStack.isSameItem(fromStack.copy(), cursorStack);
     }
 
     /**

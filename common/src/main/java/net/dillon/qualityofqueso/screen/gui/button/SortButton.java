@@ -40,10 +40,13 @@ public class SortButton extends TransferButton {
     protected void renderBaseButtonTexture(String id, AbstractWidget buttonReference, GuiGraphicsExtractor graphics) {
         ButtonUtil.drawButtonTexture(graphics, options().management.tagSorting ? id + "_tag" : id, this);
         this.renderHoveredTexture(graphics);
-        if (Minecraft.getInstance().hasControlDown()) {
-            if (options().accessibility.showButtonShortcuts && this.buttonName.equals("sort") && key(ModKeybinds.SORT_CONTAINER) == ModKeybinds.SORT_CONTAINER.getDefaultKey()) {
-                ButtonUtil.drawButtonTexture(graphics, "shortcut/sort_button_shortcut_key", this);
-            }
+
+        if (!Minecraft.getInstance().hasControlDown()) {
+            return;
+        }
+
+        if (options().accessibility.showButtonShortcuts && this.buttonName.equals("sort") && key(ModKeybinds.SORT_CONTAINER) == ModKeybinds.SORT_CONTAINER.getDefaultKey()) {
+            ButtonUtil.drawButtonTexture(graphics, "shortcut/sort_button_shortcut_key", this);
         }
     }
 

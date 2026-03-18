@@ -53,6 +53,10 @@ public abstract class ToggleableButton extends TransferButton {
 
     @Override
     public void playDownSound(SoundManager manager) {
+        if (!options().accessibility.buttonClickSounds) {
+            return;
+        }
+
         playDefaultSound(manager);
     }
 }

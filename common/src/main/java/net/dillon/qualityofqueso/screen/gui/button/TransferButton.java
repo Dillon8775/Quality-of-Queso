@@ -4,7 +4,6 @@ import net.dillon.qualityofqueso.keybind.ModKeybinds;
 import net.dillon.qualityofqueso.util.ButtonUtil;
 import net.dillon.qualityofqueso.util.HoverSize;
 import net.dillon.qualityofqueso.util.ModTexts;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -15,20 +14,11 @@ import net.minecraft.client.gui.screens.inventory.AbstractFurnaceScreen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.sounds.SoundManager;
-import net.minecraft.core.Holder;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.component.Fireworks;
-import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.item.enchantment.ItemEnchantments;
 import org.spongepowered.asm.mixin.Unique;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Supplier;
 
 import static net.dillon.qualityofqueso.util.AccessorUtil.key;
@@ -102,10 +92,13 @@ public class TransferButton extends Button {
                 "_match.png" : ".png";
         String appended = this.transferrableButton ? transferableString : ".png";
         Screen screen = Minecraft.getInstance().screen;
-        if (screen != null) {
-            if (isBrewingStandScreen(screen) || isFurnaceScreen(screen)) {
-                appended = ".png";
-            }
+
+        if (screen == null) {
+            return appended;
+        }
+
+        if (isBrewingStandScreen(screen) || isFurnaceScreen(screen)) {
+            appended = ".png";
         }
         return appended;
     }
@@ -123,14 +116,16 @@ public class TransferButton extends Button {
      * Renders the hovered button texture.
      */
     protected void renderHoveredTexture(GuiGraphicsExtractor graphics) {
-        if (this.canBeActive.get() && this.isHovered()) {
-            String name;
-            switch (this.getHoverSize()) {
-                case BIG -> name = "big_hovered";
-                default -> name = "basic_hovered";
-            }
-            ButtonUtil.drawButtonTexture(graphics, "hovered/" + name, this);
+        if (!this.canBeActive.get() || !this.isHovered()) {
+            return;
         }
+
+        String name;
+        switch (this.getHoverSize()) {
+            case BIG -> name = "big_hovered";
+            default -> name = "basic_hovered";
+        }
+        ButtonUtil.drawButtonTexture(graphics, "hovered/" + name, this);
     }
 
     /**
@@ -139,19 +134,23 @@ public class TransferButton extends Button {
     @Unique
     protected void renderBaseButtonTexture(String id, AbstractWidget buttonReference, GuiGraphicsExtractor graphics) {
         this.renderButtonTexture(id, buttonReference, graphics);
-        if (Minecraft.getInstance().hasControlDown()) {
-            boolean inventoryButton = this.buttonName.equals("transfer_inventory");
-            boolean containerButton = this.buttonName.equals("transfer_container");
-            boolean validName = inventoryButton || containerButton;
-            if (validName) {
-                if (options().accessibility.showButtonShortcuts) {
-                    if (inventoryButton && key(ModKeybinds.MOVE_INVENTORY) == ModKeybinds.MOVE_INVENTORY.getDefaultKey()) {
-                        ButtonUtil.drawButtonTexture(graphics, "shortcut/transfer_inventory_button_shortcut_key", this);
-                    } else if (containerButton && key(ModKeybinds.MOVE_CONTAINER) == ModKeybinds.MOVE_CONTAINER.getDefaultKey()) {
-                        ButtonUtil.drawButtonTexture(graphics, "shortcut/transfer_container_button_shortcut_key", this);
-                    }
-                }
-            }
+
+        if (!Minecraft.getInstance().hasControlDown()) {
+            return;
+        }
+
+        boolean inventoryButton = this.buttonName.equals("transfer_inventory");
+        boolean containerButton = this.buttonName.equals("transfer_container");
+        boolean validName = inventoryButton || containerButton;
+
+        if (!validName || !options().accessibility.showButtonShortcuts) {
+            return;
+        }
+
+        if (inventoryButton && key(ModKeybinds.MOVE_INVENTORY) == ModKeybinds.MOVE_INVENTORY.getDefaultKey()) {
+            ButtonUtil.drawButtonTexture(graphics, "shortcut/transfer_inventory_button_shortcut_key", this);
+        } else if (containerButton && key(ModKeybinds.MOVE_CONTAINER) == ModKeybinds.MOVE_CONTAINER.getDefaultKey()) {
+            ButtonUtil.drawButtonTexture(graphics, "shortcut/transfer_container_button_shortcut_key", this);
         }
     }
 
@@ -176,59 +175,40 @@ public class TransferButton extends Button {
     protected void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks) {
         this.active = this.canBeActive.get();
 
-        if (this.canBeActive.get()) {
-            this.renderBaseButtonTexture(this.resourceLocation + this.buttonName + "_button", this, graphics);
-        } else {
-            this.renderBaseButtonTexture(this.resourceLocation + this.buttonName + "_button_inactive", this, graphics);
+        this.renderBaseButtonTexture(this.resourceLocation + this.buttonName + (this.canBeActive.get() ? "_button" : "_button_inactive"), this, graphics);
+
+        if (!this.isHovered() || !this.active || !options().accessibility.helpfulTooltips) {
+            return;
         }
 
-        if (this.isHovered() && this.active && options().accessibility.helpfulTooltips) {
-            Screen screen = Minecraft.getInstance().screen;
-            if (screen != null) {
-                if (isBrewingStandScreen(screen)) {
-                    ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.brewing_stand"), graphics, this.font, mouseX, mouseY);
-                    return;
-                } else if (screen instanceof AbstractFurnaceScreen<?> abstractFurnaceScreen) {
-                    ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.furnace", abstractFurnaceScreen.getMenu().getResultSlot().getItem().getHoverName()), graphics, this.font, mouseX, mouseY);
-                    return;
-                }
+        Screen screen = Minecraft.getInstance().screen;
+        if (screen != null) {
+            if (isBrewingStandScreen(screen)) {
+                ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.brewing_stand"), graphics, this.font, mouseX, mouseY);
+                return;
+            } else if (screen instanceof AbstractFurnaceScreen<?> abstractFurnaceScreen) {
+                ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.furnace", abstractFurnaceScreen.getMenu().getResultSlot().getItem().getHoverName()), graphics, this.font, mouseX, mouseY);
+                return;
             }
-            ItemStack cursorStack = this.screenHandler.getCarried();
-            if (this.transferrableButton && !cursorStack.isEmpty()) {
-                String tooltip = "_button.with_cursor_stack";
-                Component itemName = cursorStack.getItemName();
-                if (cursorStack.is(Items.ENCHANTED_BOOK)) {
-                    ItemEnchantments enchantments = EnchantmentHelper.getEnchantmentsForCrafting(cursorStack);
-                    List<String> cursorEnchantments = new ArrayList<>();
-                    for (Holder<Enchantment> enchantment : enchantments.keySet()) {
-                        cursorEnchantments.add(getEnchantmentName(enchantment));
-                    }
-                    String collection = String.join(",", cursorEnchantments);
-                    tooltip = "_button.with_cursor_enchantment_stack";
-                    itemName = Component.literal(collection);
-                } else if (cursorStack.is(Items.FIREWORK_ROCKET)) {
-                    Fireworks firework = cursorStack.get(DataComponents.FIREWORKS);
-                    if (firework != null) {
-                        itemName = Component.literal(String.valueOf(firework.flightDuration())).withStyle(ChatFormatting.BOLD);
-                        tooltip = "_button.with_cursor_firework_stack";
-                    }
-                } else if (cursorStack.is(Items.POTION) || cursorStack.is(Items.SPLASH_POTION) || cursorStack.is(Items.LINGERING_POTION)) {
-                    tooltip = "_button.with_cursor_potion_stack";
-                } else if (cursorStack.is(Items.TIPPED_ARROW)) {
-                    tooltip = "_button.with_cursor_tipped_arrow_stack";
-                }
-                ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui." + this.buttonName + tooltip, itemName), graphics, this.font, mouseX, mouseY);
-            } else if (this.transferrableButton && !this.searchFieldText.isEmpty()) {
-                ButtonUtil.drawTooltip(this.searchFieldText.startsWith("#") ?
-                        Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query.tag" + this.getAppendedTooltip(), this.searchFieldText.substring(1)) :
-                        this.searchFieldText.startsWith("!") ?
-                                Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query.exclude" + this.getAppendedTooltip(), this.searchFieldText.substring(1)) :
-                                this.searchFieldText.startsWith(":") ?
-                                        Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query.match" + this.getAppendedTooltip(), this.searchFieldText.substring(1)) :
-                                        Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query" + this.getAppendedTooltip(), this.searchFieldText), graphics, this.font, mouseX, mouseY);
-            } else {
-                ButtonUtil.drawTooltip(this.getTooltipToRender(), graphics, this.font, mouseX, mouseY);
-            }
+        }
+        ItemStack cursorStack = this.screenHandler.getCarried();
+        if (this.transferrableButton && !cursorStack.isEmpty()) {
+            ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_cursor_stack",
+                            cursorStack.getItemName(),
+                            Minecraft.getInstance().hasShiftDown()
+                                    ? Component.translatable("qualityofqueso.gui.transfer_button.matching_cursor_stack")
+                                    : Component.translatable("qualityofqueso.gui.transfer_button.match_cursor_stack")),
+                    graphics, this.font, mouseX, mouseY);
+        } else if (this.transferrableButton && !this.searchFieldText.isEmpty()) {
+            ButtonUtil.drawTooltip(this.searchFieldText.startsWith("#") ?
+                    Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query.tag" + this.getAppendedTooltip(), this.searchFieldText.substring(1)) :
+                    this.searchFieldText.startsWith("!") ?
+                            Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query.exclude" + this.getAppendedTooltip(), this.searchFieldText.substring(1)) :
+                            this.searchFieldText.startsWith(":") ?
+                                    Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query.match" + this.getAppendedTooltip(), this.searchFieldText.substring(1)) :
+                                    Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query" + this.getAppendedTooltip(), this.searchFieldText), graphics, this.font, mouseX, mouseY);
+        } else {
+            ButtonUtil.drawTooltip(this.getTooltipToRender(), graphics, this.font, mouseX, mouseY);
         }
     }
 

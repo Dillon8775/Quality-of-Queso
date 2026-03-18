@@ -49,14 +49,14 @@ public class FillWhatsPresentButton extends ToggleableButton {
 
     @Override
     protected String onTextureId() {
-        if (ContainerTracker.IS_TRACKED_CONTAINER) {
+        if (!ContainerTracker.IS_TRACKED_CONTAINER) {
+            return of("fill_whats_present");
+        } else {
             if (ContainerTracker.CURRENT_FILTER_MODE.tag()) {
                 return of("filtered_tag");
             } else {
                 return of("filtered");
             }
-        } else {
-            return of("fill_whats_present");
         }
     }
 
