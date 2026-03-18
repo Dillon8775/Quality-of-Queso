@@ -138,8 +138,9 @@
   "qualityofqueso.gui.disable_move_anything": "\nClick to only move what's present in container",
   "qualityofqueso.gui.mark_container": "\nShift + left-click this container to mark it as \"filtered\"",
 
-  "qualityofqueso.gui.save_filtered_container": "Marked %s (%s, %s, %s) as a filtered container.",
-  "qualityofqueso.gui.remove_filtered_container": "Removed %s (%s, %s, %s) as a filtered container.",
+  "qualityofqueso.gui.save_filtered_container": "Marked %s (%s, %s, %s) as a %s.",
+  "qualityofqueso.gui.remove_filtered_container": "Removed %s (%s, %s, %s) as a %s.",
+  "qualityofqueso.gui.filtered_container": "filtered container",
 
   "qualityofqueso.gui.include_transportables": "Searching inside transportable containers\nClick to disable",
   "qualityofqueso.gui.exclude_transportables": "Ignoring contents of transportable containers\nClick to include",

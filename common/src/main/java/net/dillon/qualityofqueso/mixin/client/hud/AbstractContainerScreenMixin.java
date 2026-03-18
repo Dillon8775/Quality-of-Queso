@@ -756,7 +756,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
         if (validScreen) {
 
             // INCLUDE HOTBAR BUTTON
-            if ((containerScreen && options().management.transferring.orKeyOnly()) || ((inventoryScreen && options().searching.inventorySearching) || options().management.quickDrop.orKeyOnly())) {
+            if ((containerScreen && options().management.transferring.orKeyOnly()) || options().management.quickDrop.orKeyOnly()) {
                 this.includeHotbarButton = this.addWidget(
                         new IncludeHotbarButton(
                                 this.menu,

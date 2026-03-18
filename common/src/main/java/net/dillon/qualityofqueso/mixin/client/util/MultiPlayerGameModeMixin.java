@@ -2,6 +2,7 @@ package net.dillon.qualityofqueso.mixin.client.util;
 
 import net.dillon.qualityofqueso.util.ContainerTracker;
 import net.dillon.qualityofqueso.util.ItemHudTracker;
+import net.dillon.qualityofqueso.util.ModTexts;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
@@ -61,7 +62,8 @@ public class MultiPlayerGameModeMixin {
                 container.copy().withStyle(ChatFormatting.BOLD),
                 pos.getX(),
                 pos.getY(),
-                pos.getZ()
+                pos.getZ(),
+                Component.translatable("qualityofqueso.gui.filtered_container").withColor(ModTexts.ITEM_COLOR)
         ));
         playButtonSound(minecraft, false);
         ContainerTracker.COOLDOWN = ContainerTracker.DEFAULT_COOLDOWN;
@@ -97,12 +99,15 @@ public class MultiPlayerGameModeMixin {
             return;
         }
 
-        ItemStack stack = player.containerMenu.getSlot(slotIndex).getItem();
-        if (stack.isEmpty()) {
-            return;
-        }
+        try {
+            ItemStack stack = player.containerMenu.getSlot(slotIndex).getItem();
+            if (stack.isEmpty()) {
+                return;
+            }
 
-        ItemHudTracker.setStack(stack.copy());
+            ItemHudTracker.setStack(stack.copy());
+        } catch (IndexOutOfBoundsException e) {
+        }
     }
 
     /**
