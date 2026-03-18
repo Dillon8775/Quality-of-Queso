@@ -116,11 +116,7 @@ public class ItemFrameSearchScreen extends Screen {
     public void onClose() {
         ModUtil.SAVED_ITEM_FRAME_TEXT = this.searchField.getValue();
         ModClientOptions.CLIENT.save();
-        if (this.parent != null) {
-            this.minecraft.setScreen(this.parent);
-        } else {
-            super.onClose();
-        }
+        super.onClose();
     }
 
     /**
