@@ -1,4 +1,4 @@
-package net.dillon.qualityofqueso.platform.services;
+package net.dillon.qualityofqueso.platform;
 
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
@@ -10,7 +10,7 @@ public interface IPlatformHelper {
      * @return the mod version.
      */
     default String getModVersion() {
-        return "v1.6";
+        return "1.6";
     }
 
     /**
@@ -29,13 +29,6 @@ public interface IPlatformHelper {
     boolean isModLoaded(String modId);
 
     /**
-     * Check if the game is currently in a development environment.
-     *
-     * @return True if in a development environment, false otherwise.
-     */
-    boolean isDevelopmentEnvironment();
-
-    /**
      * Gets the config directory for the supported platform.
      */
     Path getConfigDir();
@@ -44,8 +37,4 @@ public interface IPlatformHelper {
      * Sends a packet to the server.
      */
     void sendToServer(CustomPacketPayload payload);
-
-    default String getEnvironmentName() {
-        return this.isDevelopmentEnvironment() ? "development" : "production";
-    }
 }

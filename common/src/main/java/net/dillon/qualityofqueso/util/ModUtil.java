@@ -106,6 +106,13 @@ public class ModUtil {
     }
 
     /**
+     * Sends the successfully initialized message.
+     */
+    public static void initializeSuccess() {
+        info("Quality of Queso version " + MultiLoader.PLATFORM.getModVersion() + " (for " + MultiLoader.PLATFORM.getPlatformName() + ") loaded successfully!");
+    }
+
+    /**
      * Sends a {@code warning} message to console.
      */
     public static void warn(String message) {

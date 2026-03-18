@@ -6,6 +6,7 @@ import net.dillon.qualityofqueso.option.instance.ModCommonOptions;
 import net.dillon.qualityofqueso.option.instance.TrackedContainers;
 import net.dillon.qualityofqueso.option.instance.UniversalOptions;
 import net.dillon.qualityofqueso.registry.NeoForgeSoundEvents;
+import net.dillon.qualityofqueso.util.ModUtil;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -43,6 +44,8 @@ public final class QoQ {
         if (ModCommonOptions.COMMON.getInstance() == null) {
             ModCommonOptions.COMMON.setInstance(new ModCommonOptions());
         }
+
+        ModUtil.initializeSuccess();
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {

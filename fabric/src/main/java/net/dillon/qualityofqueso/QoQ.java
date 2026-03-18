@@ -1,6 +1,7 @@
 package net.dillon.qualityofqueso;
 
 import net.dillon.qualityofqueso.event.CommonEvents;
+import net.dillon.qualityofqueso.util.ModUtil;
 import net.fabricmc.api.ModInitializer;
 
 /**
@@ -12,5 +13,7 @@ public class QoQ implements ModInitializer {
     public void onInitialize() {
         CommonEvents.registerPayloads();
         CommonEvents.registerCommands();
+
+        ModUtil.initializeSuccess();
     }
 }
