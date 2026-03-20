@@ -120,6 +120,8 @@ Bug Fixes and Optimizations:
 - Fixed drastic frame dropping when tag searching.
 - Fixed bug where throwing an item on a server doesn't display item count.
 - Fixed bug where picking up an item on a server that has the QoQ mod installed (server-side) displays that item for all users.
+- Fixed bug where Item count # is misaligned sometimes.
+- Fixed bug where Item count and armor status do not work correctly if the user is left-handed.
 - Fixed bug where "Mob Hit Ding" doesn't work on servers.
 - Fixed bug where right-clicking a container search field to clear it makes it start acting weird.
 - Fixed bug where items don't render their components with item count.
