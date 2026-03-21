@@ -77,7 +77,7 @@ If you decide to play the mod on an older version of the game, please note that 
 ## Other inventory management features:
 ### [Include/Exclude Hotbar](https://quality-of-queso.fandom.com/wiki/Include/Exclude_Hotbar)
 ### [Container Filtering](https://quality-of-queso.fandom.com/wiki/Container_Filtering)
-### [Container Sorting](https://quality-of-queso.fandom.com/wiki/Container_Sorting)
+### [Container Sorting / Move Matching Items](https://quality-of-queso.fandom.com/wiki/Container_Sorting)
 ### [Drag Sorting](https://quality-of-queso.fandom.com/wiki/Drag_Sorting)
 ### [Quick Dropping](https://quality-of-queso.fandom.com/wiki/Quick_Dropping)
 ### [Swapping](https://quality-of-queso.fandom.com/wiki/Swapping)
