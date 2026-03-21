@@ -1,5 +1,6 @@
 package net.dillon.qualityofqueso.debug;
 
+import net.minecraft.client.gui.components.debug.DebugEntryCategory;
 import net.minecraft.client.gui.components.debug.DebugScreenDisplayer;
 import net.minecraft.client.gui.components.debug.DebugScreenEntry;
 import net.minecraft.world.level.Level;
@@ -22,11 +23,13 @@ public class RealLifeTimeHudEntry implements DebugScreenEntry {
         lines.addLine(time.format(formatter));
     }
 
-    /**
-     * Set to {@code true} by default.
-     */
     @Override
     public boolean isAllowed(boolean reducedDebugInfo) {
         return true;
+    }
+
+    @Override
+    public DebugEntryCategory category() {
+        return ModHudEntries.QOQ;
     }
 }

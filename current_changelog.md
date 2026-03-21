@@ -73,6 +73,12 @@
 - Set what can change your FOV!
 - You can toggle sprinting, flying, potion effects (like speed and slowness), bow pulling, and fluids!
 
+## Simple Coordinates HUD Entry *and* Debug Hud Changes
+- Minecraft's "player position" hud entry displays your coordinates, along with a bunch of other nonsense that you may not need.
+- This new debug hud entry, just displays your coordinates, and just your coordinates alone. Nothing else!
+- The "in-game" time hud entry now displays in wording what time it is, along with the number time.
+- In addition to this, all of QoQ's hud entries are under the "Quality of Queso" debug hud category, when you press F3 + F6.
+
 ## Additions to the "Fog" option
 - You can now toggle nether/overworld fog on/off individually (or, just turn all fog off like normal with the "All Fog" option).
 - Additionally, you can set the intensity of the nether fog.
@@ -129,6 +135,7 @@
 - Fixed bug where only 1 tag appears on an item when tag searching (all of the item's tags now display).
 - Fixed bug where "Search Inventory" applies to the inventory screen as well and causes mis-matches in slots - it no longer does and only applies to containers.
 - Fixed bug where item frame searching doesn't play sounds.
+- Fixed bug where the in-game time hud doesn't update correctly when setting the time with /time.
 - Fixed swapping cooldown (for real this time).
 - Fixed bug where certain functions don't apply correctly or at all.
 - Optimized button sounds, so they play accordingly, even when using shortcut keys and buttons are disabled.
