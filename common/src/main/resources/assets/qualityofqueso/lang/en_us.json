@@ -138,7 +138,7 @@
   "qualityofqueso.gui.fill_whats_present": "Only moving matching items",
   "qualityofqueso.gui.disable_fill_whats_present": "\nClick to disable",
   "qualityofqueso.gui.move_anything": "Moving anything",
-  "qualityofqueso.gui.disable_move_anything": "\nClick to only move what's present in container",
+  "qualityofqueso.gui.disable_move_anything": "\nClick to only move matching items",
   "qualityofqueso.gui.mark_container": "\nShift + left-click this container to mark it as \"filtered\"",
 
   "qualityofqueso.gui.save_filtered_container": "Marked %s (%s, %s, %s) as a %s.",
