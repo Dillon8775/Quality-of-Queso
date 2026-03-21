@@ -13,14 +13,17 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.ConfirmLinkScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Util;
+import net.minecraft.world.level.storage.LevelResource;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
 import static net.dillon.qualityofqueso.util.ModUtil.coptions;
 
 public class ModOptionsScreen extends AbstractModOptionsScreen {
-    private AbstractWidget searchingOptions, inventoryManagementOptions, itemFrameSearchingOptions, openItemFrameSearchGUIOptions, hudOptions, fogOptions, fovEffects, miscOptions, accessibilityOptions, enableMod, showcaseVideo, wiki, askQuestions, reportBugs;
+    private AbstractWidget searchingOptions, inventoryManagementOptions, itemFrameSearchingOptions, openItemFrameSearchGUIOptions, hudOptions, fogOptions, fovEffects, miscOptions, accessibilityOptions, enableMod, showcaseVideo, wiki, askQuestions, reportBugs, openWorldDirectory;
 
     public ModOptionsScreen(Screen parent) {
         super(parent, Component.translatable("qualityofqueso.gui.options.title").withStyle(ChatFormatting.GOLD));
@@ -94,6 +97,14 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
                 ConfirmLinkScreen.confirmLink(this, "https://github.com/Dillon8775/Quality-of-Queso/issues", false)
         ).build());
         buttons.add(this.reportBugs);
+
+        if (this.minecraft.getSingleplayerServer() != null && this.minecraft.level != null) {
+            this.openWorldDirectory = this.addWidget(Button.builder(Component.translatable("qualityofqueso.gui.open_world_directory"), (button) -> {
+                Path worldPath = this.minecraft.getSingleplayerServer().getWorldPath(LevelResource.ROOT);
+                Util.getPlatform().openFile(worldPath.toFile());
+            }).build());
+            buttons.add(this.openWorldDirectory);
+        }
 
         this.list.addSmall(buttons);
     }

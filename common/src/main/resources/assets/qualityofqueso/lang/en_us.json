@@ -82,6 +82,8 @@
   "qualityofqueso.gui.report_bugs": "Report a bug...",
   "qualityofqueso.gui.report_bugs.tooltip": "Report an inconsistency or bug...",
 
+  "qualityofqueso.gui.open_world_directory": "Open World Directory...",
+
   "qualityofqueso.gui.on": "ON",
   "qualityofqueso.gui.off": "OFF",
   "qualityofqueso.gui.yes": "YES",
@@ -132,9 +134,9 @@
   "qualityofqueso.gui.tag_filtered": "Tag Filtered\nAny item matching a filtered item's tag will be moved",
   "qualityofqueso.gui.right_click_switch": "Right-click to edit filtered items",
   "qualityofqueso.gui.placeholder_editor": "Filtered Items",
-  "qualityofqueso.gui.fill_whats_present": "Only moving items that are present in this container",
+  "qualityofqueso.gui.fill_whats_present": "Only moving matching items",
   "qualityofqueso.gui.disable_fill_whats_present": "\nClick to disable",
-  "qualityofqueso.gui.move_anything": "Currently moving anything",
+  "qualityofqueso.gui.move_anything": "Moving anything",
   "qualityofqueso.gui.disable_move_anything": "\nClick to only move what's present in container",
   "qualityofqueso.gui.mark_container": "\nShift + left-click this container to mark it as \"filtered\"",
 

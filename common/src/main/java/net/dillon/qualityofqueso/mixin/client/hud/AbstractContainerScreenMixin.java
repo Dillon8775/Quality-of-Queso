@@ -265,7 +265,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             }
 
             // Skip items that aren't already present/filtered
-            if (!drop && !toInventory && options().management.fillWhatsPreset && !isPresentInContainer(this.container, this.menu, fromStack)) {
+            if (!drop && options().management.fillWhatsPreset && !isPresent(toInventory, this.container, this.menu, fromStack)) {
                 continue;
             }
 
@@ -371,6 +371,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
      */
     @Unique
     private boolean shouldButtonBeActive(boolean isPlayerInventory, @Nullable Inventory playerInventory, boolean applyFillWhatsPresentFilter) {
+        boolean toInventory = !isPlayerInventory;
         // Determine fromInventory size to run through
         int size = isPlayerInventory ? playerInventory.getNonEquipmentItems().size() : this.container.getContainerSize();
         int filledSlots = 0;
@@ -390,7 +391,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             boolean isShulkerScreen = isShulkerBoxScreen(this.screen);
             boolean isCursorShulker = isShulkerScreen && this.menu.getCarried().is(ItemTags.SHULKER_BOXES);
             boolean isStackShulker = isShulkerScreen && stack.is(ItemTags.SHULKER_BOXES);
-            if (applyFillWhatsPresentFilter && options().management.fillWhatsPreset && isPlayerInventory && !isPresentInContainer(this.container, this.menu, stack)) {
+            if (applyFillWhatsPresentFilter && options().management.fillWhatsPreset && !isPresent(toInventory, this.container, this.menu, stack)) {
                 continue;
             }
             if (!cursorStack.isEmpty()) {
@@ -419,14 +420,14 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                 }
             }
         }
-        return filledSlots != 0 && !this.areAllSlotsUnavailable(applyFillWhatsPresentFilter, isPlayerInventory, isPlayerInventory ? playerInventory : null);
+        return filledSlots != 0 && !this.areAllSlotsUnavailable(applyFillWhatsPresentFilter, isPlayerInventory, toInventory, isPlayerInventory ? playerInventory : null);
     }
 
     /**
      * @return {@code true} if all slots are grayed out, or {@code unavailable.}
      */
     @Unique
-    private boolean areAllSlotsUnavailable(boolean applyFillWhatsPresentFilter, boolean isPlayerInventory, @Nullable Inventory playerInventory) {
+    private boolean areAllSlotsUnavailable(boolean applyFillWhatsPresentFilter, boolean isPlayerInventory, boolean toInventory, @Nullable Inventory playerInventory) {
         int foundQuerys = 0;
         List<Slot> playerSlots = new ArrayList<>();
         // If checking player fromInventory, loop through all player fromInventory slots to determine if slot is unavailable
@@ -444,7 +445,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                 if (this.search(this.getSearchFieldText(), slot, false)) {
                     // prevent shulker boxes from counting as a found query when in a shulker box screen
                     if (!(isShulkerBoxScreen(this.screen) && slot.getItem().is(ItemTags.SHULKER_BOXES))) {
-                        if (!applyFillWhatsPresentFilter || !options().management.fillWhatsPreset || isPresentInContainer(this.container, this.menu, slot.getItem())) {
+                        if (!applyFillWhatsPresentFilter || !options().management.fillWhatsPreset || isPresent(toInventory, this.container, this.menu, slot.getItem())) {
                             foundQuerys++; // foundQuerys++; // increment J if query found in slot
                         }
                     }

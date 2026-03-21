@@ -349,16 +349,20 @@ public class ButtonUtil {
     /**
      * @return true if the item is present in the opposing inventory/container.
      */
-    public static boolean isPresentInContainer(Container container, AbstractContainerMenu menu, ItemStack sourceStack) {
-        if (!ContainerTracker.IS_TRACKED_CONTAINER) {
-            for (int i = 0; i < getContainerSize(container); i++) {
-                ItemStack opposingStack = menu.getSlot(i).getItem();
-                if (!opposingStack.isEmpty() && matchesFillFilter(sourceStack, opposingStack)) {
-                    return true;
-                }
+    public static boolean isPresent(boolean toInventory, Container container, AbstractContainerMenu menu, ItemStack sourceStack) {
+        if (ContainerTracker.IS_TRACKED_CONTAINER) {
+            return toInventory || itemMatchesPlaceholder(sourceStack);
+        }
+
+        int containerSize = getContainerSize(container);
+        int slotSize = getTotalSlots(menu);
+        for (int i = (toInventory ? containerSize : 0); i < (toInventory ? slotSize : containerSize); i++) {
+            ItemStack opposingStack = menu.getSlot(i).getItem();
+            if (!opposingStack.isEmpty() && matchesFillFilter(sourceStack, opposingStack)) {
+                return true;
             }
         }
-        return itemMatchesPlaceholder(sourceStack);
+        return false;
     }
 
     /**

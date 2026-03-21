@@ -1,44 +1,43 @@
-Quality of Queso Version 1.6 (MC Fabric 26.1, NeoForge 26.1):
-ATTENTION REGULAR QOQ USERS:
+# Quality of Queso Version 1.6 (MC Fabric 26.1, NeoForge 26.1):
+## ATTENTION REGULAR QOQ USERS:
 - Be prepared to reconfigure your mod settings with this version!
-
 - Dropped Forge support. Moving to NeoForge and Fabric only!
 
-OFFICIAL WIKI PAGE
-- There is now a dedicated Wiki page for this mod! Check it out here:
-https://quality-of-queso.fandom.com/wiki/Quality_of_Queso_Wiki
-I highly recommend reading it to really get the quality of life that this mod offers.
+## [OFFICIAL WIKI PAGE](https://quality-of-queso.fandom.com/wiki/Quality_of_Queso_Wiki)
+- There is now a dedicated Wiki page for this mod! Check it out [here!](https://quality-of-queso.fandom.com/wiki/Quality_of_Queso_Wiki)
+- I highly recommend reading it to really get the quality of life that this mod offers.
 
-=== NEW FEATURES ===
+# === NEW FEATURES ===
 
-Elytra Alarm:
+## Elytra Alarm
 - If you fall a certain amount of blocks (default = 20) with an elytra in your inventory and it's not equipped, the alarm goes off, indicating that you need to equip your elytra.
 - You can change the amount of blocks in the config, and this feature is entirely toggleable.
 
-Fill What's Present:
-- A new transferring functionality, which will only transfer items that are already present in the container that you are transferring to.
+## Fill What's Present / Move Matching Items
+- A new transferring functionality, which will only transfer items that are already present in the opposing container / inventory.
 - For example, lets say your chest has diamonds and planks. And lets say you have wood, emeralds, and diamonds and planks in your inventory. When transferring your inventory -> container, it will only move the diamonds and planks.
 - In addition to this, you can shift + left-click on a container block (chest, shulker box, or barrel) to mark it as a "filtered" chest. Then, whenever you open the container, the "fill what's present" will automatically enable for that chest, making it act almost like an "auto-sorter".
-- It will automatically turn off when you close the chest if it wasn't already on before.
+- Thanks to vashtetr and WimpieRatte for suggesting the "move matching items" feature.
 
-Container Filtering:
+## Container Filtering
 - In addition to the "Fill What's Present" feature, you can also manually filter containers to only transfer filtered items (or filtered items by tag), by shift + right clicking on the "Fill What's Present" button.
 - This will then open a new GUI screen where you can pick and choose which items you want to be sorted into that container.
 - You can then easily move items into that container, if it's already present in the container, or if that container has that item marked as "filtered".
 - This feature is basically multi-item container sorting, 100% client side, no redstone or special items/blocks required.
 
-Searching changes:
+## Searching Changes
 - New texture for the search bar! It's very vanilla-friendly. You can disable it if you'd like.
 - You can now search inside shulker boxes and bundles that are in the container/inventory you are searching. You can toggle this with the new "Search Transportables" that appears next to the search bar if a transportable container is present anywhere.
 - Renamed "Inventory Searching Options" category to "Searching Options".
 - Moved "Quick Search" from Misc options to "Searching" options.
 - Moved "Search Inventory" to new category of options, "Advanced" options, to allow for easier differentiation between the "Inventory Searching" option and "Search Inventory".
 
-Sorting changes:
+## Container Sorting Changes
 - You can now sort by tag!
 - Just right-click the sort button to toggle alphabetical/tag sorting.
+- You can now sort when there is a bundle in a container.
 
-HUD Changes:
+## HUD (Item Count & Armor Status) Changes
 - Armor status is now simply an on/off option. It displays your armor and highlights it when it's changed. The color of the highlight is also determined by the durability of your armor item.
 - Selected hotbar slots also use this colored highlighting system. You can configure this.
 - Shooting a bow/crossbow now displays how many arrows you have. This can be toggled.
@@ -47,11 +46,11 @@ HUD Changes:
 - Added warning indicators next to the armor, which will display if the armor's durability is 10% or less.
 - Added support for left-handed users.
 
-Transferring changes:
+## Transferring Changes
 - "Smart Moving" is now much smarter, where you can shift to transfer only matching components (for ALL items).
 - The "Include Hotbar" button now only appears in the inventory screen if the "quick drop" feature is enabled.
 
-Drag Sorting Changes:
+## Drag Sorting Changes:
 - Reverted the logic of drag sorting.
 - Holding ALT + SHIFT now EXCLUDES the slots that you are dragging on.
 - Holding just ALT will SELECT that slot and exclude all other slots.
@@ -60,29 +59,30 @@ Drag Sorting Changes:
 - Added a button to clear all excluded slots.
 - You can also right-click the button to save excluded slots.
 
-Item Frame Searching Changes:
+## Item Frame Searching Changes:
 - Holding CTRL in item frame search screen to match case no longer works. You must add ":" to the beginning of the query.
+- Item frame searching now only looks at the item name itself, meaning if it has a custom name, you can only search it by custom name.
 - You can no longer tag search with item frame searching. Item frame searching now only searches the actual item name, like "Diamond" or "Emerald".
 - The "/itemframesearcher" command is now registered server-side.
 
-Enchanting Helper:
+## Enchanting Helper
 - See more tooltips over enchantment books to see what items the enchanted book can go on!
 - You can toggle this with the "Enchanting Helper" option.
 
-Field of View Modifiers:
+## Field of View Modifiers
 - Set what can change your FOV!
 - You can toggle sprinting, flying, potion effects (like speed and slowness), bow pulling, and fluids!
 
-Fog changes:
+## Additions to the "Fog" option
 - You can now toggle nether/overworld fog on/off individually (or, just turn all fog off like normal with the "All Fog" option).
 - Additionally, you can set the intensity of the nether fog.
 
-Option changes:
+## Option Changes
 - Added an "Accessiblity Options" screen. Moved some technical options to this category.
 - Removed the "Include/Exclude Hotbar" option from the options screen, as it can easily be toggled via a container/inventory.
 - Renamed "Chest Searching" to "Container Searching".
 
-Accessibility Options Category:
+## Accessibility Options Category:
 - Moved "Perpendicular Quick Moving", "Move Items If", "Display Total w/ Stacks" and "Search Inventory" options to "Accessibility".
 - Also moved "Prevent E from typing", "Auto-close recipe book" and "Helpful tooltips" options to "Accessibility".
 - "Only Count Matching Items", which only adds items to the Item Count display counter if their components match (OFF by default).
@@ -93,11 +93,10 @@ Accessibility Options Category:
 - "Ignore Fabric Tags", which will ignore fabric tags when sorting, and transferring by filtered tags. This can be very useful because sometimes fabric tags group together odd items.
 - Moved the "Enable Mod" option into the main QoQ screen (not under "Misc..." anymore).
 
-The Fortnite Battle Pass option:
+## The Fortnite Battle Pass
 - Just, don't...
 
-Technical / small changes:
-- You can now sort with bundles in a container.
+## Technical / small changes:
 - Hovering over the quick drop button in your inventory while excluding hotbar now grays out the hotbar slots if the slot has an item.
 - "Swapping" feature is now OFF by default.
 - Organized assets and updated translations, and simplified translations so all users can read.
@@ -107,27 +106,31 @@ Technical / small changes:
 - Renamed "qualityofqueso_client-universal.json" to "qualityofqueso-universal_config.json".
 - Organized client-side configuration file.
 - Replaced "c:" tags with "fabric:" for easier understanding (tag searching). "c" tags are from fabric.
-- Lowered minimum distance of "Mob Hit Ding" to 10 (previously 15).
+- Lowered minimum distance of "Mob Hit Ding" to 10 (previously 15). The default value is still 20.
 - Added the showcase video link to the QoQ main menu.
+- Added a button to the QoQ main menu to open your world directory.
 
-Bug Fixes and Optimizations:
-- "Perpendicular Quick Moving" now works for all players, as long as the mod is installed server-side.
+## Bug Fixes and Optimizations:
+- [Bug 7](https://github.com/Dillon8775/Quality-of-Queso/issues/7) - "Perpendicular Quick Moving" now works for all players, as long as the mod is installed server-side.
 - Typing in the search bar in the creative menu and pressing any hotbar key (even if it's a letter) with a hovered slot will now actually move it to your hotbar, as it should.
-- Fixed bug where pressing "E" while "Prevent E from typing" is enabled, closes the screen, even if you are focused into a search bar.
+- [Bug 9, also mentioned in Dillon's Discord server...](https://github.com/Dillon8775/Quality-of-Queso/issues/9) - Fixed bug where pressing "E" while "Prevent E from typing" is enabled, closes the screen, even if you are focused into a search bar.
 - Fixed bug where "Prevent E from typing" only applies to the E key - if a player has the inventory key bounded to a different key other than E, it works appropriately now.
 - Fixed bug where if "Inventory Searching" is OFF, it doesn't auto-focus into the recipe book search field.
+- [Bug 10](https://github.com/Dillon8775/Quality-of-Queso/issues/10) - Fixed bug where closing your inventory with the E key auto-opens the recipe book for no reason.
 - Fixed armor status display timers being wrong.
-- Fixed drastic frame dropping when tag searching.
-- Fixed bug where throwing an item on a server doesn't display item count.
+- Fixed drastic frame drops when tag searching.
+- [Bug 5](https://github.com/Dillon8775/Quality-of-Queso/issues/5) - Fixed bug where throwing an item on a server doesn't display item count.
 - Fixed bug where picking up an item on a server that has the QoQ mod installed (server-side) displays that item for all users.
 - Fixed bug where Item count # is misaligned sometimes.
 - Fixed bug where Item count and armor status do not work correctly if the user is left-handed.
-- Fixed bug where "Mob Hit Ding" doesn't work on servers.
+- [Bug 4](https://github.com/Dillon8775/Quality-of-Queso/issues/4) - Fixed bug where "Mob Hit Ding" doesn't work on servers.
 - Fixed bug where right-clicking a container search field to clear it makes it start acting weird.
 - Fixed bug where items don't render their components with item count.
-- Fixed bug where only 1 tag of each item appears when tag searching.
+- Fixed bug where only 1 tag appears on an item when tag searching (all of the item's tags now display).
 - Fixed bug where "Search Inventory" applies to the inventory screen as well and causes mis-matches in slots - it no longer does and only applies to containers.
-- Fixed bug where mixins don't apply sometimes.
-- 100% fixed swapping cooldown.
+- Fixed bug where item frame searching doesn't play sounds.
+- Fixed swapping cooldown (for real this time).
+- Fixed bug where certain functions don't apply correctly or at all.
 - Optimized button sounds, so they play accordingly, even when using shortcut keys and buttons are disabled.
-- Other small optimizations and bug fixes.
+- Other small tweaks, optimizations, and bug fixes.
+- [Feature Request](https://github.com/Dillon8775/Quality-of-Queso/issues/2) - "Move matching items?" - added in this version.
