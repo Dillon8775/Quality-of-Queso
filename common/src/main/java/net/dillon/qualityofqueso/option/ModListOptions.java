@@ -284,9 +284,7 @@ public class ModListOptions {
 
     public static OptionInstance<Boolean> allFog() {
         return OptionInstance.createBoolean("qualityofqueso.options.all_fog", OptionInstance.cachedConstantTooltip(
-                        Component.translatable("qualityofqueso.options.all_fog.tooltip")
-                                .copy()
-                                .append(isSimpleKeybindsLoaded() ? Component.translatable("qualityofqueso.options.all_fog.simple_keybinds") : ModTexts.BLANK)),
+                        Component.translatable("qualityofqueso.options.all_fog.tooltip")),
                 ON_OFF_TEXT, options().fog.allFog, value -> options().fog.allFog = value);
     }
 

@@ -102,7 +102,7 @@ public class LocalPlayerMixin {
 
         ItemStack projectile = player.getProjectile(useItem);
 
-        if (!hasInfinity(projectile) || !projectile.is(Items.ARROW)) {
+        if (!hasInfinity(useItem) || !projectile.is(Items.ARROW)) {
             ItemHudTracker.setStack(projectile.isEmpty() ? new ItemStack(Items.ARROW) : projectile.copyWithCount(1));
         }
     }

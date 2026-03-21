@@ -83,6 +83,7 @@ public class AccessibilityOptionsScreen extends AbstractModOptionsScreen {
         List<AbstractWidget> widgets = ImmutableList.of(
                 ModListOptions.elytraAlarmSoundDelay().createButton(this.options),
                 ModListOptions.qoqButtons().createButton(this.options),
+
                 ModListOptions.multiServerConfigs().createButton(this.options),
                 this.blacklistedServersField
         );

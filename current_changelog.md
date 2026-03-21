@@ -129,9 +129,10 @@
 - Fixed bug where picking up an item on a server that has the QoQ mod installed (server-side) displays that item for all users.
 - Fixed bug where Item count # is misaligned sometimes.
 - Fixed bug where Item count and armor status do not work correctly if the user is left-handed.
+- Fixed bug where Item count doesn't display with the item's components (if they have any).
 - [Bug 4](https://github.com/Dillon8775/Quality-of-Queso/issues/4) - Fixed bug where "Mob Hit Ding" doesn't work on servers.
+- Fixed bug where "Mob Hit Ding" doesn't work with other types of arrows (spectral, tipped arrows).
 - Fixed bug where right-clicking a container search field to clear it makes it start acting weird.
-- Fixed bug where items don't render their components with item count.
 - Fixed bug where only 1 tag appears on an item when tag searching (all of the item's tags now display).
 - Fixed bug where "Search Inventory" applies to the inventory screen as well and causes mis-matches in slots - it no longer does and only applies to containers.
 - Fixed bug where item frame searching doesn't play sounds.

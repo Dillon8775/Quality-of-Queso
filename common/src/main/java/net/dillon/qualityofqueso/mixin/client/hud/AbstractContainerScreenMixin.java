@@ -391,7 +391,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             boolean isShulkerScreen = isShulkerBoxScreen(this.screen);
             boolean isCursorShulker = isShulkerScreen && this.menu.getCarried().is(ItemTags.SHULKER_BOXES);
             boolean isStackShulker = isShulkerScreen && stack.is(ItemTags.SHULKER_BOXES);
-            if (applyFillWhatsPresentFilter && options().management.fillWhatsPreset && !isPresent(toInventory, this.container, this.menu, stack)) {
+            if (applyFillWhatsPresentFilter && options().management.fillWhatsPreset && !isPresent(toInventory, this.container, this.menu, !cursorStack.isEmpty() ? cursorStack : stack)) {
                 continue;
             }
             if (!cursorStack.isEmpty()) {

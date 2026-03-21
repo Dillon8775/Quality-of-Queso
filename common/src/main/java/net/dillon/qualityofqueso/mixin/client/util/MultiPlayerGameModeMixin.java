@@ -111,10 +111,10 @@ public class MultiPlayerGameModeMixin {
     }
 
     /**
-     * Remembers chest use so the next opening chest screen can be identified.
+     * Remembers container use so the next opening container screen can be identified.
      */
     @Inject(method = "useItemOn", at = @At("HEAD"))
-    private void onUseItemOn(LocalPlayer player, InteractionHand hand, BlockHitResult hitResult, CallbackInfoReturnable<InteractionResult> cir) {
+    private void rememberContainer(LocalPlayer player, InteractionHand hand, BlockHitResult hitResult, CallbackInfoReturnable<InteractionResult> cir) {
         if (!modEnabled(Minecraft.getInstance()) || !options().management.containerFiltering) {
             return;
         }

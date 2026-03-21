@@ -268,7 +268,6 @@
   "qualityofqueso.options.all_fog": "All Fog",
   "qualityofqueso.options.all_fog.tooltip": "Remove Minecraft's annoying fog!",
   "qualityofqueso.options.all_fog.disabled": "\n\nThis feature will not work because \"applyFogFunction\" is disabled. Re-enable it by going into the universal QoQ config file.",
-  "qualityofqueso.options.all_fog.simple_keybinds": "\n\nIf you have Simple Keybinds or the Speedrunner Mod loaded, this will do nothing.",
   "qualityofqueso.options.overworld_fog": "Overworld Fog",
   "qualityofqueso.options.overworld_fog.tooltip": "Toggle overworld fog.\nThis also affects every dimension §oexcept §r§fthe nether.",
   "qualityofqueso.options.nether_fog": "Nether Fog",
@@ -314,6 +313,8 @@
   "qualityofqueso.options.move_items_if.can_move_at_all.tooltip": "If container/inventory is full, allow transferring of items if the §lto-slot's item count §r§f§o(the slot that the item is being moved to)§r§f is §oless§r§f than its §lmax item count.",
   "qualityofqueso.options.elytra_alarm_sound_delay": "Elytra Alarm Sound Delay",
   "qualityofqueso.options.elytra_alarm_sound_delay.tooltip": "Determines the time (in ticks) that the elytra alarm can play.",
+  "qualityofqueso.options.twelve_hour_format": "12-Hour Format",
+  "qualityofqueso.options.twelve_hour_format.tooltip": "Use the 12-hour clock format when displaying times with the \"Show Time\" debug entries.",
 
   "qualityofqueso.options.enable_mod": "Enable Mod",
   "qualityofqueso.options.enable_mod.tooltip": "Enables all Quality of Queso features.",

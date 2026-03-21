@@ -1,5 +1,6 @@
 package net.dillon.qualityofqueso.debug;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.debug.DebugEntryCategory;
 import net.minecraft.client.gui.components.debug.DebugScreenDisplayer;
 import net.minecraft.client.gui.components.debug.DebugScreenEntry;
@@ -8,7 +9,7 @@ import net.minecraft.world.level.chunk.LevelChunk;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
-import static net.dillon.qualityofqueso.util.ModUtil.ofQoQ;
+import static net.dillon.qualityofqueso.util.ModUtil.modEnabled;
 
 /**
  * A debug hud to display Minecraft's in-game time.
@@ -17,7 +18,7 @@ public class InGameTimeHudEntry implements DebugScreenEntry {
 
     @Override
     public void display(@NonNull DebugScreenDisplayer lines, @Nullable Level level, @Nullable LevelChunk clientChunk, @Nullable LevelChunk chunk) {
-        if (level == null) {
+        if (!modEnabled(Minecraft.getInstance()) || level == null) {
             return;
         }
         long time = level.getOverworldClockTime() % 24000;
@@ -29,21 +30,27 @@ public class InGameTimeHudEntry implements DebugScreenEntry {
 
         String amPm = hours >= 12 ? "PM" : "AM";
 
-        String description;
-        if (hours == 0) {
+        int totalMinutes = hours * 60 + minutes;
+
+        String description = "Night";
+        if (totalMinutes >= 0 && totalMinutes < 60) { // 12:00 AM - 12:59 AM
             description = "Midnight";
-        } else if (hours >= 20 || (hours >= 1 && hours < 5)) {
-            description = "Night";
-        } else if (hours == 5) {
-            description = "Early Morning";
-        } else if (hours >= 6 && hours < 12) {
-            description = "Morning";
-        } else if (hours == 12) {
+        } else if (totalMinutes >= 12 * 60 && totalMinutes < 13 * 60) { // 12:00 PM - 12:59 PM
             description = "Noon";
-        } else if (hours >= 13 && hours < 17) {
+        } else if (totalMinutes >= 60 && totalMinutes < 270) { // 1:00 AM - 4:30 AM
+            description = "Night";
+        } else if (totalMinutes >= 270 && totalMinutes < 345) { // 4:30 AM - 5:45 AM
+            description = "Sunrise";
+        } else if (totalMinutes >= 345 && totalMinutes < 480) { // 5:45 AM - 8:00 AM
+            description = "Morning";
+        } else if (totalMinutes >= 480 && totalMinutes < 720) { // 8:00 AM - 11:59 AM
             description = "Day";
-        } else {
+        } else if (totalMinutes >= 780 && totalMinutes < 1020) { // 1:00 PM - 5:00 PM
+            description = "Day";
+        } else if (totalMinutes >= 1020 && totalMinutes < 1080) { // 5:00 PM - 6:00 PM
             description = "Evening";
+        } else if (totalMinutes >= 1080 && totalMinutes < 1190) { // 6:00 PM - 7:50 PM
+            description = "Sunset";
         }
 
         hours = hours % 12;
@@ -52,7 +59,7 @@ public class InGameTimeHudEntry implements DebugScreenEntry {
         }
 
         String formatted = String.format("%d:%02d %s", hours, minutes, amPm);
-        lines.addToGroup(ofQoQ("real_life_time"), description + " (" + formatted + ", in-game)");
+        lines.addLine(description + " (" + formatted + ", in-game)");
     }
 
     @Override
