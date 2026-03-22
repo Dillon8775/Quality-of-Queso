@@ -49,6 +49,7 @@
 ## Transferring Changes
 - "Smart Moving" is now much smarter, where you can shift to transfer only matching components (for ALL items).
 - The "Include Hotbar" button now only appears in the inventory screen if the "quick drop" feature is enabled.
+- Added the transfer container button to hoppers, droppers, and dispensers.
 
 ## Drag Sorting Changes:
 - Reverted the logic of drag sorting.

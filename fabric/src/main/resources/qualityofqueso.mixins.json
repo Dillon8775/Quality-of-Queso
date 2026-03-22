@@ -8,6 +8,8 @@
     "client.accessor.AbstractRecipeBookScreenAccessor",
     "client.accessor.BrewingStandMenuAccessor",
     "client.accessor.DebugScreenEntriesAccessor",
+    "client.accessor.DispenserMenuAccessor",
+    "client.accessor.HopperMenuAccessor",
     "client.accessor.KeyMappingAccessor",
     "client.accessor.RecipeBookComponentAccessor",
     "client.accessor.ShulkerBoxMenuAccessor",

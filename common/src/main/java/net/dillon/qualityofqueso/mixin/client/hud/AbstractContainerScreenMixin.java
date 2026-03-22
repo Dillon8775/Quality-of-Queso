@@ -127,6 +127,10 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             this.container = brewingStand(brewingStandScreen);
         } else if (this.screen instanceof AbstractFurnaceScreen<?> abstractFurnaceScreen) {
             this.container = abstractFurnaceScreen.getMenu().getResultSlot().container;
+        } else if (this.screen instanceof DispenserScreen dispenserScreen) {
+            this.container = dispenser(dispenserScreen);
+        } else if (this.screen instanceof HopperScreen hopperScreen) {
+            this.container = hopper(hopperScreen);
         }
         if (isContainerScreen(this.screen)) {
             // Determine fromInventory variable; if instance ShulkerBoxScreen, fromInventory is the shulker box's fromInventory
@@ -380,6 +384,10 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
         } else if (this.screen instanceof AbstractFurnaceScreen<?> abstractFurnaceScreen
                 && !abstractFurnaceScreen.getMenu().getResultSlot().hasItem()) {
             return false;
+        } else if (this.screen instanceof DispenserScreen dispenserScreen) {
+            size = dispenser(dispenserScreen).getContainerSize();
+        } else if (this.screen instanceof HopperScreen hopperScreen) {
+            size = hopper(hopperScreen).getContainerSize();
         }
 
         for (int i = 0; i < size; i++) {
@@ -711,7 +719,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             /* --- */
 
             // TRANSFER CONTAINER BUTTON (container -> inventory)
-            if (containerScreen || isBrewingStandScreen(this.screen) || isFurnaceScreen(this.screen)) {
+            if (containerScreen || isBrewingStandScreen(this.screen) || isFurnaceScreen(this.screen) || isDispenserScreen(this.screen) || isHopperScreen(this.screen)) {
                 this.transferContainerButton = this.addWidget(
                         new TransferButton(
                                 this.menu,
@@ -1124,7 +1132,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                 }
                 cir.setReturnValue(true);
             }
-            if ((isValidScreen(this.screen) || isBrewingStandScreen(this.screen) || isFurnaceScreen(this.screen)) && options().management.transferring.orKeyOnly()) {
+            if ((isValidScreen(this.screen) || isBrewingStandScreen(this.screen) || isFurnaceScreen(this.screen) || isDispenserScreen(this.screen) || isHopperScreen(this.screen)) && options().management.transferring.orKeyOnly()) {
                 if (input.key() == key(ModKeybinds.MOVE_CONTAINER).getValue()) {
                     this.transferItems(true);
                 }

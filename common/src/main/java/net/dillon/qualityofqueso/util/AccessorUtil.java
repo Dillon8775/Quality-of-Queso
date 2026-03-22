@@ -6,10 +6,7 @@ import net.dillon.qualityofqueso.mixin.main.AbstractContainerMenuAccessor;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.debug.DebugScreenEntry;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.gui.screens.inventory.AbstractRecipeBookScreen;
-import net.minecraft.client.gui.screens.inventory.BrewingStandScreen;
-import net.minecraft.client.gui.screens.inventory.ShulkerBoxScreen;
+import net.minecraft.client.gui.screens.inventory.*;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.Container;
@@ -62,6 +59,20 @@ public class AccessorUtil {
      */
     public static Container brewingStand(BrewingStandScreen brewingStandScreen) {
         return ((BrewingStandMenuAccessor)brewingStandScreen.getMenu()).getBrewingStandContainer();
+    }
+
+    /**
+     * @return the dispenser screen container.
+     */
+    public static Container dispenser(DispenserScreen dispenserScreen) {
+        return ((DispenserMenuAccessor)dispenserScreen.getMenu()).getDispenserContainer();
+    }
+
+    /**
+     * @return the hopper screen container.
+     */
+    public static Container hopper(HopperScreen hopperScreen) {
+        return ((HopperMenuAccessor)hopperScreen.getMenu()).getHopperContainer();
     }
 
     /**

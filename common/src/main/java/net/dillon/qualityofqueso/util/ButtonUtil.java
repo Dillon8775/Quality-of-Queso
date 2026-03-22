@@ -109,6 +109,10 @@ public class ButtonUtil {
         int modifier = 18;
         if (isBrewingStandScreen(screen)) {
             modifier -= 36;
+        } else if (isDispenserScreen(screen)) {
+            modifier -= 38;
+        } else if (isHopperScreen(screen)) {
+            modifier -= 20;
         } else if (isFurnaceScreen(screen)) {
             modifier -= 16;
         } else if (screen instanceof AbstractRecipeBookScreen<?> recipeBookScreen && getRecipeBookComponent(recipeBookScreen).isVisible()) {
@@ -126,6 +130,10 @@ public class ButtonUtil {
             y += 30;
         } else if (isFurnaceScreen(screen)) {
             y += 14;
+        } else if (isDispenserScreen(screen)) {
+            y += 24;
+        } else if (isHopperScreen(screen)) {
+            y -= 1;
         }
         return screenY + titleY + (screen instanceof InventoryScreen ? 64 : y);
     }
@@ -910,6 +918,20 @@ public class ButtonUtil {
      */
     public static boolean isFurnaceScreen(Screen screen) {
         return screen instanceof AbstractFurnaceScreen<?>;
+    }
+
+    /**
+     * @return valid dispenserScreen.
+     */
+    public static boolean isDispenserScreen(Screen screen) {
+        return screen instanceof DispenserScreen;
+    }
+
+    /**
+     * @return valid hopperScreen.
+     */
+    public static boolean isHopperScreen(Screen screen) {
+        return screen instanceof HopperScreen;
     }
 
     /**
