@@ -21,12 +21,12 @@ public class SearchTransportablesButton extends ToggleableButton {
 
     @Override
     protected String onTextureId() {
-        return "transportable/include_transportables_button";
+        return "transportable/including_transportables";
     }
 
     @Override
     protected String offTextureId() {
-        return "transportable/exclude_transportables_button";
+        return "transportable/excluding_transportables";
     }
 
     @Override

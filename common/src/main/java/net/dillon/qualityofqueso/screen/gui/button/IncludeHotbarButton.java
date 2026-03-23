@@ -17,12 +17,12 @@ public class IncludeHotbarButton extends ToggleableButton {
 
     @Override
     protected String onTextureId() {
-        return "hotbar/include_hotbar_button";
+        return "hotbar/including_hotbar";
     }
 
     @Override
     protected String offTextureId() {
-        return "hotbar/exclude_hotbar_button";
+        return "hotbar/excluding_hotbar";
     }
 
     @Override

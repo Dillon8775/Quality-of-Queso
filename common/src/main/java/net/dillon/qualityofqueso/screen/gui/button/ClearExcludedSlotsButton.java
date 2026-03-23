@@ -31,12 +31,12 @@ public class ClearExcludedSlotsButton extends ToggleableButton {
 
     @Override
     protected String onTextureId() {
-        return "clear_excluded_slots/clear_excluded_slots_button_saving";
+        return "clear_excluded_slots/clear_excluded_slots_saving";
     }
 
     @Override
     protected String offTextureId() {
-        return "clear_excluded_slots/clear_excluded_slots_button";
+        return "clear_excluded_slots/clear_excluded_slots";
     }
 
     @Override

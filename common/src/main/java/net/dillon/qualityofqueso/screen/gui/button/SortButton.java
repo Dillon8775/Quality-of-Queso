@@ -38,6 +38,7 @@ public class SortButton extends TransferButton {
 
     @Override
     protected void renderBaseButtonTexture(String id, AbstractWidget buttonReference, GuiGraphicsExtractor graphics) {
+        this.renderBaseTexture(graphics);
         ButtonUtil.drawButtonTexture(graphics, options().management.tagSorting ? id + "_tag" : id, this);
         this.renderHoveredTexture(graphics);
 
@@ -46,7 +47,7 @@ public class SortButton extends TransferButton {
         }
 
         if (options().accessibility.showButtonShortcuts && this.buttonName.equals("sort") && key(ModKeybinds.SORT_CONTAINER) == ModKeybinds.SORT_CONTAINER.getDefaultKey()) {
-            ButtonUtil.drawButtonTexture(graphics, "shortcut/sort_button_shortcut_key", this);
+            ButtonUtil.drawButtonTexture(graphics, "shortcut/sort_shortcut_key", this);
         }
     }
 

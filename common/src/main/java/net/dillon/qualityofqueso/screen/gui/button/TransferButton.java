@@ -86,10 +86,10 @@ public class TransferButton extends Button {
      */
     protected String getAppendedTexture() {
         String transferableString = !this.screenHandler.getCarried().isEmpty() ?
-                "_with_stack.png" : this.searchFieldText.startsWith("!") ?
-                "_exclude.png" : this.searchFieldText.startsWith("#") ?
-                "_with_tag.png" : this.searchFieldText.startsWith(":") ?
-                "_match.png" : ".png";
+                "_cursor_stack.png" : this.searchFieldText.startsWith("!") ?
+                "_excluding.png" : this.searchFieldText.startsWith("#") ?
+                "_tag.png" : this.searchFieldText.startsWith(":") ?
+                "_matching.png" : ".png";
         String appended = this.transferrableButton ? transferableString : ".png";
         Screen screen = Minecraft.getInstance().screen;
 
@@ -108,8 +108,21 @@ public class TransferButton extends Button {
      */
     private void renderButtonTexture(String id, AbstractWidget buttonReference, GuiGraphicsExtractor graphics) {
         int xy = getTransferButtonXY(this);
+        this.renderBaseTexture(graphics);
         graphics.blit(RenderPipelines.GUI_TEXTURED, ofQoQ("textures/gui/button/" + id + this.getAppendedTexture()), buttonReference.getX() - 1, buttonReference.getY() - 1, 0.0F, 0.0F, xy, xy, xy, xy);
         this.renderHoveredTexture(graphics);
+    }
+
+    /**
+     * Renders a button's base texture.
+     */
+    protected void renderBaseTexture(GuiGraphicsExtractor graphics) {
+        String name;
+        switch (this.getHoverSize()) {
+            case BIG -> name = "big_button";
+            default -> name = "base_button";
+        }
+        ButtonUtil.drawButtonTexture(graphics, "base/" + (!this.canBeActive.get() ? name + "_inactive" : name), this);
     }
 
     /**
@@ -125,7 +138,7 @@ public class TransferButton extends Button {
             case BIG -> name = "big_hovered";
             default -> name = "basic_hovered";
         }
-        ButtonUtil.drawButtonTexture(graphics, "hovered/" + name, this);
+        ButtonUtil.drawButtonTexture(graphics, "base/hovered/" + name, this);
     }
 
     /**
@@ -148,9 +161,9 @@ public class TransferButton extends Button {
         }
 
         if (inventoryButton && key(ModKeybinds.MOVE_INVENTORY) == ModKeybinds.MOVE_INVENTORY.getDefaultKey()) {
-            ButtonUtil.drawButtonTexture(graphics, "shortcut/transfer_inventory_button_shortcut_key", this);
+            ButtonUtil.drawButtonTexture(graphics, "shortcut/transfer_inventory_shortcut_key", this);
         } else if (containerButton && key(ModKeybinds.MOVE_CONTAINER) == ModKeybinds.MOVE_CONTAINER.getDefaultKey()) {
-            ButtonUtil.drawButtonTexture(graphics, "shortcut/transfer_container_button_shortcut_key", this);
+            ButtonUtil.drawButtonTexture(graphics, "shortcut/transfer_container_shortcut_key", this);
         }
     }
 
@@ -175,7 +188,7 @@ public class TransferButton extends Button {
     protected void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks) {
         this.active = this.canBeActive.get();
 
-        this.renderBaseButtonTexture(this.resourceLocation + this.buttonName + (this.canBeActive.get() ? "_button" : "_button_inactive"), this, graphics);
+        this.renderBaseButtonTexture(this.resourceLocation + this.buttonName + (!this.canBeActive.get() ? "_inactive" : ""), this, graphics);
 
         if (!this.isHovered() || !this.active || !options().accessibility.helpfulTooltips) {
             return;
