@@ -37,8 +37,8 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
             this.minecraft.setScreen(new SearchingOptionsScreen(this));
         }).build());
         buttons.add(this.searchingOptions);
-        this.inventoryManagementOptions = this.addWidget(Button.builder(Component.translatable("qualityofqueso.gui.inventory_management_options"), button -> {
-            this.minecraft.setScreen(new InventoryManagementOptionsScreen(this));
+        this.inventoryManagementOptions = this.addWidget(Button.builder(Component.translatable("qualityofqueso.gui.management_options"), button -> {
+            this.minecraft.setScreen(new ManagementOptionsScreen(this));
         }).build());
         buttons.add(this.inventoryManagementOptions);
 

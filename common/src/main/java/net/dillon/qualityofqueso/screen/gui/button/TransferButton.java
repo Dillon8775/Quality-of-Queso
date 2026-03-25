@@ -41,8 +41,8 @@ public class TransferButton extends Button {
     /**
      * Constructs a default transfer button.
      */
-    public TransferButton(AbstractContainerMenu screenHandler, Font font, String searchFieldText, int x, int y, String resourceLocation, String buttonName, boolean transferrableButton, OnPress onPress) {
-        super(x, y, 10, 10, ModTexts.BLANK, onPress, DEFAULT_NARRATION);
+    public TransferButton(AbstractContainerMenu screenHandler, Font font, String searchFieldText, String resourceLocation, String buttonName, boolean transferrableButton, OnPress onPress) {
+        super(0, 0, 10, 10, ModTexts.BLANK, onPress, DEFAULT_NARRATION);
         this.screenHandler = screenHandler;
         this.font = font;
         this.searchFieldText = searchFieldText;
@@ -55,8 +55,8 @@ public class TransferButton extends Button {
     /**
      * Constructs a default transfer button with a boolean supplier, determining if the button can be active or not.
      */
-    public TransferButton(AbstractContainerMenu screenHandler, Font font, String searchFieldText, int x, int y, String resourceLocation, String buttonName, boolean transferrableButton, OnPress onPress, Supplier<Boolean> canBeActive) {
-        super(x, y, 10, 10, ModTexts.BLANK, onPress, DEFAULT_NARRATION);
+    public TransferButton(AbstractContainerMenu screenHandler, Font font, String searchFieldText, String resourceLocation, String buttonName, boolean transferrableButton, OnPress onPress, Supplier<Boolean> canBeActive) {
+        super(0, 0, 10, 10, ModTexts.BLANK, onPress, DEFAULT_NARRATION);
         this.screenHandler = screenHandler;
         this.font = font;
         this.searchFieldText = searchFieldText;

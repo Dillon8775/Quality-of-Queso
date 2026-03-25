@@ -17,7 +17,8 @@ public class SearchingOptionsScreen extends AbstractModOptionsScreen {
                 ModListOptions.containerSearching(),
                 ModListOptions.inventorySearching(),
                 ModListOptions.quickSearch(),
-                ModListOptions.saveSearchText()
+                ModListOptions.saveSearchText(),
+                ModListOptions.transparentSearchBar()
         };
     }
 }

@@ -5,10 +5,10 @@ import net.minecraft.client.OptionInstance;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
-public class InventoryManagementOptionsScreen extends AbstractModOptionsScreen {
+public class ManagementOptionsScreen extends AbstractModOptionsScreen {
 
-    public InventoryManagementOptionsScreen(Screen parent) {
-        super(parent, Component.translatable("qualityofqueso.gui.title.inventory_management_options"));
+    public ManagementOptionsScreen(Screen parent) {
+        super(parent, Component.translatable("qualityofqueso.gui.title.management_options"));
     }
 
     @Override
@@ -16,6 +16,7 @@ public class InventoryManagementOptionsScreen extends AbstractModOptionsScreen {
         return new OptionInstance[]{
                 ModListOptions.dragSorting(),
                 ModListOptions.tagSorting(),
+                ModListOptions.verticalLayout()
         };
     }
 

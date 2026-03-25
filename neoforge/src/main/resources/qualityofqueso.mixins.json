@@ -20,6 +20,7 @@
 
     "client.screen.CreativeModeInventoryScreenMixin",
     "client.screen.EditBoxMixin",
+    "client.screen.InventoryScreenMixin",
     "client.screen.PanoramaMixin",
     "client.screen.PauseScreenMixin",
     "client.screen.TitleScreenMixin",

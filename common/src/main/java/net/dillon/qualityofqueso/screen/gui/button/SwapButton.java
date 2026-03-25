@@ -12,8 +12,8 @@ public class SwapButton extends TransferButton {
     private static final int DEFAULT_SWAP_COOLDOWN = 20;
     public static int SWAP_COOLDOWN = DEFAULT_SWAP_COOLDOWN;
 
-    public SwapButton(AbstractContainerMenu screenHandler, Font font, String searchFieldText, int x, int y, String resourceLocation, String buttonName, OnPress onPress, Supplier<Boolean> canBeActive) {
-        super(screenHandler, font, searchFieldText, x, y, resourceLocation, buttonName, false, onPress, canBeActive);
+    public SwapButton(AbstractContainerMenu screenHandler, Font font, String searchFieldText, String resourceLocation, String buttonName, OnPress onPress, Supplier<Boolean> canBeActive) {
+        super(screenHandler, font, searchFieldText, resourceLocation, buttonName, false, onPress, canBeActive);
     }
 
     /**

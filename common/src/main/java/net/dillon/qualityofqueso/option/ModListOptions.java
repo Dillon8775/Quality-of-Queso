@@ -46,11 +46,16 @@ public class ModListOptions {
         return OptionInstance.createBoolean("qualityofqueso.options.save_search_text", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.save_search_text.tooltip")),
                 YES_NO_TEXT, options().searching.saveSearchText, value -> options().searching.saveSearchText = value);
     }
+
+    public static OptionInstance<Boolean> transparentSearchBar() {
+        return OptionInstance.createBoolean("qualityofqueso.options.transparent_search_bar", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.transparent_search_bar.tooltip")),
+                ON_OFF_TEXT, options().searching.transparentSearchBar, value -> options().searching.transparentSearchBar = value);
+    }
     // end of searching options
 
     /* ===== */
 
-    // INVENTORY MANAGEMENT
+    // MANAGEMENT
     public static OptionInstance<Transferring> transferring() {
         return new OptionInstance<>(
                 "qualityofqueso.options.transferring",
@@ -135,6 +140,16 @@ public class ModListOptions {
     public static OptionInstance<Boolean> dragSorting() {
         return OptionInstance.createBoolean("qualityofqueso.options.drag_sorting", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.drag_sorting.tooltip")),
                 ON_OFF_TEXT, options().management.dragSorting, value -> options().management.dragSorting = value);
+    }
+
+    public static OptionInstance<Boolean> tagSorting() {
+        return OptionInstance.createBoolean("qualityofqueso.options.tag_sorting", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.tag_sorting.tooltip")),
+                ON_OFF_TEXT, options().management.tagSorting, value -> options().management.tagSorting = value);
+    }
+
+    public static OptionInstance<Boolean> verticalLayout() {
+        return OptionInstance.createBoolean("qualityofqueso.options.vertical_layout", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.vertical_layout.tooltip")),
+                ON_OFF_TEXT, options().management.verticalLayout, value -> options().management.verticalLayout = value);
     }
     // end of inventory management options
 
@@ -416,11 +431,6 @@ public class ModListOptions {
                 new OptionInstance.IntRange(1, 120), options().accessibility.elytraAlarmSoundDelay, value -> options().accessibility.elytraAlarmSoundDelay = value);
     }
 
-    public static OptionInstance<Boolean> tagSorting() {
-        return OptionInstance.createBoolean("qualityofqueso.options.tag_sorting", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.tag_sorting.tooltip")),
-                ON_OFF_TEXT, options().management.tagSorting, value -> options().management.tagSorting = value);
-    }
-
     public static OptionInstance<Boolean> ignoreFabricTags() {
         return OptionInstance.createBoolean("qualityofqueso.options.ignore_fabric_tags", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.ignore_fabric_tags.tooltip")),
                 ON_OFF_TEXT, options().accessibility.ignoreFabricTags, value -> options().accessibility.ignoreFabricTags = value);
@@ -437,6 +447,8 @@ public class ModListOptions {
                 option -> {
                     return switch (option) {
                         case EVERYWHERE -> Tooltip.create(Component.translatable("qualityofqueso.options.qoq_buttons.everywhere.tooltip"));
+                        case BOTTOM_LEFT -> Tooltip.create(Component.translatable("qualityofqueso.options.qoq_buttons.bottom_left.tooltip"));
+                        case BOTTOM_RIGHT -> Tooltip.create(Component.translatable("qualityofqueso.options.qoq_buttons.bottom_right.tooltip"));
                         case TITLE_ONLY -> Tooltip.create(Component.translatable("qualityofqueso.options.qoq_buttons.title_only.tooltip"));
                         case OFF -> Tooltip.create(Component.translatable("qualityofqueso.options.qoq_buttons.off.tooltip"));
                     };

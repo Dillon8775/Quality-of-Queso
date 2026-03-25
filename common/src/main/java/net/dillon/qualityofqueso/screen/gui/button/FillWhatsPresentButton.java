@@ -19,8 +19,8 @@ public class FillWhatsPresentButton extends ToggleableButton {
     private final Minecraft minecraft;
     private final AbstractContainerScreen<?> parent;
 
-    public FillWhatsPresentButton(AbstractContainerMenu screenHandler, Font font, String searchFieldText, int x, int y, String buttonName, OnPress onPress, Minecraft minecraft, AbstractContainerScreen<?> parent) {
-        super(screenHandler, font, searchFieldText, x, y, buttonName, onPress);
+    public FillWhatsPresentButton(AbstractContainerMenu screenHandler, Font font, String searchFieldText, String buttonName, OnPress onPress, Minecraft minecraft, AbstractContainerScreen<?> parent) {
+        super(screenHandler, font, searchFieldText, buttonName, onPress);
         this.minecraft = minecraft;
         this.parent = parent;
     }

@@ -15,8 +15,8 @@ import static net.dillon.qualityofqueso.util.ModUtil.options;
  */
 public abstract class ToggleableButton extends TransferButton {
 
-    public ToggleableButton(AbstractContainerMenu screenHandler, Font font, String searchFieldText, int x, int y, String buttonName, OnPress onPress) {
-        super(screenHandler, font, searchFieldText, x, y, null, buttonName, false, onPress);
+    public ToggleableButton(AbstractContainerMenu screenHandler, Font font, String searchFieldText, String buttonName, OnPress onPress) {
+        super(screenHandler, font, searchFieldText, null, buttonName, false, onPress);
     }
 
     /**

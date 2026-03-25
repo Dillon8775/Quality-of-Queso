@@ -4,13 +4,16 @@ import com.mojang.blaze3d.platform.InputConstants;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.dillon.qualityofqueso.keybind.ModKeybinds;
 import net.dillon.qualityofqueso.option.instance.ModClientOptions;
+import net.dillon.qualityofqueso.screen.gui.ButtonLayout;
 import net.dillon.qualityofqueso.screen.gui.button.*;
 import net.dillon.qualityofqueso.screen.gui.search.SearchField;
 import net.dillon.qualityofqueso.util.ContainerTracker;
 import net.dillon.qualityofqueso.util.EnchantingHelper;
+import net.dillon.qualityofqueso.util.HoverSize;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.*;
@@ -18,6 +21,7 @@ import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.core.Holder;
+import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -76,6 +80,9 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
     @Shadow @Nullable
     protected abstract Slot getHoveredSlot(double mouseX, double mouseY);
 
+    @Shadow
+    @Final
+    protected int imageHeight;
     @Unique
     private final AbstractContainerScreen<?> screen = (AbstractContainerScreen<?>) (Object) this;
     @Unique
@@ -713,10 +720,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
         boolean containerScreen = isContainerScreen(this.screen);
         boolean inventoryScreen = isInventoryScreen(this.screen);
         boolean validScreen = containerScreen || inventoryScreen;
-        int buttons = 0;
         if (options().management.transferring.shortcutOrButton()) {
-
-            /* --- */
 
             // TRANSFER CONTAINER BUTTON (container -> inventory)
             if (containerScreen || isBrewingStandScreen(this.screen) || isFurnaceScreen(this.screen) || isDispenserScreen(this.screen) || isHopperScreen(this.screen)) {
@@ -725,19 +729,12 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                                 this.menu,
                                 this.font,
                                 this.getSearchFieldText(),
-                                getManagementButtonX(this.screen, this.imageWidth, this.width, buttons),
-                                getManagementButtonY(this.screen, this.container, this.topPos, this.titleLabelY),
                                 "transfer/container/",
                                 "transfer_container",
                                 true,
                                 b -> this.transferItems(true),
                                 () -> !isContainerFull(this.menu, this.container, true) && this.shouldButtonBeActive(false, null)));
-
-                this.transferContainerButton.extractRenderState(graphics, mouseX, mouseY, deltaTicks);
-                buttons++;
             }
-
-            /* --- */
 
             // TRANSFER INVENTORY BUTTON (inventory -> container)
             if (containerScreen) {
@@ -746,17 +743,12 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                                 this.menu,
                                 this.font,
                                 this.getSearchFieldText(),
-                                getManagementButtonX(this.screen, this.imageWidth, this.width, buttons),
-                                getManagementButtonY(this.screen, this.container, this.topPos, this.titleLabelY),
                                 "transfer/inventory/",
                                 "transfer_inventory",
                                 true,
                                 b -> this.transferItems(false),
                                 () -> !isContainerFull(this.menu, this.container, false) && this.shouldButtonBeActive(true, playerInventory)
                         ));
-
-                this.transferInventoryButton.extractRenderState(graphics, mouseX, mouseY, deltaTicks);
-                buttons++;
             }
         }
 
@@ -771,27 +763,21 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                                 this.menu,
                                 this.font,
                                 this.getSearchFieldText(),
-                                getManagementButtonX(this.screen, this.imageWidth, this.width, buttons),
-                                getManagementButtonY(this.screen, this.container, this.topPos, this.titleLabelY),
                                 "include_hotbar",
                                 b -> {
                                     options().management.includeHotbar = !options().management.includeHotbar;
                                     ModClientOptions.CLIENT.save();
                                     sendClientOptionsToServer();
                                 }));
-
-                this.includeHotbarButton.extractRenderState(graphics, mouseX, mouseY, deltaTicks);
-                buttons++;
             }
 
+            // MOVE MATCHING ITEMS BUTTON
             if (containerScreen && options().management.containerFiltering && options().management.transferring.orKeyOnly()) {
                 this.fillWhatsPresentButton = this.addWidget(
                     new FillWhatsPresentButton(
                             this.menu,
                             this.font,
                             this.getSearchFieldText(),
-                            getManagementButtonX(this.screen, this.imageWidth, this.width, buttons),
-                            getManagementButtonY(this.screen, this.container, this.topPos, this.titleLabelY),
                             "fill_whats_present",
                             b -> {
                                 if (!ContainerTracker.IS_TRACKED_CONTAINER) {
@@ -801,33 +787,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                             },
                             this.minecraft,
                             this.screen));
-
-                this.fillWhatsPresentButton.extractRenderState(graphics, mouseX, mouseY, deltaTicks);
-                buttons++;
             }
-
-            /* --- */
-
-            // SWAP BUTTON
-            if (options().management.swapping.shortcutOrButton() && containerScreen) {
-                this.swapButton = this.addWidget(
-                        new SwapButton(
-                                this.menu,
-                                this.font,
-                                this.getSearchFieldText(),
-                                getManagementButtonX(this.screen, this.imageWidth, this.width, buttons),
-                                getManagementButtonY(this.screen, this.container, this.topPos, this.titleLabelY),
-                                "swap/",
-                                "swap",
-                                b -> this.trySwap(),
-                                this::canSwap
-                        ));
-
-                this.swapButton.extractRenderState(graphics, mouseX, mouseY, deltaTicks);
-                buttons++;
-            }
-
-            /* --- */
 
             // SORT BUTTON
             if (options().management.containerSorting.shortcutOrButton() && containerScreen) {
@@ -836,62 +796,14 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                                 this.menu,
                                 this.font,
                                 this.getSearchFieldText(),
-                                getManagementButtonX(this.screen, this.imageWidth, this.width, buttons),
-                                getManagementButtonY(this.screen, this.container, this.topPos, this.titleLabelY),
                                 "sort/",
                                 "sort",
                                 b -> this.trySort(true),
                                 () -> this.canSort(true)
                         ));
-
-                this.sortButton.extractRenderState(graphics, mouseX, mouseY, deltaTicks);
-                buttons++;
             }
 
-            /* --- */
-
-            // QUICK DROP BUTTON
-            if (options().management.quickDrop.shortcutOrButton() || (options().management.quickDrop.orKeyOnly() && Minecraft.getInstance().hasControlDown() && Minecraft.getInstance().hasAltDown())) {
-                this.quickDropButton = this.addWidget(
-                        new QuickDropButton(
-                                this.menu,
-                                this.font,
-                                this.getSearchFieldText(),
-                                getManagementButtonX(this.screen, this.imageWidth, this.width, buttons),
-                                getManagementButtonY(this.screen, this.container, this.topPos, this.titleLabelY),
-                                "quick_drop/",
-                                "quick_drop",
-                                b -> this.dropItems(!containerScreen),
-                                () -> (isInventoryScreen(this.screen) ?
-                                        isAnySlotFilled(this.menu, true, 9, 36) :
-                                        isAnySlotFilled(this.menu, false, 0, getContainerSize(this.container)))
-                                        && this.menu.getCarried().isEmpty()
-                                        && this.shouldButtonBeActive(!containerScreen, containerScreen ? null : playerInventory, false)
-                        ));
-
-                this.quickDropButton.extractRenderState(graphics, mouseX, mouseY, deltaTicks);
-                buttons++;
-            }
-
-            if (options().management.dragSorting && !this.excludedSlots.isEmpty()) {
-                this.clearExcludedSlotsButton = this.addWidget(
-                        new ClearExcludedSlotsButton(
-                                this.menu,
-                                this.font,
-                                this.getSearchFieldText(),
-                                getManagementButtonX(this.screen, this.imageWidth, this.width, buttons),
-                                getManagementButtonY(this.screen, this.container, this.topPos, this.titleLabelY),
-                                "clear_excluded_slots",
-                                b -> {
-                                    this.excludedSlots.clear();
-                                    this.excludedAll = false;
-                                }
-                        )
-                );
-
-                this.clearExcludedSlotsButton.extractRenderState(graphics, mouseX, mouseY, deltaTicks);
-            }
-
+            // SEARCH INSIDE TRANSPORTABLE CONTAINERS BUTTON
             if ((options().searching.containerSearching && containerScreen) || (options().searching.inventorySearching && inventoryScreen)) {
                 boolean canRenderTransportablesButton = false;
                 for (int i = 0; i < this.getSearchSlotCount(); i++) {
@@ -902,27 +814,110 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                     }
                 }
 
-                if (!canRenderTransportablesButton) {
-                    return;
+                if (canRenderTransportablesButton) {
+                    this.searchTransportablesButton = this.addWidget(
+                            new SearchTransportablesButton(
+                                    !options().management.verticalLayout ? HoverSize.BIG : HoverSize.BASIC,
+                                    this.menu,
+                                    this.font,
+                                    this.getSearchFieldText(),
+                                    "search_transportables",
+                                    b -> {
+                                        options().searching.searchTransportables = !options().searching.searchTransportables;
+                                        ModClientOptions.CLIENT.save();
+                                    }
+                            ));
+                } else {
+                    this.searchTransportablesButton = null;
                 }
+            }
 
-                EditBox searchBox = inventoryScreen ? this.inventorySearchField : this.containerSearchField;
-                this.searchTransportablesButton = this.addWidget(
-                        new SearchTransportablesButton(
+            // QUICK DROP BUTTON
+            if (options().management.quickDrop.shortcutOrButton() || (options().management.quickDrop.orKeyOnly() && Minecraft.getInstance().hasControlDown() && Minecraft.getInstance().hasAltDown())) {
+                this.quickDropButton = this.addWidget(
+                        new QuickDropButton(
                                 this.menu,
                                 this.font,
                                 this.getSearchFieldText(),
-                                searchBox.getX() - (inventoryScreen ? -2 : 12),
-                                searchBox.getY() + (inventoryScreen ? 14 : 1),
-                                "search_transportables",
-                                b -> {
-                                    options().searching.searchTransportables = !options().searching.searchTransportables;
-                                    ModClientOptions.CLIENT.save();
-                                }
+                                "quick_drop/",
+                                "quick_drop",
+                                b -> this.dropItems(!containerScreen),
+                                () -> (isInventoryScreen(this.screen) ?
+                                        isAnySlotFilled(this.menu, true, 9, 36) :
+                                        isAnySlotFilled(this.menu, false, 0, getContainerSize(this.container)))
+                                        && this.menu.getCarried().isEmpty()
+                                        && this.shouldButtonBeActive(!containerScreen, containerScreen ? null : playerInventory, false)
                         ));
-
-                this.searchTransportablesButton.extractRenderState(graphics, mouseX, mouseY, deltaTicks);
             }
+
+            // SWAP BUTTON
+            if (options().management.swapping.shortcutOrButton() && containerScreen) {
+                this.swapButton = this.addWidget(
+                        new SwapButton(
+                                this.menu,
+                                this.font,
+                                this.getSearchFieldText(),
+                                "swap/",
+                                "swap",
+                                b -> this.trySwap(),
+                                this::canSwap
+                        ));
+            }
+
+            // CLEAR EXCLUDED SLOTS BUTTON
+            if (options().management.dragSorting && !this.excludedSlots.isEmpty()) {
+                this.clearExcludedSlotsButton = this.addWidget(
+                        new ClearExcludedSlotsButton(
+                                this.menu,
+                                this.font,
+                                this.getSearchFieldText(),
+                                "clear_excluded_slots",
+                                b -> {
+                                    this.excludedSlots.clear();
+                                    this.excludedAll = false;
+                                }
+                        )
+                );
+            } else {
+                this.clearExcludedSlotsButton = null;
+            }
+
+            // Render Button Layout
+            AbstractList<AbstractWidget> verticalLayout = NonNullList.of(
+                    null,
+                    this.transferInventoryButton,
+                    this.transferContainerButton,
+
+                    this.includeHotbarButton,
+                    this.fillWhatsPresentButton,
+
+                    this.sortButton,
+                    this.searchTransportablesButton,
+
+                    this.quickDropButton,
+                    this.swapButton,
+
+                    this.clearExcludedSlotsButton
+            );
+
+            AbstractList<AbstractWidget> horizontalLayout = NonNullList.of(
+                    null,
+                    this.transferContainerButton,
+                    this.transferInventoryButton,
+                    this.includeHotbarButton,
+                    this.fillWhatsPresentButton,
+                    this.sortButton,
+                    this.swapButton,
+                    this.quickDropButton,
+                    this.clearExcludedSlotsButton,
+                    this.searchTransportablesButton
+            );
+
+            ButtonLayout layout = new ButtonLayout(inventoryScreen ? this.inventorySearchField : this.containerSearchField,
+                    this.screen, this.container, this.topPos, this.titleLabelY, options().management.verticalLayout ? verticalLayout : horizontalLayout,
+                    this.width / 2 + getBarWidth(this.imageWidth), this.height / 2
+            );
+            layout.extractRenderState(graphics, mouseX, mouseY, deltaTicks);
         }
     }
 

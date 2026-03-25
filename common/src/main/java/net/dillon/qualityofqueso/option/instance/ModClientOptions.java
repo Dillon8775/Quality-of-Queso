@@ -20,6 +20,7 @@ public class ModClientOptions {
         public boolean inventorySearching = true;
         public boolean saveSearchText = false;
         public boolean quickSearch = true;
+        public boolean transparentSearchBar = false;
 
         // Config-only
         public boolean searchTransportables = true;
@@ -33,10 +34,11 @@ public class ModClientOptions {
         public Swapping swapping = Swapping.OFF;
 
         public boolean dragSorting = true;
+        public boolean tagSorting = false;
         public boolean saveExcludedSlots = false;
+        public boolean verticalLayout = false;
 
         // Config-only
-        public boolean tagSorting = false;
         public boolean fillWhatsPreset = false;
         public boolean includeHotbar = true;
     }

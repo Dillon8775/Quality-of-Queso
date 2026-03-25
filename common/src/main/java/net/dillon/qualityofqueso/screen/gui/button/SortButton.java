@@ -23,8 +23,8 @@ import static net.dillon.qualityofqueso.util.ModUtil.options;
  */
 public class SortButton extends TransferButton {
 
-    public SortButton(AbstractContainerMenu screenHandler, Font font, String searchFieldText, int x, int y, String resourceLocation, String buttonName, OnPress onPress, Supplier<Boolean> canBeActive) {
-        super(screenHandler, font, searchFieldText, x, y, resourceLocation, buttonName, false, onPress, canBeActive);
+    public SortButton(AbstractContainerMenu screenHandler, Font font, String searchFieldText, String resourceLocation, String buttonName, OnPress onPress, Supplier<Boolean> canBeActive) {
+        super(screenHandler, font, searchFieldText, resourceLocation, buttonName, false, onPress, canBeActive);
     }
 
     @Override

@@ -3,6 +3,7 @@ package net.dillon.qualityofqueso.util;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.dillon.qualityofqueso.option.MoveItemsIf;
 import net.dillon.qualityofqueso.option.screen.ModOptionsScreen;
+import net.dillon.qualityofqueso.platform.MultiLoader;
 import net.dillon.qualityofqueso.screen.gui.button.TransferButton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -45,6 +46,7 @@ import static net.dillon.qualityofqueso.util.ModUtil.*;
  * Utility class.
  */
 public class ButtonUtil {
+    public static int RENDERED_BUTTONS = 0;
     public static final String ENABLED_TEXTURE = "sprites/button/qoq_enabled";
     public static final String DISABLED_TEXTURE = "sprites/button/qoq_disabled";
 
@@ -102,9 +104,16 @@ public class ButtonUtil {
     }
 
     /**
+     * @return the modifier to use for recipe books.
+     */
+    public static int getRecipeBookModifier(Screen screen) {
+        return screen instanceof AbstractRecipeBookScreen<?> recipeBookScreen && getRecipeBookComponent(recipeBookScreen).isVisible() ? 77 : 0;
+    }
+
+    /**
      * @return the {@code X} value for transferring query buttons.
      */
-    public static int getManagementButtonX(Screen screen, int backgroundWidth, int width, int amount) {
+    public static int getManagementButtonX(Screen screen, int backgroundWidth, int width, int button) {
         int barWidth = getBarWidth(backgroundWidth);
         int modifier = 18;
         if (isBrewingStandScreen(screen)) {
@@ -116,9 +125,9 @@ public class ButtonUtil {
         } else if (isFurnaceScreen(screen)) {
             modifier -= 16;
         } else if (screen instanceof AbstractRecipeBookScreen<?> recipeBookScreen && getRecipeBookComponent(recipeBookScreen).isVisible()) {
-            modifier += 77;
+            modifier += getRecipeBookModifier(screen);
         }
-        return (width / 2 + barWidth / 2 + modifier) - (amount * 12);
+        return (width / 2 + barWidth / 2 + modifier) - (button * 12);
     }
 
     /**
@@ -136,6 +145,30 @@ public class ButtonUtil {
             y -= 1;
         }
         return screenY + titleY + (screen instanceof InventoryScreen ? 64 : y);
+    }
+
+    /**
+     * @return the configuration button X position.
+     */
+    public static int getConfigButtonX(int width, int button) {
+        if (options().accessibility.qoqButtons.left()) {
+            return 8 + (button * 24);
+        } else if (options().accessibility.qoqButtons.right()) {
+            return width - 28 - (button * 24);
+        } else {
+            return width / 2 + 106;
+        }
+    }
+
+    /**
+     * @return the configuration button Y position.
+     */
+    public static int getConfigButtonY(int height, boolean blacklist) {
+        if (options().accessibility.qoqButtons.left() || options().accessibility.qoqButtons.right()) {
+            return height - 29;
+        } else {
+            return height / 4 + (blacklist ? 96 : 72) - 16 + (!blacklist && MultiLoader.PLATFORM.getPlatformName().equals("NeoForged") ? -6 : 0);
+        }
     }
 
     /**

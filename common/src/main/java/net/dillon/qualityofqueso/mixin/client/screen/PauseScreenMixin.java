@@ -1,6 +1,5 @@
 package net.dillon.qualityofqueso.mixin.client.screen;
 
-import net.dillon.qualityofqueso.platform.MultiLoader;
 import net.dillon.qualityofqueso.util.ButtonUtil;
 import net.dillon.qualityofqueso.util.ModTexts;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -17,6 +16,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import static net.dillon.qualityofqueso.util.ButtonUtil.getConfigButtonX;
+import static net.dillon.qualityofqueso.util.ButtonUtil.getConfigButtonY;
 import static net.dillon.qualityofqueso.util.ModUtil.*;
 
 @Mixin(PauseScreen.class)
@@ -43,7 +44,8 @@ public class PauseScreenMixin extends Screen {
             }
             if (options().accessibility.qoqButtons.everywhere()) {
                 SpriteIconButton settingsButton = this.addRenderableWidget(ButtonUtil.initializeButton(this.minecraft, this));
-                settingsButton.setPosition(this.width / 2 + 106, this.height / 4 + 72 - 16 + (MultiLoader.PLATFORM.getPlatformName().equals("NeoForged") ? -6 : 0));
+                settingsButton.setPosition(getConfigButtonX(this.width, 0), getConfigButtonY(this.height, false));
+
                 if (!(this.minecraft.getCurrentServer() == null)) {
                     String address = this.getServerAddress();
                     this.blacklistServerButton = this.addRenderableWidget(Button.builder(ModTexts.BLANK, button -> {
@@ -53,7 +55,7 @@ public class PauseScreenMixin extends Screen {
                             uoptions().main.blacklistedServers.add(address);
                         }
                         saveAll(this.minecraft);
-                    }).bounds(this.width / 2 + 106, this.height / 4 + 96 - 16, 20, 20).build());
+                    }).bounds(getConfigButtonX(this.width, 1), getConfigButtonY(this.height, true), 20, 20).build());
                 }
             }
         }

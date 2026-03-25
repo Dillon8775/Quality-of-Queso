@@ -11,8 +11,8 @@ import static net.dillon.qualityofqueso.util.ModUtil.options;
  */
 public class IncludeHotbarButton extends ToggleableButton {
 
-    public IncludeHotbarButton(AbstractContainerMenu screenHandler, Font font, String searchFieldText, int x, int y, String buttonName, OnPress onPress) {
-        super(screenHandler, font, searchFieldText, x, y, buttonName, onPress);
+    public IncludeHotbarButton(AbstractContainerMenu screenHandler, Font font, String searchFieldText, String buttonName, OnPress onPress) {
+        super(screenHandler, font, searchFieldText, buttonName, onPress);
     }
 
     @Override

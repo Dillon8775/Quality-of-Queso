@@ -48,6 +48,13 @@ public class AccessorUtil {
     }
 
     /**
+     * @return the bar width for a screen.
+     */
+    public static int getImageWidth(AbstractContainerScreen<?> screen) {
+        return ((AbstractContainerScreenAccessor)screen).getImageWidth();
+    }
+
+    /**
      * Moves an item stack using the new quick move functionality.
      */
     public static boolean moveItemStack(AbstractContainerMenu menu, ItemStack itemStack, int startSlot, int endSlot, boolean backwards) {

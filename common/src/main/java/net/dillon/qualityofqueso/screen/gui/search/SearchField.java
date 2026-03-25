@@ -1,6 +1,7 @@
 package net.dillon.qualityofqueso.screen.gui.search;
 
 import net.dillon.qualityofqueso.util.ButtonUtil;
+import net.dillon.qualityofqueso.util.ModTexts;
 import net.dillon.qualityofqueso.util.ModUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
@@ -8,6 +9,8 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.util.FormattedCharSequence;
 
 import static net.dillon.qualityofqueso.util.ModUtil.SAVED_TEXT;
 import static net.dillon.qualityofqueso.util.ModUtil.options;
@@ -25,6 +28,12 @@ public class SearchField extends EditBox {
             this.setValue(ModUtil.SAVED_TEXT);
         }
         this.setMaxLength(50);
+        if (options().searching.transparentSearchBar) {
+            this.setTextShadow(false);
+            this.setTextColor(ModTexts.TEXT_COLOR);
+            this.addFormatter((text, offset) -> FormattedCharSequence.forward(text, Style.EMPTY.withUnderlined(true)));
+            this.setCentered(true);
+        }
         this.setHint(Component.translatable("qualityofqueso.gui.search.placeholder").withStyle(ChatFormatting.ITALIC));
     }
 

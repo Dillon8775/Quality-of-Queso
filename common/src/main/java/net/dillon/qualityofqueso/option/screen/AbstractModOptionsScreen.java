@@ -78,7 +78,7 @@ public abstract class AbstractModOptionsScreen extends OptionsSubScreen {
 
         if (this.doneButton != null) {
             graphics.centeredText(this.font, ModUtil.VERSION, this.width - 25, this.doneButton.getY() + 5, CommonColors.WHITE);
-            graphics.blit(RenderPipelines.GUI_TEXTURED, ofQoQ("textures/gui/sprites/button/cheese_wheel.png"), this.width - 55, this.doneButton.getY(), 0.0F, 0.0F, 18, 18, 18, 18);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, ofQoQ("textures/gui/sprites/button/cheese_wheel.png"), this.width - 57, this.doneButton.getY(), 0.0F, 0.0F, 18, 18, 18, 18);
         }
 
         super.extractRenderState(graphics, mouseX, mouseY, deltaTicks);

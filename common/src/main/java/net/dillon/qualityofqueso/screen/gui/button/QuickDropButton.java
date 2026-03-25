@@ -18,8 +18,8 @@ import static net.dillon.qualityofqueso.util.ModUtil.ofQoQ;
  */
 public class QuickDropButton extends TransferButton {
 
-    public QuickDropButton(AbstractContainerMenu screenHandler, Font font, String searchFieldText, int x, int y, String resourceLocation, String buttonName, OnPress onPress, Supplier<Boolean> canBeActive) {
-        super(screenHandler, font, searchFieldText, x, y, resourceLocation, buttonName, true, onPress, canBeActive);
+    public QuickDropButton(AbstractContainerMenu screenHandler, Font font, String searchFieldText, String resourceLocation, String buttonName, OnPress onPress, Supplier<Boolean> canBeActive) {
+        super(screenHandler, font, searchFieldText, resourceLocation, buttonName, true, onPress, canBeActive);
     }
 
     @Override
