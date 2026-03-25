@@ -32,6 +32,3 @@
   - BUNDLE ONLY: only plays bundle noises when using management buttons, does not play any normal "clicking" sound.
   - CLICK ONLY: only plays clicking sounds when using management buttons, no bundle sounds.
   - OFF: disables all sounds when using management buttons.
-
-# Technical changes / bug fixes
-- Sorting now correctly alphabetically sorts enchanted books based on their enchantment name.
