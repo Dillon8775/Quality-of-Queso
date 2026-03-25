@@ -19,5 +19,7 @@ public class ModHudEntries {
         AccessorUtil.registerDebugEntry(ofQoQ("real_life_time"), new RealLifeTimeHudEntry());
         AccessorUtil.registerDebugEntry(ofQoQ("in_game_time"), new InGameTimeHudEntry());
         AccessorUtil.registerDebugEntry(ofQoQ("simple_coordinates"), new SimpleCoordinatesHudEntry());
+        AccessorUtil.registerDebugEntry(ofQoQ("fastest_flight"), new FastestFlightHudEntry());
+        AccessorUtil.registerDebugEntry(ofQoQ("accurate_facing"), new AccurateFacingHudEntry());
     }
 }

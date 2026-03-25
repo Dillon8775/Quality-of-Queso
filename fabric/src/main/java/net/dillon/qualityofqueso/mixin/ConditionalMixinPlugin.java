@@ -2,8 +2,6 @@ package net.dillon.qualityofqueso.mixin;
 
 import net.dillon.qualityofqueso.option.instance.UniversalOptions;
 import net.dillon.qualityofqueso.util.ModUtil;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
@@ -14,7 +12,6 @@ import java.util.Set;
 /**
  * A mixin plugin that determines whether {@code certain mixins} should be applied.
  */
-@Environment(EnvType.CLIENT)
 public class ConditionalMixinPlugin implements IMixinConfigPlugin {
 
     /**

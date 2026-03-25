@@ -19,7 +19,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import static net.dillon.qualityofqueso.util.ButtonUtil.isInventoryScreen;
 import static net.dillon.qualityofqueso.util.ModUtil.ofQoQ;
@@ -38,6 +37,12 @@ public abstract class EditBoxMixin extends AbstractWidget {
     private boolean textShadow;
     @Shadow
     private @Nullable Component hint;
+    @Shadow
+    private String value;
+    @Shadow
+    private int displayPos;
+    @Shadow
+    public abstract int getInnerWidth();
 
     @Unique
     private static final WidgetSprites NEW_SPRITES = new WidgetSprites(
@@ -62,12 +67,13 @@ public abstract class EditBoxMixin extends AbstractWidget {
     /**
      * Right-aligns the text if the search bar is transparent.
      */
-    @Inject(method = "updateTextPosition", at = @At("TAIL"), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
-    private void rightAlignText(CallbackInfo ci, String displayed) {
+    @Inject(method = "updateTextPosition", at = @At("TAIL"))
+    private void rightAlignText(CallbackInfo ci) {
         if (!((EditBox)(Object)this instanceof SearchField) || this.font == null || !options().searching.transparentSearchBar) {
             return;
         }
 
+        String displayed = this.font.plainSubstrByWidth(this.value.substring(this.displayPos), this.getInnerWidth());
         int textWidth = this.font.width(displayed);
         this.textX = this.getX() + this.getWidth() - textWidth - (this.isBordered() ? 4 : 0);
     }

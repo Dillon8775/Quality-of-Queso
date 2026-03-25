@@ -1,9 +1,7 @@
 package net.dillon.qualityofqueso.debug;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.debug.DebugEntryCategory;
 import net.minecraft.client.gui.components.debug.DebugScreenDisplayer;
-import net.minecraft.client.gui.components.debug.DebugScreenEntry;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.LevelChunk;
 import org.jspecify.annotations.NonNull;
@@ -14,7 +12,7 @@ import static net.dillon.qualityofqueso.util.ModUtil.modEnabled;
 /**
  * A debug hud to display Minecraft's in-game time.
  */
-public class InGameTimeHudEntry implements DebugScreenEntry {
+public class InGameTimeHudEntry extends QoQScreenEntry {
 
     @Override
     public void display(@NonNull DebugScreenDisplayer lines, @Nullable Level level, @Nullable LevelChunk clientChunk, @Nullable LevelChunk chunk) {
@@ -60,15 +58,5 @@ public class InGameTimeHudEntry implements DebugScreenEntry {
 
         String formatted = String.format("%d:%02d %s", hours, minutes, amPm);
         lines.addLine(description + " (" + formatted + ", in-game)");
-    }
-
-    @Override
-    public boolean isAllowed(boolean reducedDebugInfo) {
-        return true;
-    }
-
-    @Override
-    public DebugEntryCategory category() {
-        return ModHudEntries.QOQ;
     }
 }

@@ -4,7 +4,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.dillon.qualityofqueso.option.MoveItemsIf;
 import net.dillon.qualityofqueso.option.screen.ModOptionsScreen;
 import net.dillon.qualityofqueso.platform.MultiLoader;
-import net.dillon.qualityofqueso.screen.gui.button.TransferButton;
+import net.dillon.qualityofqueso.screen.gui.widget.button.TransferButton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -12,6 +12,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.SpriteIconButton;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.*;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
@@ -213,6 +214,13 @@ public class ButtonUtil {
             }
         }
         return false;
+    }
+
+    /**
+     * @return if the click can quickly move an item.
+     */
+    public static boolean canQuickMove(AbstractContainerScreen<?> screen, MouseButtonEvent event) {
+        return modEnabled(Minecraft.getInstance()) && isContainerScreen(screen) ? options().management.alwaysQuickMove || event.hasShiftDown() : event.hasShiftDown();
     }
 
     /**
@@ -426,6 +434,10 @@ public class ButtonUtil {
      * Plays the default button press sound.
      */
     public static void playDefaultSound(SoundManager manager) {
+        if (options().accessibility.buttonSounds.off() || options().accessibility.buttonSounds.bundleOnly()) {
+            return;
+        }
+
         manager.play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
     }
 
@@ -440,6 +452,10 @@ public class ButtonUtil {
      * Plays the bundle sounds when using buttons.
      */
     public static void playButtonSound(Minecraft client, boolean drop) {
+        if (options().accessibility.buttonSounds.off() || options().accessibility.buttonSounds.clickOnly()) {
+            return;
+        }
+
         client.getSoundManager().play(SimpleSoundInstance.forUI(drop ? SoundEvents.BUNDLE_DROP_CONTENTS : SoundEvents.BUNDLE_INSERT, 1.0F, 5.0F));
     }
 
@@ -447,6 +463,10 @@ public class ButtonUtil {
      * Plays the inactive bundle sound.
      */
     public static void playButtonInactiveSound(Minecraft client) {
+        if (options().accessibility.buttonSounds.off() || options().accessibility.buttonSounds.clickOnly()) {
+            return;
+        }
+
         client.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.BUNDLE_INSERT_FAIL, 1.0F, 0.6F));
     }
 

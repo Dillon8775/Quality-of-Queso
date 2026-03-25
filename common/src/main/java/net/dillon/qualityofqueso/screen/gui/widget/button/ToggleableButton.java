@@ -1,4 +1,4 @@
-package net.dillon.qualityofqueso.screen.gui.button;
+package net.dillon.qualityofqueso.screen.gui.widget.button;
 
 import net.dillon.qualityofqueso.util.ButtonUtil;
 import net.minecraft.client.gui.Font;
@@ -53,7 +53,7 @@ public abstract class ToggleableButton extends TransferButton {
 
     @Override
     public void playDownSound(SoundManager manager) {
-        if (!options().accessibility.buttonClickSounds) {
+        if (options().accessibility.buttonSounds.off() || options().accessibility.buttonSounds.bundleOnly()) {
             return;
         }
 

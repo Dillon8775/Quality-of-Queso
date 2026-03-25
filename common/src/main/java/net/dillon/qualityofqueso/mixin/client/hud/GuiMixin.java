@@ -121,25 +121,37 @@ public class GuiMixin {
             i++;
         }
 
-        boolean canRenderArmorHotbar = options().accessibility.armorSlotOutlines && (options().hud.armorStatus || (options().misc.elytraAlarm && SHOULD_WARN_OF_ELYTRA));
+        boolean canRenderArmorHotbar = options().accessibility.armorHotbar && (!options().hud.armorStatus.off() || (options().misc.elytraAlarm && SHOULD_WARN_OF_ELYTRA));
 
         if (canRenderArmorHotbar) {
-            graphics.blitSprite(
-                    RenderPipelines.GUI_TEXTURED,
-                    ofQoQ("hud/armor_hotbar"),
-                    this.getArmorBarX(this.minecraft, graphics),
-                    getGuiHeight(graphics) - 2,
-                    82,
-                    22
-            );
+            CAN_ACTUALLY_RENDER_ARMOR_HOTBAR = false;
+            for (int armorTimer : ARMOR_TIMERS) {
+                if (this.minecraft.player.tickCount < armorTimer) {
+                    CAN_ACTUALLY_RENDER_ARMOR_HOTBAR = true;
+                    break;
+                }
+            }
+            if (CAN_ACTUALLY_RENDER_ARMOR_HOTBAR || !options().hud.armorStatus.onUpdate()) {
+                graphics.blitSprite(
+                        RenderPipelines.GUI_TEXTURED,
+                        ofQoQ("hud/armor_hotbar"),
+                        this.getArmorBarX(this.minecraft, graphics),
+                        getGuiHeight(graphics) - 2,
+                        82,
+                        22
+                );
+            }
         }
 
         i = 0;
         for (EquipmentSlot slot : slots) {
-            if (options().hud.armorStatus) {
+            if (!options().hud.armorStatus.off()) {
                 if (slot != EquipmentSlot.CHEST || !SHOULD_WARN_OF_ELYTRA) {
-                    drawItem(this.minecraft, graphics, getItemBySlot(this.minecraft, slot), this.getArmorX(this.minecraft, slot), true);
-                    if (this.minecraft.player.tickCount < ARMOR_TIMERS[i]) {
+                    boolean bl = this.minecraft.player.tickCount < ARMOR_TIMERS[i];
+                    if ((bl || CAN_ACTUALLY_RENDER_ARMOR_HOTBAR) || !options().hud.armorStatus.onUpdate()) {
+                        drawItem(this.minecraft, graphics, getItemBySlot(this.minecraft, slot), this.getArmorX(this.minecraft, slot), true);
+                    }
+                    if (bl) {
                         this.renderHighlightedArmorSlot(this.minecraft, HOTBAR_SELECTION_SPRITE, graphics, slots[i], false);
                     }
                     if (getItemHealthPercentage(getItemBySlot(this.minecraft, slot)) < 0.11F) {

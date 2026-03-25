@@ -103,15 +103,15 @@ public class ModListOptions {
 
     public static OptionInstance<QuickDrop> quickDrop() {
         return new OptionInstance<>(
-                "qualityofqueso.options.quick_drop",
+                "qualityofqueso.options.quick_dropping",
                 option -> {
                     Component text = ModTexts.BLANK;
                     switch (option) {
-                        case SHORTCUT_KEY_OR_BUTTON -> text = Component.translatable("qualityofqueso.options.quick_drop.shortcut_key_or_button.tooltip");
-                        case SHORTCUT_KEY_ONLY -> text = Component.translatable("qualityofqueso.options.quick_drop.shortcut_key_only.tooltip");
+                        case SHORTCUT_KEY_OR_BUTTON -> text = Component.translatable("qualityofqueso.options.quick_dropping.shortcut_key_or_button.tooltip");
+                        case SHORTCUT_KEY_ONLY -> text = Component.translatable("qualityofqueso.options.quick_dropping.shortcut_key_only.tooltip");
                     }
                     String appended = !text.equals(ModTexts.BLANK) ? "\n\n" : "";
-                    return Tooltip.create(Component.translatable("qualityofqueso.options.quick_drop.tooltip").append(appended).append(text));
+                    return Tooltip.create(Component.translatable("qualityofqueso.options.quick_dropping.tooltip").append(appended).append(text));
                 },
                 (optionText, value) -> value.getText(),
                 new OptionInstance.Enum<>(Arrays.asList(QuickDrop.values()), QuickDrop.Codec),
@@ -147,9 +147,9 @@ public class ModListOptions {
                 ON_OFF_TEXT, options().management.tagSorting, value -> options().management.tagSorting = value);
     }
 
-    public static OptionInstance<Boolean> verticalLayout() {
-        return OptionInstance.createBoolean("qualityofqueso.options.vertical_layout", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.vertical_layout.tooltip")),
-                ON_OFF_TEXT, options().management.verticalLayout, value -> options().management.verticalLayout = value);
+    public static OptionInstance<Boolean> horizontalLayout() {
+        return OptionInstance.createBoolean("qualityofqueso.options.horizontal_layout", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.horizontal_layout.tooltip")),
+                ON_OFF_TEXT, options().management.horizontalLayout, value -> options().management.horizontalLayout = value);
     }
     // end of inventory management options
 
@@ -194,9 +194,34 @@ public class ModListOptions {
     /* ===== */
 
     // HUD
-    public static OptionInstance<Boolean> armorStatus() {
-        return OptionInstance.createBoolean("qualityofqueso.options.armor_status", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.armor_status.tooltip")),
-                ON_OFF_TEXT, options().hud.armorStatus, value -> options().hud.armorStatus = value);
+    public static OptionInstance<ArmorStatus> armorStatus() {
+        return new OptionInstance<>(
+                "qualityofqueso.options.armor_status",
+                option -> {
+                    Component text = ModTexts.BLANK;
+                    switch (option) {
+                        case ON -> text = Component.translatable("qualityofqueso.options.armor_status.on.tooltip");
+                        case ON_UPDATE -> text = Component.translatable("qualityofqueso.options.armor_status.on_update.tooltip");
+                    }
+                    return Tooltip.create(Component.translatable("qualityofqueso.options.armor_status.tooltip").copy().append(text != ModTexts.BLANK ? "\n\n" : "").append(text));
+                },
+                (optionText, value) -> value.getText(),
+                new OptionInstance.Enum<>(Arrays.asList(ArmorStatus.values()), ArmorStatus.Codec),
+                options().hud.armorStatus,
+                value -> {
+                    options().hud.armorStatus = value;
+                    ModClientOptions.CLIENT.save();
+                    resetArmorHudState();
+                });
+    }
+
+    public static OptionInstance<Boolean> armorHotbar() {
+        return OptionInstance.createBoolean("qualityofqueso.options.armor_hotbar", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.armor_hotbar.tooltip")),
+                ON_OFF_TEXT, options().accessibility.armorHotbar, value -> {
+            options().accessibility.armorHotbar = value;
+            ModClientOptions.CLIENT.save();
+            resetArmorHudState();
+        });
     }
 
     public static OptionInstance<Boolean> coloredHighlighting() {
@@ -386,11 +411,6 @@ public class ModListOptions {
                 YES_NO_TEXT, options().accessibility.useOldSearchBarTexture, value -> options().accessibility.useOldSearchBarTexture = value);
     }
 
-    public static OptionInstance<Boolean> armorSlotOutlines() {
-        return OptionInstance.createBoolean("qualityofqueso.options.armor_slot_outlines", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.armor_slot_outlines.tooltip")),
-                ON_OFF_TEXT, options().accessibility.armorSlotOutlines, value -> options().accessibility.armorSlotOutlines = value);
-    }
-
     public static OptionInstance<Boolean> onlyCountMatchingItems() {
         return OptionInstance.createBoolean("qualityofqueso.options.only_count_matching_items", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.only_count_matching_items.tooltip")),
                 YES_NO_TEXT, options().accessibility.onlyCountMatchingItems, value -> options().accessibility.onlyCountMatchingItems = value);
@@ -436,9 +456,23 @@ public class ModListOptions {
                 ON_OFF_TEXT, options().accessibility.ignoreFabricTags, value -> options().accessibility.ignoreFabricTags = value);
     }
 
-    public static OptionInstance<Boolean> buttonClickSounds() {
-        return OptionInstance.createBoolean("qualityofqueso.options.button_click_sounds", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.button_click_sounds.tooltip")),
-                ON_OFF_TEXT, options().accessibility.buttonClickSounds, value -> options().accessibility.buttonClickSounds = value);
+    public static OptionInstance<ButtonSounds> buttonSounds() {
+        return new OptionInstance<>(
+                "qualityofqueso.options.button_sounds",
+                option -> {
+                    Component text;
+                    switch (option) {
+                        case BUNDLE_ONLY -> text = Component.translatable("qualityofqueso.options.button_sounds.bundle_only.tooltip");
+                        case CLICK_ONLY -> text = Component.translatable("qualityofqueso.options.button_sounds.click_only.tooltip");
+                        case OFF -> text = Component.translatable("qualityofqueso.options.button_sounds.off.tooltip");
+                        default -> text = Component.translatable("qualityofqueso.options.button_sounds.all.tooltip");
+                    };
+                    return Tooltip.create(Component.translatable("qualityofqueso.options.button_sounds.tooltip").copy().append("\n\n").append(text));
+                },
+                (optionText, value) -> value.getText(),
+                new OptionInstance.Enum<>(Arrays.asList(ButtonSounds.values()), ButtonSounds.Codec),
+                options().accessibility.buttonSounds,
+                value -> options().accessibility.buttonSounds = value);
     }
 
     public static OptionInstance<QoQButtons> qoqButtons() {

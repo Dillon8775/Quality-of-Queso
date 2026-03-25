@@ -20,7 +20,13 @@ public class HudOptionsScreen extends AbstractModOptionsScreen {
     @Override
     protected OptionInstance<?>[] options() {
         return new OptionInstance[]{
-                ModListOptions.coloredHighlighting(),
+                ModListOptions.armorStatus(),
+                ModListOptions.armorHotbar()
+        };
+    }
+
+    protected OptionInstance<?>[] bottomOptions() {
+        return new OptionInstance[]{
                 ModListOptions.warningIndicators()
         };
     }
@@ -28,14 +34,15 @@ public class HudOptionsScreen extends AbstractModOptionsScreen {
     @Override
     protected void init() {
         super.init();
+        this.list.addSmall(this.options());
         List<AbstractWidget> options = new ArrayList<>(List.of(
-                ModListOptions.armorStatus().createButton(this.minecraft.options),
                 Button.builder(Component.translatable("qualityofqueso.gui.item_count_options"), button -> {
                     this.minecraft.setScreen(new ItemCountOptionsScreen(this));
-                }).tooltip(Tooltip.create(Component.translatable("qualityofqueso.gui.item_count_options.tooltip"))).build()
+                }).tooltip(Tooltip.create(Component.translatable("qualityofqueso.gui.item_count_options.tooltip"))).build(),
+                ModListOptions.coloredHighlighting().createButton(this.options)
         ));
         this.list.addSmall(options);
-        this.list.addSmall(this.options());
+        this.list.addSmall(this.bottomOptions());
     }
 
     @Override

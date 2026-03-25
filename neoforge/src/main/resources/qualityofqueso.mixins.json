@@ -15,6 +15,7 @@
     "client.accessor.ShulkerBoxMenuAccessor",
 
     "client.hud.AbstractContainerScreenMixin",
+    "client.hud.AbstractRecipeBookScreenMixin",
     "client.hud.GuiMixin",
     "client.hud.RecipeBookComponentMixin",
 

@@ -43,13 +43,13 @@ public class AccessibilityOptionsScreen extends AbstractModOptionsScreen {
                 ModListOptions.displayTotalWithStacks(),
 
                 ModListOptions.useOldSearchBarTexture(),
-                ModListOptions.armorSlotOutlines(),
+                ModListOptions.elytraAlarmSoundDelay(),
 
                 ModListOptions.perpendicularQuickMoving(),
                 ModListOptions.moveItemsIf(),
 
-                ModListOptions.ignoreFabricTags(),
-                ModListOptions.buttonClickSounds()
+                ModListOptions.qoqButtons(),
+                ModListOptions.buttonSounds()
         };
     }
 
@@ -81,10 +81,9 @@ public class AccessibilityOptionsScreen extends AbstractModOptionsScreen {
         this.blacklistedServersField.setResponder(this::onTextChanged);
 
         List<AbstractWidget> widgets = ImmutableList.of(
-                ModListOptions.elytraAlarmSoundDelay().createButton(this.options),
-                ModListOptions.qoqButtons().createButton(this.options),
-
                 ModListOptions.multiServerConfigs().createButton(this.options),
+                ModListOptions.ignoreFabricTags().createButton(this.options),
+
                 this.blacklistedServersField
         );
         this.list.addSmall(widgets);

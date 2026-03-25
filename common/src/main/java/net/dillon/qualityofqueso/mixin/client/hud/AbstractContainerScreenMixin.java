@@ -4,12 +4,12 @@ import com.mojang.blaze3d.platform.InputConstants;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.dillon.qualityofqueso.keybind.ModKeybinds;
 import net.dillon.qualityofqueso.option.instance.ModClientOptions;
-import net.dillon.qualityofqueso.screen.gui.ButtonLayout;
-import net.dillon.qualityofqueso.screen.gui.button.*;
 import net.dillon.qualityofqueso.screen.gui.search.SearchField;
+import net.dillon.qualityofqueso.screen.gui.widget.WidgetLayout;
+import net.dillon.qualityofqueso.screen.gui.widget.WidgetLayoutHolder;
+import net.dillon.qualityofqueso.screen.gui.widget.button.*;
 import net.dillon.qualityofqueso.util.ContainerTracker;
 import net.dillon.qualityofqueso.util.EnchantingHelper;
-import net.dillon.qualityofqueso.util.HoverSize;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -49,6 +49,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -61,7 +62,7 @@ import static net.dillon.qualityofqueso.util.GuiUtil.ofItalicAndGray;
 import static net.dillon.qualityofqueso.util.ModUtil.*;
 
 @Mixin(AbstractContainerScreen.class)
-public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMenu> extends Screen implements MenuAccess<T> {
+public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMenu> extends Screen implements MenuAccess<T>, WidgetLayoutHolder {
     @Shadow
     protected int imageWidth;
     @Shadow
@@ -107,6 +108,10 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
     private TransferButton searchTransportablesButton;
     @Unique
     private TransferButton clearExcludedSlotsButton;
+    @Unique
+    private TransferButton alwaysQuickMoveButton;
+    @Unique
+    private WidgetLayout widgetLayout;
     @Unique
     private Container container;
     @Unique
@@ -752,6 +757,21 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             }
         }
 
+        // ALWAYS QUICK MOVE BUTTON
+        if (containerScreen) {
+            this.alwaysQuickMoveButton = this.addWidget(
+                    new AlwaysQuickMoveButton(
+                            this.menu,
+                            this.font,
+                            this.getSearchFieldText(),
+                            "always_quick_move",
+                            b -> {
+                                options().management.alwaysQuickMove = !options().management.alwaysQuickMove;
+                                ModClientOptions.CLIENT.save();
+                            }
+                    ));
+        }
+
         /* --- */
 
         if (validScreen) {
@@ -817,7 +837,6 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                 if (canRenderTransportablesButton) {
                     this.searchTransportablesButton = this.addWidget(
                             new SearchTransportablesButton(
-                                    !options().management.verticalLayout ? HoverSize.BIG : HoverSize.BASIC,
                                     this.menu,
                                     this.font,
                                     this.getSearchFieldText(),
@@ -848,6 +867,8 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                                         && this.menu.getCarried().isEmpty()
                                         && this.shouldButtonBeActive(!containerScreen, containerScreen ? null : playerInventory, false)
                         ));
+            } else {
+                this.quickDropButton = null;
             }
 
             // SWAP BUTTON
@@ -889,14 +910,15 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                     this.transferContainerButton,
 
                     this.includeHotbarButton,
-                    this.fillWhatsPresentButton,
+                    this.alwaysQuickMoveButton,
 
+                    this.fillWhatsPresentButton,
                     this.sortButton,
-                    this.searchTransportablesButton,
 
                     this.quickDropButton,
                     this.swapButton,
 
+                    this.searchTransportablesButton,
                     this.clearExcludedSlotsButton
             );
 
@@ -905,20 +927,45 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                     this.transferContainerButton,
                     this.transferInventoryButton,
                     this.includeHotbarButton,
+                    this.alwaysQuickMoveButton,
                     this.fillWhatsPresentButton,
                     this.sortButton,
+                    this.searchTransportablesButton,
                     this.swapButton,
                     this.quickDropButton,
-                    this.clearExcludedSlotsButton,
-                    this.searchTransportablesButton
+                    this.clearExcludedSlotsButton
             );
 
-            ButtonLayout layout = new ButtonLayout(inventoryScreen ? this.inventorySearchField : this.containerSearchField,
-                    this.screen, this.container, this.topPos, this.titleLabelY, options().management.verticalLayout ? verticalLayout : horizontalLayout,
-                    this.width / 2 + getBarWidth(this.imageWidth), this.height / 2
-            );
-            layout.extractRenderState(graphics, mouseX, mouseY, deltaTicks);
+            this.setWidgetLayout(WidgetLayout.initializeLayout(this.screen,
+                    inventoryScreen ? this.inventorySearchField : this.containerSearchField,
+                    this.container, this.topPos, this.titleLabelY, options().management.horizontalLayout ? horizontalLayout : verticalLayout
+            ));
+            this.getWidgetLayout().extractRenderState(graphics, mouseX, mouseY, deltaTicks);
         }
+    }
+
+    /**
+     * @return the widget layout.
+     */
+    @Override
+    public WidgetLayout getWidgetLayout() {
+        return this.widgetLayout;
+    }
+
+    /**
+     * Sets the widget layout for other screens to reference.
+     */
+    @Override
+    public void setWidgetLayout(WidgetLayout layout) {
+        this.widgetLayout = layout;
+    }
+
+    /**
+     * Allows clicking on the vertical box outside of the GUI screen.
+     */
+    @Inject(method = "hasClickedOutside", at = @At("HEAD"), cancellable = true)
+    private void hasClickedOnBoxInContainer(double mx, double my, int xo, int yo, CallbackInfoReturnable<Boolean> cir) {
+        WidgetLayout.hasClickedOnBox(mx, my, this.widgetLayout, cir);
     }
 
     /**
@@ -1051,6 +1098,14 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
         if (modEnabled(this.minecraft) && options().misc.quickGuiExit && this.menu.getCarried().isEmpty() && button == 0 && slot == null) {
             this.onClose();
         }
+    }
+
+    /**
+     * Always quickly moves items if the option is enabled.
+     */
+    @Redirect(method = {"mouseClicked", "mouseReleased"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/input/MouseButtonEvent;hasShiftDown()Z"))
+    private boolean alwaysQuickMove(MouseButtonEvent event) {
+        return canQuickMove(this.screen, event);
     }
 
     /**

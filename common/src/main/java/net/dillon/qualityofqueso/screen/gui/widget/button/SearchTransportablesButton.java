@@ -1,6 +1,5 @@
-package net.dillon.qualityofqueso.screen.gui.button;
+package net.dillon.qualityofqueso.screen.gui.widget.button;
 
-import net.dillon.qualityofqueso.util.HoverSize;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
@@ -14,11 +13,9 @@ import static net.dillon.qualityofqueso.util.ModUtil.options;
  * A button for toggling searching transportables.
  */
 public class SearchTransportablesButton extends ToggleableButton {
-    private final HoverSize hoverSize;
 
-    public SearchTransportablesButton(HoverSize hoverSize, AbstractContainerMenu screenHandler, Font font, String searchFieldText, String buttonName, OnPress onPress) {
+    public SearchTransportablesButton(AbstractContainerMenu screenHandler, Font font, String searchFieldText, String buttonName, OnPress onPress) {
         super(screenHandler, font, searchFieldText, buttonName, onPress);
-        this.hoverSize = hoverSize;
     }
 
     @Override
@@ -42,11 +39,6 @@ public class SearchTransportablesButton extends ToggleableButton {
                 this.option()
                         ? "qualityofqueso.gui.include_transportables"
                         : "qualityofqueso.gui.exclude_transportables");
-    }
-
-    @Override
-    public HoverSize getHoverSize() {
-        return this.hoverSize;
     }
 
     @Override

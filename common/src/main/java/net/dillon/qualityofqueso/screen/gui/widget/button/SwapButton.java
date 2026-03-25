@@ -1,4 +1,4 @@
-package net.dillon.qualityofqueso.screen.gui.button;
+package net.dillon.qualityofqueso.screen.gui.widget.button;
 
 import net.minecraft.client.gui.Font;
 import net.minecraft.world.inventory.AbstractContainerMenu;

@@ -8,7 +8,7 @@ import net.dillon.qualityofqueso.option.instance.UniversalOptions;
 import net.dillon.qualityofqueso.packet.ClientPreferencesC2SPacket;
 import net.dillon.qualityofqueso.packet.GlowSearchC2SPayload;
 import net.dillon.qualityofqueso.platform.MultiLoader;
-import net.dillon.qualityofqueso.screen.gui.button.SwapButton;
+import net.dillon.qualityofqueso.screen.gui.widget.button.SwapButton;
 import net.dillon.qualityofqueso.server.ServerStorage;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -42,8 +42,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.io.File;
 import java.util.*;
 
-import static net.dillon.qualityofqueso.util.GuiUtil.ARMOR_TIMERS;
-import static net.dillon.qualityofqueso.util.GuiUtil.LAST_ARMOR_STACKS;
+import static net.dillon.qualityofqueso.util.GuiUtil.*;
 
 /**
  * Utility class for the Quality of Queso mod.
@@ -124,6 +123,13 @@ public class ModUtil {
      */
     public static Identifier ofQoQ(String name) {
         return Identifier.fromNamespaceAndPath("qualityofqueso", name);
+    }
+
+    /**
+     * Rounds the value to the nearest tenths place.
+     */
+    public static double round(double d) {
+        return Math.round(d * 10.0) / 10.0;
     }
 
     /**
@@ -262,6 +268,7 @@ public class ModUtil {
     public static void resetArmorHudState() {
         Arrays.fill(ARMOR_TIMERS, 0);
         Arrays.fill(LAST_ARMOR_STACKS, null);
+        CAN_ACTUALLY_RENDER_ARMOR_HOTBAR = false;
     }
 
     /**

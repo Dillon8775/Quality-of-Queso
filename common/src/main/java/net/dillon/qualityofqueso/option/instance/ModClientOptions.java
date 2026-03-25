@@ -35,16 +35,17 @@ public class ModClientOptions {
 
         public boolean dragSorting = true;
         public boolean tagSorting = false;
-        public boolean saveExcludedSlots = false;
-        public boolean verticalLayout = false;
+        public boolean horizontalLayout = false;
 
         // Config-only
+        public boolean alwaysQuickMove = false;
+        public boolean saveExcludedSlots = false;
         public boolean fillWhatsPreset = false;
         public boolean includeHotbar = true;
     }
 
     public static class Hud {
-        public boolean armorStatus = true;
+        public ArmorStatus armorStatus = ArmorStatus.ON;
         public boolean coloredHighlighting = true;
         public boolean warningIndicators = true;
 
@@ -107,13 +108,13 @@ public class ModClientOptions {
         public boolean displayTotalWithStacks = false;
 
         public boolean useOldSearchBarTexture = false;
-        public boolean armorSlotOutlines = true;
+        public boolean armorHotbar = true;
 
         public boolean perpendicularQuickMoving = false;
         public MoveItemsIf moveItemsIf = MoveItemsIf.CAN_MOVE_AT_ALL;
 
         public boolean ignoreFabricTags = false;
-        public boolean buttonClickSounds = true;
+        public ButtonSounds buttonSounds = ButtonSounds.ALL;
 
         public int elytraAlarmSoundDelay = 1;
 

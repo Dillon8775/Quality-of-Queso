@@ -27,6 +27,7 @@ import static net.dillon.qualityofqueso.util.ModUtil.options;
 public class GuiUtil {
     public static double PLAYER_FALL_DISTANCE;
     public static boolean SHOULD_WARN_OF_ELYTRA;
+    public static boolean CAN_ACTUALLY_RENDER_ARMOR_HOTBAR;
     public static final int[] ARMOR_TIMERS = new int[4];
     public static final ItemStack[] LAST_ARMOR_STACKS = new ItemStack[4];
 

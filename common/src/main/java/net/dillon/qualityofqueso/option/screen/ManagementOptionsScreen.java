@@ -16,7 +16,7 @@ public class ManagementOptionsScreen extends AbstractModOptionsScreen {
         return new OptionInstance[]{
                 ModListOptions.dragSorting(),
                 ModListOptions.tagSorting(),
-                ModListOptions.verticalLayout()
+                ModListOptions.horizontalLayout()
         };
     }
 

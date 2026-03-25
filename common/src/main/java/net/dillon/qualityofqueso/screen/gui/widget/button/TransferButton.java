@@ -1,8 +1,7 @@
-package net.dillon.qualityofqueso.screen.gui.button;
+package net.dillon.qualityofqueso.screen.gui.widget.button;
 
 import net.dillon.qualityofqueso.keybind.ModKeybinds;
 import net.dillon.qualityofqueso.util.ButtonUtil;
-import net.dillon.qualityofqueso.util.HoverSize;
 import net.dillon.qualityofqueso.util.ModTexts;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -117,11 +116,7 @@ public class TransferButton extends Button {
      * Renders a button's base texture.
      */
     protected void renderBaseTexture(GuiGraphicsExtractor graphics) {
-        String name;
-        switch (this.getHoverSize()) {
-            case BIG -> name = "big_button";
-            default -> name = "base_button";
-        }
+        String name = "base_button";
         ButtonUtil.drawButtonTexture(graphics, "base/" + (!this.canBeActive.get() ? name + "_inactive" : name), this);
     }
 
@@ -133,12 +128,7 @@ public class TransferButton extends Button {
             return;
         }
 
-        String name;
-        switch (this.getHoverSize()) {
-            case BIG -> name = "big_hovered";
-            default -> name = "basic_hovered";
-        }
-        ButtonUtil.drawButtonTexture(graphics, "base/hovered/" + name, this);
+        ButtonUtil.drawButtonTexture(graphics, "base/hovered/basic_hovered", this);
     }
 
     /**
@@ -223,12 +213,5 @@ public class TransferButton extends Button {
         } else {
             ButtonUtil.drawTooltip(this.getTooltipToRender(), graphics, this.font, mouseX, mouseY);
         }
-    }
-
-    /**
-     * @return the button hover texture size.
-     */
-    public HoverSize getHoverSize() {
-        return HoverSize.BASIC;
     }
 }
