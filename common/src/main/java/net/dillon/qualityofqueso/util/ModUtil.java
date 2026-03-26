@@ -119,6 +119,13 @@ public class ModUtil {
     }
 
     /**
+     * Sends an {@code error} message to the console.
+     */
+    public static void error(String message) {
+        LOGGER.error(message);
+    }
+
+    /**
      * @return an identifier with the quality of queso namespace.
      */
     public static Identifier ofQoQ(String name) {
@@ -269,6 +276,59 @@ public class ModUtil {
         Arrays.fill(ARMOR_TIMERS, 0);
         Arrays.fill(LAST_ARMOR_STACKS, null);
         CAN_ACTUALLY_RENDER_ARMOR_HOTBAR = false;
+    }
+
+    /**
+     * Checks all client-side configuration instances upon initialization, and crashes the game if one is null.
+     */
+    public static void checkClientConfigsAndCrash() {
+        boolean shouldStop = false;
+        String configName = "";
+        if (ModClientOptions.CLIENT.getInstance() == null) {
+            error("Quality of Queso's client-config is null! Please delete it and relaunch your game.");
+            shouldStop = true;
+            configName = BaseOptions.DEFAULT_CLIENT_FILE_NAME;
+        }
+        if (TrackedContainers.TRACKED_CONTAINERS.getInstance() == null) {
+            error("Quality of Queso's tracked containers config is null! Please delete it and relaunch your game.");
+            shouldStop = true;
+            configName = BaseOptions.DEFAULT_TRACKED_CONTAINERS_NAME;
+        }
+
+        stop(shouldStop, configName);
+    }
+
+    /**
+     * Checks all common configuration instances upon initialization, and crashes the game if one is null.
+     */
+    public static void checkCommonConfigsAndCrash() {
+        boolean shouldStop = false;
+        String configName = "";
+        if (UniversalOptions.UNIVERSAL.getInstance() == null) {
+            error("Quality of Queso's universal config is null! Please delete it and relaunch your game.");
+            shouldStop = true;
+            configName = "universal config";
+        }
+        if (ModCommonOptions.COMMON.getInstance() == null) {
+            error("Quality of Queso's common config is null! Please delete it and relaunch your game.");
+            shouldStop = true;
+            configName = BaseOptions.DEFAULT_COMMON_FILE_NAME;
+        }
+
+        stop(shouldStop, configName);
+    }
+
+    /**
+     * Stops the game if it should stop.
+     */
+    public static void stop(boolean shouldStop, String configName) {
+        if (shouldStop) {
+            try {
+                Minecraft.getInstance().destroy();
+            } catch (NullPointerException e) {
+                throw new NullPointerException("Quality of Queso's \"" + configName + "\" configuration file is null. Not sure what happened! Please delete this config file (located in your \".minecraft/config\" directory), and then you can relaunch your game.");
+            }
+        }
     }
 
     /**

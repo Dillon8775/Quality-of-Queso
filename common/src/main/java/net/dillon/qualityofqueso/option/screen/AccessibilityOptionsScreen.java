@@ -2,14 +2,19 @@ package net.dillon.qualityofqueso.option.screen;
 
 import com.google.common.collect.ImmutableList;
 import net.dillon.qualityofqueso.option.ModListOptions;
+import net.dillon.qualityofqueso.option.instance.ModClientOptions;
+import net.dillon.qualityofqueso.screen.gui.search.SearchField;
 import net.dillon.qualityofqueso.util.ButtonUtil;
+import net.dillon.qualityofqueso.util.ModUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.CommonColors;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +26,10 @@ import static net.dillon.qualityofqueso.util.ModUtil.uoptions;
  */
 public class AccessibilityOptionsScreen extends AbstractModOptionsScreen {
     private EditBox blacklistedServersField;
+    private EditBox searchBarTextColorField;
+    private static boolean SAFE_TO_SAVE_COLOR;
+    private static final Component DEFAULT_COLOR_FIELD_TOOLTIP = Component.translatable("qualityofqueso.options.search_bar_text_color.tooltip");
+    private static Component COLOR_FIELD_TOOLTIP = DEFAULT_COLOR_FIELD_TOOLTIP;
     private List<String> blacklistedServers = new ArrayList<>();
 
     public AccessibilityOptionsScreen(Screen parent) {
@@ -37,19 +46,7 @@ public class AccessibilityOptionsScreen extends AbstractModOptionsScreen {
                 ModListOptions.showButtonShortcuts(),
 
                 ModListOptions.autoCloseRecipeBook(),
-                ModListOptions.autoFocusIntoRecipeBook(),
-
-                ModListOptions.onlyCountMatchingItems(),
-                ModListOptions.displayTotalWithStacks(),
-
-                ModListOptions.useOldSearchBarTexture(),
-                ModListOptions.elytraAlarmSoundDelay(),
-
-                ModListOptions.perpendicularQuickMoving(),
-                ModListOptions.moveItemsIf(),
-
-                ModListOptions.qoqButtons(),
-                ModListOptions.buttonSounds()
+                ModListOptions.ignoreFabricTags(),
         };
     }
 
@@ -58,10 +55,30 @@ public class AccessibilityOptionsScreen extends AbstractModOptionsScreen {
         super.init();
         this.list.addSmall(this.options());
 
-        // Initialize the list from current options
-        this.blacklistedServers = new ArrayList<>(uoptions().main.blacklistedServers);
+        this.searchBarTextColorField = new EditBox(
+                this.font,
+                0,
+                0,
+                150,
+                20,
+                Component.empty()
+        ) {
+            @Override
+            public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+                if (event.button() == 1 && this.isHovered()) {
+                    this.setValue(String.format("#%06X", ModClientOptions.DEFAULT_TEXT_COLOR & 0xFFFFFF));
+                    this.setFocused(false);
+                    return true;
+                }
+                return super.mouseClicked(event, doubleClick);
+            }
+        };
+        this.searchBarTextColorField.setMaxLength(7);
+        this.searchBarTextColorField.setValue(String.format("#%06X", ModUtil.options().accessibility.searchBarTextColor & 0xFFFFFF));
+        this.searchBarTextColorField.setTextColor(CommonColors.GREEN);
+        this.searchBarTextColorField.setResponder(this::onColorChanged);
 
-        // Create the position and text field
+        this.blacklistedServers = new ArrayList<>(uoptions().main.blacklistedServers);
         this.blacklistedServersField = new EditBox(
                 this.font,
                 0, // x=irrelevant
@@ -70,20 +87,25 @@ public class AccessibilityOptionsScreen extends AbstractModOptionsScreen {
                 20,
                 Component.empty()
         );
-
         this.blacklistedServersField.setMaxLength(Integer.MAX_VALUE);
-
         this.blacklistedServersField.setHint(Component.translatable("qualityofqueso.options.blacklisted_servers").withStyle(ChatFormatting.GRAY));
-        // Set initial text from current blacklisted servers
         this.blacklistedServersField.setValue(String.join(", ", this.blacklistedServers));
-
-        // Add change listener
         this.blacklistedServersField.setResponder(this::onTextChanged);
 
         List<AbstractWidget> widgets = ImmutableList.of(
-                ModListOptions.multiServerConfigs().createButton(this.options),
-                ModListOptions.ignoreFabricTags().createButton(this.options),
+                ModListOptions.useOldSearchBarTexture().createButton(this.options),
+                this.searchBarTextColorField,
 
+                ModListOptions.onlyCountMatchingItems().createButton(this.options),
+                ModListOptions.displayTotalWithStacks().createButton(this.options),
+
+                ModListOptions.perpendicularQuickMoving().createButton(this.options),
+                ModListOptions.moveItemsIf().createButton(this.options),
+
+                ModListOptions.qoqButtons().createButton(this.options),
+                ModListOptions.elytraAlarmSoundDelay().createButton(this.options),
+
+                ModListOptions.multiServerConfigs().createButton(this.options),
                 this.blacklistedServersField
         );
         this.list.addSmall(widgets);
@@ -106,11 +128,30 @@ public class AccessibilityOptionsScreen extends AbstractModOptionsScreen {
         }
     }
 
+    /**
+     * Attempts to change the color of the search bar text field.
+     */
+    private void onColorChanged(String newColor) {
+        try {
+            SearchField.parseTextColor(newColor);
+            this.searchBarTextColorField.setTextColor(CommonColors.GREEN);
+            SAFE_TO_SAVE_COLOR = true;
+            COLOR_FIELD_TOOLTIP = DEFAULT_COLOR_FIELD_TOOLTIP;
+        } catch (IllegalArgumentException | StringIndexOutOfBoundsException e) {
+            this.searchBarTextColorField.setTextColor(CommonColors.RED);
+            SAFE_TO_SAVE_COLOR = false;
+            COLOR_FIELD_TOOLTIP = Component.translatable("qualityofqueso.options.search_bar_text_color.tooltip.error").withStyle(ChatFormatting.RED);
+        }
+    }
+
     @Override
     public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks) {
         super.extractRenderState(graphics, mouseX, mouseY, deltaTicks);
         if (this.blacklistedServersField.isHovered()) {
             ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.options.blacklisted_servers.tooltip"), graphics, this.font, mouseX, mouseY);
+        }
+        if (this.searchBarTextColorField.isHovered()) {
+            ButtonUtil.drawTooltip(COLOR_FIELD_TOOLTIP, graphics, this.font, mouseX, mouseY);
         }
     }
 
@@ -118,6 +159,9 @@ public class AccessibilityOptionsScreen extends AbstractModOptionsScreen {
     public void onClose() {
         uoptions().main.blacklistedServers.clear();
         uoptions().main.blacklistedServers.addAll(this.blacklistedServers);
+        ModUtil.options().accessibility.searchBarTextColor = SAFE_TO_SAVE_COLOR
+                ? SearchField.getTextColor(this.searchBarTextColorField.getValue())
+                : ModClientOptions.DEFAULT_TEXT_COLOR;
         super.onClose();
     }
 

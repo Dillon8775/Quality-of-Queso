@@ -52,7 +52,7 @@ public class WidgetLayout extends AbstractWidget {
         int containerY = this.topPos + this.titleLabelY + 2 * (this.container == null ? 0 : this.container.getContainerSize()) + 12;
         boolean inventoryScreen = isInventoryScreen(this.screen);
 
-        if (RENDERED_BUTTONS > 0 && !options().management.horizontalLayout) {
+        if (RENDERED_BUTTONS > 0 && !options().management.buttonLayout.horizontal()) {
             graphics.blit(RenderPipelines.GUI_TEXTURED, ofQoQ("textures/gui/button/base/layout/layout_" + this.getLayoutNumber() + ".png"),
                     this.getX(),
                     this.getPanelY(),
@@ -71,7 +71,7 @@ public class WidgetLayout extends AbstractWidget {
                 continue;
             }
 
-            if (options().management.horizontalLayout) {
+            if (options().management.buttonLayout.horizontal()) {
                 widget.setX(getManagementButtonX(this.screen, getImageWidth(this.screen), this.screen.width, buttons));
                 widget.setY(getManagementButtonY(this.screen, this.container, this.topPos, this.titleLabelY));
             } else {
@@ -97,7 +97,7 @@ public class WidgetLayout extends AbstractWidget {
      */
     @Override
     public boolean isMouseOver(double mouseX, double mouseY) {
-        if (!this.visible || options().management.horizontalLayout || RENDERED_BUTTONS <= 0) {
+        if (!this.visible || options().management.buttonLayout.horizontal() || RENDERED_BUTTONS <= 0) {
             return false;
         }
 

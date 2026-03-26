@@ -434,7 +434,7 @@ public class ButtonUtil {
      * Plays the default button press sound.
      */
     public static void playDefaultSound(SoundManager manager) {
-        if (options().accessibility.buttonSounds.off() || options().accessibility.buttonSounds.bundleOnly()) {
+        if (options().management.buttonSounds.off() || options().management.buttonSounds.bundleOnly()) {
             return;
         }
 
@@ -452,7 +452,7 @@ public class ButtonUtil {
      * Plays the bundle sounds when using buttons.
      */
     public static void playButtonSound(Minecraft client, boolean drop) {
-        if (options().accessibility.buttonSounds.off() || options().accessibility.buttonSounds.clickOnly()) {
+        if (options().management.buttonSounds.off() || options().management.buttonSounds.clickOnly()) {
             return;
         }
 
@@ -463,7 +463,7 @@ public class ButtonUtil {
      * Plays the inactive bundle sound.
      */
     public static void playButtonInactiveSound(Minecraft client) {
-        if (options().accessibility.buttonSounds.off() || options().accessibility.buttonSounds.clickOnly()) {
+        if (options().management.buttonSounds.off() || options().management.buttonSounds.clickOnly()) {
             return;
         }
 

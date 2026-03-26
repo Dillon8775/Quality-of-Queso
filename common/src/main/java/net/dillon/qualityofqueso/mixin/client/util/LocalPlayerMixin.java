@@ -48,7 +48,7 @@ public class LocalPlayerMixin {
     private void playElytraWarningSound(CallbackInfo ci) {
         LocalPlayer player = (LocalPlayer) (Object) this;
 
-        if (!modEnabled(Minecraft.getInstance()) || !options().misc.elytraAlarm) {
+        if (!modEnabled(Minecraft.getInstance()) || !options().elytraAlarm.elytraAlarm.enabled()) {
             this.elytraWarningCooldown = 0;
             return;
         }
@@ -69,16 +69,23 @@ public class LocalPlayerMixin {
                 && !player.onGround()
                 && !player.isFallFlying()
                 && (player.gameMode() == GameType.SURVIVAL || player.gameMode() == GameType.ADVENTURE)
-                && PLAYER_FALL_DISTANCE >= options().misc.minElytraFallDistance;
+                && PLAYER_FALL_DISTANCE >= options().elytraAlarm.minFallDistance;
 
-        if (!SHOULD_WARN_OF_ELYTRA) {
+        for (String itemName : options().elytraAlarm.blacklistedItems) {
+            if (isHoldingItem(player, itemName)) {
+                SHOULD_WARN_OF_ELYTRA = false;
+                break;
+            }
+        }
+
+        if (!SHOULD_WARN_OF_ELYTRA || options().elytraAlarm.elytraAlarm.indicatorOnly()) {
             this.elytraWarningCooldown = 0;
             return;
         }
 
         if (this.elytraWarningCooldown <= 0) {
             Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.ARROW_HIT_PLAYER, 0.2F, 1.0F));
-            this.elytraWarningCooldown = options().accessibility.elytraAlarmSoundDelay;
+            this.elytraWarningCooldown = options().elytraAlarm.soundDelayTicks;
             return;
         }
 

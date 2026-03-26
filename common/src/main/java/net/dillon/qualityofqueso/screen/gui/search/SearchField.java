@@ -1,7 +1,6 @@
 package net.dillon.qualityofqueso.screen.gui.search;
 
 import net.dillon.qualityofqueso.util.ButtonUtil;
-import net.dillon.qualityofqueso.util.ModTexts;
 import net.dillon.qualityofqueso.util.ModUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
@@ -30,7 +29,7 @@ public class SearchField extends EditBox {
         this.setMaxLength(50);
         if (options().searching.transparentSearchBar) {
             this.setTextShadow(false);
-            this.setTextColor(ModTexts.TEXT_COLOR);
+            this.setTextColor(options().accessibility.searchBarTextColor);
             this.addFormatter((text, offset) -> FormattedCharSequence.forward(text, Style.EMPTY.withUnderlined(true)));
             this.setCentered(true);
         }
@@ -65,6 +64,24 @@ public class SearchField extends EditBox {
             }
         }
         return super.mouseClicked(click, doubled);
+    }
+
+    /**
+     * Gets the text color for the search bar, in ARGB format.
+     */
+    public static int getTextColor(String colorHex) {
+        return 0xFF000000 | parseTextColor(colorHex);
+    }
+
+    /**
+     * Attempts to parse a text color.
+     */
+    public static int parseTextColor(String color) {
+        String normalized = color.startsWith("#") ? color.substring(1) : color;
+        if (!normalized.matches("[0-9a-fA-F]{6}")) {
+            throw new NumberFormatException("RGB hex digits must be exactly 6 characters.");
+        }
+        return Integer.parseInt(normalized, 16);
     }
 
     /**

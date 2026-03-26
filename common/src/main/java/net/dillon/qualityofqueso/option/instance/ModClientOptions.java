@@ -3,13 +3,19 @@ package net.dillon.qualityofqueso.option.instance;
 import net.dillon.qualityofqueso.option.*;
 import net.dillon.qualityofqueso.option.base.BaseOptions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Client-side options, only loaded on client side.
  */
 public class ModClientOptions {
+    public static final int DEFAULT_TEXT_COLOR = -12566464;
     public Searching searching = new Searching();
     public InventoryManagement management = new InventoryManagement();
+    public InventoryManagement.ButtonDisplayOptions buttonDisplayOptions = new InventoryManagement.ButtonDisplayOptions();
     public Hud hud = new Hud();
+    public ElytraAlarm elytraAlarm = new ElytraAlarm();
     public Miscellaneous misc = new Miscellaneous();
     public Fog fog = new Fog();
     public FOVEffects fovEffects = new FOVEffects();
@@ -19,7 +25,7 @@ public class ModClientOptions {
         public boolean containerSearching = true;
         public boolean inventorySearching = true;
         public boolean saveSearchText = false;
-        public boolean quickSearch = true;
+        public QuickSearch quickSearch = QuickSearch.ON;
         public boolean transparentSearchBar = false;
 
         // Config-only
@@ -27,6 +33,7 @@ public class ModClientOptions {
     }
 
     public static class InventoryManagement {
+        public ButtonLayout buttonLayout = ButtonLayout.VERTICAL;
         public Transferring transferring = Transferring.SHORTCUT_KEY_OR_BUTTON;
         public ContainerSorting containerSorting = ContainerSorting.SHORTCUT_KEY_OR_BUTTON;
         public boolean containerFiltering = true;
@@ -35,17 +42,25 @@ public class ModClientOptions {
 
         public boolean dragSorting = true;
         public boolean tagSorting = false;
-        public boolean horizontalLayout = false;
+
+        public ButtonSounds buttonSounds = ButtonSounds.ALL;
 
         // Config-only
         public boolean alwaysQuickMove = false;
         public boolean saveExcludedSlots = false;
         public boolean fillWhatsPreset = false;
         public boolean includeHotbar = true;
+
+        public static class ButtonDisplayOptions {
+            public DisplayIncludeHotbar displayIncludeHotbar = DisplayIncludeHotbar.ALWAYS;
+            public boolean displaySearchTransportables = true;
+            public boolean displayAlwaysQuickMove = true;
+        }
     }
 
     public static class Hud {
         public ArmorStatus armorStatus = ArmorStatus.ON;
+        public boolean armorHotbar = true;
         public boolean coloredHighlighting = true;
         public boolean warningIndicators = true;
 
@@ -57,11 +72,22 @@ public class ModClientOptions {
         public boolean countAllArrows = true;
     }
 
+    public static class ElytraAlarm {
+        public net.dillon.qualityofqueso.option.ElytraAlarm elytraAlarm = net.dillon.qualityofqueso.option.ElytraAlarm.ON;
+        public int minFallDistance = 20;
+        public int soundDelayTicks = 1;
+        public List<String> blacklistedItems = new ArrayList<>(List.of(
+                "minecraft:mace",
+                "minecraft:wind_charge",
+                "minecraft:ender_pearl",
+                "minecraft:water_bucket",
+                "minecraft:powder_snow_bucket"
+        ));
+    }
+
     public static class Miscellaneous {
-        public boolean elytraAlarm = true;
-        public int minElytraFallDistance = 20;
         public boolean mobHitDing = true;
-        public int minMobHitDingDistance = 20;
+        public int minMobHitDingDistance = 15;
 
         public boolean quickGuiExit = true;
         public boolean quickEquip = true;
@@ -102,21 +128,16 @@ public class ModClientOptions {
         public boolean searchInventory = true;
 
         public boolean autoCloseRecipeBook = true;
-        public boolean autoFocusIntoRecipeBook = true;
+        public boolean ignoreFabricTags = false;
+
+        public boolean useOldSearchBarTexture = false;
+        public int searchBarTextColor = DEFAULT_TEXT_COLOR;
 
         public boolean onlyCountMatchingItems = false;
         public boolean displayTotalWithStacks = false;
 
-        public boolean useOldSearchBarTexture = false;
-        public boolean armorHotbar = true;
-
         public boolean perpendicularQuickMoving = false;
         public MoveItemsIf moveItemsIf = MoveItemsIf.CAN_MOVE_AT_ALL;
-
-        public boolean ignoreFabricTags = false;
-        public ButtonSounds buttonSounds = ButtonSounds.ALL;
-
-        public int elytraAlarmSoundDelay = 1;
 
         public QoQButtons qoqButtons = QoQButtons.EVERYWHERE;
         public float doNot = 2.0F;

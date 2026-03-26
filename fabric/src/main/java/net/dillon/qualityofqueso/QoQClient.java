@@ -3,6 +3,7 @@ package net.dillon.qualityofqueso;
 import net.dillon.qualityofqueso.debug.ModHudEntries;
 import net.dillon.qualityofqueso.event.ClientEvents;
 import net.dillon.qualityofqueso.sound.ModSoundEvents;
+import net.dillon.qualityofqueso.util.ModUtil;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -19,6 +20,8 @@ public class QoQClient implements ClientModInitializer {
 
         ClientEvents.registerClientEvents();
         ClientEvents.registerKeybindings();
+
+        ModUtil.checkClientConfigsAndCrash();
 
         ModSoundEvents.initializeSoundEvents();
     }

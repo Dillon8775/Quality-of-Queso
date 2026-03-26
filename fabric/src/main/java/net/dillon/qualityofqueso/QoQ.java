@@ -14,6 +14,8 @@ public class QoQ implements ModInitializer {
         CommonEvents.registerPayloads();
         CommonEvents.registerCommands();
 
+        ModUtil.checkCommonConfigsAndCrash();
+
         ModUtil.initializeSuccess();
     }
 }

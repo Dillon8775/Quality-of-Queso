@@ -1,34 +1,34 @@
-# Quality of Queso Version 1.6.1 (MC Fabric 26.1, NeoForge 26.1):
+# Quality of Queso Version 1.6.2 (MC Fabric 26.1, NeoForge 26.1):
 
-# Searching and Management Changes
-- Renamed "Inventory Management" options to "Management" options.
-- Added "Transparent Search Bar" option, which gives the search bar in your inventory and containers a transparent texture. Only the text that you type into the search bar will render. This is OFF by default.
-- Renamed "Quick Drop" option to "Quick Dropping".
+# Option Changes
+- Removed the "Vertical Layout" option, and replaced it with a "Display Buttons" option, in which you can choose to display buttons "vertically" or "horizontally" on the screen.
+- Added new separate options screen under "Management..." options, which allows you to set whether or not certain buttons should display at all.
+- Moved "Button Sounds" option to "Management" options.
+- You can now toggle to only auto-focus into certain search bars with the "Quick Search" option, unique to the recipe book search bar, and search bars that search containers/your inventory.
+- Removed "Auto-Focus into Recipe Book" option, due to the new versatility of the "Quick Search" option.
 
-- The "Search Transportables" button no longer displays next to the search bar. Instead, it displays along all other management buttons, and looks correct now.
+# Elytra Alarm Changes
+- Holding any of the following items will NOT trigger the elytra alarm:
+  - Mace
+  - Wind charge
+  - Ender pearl
+  - Water bucket
+  - Powder snow bucket
+- This is because all of these items can negate fall damage entirely or partially, so there's no need to play the sound.  You can add more items to this list if you go into the client configuration file.
+- You will find the items listed under an option called "blacklisted_elytra_alarm_items", and you can modify to your liking there.
+- You can now configure the elytra alarm to only warn the user via armor status, and do not play the sound, by setting "Elytra Alarm" to "INDICATOR ONLY".
 
-# Vertical Layout for Management Buttons
-- All management buttons are now displayed in a "vertical" layout, in a small, separate box, outside of the GUI screen.
-- Don't worry, if you don't like this option, you can go back to the default layout, by enabling "Horizontal Layout", under Management options.
+# Other Changes
+- Lowered the default value of the minimum distance that the player has to be from a mob to play the "Mob Hit Ding" sound to 15 blocks (previously 20).
 
-# Always Quick Move
-- Added a new button, which essentially "locks" your shift key, so you can always quickly move items, without pressing shift.
+# Bug Fixes
+- Fixed critical bug where the player can rarely get kicked when picking up an item.
+- Fixed critical bug where configuration files can, although rare, equate to null. The game will now throw a "NullPointerException" when a configuration file is null. If one is null, you need to simply delete the file, and then relaunch your game.
+- Fixed bug when "Quick Search" is OFF, attempting to focus into the inventory search field manually when previously focused into the recipe book search field will not fully focus unless pressing another time.
+- Fixed bug where certain letters don't quick search under the right conditions.
+- Fixed bug where "Prevent E from typing" always seems to be on.
+- Fixed bug where the "search transportable" button still plays a sound, even if "Button Sounds" are off.
+- Fixed a small inconsistency with Multi-Server configs.
 
-# Accurate Facing Debug Hud
-- A new debug hud, which accurately displays the direction you are facing (ex. northeast, southeast, northwest, etc.).
-
-# Fastest Flight Debug Hud
-- A new debug hud, which displays the players "x-rotation" / YAW (although, it seems like it's the y-rotation, but that's what Minecraft calls it for some reason, lol), which can be used to get the fastest flying speed.
-- For those that don't know, getting your X-rotation / YAW to be around 40 (or -40) will give the player the best momentum when flying with an elytra. Displaying this can help you always gain that speed.
-- This hud will only display if the player has an elytra equipped, to keep it off the screen when not needed.
-
-# Option changes
-- Added "Bottom Left" and "Bottom Right" options for the Quality of Queso configuration buttons to be displayed in the pause menu.
-- These do not affect the title screen.
-- Reimplemented the "on change" option for Armor Status (it is now called "on update").
-- Renamed option "Armor Slot Outlines" to "Armor Hotbar". Also moved this option to "HUD..." options, instead of it being under accessibility.
-- Changed the "Button Click Sounds" option to "Button Sounds", which can be toggled in 4 different options.
-  - ALL: plays all button sounds (bundle noises and normal click sounds)
-  - BUNDLE ONLY: only plays bundle noises when using management buttons, does not play any normal "clicking" sound.
-  - CLICK ONLY: only plays clicking sounds when using management buttons, no bundle sounds.
-  - OFF: disables all sounds when using management buttons.
+# Technical Changes
+- Moved some configuration options around in the config files, to keep it organized.

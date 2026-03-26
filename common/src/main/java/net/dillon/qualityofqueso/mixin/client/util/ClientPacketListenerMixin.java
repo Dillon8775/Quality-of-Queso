@@ -4,6 +4,7 @@ import net.dillon.qualityofqueso.util.ItemHudTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.protocol.game.ClientboundDamageEventPacket;
 import net.minecraft.network.protocol.game.ClientboundTakeItemEntityPacket;
@@ -38,12 +39,34 @@ public class ClientPacketListenerMixin {
             return;
         }
 
+        if (packet == null) {
+            return;
+        }
+
+        if (this.level.getEntity(packet.getPlayerId()) == null || this.level.getEntity(packet.getItemId()) == null) {
+            return;
+        }
+
         Entity entity = this.level.getEntity(packet.getItemId());
         if (!(entity instanceof ItemEntity itemEntity)) {
             return;
         }
-        if (this.level.getEntity(packet.getPlayerId()).getId() != Minecraft.getInstance().player.getId()) {
+
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player == null) {
             return;
+        }
+
+        if (this.level.getEntity(packet.getPlayerId()) == null) {
+            return;
+        }
+
+        try {
+            if (this.level.getEntity(packet.getPlayerId()).getId() != player.getId()) {
+                return;
+            }
+        } catch (NullPointerException e) {
+            throw new NullPointerException("Unable to send item pickup status because \"ClientLevel.getEntity(int)\" is null.");
         }
 
         ItemStack stack = itemEntity.getItem();

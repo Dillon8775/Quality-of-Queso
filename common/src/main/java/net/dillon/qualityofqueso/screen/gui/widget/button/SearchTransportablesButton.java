@@ -43,6 +43,10 @@ public class SearchTransportablesButton extends ToggleableButton {
 
     @Override
     public void playDownSound(SoundManager manager) {
+        if (options().management.buttonSounds.off()) {
+            return;
+        }
+
         manager.play(SimpleSoundInstance.forUI(
                 options().searching.searchTransportables ? SoundEvents.SHULKER_BOX_CLOSE : SoundEvents.SHULKER_BOX_OPEN,
                 1.0F

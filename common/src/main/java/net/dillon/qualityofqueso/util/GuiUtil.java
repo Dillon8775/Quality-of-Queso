@@ -4,6 +4,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
@@ -94,6 +95,16 @@ public class GuiUtil {
         } else {
             return minecraft.player.getProjectile(minecraft.player.getMainHandItem());
         }
+    }
+
+    /**
+     * @return if the player is holding an item in their offhand or mainhand.
+     */
+    public static boolean isHoldingItem(LocalPlayer player, String itemName) {
+        String mainHandItem = player.getMainHandItem().getItem().toString();
+        String offHandItem = player.getOffhandItem().getItem().toString();
+
+        return mainHandItem.equals(itemName) || offHandItem.equals(itemName);
     }
 
     /**

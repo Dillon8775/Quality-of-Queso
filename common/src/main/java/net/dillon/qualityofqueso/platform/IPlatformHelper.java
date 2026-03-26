@@ -10,7 +10,7 @@ public interface IPlatformHelper {
      * @return the mod version.
      */
     default String getModVersion() {
-        return "1.6.1";
+        return "1.6.2";
     }
 
     /**

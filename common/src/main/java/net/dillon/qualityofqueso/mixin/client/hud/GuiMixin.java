@@ -121,7 +121,7 @@ public class GuiMixin {
             i++;
         }
 
-        boolean canRenderArmorHotbar = options().accessibility.armorHotbar && (!options().hud.armorStatus.off() || (options().misc.elytraAlarm && SHOULD_WARN_OF_ELYTRA));
+        boolean canRenderArmorHotbar = options().hud.armorHotbar && (!options().hud.armorStatus.off() || (options().elytraAlarm.elytraAlarm.enabled() && SHOULD_WARN_OF_ELYTRA));
 
         if (canRenderArmorHotbar) {
             CAN_ACTUALLY_RENDER_ARMOR_HOTBAR = false;
@@ -160,7 +160,7 @@ public class GuiMixin {
                 }
             }
 
-            if (slot == EquipmentSlot.CHEST && options().misc.elytraAlarm && SHOULD_WARN_OF_ELYTRA) {
+            if (slot == EquipmentSlot.CHEST && options().elytraAlarm.elytraAlarm.enabled() && SHOULD_WARN_OF_ELYTRA) {
                 drawItem(this.minecraft, graphics, new ItemStack(Items.ELYTRA), this.getArmorX(this.minecraft, EquipmentSlot.CHEST), true);
                 this.renderHighlightedArmorSlot(this.minecraft, HOTBAR_SELECTION_SPRITE, graphics, slot, true);
                 this.renderWarningIndicator(this.minecraft, graphics, 0, slot);
