@@ -912,8 +912,8 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                     this.includeHotbarButton,
                     this.alwaysQuickMoveButton,
 
-                    this.fillWhatsPresentButton,
                     this.sortButton,
+                    this.fillWhatsPresentButton,
 
                     this.quickDropButton,
                     this.swapButton,
