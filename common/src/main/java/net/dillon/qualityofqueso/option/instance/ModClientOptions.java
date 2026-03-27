@@ -1,7 +1,13 @@
 package net.dillon.qualityofqueso.option.instance;
 
-import net.dillon.qualityofqueso.option.*;
 import net.dillon.qualityofqueso.option.base.BaseOptions;
+import net.dillon.qualityofqueso.option.eum.accessibility.QoQButtons;
+import net.dillon.qualityofqueso.option.eum.effects.Bows;
+import net.dillon.qualityofqueso.option.eum.effects.PotionEffects;
+import net.dillon.qualityofqueso.option.eum.hud.ArmorStatus;
+import net.dillon.qualityofqueso.option.eum.hud.ItemCount;
+import net.dillon.qualityofqueso.option.eum.management.*;
+import net.dillon.qualityofqueso.option.eum.searching.QuickSearch;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +59,7 @@ public class ModClientOptions {
 
         public static class ButtonDisplayOptions {
             public DisplayIncludeHotbar displayIncludeHotbar = DisplayIncludeHotbar.ALWAYS;
+            public DisplayFillWhatsPresent displayFillWhatsPresent = DisplayFillWhatsPresent.ALWAYS;
             public boolean displaySearchTransportables = true;
             public boolean displayAlwaysQuickMove = true;
         }
@@ -64,7 +71,7 @@ public class ModClientOptions {
         public boolean coloredHighlighting = true;
         public boolean warningIndicators = true;
 
-        public ItemCount itemCount = ItemCount.STACKS;
+        public ItemCount itemCount = ItemCount.TOTAL;
         public boolean displayOnThrow = true;
         public boolean displayOnPickup = true;
         public boolean countContainers = true;
@@ -73,7 +80,7 @@ public class ModClientOptions {
     }
 
     public static class ElytraAlarm {
-        public net.dillon.qualityofqueso.option.ElytraAlarm elytraAlarm = net.dillon.qualityofqueso.option.ElytraAlarm.ON;
+        public net.dillon.qualityofqueso.option.eum.misc.ElytraAlarm elytraAlarm = net.dillon.qualityofqueso.option.eum.misc.ElytraAlarm.ON;
         public int minFallDistance = 20;
         public int soundDelayTicks = 1;
         public List<String> blacklistedItems = new ArrayList<>(List.of(
@@ -113,7 +120,7 @@ public class ModClientOptions {
     public static class FOVEffects {
         public boolean sprinting = true;
         public boolean flying = true;
-        public boolean potions = true;
+        public PotionEffects potionEffects = PotionEffects.ON;
         public Bows bows = Bows.ON;
         public boolean fluids = true;
     }
@@ -137,7 +144,6 @@ public class ModClientOptions {
         public boolean displayTotalWithStacks = false;
 
         public boolean perpendicularQuickMoving = false;
-        public MoveItemsIf moveItemsIf = MoveItemsIf.CAN_MOVE_AT_ALL;
 
         public QoQButtons qoqButtons = QoQButtons.EVERYWHERE;
         public float doNot = 2.0F;

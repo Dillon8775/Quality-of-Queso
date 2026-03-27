@@ -22,6 +22,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -563,5 +564,16 @@ public class ModUtil {
         if (options().management.swapping.orKeyOnly() && SwapButton.SWAP_COOLDOWN > 0) {
             SwapButton.SWAP_COOLDOWN--;
         }
+    }
+
+    /**
+     * @return if the passed in effect instance is a beacon effect (or ambient).
+     */
+    public static boolean canApplyEffect(MobEffectInstance effect) {
+        if (options().fovEffects.potionEffects.nonBeacon() && effect.isAmbient()) {
+            return false;
+        }
+
+        return options().fovEffects.potionEffects.enabled();
     }
 }

@@ -1,4 +1,4 @@
-package net.dillon.qualityofqueso.option;
+package net.dillon.qualityofqueso.option.eum.searching;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.network.chat.Component;

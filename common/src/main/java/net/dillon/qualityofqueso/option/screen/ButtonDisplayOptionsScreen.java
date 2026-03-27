@@ -21,6 +21,7 @@ public class ButtonDisplayOptionsScreen extends AbstractModOptionsScreen {
     protected void init() {
         super.init();
         this.list.addBig(ModListOptions.displayIncludeHotbar());
+        this.list.addBig(ModListOptions.displayFillWhatsPresent());
         this.list.addBig(ModListOptions.displaySearchTransportables());
         this.list.addBig(ModListOptions.displayAlwaysQuickMove());
     }

@@ -1,20 +1,20 @@
-package net.dillon.qualityofqueso.option;
+package net.dillon.qualityofqueso.option.eum.effects;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.StringRepresentable;
 
-public enum ElytraAlarm implements StringRepresentable {
-    ON(0, "on", "qualityofqueso.options.elytra_alarm.on"),
-    INDICATOR_ONLY(1, "indicator_only", "qualityofqueso.options.elytra_alarm.indicator_only"),
-    OFF(2, "off", "qualityofqueso.options.elytra_alarm.off");
+public enum PotionEffects implements StringRepresentable {
+    ON(0, "on", "qualityofqueso.options.fov_effects.potion_effects.on"),
+    NON_BEACON(1, "non_beacon", "qualityofqueso.options.fov_effects.potion_effects.non_beacon"),
+    OFF(2, "off", "qualityofqueso.options.fov_effects.potion_effects.off");
 
-    public static final Codec<ElytraAlarm> Codec = StringRepresentable.fromEnum(ElytraAlarm::values);
+    public static final Codec<PotionEffects> Codec = StringRepresentable.fromEnum(PotionEffects::values);
     private final int ordinal;
     private final String name;
     private final Component translationKey;
 
-    ElytraAlarm(final int ordinal, final String name, final String translationKey) {
+    PotionEffects(final int ordinal, final String name, final String translationKey) {
         this.ordinal = ordinal;
         this.name = name;
         this.translationKey = Component.translatable(translationKey);
@@ -24,8 +24,8 @@ public enum ElytraAlarm implements StringRepresentable {
         return this != OFF;
     }
 
-    public boolean indicatorOnly() {
-        return this == INDICATOR_ONLY;
+    public boolean nonBeacon() {
+        return this == NON_BEACON;
     }
 
     public int getId() {

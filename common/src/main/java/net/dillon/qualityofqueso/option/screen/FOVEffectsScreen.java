@@ -17,7 +17,7 @@ public class FOVEffectsScreen extends AbstractModOptionsScreen {
                 ModListOptions.sprinting(),
                 ModListOptions.flying(),
 
-                ModListOptions.potions(),
+                ModListOptions.potionEffects(),
                 ModListOptions.fluids(),
 
                 ModListOptions.bows()

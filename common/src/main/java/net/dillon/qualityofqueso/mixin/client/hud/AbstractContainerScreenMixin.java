@@ -187,9 +187,11 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
 
         // Handle excluded slots
         if (isValidScreen(this.screen) && options().management.saveExcludedSlots && this.container != null) {
-            for (int i : this.excludedSlots) {
-                this.excludedSlots.remove(i);
+            if (this.screen instanceof AbstractRecipeBookScreen<?> recipeScreen && getRecipeBookComponent(recipeScreen).isVisible()) {
+                return;
             }
+
+            this.excludedSlots.clear();
             if (SAVED_EXCLUDED_SLOTS.containsKey(getTotalSlots(this.menu))) {
                 this.excludedSlots.addAll(SAVED_EXCLUDED_SLOTS.get(getTotalSlots(this.menu)));
             }
@@ -727,8 +729,8 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
         boolean validScreen = containerScreen || inventoryScreen;
         if (options().management.transferring.shortcutOrButton()) {
 
-            // TRANSFER CONTAINER BUTTON (container -> inventory)
-            if (containerScreen || isBrewingStandScreen(this.screen) || isFurnaceScreen(this.screen) || isDispenserScreen(this.screen) || isHopperScreen(this.screen)) {
+            if (containerScreen) {
+                // TRANSFER CONTAINER BUTTON (container -> inventory)
                 this.transferContainerButton = this.addWidget(
                         new TransferButton(
                                 this.menu,
@@ -739,10 +741,8 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                                 true,
                                 b -> this.transferItems(true),
                                 () -> !isContainerFull(this.menu, this.container, true) && this.shouldButtonBeActive(false, null)));
-            }
 
-            // TRANSFER INVENTORY BUTTON (inventory -> container)
-            if (containerScreen) {
+                // TRANSFER INVENTORY BUTTON (inventory -> container)
                 this.transferInventoryButton = this.addWidget(
                         new TransferButton(
                                 this.menu,
@@ -796,7 +796,8 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             }
 
             // MOVE MATCHING ITEMS BUTTON
-            if (containerScreen && options().management.containerFiltering && options().management.transferring.orKeyOnly()) {
+            if (ContainerTracker.IS_TRACKED_CONTAINER || !options().buttonDisplayOptions.displayFillWhatsPresent.filteredContainersOnly() &&
+                    (containerScreen && options().management.containerFiltering && options().management.transferring.orKeyOnly())) {
                 this.fillWhatsPresentButton = this.addWidget(
                     new FillWhatsPresentButton(
                             this.menu,
@@ -934,14 +935,13 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                     this.alwaysQuickMoveButton,
                     this.fillWhatsPresentButton,
                     this.sortButton,
-                    this.searchTransportablesButton,
+                    inventoryScreen ? this.quickDropButton : this.searchTransportablesButton,
                     this.swapButton,
-                    this.quickDropButton,
+                    inventoryScreen ? this.searchTransportablesButton : this.quickDropButton,
                     this.clearExcludedSlotsButton
             );
 
             this.setWidgetLayout(WidgetLayout.initializeLayout(this.screen,
-                    inventoryScreen ? this.inventorySearchField : this.containerSearchField,
                     this.container, this.topPos, this.titleLabelY, options().management.buttonLayout.horizontal() ? horizontalLayout : verticalLayout
             ));
             this.getWidgetLayout().extractRenderState(graphics, mouseX, mouseY, deltaTicks);
@@ -1424,7 +1424,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
         }
 
         if (options().management.saveExcludedSlots && this.menu != null) {
-            SAVED_EXCLUDED_SLOTS.put(getTotalSlots(this.menu), this.excludedSlots);
+            SAVED_EXCLUDED_SLOTS.put(getTotalSlots(this.menu), new HashSet<>(this.excludedSlots));
         }
 
         if (options().searching.saveSearchText) {
@@ -1473,7 +1473,9 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             this.excludedSlots.clear();
             // Refresh screen (or resize)
             this.init(width, height);
-            this.excludedSlots.addAll(temp);
+            if (!(this.screen instanceof AbstractRecipeBookScreen<?> recipeScreen && getRecipeBookComponent(recipeScreen).isVisible())) {
+                this.excludedSlots.addAll(temp);
+            }
             // Reset text and focused status
             this.containerSearchField.setValue(text);
             this.containerSearchField.setFocused(refocus);

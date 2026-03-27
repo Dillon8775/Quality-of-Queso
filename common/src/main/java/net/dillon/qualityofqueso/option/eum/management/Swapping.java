@@ -1,20 +1,20 @@
-package net.dillon.qualityofqueso.option;
+package net.dillon.qualityofqueso.option.eum.management;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.StringRepresentable;
 
-public enum ContainerSorting implements StringRepresentable {
+public enum Swapping implements StringRepresentable {
     SHORTCUT_KEY_OR_BUTTON(0, "shortcut_key_or_button", "qualityofqueso.options.shortcut_key_or_button"),
     SHORTCUT_KEY_ONLY(1, "shortcut_key_only", "qualityofqueso.options.shortcut_key_only"),
     OFF(2, "off", "qualityofqueso.options.management_button.off");
 
-    public static final Codec<ContainerSorting> Codec = StringRepresentable.fromEnum(ContainerSorting::values);
+    public static final Codec<Swapping> Codec = StringRepresentable.fromEnum(Swapping::values);
     private final int ordinal;
     private final String name;
     private final Component translationKey;
 
-    ContainerSorting(final int ordinal, final String name, final String translationKey) {
+    Swapping(final int ordinal, final String name, final String translationKey) {
         this.ordinal = ordinal;
         this.name = name;
         this.translationKey = Component.translatable(translationKey);

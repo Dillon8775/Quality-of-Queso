@@ -15,7 +15,7 @@ public class ModKeybinds {
     public static final KeyMapping QUICK_EQUIP = new KeyMapping(
             "qualityofqueso.quick_equip",
             InputConstants.Type.KEYSYM,
-            GLFW.GLFW_KEY_B,
+            InputConstants.UNKNOWN.getValue(),
             QOQ
     );
 

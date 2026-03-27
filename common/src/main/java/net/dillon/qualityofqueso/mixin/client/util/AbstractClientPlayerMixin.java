@@ -11,6 +11,7 @@ import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 
+import static net.dillon.qualityofqueso.util.ModUtil.canApplyEffect;
 import static net.dillon.qualityofqueso.util.ModUtil.options;
 
 @Mixin(AbstractClientPlayer.class)
@@ -40,17 +41,17 @@ public abstract class AbstractClientPlayerMixin extends Player {
                 effectiveSpeed *= 1.3F;
             }
 
-            if (options().fovEffects.potions) {
+            if (options().fovEffects.potionEffects.enabled()) {
                 if (this.hasEffect(MobEffects.SPEED)) {
                     MobEffectInstance effect = this.getEffect(MobEffects.SPEED);
-                    if (effect != null) {
+                    if (effect != null && canApplyEffect(effect)) {
                         effectiveSpeed *= 1.0F + 0.2F * (effect.getAmplifier() + 1);
                     }
                 }
 
                 if (this.hasEffect(MobEffects.SLOWNESS)) {
                     MobEffectInstance effect = this.getEffect(MobEffects.SLOWNESS);
-                    if (effect != null) {
+                    if (effect != null && canApplyEffect(effect)) {
                         effectiveSpeed *= 1.0F - 0.15F * (effect.getAmplifier() + 1);
                     }
                 }
@@ -63,7 +64,7 @@ public abstract class AbstractClientPlayerMixin extends Player {
         // Bow FOV
         if (this.isUsingItem()) {
             if (this.getUseItem().getItem() instanceof BowItem && options().fovEffects.bows.enabled()) {
-                float scale = options().fovEffects.bows.isQuick() ? 1.0F : Math.min(this.getTicksUsingItem() / 20.0F, 1.0F);
+                float scale = options().fovEffects.bows.quickPull() ? 1.0F : Math.min(this.getTicksUsingItem() / 20.0F, 1.0F);
                 modifier *= 1.0F - Mth.square(scale) * 0.15F;
             } else if (firstPerson && this.isScoping()) {
                 return 0.1F;

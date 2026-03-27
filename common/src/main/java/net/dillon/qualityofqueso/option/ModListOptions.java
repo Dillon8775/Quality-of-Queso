@@ -1,6 +1,14 @@
 package net.dillon.qualityofqueso.option;
 
 import net.dillon.qualityofqueso.keybind.ModKeybinds;
+import net.dillon.qualityofqueso.option.eum.accessibility.QoQButtons;
+import net.dillon.qualityofqueso.option.eum.effects.Bows;
+import net.dillon.qualityofqueso.option.eum.effects.PotionEffects;
+import net.dillon.qualityofqueso.option.eum.hud.ArmorStatus;
+import net.dillon.qualityofqueso.option.eum.hud.ItemCount;
+import net.dillon.qualityofqueso.option.eum.management.*;
+import net.dillon.qualityofqueso.option.eum.misc.ElytraAlarm;
+import net.dillon.qualityofqueso.option.eum.searching.QuickSearch;
 import net.dillon.qualityofqueso.option.instance.ModClientOptions;
 import net.dillon.qualityofqueso.util.ModTexts;
 import net.dillon.qualityofqueso.util.ModUtil;
@@ -190,6 +198,21 @@ public class ModListOptions {
                 value -> options().buttonDisplayOptions.displayIncludeHotbar = value);
     }
 
+    public static OptionInstance<DisplayFillWhatsPresent> displayFillWhatsPresent() {
+        return new OptionInstance<>(
+                "qualityofqueso.options.display_fill_whats_present",
+                option -> {
+                    return switch (option) {
+                        case ALWAYS -> Tooltip.create(Component.translatable("qualityofqueso.options.display_fill_whats_present.always.tooltip"));
+                        case FILTERED_CONTAINERS_ONLY -> Tooltip.create(Component.translatable("qualityofqueso.options.display_fill_whats_present.filtered_containers_only.tooltip"));
+                    };
+                },
+                (optionText, value) -> value.getText(),
+                new OptionInstance.Enum<>(Arrays.asList(DisplayFillWhatsPresent.values()), DisplayFillWhatsPresent.Codec),
+                options().buttonDisplayOptions.displayFillWhatsPresent,
+                value -> options().buttonDisplayOptions.displayFillWhatsPresent = value);
+    }
+
     public static OptionInstance<Boolean> displaySearchTransportables() {
         return OptionInstance.createBoolean("qualityofqueso.options.display_search_transportables", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.display_search_transportables.tooltip")),
                 ON_OFF_TEXT, options().buttonDisplayOptions.displaySearchTransportables, value -> options().buttonDisplayOptions.displaySearchTransportables = value);
@@ -291,7 +314,6 @@ public class ModListOptions {
                     switch (option) {
                         case TOTAL -> text = Component.translatable("qualityofqueso.options.item_count.total.tooltip");
                         case STACKS -> text = Component.translatable("qualityofqueso.options.item_count.stacks.tooltip");
-                        case REMAINDER -> text = Component.translatable("qualityofqueso.options.item_count.remainder.tooltip");
                     }
                     return Tooltip.create(Component.translatable("qualityofqueso.options.item_count.tooltip").append(text != ModTexts.BLANK ? "\n\n" : "").append(text));
                 },
@@ -481,24 +503,6 @@ public class ModListOptions {
                 ON_OFF_TEXT, options().accessibility.perpendicularQuickMoving, value -> options().accessibility.perpendicularQuickMoving = value);
     }
 
-    public static OptionInstance<MoveItemsIf> moveItemsIf() {
-        return new OptionInstance<>(
-                "qualityofqueso.options.move_items_if",
-                option -> {
-                    Component text;
-                    switch (option) {
-                        case CONTAINER_ISNT_FILLED -> text = Component.translatable("qualityofqueso.options.move_items_if.container_isnt_filled.tooltip");
-                        case LESS_THAN_MAX_STACK_SIZE -> text = Component.translatable("qualityofqueso.options.move_items_if.less_than_max_item_count.tooltip");
-                        default -> text = Component.translatable("qualityofqueso.options.move_items_if.can_move_at_all.tooltip");
-                    }
-                    return Tooltip.create(Component.translatable("qualityofqueso.options.move_items_if.tooltip").append("\n\n").append(text));
-                },
-                (optionText, value) -> value.getText(),
-                new OptionInstance.Enum<>(Arrays.asList(MoveItemsIf.values()), MoveItemsIf.Codec),
-                options().accessibility.moveItemsIf,
-                value -> options().accessibility.moveItemsIf = value);
-    }
-
     public static OptionInstance<Integer> elytraAlarmSoundDelay() {
         return new OptionInstance<>("qualityofqueso.options.elytra_alarm_sound_delay",
                 OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.elytra_alarm_sound_delay.tooltip")),
@@ -515,14 +519,12 @@ public class ModListOptions {
         return new OptionInstance<>(
                 "qualityofqueso.options.button_sounds",
                 option -> {
-                    Component text;
-                    switch (option) {
-                        case BUNDLE_ONLY -> text = Component.translatable("qualityofqueso.options.button_sounds.bundle_only.tooltip");
-                        case CLICK_ONLY -> text = Component.translatable("qualityofqueso.options.button_sounds.click_only.tooltip");
-                        case OFF -> text = Component.translatable("qualityofqueso.options.button_sounds.off.tooltip");
-                        default -> text = Component.translatable("qualityofqueso.options.button_sounds.all.tooltip");
+                    return switch (option) {
+                        case ALL -> Tooltip.create(Component.translatable("qualityofqueso.options.button_sounds.all.tooltip"));
+                        case BUNDLE_ONLY -> Tooltip.create(Component.translatable("qualityofqueso.options.button_sounds.bundle_only.tooltip"));
+                        case CLICK_ONLY -> Tooltip.create(Component.translatable("qualityofqueso.options.button_sounds.click_only.tooltip"));
+                        case OFF -> Tooltip.create(Component.translatable("qualityofqueso.options.button_sounds.off.tooltip"));
                     };
-                    return Tooltip.create(Component.translatable("qualityofqueso.options.button_sounds.tooltip").copy().append("\n\n").append(text));
                 },
                 (optionText, value) -> value.getText(),
                 new OptionInstance.Enum<>(Arrays.asList(ButtonSounds.values()), ButtonSounds.Codec),
@@ -570,9 +572,20 @@ public class ModListOptions {
                 ON_OFF_TEXT, options().fovEffects.flying, value -> options().fovEffects.flying = value);
     }
 
-    public static OptionInstance<Boolean> potions() {
-        return OptionInstance.createBoolean("qualityofqueso.options.fov_effects.potions", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.fov_effects.potions.tooltip")),
-                ON_OFF_TEXT, options().fovEffects.potions, value -> options().fovEffects.potions = value);
+    public static OptionInstance<PotionEffects> potionEffects() {
+        return new OptionInstance<>(
+                "qualityofqueso.options.fov_effects.potion_effects",
+                option -> {
+                    Component text = ModTexts.BLANK;
+                    switch (option) {
+                        case NON_BEACON -> text = Component.translatable("qualityofqueso.options.fov_effects.potion_effects.non_beacon.tooltip");
+                    }
+                    return Tooltip.create(Component.translatable("qualityofqueso.options.fov_effects.potion_effects.tooltip").copy().append(text));
+                },
+                (optionText, value) -> value.getText(),
+                new OptionInstance.Enum<>(Arrays.asList(PotionEffects.values()), PotionEffects.Codec),
+                options().fovEffects.potionEffects,
+                value -> options().fovEffects.potionEffects = value);
     }
 
     public static OptionInstance<Boolean> fluids() {
@@ -586,7 +599,7 @@ public class ModListOptions {
                 option -> {
                     Component text;
                     switch (option) {
-                        case QUICK -> text = Component.translatable("qualityofqueso.options.fov_effects.bows.quick.tooltip");
+                        case QUICK_PULL -> text = Component.translatable("qualityofqueso.options.fov_effects.bows.quick_pull.tooltip");
                         case OFF -> text = Component.translatable("qualityofqueso.options.fov_effects.bows.off.tooltip");
                         default -> text = Component.translatable("qualityofqueso.options.fov_effects.bows.on.tooltip");
                     }

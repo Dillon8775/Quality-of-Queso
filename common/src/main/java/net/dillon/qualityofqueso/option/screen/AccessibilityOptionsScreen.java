@@ -100,12 +100,11 @@ public class AccessibilityOptionsScreen extends AbstractModOptionsScreen {
                 ModListOptions.displayTotalWithStacks().createButton(this.options),
 
                 ModListOptions.perpendicularQuickMoving().createButton(this.options),
-                ModListOptions.moveItemsIf().createButton(this.options),
-
-                ModListOptions.qoqButtons().createButton(this.options),
                 ModListOptions.elytraAlarmSoundDelay().createButton(this.options),
 
+                ModListOptions.qoqButtons().createButton(this.options),
                 ModListOptions.multiServerConfigs().createButton(this.options),
+
                 this.blacklistedServersField
         );
         this.list.addSmall(widgets);

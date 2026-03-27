@@ -1,30 +1,27 @@
-package net.dillon.qualityofqueso.option;
+package net.dillon.qualityofqueso.option.eum.hud;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.StringRepresentable;
 
-public enum ButtonLayout implements StringRepresentable {
-    HORIZONTAL(0, "on", "qualityofqueso.options.button_layout.horizontal"),
-    VERTICAL(1, "quick", "qualityofqueso.options.button_layout.vertical");
+public enum ItemCount implements StringRepresentable {
+    TOTAL(0, "always", "qualityofqueso.options.item_count.total"),
+    STACKS(1, "stacks", "qualityofqueso.options.item_count.stacks"),
+    OFF(1, "off", "qualityofqueso.options.item_count.off");
 
-    public static final Codec<ButtonLayout> Codec = StringRepresentable.fromEnum(ButtonLayout::values);
+    public static final Codec<ItemCount> Codec = StringRepresentable.fromEnum(ItemCount::values);
     private final int ordinal;
     private final String name;
     private final Component translationKey;
 
-    ButtonLayout(final int ordinal, final String name, final String translationKey) {
+    ItemCount(final int ordinal, final String name, final String translationKey) {
         this.ordinal = ordinal;
         this.name = name;
         this.translationKey = Component.translatable(translationKey);
     }
 
-    public boolean horizontal() {
-        return this == HORIZONTAL;
-    }
-
-    public boolean vertical() {
-        return this == VERTICAL;
+    public boolean enabled() {
+        return this != OFF;
     }
 
     public int getId() {

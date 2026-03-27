@@ -1,7 +1,6 @@
 package net.dillon.qualityofqueso.util;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import net.dillon.qualityofqueso.option.MoveItemsIf;
 import net.dillon.qualityofqueso.option.screen.ModOptionsScreen;
 import net.dillon.qualityofqueso.platform.MultiLoader;
 import net.dillon.qualityofqueso.screen.gui.widget.button.TransferButton;
@@ -319,7 +318,7 @@ public class ButtonUtil {
                 filledSlots++;
             }
 
-            if (fromItem.isEmpty() || options.accessibility.moveItemsIf.containerIsntFilled()) {
+            if (fromItem.isEmpty()) {
                 continue;
             }
 
@@ -329,15 +328,9 @@ public class ButtonUtil {
                     continue;
                 }
 
-                if (options.accessibility.moveItemsIf == MoveItemsIf.CAN_MOVE_AT_ALL) {
-                    if (ItemStack.isSameItem(toItem, fromItem)) {
-                        Integer free = componentFreeSpace.get(toItem.getComponents());
-                        if (free != null && free > 0) {
-                            return false;
-                        }
-                    }
-                } else if (options.accessibility.moveItemsIf == MoveItemsIf.LESS_THAN_MAX_STACK_SIZE) {
-                    if (ItemStack.isSameItemSameComponents(toItem, fromItem) && !(toItem.getCount() + fromItem.getCount() > toItem.getMaxStackSize())) {
+                if (ItemStack.isSameItem(toItem, fromItem)) {
+                    Integer free = componentFreeSpace.get(toItem.getComponents());
+                    if (free != null && free > 0) {
                         return false;
                     }
                 }
@@ -924,9 +917,10 @@ public class ButtonUtil {
      * @return whether a slot should be grayed out.
      */
     public static boolean shouldGrayout(AbstractContainerScreen<?> screen, TransferButton inventoryButton, TransferButton containerButton, TransferButton hotbarButton, TransferButton quickDropButton, Slot slot) {
-        boolean shortcutKeyReady = isInventoryScreen(screen) ? Minecraft.getInstance().hasControlDown() && Minecraft.getInstance().hasAltDown() : Minecraft.getInstance().hasControlDown();
+        boolean inventoryScreen = isInventoryScreen(screen);
+        boolean shortcutKeyReady = inventoryScreen ? Minecraft.getInstance().hasControlDown() && Minecraft.getInstance().hasAltDown() : Minecraft.getInstance().hasControlDown();
         return shortcutKeyReady
-                || shiftHeld(screen, false)
+                || (!inventoryScreen && shiftHeld(screen, false))
                 || (buttonHoveredAndActive(inventoryButton) && slot.hasItem())
                 || buttonHoveredAndActive(containerButton)
                 || (buttonHoveredAndActive(hotbarButton) && slot.hasItem())

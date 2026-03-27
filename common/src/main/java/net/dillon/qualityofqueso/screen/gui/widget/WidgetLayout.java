@@ -1,10 +1,11 @@
 package net.dillon.qualityofqueso.screen.gui.widget;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.Container;
@@ -44,8 +45,10 @@ public class WidgetLayout extends AbstractWidget {
      */
     @Override
     protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
-        this.setX(this.getPanelX());
-        this.setY(this.getPanelY());
+        LocalPlayer player = Minecraft.getInstance().player;
+
+        this.setX(this.getPanelX(player));
+        this.setY(this.getPanelY(player));
         this.setWidth(this.getPanelWidth());
         this.setHeight(this.getPanelHeight());
 
@@ -55,15 +58,23 @@ public class WidgetLayout extends AbstractWidget {
         if (RENDERED_BUTTONS > 0 && !options().management.buttonLayout.horizontal()) {
             graphics.blit(RenderPipelines.GUI_TEXTURED, ofQoQ("textures/gui/button/base/layout/layout_" + this.getLayoutNumber() + ".png"),
                     this.getX(),
-                    this.getPanelY(),
+                    this.getPanelY(player),
                     0.0F, 0.0F, WIDTH, HEIGHT, WIDTH, HEIGHT);
         }
 
         int buttons = 0;
         int finalX = 8;
 
-        int x = finalX + getRecipeBookModifier(this.screen);
+        int recipeBookModifier = getRecipeBookModifier(this.screen);
+        int x = finalX + recipeBookModifier;
         int y = inventoryScreen ? -33 : -34;
+
+        int newX = finalX;
+        if (this.hasTooManyEffects(player)) {
+            newX = -40 + recipeBookModifier;
+            x = newX;
+            y = 69;
+        }
 
         int addition = 12;
         for (AbstractWidget widget : this.buttons) {
@@ -80,7 +91,7 @@ public class WidgetLayout extends AbstractWidget {
                 if (buttons % 2 == 0) {
                     x += addition;
                 } else {
-                    x = finalX;
+                    x = newX;
                     y += addition;
                 }
             }
@@ -105,6 +116,13 @@ public class WidgetLayout extends AbstractWidget {
     }
 
     /**
+     * @return if the player has more than 2 effects, determining if the buttons should be rendered in a different place.
+     */
+    private boolean hasTooManyEffects(LocalPlayer player) {
+        return isInventoryScreen(this.screen) && player != null && player.getActiveEffects().size() > 2;
+    }
+
+    /**
      * @return the layout number to display.
      */
     private int getLayoutNumber() {
@@ -125,8 +143,16 @@ public class WidgetLayout extends AbstractWidget {
     /**
      * @return the panel X for the box.
      */
-    private int getPanelX() {
-        return this.screen.width / 2 + 92 + getRecipeBookModifier(this.screen);
+    private int getPanelX(LocalPlayer player) {
+        return this.screen.width / 2 + (this.hasTooManyEffects(player) ? 44 : 92) + getRecipeBookModifier(this.screen);
+    }
+
+    /**
+     * @return the panel Y for the box.
+     */
+    private int getPanelY(LocalPlayer player) {
+        boolean inventoryScreen = isInventoryScreen(this.screen);
+        return this.getContainerY() - (inventoryScreen ? (this.hasTooManyEffects(player) ? -65 : 37) : 38);
     }
 
     /**
@@ -134,14 +160,6 @@ public class WidgetLayout extends AbstractWidget {
      */
     private int getContainerY() {
         return this.topPos + this.titleLabelY + 2 * (this.container == null ? 0 : this.container.getContainerSize()) + 12;
-    }
-
-    /**
-     * @return the panel Y for the box.
-     */
-    private int getPanelY() {
-        boolean inventoryScreen = isInventoryScreen(this.screen);
-        return this.getContainerY() - (inventoryScreen ? 37 : 38);
     }
 
     /**
@@ -179,7 +197,7 @@ public class WidgetLayout extends AbstractWidget {
     /**
      * Initializes and returns a new WidgetLayout.
      */
-    public static WidgetLayout initializeLayout(AbstractContainerScreen<?> screen, EditBox searchField, Container container, int topPos, int titleLabelY, List<AbstractWidget> widgets) {
+    public static WidgetLayout initializeLayout(AbstractContainerScreen<?> screen, Container container, int topPos, int titleLabelY, List<AbstractWidget> widgets) {
         return new WidgetLayout(screen, container, topPos, titleLabelY, widgets);
     }
 
