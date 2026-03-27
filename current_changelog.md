@@ -38,6 +38,7 @@
 - Fixed bug where excluding slots in inventory and opening the recipe book screen doesn't render anything right and throws a ConcurrentModificationException.
 - Fixed bug where the "search transportable" button still plays a sound, even if "Button Sounds" are off.
 - Fixed a small inconsistency with Multi-Server configs.
+- Fixed small bug where if player has flying abilities at all (even if in survival mode) the elytra alarm still plays.
 - Fixed a small grayout bug (I don't even know how I came across it it's such a small bug lol) with the inventory screen when excluding hotbar and holding shift.
 
 # Technical Changes
