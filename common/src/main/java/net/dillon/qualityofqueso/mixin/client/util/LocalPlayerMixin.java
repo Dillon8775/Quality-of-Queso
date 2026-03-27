@@ -68,6 +68,8 @@ public class LocalPlayerMixin {
                 && !hasElytraEquipped
                 && !player.onGround()
                 && !player.isFallFlying()
+                && !player.getAbilities().mayfly
+                && !player.getAbilities().flying
                 && (player.gameMode() == GameType.SURVIVAL || player.gameMode() == GameType.ADVENTURE)
                 && PLAYER_FALL_DISTANCE >= options().elytraAlarm.minFallDistance;
 

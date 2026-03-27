@@ -2,11 +2,13 @@ package net.dillon.qualityofqueso.option.screen;
 
 import net.dillon.qualityofqueso.platform.MultiLoader;
 import net.dillon.qualityofqueso.util.ButtonUtil;
+import net.dillon.qualityofqueso.util.ModTexts;
 import net.dillon.qualityofqueso.util.ModUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.SpriteIconButton;
 import net.minecraft.client.gui.layouts.LinearLayout;
 import net.minecraft.client.gui.screens.ConfirmLinkScreen;
 import net.minecraft.client.gui.screens.Screen;
@@ -16,11 +18,15 @@ import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.CommonColors;
 import net.minecraft.util.Util;
+import net.minecraft.world.level.storage.LevelResource;
+
+import java.nio.file.Path;
 
 import static net.dillon.qualityofqueso.util.ModUtil.*;
 
 public abstract class AbstractModOptionsScreen extends OptionsSubScreen {
     private Button doneButton;
+    private SpriteIconButton worldDirectoryButton;
 
     public AbstractModOptionsScreen(Screen parent, Component title) {
         super(parent, Minecraft.getInstance().options, title);
@@ -79,6 +85,15 @@ public abstract class AbstractModOptionsScreen extends OptionsSubScreen {
         if (this.doneButton != null) {
             graphics.centeredText(this.font, ModUtil.VERSION, this.width - 25, this.doneButton.getY() + 5, CommonColors.WHITE);
             graphics.blit(RenderPipelines.GUI_TEXTURED, ofQoQ("textures/gui/sprites/button/cheese_wheel.png"), this.width - 57, this.doneButton.getY(), 0.0F, 0.0F, 18, 18, 18, 18);
+            if (this.worldDirectoryButton == null && this.minecraft.getSingleplayerServer() != null && this.minecraft.level != null) {
+                this.worldDirectoryButton = this.addRenderableWidget(SpriteIconButton.builder(ModTexts.BLANK, (button) -> {
+                    Path worldPath = this.minecraft.getSingleplayerServer().getWorldPath(LevelResource.ROOT);
+                    Util.getPlatform().openFile(worldPath.toFile());
+                }, false).width(20).sprite(ofQoQ("button/world_directory"), 16, 16).build());
+            }
+            if (this.worldDirectoryButton != null) {
+                this.worldDirectoryButton.setPosition(this.width / 2 - 179, this.doneButton.getY());
+            }
         }
 
         super.extractRenderState(graphics, mouseX, mouseY, deltaTicks);

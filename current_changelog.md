@@ -26,6 +26,7 @@
 - Lowered the default value of the minimum distance that the player has to be from a mob to play the "Mob Hit Ding" sound to 15 blocks (previously 20).
 - The "Quick Equip" keybind is now unbounded by default.
 - Removed the "transfer container" button from hoppers, droppers/dispensers, brewing stands and furnaces. You can still use the shortcut key to move items in these screens, however.
+- The "Open World Directory" button now has a unique texture (credit to MannyQUESO).
 
 # Bug Fixes
 - [Bug 11](https://github.com/Dillon8775/Quality-of-Queso/issues/11) - Fixed critical bug where the player can rarely get kicked when picking up an item.

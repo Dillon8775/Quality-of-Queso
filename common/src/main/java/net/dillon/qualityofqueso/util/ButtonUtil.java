@@ -163,11 +163,11 @@ public class ButtonUtil {
     /**
      * @return the configuration button Y position.
      */
-    public static int getConfigButtonY(int height, boolean blacklist) {
+    public static int getConfigButtonY(int height, int button, boolean blacklist) {
         if (options().accessibility.qoqButtons.left() || options().accessibility.qoqButtons.right()) {
             return height - 29;
         } else {
-            return height / 4 + (blacklist ? 96 : 72) - 16 + (!blacklist && MultiLoader.PLATFORM.getPlatformName().equals("NeoForged") ? -6 : 0);
+            return height / 4 + 72 + (button * 24) - 16 + (!blacklist && MultiLoader.PLATFORM.getPlatformName().equals("NeoForged") ? -6 : 0);
         }
     }
 

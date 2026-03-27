@@ -43,8 +43,10 @@ public class PauseScreenMixin extends Screen {
                 this.disconnectButton.active = false;
             }
             if (options().accessibility.qoqButtons.everywhere()) {
+                int index = 0;
                 SpriteIconButton settingsButton = this.addRenderableWidget(ButtonUtil.initializeButton(this.minecraft, this));
-                settingsButton.setPosition(getConfigButtonX(this.width, 0), getConfigButtonY(this.height, false));
+                settingsButton.setPosition(getConfigButtonX(this.width, 0), getConfigButtonY(this.height, index, false));
+                index++;
 
                 if (!(this.minecraft.getCurrentServer() == null)) {
                     String address = this.getServerAddress();
@@ -55,7 +57,7 @@ public class PauseScreenMixin extends Screen {
                             uoptions().main.blacklistedServers.add(address);
                         }
                         saveAll(this.minecraft);
-                    }).bounds(getConfigButtonX(this.width, 1), getConfigButtonY(this.height, true), 20, 20).build());
+                    }).bounds(getConfigButtonX(this.width, 1), getConfigButtonY(this.height, index, true), 20, 20).build());
                 }
             }
         }
