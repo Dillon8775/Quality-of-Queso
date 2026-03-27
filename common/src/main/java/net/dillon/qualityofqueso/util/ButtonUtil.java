@@ -344,7 +344,7 @@ public class ButtonUtil {
      * @return {@code true} if the hovered slot has an query (assuming hovered slot isn't {@code null}).
      */
     public static boolean hoveredSlotHasItem(Slot focusedSlot) {
-        return focusedSlot != null && focusedSlot.getItem() != ItemStack.EMPTY;
+        return focusedSlot != null && !focusedSlot.getItem().isEmpty();
     }
 
     /**

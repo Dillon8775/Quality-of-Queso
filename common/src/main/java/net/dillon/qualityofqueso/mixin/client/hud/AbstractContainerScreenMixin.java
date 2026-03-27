@@ -1210,11 +1210,13 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
         // Quick equip logic
         if (input.key() == key(ModKeybinds.QUICK_EQUIP).getValue()) {
             quickEquip(this.screen, this.hoveredSlot);
-            if (hoveredSlotHasItem(this.hoveredSlot) && this.inventorySearchField != null && this.inventorySearchField.isFocused()) {
-                this.inventorySearchField.setFocused(false);
-            }
-            if (isInventoryScreen(this.screen)) {
-                return;
+            if (hoveredSlotHasItem(this.hoveredSlot)) {
+                if (this.inventorySearchField != null && this.inventorySearchField.isFocused()) {
+                    this.inventorySearchField.setFocused(false);
+                }
+                if (isInventoryScreen(this.screen)) {
+                    return;
+                }
             }
         }
 
@@ -1256,7 +1258,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                     break;
                 }
             }
-            if (this.screen instanceof InventoryScreen && input.key() == key(ModKeybinds.QUICK_EQUIP).getValue()) {
+            if (this.screen instanceof InventoryScreen && input.key() == key(ModKeybinds.QUICK_EQUIP).getValue() && hoveredSlotHasItem(this.hoveredSlot)) {
                 ignoreTyping = true;
             }
         }
