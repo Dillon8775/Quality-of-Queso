@@ -11,6 +11,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import static net.dillon.qualityofqueso.util.ModUtil.options;
+
 @Mixin(TitleScreen.class)
 public class TitleScreenMixin extends Screen {
 
@@ -20,7 +22,9 @@ public class TitleScreenMixin extends Screen {
 
     @Inject(method = "init", at = @At("TAIL"))
     private void init(CallbackInfo ci) {
-        SpriteIconButton settingsButton = this.addRenderableWidget(ButtonUtil.initializeButton(this.minecraft, this));
-        settingsButton.setPosition(this.width / 2 + 128, this.height / 4 + 132 + (MultiLoader.PLATFORM.getPlatformName().equals("NeoForged") ? 8 : 0));
+        if (options().accessibility.qoqButtons.enabled()) {
+            SpriteIconButton settingsButton = this.addRenderableWidget(ButtonUtil.initializeButton(this.minecraft, this));
+            settingsButton.setPosition(this.width / 2 + 128, this.height / 4 + 132 + (MultiLoader.PLATFORM.getPlatformName().equals("NeoForged") ? 8 : 0));
+        }
     }
 }

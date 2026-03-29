@@ -70,7 +70,7 @@ public class ClientPacketListenerMixin {
         }
 
         ItemStack stack = itemEntity.getItem();
-        ItemHudTracker.setStack(stack);
+        ItemHudTracker.setStack(stack, false);
     }
 
     /**

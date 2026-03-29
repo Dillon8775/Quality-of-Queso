@@ -776,7 +776,7 @@ public class ButtonUtil {
             if (!clickedStack.isEmpty()) {
                 boolean throwSingle = Minecraft.getInstance().hasShiftDown();
                 if (modEnabled(client) && options().hud.displayOnThrow) {
-                    ItemHudTracker.setStack(throwSingle ? clickedStack.copyWithCount(1) : clickedStack.copy());
+                    ItemHudTracker.setStack(throwSingle ? clickedStack.copyWithCount(1) : clickedStack.copy(), false);
                 }
 
                 client.gameMode.handleContainerInput(syncId, slotIndex, throwSingle ? 0 : 1, containerInput, client.player);

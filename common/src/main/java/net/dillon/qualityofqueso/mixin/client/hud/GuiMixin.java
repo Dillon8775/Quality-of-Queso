@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static net.dillon.qualityofqueso.util.GuiUtil.*;
+import static net.dillon.qualityofqueso.util.ItemHudTracker.ARROW_OUTLINE;
 import static net.dillon.qualityofqueso.util.ModUtil.*;
 
 @Mixin(Gui.class)
@@ -215,7 +216,7 @@ public class GuiMixin {
             }
         }
 
-        boolean trackedArrow = options().hud.showArrowCount && (holdingArrowDisplayableProjectileWeapon || isStackArrow(ItemHudTracker.getStack()));
+        boolean trackedArrow = options().hud.showArrowCount && (holdingArrowDisplayableProjectileWeapon || (isStackArrow(ItemHudTracker.getStack()) && ARROW_OUTLINE));
         int maxCount = trackedArrow ? 64 : stack.getMaxStackSize();
 
         this.isDisplayingExactStack = false;
@@ -263,7 +264,7 @@ public class GuiMixin {
             newStack.applyComponents(components);
 
             HumanoidArm offhandArm = this.minecraft.player.getMainArm().getOpposite();
-            boolean isArrow = isStackArrow(newStack);
+            boolean isArrow = isStackArrow(newStack) && ARROW_OUTLINE;
             boolean arrowDisplayValid = (isArrow || holdingArrowDisplayableProjectileWeapon) && options().hud.itemCount == ItemCount.STACKS ? count < 65 : count < 100;
             boolean shouldRenderArrowUi = options().hud.showArrowCount && !hasInfinity && arrowDisplayValid && (holdingArrowDisplayableProjectileWeapon || !this.renderingHeldItem);
             if (shouldRenderArrowUi && (isArrow || holdingArrowDisplayableProjectileWeapon)) {

@@ -105,7 +105,7 @@ public class MultiPlayerGameModeMixin {
                 return;
             }
 
-            ItemHudTracker.setStack(stack.copy());
+            ItemHudTracker.setStack(stack.copy(), false);
         } catch (IndexOutOfBoundsException e) {
         }
     }
@@ -146,6 +146,6 @@ public class MultiPlayerGameModeMixin {
         }
 
         ChargedProjectiles chargedProjectiles = player.getItemInHand(hand).get(DataComponents.CHARGED_PROJECTILES);
-        ItemHudTracker.setStack(chargedProjectiles.isEmpty() ? new ItemStack(Items.ARROW) : chargedProjectiles.itemCopies().get(0));
+        ItemHudTracker.setStack(chargedProjectiles.isEmpty() ? new ItemStack(Items.ARROW) : chargedProjectiles.itemCopies().get(0), true);
     }
 }

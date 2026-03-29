@@ -25,6 +25,10 @@ public enum QoQButtons implements StringRepresentable {
         this.translationKey = Component.translatable(translationKey);
     }
 
+    public boolean enabled() {
+        return this != OFF;
+    }
+
     public boolean left() {
         return this == BOTTOM_LEFT;
     }

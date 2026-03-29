@@ -38,7 +38,7 @@ public class LocalPlayerMixin {
             return;
         }
 
-        ItemHudTracker.setStack(itemStack.copy());
+        ItemHudTracker.setStack(itemStack.copy(), false);
     }
 
     /**
@@ -112,7 +112,7 @@ public class LocalPlayerMixin {
         ItemStack projectile = player.getProjectile(useItem);
 
         if (!hasInfinity(useItem) || !projectile.is(Items.ARROW)) {
-            ItemHudTracker.setStack(projectile.isEmpty() ? new ItemStack(Items.ARROW) : projectile.copyWithCount(1));
+            ItemHudTracker.setStack(projectile.isEmpty() ? new ItemStack(Items.ARROW) : projectile.copyWithCount(1), true);
         }
     }
 }

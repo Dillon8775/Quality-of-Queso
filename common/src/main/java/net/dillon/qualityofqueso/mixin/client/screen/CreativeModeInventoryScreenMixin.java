@@ -23,6 +23,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Objects;
 
+import static net.dillon.qualityofqueso.util.AccessorUtil.key;
 import static net.dillon.qualityofqueso.util.ModUtil.*;
 
 @Mixin(CreativeModeInventoryScreen.class)
@@ -82,7 +83,6 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
                 if (this.hoveredSlot != null && this.hoveredSlot.hasItem() && this.searchBox.isFocused()) {
                     for (int i = 0; i < 9; i++) {
                         if (Minecraft.getInstance().options.keyHotbarSlots[i].consumeClick()) {
-                            System.out.println("ok");
                             this.searchBox.setFocused(false);
                             return true;
                         }
@@ -110,6 +110,12 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
             if (this.hoveredSlot != null && this.hoveredSlot.getItem() != ItemStack.EMPTY && !this.searchBox.isFocused()) {
                 this.ignoreTextInput = true;
                 cir.setReturnValue(super.keyPressed(input));
+            }
+
+            if (options().accessibility.preventEFromTyping && input.key() == key(Minecraft.getInstance().options.keyInventory).getValue() && !this.searchBox.isFocused()) {
+                this.ignoreTextInput = true;
+                this.onClose();
+                cir.setReturnValue(true);
             }
 
             for (int key : popularKeys) {

@@ -1167,10 +1167,27 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
         }
 
         // Prevent inventory key from closing automatically if search bar is focused when prevent E from typing is enabled
-        if (options().accessibility.preventEFromTyping && input.key() == key(Minecraft.getInstance().options.keyInventory).getValue()) {
-            if ((this.containerSearchField != null && !this.containerSearchField.isFocused()) || (this.inventorySearchField != null && !this.inventorySearchField.isFocused()) || (isInventoryScreen(this.screen) && this.inventorySearchField == null)) {
+        if (input.key() == key(Minecraft.getInstance().options.keyInventory).getValue()) {
+            boolean isContainer = isContainerScreen(this.screen);
+            boolean isInventory = isInventoryScreen(this.screen);
+
+            boolean hasSearch = this.containerSearchField != null || this.inventorySearchField != null;
+
+            if (!hasSearch) {
                 this.onClose();
                 cir.setReturnValue(true);
+                return;
+            }
+
+            // Otherwise respect the setting + focus
+            if (options().accessibility.preventEFromTyping) {
+                boolean isFocused = (this.containerSearchField != null && this.containerSearchField.isFocused())
+                        || (this.inventorySearchField != null && this.inventorySearchField.isFocused());
+
+                if (!isFocused || (!isContainer && !isInventory)) {
+                    this.onClose();
+                    cir.setReturnValue(true);
+                }
             }
         }
 
