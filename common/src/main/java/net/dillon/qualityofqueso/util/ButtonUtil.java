@@ -989,6 +989,13 @@ public class ButtonUtil {
     }
 
     /**
+     * @return secondary screens for management buttons.
+     */
+    public static boolean isSecondaryScreen(Screen screen) {
+        return isBrewingStandScreen(screen) || isFurnaceScreen(screen) || isHopperScreen(screen) || isDispenserScreen(screen);
+    }
+
+    /**
      * @return valid screen for mod to work.
      */
     public static boolean isValidScreen(Screen screen) {

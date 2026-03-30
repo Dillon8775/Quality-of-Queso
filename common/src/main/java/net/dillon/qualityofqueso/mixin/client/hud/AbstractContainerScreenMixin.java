@@ -77,13 +77,9 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
     @Shadow
     @Nullable
     protected Slot hoveredSlot;
-
     @Shadow @Nullable
-    protected abstract Slot getHoveredSlot(double mouseX, double mouseY);
+    protected abstract Slot getHoveredSlot(double x, double y);
 
-    @Shadow
-    @Final
-    protected int imageHeight;
     @Unique
     private final AbstractContainerScreen<?> screen = (AbstractContainerScreen<?>) (Object) this;
     @Unique
@@ -647,7 +643,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
      * Grays out any containerSlot which doesn't contain the query name being searched.
      */
     @Inject(method = "extractContents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;extractSlotHighlightFront(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V", shift = At.Shift.AFTER))
-    private void grayOutSlot(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks, CallbackInfo ci) {
+    private void grayOutSlot(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a, CallbackInfo ci) {
         if (!isValidScreen(this.screen)) {
             return;
         }
@@ -706,30 +702,33 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
      * Handles rendering, such as the search field and transferring fromInventory button textures.
      */
     @Inject(method = "extractContents", at = @At("TAIL"))
-    private void renderWidgets(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks, CallbackInfo ci) {
+    private void renderWidgets(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a, CallbackInfo ci) {
         if (!modEnabled(this.minecraft)) {
             return;
         }
 
         // Render the search field
         if (this.containerSearchField != null) {
-            this.containerSearchField.extractWidgetRenderState(graphics, mouseX, mouseY, deltaTicks);
+            this.containerSearchField.extractWidgetRenderState(graphics, mouseX, mouseY, a);
         }
+
         // Render fromInventory search field
         if (this.inventorySearchField != null) {
             this.inventorySearchField.setX(this.width / 2 + getBarWidth(this.imageWidth) / 2 - (
                     this.screen instanceof AbstractRecipeBookScreen<?> recipeBookScreen && getRecipeBookComponent(recipeBookScreen).isVisible() ? -16 : 60
             ));
-            this.inventorySearchField.extractWidgetRenderState(graphics, mouseX, mouseY, deltaTicks);
+            this.inventorySearchField.extractWidgetRenderState(graphics, mouseX, mouseY, a);
         }
 
         Inventory playerInventory = this.minecraft.player.getInventory();
         boolean containerScreen = isContainerScreen(this.screen);
         boolean inventoryScreen = isInventoryScreen(this.screen);
         boolean validScreen = containerScreen || inventoryScreen;
+        boolean secondaryScreen = isHopperScreen(this.screen) || isDispenserScreen(this.screen);
+        boolean otherScreen = isBrewingStandScreen(this.screen) || isFurnaceScreen(this.screen);
         if (options().management.transferring.shortcutOrButton()) {
 
-            if (containerScreen) {
+            if (containerScreen || secondaryScreen || otherScreen) {
                 // TRANSFER CONTAINER BUTTON (container -> inventory)
                 this.transferContainerButton = this.addWidget(
                         new TransferButton(
@@ -742,18 +741,20 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                                 b -> this.transferItems(true),
                                 () -> !isContainerFull(this.menu, this.container, true) && this.shouldButtonBeActive(false, null)));
 
-                // TRANSFER INVENTORY BUTTON (inventory -> container)
-                this.transferInventoryButton = this.addWidget(
-                        new TransferButton(
-                                this.menu,
-                                this.font,
-                                this.getSearchFieldText(),
-                                "transfer/inventory/",
-                                "transfer_inventory",
-                                true,
-                                b -> this.transferItems(false),
-                                () -> !isContainerFull(this.menu, this.container, false) && this.shouldButtonBeActive(true, playerInventory)
-                        ));
+                if (!otherScreen) {
+                    // TRANSFER INVENTORY BUTTON (inventory -> container)
+                    this.transferInventoryButton = this.addWidget(
+                            new TransferButton(
+                                    this.menu,
+                                    this.font,
+                                    this.getSearchFieldText(),
+                                    "transfer/inventory/",
+                                    "transfer_inventory",
+                                    true,
+                                    b -> this.transferItems(false),
+                                    () -> !isContainerFull(this.menu, this.container, false) && this.shouldButtonBeActive(true, playerInventory)
+                            ));
+                }
             }
         }
 
@@ -907,8 +908,10 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             } else {
                 this.clearExcludedSlotsButton = null;
             }
+        }
 
-            // Render Button Layout
+        // Render all buttons in a layout form
+        if (validScreen || isSecondaryScreen(this.screen)) {
             AbstractList<AbstractWidget> verticalLayout = NonNullList.of(
                     null,
                     this.transferInventoryButton,
@@ -941,10 +944,13 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                     this.clearExcludedSlotsButton
             );
 
+            // Set and initialize the widget layout
             this.setWidgetLayout(WidgetLayout.initializeLayout(this.screen,
-                    this.container, this.topPos, this.titleLabelY, options().management.buttonLayout.horizontal() ? horizontalLayout : verticalLayout
+                    this.container, this.topPos, this.titleLabelY, secondaryScreen
+                            ? NonNullList.of(null, this.transferInventoryButton, this.transferContainerButton)
+                            : options().management.buttonLayout.horizontal() ? horizontalLayout : verticalLayout
             ));
-            this.getWidgetLayout().extractRenderState(graphics, mouseX, mouseY, deltaTicks);
+            this.getWidgetLayout().extractRenderState(graphics, mouseX, mouseY, a);
         }
     }
 
@@ -987,7 +993,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
      * Renders tag tooltips to all slots if searching by tag {@code searchQuery.startsWith(#)}.
      */
     @Inject(method = "extractTooltip", at = @At("HEAD"), cancellable = true)
-    private void modifyTooltips(GuiGraphicsExtractor graphics, int x, int y, CallbackInfo ci) {
+    private void modifyTooltips(GuiGraphicsExtractor graphics, int mouseX, int mouseY, CallbackInfo ci) {
         if (modEnabled(this.minecraft) && isExcludingSlots(this.screen)) {
             ci.cancel();
         }
@@ -1052,7 +1058,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             }
             originalTooltip.add(index, Component.translatable("qualityofqueso.gui.applicable_on"));
 
-            graphics.setTooltipForNextFrame(this.font, originalTooltip, Optional.empty(), x, y);
+            graphics.setTooltipForNextFrame(this.font, originalTooltip, Optional.empty(), mouseX, mouseY);
             ci.cancel();
         }
 
@@ -1076,7 +1082,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             if (stack.tags().toList().isEmpty()) {
                 originalTooltip.add(1, Component.translatable("qualityofqueso.gui.no_tags_found").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
             }
-            graphics.setTooltipForNextFrame(this.font, originalTooltip, Optional.empty(), x, y);
+            graphics.setTooltipForNextFrame(this.font, originalTooltip, Optional.empty(), mouseX, mouseY);
             ci.cancel();
         }
     }
@@ -1085,9 +1091,8 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
      * Closes the screen when clicking outside of menu.
      */
     @Inject(method = "slotClicked", at = @At("HEAD"))
-    private void closeButtonOnClickOutOfBounds(Slot slot, int slotId, int button, ContainerInput
-            actionType, CallbackInfo ci) {
-        if (modEnabled(this.minecraft) && options().misc.quickGuiExit && this.menu.getCarried().isEmpty() && button == 0 && slot == null) {
+    private void closeButtonOnClickOutOfBounds(Slot slot, int slotId, int buttonNum, ContainerInput containerInput, CallbackInfo ci) {
+        if (modEnabled(this.minecraft) && options().misc.quickGuiExit && this.menu.getCarried().isEmpty() && buttonNum == 0 && slot == null) {
             this.onClose();
         }
     }
@@ -1104,7 +1109,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
      * Implements functionality for the {@code Quick Equip right-click feature,} and handles fromInventory search field.
      */
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
-    private void handleMouseClicking(MouseButtonEvent event, boolean isDouble, CallbackInfoReturnable<Boolean> cir) {
+    private void handleMouseClicking(MouseButtonEvent event, boolean doubleClick, CallbackInfoReturnable<Boolean> cir) {
         if (!modEnabled(this.minecraft)) {
             return;
         }
@@ -1117,7 +1122,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             cir.setReturnValue(true);
         }
         // Refocus fromInventory search field if clicked.
-        if (this.inventorySearchField != null && this.inventorySearchField.mouseClicked(event, isDouble)) {
+        if (this.inventorySearchField != null && this.inventorySearchField.mouseClicked(event, doubleClick)) {
             this.inventorySearchField.setFocused(true);
         }
 
@@ -1135,7 +1140,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
      * Drag-sort feature, where you can exclude slots by clicking on them.
      */
     @Inject(method = "mouseDragged", at = @At("HEAD"), cancellable = true)
-    private void dragToExclude(MouseButtonEvent event, double offsetX, double offsetY, CallbackInfoReturnable<Boolean> cir) {
+    private void dragToExclude(MouseButtonEvent event, double dx, double dy, CallbackInfoReturnable<Boolean> cir) {
         if (!modEnabled(this.minecraft)) {
             return;
         }
@@ -1149,13 +1154,13 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
      * Handles key pressing correctly and implements functionality for the {@link ModKeybinds#QUICK_EQUIP} keybind.
      */
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
-    private void handleKeyPressing(KeyEvent input, CallbackInfoReturnable<Boolean> cir) {
+    private void handleKeyPressing(KeyEvent event, CallbackInfoReturnable<Boolean> cir) {
         if (!modEnabled(this.minecraft)) {
             return;
         }
 
         // Prevent inventory key from closing automatically if search bar is focused when prevent E from typing is enabled
-        if (input.key() == key(Minecraft.getInstance().options.keyInventory).getValue()) {
+        if (event.key() == key(Minecraft.getInstance().options.keyInventory).getValue()) {
             boolean isContainer = isContainerScreen(this.screen);
             boolean isInventory = isInventoryScreen(this.screen);
 
@@ -1181,7 +1186,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
 
         if (Minecraft.getInstance().hasControlDown()) {
             if (this.screen instanceof AbstractRecipeBookScreen<?> recipeScreen
-                    && input.key() == key(ModKeybinds.HIDE_RECIPE_BOOK).getValue()
+                    && event.key() == key(ModKeybinds.HIDE_RECIPE_BOOK).getValue()
                     && getRecipeBookComponent(recipeScreen).isVisible()) {
                 String text = this.getSearchFieldText();
                 getRecipeBookComponent(recipeScreen).toggleVisibility();
@@ -1192,28 +1197,28 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                 cir.setReturnValue(true);
             }
             if ((isValidScreen(this.screen) || isBrewingStandScreen(this.screen) || isFurnaceScreen(this.screen) || isDispenserScreen(this.screen) || isHopperScreen(this.screen)) && options().management.transferring.orKeyOnly()) {
-                if (input.key() == key(ModKeybinds.MOVE_CONTAINER).getValue()) {
+                if (event.key() == key(ModKeybinds.MOVE_CONTAINER).getValue()) {
                     this.transferItems(true);
                 }
-                if (input.key() == key(ModKeybinds.MOVE_INVENTORY).getValue()) {
+                if (event.key() == key(ModKeybinds.MOVE_INVENTORY).getValue()) {
                     this.transferItems(false);
                 }
             }
             if (isValidScreen(this.screen)) {
-                if (options().management.containerSorting.orKeyOnly() && input.key() == key(ModKeybinds.SORT_CONTAINER).getValue()) {
+                if (options().management.containerSorting.orKeyOnly() && event.key() == key(ModKeybinds.SORT_CONTAINER).getValue()) {
                     this.trySort(false);
                 }
-                if (options().management.swapping.orKeyOnly() && input.key() == key(ModKeybinds.SWAP_ITEMS).getValue()) {
+                if (options().management.swapping.orKeyOnly() && event.key() == key(ModKeybinds.SWAP_ITEMS).getValue()) {
                     this.trySwap();
                 }
-                if (options().management.quickDrop.orKeyOnly() && Minecraft.getInstance().hasAltDown() && input.key() == GLFW.GLFW_KEY_Q) {
+                if (options().management.quickDrop.orKeyOnly() && Minecraft.getInstance().hasAltDown() && event.key() == GLFW.GLFW_KEY_Q) {
                     this.dropItems(!isContainerScreen(this.screen));
                 }
             }
         }
 
         // Quick equip logic
-        if (input.key() == key(ModKeybinds.QUICK_EQUIP).getValue()) {
+        if (event.key() == key(ModKeybinds.QUICK_EQUIP).getValue()) {
             quickEquip(this.screen, this.hoveredSlot);
             if (hoveredSlotHasItem(this.hoveredSlot)) {
                 if (this.inventorySearchField != null && this.inventorySearchField.isFocused()) {
@@ -1227,7 +1232,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
 
         // Prevent E from typing entirely in fromInventory screens
         boolean canCloseFromE = (this.containerSearchField != null && !this.containerSearchField.isFocused()) || (this.inventorySearchField != null && !this.inventorySearchField.isFocused());
-        if ((input.key() == key(Minecraft.getInstance().options.keyInventory).getValue() && options().accessibility.preventEFromTyping && canCloseFromE)
+        if ((event.key() == key(Minecraft.getInstance().options.keyInventory).getValue() && options().accessibility.preventEFromTyping && canCloseFromE)
                 && (isContainerScreen(this.screen) || isInventoryScreen(this.screen) || isCreativeInventoryScreen(this.screen))) {
             this.onClose();
             cir.setReturnValue(true);
@@ -1246,7 +1251,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
 
         // If a "disallowed key" is pressed, ignoreTyping and secondaryIgnoreTyping become true.
         for (int key : allDisallowedKeys) {
-            if (input.key() == key) {
+            if (event.key() == key) {
                 ignoreTyping = true;
                 secondaryIgnoreTyping = true;
                 break;
@@ -1256,21 +1261,21 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
         // handle switching items from hotbar to another containerSlot in fromInventory; cancel out typing if an query can be moved
         if (this.menu.getCarried().isEmpty() && this.hoveredSlot != null) {
             for (int i = 0; i < 9; i++) {
-                if (this.minecraft.options.keyHotbarSlots[i].matches(input)) {
+                if (this.minecraft.options.keyHotbarSlots[i].matches(event)) {
                     ignoreTyping = true;
                     secondaryIgnoreTyping = true;
                     hotbarKeyPressed = true;
                     break;
                 }
             }
-            if (this.screen instanceof InventoryScreen && input.key() == key(ModKeybinds.QUICK_EQUIP).getValue() && hoveredSlotHasItem(this.hoveredSlot)) {
+            if (this.screen instanceof InventoryScreen && event.key() == key(ModKeybinds.QUICK_EQUIP).getValue() && hoveredSlotHasItem(this.hoveredSlot)) {
                 ignoreTyping = true;
             }
         }
 
         // Handle 'T' and 'E' keys
         for (int key : popularKeys) {
-            if (input.key() == key) {
+            if (event.key() == key) {
                 secondaryIgnoreTyping = false;
                 cir.setReturnValue(true);
                 break;
@@ -1290,7 +1295,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                 GLFW.GLFW_KEY_9
         );
         for (int key : numbers) {
-            if (input.key() == key) {
+            if (event.key() == key) {
                 numberKeyPressed = true;
                 break;
             }
@@ -1298,13 +1303,13 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
 
         // Check if drop key or swap hands key was pressed
         if (this.hoveredSlot != null) {
-            if (input.key() == key(Minecraft.getInstance().options.keyDrop).getValue()) {
+            if (event.key() == key(Minecraft.getInstance().options.keyDrop).getValue()) {
                 secondaryIgnoreTyping = true;
                 dropKeyPressed = true;
             }
         }
         if (hoveredSlotHasItem(this.hoveredSlot) || !Minecraft.getInstance().player.getOffhandItem().isEmpty()) {
-            if (input.key() == key(Minecraft.getInstance().options.keySwapOffhand).getValue()) {
+            if (event.key() == key(Minecraft.getInstance().options.keySwapOffhand).getValue()) {
                 secondaryIgnoreTyping = true;
                 swapKeyPressed = true;
             }
@@ -1316,7 +1321,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
         // Recipe book search field logic
         if (this.screen instanceof AbstractRecipeBookScreen<?> recipeScreen && !Minecraft.getInstance().hasControlDown()) {
             boolean swapKeyValid = swapKeyPressed && (hoveredSlotHasItem(this.hoveredSlot) || this.menu.getSlot(45).hasItem());
-            if (!options().accessibility.preventEFromTyping || input.key() != key(Minecraft.getInstance().options.keyInventory).getValue()) {
+            if (!options().accessibility.preventEFromTyping || event.key() != key(Minecraft.getInstance().options.keyInventory).getValue()) {
                 if (options().searching.quickSearch.enabled() && !ignoreTyping && !swapKeyValid && !dropKeyPressed && !getRecipeBookComponent(recipeScreen).isVisible() &&
                         (this.inventorySearchField == null ||
                                 (!this.inventorySearchField.isFocused() && !options().searching.quickSearch.searchBar()))) {
@@ -1326,7 +1331,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                 if (getSearchBoxInsideRecipeBook(recipeScreen) != null) {
                     boolean unfocus = false;
                     for (int i = 0; i < 9; i++) {
-                        if (this.hoveredSlot != null && this.minecraft.options.keyHotbarSlots[i].matches(input)) {
+                        if (this.hoveredSlot != null && this.minecraft.options.keyHotbarSlots[i].matches(event)) {
                             unfocus = true;
                             break;
                         }
@@ -1342,7 +1347,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                     }
 
                     if (getSearchBoxInsideRecipeBook(recipeScreen).isFocused()) {
-                        cir.setReturnValue(getRecipeBookComponent(recipeScreen).keyPressed(input) || super.keyPressed(input));
+                        cir.setReturnValue(getRecipeBookComponent(recipeScreen).keyPressed(event) || super.keyPressed(event));
                     }
                 }
             }
@@ -1351,7 +1356,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
         if (options().searching.inventorySearching && this.inventorySearchField != null) {
             if (!Minecraft.getInstance().hasControlDown() && this.screen instanceof AbstractRecipeBookScreen<?> recipeScreen && getRecipeBookComponent(recipeScreen).isVisible() && !this.inventorySearchField.isFocused()) {
                 getSearchBoxInsideRecipeBook(recipeScreen).setFocused(!cannotType);
-            } else if ((options().searching.quickSearch.enabled() || options().searching.quickSearch.searchBar()) && !secondaryIgnoreTyping && (!Minecraft.getInstance().hasControlDown() || (Minecraft.getInstance().hasControlDown() && input.key() == GLFW.GLFW_KEY_A))) {
+            } else if ((options().searching.quickSearch.enabled() || options().searching.quickSearch.searchBar()) && !secondaryIgnoreTyping && (!Minecraft.getInstance().hasControlDown() || (Minecraft.getInstance().hasControlDown() && event.key() == GLFW.GLFW_KEY_A))) {
                 this.inventorySearchField.setFocused(true);
                 this.setFocused(this.inventorySearchField);
             } else if (this.inventorySearchField.isFocused() && cannotType) {
@@ -1362,7 +1367,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             if (this.screen instanceof AbstractRecipeBookScreen<?> recipeScreen && getSearchBoxInsideRecipeBook(recipeScreen) != null) {
                 if (this.inventorySearchField.isFocused()) {
                     getSearchBoxInsideRecipeBook(recipeScreen).setFocused(false);
-                    if (input.key() == GLFW.GLFW_KEY_BACKSPACE && getRecipeBookComponent(recipeScreen).isVisible()) {
+                    if (event.key() == GLFW.GLFW_KEY_BACKSPACE && getRecipeBookComponent(recipeScreen).isVisible()) {
                         String text = this.getSearchFieldText();
                         getRecipeBookComponent(recipeScreen).toggleVisibility();
                         this.repositionElements();
@@ -1378,20 +1383,20 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                 }
             }
 
-            if (this.inventorySearchField.isFocused() && this.inventorySearchField.keyPressed(input)) {
+            if (this.inventorySearchField.isFocused() && this.inventorySearchField.keyPressed(event)) {
                 cir.setReturnValue(true);
             }
         }
 
         // Chest search field logic
         if (options().searching.containerSearching && isContainerScreen(this.screen)) {
-            if ((options().searching.quickSearch.on() || options().searching.quickSearch.searchBar()) && !secondaryIgnoreTyping && (!Minecraft.getInstance().hasControlDown() || (Minecraft.getInstance().hasControlDown() && input.key() == GLFW.GLFW_KEY_A))) {
+            if ((options().searching.quickSearch.on() || options().searching.quickSearch.searchBar()) && !secondaryIgnoreTyping && (!Minecraft.getInstance().hasControlDown() || (Minecraft.getInstance().hasControlDown() && event.key() == GLFW.GLFW_KEY_A))) {
                 this.containerSearchField.setFocused(true);
             } else if (this.containerSearchField.isFocused() && cannotType) {
                 this.containerSearchField.setFocused(false);
             }
 
-            if (this.containerSearchField.isFocused() && this.containerSearchField.keyPressed(input)) {
+            if (this.containerSearchField.isFocused() && this.containerSearchField.keyPressed(event)) {
                 cir.setReturnValue(true);
             }
         }

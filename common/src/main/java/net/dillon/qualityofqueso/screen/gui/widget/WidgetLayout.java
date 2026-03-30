@@ -55,7 +55,7 @@ public class WidgetLayout extends AbstractWidget {
         int containerY = this.topPos + this.titleLabelY + 2 * (this.container == null ? 0 : this.container.getContainerSize()) + 12;
         boolean inventoryScreen = isInventoryScreen(this.screen);
 
-        if (RENDERED_BUTTONS > 0 && !options().management.buttonLayout.horizontal()) {
+        if (RENDERED_BUTTONS > 0 && (!options().management.buttonLayout.horizontal() || isSecondaryScreen(this.screen))) {
             graphics.blit(RenderPipelines.GUI_TEXTURED, ofQoQ("textures/gui/button/base/layout/layout_" + this.getLayoutNumber() + ".png"),
                     this.getX(),
                     this.getPanelY(player),
@@ -74,6 +74,8 @@ public class WidgetLayout extends AbstractWidget {
             newX = -40 + recipeBookModifier;
             x = newX;
             y = 69;
+        } else if (isSecondaryScreen(this.screen)) {
+            y = 12;
         }
 
         int addition = 12;
@@ -82,7 +84,7 @@ public class WidgetLayout extends AbstractWidget {
                 continue;
             }
 
-            if (options().management.buttonLayout.horizontal()) {
+            if (options().management.buttonLayout.horizontal() && !isSecondaryScreen(this.screen)) {
                 widget.setX(getManagementButtonX(this.screen, getImageWidth(this.screen), this.screen.width, buttons));
                 widget.setY(getManagementButtonY(this.screen, this.container, this.topPos, this.titleLabelY));
             } else {
@@ -108,7 +110,7 @@ public class WidgetLayout extends AbstractWidget {
      */
     @Override
     public boolean isMouseOver(double mouseX, double mouseY) {
-        if (!this.visible || options().management.buttonLayout.horizontal() || RENDERED_BUTTONS <= 0) {
+        if (!this.visible || (!isSecondaryScreen(this.screen) && options().management.buttonLayout.horizontal()) || RENDERED_BUTTONS <= 0) {
             return false;
         }
 
@@ -152,7 +154,7 @@ public class WidgetLayout extends AbstractWidget {
      */
     private int getPanelY(LocalPlayer player) {
         boolean inventoryScreen = isInventoryScreen(this.screen);
-        return this.getContainerY() - (inventoryScreen ? (this.hasTooManyEffects(player) ? -65 : 37) : 38);
+        return this.getContainerY() - (inventoryScreen ? (this.hasTooManyEffects(player) ? -65 : 37) : (isSecondaryScreen(this.screen) ? -8 : 38));
     }
 
     /**
