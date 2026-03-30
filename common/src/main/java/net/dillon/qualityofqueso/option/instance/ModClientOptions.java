@@ -99,6 +99,7 @@ public class ModClientOptions {
         public boolean quickGuiExit = true;
         public boolean quickEquip = true;
 
+        public boolean armorDing = true;
         public boolean enchantingHelper = true;
 
         public boolean preventRageQuitting = false;
@@ -129,7 +130,7 @@ public class ModClientOptions {
         public boolean enableMod = true;
 
         public boolean helpfulTooltips = true;
-        public boolean preventEFromTyping = false;
+        public boolean preventEFromTyping = true;
 
         public boolean showButtonShortcuts = true;
         public boolean searchInventory = true;

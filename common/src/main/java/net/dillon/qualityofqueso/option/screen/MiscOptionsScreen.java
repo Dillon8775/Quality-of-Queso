@@ -2,12 +2,10 @@ package net.dillon.qualityofqueso.option.screen;
 
 import net.dillon.qualityofqueso.option.ModListOptions;
 import net.minecraft.client.OptionInstance;
-import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
 public class MiscOptionsScreen extends AbstractModOptionsScreen {
-    private AbstractWidget fogButton;
 
     public MiscOptionsScreen(Screen parent) {
         super(parent, Component.translatable("qualityofqueso.gui.title.misc_options"));
@@ -22,14 +20,16 @@ public class MiscOptionsScreen extends AbstractModOptionsScreen {
                 ModListOptions.mobHitDing(),
                 ModListOptions.minMobHitDingDistance(),
 
+                ModListOptions.armorDing(),
                 ModListOptions.quickEquip(),
-                ModListOptions.enchantingHelper(),
 
+                ModListOptions.enchantingHelper(),
                 ModListOptions.quickGuiExit(),
+
                 ModListOptions.preventRageQuitting(),
+                ModListOptions.alwaysPreventRageQuitting(),
 
                 ModListOptions.fortniteBattlePass(),
-                ModListOptions.alwaysPreventRageQuitting()
         };
     }
 }

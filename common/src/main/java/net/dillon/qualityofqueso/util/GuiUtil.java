@@ -5,10 +5,12 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.BowItem;
@@ -124,8 +126,8 @@ public class GuiUtil {
     /**
      * @return text with italic and gray.
      */
-    public static Component ofItalicAndGray(String text) {
-        return Component.literal(text).withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY);
+    public static Component ofItalicAndGray(Component text) {
+        return text.copy().withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY);
     }
 
     /**
@@ -154,6 +156,13 @@ public class GuiUtil {
     public static float getItemHealthPercentage(ItemStack stack) {
         int maxDamage = stack.getMaxDamage();
         return Math.max(0.0F, ((float)maxDamage - stack.getDamageValue()) / maxDamage);
+    }
+
+    /**
+     * Plays a generic ding sound.
+     */
+    public static void playDingSound(Minecraft minecraft) {
+        minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.ARROW_HIT_PLAYER, 0.2F, 1.0F));
     }
 
     /**

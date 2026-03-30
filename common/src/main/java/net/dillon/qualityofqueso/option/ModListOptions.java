@@ -404,6 +404,11 @@ public class ModListOptions {
                 ON_OFF_TEXT, options().misc.quickGuiExit, value -> options().misc.quickGuiExit = value);
     }
 
+    public static OptionInstance<Boolean> armorDing() {
+        return OptionInstance.createBoolean("qualityofqueso.options.armor_ding", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.armor_ding.tooltip")),
+                ON_OFF_TEXT, options().misc.armorDing, value -> options().misc.armorDing = value);
+    }
+
     public static OptionInstance<Boolean> allFog() {
         return OptionInstance.createBoolean("qualityofqueso.options.all_fog", OptionInstance.cachedConstantTooltip(
                         Component.translatable("qualityofqueso.options.all_fog.tooltip")),

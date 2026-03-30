@@ -1006,55 +1006,43 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
 
             for (Object2IntMap.Entry<Holder<Enchantment>> enchantment : enchantments.entrySet()) {
                 if (isEnchantmentInGroup(EnchantingHelper.ALL_PURPOSE_ENCHANTMENTS, enchantment)) {
-                    enchantmentApplicables.add(ofItalicAndGray("Any tool, weapon or armor piece"));
+                    enchantmentApplicables.add(ofItalicAndGray(Component.translatable("qualityofqueso.gui.all_purpose")));
                 }
-
                 if (isEnchantmentInGroup(EnchantingHelper.ARMOR_ENCHANTMENTS, enchantment) || enchantment.getKey().is(EnchantmentTags.ARMOR_EXCLUSIVE)) {
-                    enchantmentApplicables.add(ofItalicAndGray("Armor"));
+                    enchantmentApplicables.add(ofItalicAndGray(Component.translatable("qualityofqueso.gui.armor")));
                 }
-
                 if (isEnchantmentInGroup(EnchantingHelper.HELMET_EXCLUSIVE, enchantment)) {
-                    enchantmentApplicables.add(ofItalicAndGray("Helmets"));
+                    enchantmentApplicables.add(ofItalicAndGray(Component.translatable("qualityofqueso.gui.helmets")));
                 }
-
                 if (isEnchantmentInGroup(EnchantingHelper.LEGS_EXCLUSIVE, enchantment)) {
-                    enchantmentApplicables.add(ofItalicAndGray("Leggings"));
+                    enchantmentApplicables.add(ofItalicAndGray(Component.translatable("qualityofqueso.gui.leggings")));
                 }
-
                 if (isEnchantmentInGroup(EnchantingHelper.BOOTS_EXCLUSIVE, enchantment) || enchantment.getKey().is(EnchantmentTags.BOOTS_EXCLUSIVE)) {
-                    enchantmentApplicables.add(ofItalicAndGray("Boots"));
+                    enchantmentApplicables.add(ofItalicAndGray(Component.translatable("qualityofqueso.gui.boots")));
                 }
-
                 if (isEnchantmentInGroup(EnchantingHelper.SWORDS, enchantment)) {
-                    enchantmentApplicables.add(ofItalicAndGray("Swords"));
+                    enchantmentApplicables.add(ofItalicAndGray(Component.translatable("qualityofqueso.gui.swords")));
                 }
-
                 if (isEnchantmentInGroup(EnchantingHelper.SPEARS, enchantment)) {
-                    enchantmentApplicables.add(ofItalicAndGray("Spears"));
+                    enchantmentApplicables.add(ofItalicAndGray(Component.translatable("qualityofqueso.gui.spears")));
                 }
-
                 if (isEnchantmentInGroup(EnchantingHelper.MACES, enchantment)) {
-                    enchantmentApplicables.add(ofItalicAndGray("Maces"));
+                    enchantmentApplicables.add(ofItalicAndGray(Component.translatable("qualityofqueso.gui.maces")));
                 }
-
                 if (isEnchantmentInGroup(EnchantingHelper.TRIDENTS, enchantment) || enchantment.getKey().is(EnchantmentTags.RIPTIDE_EXCLUSIVE)) {
-                    enchantmentApplicables.add(ofItalicAndGray("Tridents"));
+                    enchantmentApplicables.add(ofItalicAndGray(Component.translatable("qualityofqueso.gui.tridents")));
                 }
-
                 if (isEnchantmentInGroup(EnchantingHelper.BOWS, enchantment) || enchantment.getKey().is(EnchantmentTags.BOW_EXCLUSIVE)) {
-                    enchantmentApplicables.add(ofItalicAndGray("Bows"));
+                    enchantmentApplicables.add(ofItalicAndGray(Component.translatable("qualityofqueso.gui.bows")));
                 }
-
                 if (isEnchantmentInGroup(EnchantingHelper.CROSSBOWS, enchantment) || enchantment.getKey().is(EnchantmentTags.CROSSBOW_EXCLUSIVE)) {
-                    enchantmentApplicables.add(ofItalicAndGray("Crossbows"));
+                    enchantmentApplicables.add(ofItalicAndGray(Component.translatable("qualityofqueso.gui.crossbows")));
                 }
-
                 if (isEnchantmentInGroup(EnchantingHelper.TOOLS, enchantment) || enchantment.getKey().is(EnchantmentTags.MINING_EXCLUSIVE)) {
-                    enchantmentApplicables.add(ofItalicAndGray("Tools"));
+                    enchantmentApplicables.add(ofItalicAndGray(Component.translatable("qualityofqueso.gui.tools")));
                 }
-
                 if (isEnchantmentInGroup(EnchantingHelper.FISHING_RODS, enchantment)) {
-                    enchantmentApplicables.add(ofItalicAndGray("Fishing Rods"));
+                    enchantmentApplicables.add(ofItalicAndGray(Component.translatable("qualityofqueso.gui.fishing_rods")));
                 }
             }
 
@@ -1062,7 +1050,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             for (Component c : enchantmentApplicables) {
                 originalTooltip.add(index, c);
             }
-            originalTooltip.add(index, Component.literal("Applicable on:"));
+            originalTooltip.add(index, Component.translatable("qualityofqueso.gui.applicable_on"));
 
             graphics.setTooltipForNextFrame(this.font, originalTooltip, Optional.empty(), x, y);
             ci.cancel();

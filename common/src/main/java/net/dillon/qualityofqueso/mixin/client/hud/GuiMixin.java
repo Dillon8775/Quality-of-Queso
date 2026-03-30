@@ -45,8 +45,6 @@ public class GuiMixin {
     @Final
     private static Identifier HOTBAR_OFFHAND_RIGHT_SPRITE;
     @Unique
-    private static final EquipmentSlot[] slots = {EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
-    @Unique
     private static final int DISPLAY_TICKS = 80;
     @Unique
     private boolean moveArmorOver = false;
@@ -108,7 +106,7 @@ public class GuiMixin {
         this.tryRenderItem(graphics, mainHandItem, offHandItem);
 
         int i = 0;
-        for (EquipmentSlot slot : slots) {
+        for (EquipmentSlot slot : SLOTS) {
             ItemStack current = getItemBySlot(this.minecraft, slot);
             if (LAST_ARMOR_STACKS[i] == null) {
                 LAST_ARMOR_STACKS[i] = current.copy();
@@ -145,7 +143,7 @@ public class GuiMixin {
         }
 
         i = 0;
-        for (EquipmentSlot slot : slots) {
+        for (EquipmentSlot slot : SLOTS) {
             if (!options().hud.armorStatus.off()) {
                 if (slot != EquipmentSlot.CHEST || !SHOULD_WARN_OF_ELYTRA) {
                     boolean bl = this.minecraft.player.tickCount < ARMOR_TIMERS[i];
@@ -153,7 +151,7 @@ public class GuiMixin {
                         drawItem(this.minecraft, graphics, getItemBySlot(this.minecraft, slot), this.getArmorX(this.minecraft, slot), true);
                     }
                     if (bl) {
-                        this.renderHighlightedArmorSlot(this.minecraft, HOTBAR_SELECTION_SPRITE, graphics, slots[i], false);
+                        this.renderHighlightedArmorSlot(this.minecraft, HOTBAR_SELECTION_SPRITE, graphics, SLOTS[i], false);
                     }
                     if (getItemHealthPercentage(getItemBySlot(this.minecraft, slot)) < 0.11F) {
                         this.renderWarningIndicator(this.minecraft, graphics, 0, slot);

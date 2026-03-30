@@ -97,6 +97,10 @@ public class ModUtil {
             ItemTags.LEG_ARMOR, EquipmentSlot.LEGS,
             ItemTags.FOOT_ARMOR, EquipmentSlot.FEET
     );
+    public static final EquipmentSlot[] SLOTS = {EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
+    public static final String PLAYED_ARMOR_DING_NAME = "PlayedArmorDing";
+    public static final String TIMES_TO_PLAY_ARMOR_DING_NAME = "TimesToPlay";
+    public static final String DING_COOLDOWN_NAME = "DingCooldown";
 
     /**
      * Sends a message to console.
