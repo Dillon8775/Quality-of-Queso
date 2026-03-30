@@ -43,7 +43,6 @@ public abstract class EditBoxMixin extends AbstractWidget {
     private int displayPos;
     @Shadow
     public abstract int getInnerWidth();
-
     @Unique
     private static final WidgetSprites NEW_SPRITES = new WidgetSprites(
             ofQoQ("widget/search_field"), ofQoQ("widget/search_field_highlighted")

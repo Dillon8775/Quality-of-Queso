@@ -126,7 +126,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
     }
 
     /**
-     * Creates and initializes the search field and container button.
+     * Creates and initializes the search field, and handles other initializing things for handled screens.
      */
     @Inject(method = "init", at = @At("TAIL"))
     private void init(CallbackInfo ci) {
@@ -613,7 +613,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
     }
 
     /**
-     * Selects slots.
+     * Selects a slot by drag-clicking.
      */
     @Unique
     private void selectSlot(MouseButtonEvent click, CallbackInfoReturnable<Boolean> cir) {

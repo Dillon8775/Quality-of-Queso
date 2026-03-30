@@ -20,6 +20,9 @@ public class TitleScreenMixin extends Screen {
         super(pTitle);
     }
 
+    /**
+     * Adds the Quality of Queso configuration button to the title screen.
+     */
     @Inject(method = "init", at = @At("TAIL"))
     private void init(CallbackInfo ci) {
         if (options().accessibility.qoqButtons.enabled()) {

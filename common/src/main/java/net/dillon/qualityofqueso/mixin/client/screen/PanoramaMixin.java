@@ -11,10 +11,10 @@ import static net.dillon.qualityofqueso.util.ModUtil.options;
 public class PanoramaMixin {
 
     /**
-     * Oh, so like a fortnite battle pass
+     * Oh, so like a fortnite battle pass...
      */
     @ModifyConstant(method = "extractRenderState", constant = @Constant(floatValue = 0.1F))
-    private float spin(float original) {
-        return options().misc.fortniteBattlePass ? options().accessibility.doNot : 0.1F;
+    private float doNot(float original) {
+        return options().misc.fortniteBattlePass ? options().accessibility.doNot : original;
     }
 }

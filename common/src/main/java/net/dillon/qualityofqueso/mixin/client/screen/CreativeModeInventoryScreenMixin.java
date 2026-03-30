@@ -104,6 +104,9 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
         }
     }
 
+    /**
+     * Handles key pressing in the creative mode tab screen.
+     */
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
     private void allowCertainChars(KeyEvent input, CallbackInfoReturnable<Boolean> cir) {
         if (modEnabled(this.minecraft) && options().searching.quickSearch.enabled()) {
