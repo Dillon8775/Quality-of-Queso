@@ -12,6 +12,7 @@
 
 ## NeoForge BugFix
 - Fixed bug where joining a NeoForge server that doesn't have the Quality of Queso mod installed will not allow connection.
+- Small NeoForge bugfix with blacklist server button.
 
 ## Fabric Changes
 - (Fabric only) The mod now requires Fabric Loader version **0.18.5.**

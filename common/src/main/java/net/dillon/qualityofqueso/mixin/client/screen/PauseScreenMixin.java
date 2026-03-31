@@ -45,7 +45,7 @@ public class PauseScreenMixin extends Screen {
             if (options().accessibility.menuButton.everywhere()) {
                 int index = 0;
                 SpriteIconButton settingsButton = this.addRenderableWidget(ButtonUtil.initializeButton(this.minecraft, this));
-                settingsButton.setPosition(getConfigButtonX(this.width, 0), getConfigButtonY(this.height, index, false));
+                settingsButton.setPosition(getConfigButtonX(this.width, 0), getConfigButtonY(this.height, index));
                 index++;
 
                 if (!(this.minecraft.getCurrentServer() == null)) {
@@ -57,7 +57,7 @@ public class PauseScreenMixin extends Screen {
                             uoptions().main.blacklistedServers.add(address);
                         }
                         saveAll(this.minecraft);
-                    }).bounds(getConfigButtonX(this.width, 1), getConfigButtonY(this.height, index, true), 20, 20).build());
+                    }).bounds(getConfigButtonX(this.width, 1), getConfigButtonY(this.height, index), 20, 20).build());
                 }
             }
         }
