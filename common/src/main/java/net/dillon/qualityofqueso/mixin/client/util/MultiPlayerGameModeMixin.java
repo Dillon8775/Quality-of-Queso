@@ -136,7 +136,7 @@ public class MultiPlayerGameModeMixin {
             return;
         }
 
-        if (!modEnabled(Minecraft.getInstance()) || localPlayer.isCreative() || !localPlayer.level().isClientSide() || !options().hud.showArrowCount) {
+        if (!modEnabled(Minecraft.getInstance()) || localPlayer.isCreative() || !localPlayer.level().isClientSide() || !options().hud.showArrowCounter) {
             return;
         }
 

@@ -1,7 +1,6 @@
 package net.dillon.qualityofqueso.screen;
 
 import net.dillon.qualityofqueso.option.ModListOptions;
-import net.dillon.qualityofqueso.option.instance.ModClientOptions;
 import net.dillon.qualityofqueso.packet.GlowSearchC2SPayload;
 import net.dillon.qualityofqueso.platform.MultiLoader;
 import net.dillon.qualityofqueso.util.ButtonUtil;
@@ -56,7 +55,7 @@ public class ItemFrameSearchScreen extends Screen {
             this.clear();
         }).bounds(this.width / 2 - 105, this.height / 2 + 24, 100, 20).build());
         this.addRenderableWidget(Button.builder(Component.translatable("qualityofqueso.gui.close"), button -> {
-            this.onClose();
+            this.close(true);
         }).bounds(this.width / 2 - 215, this.height / 2 + 24, 100, 20).build());
         this.addWidget(this.searchField);
         this.setInitialFocus(this.searchField);
@@ -110,13 +109,23 @@ public class ItemFrameSearchScreen extends Screen {
     }
 
     /**
-     * Saves the text in {@code search field} when closing the screen.
+     * Proper closing of the screen.
      */
     @Override
     public void onClose() {
+        this.close(true);
+    }
+
+    /**
+     * Properly closes the item frame screen and saves the search field text when closing the screen.
+     */
+    private void close(boolean backToParent) {
         ModUtil.SAVED_ITEM_FRAME_TEXT = this.searchField.getValue();
-        ModClientOptions.CLIENT.save();
-        super.onClose();
+        if (backToParent && this.parent != null) {
+            this.minecraft.setScreen(this.parent);
+        } else {
+            super.onClose();
+        }
     }
 
     /**
@@ -131,7 +140,7 @@ public class ItemFrameSearchScreen extends Screen {
      * Closes the screen and sends the glowing packet.
      */
     private void sendPacket(boolean clear, int timer, int radius) {
-        this.onClose();
+        this.close(false);
         String text = this.searchField.getValue();
         boolean matchCase = text.startsWith(":");
         MultiLoader.PLATFORM.sendToServer(new GlowSearchC2SPayload(text.substring(matchCase ? 1 : 0), matchCase, clear, timer, radius));

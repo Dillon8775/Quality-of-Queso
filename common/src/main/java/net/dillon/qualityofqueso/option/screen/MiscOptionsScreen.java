@@ -23,7 +23,7 @@ public class MiscOptionsScreen extends AbstractModOptionsScreen {
                 ModListOptions.armorDing(),
                 ModListOptions.quickEquip(),
 
-                ModListOptions.enchantingHelper(),
+                ModListOptions.enchantmentHelper(),
                 ModListOptions.quickGuiExit(),
 
                 ModListOptions.preventRageQuitting(),

@@ -47,8 +47,11 @@ import static net.dillon.qualityofqueso.util.ModUtil.*;
  */
 public class ButtonUtil {
     public static int RENDERED_BUTTONS = 0;
-    public static final String ENABLED_TEXTURE = "sprites/button/qoq_enabled";
-    public static final String DISABLED_TEXTURE = "sprites/button/qoq_disabled";
+    public static final String CHEESE_WHEEL_TEXTURE = "widget/cheese_wheel";
+    public static final String QOQ_ENABLED_TEXTURE = "sprites/widget/qoq_enabled";
+    public static final String QOQ_DISABLED_TEXTURE = "sprites/widget/qoq_disabled";
+    public static final String OPEN_SCREENSHOTS_DIRECTORY_TEXTURE = "widget/open_screenshots_directory";
+    public static final String OPEN_WORLD_DIRECTORY_TEXTURE = "widget/open_world_directory";
 
     /**
      * Initializes the settings button.
@@ -56,8 +59,15 @@ public class ButtonUtil {
     public static SpriteIconButton initializeButton(Minecraft client, Screen parent) {
         return SpriteIconButton.builder(ModTexts.BLANK, (onPress) -> client.setScreen(new ModOptionsScreen(parent)), false)
                 .width(20)
-                .sprite(ofQoQ("button/cheese_wheel"), 16, 16)
+                .sprite(ofQoQ(CHEESE_WHEEL_TEXTURE), 16, 16)
                 .build();
+    }
+
+    /**
+     * Sets the position for a button.
+     */
+    public static void setButtonPosition(SpriteIconButton button, int width, int height, int buttonIndex) {
+        button.setPosition(width / 2 - 179 - (buttonIndex * 24), height);
     }
 
     /**
@@ -151,9 +161,9 @@ public class ButtonUtil {
      * @return the configuration button X position.
      */
     public static int getConfigButtonX(int width, int button) {
-        if (options().accessibility.qoqButtons.left()) {
+        if (options().accessibility.menuButton.left()) {
             return 8 + (button * 24);
-        } else if (options().accessibility.qoqButtons.right()) {
+        } else if (options().accessibility.menuButton.right()) {
             return width - 28 - (button * 24);
         } else {
             return width / 2 + 106;
@@ -164,7 +174,7 @@ public class ButtonUtil {
      * @return the configuration button Y position.
      */
     public static int getConfigButtonY(int height, int button, boolean blacklist) {
-        if (options().accessibility.qoqButtons.left() || options().accessibility.qoqButtons.right()) {
+        if (options().accessibility.menuButton.left() || options().accessibility.menuButton.right()) {
             return height - 29;
         } else {
             return height / 4 + 72 + (button * 24) - 16 + (!blacklist && MultiLoader.PLATFORM.getPlatformName().equals("NeoForged") ? -6 : 0);

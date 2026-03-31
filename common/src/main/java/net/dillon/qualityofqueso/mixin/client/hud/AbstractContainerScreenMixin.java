@@ -1006,7 +1006,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
         ItemStack stack = hoveredSlot.getItem();
         List<Component> originalTooltip = stack.getTooltipLines(Item.TooltipContext.EMPTY, this.minecraft.player, Minecraft.getInstance().options.advancedItemTooltips ? TooltipFlag.ADVANCED : TooltipFlag.NORMAL);
 
-        if (options().misc.enchantingHelper && stack.is(Items.ENCHANTED_BOOK)) {
+        if (options().misc.enchantmentHelper && stack.is(Items.ENCHANTED_BOOK)) {
             ItemEnchantments enchantments = stack.getOrDefault(DataComponents.STORED_ENCHANTMENTS, ItemEnchantments.EMPTY);
             Set<Component> enchantmentApplicables = new HashSet<>();
 

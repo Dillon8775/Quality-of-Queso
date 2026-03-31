@@ -18,7 +18,7 @@ public class CommonEvents {
 
     @SubscribeEvent
     public static void register(RegisterPayloadHandlersEvent event) {
-        final PayloadRegistrar registrar = event.registrar("1");
+        final PayloadRegistrar registrar = event.registrar("1").optional();
         registrar.playToServer(
                 GlowSearchC2SPayload.PAYLOAD_ID,
                 GlowSearchC2SPayload.CODEC,

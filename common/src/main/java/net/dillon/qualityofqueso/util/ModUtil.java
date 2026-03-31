@@ -128,6 +128,13 @@ public class ModUtil {
     }
 
     /**
+     * Sends a {@code debug} message to the console.
+     */
+    public static void debug(String message) {
+        LOGGER.debug(message);
+    }
+
+    /**
      * @return an identifier with the quality of queso namespace.
      */
     public static Identifier ofQoQ(String name) {
@@ -541,7 +548,7 @@ public class ModUtil {
     }
 
     /**
-     * Sends client-side options to the server, for storage reference.
+     * Sends client options to server, for reference.
      */
     public static void sendClientOptionsToServer() {
         MultiLoader.PLATFORM.sendToServer(new ClientPreferencesC2SPacket(options().management.includeHotbar, !options().management.includeHotbar || options().accessibility.perpendicularQuickMoving));

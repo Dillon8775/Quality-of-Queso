@@ -37,6 +37,7 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
                 Tooltip.create(Component.translatable("qualityofqueso.gui.searching_options.tooltip"))
         ).build());
         buttons.add(this.searchingOptions);
+
         this.inventoryManagementOptions = this.addWidget(Button.builder(Component.translatable("qualityofqueso.gui.management_options"), button -> {
             this.minecraft.setScreen(new ManagementOptionsScreen(this));
         }).tooltip(
@@ -50,14 +51,12 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
                 Tooltip.create(Component.translatable("qualityofqueso.gui.item_frame_searching_options.tooltip"))
         ).build());
         buttons.add(this.itemFrameSearchingOptions);
+
         this.openItemFrameSearchGUIOptions = this.addWidget(Button.builder(Component.translatable("qualityofqueso.gui.open_item_frame_search_gui"), button -> {
             if (coptions().itemFrameSearching && this.minecraft.level != null) {
                 this.minecraft.setScreen(new ItemFrameSearchScreen(this));
             }
-        }).tooltip(Tooltip.create(!coptions().itemFrameSearching
-                ? Component.translatable("qualityofqueso.gui.open_item_frame_search_gui.disabled")
-                : Component.translatable("qualityofqueso.gui.open_item_frame_search_gui.null_world")
-        )).build());
+        }).build());
         buttons.add(this.openItemFrameSearchGUIOptions);
 
         this.hudOptions = this.addWidget(Button.builder(Component.translatable("qualityofqueso.gui.hud_options"), button -> {
@@ -66,10 +65,11 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
                 Tooltip.create(Component.translatable("qualityofqueso.gui.hud_options.tooltip"))
         ).build());
         buttons.add(this.hudOptions);
-        this.itemCountOptions = Button.builder(Component.translatable("qualityofqueso.gui.item_count_options"), button -> {
-            this.minecraft.setScreen(new ItemCountOptionsScreen(this));
+
+        this.itemCountOptions = Button.builder(Component.translatable("qualityofqueso.gui.item_counter_options"), button -> {
+            this.minecraft.setScreen(new ItemCounterOptionsScreen(this));
         }).tooltip(
-                Tooltip.create(Component.translatable("qualityofqueso.gui.item_count_options.tooltip"))
+                Tooltip.create(Component.translatable("qualityofqueso.gui.item_counter_options.tooltip"))
         ).build();
         buttons.add(this.itemCountOptions);
 
@@ -78,6 +78,7 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
         }).build());
         this.fovEffects.active = ModUtil.uoptions().functions.applyFovEffects;
         buttons.add(this.fovEffects);
+
         this.fogOptions = Button.builder(Component.translatable("qualityofqueso.gui.fog_options"), button -> {
             this.minecraft.setScreen(new FogOptionsScreen(this));
         }).build();
@@ -86,26 +87,39 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
 
         this.miscOptions = this.addWidget(Button.builder(Component.translatable("qualityofqueso.gui.misc_options"), button -> {
             this.minecraft.setScreen(new MiscOptionsScreen(this));
-        }).build());
+        }).tooltip(
+                Tooltip.create(Component.translatable("qualityofqueso.gui.misc_options.tooltip")
+        )).build());
         buttons.add(this.miscOptions);
+
         this.accessibilityOptions = this.addWidget(Button.builder(Component.translatable("qualityofqueso.gui.accessibility_options"), button -> {
             this.minecraft.setScreen(new AccessibilityOptionsScreen(this));
-        }).build());
+        }).tooltip(
+                Tooltip.create(Component.translatable("qualityofqueso.gui.accessibility_options.tooltip"))
+        ).build());
         buttons.add(this.accessibilityOptions);
 
         this.enableMod = ModListOptions.enableQoQ().createButton(this.options);
         buttons.add(this.enableMod);
+
         this.showcaseVideo = this.addWidget(Button.builder(Component.translatable("qualityofqueso.gui.showcase_video"),
                 ConfirmLinkScreen.confirmLink(this, ModUtil.SHOWCASE_VIDEO_LINK, false)
+        ).tooltip(
+                Tooltip.create(Component.translatable("qualityofqueso.gui.showcase_video.tooltip"))
         ).build());
         buttons.add(this.showcaseVideo);
 
         this.askQuestions = this.addWidget(Button.builder(Component.translatable("qualityofqueso.gui.ask_questions"),
                 ConfirmLinkScreen.confirmLink(this, "https://discord.gg/vfqEAn4YFy", false)
+        ).tooltip(
+                Tooltip.create(Component.translatable("qualityofqueso.gui.ask_questions.tooltip"))
         ).build());
         buttons.add(this.askQuestions);
+
         this.reportBugs = this.addWidget(Button.builder(Component.translatable("qualityofqueso.gui.report_bugs"),
                 ConfirmLinkScreen.confirmLink(this, "https://github.com/Dillon8775/Quality-of-Queso/issues", false)
+        ).tooltip(
+                Tooltip.create(Component.translatable("qualityofqueso.gui.report_bugs.tooltip"))
         ).build());
         buttons.add(this.reportBugs);
 
@@ -116,36 +130,27 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
     public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks) {
         super.extractRenderState(graphics, mouseX, mouseY, deltaTicks);
         this.openItemFrameSearchGUIOptions.active = coptions().itemFrameSearching && this.minecraft.level != null;
-        if (ModUtil.options().accessibility.helpfulTooltips) {
-            if (this.fogOptions.isHovered()) {
-                ButtonUtil.drawTooltip(this.functionTooltip(
-                        Component.translatable("qualityofqueso.gui.fog_options.tooltip"),
-                        Component.translatable("qualityofqueso.gui.fog_options.disabled"),
-                        ModUtil.uoptions().functions.applyFog
-                ), graphics, this.font, mouseX, mouseY);
+        if (this.openItemFrameSearchGUIOptions.isHovered()) {
+            if (!coptions().itemFrameSearching) {
+                ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.open_item_frame_search_gui.disabled"), graphics, this.font, mouseX, mouseY);
+            } else if (this.minecraft.level == null) {
+                ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.open_item_frame_search_gui.null_world"), graphics, this.font, mouseX, mouseY);
             }
-            if (this.fovEffects.isHovered()) {
-                ButtonUtil.drawTooltip(this.functionTooltip(
-                        Component.translatable("qualityofqueso.gui.fov_effects.tooltip"),
-                        Component.translatable("qualityofqueso.gui.fov_effects.disabled"),
-                        ModUtil.uoptions().functions.applyFovEffects
-                ), graphics, this.font, mouseX, mouseY);
-            }
-            if (this.miscOptions.isHovered()) {
-                ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.misc_options.tooltip"), graphics, this.font, mouseX, mouseY);
-            }
-            if (this.accessibilityOptions.isHovered()) {
-                ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.accessibility_options.tooltip"), graphics, this.font, mouseX, mouseY);
-            }
-            if (this.showcaseVideo.isHovered()) {
-                ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.showcase_video.tooltip"), graphics, this.font, mouseX, mouseY);
-            }
-            if (this.askQuestions.isHovered()) {
-                ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.ask_questions.tooltip"), graphics, this.font, mouseX, mouseY);
-            }
-            if (this.reportBugs.isHovered()) {
-                ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.report_bugs.tooltip"), graphics, this.font, mouseX, mouseY);
-            }
+        }
+
+        if (this.fogOptions.isHovered()) {
+            ButtonUtil.drawTooltip(this.functionTooltip(
+                    Component.translatable("qualityofqueso.gui.fog_options.tooltip"),
+                    Component.translatable("qualityofqueso.gui.fog_options.disabled"),
+                    ModUtil.uoptions().functions.applyFog
+            ), graphics, this.font, mouseX, mouseY);
+        }
+        if (this.fovEffects.isHovered()) {
+            ButtonUtil.drawTooltip(this.functionTooltip(
+                    Component.translatable("qualityofqueso.gui.fov_effects.tooltip"),
+                    Component.translatable("qualityofqueso.gui.fov_effects.disabled"),
+                    ModUtil.uoptions().functions.applyFovEffects
+            ), graphics, this.font, mouseX, mouseY);
         }
     }
 

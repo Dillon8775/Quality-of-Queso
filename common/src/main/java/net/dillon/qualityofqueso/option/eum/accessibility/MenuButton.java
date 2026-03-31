@@ -5,21 +5,21 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.StringRepresentable;
 
 /**
- * Defines where the Quality of Queso configuration button can appear.
+ * Defines where the Quality of Queso menu button should appear.
  */
-public enum QoQButtons implements StringRepresentable {
-    EVERYWHERE(0, "everywhere", "qualityofqueso.options.qoq_buttons.everywhere"),
-    BOTTOM_LEFT(1, "bottom", "qualityofqueso.options.qoq_buttons.bottom_left"),
-    BOTTOM_RIGHT(1, "bottom", "qualityofqueso.options.qoq_buttons.bottom_right"),
-    TITLE_ONLY(2, "title_only", "qualityofqueso.options.qoq_buttons.title_only"),
-    OFF(3, "off", "qualityofqueso.options.qoq_buttons.off");
+public enum MenuButton implements StringRepresentable {
+    EVERYWHERE(0, "everywhere", "qualityofqueso.options.menu_button.everywhere"),
+    BOTTOM_LEFT(1, "bottom", "qualityofqueso.options.menu_button.bottom_left"),
+    BOTTOM_RIGHT(1, "bottom", "qualityofqueso.options.menu_button.bottom_right"),
+    TITLE_ONLY(2, "title_only", "qualityofqueso.options.menu_button.title_only"),
+    OFF(3, "off", "qualityofqueso.options.menu_button.off");
 
-    public static final Codec<QoQButtons> Codec = StringRepresentable.fromEnum(QoQButtons::values);
+    public static final Codec<MenuButton> Codec = StringRepresentable.fromEnum(MenuButton::values);
     private final int ordinal;
     private final String name;
     private final Component translationKey;
 
-    QoQButtons(final int ordinal, final String name, final String translationKey) {
+    MenuButton(final int ordinal, final String name, final String translationKey) {
         this.ordinal = ordinal;
         this.name = name;
         this.translationKey = Component.translatable(translationKey);

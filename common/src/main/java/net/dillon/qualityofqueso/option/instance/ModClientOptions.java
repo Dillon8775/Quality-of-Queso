@@ -1,11 +1,11 @@
 package net.dillon.qualityofqueso.option.instance;
 
 import net.dillon.qualityofqueso.option.base.BaseOptions;
-import net.dillon.qualityofqueso.option.eum.accessibility.QoQButtons;
+import net.dillon.qualityofqueso.option.eum.accessibility.MenuButton;
 import net.dillon.qualityofqueso.option.eum.effects.Bows;
 import net.dillon.qualityofqueso.option.eum.effects.PotionEffects;
 import net.dillon.qualityofqueso.option.eum.hud.ArmorStatus;
-import net.dillon.qualityofqueso.option.eum.hud.ItemCount;
+import net.dillon.qualityofqueso.option.eum.hud.ItemCounter;
 import net.dillon.qualityofqueso.option.eum.management.*;
 import net.dillon.qualityofqueso.option.eum.searching.QuickSearch;
 
@@ -39,7 +39,7 @@ public class ModClientOptions {
     }
 
     public static class InventoryManagement {
-        public ButtonLayout buttonLayout = ButtonLayout.VERTICAL;
+        public ButtonLayout buttonLayout = ButtonLayout.HORIZONTAL;
         public Transferring transferring = Transferring.SHORTCUT_KEY_OR_BUTTON;
         public ContainerSorting containerSorting = ContainerSorting.SHORTCUT_KEY_OR_BUTTON;
         public boolean containerFiltering = true;
@@ -71,11 +71,11 @@ public class ModClientOptions {
         public boolean coloredHighlighting = true;
         public boolean warningIndicators = true;
 
-        public ItemCount itemCount = ItemCount.TOTAL;
+        public ItemCounter itemCounter = ItemCounter.STACKS;
         public boolean displayOnThrow = true;
         public boolean displayOnPickup = true;
         public boolean countContainers = true;
-        public boolean showArrowCount = true;
+        public boolean showArrowCounter = true;
         public boolean countAllArrows = true;
     }
 
@@ -100,7 +100,7 @@ public class ModClientOptions {
         public boolean quickEquip = true;
 
         public boolean armorDing = true;
-        public boolean enchantingHelper = true;
+        public boolean enchantmentHelper = true;
 
         public boolean preventRageQuitting = false;
         public boolean alwaysPreventRageQuitting = false;
@@ -146,7 +146,7 @@ public class ModClientOptions {
 
         public boolean perpendicularQuickMoving = false;
 
-        public QoQButtons qoqButtons = QoQButtons.EVERYWHERE;
+        public MenuButton menuButton = MenuButton.EVERYWHERE;
         public float doNot = 2.0F;
     }
 

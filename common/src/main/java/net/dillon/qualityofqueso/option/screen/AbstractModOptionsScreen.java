@@ -20,13 +20,16 @@ import net.minecraft.util.CommonColors;
 import net.minecraft.util.Util;
 import net.minecraft.world.level.storage.LevelResource;
 
+import java.io.File;
 import java.nio.file.Path;
 
+import static net.dillon.qualityofqueso.util.ButtonUtil.*;
 import static net.dillon.qualityofqueso.util.ModUtil.*;
 
 public abstract class AbstractModOptionsScreen extends OptionsSubScreen {
     private Button doneButton;
     private SpriteIconButton worldDirectoryButton;
+    private SpriteIconButton screenshotsButton;
 
     public AbstractModOptionsScreen(Screen parent, Component title) {
         super(parent, Minecraft.getInstance().options, title);
@@ -65,7 +68,7 @@ public abstract class AbstractModOptionsScreen extends OptionsSubScreen {
     @Override
     public void onClose() {
         saveAll(this.minecraft);
-        ModUtil.info("Saved changes.");
+        ModUtil.debug("Saved changes.");
         if (this.minecraft.level != null) {
             sendClientOptionsToServer();
         }
@@ -84,15 +87,30 @@ public abstract class AbstractModOptionsScreen extends OptionsSubScreen {
 
         if (this.doneButton != null) {
             graphics.centeredText(this.font, ModUtil.VERSION, this.width - 25, this.doneButton.getY() + 5, CommonColors.WHITE);
-            graphics.blit(RenderPipelines.GUI_TEXTURED, ofQoQ("textures/gui/sprites/button/cheese_wheel.png"), this.width - 57, this.doneButton.getY(), 0.0F, 0.0F, 18, 18, 18, 18);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, ofQoQ("textures/gui/sprites/" + CHEESE_WHEEL_TEXTURE + ".png"), this.width - 57, this.doneButton.getY(), 0.0F, 0.0F, 18, 18, 18, 18);
+            if (this.screenshotsButton == null) {
+                this.screenshotsButton = this.addRenderableWidget(SpriteIconButton.builder(ModTexts.BLANK, (button) -> {
+                    Util.getPlatform().openFile(new File(Minecraft.getInstance().gameDirectory, "screenshots"));
+                }, false).width(20).sprite(ofQoQ(OPEN_SCREENSHOTS_DIRECTORY_TEXTURE), 16, 16).build());
+            }
             if (this.worldDirectoryButton == null && this.minecraft.getSingleplayerServer() != null && this.minecraft.level != null) {
                 this.worldDirectoryButton = this.addRenderableWidget(SpriteIconButton.builder(ModTexts.BLANK, (button) -> {
                     Path worldPath = this.minecraft.getSingleplayerServer().getWorldPath(LevelResource.ROOT);
                     Util.getPlatform().openFile(worldPath.toFile());
-                }, false).width(20).sprite(ofQoQ("button/world_directory"), 16, 16).build());
+                }, false).width(20).sprite(ofQoQ(OPEN_WORLD_DIRECTORY_TEXTURE), 16, 16).build());
+            }
+
+            if (this.screenshotsButton != null) {
+                setButtonPosition(this.screenshotsButton, this.width, this.doneButton.getY(), 0);
+                if (this.screenshotsButton.isHovered()) {
+                    ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.open_screenshots_folder"), graphics, this.font, mouseX, mouseY);
+                }
             }
             if (this.worldDirectoryButton != null) {
-                this.worldDirectoryButton.setPosition(this.width / 2 - 179, this.doneButton.getY());
+                setButtonPosition(this.worldDirectoryButton, this.width, this.doneButton.getY(), 1);
+                if (this.worldDirectoryButton.isHovered()) {
+                    ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.open_world_directory"), graphics, this.font, mouseX, mouseY);
+                }
             }
         }
 

@@ -42,7 +42,7 @@ public class PauseScreenMixin extends Screen {
             if (this.disconnectButton != null && options().misc.preventRageQuitting) {
                 this.disconnectButton.active = false;
             }
-            if (options().accessibility.qoqButtons.everywhere()) {
+            if (options().accessibility.menuButton.everywhere()) {
                 int index = 0;
                 SpriteIconButton settingsButton = this.addRenderableWidget(ButtonUtil.initializeButton(this.minecraft, this));
                 settingsButton.setPosition(getConfigButtonX(this.width, 0), getConfigButtonY(this.height, index, false));
@@ -72,19 +72,19 @@ public class PauseScreenMixin extends Screen {
             if (options().misc.preventRageQuitting && options().accessibility.helpfulTooltips && this.disconnectButton != null && this.disconnectButton.isHovered()) {
                 ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.disconnect"), graphics, this.font, mouseX, mouseY);
             }
-            if (options().accessibility.qoqButtons.everywhere() && !(this.minecraft.getCurrentServer() == null)) {
+            if (options().accessibility.menuButton.everywhere() && !(this.minecraft.getCurrentServer() == null)) {
                 if (this.blacklistServerButton != null) {
                     this.blacklistServerButton.active = isOnServer(this.minecraft);
                     String address = this.getServerAddress();
 
                     if (this.blacklistServerButton.isHovered()) {
-                        ButtonUtil.drawTexture(graphics, this.isServerBlacklisted(address) ? ButtonUtil.ENABLED_TEXTURE : ButtonUtil.DISABLED_TEXTURE, this.blacklistServerButton);
+                        ButtonUtil.drawTexture(graphics, this.isServerBlacklisted(address) ? ButtonUtil.QOQ_ENABLED_TEXTURE : ButtonUtil.QOQ_DISABLED_TEXTURE, this.blacklistServerButton);
                         ButtonUtil.drawTooltip(this.tooltipWithPrefix(this.isServerBlacklisted(address) ?
                                         Component.translatable("qualityofqueso.gui.remove_blacklisted_server") :
                                         Component.translatable("qualityofqueso.gui.add_blacklisted_server")),
                                 graphics, this.font, mouseX, mouseY);
                     } else {
-                        ButtonUtil.drawTexture(graphics, this.isServerBlacklisted(address) ? ButtonUtil.DISABLED_TEXTURE : ButtonUtil.ENABLED_TEXTURE, this.blacklistServerButton);
+                        ButtonUtil.drawTexture(graphics, this.isServerBlacklisted(address) ? ButtonUtil.QOQ_DISABLED_TEXTURE : ButtonUtil.QOQ_ENABLED_TEXTURE, this.blacklistServerButton);
                     }
                 }
             }

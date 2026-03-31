@@ -151,7 +151,7 @@ public class LocalPlayerMixin extends AbstractClientPlayer {
     @Inject(method = "stopUsingItem", at = @At("HEAD"))
     private void onBowFired(CallbackInfo ci) {
         LocalPlayer player = (LocalPlayer) (Object) this;
-        if (!modEnabled(Minecraft.getInstance()) || player.isCreative() || !player.level().isClientSide() || !options().hud.showArrowCount) {
+        if (!modEnabled(Minecraft.getInstance()) || player.isCreative() || !player.level().isClientSide() || !options().hud.showArrowCounter) {
             return;
         }
 

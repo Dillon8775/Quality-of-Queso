@@ -29,6 +29,11 @@ public interface IPlatformHelper {
     boolean isModLoaded(String modId);
 
     /**
+     * @return if the payload can send over to the server.
+     */
+    boolean isSafeToSend(CustomPacketPayload packet);
+
+    /**
      * Gets the config directory for the supported platform.
      */
     Path getConfigDir();

@@ -96,13 +96,10 @@ public class AccessibilityOptionsScreen extends AbstractModOptionsScreen {
                 ModListOptions.useOldSearchBarTexture().createButton(this.options),
                 this.searchBarTextColorField,
 
-                ModListOptions.onlyCountMatchingItems().createButton(this.options),
-                ModListOptions.displayTotalWithStacks().createButton(this.options),
-
                 ModListOptions.perpendicularQuickMoving().createButton(this.options),
                 ModListOptions.elytraAlarmSoundDelay().createButton(this.options),
 
-                ModListOptions.qoqButtons().createButton(this.options),
+                ModListOptions.menuButton().createButton(this.options),
                 ModListOptions.multiServerConfigs().createButton(this.options),
 
                 this.blacklistedServersField

@@ -1,11 +1,11 @@
 package net.dillon.qualityofqueso.option;
 
 import net.dillon.qualityofqueso.keybind.ModKeybinds;
-import net.dillon.qualityofqueso.option.eum.accessibility.QoQButtons;
+import net.dillon.qualityofqueso.option.eum.accessibility.MenuButton;
 import net.dillon.qualityofqueso.option.eum.effects.Bows;
 import net.dillon.qualityofqueso.option.eum.effects.PotionEffects;
 import net.dillon.qualityofqueso.option.eum.hud.ArmorStatus;
-import net.dillon.qualityofqueso.option.eum.hud.ItemCount;
+import net.dillon.qualityofqueso.option.eum.hud.ItemCounter;
 import net.dillon.qualityofqueso.option.eum.management.*;
 import net.dillon.qualityofqueso.option.eum.misc.ElytraAlarm;
 import net.dillon.qualityofqueso.option.eum.searching.QuickSearch;
@@ -257,8 +257,8 @@ public class ModListOptions {
     public static OptionInstance<Integer> itemFrameSearchRadius() {
         return new OptionInstance<>("qualityofqueso.options.item_frame_search_radius",
                 OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.item_frame_search_radius.tooltip")),
-                (optionText, value) -> Options.genericValueLabel(optionText, Component.literal(value + "m")),
-                new OptionInstance.IntRange(25, 500), options().misc.itemFrameSearchRadius, value -> options().misc.itemFrameSearchRadius = value);
+                (optionText, value) -> Options.genericValueLabel(optionText, Component.literal(value + " blocks")),
+                new OptionInstance.IntRange(2, 50).xmap(value -> value * 10, value -> value / 10, true), options().misc.itemFrameSearchRadius, value -> options().misc.itemFrameSearchRadius = value);
     }
     // end of item frame searching options
 
@@ -305,22 +305,22 @@ public class ModListOptions {
                 ON_OFF_TEXT, options().hud.warningIndicators, value -> options().hud.warningIndicators = value);
     }
 
-    // ITEM COUNT
-    public static OptionInstance<ItemCount> itemCount() {
+    // ITEM COUNTER
+    public static OptionInstance<ItemCounter> itemCounter() {
         return new OptionInstance<>(
-                "qualityofqueso.options.item_count",
+                "qualityofqueso.options.item_counter",
                 option -> {
                     Component text = ModTexts.BLANK;
                     switch (option) {
-                        case TOTAL -> text = Component.translatable("qualityofqueso.options.item_count.total.tooltip");
-                        case STACKS -> text = Component.translatable("qualityofqueso.options.item_count.stacks.tooltip");
+                        case TOTAL -> text = Component.translatable("qualityofqueso.options.item_counter.total.tooltip");
+                        case STACKS -> text = Component.translatable("qualityofqueso.options.item_counter.stacks.tooltip");
                     }
-                    return Tooltip.create(Component.translatable("qualityofqueso.options.item_count.tooltip").append(text != ModTexts.BLANK ? "\n\n" : "").append(text));
+                    return Tooltip.create(Component.translatable("qualityofqueso.options.item_counter.tooltip").append(text != ModTexts.BLANK ? "\n\n" : "").append(text));
                 },
                 (optionText, value) -> value.getText(),
-                new OptionInstance.Enum<>(Arrays.asList(ItemCount.values()), ItemCount.Codec),
-                options().hud.itemCount,
-                value -> options().hud.itemCount = value);
+                new OptionInstance.Enum<>(Arrays.asList(ItemCounter.values()), ItemCounter.Codec),
+                options().hud.itemCounter,
+                value -> options().hud.itemCounter = value);
     }
 
     public static OptionInstance<Boolean> displayOnThrow() {
@@ -338,9 +338,9 @@ public class ModListOptions {
                 YES_NO_TEXT, options().hud.countContainers, value -> options().hud.countContainers = value);
     }
 
-    public static OptionInstance<Boolean> showArrowCount() {
-        return OptionInstance.createBoolean("qualityofqueso.options.show_arrow_count", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.show_arrow_count.tooltip")),
-                YES_NO_TEXT, options().hud.showArrowCount, value -> options().hud.showArrowCount = value);
+    public static OptionInstance<Boolean> showArrowCounter() {
+        return OptionInstance.createBoolean("qualityofqueso.options.show_arrow_counter", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.show_arrow_counter.tooltip")),
+                YES_NO_TEXT, options().hud.showArrowCounter, value -> options().hud.showArrowCounter = value);
     }
 
     public static OptionInstance<Boolean> countAllArrows() {
@@ -394,9 +394,9 @@ public class ModListOptions {
                 ON_OFF_TEXT, options().misc.quickEquip, value -> options().misc.quickEquip = value);
     }
 
-    public static OptionInstance<Boolean> enchantingHelper() {
-        return OptionInstance.createBoolean("qualityofqueso.options.enchanting_helper", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.enchanting_helper.tooltip")),
-                ON_OFF_TEXT, options().misc.enchantingHelper, value -> options().misc.enchantingHelper = value);
+    public static OptionInstance<Boolean> enchantmentHelper() {
+        return OptionInstance.createBoolean("qualityofqueso.options.enchantment_helper", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.enchantment_helper.tooltip")),
+                ON_OFF_TEXT, options().misc.enchantmentHelper, value -> options().misc.enchantmentHelper = value);
     }
 
     public static OptionInstance<Boolean> quickGuiExit() {
@@ -537,22 +537,22 @@ public class ModListOptions {
                 value -> options().management.buttonSounds = value);
     }
 
-    public static OptionInstance<QoQButtons> qoqButtons() {
+    public static OptionInstance<MenuButton> menuButton() {
         return new OptionInstance<>(
-                "qualityofqueso.options.qoq_buttons",
+                "qualityofqueso.options.menu_button",
                 option -> {
                     return switch (option) {
-                        case EVERYWHERE -> Tooltip.create(Component.translatable("qualityofqueso.options.qoq_buttons.everywhere.tooltip"));
-                        case BOTTOM_LEFT -> Tooltip.create(Component.translatable("qualityofqueso.options.qoq_buttons.bottom_left.tooltip"));
-                        case BOTTOM_RIGHT -> Tooltip.create(Component.translatable("qualityofqueso.options.qoq_buttons.bottom_right.tooltip"));
-                        case TITLE_ONLY -> Tooltip.create(Component.translatable("qualityofqueso.options.qoq_buttons.title_only.tooltip"));
-                        case OFF -> Tooltip.create(Component.translatable("qualityofqueso.options.qoq_buttons.off.tooltip"));
+                        case EVERYWHERE -> Tooltip.create(Component.translatable("qualityofqueso.options.menu_button.everywhere.tooltip"));
+                        case BOTTOM_LEFT -> Tooltip.create(Component.translatable("qualityofqueso.options.menu_button.bottom_left.tooltip"));
+                        case BOTTOM_RIGHT -> Tooltip.create(Component.translatable("qualityofqueso.options.menu_button.bottom_right.tooltip"));
+                        case TITLE_ONLY -> Tooltip.create(Component.translatable("qualityofqueso.options.menu_button.title_only.tooltip"));
+                        case OFF -> Tooltip.create(Component.translatable("qualityofqueso.options.menu_button.off.tooltip"));
                     };
                 },
                 (optionText, value) -> value.getText(),
-                new OptionInstance.Enum<>(Arrays.asList(QoQButtons.values()), QoQButtons.Codec),
-                options().accessibility.qoqButtons,
-                value -> options().accessibility.qoqButtons = value);
+                new OptionInstance.Enum<>(Arrays.asList(MenuButton.values()), MenuButton.Codec),
+                options().accessibility.menuButton,
+                value -> options().accessibility.menuButton = value);
     }
 
     public static OptionInstance<Boolean> multiServerConfigs() {

@@ -25,10 +25,11 @@
 - Ability to [remove Minecraft's annoying fog](https://quality-of-queso.fandom.com/wiki/Remove_Fog)
 - And so much more!
 
-## Please read through the [Wiki](https://quality-of-queso.fandom.com/wiki/Quality_of_Queso_Wiki) to view all the mod's features, so you can really experience the quality of life that this mod offers.
+## Please read through the [Wiki](https://quality-of-queso.fandom.com/wiki/Quality_of_Queso_Wiki), so you can really experience the quality of life that this mod offers.
+- All features (except [one](https://quality-of-queso.fandom.com/wiki/Item_Frame_Searching)) in this mod are 100% client-side, meaning you can use it on servers *and* singleplayer, with no issue.
+- You can even create [separate configurations for each server that you play on.]()
 
-## All features (except [one](https://quality-of-queso.fandom.com/wiki/Item_Frame_Searching)) in this mod are 100% client-side, meaning you can use it on servers *and* singleplayer, with no issue.
-### You can even create [separate configurations for each server that you play on.]()
+## Open for suggestions! Join my [Discord server](https://discord.gg/vfqEAn4YFy) to give suggestions!
 
 ### Please report *any* bugs you may find <a href="https://github.com/Dillon8775/Quality-of-Queso/issues" target="_blank">here.</a>
 
@@ -79,6 +80,7 @@ If you decide to play the mod on an older version of the game, please note that 
 ### [Container Filtering](https://quality-of-queso.fandom.com/wiki/Container_Filtering)
 ### [Container Sorting / Move Matching Items](https://quality-of-queso.fandom.com/wiki/Container_Sorting)
 ### [Drag Sorting](https://quality-of-queso.fandom.com/wiki/Drag_Sorting)
+### [Always Quick Move](https://quality-of-queso.fandom.com/wiki/Always_Quick_Move)
 ### [Quick Dropping](https://quality-of-queso.fandom.com/wiki/Quick_Dropping)
 ### [Swapping](https://quality-of-queso.fandom.com/wiki/Swapping)
 
@@ -138,12 +140,10 @@ If you decide to play the mod on an older version of the game, please note that 
 
 ### Display the total amount of the item that you are holding!
 ###
-#### This is highly configurable with the "Item Count" option:
+#### This is highly configurable:
 
 - **"TOTAL"** will display the exact count.
-- **"STACKS"** will display how many stacks of that item you have, if you have a perfect amount of stacks.
-  - For example, if you have **exactly 3 stacks of dirt blocks,** it will display **"3x 64".** If you don't have exactly *said* amount of stacks, it will instead just display the total amount (so **192** in this case).
-- **"REMAINDER"** - will display how many perfect stacks you have *PLUS* the additional amount remaining.
+- **"STACKS"** will display how many perfect stacks you have *PLUS* the additional amount remaining.
   - For example, if you have **3 stacks** ***and*** **12 additional dirt blocks,** it will display as **"3x64 & 12"**.
 
 ## More information [here.](https://quality-of-queso.fandom.com/wiki/Item_Count)
@@ -159,6 +159,15 @@ If you decide to play the mod on an older version of the game, please note that 
 ## More information [here.](https://quality-of-queso.fandom.com/wiki/Mob_Hit_Ding)
 
 #### (since: v1.5.1)
+
+---
+
+# _Armor Ding!_
+### Plays a ding sound whenever a piece of armor reaches 10% durability!
+
+## More information [here.](https://quality-of-queso.fandom.com/wiki/Armor_Ding)
+
+#### (since: v1.6.4)
 
 ---
 

@@ -120,7 +120,7 @@ public class GuiUtil {
      * @return if the arrow count can be displayed at all.
      */
     public static boolean holdingArrowDisplayableProjectileWeapon(Minecraft minecraft, ItemStack stack) {
-        return options().hud.showArrowCount && !minecraft.player.isCreative() && (stack.getItem() instanceof BowItem || stack.getItem() instanceof CrossbowItem);
+        return options().hud.showArrowCounter && !minecraft.player.isCreative() && (stack.getItem() instanceof BowItem || stack.getItem() instanceof CrossbowItem);
     }
 
     /**

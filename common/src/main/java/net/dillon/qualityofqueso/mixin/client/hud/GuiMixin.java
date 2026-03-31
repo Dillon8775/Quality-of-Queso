@@ -1,6 +1,6 @@
 package net.dillon.qualityofqueso.mixin.client.hud;
 
-import net.dillon.qualityofqueso.option.eum.hud.ItemCount;
+import net.dillon.qualityofqueso.option.eum.hud.ItemCounter;
 import net.dillon.qualityofqueso.util.ItemHudTracker;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
@@ -174,7 +174,7 @@ public class GuiMixin {
     @Unique
     private boolean renderItem(GuiGraphicsExtractor graphics, ItemStack stack) {
         boolean holdingArrowDisplayableProjectileWeapon = holdingArrowDisplayableProjectileWeapon(this.minecraft, stack);
-        if (!options().hud.itemCount.enabled() || (!stack.isStackable() && !holdingArrowDisplayableProjectileWeapon)) {
+        if (!options().hud.itemCounter.enabled() || (!stack.isStackable() && !holdingArrowDisplayableProjectileWeapon)) {
             if (!stack.is(ItemTags.SHULKER_BOXES) && !stack.is(ItemTags.BUNDLES)) {
                 return false;
             }
@@ -205,7 +205,7 @@ public class GuiMixin {
                     }
                 }
             } else if (
-                    (options().hud.countAllArrows && options().hud.showArrowCount && (isStackArrow(invStack) && isStackArrow(ItemHudTracker.getStack()) && !this.renderingHeldItem))
+                    (options().hud.countAllArrows && options().hud.showArrowCounter && (isStackArrow(invStack) && isStackArrow(ItemHudTracker.getStack()) && !this.renderingHeldItem))
                             || (holdingArrowDisplayableProjectileWeapon ? !options().hud.countAllArrows ? invStack.is(getProjectileFromActiveHand(this.minecraft).getItem()) && isStackArrow(invStack) : isStackArrow(invStack) : invStack.is(stack.getItem()))) {
                 if (itemMatchesInventoryItem(stack, invStack) || holdingArrowDisplayableProjectileWeapon || (options().hud.countAllArrows && isStackArrow(ItemHudTracker.getStack()))) {
                     count += invStack.getCount();
@@ -214,7 +214,7 @@ public class GuiMixin {
             }
         }
 
-        boolean trackedArrow = options().hud.showArrowCount && (holdingArrowDisplayableProjectileWeapon || (isStackArrow(ItemHudTracker.getStack()) && ARROW_OUTLINE));
+        boolean trackedArrow = options().hud.showArrowCounter && (holdingArrowDisplayableProjectileWeapon || (isStackArrow(ItemHudTracker.getStack()) && ARROW_OUTLINE));
         int maxCount = trackedArrow ? 64 : stack.getMaxStackSize();
 
         this.isDisplayingExactStack = false;
@@ -238,9 +238,9 @@ public class GuiMixin {
             boolean evenStack = count != 0 && count != 64 && count % maxCount == 0;
             this.isDisplayingExactStack = evenStack;
             if (!hasInfinity && count > maxCount) {
-                if (options().hud.itemCount != ItemCount.TOTAL && evenStack) {
+                if (options().hud.itemCounter != ItemCounter.TOTAL && evenStack) {
                     text = count / maxCount + "x " + maxItemCount;
-                } else if (options().hud.itemCount == ItemCount.STACKS) {
+                } else if (options().hud.itemCounter == ItemCounter.STACKS) {
                     int totalCount = 0;
                     for (int i : items) {
                         totalCount += i;
@@ -263,8 +263,8 @@ public class GuiMixin {
 
             HumanoidArm offhandArm = this.minecraft.player.getMainArm().getOpposite();
             boolean isArrow = isStackArrow(newStack) && ARROW_OUTLINE;
-            boolean arrowDisplayValid = (isArrow || holdingArrowDisplayableProjectileWeapon) && options().hud.itemCount == ItemCount.STACKS ? count < 65 : count < 100;
-            boolean shouldRenderArrowUi = options().hud.showArrowCount && !hasInfinity && arrowDisplayValid && (holdingArrowDisplayableProjectileWeapon || !this.renderingHeldItem);
+            boolean arrowDisplayValid = (isArrow || holdingArrowDisplayableProjectileWeapon) && options().hud.itemCounter == ItemCounter.STACKS ? count < 65 : count < 100;
+            boolean shouldRenderArrowUi = options().hud.showArrowCounter && !hasInfinity && arrowDisplayValid && (holdingArrowDisplayableProjectileWeapon || !this.renderingHeldItem);
             if (shouldRenderArrowUi && (isArrow || holdingArrowDisplayableProjectileWeapon)) {
                 graphics.blitSprite(RenderPipelines.GUI_TEXTURED, HOTBAR_OFFHAND_RIGHT_SPRITE,
                         getGuiWidth(graphics) + 90,
@@ -313,11 +313,11 @@ public class GuiMixin {
                 x += 6;
             } else if (count > 999) {
                 x -= 8;
-            } else if (count > 99 || (options().hud.itemCount == ItemCount.STACKS && this.isDisplayingRemainder)) {
+            } else if (count > 99 || (options().hud.itemCounter == ItemCounter.STACKS && this.isDisplayingRemainder)) {
                 x -= 5;
             }
             if (isLeftHanded(this.minecraft)) {
-                if (count > 64 && options().hud.itemCount == ItemCount.STACKS) {
+                if (count > 64 && options().hud.itemCounter == ItemCounter.STACKS) {
                     x += 25;
                     if (fullStacks > 99) {
                         x += 14;
@@ -347,7 +347,7 @@ public class GuiMixin {
                 this.renderWarningIndicator(this.minecraft, graphics, (int)(9 * 1.01), null);
             }
             graphics.text(this.minecraft.font, text, ((graphics.guiWidth() / 2) + (isLeftHanded(this.minecraft) ? -x - 18 : x)), graphics.guiHeight() - (hasInfinity ? 9 : 10), color, true);
-            if (options().accessibility.displayTotalWithStacks && count > 64 && (evenStack || options().hud.itemCount == ItemCount.STACKS)) {
+            if (options().accessibility.displayTotalWithStacks && count > 64 && (evenStack || options().hud.itemCounter == ItemCounter.STACKS)) {
                 graphics.text(this.minecraft.font, "(" + String.format("%,d", count) + ")", ((graphics.guiWidth() / 2) + ((isLeftHanded(this.minecraft) ? -x - 16 : x) + 5)), graphics.guiHeight() - 22, color, true);
             }
             return true;
@@ -370,9 +370,9 @@ public class GuiMixin {
      */
     @Unique
     private int getArmorX(Minecraft minecraft, EquipmentSlot slot) {
-        int setBase = !options().hud.itemCount.enabled() ? 0 : 32;
+        int setBase = !options().hud.itemCounter.enabled() ? 0 : 32;
         int base = setBase;
-        if (this.isRenderingItem && !isLeftHanded(minecraft) && options().hud.itemCount == ItemCount.STACKS) {
+        if (this.isRenderingItem && !isLeftHanded(minecraft) && options().hud.itemCounter == ItemCounter.STACKS) {
             base += this.isDisplayingRemainder ? 32 : this.isDisplayingExactStack ? 14 : 0;
             if (this.moveArmorOver) {
                 base += 4;
