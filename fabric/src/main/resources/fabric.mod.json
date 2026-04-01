@@ -1,24 +1,24 @@
 {
   "schemaVersion": 1,
-  "id": "qualityofqueso",
-  "version": "1.6.4+mc26.1",
-  "name": "Quality of Queso",
-  "description": "Chest searching, container filtering, precise inventory management, and more!",
+  "id": "${mod_id}",
+  "version": "${version}+${mc_version}",
+  "name": "${mod_name}",
+  "description": "${description}",
   "authors": [
     "MannyQUESO",
 	"Dillon8775"
   ],
   "contact": {
-    "homepage": "https://modrinth.com/mod/quality-of-queso",
-    "sources": "https://github.com/Dillon8775/Quality-of-Queso",
-    "issues": "https://github.com/Dillon8775/Quality-of-Queso/issues"
+    "homepage": "${homepage}",
+    "sources": "${sources}",
+    "issues": "${issues}"
   },
-  "license": "All rights reserved.",
-  "icon": "assets/qualityofqueso/icon.png",
+  "license": "${license}",
+  "icon": "${logo}.png",
   "environment": "*",
   "entrypoints": {
     "client": [
-      "net.dillon.qualityofqueso.QoQClient"
+      "net.dillon.qualityofqueso.ClientQoQ"
     ],
     "main": [
       "net.dillon.qualityofqueso.QoQ"
@@ -31,15 +31,15 @@
     "qualityofqueso.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.18.5",
+    "fabricloader": ">=${fabric_loader_version}",
     "minecraft": ">=26.1-pre.2",
-    "java": ">=25",
+    "java": ">=${java_version}",
     "fabric-api": "*"
   },
   "custom": {
     "modmenu": {
       "links": {
-        "modmenu.discord": "https://discord.gg/vfqEAn4YFy"
+        "modmenu.discord": "${discord}"
       }
     }
   }

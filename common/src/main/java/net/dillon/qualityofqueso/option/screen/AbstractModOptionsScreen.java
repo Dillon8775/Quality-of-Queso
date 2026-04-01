@@ -58,7 +58,7 @@ public abstract class AbstractModOptionsScreen extends OptionsSubScreen {
                         ConfirmLinkScreen.confirmLink(this, ModUtil.WIKI_LINK, false)).build());
         this.doneButton = linearLayout2.addChild(Button.builder(CommonComponents.GUI_DONE, button -> {
             if (Minecraft.getInstance().hasShiftDown()) {
-                Util.getPlatform().openFile(MultiLoader.PLATFORM.getConfigDir().toFile());
+                Util.getPlatform().openFile(MultiLoader.getPlatform().getConfigDir().toFile());
             } else {
                 this.onClose();
             }

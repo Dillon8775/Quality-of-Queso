@@ -3,8 +3,8 @@ package net.dillon.qualityofqueso.command;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import net.dillon.qualityofqueso.packet.GlowSearchC2SPayload;
-import net.dillon.qualityofqueso.platform.MultiLoader;
+import net.blay09.mods.balm.Balm;
+import net.dillon.qualityofqueso.packet.GlowSearchC2SPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
@@ -101,7 +101,7 @@ public class ItemFrameSearcherCommand {
         } else {
             context.sendSuccess(() -> Component.translatable("qualityofqueso.item_frame_searcher_command.executed.with_timer", query, radius, timer), true);
         }
-        MultiLoader.PLATFORM.sendToServer(new GlowSearchC2SPayload(query, Minecraft.getInstance().hasControlDown(), clear, timer, radius));
+        Balm.networking().sendToServer(new GlowSearchC2SPacket(query, Minecraft.getInstance().hasControlDown(), clear, timer, radius));
         return 0;
     }
 }

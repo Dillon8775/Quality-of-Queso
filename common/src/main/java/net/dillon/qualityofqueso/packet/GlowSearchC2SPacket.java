@@ -1,6 +1,6 @@
 package net.dillon.qualityofqueso.packet;
 
-import io.netty.buffer.ByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -11,22 +11,22 @@ import static net.dillon.qualityofqueso.util.ModUtil.ofQoQ;
 /**
  * The payload (or packet) for taking in the data required to make item frames glow.
  */
-public record GlowSearchC2SPayload(String query, boolean matchCase, boolean clear, int timer, int radius) implements CustomPacketPayload {
-    public static final Identifier ID = ofQoQ("glow_search");
-    public static final Type<GlowSearchC2SPayload> PAYLOAD_ID = new Type<>(ID);
-    public static final StreamCodec<ByteBuf, GlowSearchC2SPayload> CODEC =
+public record GlowSearchC2SPacket(String query, boolean matchCase, boolean clear, int timer, int radius) implements CustomPacketPayload {
+    private static final Identifier ID = ofQoQ("glow_search");
+    public static final Type<GlowSearchC2SPacket> PACKET_TYPE = new Type<>(ID);
+    public static final StreamCodec<RegistryFriendlyByteBuf, GlowSearchC2SPacket> CODEC =
             StreamCodec.composite(
                     ByteBufCodecs.STRING_UTF8,
-                    GlowSearchC2SPayload::query,
+                    GlowSearchC2SPacket::query,
                     ByteBufCodecs.BOOL,
-                    GlowSearchC2SPayload::matchCase,
+                    GlowSearchC2SPacket::matchCase,
                     ByteBufCodecs.BOOL,
-                    GlowSearchC2SPayload::clear,
+                    GlowSearchC2SPacket::clear,
                     ByteBufCodecs.INT,
-                    GlowSearchC2SPayload::timer,
+                    GlowSearchC2SPacket::timer,
                     ByteBufCodecs.INT,
-                    GlowSearchC2SPayload::radius,
-                    GlowSearchC2SPayload::new
+                    GlowSearchC2SPacket::radius,
+                    GlowSearchC2SPacket::new
             );
 
     /**
@@ -34,6 +34,6 @@ public record GlowSearchC2SPayload(String query, boolean matchCase, boolean clea
      */
     @Override
     public Type<? extends CustomPacketPayload> type() {
-        return PAYLOAD_ID;
+        return PACKET_TYPE;
     }
 }

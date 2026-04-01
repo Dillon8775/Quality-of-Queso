@@ -114,7 +114,7 @@ public abstract class BaseOptions<T> {
         if (this.file == null) {
             File baseDir = (this.customDir != null)
                     ? this.customDir
-                    : MultiLoader.PLATFORM.getConfigDir().toFile();
+                    : MultiLoader.getPlatform().getConfigDir().toFile();
 
             baseDir.mkdirs();
             this.file = new File(baseDir, this.fileName);

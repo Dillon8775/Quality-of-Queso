@@ -1,6 +1,5 @@
 package net.dillon.qualityofqueso.event;
 
-import net.dillon.qualityofqueso.QoQ;
 import net.dillon.qualityofqueso.keybind.ModKeybinds;
 import net.dillon.qualityofqueso.util.ModUtil;
 import net.minecraft.client.Minecraft;
@@ -11,10 +10,8 @@ import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
 
-import static net.dillon.qualityofqueso.util.ModUtil.*;
-
-@EventBusSubscriber(modid = QoQ.MOD_ID, value = Dist.CLIENT)
-public class ClientEvents {
+@EventBusSubscriber(modid = ModUtil.MOD_ID, value = Dist.CLIENT)
+public class NeoForgeClientEvents {
 
     @SubscribeEvent
     public static void registerKeybindings(RegisterKeyMappingsEvent event) {
@@ -27,37 +24,23 @@ public class ClientEvents {
         event.register(ModKeybinds.HIDE_RECIPE_BOOK);
     }
 
-    // Load multi-server config
     @SubscribeEvent
     public static void onClientJoin(ClientPlayerNetworkEvent.LoggingIn event) {
-        if (uoptions().main.multiServerConfigs) {
-            ModUtil.LOADED = true;
-            loadServerConfig();
-        }
-        if (isOnServer(Minecraft.getInstance()) && options().misc.alwaysPreventRageQuitting) {
-            options().misc.preventRageQuitting = true;
-            saveAll(Minecraft.getInstance());
-        }
-        sendClientOptionsToServer();
+        ClientEvents.onPlayerJoin(Minecraft.getInstance());
     }
 
     @SubscribeEvent
     public static void onLevelChange(LevelEvent.Load event) {
-        resetArmorHudState();
+        ClientEvents.afterLevelChangeOrRespawn();
     }
 
     @SubscribeEvent
     public static void onClientRespawn(ClientPlayerNetworkEvent.Clone event) {
-        resetArmorHudState();
+        ClientEvents.afterLevelChangeOrRespawn();
     }
 
-    // Unload multi-server config
     @SubscribeEvent
     public static void onClientDisconnect(ClientPlayerNetworkEvent.LoggingOut event) {
-        resetArmorHudState();
-
-        if (isOnServer(Minecraft.getInstance())) {
-            unloadServerConfig();
-        }
+        ClientEvents.onPlayerDisconnect(Minecraft.getInstance());
     }
 }

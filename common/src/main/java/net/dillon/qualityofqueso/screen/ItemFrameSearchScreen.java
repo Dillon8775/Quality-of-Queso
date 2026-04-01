@@ -1,8 +1,8 @@
 package net.dillon.qualityofqueso.screen;
 
+import net.blay09.mods.balm.Balm;
 import net.dillon.qualityofqueso.option.ModListOptions;
-import net.dillon.qualityofqueso.packet.GlowSearchC2SPayload;
-import net.dillon.qualityofqueso.platform.MultiLoader;
+import net.dillon.qualityofqueso.packet.GlowSearchC2SPacket;
 import net.dillon.qualityofqueso.util.ButtonUtil;
 import net.dillon.qualityofqueso.util.ModTexts;
 import net.dillon.qualityofqueso.util.ModUtil;
@@ -143,6 +143,6 @@ public class ItemFrameSearchScreen extends Screen {
         this.close(false);
         String text = this.searchField.getValue();
         boolean matchCase = text.startsWith(":");
-        MultiLoader.PLATFORM.sendToServer(new GlowSearchC2SPayload(text.substring(matchCase ? 1 : 0), matchCase, clear, timer, radius));
+        Balm.networking().sendToServer(new GlowSearchC2SPacket(text.substring(matchCase ? 1 : 0), matchCase, clear, timer, radius));
     }
 }

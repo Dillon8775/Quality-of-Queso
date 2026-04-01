@@ -1,8 +1,13 @@
 package net.dillon.qualityofqueso;
 
-import net.dillon.qualityofqueso.event.CommonEvents;
+import net.blay09.mods.balm.Balm;
+import net.blay09.mods.balm.fabric.platform.runtime.FabricLoadContext;
+import net.dillon.qualityofqueso.main.Main;
 import net.dillon.qualityofqueso.util.ModUtil;
 import net.fabricmc.api.ModInitializer;
+
+import static net.dillon.qualityofqueso.event.FabricCommonEvents.registerFabricCommands;
+import static net.dillon.qualityofqueso.sound.ModSoundEvents.registerSoundEvents;
 
 /**
  * The server-side (or main) entrypoint for {@code QoQ.}
@@ -11,11 +16,9 @@ public class QoQ implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        CommonEvents.registerPayloads();
-        CommonEvents.registerCommands();
+        Balm.initializeMod(ModUtil.MOD_ID, FabricLoadContext.INSTANCE, Main::initialize);
 
-        ModUtil.checkCommonConfigsAndCrash();
-
-        ModUtil.initializeSuccess();
+        registerFabricCommands();
+        registerSoundEvents();
     }
 }

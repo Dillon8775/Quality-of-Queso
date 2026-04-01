@@ -1,5 +1,8 @@
 package net.dillon.qualityofqueso;
 
+import net.blay09.mods.balm.Balm;
+import net.blay09.mods.balm.neoforge.platform.runtime.NeoForgeLoadContext;
+import net.dillon.qualityofqueso.main.ClientMain;
 import net.dillon.qualityofqueso.option.screen.ModOptionsScreen;
 import net.dillon.qualityofqueso.util.ModUtil;
 import net.neoforged.api.distmarker.Dist;
@@ -8,14 +11,12 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 
-@Mod(value = QoQ.MOD_ID, dist = Dist.CLIENT)
-public class QoQClient {
+@Mod(value = ModUtil.MOD_ID, dist = Dist.CLIENT)
+public class ClientQoQ {
 
-    /**
-     * Registers client-side events for QoQ.
-     */
-    public QoQClient(IEventBus modEventBus, ModContainer container) {
-        ModUtil.checkClientConfigsAndCrash();
+    public ClientQoQ(ModContainer container, IEventBus modEventBus) {
+        final var context = new NeoForgeLoadContext(container, modEventBus);
+        Balm.initializeMod(ModUtil.MOD_ID, context, ClientMain::cInitialize);
 
         container.registerExtensionPoint(
                 IConfigScreenFactory.class,

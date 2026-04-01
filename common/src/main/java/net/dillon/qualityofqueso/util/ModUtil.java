@@ -1,12 +1,13 @@
 package net.dillon.qualityofqueso.util;
 
+import net.blay09.mods.balm.Balm;
 import net.dillon.qualityofqueso.option.base.BaseOptions;
 import net.dillon.qualityofqueso.option.instance.ModClientOptions;
 import net.dillon.qualityofqueso.option.instance.ModCommonOptions;
 import net.dillon.qualityofqueso.option.instance.TrackedContainers;
 import net.dillon.qualityofqueso.option.instance.UniversalOptions;
 import net.dillon.qualityofqueso.packet.ClientPreferencesC2SPacket;
-import net.dillon.qualityofqueso.packet.GlowSearchC2SPayload;
+import net.dillon.qualityofqueso.packet.GlowSearchC2SPacket;
 import net.dillon.qualityofqueso.platform.MultiLoader;
 import net.dillon.qualityofqueso.screen.gui.widget.button.SwapButton;
 import net.dillon.qualityofqueso.server.ServerStorage;
@@ -49,7 +50,8 @@ import static net.dillon.qualityofqueso.util.GuiUtil.*;
  * Utility class for the Quality of Queso mod.
  */
 public class ModUtil {
-    public static final Component VERSION = Component.literal(MultiLoader.PLATFORM.getModVersion()).withStyle(ChatFormatting.GOLD);
+    public static final String MOD_ID = "qualityofqueso";
+    public static final Component VERSION = Component.literal(MultiLoader.getPlatform().getModVersion()).withStyle(ChatFormatting.GOLD);
     public static final String WIKI_LINK = "https://quality-of-queso.fandom.com/wiki/Quality_of_Queso_Wiki";
     public static final String SHOWCASE_VIDEO_LINK = "https://youtu.be/02wfcgHkPmQ";
     private static final Logger LOGGER = LoggerFactory.getLogger("Quality of Queso");
@@ -104,13 +106,6 @@ public class ModUtil {
      */
     public static void info(String message) {
         LOGGER.info(message);
-    }
-
-    /**
-     * Sends the successfully initialized message.
-     */
-    public static void initializeSuccess() {
-        info("Quality of Queso version " + MultiLoader.PLATFORM.getModVersion() + " (for " + MultiLoader.PLATFORM.getPlatformName() + ") loaded successfully!");
     }
 
     /**
@@ -209,7 +204,7 @@ public class ModUtil {
         String address = instance.getCurrentServer().ip;
         String safe = address.replace(":", "_").replace(".", "-");
 
-        File serverDir = MultiLoader.PLATFORM.getConfigDir()
+        File serverDir = MultiLoader.getPlatform().getConfigDir()
                 .resolve("qoq/server-configs")
                 .toFile();
 
@@ -285,46 +280,6 @@ public class ModUtil {
         Arrays.fill(ARMOR_TIMERS, 0);
         Arrays.fill(LAST_ARMOR_STACKS, null);
         CAN_ACTUALLY_RENDER_ARMOR_HOTBAR = false;
-    }
-
-    /**
-     * Checks all client-side configuration instances upon initialization, and crashes the game if one is null.
-     */
-    public static void checkClientConfigsAndCrash() {
-        boolean shouldStop = false;
-        String configName = "";
-        if (ModClientOptions.CLIENT.getInstance() == null) {
-            error("Quality of Queso's client-config is null! Please delete it and relaunch your game.");
-            shouldStop = true;
-            configName = BaseOptions.DEFAULT_CLIENT_FILE_NAME;
-        }
-        if (TrackedContainers.TRACKED_CONTAINERS.getInstance() == null) {
-            error("Quality of Queso's tracked containers config is null! Please delete it and relaunch your game.");
-            shouldStop = true;
-            configName = BaseOptions.DEFAULT_TRACKED_CONTAINERS_NAME;
-        }
-
-        stop(shouldStop, configName);
-    }
-
-    /**
-     * Checks all common configuration instances upon initialization, and crashes the game if one is null.
-     */
-    public static void checkCommonConfigsAndCrash() {
-        boolean shouldStop = false;
-        String configName = "";
-        if (UniversalOptions.UNIVERSAL.getInstance() == null) {
-            error("Quality of Queso's universal config is null! Please delete it and relaunch your game.");
-            shouldStop = true;
-            configName = "universal config";
-        }
-        if (ModCommonOptions.COMMON.getInstance() == null) {
-            error("Quality of Queso's common config is null! Please delete it and relaunch your game.");
-            shouldStop = true;
-            configName = BaseOptions.DEFAULT_COMMON_FILE_NAME;
-        }
-
-        stop(shouldStop, configName);
     }
 
     /**
@@ -415,7 +370,7 @@ public class ModUtil {
         return !client.isSingleplayer() && !(client.getCurrentServer() == null);
     }
 
-    public static void handleGlowPayload(GlowSearchC2SPayload payload, ServerPlayer player) {
+    public static void handleGlowPayload(ServerPlayer player, GlowSearchC2SPacket payload) {
         if (coptions().itemFrameSearching) {
             ServerLevel world = player.level();
 
@@ -542,16 +497,16 @@ public class ModUtil {
     /**
      * The server receives the player's request from the client to the server for their options.
      */
-    public static void handleClientToServerOptions(ClientPreferencesC2SPacket packet, UUID playerUuid) {
-        ServerStorage.setIncludeHotbar(playerUuid, packet.includeHotbar());
-        ServerStorage.setPerpendicularQuickMoving(playerUuid, packet.perpendicularQuickMoving());
+    public static void handleClientToServerOptions(ServerPlayer player, ClientPreferencesC2SPacket packet) {
+        ServerStorage.setIncludeHotbar(player.getUUID(), packet.includeHotbar());
+        ServerStorage.setPerpendicularQuickMoving(player.getUUID(), packet.perpendicularQuickMoving());
     }
 
     /**
      * Sends client options to server, for reference.
      */
     public static void sendClientOptionsToServer() {
-        MultiLoader.PLATFORM.sendToServer(new ClientPreferencesC2SPacket(options().management.includeHotbar, !options().management.includeHotbar || options().accessibility.perpendicularQuickMoving));
+        Balm.networking().sendToServer(new ClientPreferencesC2SPacket(options().management.includeHotbar, !options().management.includeHotbar || options().accessibility.perpendicularQuickMoving));
     }
 
     /**
