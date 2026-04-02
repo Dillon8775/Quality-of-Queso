@@ -34,8 +34,8 @@ public class QuickDropButton extends TransferButton {
     protected void renderBaseButtonTexture(String id, AbstractWidget buttonReference, GuiGraphicsExtractor graphics) {
         String transferableString = this.searchFieldText.startsWith("!") ?
                 "_excluding.png" : this.searchFieldText.startsWith("#") ?
-                "_tag.png" : this.searchFieldText.startsWith(":") ?
-                "_matching.png" : ".png";
+                                   "_tag.png" : this.searchFieldText.startsWith(":") ?
+                                                "_matching.png" : ".png";
         this.renderBaseTexture(graphics);
         graphics.blit(RenderPipelines.GUI_TEXTURED, ofQoQ("textures/gui/button/" + id + transferableString), buttonReference.getX() - 1, buttonReference.getY() - 1, 0.0F, 0.0F, 12, 12, 12, 12);
         this.renderHoveredTexture(graphics);

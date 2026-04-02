@@ -31,8 +31,10 @@ public abstract class EditBoxMixin extends AbstractWidget {
     private Font font;
     @Shadow
     private int textX;
+
     @Shadow
     public abstract boolean isBordered();
+
     @Shadow
     private boolean textShadow;
     @Shadow
@@ -41,8 +43,10 @@ public abstract class EditBoxMixin extends AbstractWidget {
     private String value;
     @Shadow
     private int displayPos;
+
     @Shadow
     public abstract int getInnerWidth();
+
     @Unique
     private static final WidgetSprites NEW_SPRITES = new WidgetSprites(
             ofQoQ("widget/search_field"), ofQoQ("widget/search_field_highlighted")
@@ -58,7 +62,7 @@ public abstract class EditBoxMixin extends AbstractWidget {
     @ModifyArg(method = "extractWidgetRenderState", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIII)V"), index = 1)
     private Identifier applySearchFieldTexture(Identifier original) {
         Identifier newId = NEW_SPRITES.get(this.isActive(), this.isFocused());
-        return (EditBox)(Object)this instanceof SearchField && !options().accessibility.useOldSearchBarTexture
+        return (EditBox) (Object) this instanceof SearchField && !options().accessibility.useOldSearchBarTexture
                 ? options().searching.transparentSearchBar ? ofQoQ("widget/search_field_transparent") : newId
                 : original;
     }
@@ -68,7 +72,7 @@ public abstract class EditBoxMixin extends AbstractWidget {
      */
     @Inject(method = "updateTextPosition", at = @At("TAIL"))
     private void rightAlignText(CallbackInfo ci) {
-        if (!((EditBox)(Object)this instanceof SearchField) || this.font == null || !options().searching.transparentSearchBar) {
+        if (!((EditBox) (Object) this instanceof SearchField) || this.font == null || !options().searching.transparentSearchBar) {
             return;
         }
 
@@ -83,8 +87,8 @@ public abstract class EditBoxMixin extends AbstractWidget {
     @Redirect(method = "extractWidgetRenderState", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;text(Lnet/minecraft/client/gui/Font;Lnet/minecraft/network/chat/Component;III)V"))
     private void applyShadowWithHint(GuiGraphicsExtractor graphicsExtractor, Font font, Component text, int x, int y, int color) {
         if (text == this.hint) {
-            graphicsExtractor.text(font, text, (((EditBox)(Object)this instanceof SearchField) && options().searching.transparentSearchBar
-                    ? x - (isInventoryScreen(Minecraft.getInstance().screen) ? 72 : 65) : x),
+            graphicsExtractor.text(font, text, (((EditBox) (Object) this instanceof SearchField) && options().searching.transparentSearchBar
+                            ? x - (isInventoryScreen(Minecraft.getInstance().screen) ? 72 : 65) : x),
                     y, color, this.textShadow);
         }
     }

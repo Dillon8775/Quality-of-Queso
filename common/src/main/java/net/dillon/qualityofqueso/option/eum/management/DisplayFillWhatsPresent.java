@@ -6,7 +6,8 @@ import net.minecraft.util.StringRepresentable;
 
 public enum DisplayFillWhatsPresent implements StringRepresentable {
     ALWAYS(0, "always", "qualityofqueso.options.display_fill_whats_present.always"),
-    FILTERED_CONTAINERS_ONLY(1, "filtered_containers_only", "qualityofqueso.options.display_fill_whats_present.filtered_containers_only"),;
+    FILTERED_CONTAINERS_ONLY(1, "filtered_containers_only", "qualityofqueso.options.display_fill_whats_present.filtered_containers_only"),
+    ;
 
     public static final Codec<DisplayFillWhatsPresent> Codec = StringRepresentable.fromEnum(DisplayFillWhatsPresent::values);
     private final int ordinal;

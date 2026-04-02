@@ -4,12 +4,10 @@
   "qualityofqueso.gui.open_config_directory.help": "Hold SHIFT+click to open config directory...",
   "qualityofqueso.gui.open_config_directory": "Open config directory...",
   "qualityofqueso.gui.learn_more": "Learn More...",
-
   "qualityofqueso.gui.search_item_frames": "Search for §oitem §r§fto make all item frames with §oitem §r§fglow.",
   "qualityofqueso.gui.search_item_frames.warning.line1": "§cPlease note: §r§fthis feature only works if the server has this mod installed",
   "qualityofqueso.gui.search_item_frames.warning.line2": "§oAND §r§fthe server has this feature enabled.",
   "qualityofqueso.gui.search_item_frames.line3": "You can also use the §b/itemframesearcher§r§f command if you'd like.",
-
   "qualityofqueso.gui.chest_search.search_filtering": "Match case with %s\n§r§fSearch multiple items with %s\n§r§fSearch item by tag with %s\n§r§fExclude search with %s\n§r§fRight-click to clear",
   "qualityofqueso.gui.search_item_frames.search_filtering": "Match case with §l:\n§r§fSearch multiple items with §o,",
   "qualityofqueso.gui.search": "Search...",
@@ -17,7 +15,6 @@
   "qualityofqueso.gui.clear": "Clear...",
   "qualityofqueso.gui.clear.tooltip": "Remove the glowing effect from all item frames within the specified radius.",
   "qualityofqueso.gui.close": "Close...",
-
   "qualityofqueso.item_frame_searcher_command.executed.without_timer": "Searched item frames containing \"%s\" within a %s block radius.",
   "qualityofqueso.item_frame_searcher_command.executed.with_timer": "Searched item frames containing \"%s\" within a %s block radius, removing glow after %s second(s).",
   "qualityofqueso.item_frame_searcher_command.executed.clear": "Removed glow from item frames within a %s block radius.",
@@ -28,73 +25,56 @@
   "qualityofqueso.item_frame_searcher.executed.without_timer.match_case": "Found %s item frame(s) with item name \"%s\" and set glowing indefinitely.",
   "qualityofqueso.item_frame_searcher.executed.with_timer": "Found %s item frame(s) containing \"%s\" and set glowing for %s seconds.",
   "qualityofqueso.item_frame_searcher.executed.with_timer.match_case": "Found %s item frame(s) with item name \"%s\" and set glowing for %s seconds.",
-
   "qualityofqueso.gui.search.placeholder": "Search items...",
   "qualityofqueso.gui.searching_options": "§6Searching...",
   "qualityofqueso.gui.title.searching_options": "Searching Options",
   "qualityofqueso.gui.searching_options.tooltip": "Toggle/configure Inventory and Container Searching features...",
-
   "qualityofqueso.gui.management_options": "§bManagement...",
   "qualityofqueso.gui.title.management_options": "Management Options",
   "qualityofqueso.gui.inventory_management_options.tooltip": "Toggle and configure inventory/container Management features, like sorting, transferring, etc...",
-
   "qualityofqueso.gui.button_display_options": "Button Display Options...",
   "qualityofqueso.gui.title.button_display_options": "Button Display Options",
   "qualityofqueso.gui.button_display_options.tooltip": "Configure if certain buttons should be visible...",
-
   "qualityofqueso.gui.item_frame_searching_options": "§6Item Frame Searching...",
   "qualityofqueso.gui.title.item_frame_searching_options": "Item Frame Searching Options",
   "qualityofqueso.gui.open_item_frame_search_gui": "Open Item Frame Search GUI...",
   "qualityofqueso.gui.open_item_frame_search_gui.disabled": "You must enable the Item Frame Searching option to use this feature!",
   "qualityofqueso.gui.open_item_frame_search_gui.null_world": "You must be in a world to use this feature!",
   "qualityofqueso.gui.item_frame_searching_options.tooltip": "Toggle/configure Item Frame Searching features...",
-
   "qualityofqueso.gui.hud_options": "§cHUD...",
   "qualityofqueso.gui.title.hud_options": "HUD Options",
   "qualityofqueso.gui.hud_options.tooltip": "Toggle/configure HUD features, like armor status and item counter...",
-
   "qualityofqueso.gui.item_counter_options": "§6Item Counter...",
   "qualityofqueso.gui.title.item_counter_options": "Item Counter Options",
   "qualityofqueso.gui.item_counter_options.tooltip": "Toggle/configure item counter options...",
-
   "qualityofqueso.gui.fog_options": "§7Fog...",
   "qualityofqueso.gui.title.fog_options": "Fog Options",
   "qualityofqueso.gui.fog_options.tooltip": "Configure fog settings...",
   "qualityofqueso.gui.fog_options.disabled": "You have disabled fog functions.",
-
   "qualityofqueso.gui.fov_effects": "§aFOV Effects...",
   "qualityofqueso.gui.title.fov_effects": "Field of View Modifiers",
   "qualityofqueso.gui.fov_effects.tooltip": "Configure what can change your FOV...",
   "qualityofqueso.gui.fov_effects.disabled": "You have disabled fov modifications.",
-
   "qualityofqueso.gui.function_disabled": " You can re-enable them in the universal config file. You will have to restart your game for it to take effect.",
-
   "qualityofqueso.gui.misc_options": "Misc...",
   "qualityofqueso.gui.title.misc_options": "Miscellaneous Options",
   "qualityofqueso.gui.misc_options.tooltip": "Configure other Quality of Queso features...",
-
   "qualityofqueso.gui.accessibility_options": "Accessibility...",
   "qualityofqueso.gui.title.accessibility_options": "Accessibility Options",
   "qualityofqueso.gui.accessibility_options.tooltip": "Configure Quality of Queso to your liking...",
-
   "qualityofqueso.gui.showcase_video": "§6Showcase Video...",
   "qualityofqueso.gui.showcase_video.tooltip": "Watch a video that goes over the mod's biggest features!",
-
   "qualityofqueso.gui.ask_questions": "Ask questions...",
   "qualityofqueso.gui.ask_questions.tooltip": "Join Dillon's Discord and ask more questions...",
   "qualityofqueso.gui.report_bugs": "Report a bug...",
   "qualityofqueso.gui.report_bugs.tooltip": "Report a bug on the GitHub repository...",
-
   "qualityofqueso.gui.open_screenshots_folder": "Open Screenshots Folder...",
   "qualityofqueso.gui.open_world_directory": "Open World Directory...",
-
   "qualityofqueso.gui.on": "ON",
   "qualityofqueso.gui.off": "OFF",
   "qualityofqueso.gui.yes": "YES",
   "qualityofqueso.gui.no": "NO",
-
   "qualityofqueso.gui.no_tags_found": "No tags found.",
-
   "qualityofqueso.gui.applicable_on": "§7§o§nCan be added to...",
   "qualityofqueso.gui.all_purpose": "Any tool, weapon or armor piece",
   "qualityofqueso.gui.armor": "Armor",
@@ -109,7 +89,6 @@
   "qualityofqueso.gui.crossbows": "Crossbows",
   "qualityofqueso.gui.tools": "Tools",
   "qualityofqueso.gui.fishing_rods": "Fishing Rods",
-
   "qualityofqueso.gui.transfer_container_button.with_cursor_stack": "Move all \"%s\" to inventory\n%s",
   "qualityofqueso.gui.transfer_container_button.with_search_query.exclude": "Move all items §onot§r containing \"%s\" to inventory",
   "qualityofqueso.gui.transfer_container_button.with_search_query.tag": "Move all items with tag \"%s\" to inventory",
@@ -118,36 +97,28 @@
   "qualityofqueso.gui.transfer_container_button.brewing_stand": "Move all potions to inventory",
   "qualityofqueso.gui.transfer_container_button.furnace": "Move \"%s\" to inventory",
   "qualityofqueso.gui.transfer_container_button": "Move all items in this container to inventory",
-
   "qualityofqueso.gui.transfer_inventory_button.with_cursor_stack": "Move all \"%s\" to this container\n%s",
   "qualityofqueso.gui.transfer_inventory_button.with_search_query.exclude": "Move all items §onot§r containing \"%s\" to this container",
   "qualityofqueso.gui.transfer_inventory_button.with_search_query.tag": "Move all items with tag \"%s\" to this container",
   "qualityofqueso.gui.transfer_inventory_button.with_search_query.match": "Move all \"%s\" to this container",
   "qualityofqueso.gui.transfer_inventory_button.with_search_query": "Move all items containing \"%s\" to this container",
   "qualityofqueso.gui.transfer_inventory_button": "Move all items in inventory to this container",
-
   "qualityofqueso.gui.transfer_button.match_cursor_stack": "Hold shift to only move items with matching components",
   "qualityofqueso.gui.transfer_button.matching_cursor_stack": "Only moving items with matching components",
-
   "qualityofqueso.gui.quick_drop_button.with_search_query.exclude": "Throw out all items §onot§r containing \"%s\" in this container",
   "qualityofqueso.gui.quick_drop_button.with_search_query.tag": "Throw out all items with tag \"%s\" in this container",
   "qualityofqueso.gui.quick_drop_button.with_search_query.match": "Throw out all \"%s\" in this container",
   "qualityofqueso.gui.quick_drop_button.with_search_query": "Throw out all items containing \"%s\" in this container",
   "qualityofqueso.gui.quick_drop_button": "Throw out all items in this container\nHold shift to only drop one of each item",
-
   "qualityofqueso.gui.quick_drop_button.with_search_query.exclude.inventory": "Drop all items §onot§r containing \"%s\"",
   "qualityofqueso.gui.quick_drop_button.with_search_query.tag.inventory": "Drop all items with tag \"%s\"",
   "qualityofqueso.gui.quick_drop_button.with_search_query.match.inventory": "Drop all \"%s\"",
   "qualityofqueso.gui.quick_drop_button.with_search_query.inventory": "Drop all items containing \"%s\"",
   "qualityofqueso.gui.quick_drop_button.inventory": "Drop all items\nHold shift to only drop one of each item\nDoes not drop armor items or offhand items",
-
   "qualityofqueso.gui.swap_button": "Swap all items in this container with inventory, with it's respective slot",
-
   "qualityofqueso.gui.sort_button": "Sort all items in this container\nSorting %s\nRight-click to change sort mode",
-
   "qualityofqueso.gui.include_hotbar": "Including hotbar\nClick to disable",
   "qualityofqueso.gui.exclude_hotbar": "Ignoring hotbar\nClick to include",
-
   "qualityofqueso.gui.filtered_mode": "This container is marked as \"filtered\"\nMode: %s\n%s",
   "qualityofqueso.gui.item_filtered": "Item Filtered",
   "qualityofqueso.gui.tag_filtered": "Tag Filtered\nAny item matching a filtered item's tag will be moved",
@@ -158,27 +129,21 @@
   "qualityofqueso.gui.move_anything": "Moving anything",
   "qualityofqueso.gui.disable_move_anything": "\nClick to only move matching items",
   "qualityofqueso.gui.mark_container": "\nShift + left-click this container to mark it as \"filtered\"",
-
   "qualityofqueso.gui.save_filtered_container": "Marked %s (%s, %s, %s) as a %s.",
   "qualityofqueso.gui.remove_filtered_container": "Removed %s (%s, %s, %s) as a %s.",
   "qualityofqueso.gui.filtered_container": "filtered container",
-
   "qualityofqueso.gui.include_transportables": "Searching inside transportable containers\nClick to disable",
   "qualityofqueso.gui.exclude_transportables": "Ignoring contents of transportable containers\nClick to include",
-
   "qualityofqueso.gui.always_quick_move": "Always quick moving\nClick to disable",
   "qualityofqueso.gui.shift_to_quick_move": "Shift to quickly move items\nClick to always quick move",
-
   "qualityofqueso.gui.clear_excluded_slots": "Clear all excluded slots\n%s",
   "qualityofqueso.gui.save_slots": "Right-click to save selected slots",
   "qualityofqueso.gui.saving_slots": "Saving excluded slots",
-
   "qualityofqueso.gui.blacklisted_server_button_prefix": "§6§lQuality of Queso§r",
   "qualityofqueso.gui.server_already_blacklisted": "This server is already blacklisted!",
   "qualityofqueso.gui.add_blacklisted_server": "Disable the mod from functioning on this server.",
   "qualityofqueso.gui.remove_blacklisted_server": "Allow the mod to function on this server.",
   "qualityofqueso.gui.server_not_blacklisted": "This server is not blacklisted!",
-
   "key.category.qualityofqueso.quality_of_queso": "Quality of Queso",
   "qualityofqueso.quick_equip": "Quick Equip",
   "qualityofqueso.move_container": "Move Container (+ctrl)",
@@ -187,13 +152,10 @@
   "qualityofqueso.swap_items": "Swap Items (+ctrl)",
   "qualityofqueso.open_item_frame_search_gui": "Open Item Frame Search GUI",
   "qualityofqueso.hide_recipe_book": "Hide Recipe Book (+ctrl)",
-
   "qualityofqueso.created_server_config": "(QoQ) New configuration for this server (%s) has been created and loaded.",
   "qualityofqueso.loaded_server_config": "QoQ config for this server (%s) has been loaded.",
   "qualityofqueso.unloaded_server_config": "QoQ config for %s has been unloaded, now using global config.",
-
   "qualityofqueso.gui.disconnect": "Control that anger of yours!\n\nManny struggles with this...",
-
   "qualityofqueso.options.container_searching": "Container Searching",
   "qualityofqueso.options.container_searching.tooltip": "Adds a search bar in containers, to search for items.",
   "qualityofqueso.options.inventory_searching": "Inventory Searching",
@@ -210,17 +172,14 @@
   "qualityofqueso.options.save_search_text.tooltip": "Saves the text in search bars when exiting the GUI.",
   "qualityofqueso.options.transparent_search_bar": "Transparent Search Bar",
   "qualityofqueso.options.transparent_search_bar.tooltip": "Makes the search bar in containers and your inventory transparent. Only the text typed in the bar will render.",
-
   "qualityofqueso.options.button_layout": "Layout Buttons",
   "qualityofqueso.options.button_layout.horizontal": "§aHorizontally",
   "qualityofqueso.options.button_layout.horizontal.tooltip": "Displays all management buttons horizontally across the GUI screen.",
   "qualityofqueso.options.button_layout.vertical": "§6Vertically",
   "qualityofqueso.options.button_layout.vertical.tooltip": "Displays all management buttons vertically in a separate, small box, beside of the GUI screen.",
-
   "qualityofqueso.options.shortcut_key_or_button": "§6Shortcut Key §6§l§oOR §r§f§6Button",
   "qualityofqueso.options.shortcut_key_only": "§eShortcut Key §e§l§oONLY",
   "qualityofqueso.options.management_button.off": "§7§lOFF",
-
   "qualityofqueso.options.transferring": "Transferring",
   "qualityofqueso.options.transferring.tooltip": "Quickly transfer items.\n\nShortcut keys:\nCTRL + %s (inventory -> container)\nCTRL + %s (container -> inventory)",
   "qualityofqueso.options.transferring.shortcut_key_or_button.tooltip": "Use shortcut key or button to transfer items.",
@@ -243,7 +202,6 @@
   "qualityofqueso.options.drag_sorting.tooltip": "Hold §lALT §r§fand drag-click to manually pick slots.\nHold §lALT + SHIFT §r§fto manually exclude slots from being affected.\n\nNote: if moving to an excluded slot, the item will still move to that slot. This feature only applies to searching and picking items to move.",
   "qualityofqueso.options.save_excluded_slots": "Save Excluded Slots",
   "qualityofqueso.options.save_excluded_slots.tooltip": "Saves all excluded slots when closing the GUI, and restores them when opening a container of the same size.",
-
   "qualityofqueso.options.display_include_hotbar": "Include Hotbar Button",
   "qualityofqueso.options.display_include_hotbar.always": "§a§lALWAYS",
   "qualityofqueso.options.display_include_hotbar.always.tooltip": "Display the include hotbar button in both container screens, and in your inventory.",
@@ -258,14 +216,12 @@
   "qualityofqueso.options.display_search_transportables.tooltip": "Displays the \"search inside transportables\" button, for searching inside transportable containers.",
   "qualityofqueso.options.display_always_quick_move": "\"Always Quick Move\" Button",
   "qualityofqueso.options.display_always_quick_move.tooltip": "Displays the \"always quick move\" button, which toggles the requirement of holding shift to quickly move items.",
-
   "qualityofqueso.options.item_frame_searching": "Item Frame Searching",
   "qualityofqueso.options.item_frame_searching.tooltip": "Search for an item frame with a specific item inside of it and make it glow.\n\nShortcut key = %s",
   "qualityofqueso.options.item_frame_search_radius": "Radius",
   "qualityofqueso.options.item_frame_search_radius.tooltip": "Determines the radius to search for item frames.",
   "qualityofqueso.options.item_frame_search_glow_duration": "§eGlow Duration",
   "qualityofqueso.options.item_frame_search_glow_duration.tooltip": "Specifies how long item frames will remain glowing.\n\n§cIndefinite §r§fmeans item frames will remain glowing forever, or until cleared by the player.",
-
   "qualityofqueso.options.armor_status": "Armor Status",
   "qualityofqueso.options.armor_status.tooltip": "Display your armor items near your hotbar.",
   "qualityofqueso.options.armor_status.on": "§6§lON",
@@ -273,7 +229,6 @@
   "qualityofqueso.options.armor_status.on_update": "§bOn Update",
   "qualityofqueso.options.armor_status.on_update.tooltip": "Display armor status when the armor item updates (ex. durability changes, breaks, or item is changed).",
   "qualityofqueso.options.armor_status.off": "§7OFF",
-
   "qualityofqueso.options.item_counter": "Item Counter",
   "qualityofqueso.options.item_counter.tooltip": "Displays the total amount of the item you are holding next to your hotbar.",
   "qualityofqueso.options.item_counter.total": "§aTotal",
@@ -291,12 +246,10 @@
   "qualityofqueso.options.count_all_arrows.tooltip": "Counts all types of arrows in your inventory.",
   "qualityofqueso.options.count_containers": "Count Containers",
   "qualityofqueso.options.count_containers.tooltip": "Searches transportable containers in your inventory (like shulker boxes and bundles) for your held item, and adds it to the counter.",
-
   "qualityofqueso.options.colored_highlighting": "Colored Highlighting",
   "qualityofqueso.options.colored_highlighting.tooltip": "Highlights slots with a color based on the item durability.",
   "qualityofqueso.options.warning_indicators": "Warning Indicators",
   "qualityofqueso.options.warning_indicators.tooltip": "Displays a warning indicator next to an item that's durability is 10% or less.",
-
   "qualityofqueso.options.elytra_alarm": "Elytra Alarm",
   "qualityofqueso.options.elytra_alarm.tooltip": "Plays an alarm sound after falling %s blocks without an elytra equipped (if you have an elytra in your inventory).",
   "qualityofqueso.options.elytra_alarm.on": "§6§lON",
@@ -323,7 +276,6 @@
   "qualityofqueso.options.always_prevent_rage_quitting.tooltip": "Automatically enables \"Prevent Rage Quitting\" whenever you join a server.",
   "qualityofqueso.options.fortnite_battle_pass": "Fortnite Battle Pass",
   "qualityofqueso.options.fortnite_battle_pass.tooltip": "Just, don't...\n§cWarning: the panorama will move very fast.",
-
   "qualityofqueso.options.all_fog": "All Fog",
   "qualityofqueso.options.all_fog.tooltip": "Remove Minecraft's annoying fog!",
   "qualityofqueso.options.all_fog.disabled": "\n\nThis feature will not work because \"applyFogFunction\" is disabled. Re-enable it by going into the universal QoQ config file.",
@@ -333,7 +285,6 @@
   "qualityofqueso.options.nether_fog.tooltip": "Toggle nether fog §oonly.\n§r§fThis allows you to change the fog intensity in the nether.",
   "qualityofqueso.options.nether_fog_intensity": "Nether Fog Intensity",
   "qualityofqueso.options.nether_fog_intensity.tooltip": "Determines the intensity for nether fog.\nThis only works if \"Nether Fog\" is enabled.",
-
   "qualityofqueso.options.helpful_tooltips": "Helpful Tooltips",
   "qualityofqueso.options.helpful_tooltips.tooltip": "Displays helpful tooltips for this mod.",
   "qualityofqueso.options.prevent_e_from_typing": "Prevent E from typing",
@@ -373,10 +324,8 @@
   "qualityofqueso.options.elytra_alarm_sound_delay.tooltip": "Determines the time (in ticks) that the elytra alarm can play.",
   "qualityofqueso.options.twelve_hour_format": "12-Hour Format",
   "qualityofqueso.options.twelve_hour_format.tooltip": "Use the 12-hour clock format when displaying times with the \"Show Time\" debug entries.",
-
   "qualityofqueso.options.enable_mod": "Enable Mod",
   "qualityofqueso.options.enable_mod.tooltip": "Enables all Quality of Queso features.",
-
   "qualityofqueso.options.menu_button": "Menu Button",
   "qualityofqueso.options.menu_button.everywhere": "§aEverywhere",
   "qualityofqueso.options.menu_button.everywhere.tooltip": "Display the Quality of Queso menu button on title §oand §r§fpause screen.",
@@ -388,12 +337,10 @@
   "qualityofqueso.options.menu_button.title_only.tooltip": "Only display the Quality of Queso menu button on title screen.",
   "qualityofqueso.options.menu_button.off": "§7OFF",
   "qualityofqueso.options.menu_button.off.tooltip": "Do not display the Quality of Queso menu button.\n\nYou should only do this if you have another way of accessing the menu (ex. via Mod Menu or NeoForge's mod list).",
-
   "qualityofqueso.options.multi_server_configs": "Multi-Server Configs",
   "qualityofqueso.options.multi_server_configs.tooltip": "Create separate Quality of Queso configs for each server that you play on.",
   "qualityofqueso.options.blacklisted_servers": "Add blacklisted servers...",
   "qualityofqueso.options.blacklisted_servers.tooltip": "Add blacklisted servers here.\n\nAll features will be disabled on any blacklisted server.\n\nSeparate each blacklisted server with a comma (§l,§r§f)",
-
   "qualityofqueso.options.fov_effects.sprinting": "Sprinting",
   "qualityofqueso.options.fov_effects.sprinting.tooltip": "Toggle sprinting modifying FOV.",
   "qualityofqueso.options.fov_effects.flying": "Flying",
@@ -414,6 +361,5 @@
   "qualityofqueso.options.fov_effects.bows.quick_pull.tooltip": "Quickly zooms in when pulling back a bow.",
   "qualityofqueso.options.fov_effects.bows.off.tooltip": "No FOV change when using a bow.",
   "qualityofqueso.options.fov_effects.bows.tooltip": "Toggle pulling back bows modifying FOV.",
-
   "qualityofqueso.fortnite_battle_pass": "Fortnite battle pass..."
 }

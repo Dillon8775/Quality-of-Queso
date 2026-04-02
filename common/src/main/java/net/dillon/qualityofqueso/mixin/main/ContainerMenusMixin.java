@@ -26,7 +26,7 @@ public class ContainerMenusMixin {
     private void redirectQuickMove(Player player, int slotIndex, CallbackInfoReturnable<ItemStack> cir) {
         UUID uuid = player.getUUID();
         if (ServerStorage.shouldUsePerpendicularQuickMoving(uuid)) {
-            AbstractContainerMenu menu = (AbstractContainerMenu)(Object)this;
+            AbstractContainerMenu menu = (AbstractContainerMenu) (Object) this;
 
             Slot slot = menu.slots.get(slotIndex);
             if (slot == null || !slot.hasItem()) {

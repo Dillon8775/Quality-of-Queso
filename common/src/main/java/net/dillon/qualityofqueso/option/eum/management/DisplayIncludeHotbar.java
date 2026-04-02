@@ -6,7 +6,8 @@ import net.minecraft.util.StringRepresentable;
 
 public enum DisplayIncludeHotbar implements StringRepresentable {
     ALWAYS(0, "always", "qualityofqueso.options.display_include_hotbar.always"),
-    CONTAINER_SCREENS_ONLY(1, "container_screens_only", "qualityofqueso.options.display_include_hotbar.container_screens_only"),;
+    CONTAINER_SCREENS_ONLY(1, "container_screens_only", "qualityofqueso.options.display_include_hotbar.container_screens_only"),
+    ;
 
     public static final Codec<DisplayIncludeHotbar> Codec = StringRepresentable.fromEnum(DisplayIncludeHotbar::values);
     private final int ordinal;

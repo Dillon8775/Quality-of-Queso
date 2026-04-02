@@ -16,7 +16,7 @@ public class AbstractRecipeBookScreenMixin {
      */
     @Inject(method = "hasClickedOutside", at = @At("HEAD"), cancellable = true)
     private void hasClickedOnBoxInInventory(double mx, double my, int xo, int yo, CallbackInfoReturnable<Boolean> cir) {
-        WidgetLayout layout = ((WidgetLayoutHolder)this).getWidgetLayout();
+        WidgetLayout layout = ((WidgetLayoutHolder) this).getWidgetLayout();
         WidgetLayout.hasClickedOnBox(mx, my, layout, cir);
     }
 }

@@ -89,11 +89,11 @@ public class ContainerTracker {
         String world = worldKey(level);
         String dimension = level.dimension() == Level.END ? "minecraft:end"
                 : level.dimension() == Level.NETHER ? "minecraft:nether"
-                : level.dimension() == Level.OVERWORLD ? "minecraft:overworld" : level.dimension().toString();
+                  : level.dimension() == Level.OVERWORLD ? "minecraft:overworld" : level.dimension().toString();
         BlockEntity blockEntity = level.getBlockEntity(pos);
         String container = blockEntity instanceof ShulkerBoxBlockEntity ? "minecraft:shulker_box"
                 : blockEntity instanceof BarrelBlockEntity ? "minecraft:barrel"
-                : blockEntity instanceof ChestBlockEntity ? "minecraft:chest" : "unknown_container";
+                  : blockEntity instanceof ChestBlockEntity ? "minecraft:chest" : "unknown_container";
         return world + " / " + dimension + " / " + container + " (" + pos.getX() + ", " + pos.getY() + ", " + pos.getZ() + ")";
     }
 
@@ -162,6 +162,7 @@ public class ContainerTracker {
 
     /**
      * Toggles tracking state for a chest.
+     *
      * @return {@code true} if now tracked after toggling.
      */
     public static boolean toggleTracked(Level level, BlockPos pos) {

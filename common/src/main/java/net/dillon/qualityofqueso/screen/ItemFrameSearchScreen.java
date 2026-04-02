@@ -61,7 +61,7 @@ public class ItemFrameSearchScreen extends Screen {
         this.setInitialFocus(this.searchField);
     }
 
-     /**
+    /**
      * Basic rendering; render the {@code search field}, other texts and tooltips, and basic background.
      */
     @Override

@@ -22,7 +22,8 @@ import static net.dillon.qualityofqueso.util.ModUtil.*;
 
 @Mixin(PauseScreen.class)
 public class PauseScreenMixin extends Screen {
-    @Shadow @Final
+    @Shadow
+    @Final
     private boolean showPauseMenu;
     @Shadow
     private Button disconnectButton;

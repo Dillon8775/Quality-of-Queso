@@ -86,9 +86,9 @@ public class TransferButton extends Button {
     protected String getAppendedTexture() {
         String transferableString = !this.screenHandler.getCarried().isEmpty() ?
                 "_cursor_stack.png" : this.searchFieldText.startsWith("!") ?
-                "_excluding.png" : this.searchFieldText.startsWith("#") ?
-                "_tag.png" : this.searchFieldText.startsWith(":") ?
-                "_matching.png" : ".png";
+                                      "_excluding.png" : this.searchFieldText.startsWith("#") ?
+                                                         "_tag.png" : this.searchFieldText.startsWith(":") ?
+                                                                      "_matching.png" : ".png";
         String appended = this.transferrableButton ? transferableString : ".png";
         Screen screen = Minecraft.getInstance().screen;
 
@@ -207,9 +207,9 @@ public class TransferButton extends Button {
                     Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query.tag" + this.getAppendedTooltip(), this.searchFieldText.substring(1)) :
                     this.searchFieldText.startsWith("!") ?
                             Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query.exclude" + this.getAppendedTooltip(), this.searchFieldText.substring(1)) :
-                            this.searchFieldText.startsWith(":") ?
-                                    Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query.match" + this.getAppendedTooltip(), this.searchFieldText.substring(1)) :
-                                    Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query" + this.getAppendedTooltip(), this.searchFieldText), graphics, this.font, mouseX, mouseY);
+                    this.searchFieldText.startsWith(":") ?
+                            Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query.match" + this.getAppendedTooltip(), this.searchFieldText.substring(1)) :
+                            Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.with_search_query" + this.getAppendedTooltip(), this.searchFieldText), graphics, this.font, mouseX, mouseY);
         } else {
             ButtonUtil.drawTooltip(this.getTooltipToRender(), graphics, this.font, mouseX, mouseY);
         }

@@ -11,7 +11,8 @@ import static net.dillon.qualityofqueso.util.ModUtil.ofQoQ;
 /**
  * The payload (or packet) for taking in the data required to make item frames glow.
  */
-public record GlowSearchC2SPacket(String query, boolean matchCase, boolean clear, int timer, int radius) implements CustomPacketPayload {
+public record GlowSearchC2SPacket(String query, boolean matchCase, boolean clear, int timer,
+                                  int radius) implements CustomPacketPayload {
     private static final Identifier ID = ofQoQ("glow_search");
     public static final Type<GlowSearchC2SPacket> PACKET_TYPE = new Type<>(ID);
     public static final StreamCodec<RegistryFriendlyByteBuf, GlowSearchC2SPacket> CODEC =

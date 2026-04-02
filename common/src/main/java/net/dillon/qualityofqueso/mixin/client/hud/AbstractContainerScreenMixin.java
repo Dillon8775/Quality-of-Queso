@@ -77,7 +77,9 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
     @Shadow
     @Nullable
     protected Slot hoveredSlot;
-    @Shadow @Nullable
+
+    @Shadow
+    @Nullable
     protected abstract Slot getHoveredSlot(double x, double y);
 
     @Unique
@@ -380,8 +382,8 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
     }
 
     /**
-     * @return if the button should be active.
      * @param isPlayerInventory means button status is directed towards the transfer inventory button
+     * @return if the button should be active.
      */
     @Unique
     private boolean shouldButtonBeActive(boolean isPlayerInventory, @Nullable Inventory playerInventory, boolean applyFillWhatsPresentFilter) {
@@ -800,19 +802,19 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             if (ContainerTracker.IS_TRACKED_CONTAINER || !options().buttonDisplayOptions.displayFillWhatsPresent.filteredContainersOnly() &&
                     (containerScreen && options().management.containerFiltering && options().management.transferring.orKeyOnly())) {
                 this.fillWhatsPresentButton = this.addWidget(
-                    new FillWhatsPresentButton(
-                            this.menu,
-                            this.font,
-                            this.getSearchFieldText(),
-                            "fill_whats_present",
-                            b -> {
-                                if (!ContainerTracker.IS_TRACKED_CONTAINER) {
-                                    options().management.fillWhatsPreset = !options().management.fillWhatsPreset;
-                                    ModClientOptions.CLIENT.save();
-                                }
-                            },
-                            this.minecraft,
-                            this.screen));
+                        new FillWhatsPresentButton(
+                                this.menu,
+                                this.font,
+                                this.getSearchFieldText(),
+                                "fill_whats_present",
+                                b -> {
+                                    if (!ContainerTracker.IS_TRACKED_CONTAINER) {
+                                        options().management.fillWhatsPreset = !options().management.fillWhatsPreset;
+                                        ModClientOptions.CLIENT.save();
+                                    }
+                                },
+                                this.minecraft,
+                                this.screen));
             }
 
             // SORT BUTTON
@@ -1114,7 +1116,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             return;
         }
 
-        if (isExcludingSlots((AbstractContainerScreen<?>)(Object)this)) {
+        if (isExcludingSlots((AbstractContainerScreen<?>) (Object) this)) {
             this.selectSlot(event, cir);
         }
         if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT && this.hoveredSlot != null && isQuicklyEquippable(this.hoveredSlot.getItem())) {
@@ -1145,7 +1147,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             return;
         }
 
-        if (isExcludingSlots((AbstractContainerScreen<?>)(Object)this)) {
+        if (isExcludingSlots((AbstractContainerScreen<?>) (Object) this)) {
             this.selectSlot(event, cir);
         }
     }

@@ -34,7 +34,7 @@ public abstract class ItemFrameMixin extends HangingEntity implements GlowCountd
 
             // Once timer reaches 0, turn off glow effect
             if (this.glowTicksRemaining == 0) {
-                ((ItemFrame)(Object)this).setGlowingTag(false);
+                ((ItemFrame) (Object) this).setGlowingTag(false);
             }
         }
         super.tick();

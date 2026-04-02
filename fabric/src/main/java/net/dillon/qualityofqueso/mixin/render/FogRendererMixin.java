@@ -17,11 +17,11 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 @Mixin(FogRenderer.class)
 public class FogRendererMixin {
 
-	/**
-	 * Removes fog from the game when using the keybind.
-	 */
-	@Inject(method = "setupFog", at = @At("RETURN"), locals = LocalCapture.CAPTURE_FAILHARD)
-	private void modifyFogEnd(Camera camera, int renderDistanceInChunks, DeltaTracker deltaTracker, float darkenWorldAmount, ClientLevel level, CallbackInfoReturnable<FogData> cir, float partialTickTime, float renderDistanceInBlocks, FogType fogType, Entity entity, FogData fog, float renderDistanceFogSpan) {
-		ModUtil.handleFog(entity, fogType, fog);
-	}
+    /**
+     * Removes fog from the game when using the keybind.
+     */
+    @Inject(method = "setupFog", at = @At("RETURN"), locals = LocalCapture.CAPTURE_FAILHARD)
+    private void modifyFogEnd(Camera camera, int renderDistanceInChunks, DeltaTracker deltaTracker, float darkenWorldAmount, ClientLevel level, CallbackInfoReturnable<FogData> cir, float partialTickTime, float renderDistanceInBlocks, FogType fogType, Entity entity, FogData fog, float renderDistanceFogSpan) {
+        ModUtil.handleFog(entity, fogType, fog);
+    }
 }

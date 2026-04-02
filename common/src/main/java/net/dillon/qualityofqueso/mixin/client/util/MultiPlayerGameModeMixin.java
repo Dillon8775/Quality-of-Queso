@@ -55,7 +55,7 @@ public class MultiPlayerGameModeMixin {
         boolean tracked = ContainerTracker.toggleTracked(minecraft.level, pos);
         Component container = blockEntity instanceof ShulkerBoxBlockEntity ? Component.literal("shulker box").withStyle(ChatFormatting.LIGHT_PURPLE)
                 : blockEntity instanceof BarrelBlockEntity ? Component.literal("barrel").withStyle(ChatFormatting.GOLD)
-                : Component.literal("chest").withStyle(ChatFormatting.GOLD);
+                  : Component.literal("chest").withStyle(ChatFormatting.GOLD);
         minecraft.player.sendSystemMessage(Component.translatable(
                 tracked ? "qualityofqueso.gui.save_filtered_container"
                         : "qualityofqueso.gui.remove_filtered_container",

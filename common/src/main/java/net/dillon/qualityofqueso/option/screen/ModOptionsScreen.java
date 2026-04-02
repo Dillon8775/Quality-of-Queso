@@ -89,7 +89,7 @@ public class ModOptionsScreen extends AbstractModOptionsScreen {
             this.minecraft.setScreen(new MiscOptionsScreen(this));
         }).tooltip(
                 Tooltip.create(Component.translatable("qualityofqueso.gui.misc_options.tooltip")
-        )).build());
+                )).build());
         buttons.add(this.miscOptions);
 
         this.accessibilityOptions = this.addWidget(Button.builder(Component.translatable("qualityofqueso.gui.accessibility_options"), button -> {

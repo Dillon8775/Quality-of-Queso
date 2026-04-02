@@ -177,7 +177,7 @@ public class ModUtil {
      */
     private static Component safeAddress(String address) {
         Component text = Component.literal(address).copy().withStyle(ChatFormatting.AQUA);
-        for (char c :  address.toCharArray()) {
+        for (char c : address.toCharArray()) {
             if (Character.isDigit(c)) {
                 text = text.copy().withStyle(ChatFormatting.OBFUSCATED);
                 break;
@@ -209,7 +209,7 @@ public class ModUtil {
                 .toFile();
 
         String clientServerConfig = safe + "_client.json";
-        String trackedContainersServerConfig =  safe + "_tracked-containers.json";
+        String trackedContainersServerConfig = safe + "_tracked-containers.json";
         String commonServerConfig = safe + "_common.json";
         File clientServerFile = new File(serverDir, clientServerConfig);
         File trackedContainersServerFile = new File(serverDir, trackedContainersServerConfig);
@@ -422,7 +422,7 @@ public class ModUtil {
                 }
                 // If payload timer isn't null and not clearing, begin the countdown before the glow effect is removed
                 if (!payload.clear() && payload.timer() != 0) {
-                    ((GlowCountdown)frame).startGlowCountdown(payload.timer() * 20);
+                    ((GlowCountdown) frame).startGlowCountdown(payload.timer() * 20);
                 }
             }
             if (payload.clear()) {

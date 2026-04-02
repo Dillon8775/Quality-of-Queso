@@ -37,9 +37,11 @@ import static net.dillon.qualityofqueso.util.ModUtil.*;
 
 @Mixin(Gui.class)
 public class GuiMixin {
-    @Shadow @Final
+    @Shadow
+    @Final
     private Minecraft minecraft;
-    @Shadow @Final
+    @Shadow
+    @Final
     private static Identifier HOTBAR_SELECTION_SPRITE;
     @Shadow
     @Final
@@ -99,11 +101,6 @@ public class GuiMixin {
         if (!modEnabled(this.minecraft) || this.minecraft.player == null) {
             return;
         }
-
-        ItemStack mainHandItem = getItemBySlot(this.minecraft, EquipmentSlot.MAINHAND);
-        ItemStack offHandItem = getItemBySlot(this.minecraft, EquipmentSlot.OFFHAND);
-
-        this.tryRenderItem(graphics, mainHandItem, offHandItem);
 
         int i = 0;
         for (EquipmentSlot slot : SLOTS) {
@@ -166,6 +163,11 @@ public class GuiMixin {
             }
             i++;
         }
+
+        ItemStack mainHandItem = getItemBySlot(this.minecraft, EquipmentSlot.MAINHAND);
+        ItemStack offHandItem = getItemBySlot(this.minecraft, EquipmentSlot.OFFHAND);
+
+        this.tryRenderItem(graphics, mainHandItem, offHandItem);
     }
 
     /**
@@ -275,8 +277,8 @@ public class GuiMixin {
                 graphics.blitSprite(RenderPipelines.GUI_TEXTURED,
                         options().hud.coloredHighlighting
                                 ? count < 11 ? ofQoQ("hud/slot_bad")
-                                : count < 21 ? ofQoQ("hud/slot_ok")
-                                : ofQoQ("hud/slot_good")
+                                  : count < 21 ? ofQoQ("hud/slot_ok")
+                                    : ofQoQ("hud/slot_good")
                                 : HOTBAR_SELECTION_SPRITE,
                         getGuiWidth(graphics) + 96,
                         getGuiHeight(graphics) - 3,
@@ -344,7 +346,7 @@ public class GuiMixin {
                 }
             }
             if (!hasInfinity && shouldRenderArrowUi && options().hud.warningIndicators && validArrow && count < 6) {
-                this.renderWarningIndicator(this.minecraft, graphics, (int)(9 * 1.01), null);
+                this.renderWarningIndicator(this.minecraft, graphics, (int) (9 * 1.01), null);
             }
             graphics.text(this.minecraft.font, text, ((graphics.guiWidth() / 2) + (isLeftHanded(this.minecraft) ? -x - 18 : x)), graphics.guiHeight() - (hasInfinity ? 9 : 10), color, true);
             if (options().accessibility.displayTotalWithStacks && count > 64 && (evenStack || options().hud.itemCounter == ItemCounter.STACKS)) {

@@ -34,8 +34,10 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
     private static CreativeModeTab selectedTab;
     @Shadow
     private boolean ignoreTextInput;
+
     @Shadow
     protected abstract void refreshSearchResults();
+
     @Shadow
     protected abstract void selectTab(CreativeModeTab pTab);
 
@@ -44,8 +46,8 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
     }
 
     /**
-	 * Closes the screen when clicking outside of the menu.
-	 */
+     * Closes the screen when clicking outside of the menu.
+     */
     @Inject(method = "slotClicked", at = @At("HEAD"))
     private void closeButtonOnClickOutOfBounds(Slot slot, int slotId, int mouseButton, ContainerInput type, CallbackInfo ci) {
         if (modEnabled(this.minecraft) && options().misc.quickGuiExit && this.menu.getCarried().isEmpty() && mouseButton == 0 && slot == null) {
@@ -72,8 +74,8 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
     }
 
     /**
-	 * Allow typing in creative menu regardless of what menu.
-	 */
+     * Allow typing in creative menu regardless of what menu.
+     */
     @Overwrite
     public boolean charTyped(CharacterEvent input) {
         if (this.ignoreTextInput || (!(options().searching.quickSearch.enabled()) && selectedTab.getType() != CreativeModeTab.Type.SEARCH)) {

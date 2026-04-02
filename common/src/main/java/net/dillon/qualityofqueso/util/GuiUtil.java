@@ -155,7 +155,7 @@ public class GuiUtil {
      */
     public static float getItemHealthPercentage(ItemStack stack) {
         int maxDamage = stack.getMaxDamage();
-        return Math.max(0.0F, ((float)maxDamage - stack.getDamageValue()) / maxDamage);
+        return Math.max(0.0F, ((float) maxDamage - stack.getDamageValue()) / maxDamage);
     }
 
     /**

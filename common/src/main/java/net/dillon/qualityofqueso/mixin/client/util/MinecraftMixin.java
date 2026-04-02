@@ -25,6 +25,7 @@ public abstract class MinecraftMixin {
     @Shadow
     @Final
     public Options options;
+
     @Shadow
     public abstract SoundManager getSoundManager();
 

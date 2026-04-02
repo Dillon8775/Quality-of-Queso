@@ -663,6 +663,7 @@ public class ButtonUtil {
 
     /**
      * Finds a slot matching the target merging slot.
+     *
      * @return the slot index.
      */
     private static int findMatchingSlot(AbstractContainerMenu handler, ItemStack target, int start, int limit) {

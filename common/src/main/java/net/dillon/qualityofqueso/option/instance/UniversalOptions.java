@@ -23,7 +23,7 @@ public class UniversalOptions {
     }
 
     public static final ModOptionsHandler UNIVERSAL = new ModOptionsHandler();
-    
+
     public static class ModOptionsHandler extends BaseOptions<UniversalOptions> {
 
         protected ModOptionsHandler() {

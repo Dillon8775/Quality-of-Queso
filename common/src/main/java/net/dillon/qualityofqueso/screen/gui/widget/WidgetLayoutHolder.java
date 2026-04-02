@@ -5,5 +5,6 @@ package net.dillon.qualityofqueso.screen.gui.widget;
  */
 public interface WidgetLayoutHolder {
     WidgetLayout getWidgetLayout();
+
     void setWidgetLayout(WidgetLayout layout);
 }

@@ -28,7 +28,8 @@ import static net.dillon.qualityofqueso.util.ModUtil.*;
 
 @Mixin(LocalPlayer.class)
 public class LocalPlayerMixin extends AbstractClientPlayer {
-    @Shadow @Final
+    @Shadow
+    @Final
     protected Minecraft minecraft;
     @Unique
     private int elytraWarningCooldown;

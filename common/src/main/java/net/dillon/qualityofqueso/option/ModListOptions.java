@@ -53,8 +53,10 @@ public class ModListOptions {
                 option -> {
                     Component text = ModTexts.BLANK;
                     switch (option) {
-                        case RECIPE_BOOK -> text = Component.translatable("qualityofqueso.options.quick_search.recipe_book.tooltip");
-                        case SEARCH_BAR -> text = Component.translatable("qualityofqueso.options.quick_search.search_bar.tooltip");
+                        case RECIPE_BOOK ->
+                                text = Component.translatable("qualityofqueso.options.quick_search.recipe_book.tooltip");
+                        case SEARCH_BAR ->
+                                text = Component.translatable("qualityofqueso.options.quick_search.search_bar.tooltip");
                     }
                     return Tooltip.create(Component.translatable("qualityofqueso.options.quick_search.tooltip").copy().append(text));
                 },
@@ -81,8 +83,10 @@ public class ModListOptions {
                 "qualityofqueso.options.button_layout",
                 option -> {
                     return switch (option) {
-                        case VERTICAL -> Tooltip.create(Component.translatable("qualityofqueso.options.button_layout.vertical.tooltip"));
-                        case HORIZONTAL -> Tooltip.create(Component.translatable("qualityofqueso.options.button_layout.horizontal.tooltip"));
+                        case VERTICAL ->
+                                Tooltip.create(Component.translatable("qualityofqueso.options.button_layout.vertical.tooltip"));
+                        case HORIZONTAL ->
+                                Tooltip.create(Component.translatable("qualityofqueso.options.button_layout.horizontal.tooltip"));
                     };
                 },
                 (optionText, value) -> value.getText(),
@@ -143,8 +147,10 @@ public class ModListOptions {
                 option -> {
                     Component text = ModTexts.BLANK;
                     switch (option) {
-                        case SHORTCUT_KEY_OR_BUTTON -> text = Component.translatable("qualityofqueso.options.quick_dropping.shortcut_key_or_button.tooltip");
-                        case SHORTCUT_KEY_ONLY -> text = Component.translatable("qualityofqueso.options.quick_dropping.shortcut_key_only.tooltip");
+                        case SHORTCUT_KEY_OR_BUTTON ->
+                                text = Component.translatable("qualityofqueso.options.quick_dropping.shortcut_key_or_button.tooltip");
+                        case SHORTCUT_KEY_ONLY ->
+                                text = Component.translatable("qualityofqueso.options.quick_dropping.shortcut_key_only.tooltip");
                     }
                     String appended = !text.equals(ModTexts.BLANK) ? "\n\n" : "";
                     return Tooltip.create(Component.translatable("qualityofqueso.options.quick_dropping.tooltip").append(appended).append(text));
@@ -161,8 +167,10 @@ public class ModListOptions {
                 option -> {
                     Component text = ModTexts.BLANK;
                     switch (option) {
-                        case SHORTCUT_KEY_OR_BUTTON -> text = Component.translatable("qualityofqueso.options.swapping.shortcut_key_or_button.tooltip");
-                        case SHORTCUT_KEY_ONLY -> text = Component.translatable("qualityofqueso.options.swapping.shortcut_key_only.tooltip");
+                        case SHORTCUT_KEY_OR_BUTTON ->
+                                text = Component.translatable("qualityofqueso.options.swapping.shortcut_key_or_button.tooltip");
+                        case SHORTCUT_KEY_ONLY ->
+                                text = Component.translatable("qualityofqueso.options.swapping.shortcut_key_only.tooltip");
                     }
                     String appended = !text.equals(ModTexts.BLANK) ? "\n\n" : "";
                     return Tooltip.create(Component.translatable("qualityofqueso.options.swapping.tooltip", keyMappingAsString(ModKeybinds.SWAP_ITEMS)).append(appended).append(text));
@@ -188,8 +196,10 @@ public class ModListOptions {
                 "qualityofqueso.options.display_include_hotbar",
                 option -> {
                     return switch (option) {
-                        case ALWAYS -> Tooltip.create(Component.translatable("qualityofqueso.options.display_include_hotbar.always.tooltip"));
-                        case CONTAINER_SCREENS_ONLY -> Tooltip.create(Component.translatable("qualityofqueso.options.display_include_hotbar.container_screens_only.tooltip"));
+                        case ALWAYS ->
+                                Tooltip.create(Component.translatable("qualityofqueso.options.display_include_hotbar.always.tooltip"));
+                        case CONTAINER_SCREENS_ONLY ->
+                                Tooltip.create(Component.translatable("qualityofqueso.options.display_include_hotbar.container_screens_only.tooltip"));
                     };
                 },
                 (optionText, value) -> value.getText(),
@@ -203,8 +213,10 @@ public class ModListOptions {
                 "qualityofqueso.options.display_fill_whats_present",
                 option -> {
                     return switch (option) {
-                        case ALWAYS -> Tooltip.create(Component.translatable("qualityofqueso.options.display_fill_whats_present.always.tooltip"));
-                        case FILTERED_CONTAINERS_ONLY -> Tooltip.create(Component.translatable("qualityofqueso.options.display_fill_whats_present.filtered_containers_only.tooltip"));
+                        case ALWAYS ->
+                                Tooltip.create(Component.translatable("qualityofqueso.options.display_fill_whats_present.always.tooltip"));
+                        case FILTERED_CONTAINERS_ONLY ->
+                                Tooltip.create(Component.translatable("qualityofqueso.options.display_fill_whats_present.filtered_containers_only.tooltip"));
                     };
                 },
                 (optionText, value) -> value.getText(),
@@ -272,7 +284,8 @@ public class ModListOptions {
                     Component text = ModTexts.BLANK;
                     switch (option) {
                         case ON -> text = Component.translatable("qualityofqueso.options.armor_status.on.tooltip");
-                        case ON_UPDATE -> text = Component.translatable("qualityofqueso.options.armor_status.on_update.tooltip");
+                        case ON_UPDATE ->
+                                text = Component.translatable("qualityofqueso.options.armor_status.on_update.tooltip");
                     }
                     return Tooltip.create(Component.translatable("qualityofqueso.options.armor_status.tooltip").copy().append(text != ModTexts.BLANK ? "\n\n" : "").append(text));
                 },
@@ -289,10 +302,10 @@ public class ModListOptions {
     public static OptionInstance<Boolean> armorHotbar() {
         return OptionInstance.createBoolean("qualityofqueso.options.armor_hotbar", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.armor_hotbar.tooltip")),
                 ON_OFF_TEXT, options().hud.armorHotbar, value -> {
-            options().hud.armorHotbar = value;
-            ModClientOptions.CLIENT.save();
-            resetArmorHudState();
-        });
+                    options().hud.armorHotbar = value;
+                    ModClientOptions.CLIENT.save();
+                    resetArmorHudState();
+                });
     }
 
     public static OptionInstance<Boolean> coloredHighlighting() {
@@ -312,8 +325,10 @@ public class ModListOptions {
                 option -> {
                     Component text = ModTexts.BLANK;
                     switch (option) {
-                        case TOTAL -> text = Component.translatable("qualityofqueso.options.item_counter.total.tooltip");
-                        case STACKS -> text = Component.translatable("qualityofqueso.options.item_counter.stacks.tooltip");
+                        case TOTAL ->
+                                text = Component.translatable("qualityofqueso.options.item_counter.total.tooltip");
+                        case STACKS ->
+                                text = Component.translatable("qualityofqueso.options.item_counter.stacks.tooltip");
                     }
                     return Tooltip.create(Component.translatable("qualityofqueso.options.item_counter.tooltip").append(text != ModTexts.BLANK ? "\n\n" : "").append(text));
                 },
@@ -358,7 +373,8 @@ public class ModListOptions {
                 option -> {
                     Component text;
                     switch (option) {
-                        case INDICATOR_ONLY -> text = Component.translatable("qualityofqueso.options.elytra_alarm.indicator_only.tooltip");
+                        case INDICATOR_ONLY ->
+                                text = Component.translatable("qualityofqueso.options.elytra_alarm.indicator_only.tooltip");
                         default -> text = ModTexts.BLANK;
                     }
                     return Tooltip.create(Component.translatable("qualityofqueso.options.elytra_alarm.tooltip", options().elytraAlarm.minFallDistance).append(text));
@@ -445,9 +461,9 @@ public class ModListOptions {
     public static OptionInstance<Boolean> fortniteBattlePass() {
         return OptionInstance.createBoolean("qualityofqueso.options.fortnite_battle_pass", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.fortnite_battle_pass.tooltip")),
                 ON_OFF_TEXT, options().misc.fortniteBattlePass, value -> {
-            options().misc.fortniteBattlePass = value;
-            ModClientOptions.CLIENT.save();
-        });
+                    options().misc.fortniteBattlePass = value;
+                    ModClientOptions.CLIENT.save();
+                });
     }
     // end of misc options
 
@@ -525,10 +541,14 @@ public class ModListOptions {
                 "qualityofqueso.options.button_sounds",
                 option -> {
                     return switch (option) {
-                        case ALL -> Tooltip.create(Component.translatable("qualityofqueso.options.button_sounds.all.tooltip"));
-                        case BUNDLE_ONLY -> Tooltip.create(Component.translatable("qualityofqueso.options.button_sounds.bundle_only.tooltip"));
-                        case CLICK_ONLY -> Tooltip.create(Component.translatable("qualityofqueso.options.button_sounds.click_only.tooltip"));
-                        case OFF -> Tooltip.create(Component.translatable("qualityofqueso.options.button_sounds.off.tooltip"));
+                        case ALL ->
+                                Tooltip.create(Component.translatable("qualityofqueso.options.button_sounds.all.tooltip"));
+                        case BUNDLE_ONLY ->
+                                Tooltip.create(Component.translatable("qualityofqueso.options.button_sounds.bundle_only.tooltip"));
+                        case CLICK_ONLY ->
+                                Tooltip.create(Component.translatable("qualityofqueso.options.button_sounds.click_only.tooltip"));
+                        case OFF ->
+                                Tooltip.create(Component.translatable("qualityofqueso.options.button_sounds.off.tooltip"));
                     };
                 },
                 (optionText, value) -> value.getText(),
@@ -542,11 +562,16 @@ public class ModListOptions {
                 "qualityofqueso.options.menu_button",
                 option -> {
                     return switch (option) {
-                        case EVERYWHERE -> Tooltip.create(Component.translatable("qualityofqueso.options.menu_button.everywhere.tooltip"));
-                        case BOTTOM_LEFT -> Tooltip.create(Component.translatable("qualityofqueso.options.menu_button.bottom_left.tooltip"));
-                        case BOTTOM_RIGHT -> Tooltip.create(Component.translatable("qualityofqueso.options.menu_button.bottom_right.tooltip"));
-                        case TITLE_ONLY -> Tooltip.create(Component.translatable("qualityofqueso.options.menu_button.title_only.tooltip"));
-                        case OFF -> Tooltip.create(Component.translatable("qualityofqueso.options.menu_button.off.tooltip"));
+                        case EVERYWHERE ->
+                                Tooltip.create(Component.translatable("qualityofqueso.options.menu_button.everywhere.tooltip"));
+                        case BOTTOM_LEFT ->
+                                Tooltip.create(Component.translatable("qualityofqueso.options.menu_button.bottom_left.tooltip"));
+                        case BOTTOM_RIGHT ->
+                                Tooltip.create(Component.translatable("qualityofqueso.options.menu_button.bottom_right.tooltip"));
+                        case TITLE_ONLY ->
+                                Tooltip.create(Component.translatable("qualityofqueso.options.menu_button.title_only.tooltip"));
+                        case OFF ->
+                                Tooltip.create(Component.translatable("qualityofqueso.options.menu_button.off.tooltip"));
                     };
                 },
                 (optionText, value) -> value.getText(),
@@ -558,9 +583,9 @@ public class ModListOptions {
     public static OptionInstance<Boolean> multiServerConfigs() {
         return OptionInstance.createBoolean("qualityofqueso.options.multi_server_configs", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.multi_server_configs.tooltip")),
                 ON_OFF_TEXT, uoptions().main.multiServerConfigs, value -> {
-            uoptions().main.multiServerConfigs = value;
-            ModUtil.saveAll(Minecraft.getInstance());
-        });
+                    uoptions().main.multiServerConfigs = value;
+                    ModUtil.saveAll(Minecraft.getInstance());
+                });
     }
     // end of accessibility options
 
@@ -583,7 +608,8 @@ public class ModListOptions {
                 option -> {
                     Component text = ModTexts.BLANK;
                     switch (option) {
-                        case NON_BEACON -> text = Component.translatable("qualityofqueso.options.fov_effects.potion_effects.non_beacon.tooltip");
+                        case NON_BEACON ->
+                                text = Component.translatable("qualityofqueso.options.fov_effects.potion_effects.non_beacon.tooltip");
                     }
                     return Tooltip.create(Component.translatable("qualityofqueso.options.fov_effects.potion_effects.tooltip").copy().append(text));
                 },
@@ -604,8 +630,10 @@ public class ModListOptions {
                 option -> {
                     Component text;
                     switch (option) {
-                        case QUICK_PULL -> text = Component.translatable("qualityofqueso.options.fov_effects.bows.quick_pull.tooltip");
-                        case OFF -> text = Component.translatable("qualityofqueso.options.fov_effects.bows.off.tooltip");
+                        case QUICK_PULL ->
+                                text = Component.translatable("qualityofqueso.options.fov_effects.bows.quick_pull.tooltip");
+                        case OFF ->
+                                text = Component.translatable("qualityofqueso.options.fov_effects.bows.off.tooltip");
                         default -> text = Component.translatable("qualityofqueso.options.fov_effects.bows.on.tooltip");
                     }
                     return Tooltip.create(Component.translatable("qualityofqueso.options.fov_effects.bows.tooltip").copy().append("\n\n").append(text));
@@ -620,6 +648,7 @@ public class ModListOptions {
     /* ===== */
 
     // HELPER METHODS
+
     /**
      * @return the bound key as a string.
      */

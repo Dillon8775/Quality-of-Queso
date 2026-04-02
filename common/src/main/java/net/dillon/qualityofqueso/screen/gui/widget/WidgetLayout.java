@@ -106,7 +106,6 @@ public class WidgetLayout extends AbstractWidget {
 
     /**
      * Checks if the mouse is over top of the panel.
-
      */
     @Override
     public boolean isMouseOver(double mouseX, double mouseY) {
