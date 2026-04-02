@@ -17,12 +17,15 @@ import static net.dillon.qualityofqueso.util.ModUtil.coptions;
 public class CommonEvents {
 
     public static void registerPackets() {
+        Balm.networking().allowClientAndServerOnly(ModUtil.MOD_ID);
+
         Balm.networking().registerServerboundPacket(
                 GlowSearchC2SPacket.PACKET_TYPE,
                 GlowSearchC2SPacket.class,
                 GlowSearchC2SPacket.CODEC,
-                ModUtil::handleGlowPayload
+                ModUtil::sendGlowPacket
         );
+
         Balm.networking().registerServerboundPacket(
                 ClientPreferencesC2SPacket.PACKET_TYPE,
                 ClientPreferencesC2SPacket.class,

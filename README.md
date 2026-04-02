@@ -7,6 +7,10 @@
 <a href="https://neoforged.net/" target="_blank">
   <img src="https://neoforged.net/img/authors/neoforged.png" width="100" height="100" alt="Compatible with NeoForged">
 </a>
+‎ ‎ ‎
+<a href="https://neoforged.net/" target="_blank">
+  <img src="https://avatars.githubusercontent.com/u/1390178?s=280&v=4" width="100" height="100" alt="Compatible with Forge">
+</a>
 
 ---
 <img src="https://cdn.modrinth.com/data/cached_images/3f52366fa307bc8b96964e580ea29c0c28c1fc9a.png" width="200" height="200" alt="QoQ logo">
@@ -35,9 +39,7 @@
 
 ## Open for suggestions! Join my [Discord server](https://discord.gg/vfqEAn4YFy) to give suggestions!
 
-### Please report
-
-*any* bugs you may find <a href="https://github.com/Dillon8775/Quality-of-Queso/issues" target="_blank">here.</a>
+### Please report *any* bugs you may find <a href="https://github.com/Dillon8775/Quality-of-Queso/issues" target="_blank">here.</a>
 
 ---
 <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/02wfcgHkPmQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
@@ -129,9 +131,7 @@ unknown bugs, outdated features, and/or broken features.**
 
 #### You can change the radius to search for item frames (ex. 50 blocks, 100 blocks, 300 blocks)
 
-## Please note (for this feature only): this mod must be installed on the server-side,
-
-_and_ enabled on the server side in order for players to use this feature.
+## Please note (for this feature only): this mod must be installed on the server-side, _and_ enabled on the server side in order for players to use this feature.
 
 ### There is also a command to use this feature if you don't want to use the GUI screen, /itemframesearcher.
 

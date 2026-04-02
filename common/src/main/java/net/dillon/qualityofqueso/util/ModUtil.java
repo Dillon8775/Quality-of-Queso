@@ -370,7 +370,18 @@ public class ModUtil {
         return !client.isSingleplayer() && !(client.getCurrentServer() == null);
     }
 
-    public static void handleGlowPayload(ServerPlayer player, GlowSearchC2SPacket payload) {
+    /**
+     * Sends the glow packet to the server.
+     */
+    public static void sendGlowPacket(ServerPlayer player, GlowSearchC2SPacket packet) {
+        handleGlowPacket(player, packet.query(), packet.matchCase(), packet.clear(), packet.timer(), packet.radius());
+    }
+
+    /**
+     * Handles the glow packet.
+     */
+    public static void handleGlowPacket(ServerPlayer player, String query, boolean matchCase, boolean clear, int timer,
+                                        int radius) {
         if (coptions().itemFrameSearching) {
             ServerLevel world = player.level();
 
@@ -378,12 +389,12 @@ public class ModUtil {
 
             // Find all nearby item frames
             List<ItemFrame> nearbyFrames = world.getEntitiesOfClass(ItemFrame.class,
-                    new AABB(playerPos.add(-payload.radius(), -payload.radius(), -payload.radius()), playerPos.add(payload.radius(), payload.radius(), payload.radius())),
+                    new AABB(playerPos.add(-radius, -radius, -radius), playerPos.add(radius, radius, radius)),
                     frame -> {
-                        String[] terms = payload.query().split(",");
+                        String[] terms = query.split(",");
 
                         // If payload is clear, all item frames found are added to list no matter their stack.
-                        if (payload.clear()) {
+                        if (clear) {
                             return true;
                         } else {
                             ItemStack stack = frame.getItem();
@@ -399,7 +410,7 @@ public class ModUtil {
                             // If item frame has stack, add it to the list to glow
                             for (String term : terms) {
                                 String trimmed = term.trim().toLowerCase();
-                                if (payload.matchCase() ?
+                                if (matchCase ?
                                         rawItemName.matches(trimmed) :
                                         rawItemName.contains(trimmed)) {
                                     return true;
@@ -415,33 +426,33 @@ public class ModUtil {
             // If item is found, make it glow
             for (ItemFrame frame : nearbyFrames) {
                 boolean alreadyGlowing = frame.isCurrentlyGlowing();
-                frame.setGlowingTag(!payload.clear());
+                frame.setGlowingTag(!clear);
                 searched++; // Add to search count
-                if (payload.clear() && !alreadyGlowing) {
+                if (clear && !alreadyGlowing) {
                     searched--; // If clearing and the frame wasn't already glowing to begin with, subtract it from searched
                 }
                 // If payload timer isn't null and not clearing, begin the countdown before the glow effect is removed
-                if (!payload.clear() && payload.timer() != 0) {
-                    ((GlowCountdown) frame).startGlowCountdown(payload.timer() * 20);
+                if (!clear && timer != 0) {
+                    ((GlowCountdown) frame).startGlowCountdown(timer * 20);
                 }
             }
-            if (payload.clear()) {
+            if (clear) {
                 player.sendSystemMessage(Component.translatable("qualityofqueso.item_frame_searcher.executed.cleared", searched), false);
                 playSound(player, SoundEvents.PLAYER_SPLASH, 1.0F);
             } else if (nearbyFrames.isEmpty()) {
-                player.sendSystemMessage(payload.matchCase() ?
-                        Component.translatable("qualityofqueso.item_frame_searcher.executed.found_none.match_case", searched, payload.query()) :
-                        Component.translatable("qualityofqueso.item_frame_searcher.executed.found_none", searched, payload.query()), false);
+                player.sendSystemMessage(matchCase ?
+                        Component.translatable("qualityofqueso.item_frame_searcher.executed.found_none.match_case", searched, query) :
+                        Component.translatable("qualityofqueso.item_frame_searcher.executed.found_none", searched, query), false);
                 playSound(player, SoundEvents.NOTE_BLOCK_BASS.value(), 2.0F);
             } else {
-                if (payload.timer() == 0) {
-                    player.sendSystemMessage(payload.matchCase() ?
-                            Component.translatable("qualityofqueso.item_frame_searcher.executed.without_timer.match_case", searched, payload.query()) :
-                            Component.translatable("qualityofqueso.item_frame_searcher.executed.without_timer", searched, payload.query()));
+                if (timer == 0) {
+                    player.sendSystemMessage(matchCase ?
+                            Component.translatable("qualityofqueso.item_frame_searcher.executed.without_timer.match_case", searched, query) :
+                            Component.translatable("qualityofqueso.item_frame_searcher.executed.without_timer", searched, query));
                 } else {
-                    player.sendSystemMessage(payload.matchCase() ?
-                            Component.translatable("qualityofqueso.item_frame_searcher.executed.with_timer.match_case", searched, payload.query(), payload.timer()) :
-                            Component.translatable("qualityofqueso.item_frame_searcher.executed.with_timer", searched, payload.query(), payload.timer()), false);
+                    player.sendSystemMessage(matchCase ?
+                            Component.translatable("qualityofqueso.item_frame_searcher.executed.with_timer.match_case", searched, query, timer) :
+                            Component.translatable("qualityofqueso.item_frame_searcher.executed.with_timer", searched, query, timer), false);
                 }
                 playSound(player, SoundEvents.ARROW_HIT_PLAYER, 1.0F);
             }

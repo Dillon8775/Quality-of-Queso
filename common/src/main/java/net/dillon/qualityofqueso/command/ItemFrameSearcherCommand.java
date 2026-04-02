@@ -3,16 +3,12 @@ package net.dillon.qualityofqueso.command;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import net.blay09.mods.balm.Balm;
-import net.dillon.qualityofqueso.packet.GlowSearchC2SPacket;
-import net.minecraft.client.Minecraft;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 
-import static net.dillon.qualityofqueso.util.ModUtil.coptions;
-import static net.dillon.qualityofqueso.util.ModUtil.options;
+import static net.dillon.qualityofqueso.util.ModUtil.*;
 
 public class ItemFrameSearcherCommand {
     private static final String ITEM = "item (string)";
@@ -101,7 +97,8 @@ public class ItemFrameSearcherCommand {
         } else {
             context.sendSuccess(() -> Component.translatable("qualityofqueso.item_frame_searcher_command.executed.with_timer", query, radius, timer), true);
         }
-        Balm.networking().sendToServer(new GlowSearchC2SPacket(query, Minecraft.getInstance().hasControlDown(), clear, timer, radius));
+        boolean matchCase = query.startsWith(":");
+        handleGlowPacket(context.getPlayer(), query.substring(matchCase ? 1 : 0), query.startsWith(":"), clear, timer, radius);
         return 0;
     }
 }

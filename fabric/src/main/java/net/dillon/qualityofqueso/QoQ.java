@@ -7,7 +7,6 @@ import net.dillon.qualityofqueso.util.ModUtil;
 import net.fabricmc.api.ModInitializer;
 
 import static net.dillon.qualityofqueso.event.FabricCommonEvents.registerFabricCommands;
-import static net.dillon.qualityofqueso.sound.ModSoundEvents.registerSoundEvents;
 
 /**
  * The server-side (or main) entrypoint for {@code QoQ.}
@@ -19,6 +18,5 @@ public class QoQ implements ModInitializer {
         Balm.initializeMod(ModUtil.MOD_ID, FabricLoadContext.INSTANCE, Main::initialize);
 
         registerFabricCommands();
-        registerSoundEvents();
     }
 }
