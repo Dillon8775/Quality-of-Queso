@@ -4,7 +4,7 @@ import net.neoforged.fml.loading.FMLPaths;
 
 import java.nio.file.Path;
 
-public class NeoForgePlatformHelper implements PlatformHelper {
+public class NeoForgedPlatformHelper implements PlatformHelper {
 
     @Override
     public Path getConfigDir() {

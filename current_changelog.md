@@ -5,13 +5,16 @@
 # Balm Mod Dependency
 
 ### [Balm](https://modrinth.com/mod/balm) is now
-*required* in order to use this mod. It is available for all platforms, and this decision has been made to make developing on multiple platforms easier.
+
+*required* in order to use this mod. It is available for all platforms, and this decision has been made to make
+developing on multiple platforms easier.
 
 ---
 
 # 1.21.1 Support
 
 ## Quality of Queso now supports 1.21.1 for Fabric, Forge, and NeoForged *(for
+
 now)*. However, a few features are unavailable in this version, due to compatability issues:
 
 - Transparent search bar

@@ -5,8 +5,8 @@
   "name": "${mod_name}",
   "description": "${description}",
   "authors": [
-    "MannyQUESO",
-    "Dillon8775"
+    "Dillon8775",
+    "MannyQUESO"
   ],
   "contact": {
     "homepage": "${homepage}",
@@ -35,7 +35,7 @@
     "minecraft": ">=26.1-pre.2",
     "java": ">=${java_version}",
     "fabric-api": "*",
-    "balm": ">=${balm_version}"
+    "balm-fabric": ">=${balm_version}"
   },
   "custom": {
     "modmenu": {

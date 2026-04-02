@@ -36,6 +36,7 @@
 ## Open for suggestions! Join my [Discord server](https://discord.gg/vfqEAn4YFy) to give suggestions!
 
 ### Please report
+
 *any* bugs you may find <a href="https://github.com/Dillon8775/Quality-of-Queso/issues" target="_blank">here.</a>
 
 ---
@@ -129,6 +130,7 @@ unknown bugs, outdated features, and/or broken features.**
 #### You can change the radius to search for item frames (ex. 50 blocks, 100 blocks, 300 blocks)
 
 ## Please note (for this feature only): this mod must be installed on the server-side,
+
 _and_ enabled on the server side in order for players to use this feature.
 
 ### There is also a command to use this feature if you don't want to use the GUI screen, /itemframesearcher.
