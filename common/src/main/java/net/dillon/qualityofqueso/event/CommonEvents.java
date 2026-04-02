@@ -9,6 +9,8 @@ import net.dillon.qualityofqueso.util.ModUtil;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 
+import static net.dillon.qualityofqueso.util.ModUtil.coptions;
+
 /**
  * Common events for Quality of Queso.
  */
@@ -30,6 +32,8 @@ public class CommonEvents {
     }
 
     public static void registerCommands(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext commandRegistryAccess) {
-        dispatcher.register(ItemFrameSearcherCommand.getItemFrameSearcherCommand(commandRegistryAccess));
+        if (coptions().itemFrameSearching) {
+            dispatcher.register(ItemFrameSearcherCommand.getItemFrameSearcherCommand(commandRegistryAccess));
+        }
     }
 }

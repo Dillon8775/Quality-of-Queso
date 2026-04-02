@@ -34,7 +34,8 @@
     "fabricloader": ">=${fabric_loader_version}",
     "minecraft": ">=26.1-pre.2",
     "java": ">=${java_version}",
-    "fabric-api": "*"
+    "fabric-api": "*",
+    "balm": ">=${balm_version}"
   },
   "custom": {
     "modmenu": {

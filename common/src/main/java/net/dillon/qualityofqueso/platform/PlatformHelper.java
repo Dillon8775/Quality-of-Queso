@@ -10,7 +10,7 @@ public interface PlatformHelper {
      * @return the mod version.
      */
     default String getModVersion() {
-        return "1.6.4";
+        return "1.6.5";
     }
 
     /**
