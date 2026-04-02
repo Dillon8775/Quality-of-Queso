@@ -13,6 +13,13 @@
 </a>
 
 ---
+
+# Requires [Balm!](https://modrinth.com/mod/balm)
+<a href="https://modrinth.com/mod/balm" target="_blank">
+<img src="https://media.forgecdn.net/avatars/thumbnails/1107/117/256/256/638657111836546584.png" width="128" height="128" alt="Compatible with Forge">
+</a>
+
+----
 <img src="https://cdn.modrinth.com/data/cached_images/3f52366fa307bc8b96964e580ea29c0c28c1fc9a.png" width="200" height="200" alt="QoQ logo">
 
 ## Welcome to Quality of Queso!

@@ -8,7 +8,7 @@ base {
 }
 
 tasks.named('jar', Jar) {
-    archiveFileName.set("${mod_id}-${version}_${project.name}-mc${minecraft_version}.jar")
+    archiveFileName.set("${mod_id}-${mod_version}_${project.name}-mc${minecraft_version}.jar")
 }
 
 java {
@@ -88,28 +88,31 @@ jar {
 
 processResources {
     var expandProps = [
-            'version'                      : version,
-            'mc_version'                   : mc_version,
-            'group'                        : project.group,
-            'minecraft_version'            : minecraft_version,
-            'minecraft_version_range'      : minecraft_version_range,
-            'fabric_version'               : fabric_version,
-            'fabric_loader_version'        : fabric_loader_version,
-            'mod_name'                     : mod_name,
-            'mod_author'                   : mod_author,
-            'mod_id'                       : mod_id,
-            'logo'                         : logo,
-            'license'                      : license,
-            'description'                  : project.description,
+            'version': version,
+            'mod_id': mod_id,
+            'mod_version': mod_version,
+            'mod_name' : mod_name,
+            'description' : project.description,
+            'mod_author' : mod_author,
+            'credits' : credits,
+            'license' : license,
+            'logo' : logo,
+            'mc_version' : mc_version,
+            'supported_mc_versions': supported_mc_versions,
+            'minecraft_version_range' : minecraft_version_range,
+            'group' : project.group,
+            'homepage' : homepage,
+            'sources' : sources,
+            'issues' : issues,
+            'discord' : discord,
+            'java_version' : java_version,
+            'minecraft_version' : minecraft_version,
+            'balm_version' : balm_version,
+            'fabric_version' : fabric_version,
+            'fabric_loader_version' : fabric_loader_version,
+            'modmenu_version' : modmenu_version,
             'neoforge_version'             : neoforge_version,
             'neoforge_loader_version_range': neoforge_loader_version_range,
-            'credits'                      : credits,
-            'homepage'                     : homepage,
-            'sources'                      : sources,
-            'issues'                       : issues,
-            'discord'                      : discord,
-            'balm_version'                 : balm_version,
-            'java_version'                 : java_version
     ]
 
     var jsonExpandProps = expandProps.collectEntries {

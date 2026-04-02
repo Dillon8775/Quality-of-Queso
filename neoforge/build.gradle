@@ -1,6 +1,10 @@
+import net.darkhax.curseforgegradle.TaskPublishCurseForge
+
 plugins {
     id 'multiloader-loader'
     id 'net.neoforged.moddev'
+    alias libs.plugins.curseForgeGradle
+    alias libs.plugins.modrinthMinotaur
 }
 
 repositories {
@@ -52,6 +56,57 @@ neoForge {
 }
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }
+
+tasks.register('curseforge', TaskPublishCurseForge) {
+    dependsOn('build')
+    description = 'Publishes the NeoForge build to CurseForge.'
+    group = 'publishing'
+
+    apiToken = project.findProperty("curseforge.api_key") ?: System.getenv("CURSEFORGE_TOKEN") ?: "none"
+
+    def projectId = findProperty("curseforge_project_id")
+    onlyIf {
+        projectId != null
+    }
+    if (projectId) {
+        def mainFile = upload(findProperty("curseforge_project_id"), jar.archiveFile.get().asFile)
+        mainFile.displayName = "[${mc_version.substring(2)}] $mod_name ${mod_version}"
+        mainFile.changelog = rootProject.file("${changelog_file}").text
+        mainFile.addRequirement("balm")
+        def supportedVersions = supported_mc_versions
+                .split(",")
+                .collect { it.trim() }
+        supportedVersions.each { v ->
+            mainFile.addGameVersion(v)
+        }
+        mainFile.releaseType = "release"
+        project.findProperty("curseforge_environments")?.split(",")?.toList()?.each { mainFile.addEnvironment(it) }
+        mainFile.addModLoader("NeoForge")
+    }
+}
+
+modrinth {
+    token = project.findProperty("modrinth.token") ?: System.getenv("MODRINTH_TOKEN") ?: "none"
+    projectId = findProperty("modrinth_project_id")
+    versionType = "release"
+
+    versionNumber = project.mod_version.toString()
+    versionName = "[mc${minecraft_version}] ${mod_name} ${project.mod_version}"
+
+    uploadFile = jar
+    def changelogFile = rootProject.file("${changelog_file}")
+    if (changelogFile.exists()) {
+        changelog = changelogFile.text
+    }
+    def supportedVersions = supported_mc_versions
+            .split(",")
+            .collect { it.trim() }
+    gameVersions = supportedVersions
+    loaders = ['neoforge']
+    dependencies {
+        required.project "balm"
+    }
+}
 
 // Implement mcgradleconventions loader attribute
 def loaderAttribute = Attribute.of('io.github.mcgradleconventions.loader', String)
