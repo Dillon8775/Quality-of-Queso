@@ -1,4 +1,4 @@
-package net.dillon.qualityofqueso.screen.gui.widget;
+package net.dillon.qualityofqueso.button.widget;
 
 /**
  * Holds widget layouts in different screens.

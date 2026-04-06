@@ -1,9 +1,10 @@
 package net.dillon.qualityofqueso.util;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import net.dillon.qualityofqueso.button.TransferButton;
 import net.dillon.qualityofqueso.option.screen.ModOptionsScreen;
 import net.dillon.qualityofqueso.platform.MultiLoader;
-import net.dillon.qualityofqueso.screen.gui.widget.button.TransferButton;
+import net.dillon.qualityofqueso.sound.ModSoundEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -459,7 +460,7 @@ public class ButtonUtil {
             return;
         }
 
-        client.getSoundManager().play(SimpleSoundInstance.forUI(drop ? SoundEvents.BUNDLE_DROP_CONTENTS : SoundEvents.BUNDLE_INSERT, 1.0F, 5.0F));
+        client.getSoundManager().play(SimpleSoundInstance.forUI(drop ? ModSoundEvents.MANAGEMENT_DROP : ModSoundEvents.MANAGEMENT_SUCCEED, 1.0F, 5.0F));
     }
 
     /**
@@ -470,7 +471,7 @@ public class ButtonUtil {
             return;
         }
 
-        client.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.BUNDLE_INSERT_FAIL, 1.0F, 0.6F));
+        client.getSoundManager().play(SimpleSoundInstance.forUI(ModSoundEvents.MANAGEMENT_REJECT, 1.0F, 0.6F));
     }
 
     /**

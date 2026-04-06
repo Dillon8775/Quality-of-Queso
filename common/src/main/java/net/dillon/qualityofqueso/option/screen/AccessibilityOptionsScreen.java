@@ -3,7 +3,7 @@ package net.dillon.qualityofqueso.option.screen;
 import com.google.common.collect.ImmutableList;
 import net.dillon.qualityofqueso.option.ModListOptions;
 import net.dillon.qualityofqueso.option.instance.ModClientOptions;
-import net.dillon.qualityofqueso.screen.gui.search.SearchField;
+import net.dillon.qualityofqueso.screen.gui.SearchField;
 import net.dillon.qualityofqueso.util.ButtonUtil;
 import net.dillon.qualityofqueso.util.ModUtil;
 import net.minecraft.ChatFormatting;

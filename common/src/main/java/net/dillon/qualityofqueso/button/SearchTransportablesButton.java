@@ -1,4 +1,4 @@
-package net.dillon.qualityofqueso.screen.gui.widget.button;
+package net.dillon.qualityofqueso.button;
 
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;

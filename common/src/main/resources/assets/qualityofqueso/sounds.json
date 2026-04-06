@@ -1,4 +1,26 @@
 {
+  "qualityofqueso.management.succeed": {
+    "subtitle": "qualityofqueso.gui.management_succeed",
+    "sounds": [
+      "qualityofqueso:management_succeeds",
+      "qualityofqueso:management_succeeds_1",
+      "qualityofqueso:management_succeeds_2"
+    ]
+  },
+  "qualityofqueso.management.reject": {
+    "subtitle": "qualityofqueso.gui.management_reject",
+    "sounds": [
+      "qualityofqueso:management_rejects"
+    ]
+  },
+  "qualityofqueso.management.drop": {
+    "subtitle": "qualityofqueso.gui.management_drop",
+    "sounds": [
+      "qualityofqueso:management_drop",
+      "qualityofqueso:management_drop_1",
+      "qualityofqueso:management_drop_2"
+    ]
+  },
   "fortnite_battle_pass": {
     "sounds": [
       "qualityofqueso:fortnite_battle_pass/aaagghh",

@@ -1,4 +1,4 @@
-package net.dillon.qualityofqueso.screen.gui.search;
+package net.dillon.qualityofqueso.screen.gui;
 
 import net.dillon.qualityofqueso.util.ButtonUtil;
 import net.dillon.qualityofqueso.util.ModUtil;

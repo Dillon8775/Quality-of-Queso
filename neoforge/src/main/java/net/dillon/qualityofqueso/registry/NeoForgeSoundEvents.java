@@ -24,6 +24,6 @@ public final class NeoForgeSoundEvents {
     }
 
     public static void bindCommonReferences() {
-        ModSoundEvents.bindFortniteBattlePass(FORTNITE_BATTLE_PASS.get());
+        ModSoundEvents.bindSounds(FORTNITE_BATTLE_PASS.get());
     }
 }

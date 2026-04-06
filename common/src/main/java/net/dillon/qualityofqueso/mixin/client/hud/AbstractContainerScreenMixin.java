@@ -2,12 +2,12 @@ package net.dillon.qualityofqueso.mixin.client.hud;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import net.dillon.qualityofqueso.button.*;
+import net.dillon.qualityofqueso.button.widget.WidgetLayout;
+import net.dillon.qualityofqueso.button.widget.WidgetLayoutHolder;
 import net.dillon.qualityofqueso.keybind.ModKeybinds;
 import net.dillon.qualityofqueso.option.instance.ModClientOptions;
-import net.dillon.qualityofqueso.screen.gui.search.SearchField;
-import net.dillon.qualityofqueso.screen.gui.widget.WidgetLayout;
-import net.dillon.qualityofqueso.screen.gui.widget.WidgetLayoutHolder;
-import net.dillon.qualityofqueso.screen.gui.widget.button.*;
+import net.dillon.qualityofqueso.screen.gui.SearchField;
 import net.dillon.qualityofqueso.util.ContainerTracker;
 import net.dillon.qualityofqueso.util.EnchantingHelper;
 import net.minecraft.ChatFormatting;
@@ -537,8 +537,8 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             return false;
         }
 
-        String itemName = stack.getHoverName().getString().toLowerCase();
-        String customName = stack.getCustomName() != null ? stack.getCustomName().getString().toLowerCase() : "";
+        String itemName = stack.getItemName().getString().toLowerCase();
+        String customName = stack.getCustomName() != null ? stack.getCustomName().getString().toLowerCase() : itemName;
 
         String[] terms = searchQuery.split(",");
         // If slot contains a comma, for each query searched (separated by each comma), return true if search query'namespace find an query (make slot available)

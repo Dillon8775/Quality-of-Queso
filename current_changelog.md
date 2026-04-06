@@ -1,37 +1,10 @@
-# Quality of Queso Version 1.6.5 (MC Fabric/NeoForged 26.1, and 1.21.1 Fabric/NeoForged/Forge):
+# Quality of Queso Version 1.7 (MC Fabric/NeoForged 26.1, and 1.21.1 Fabric/NeoForged/Forge):
 
----
-
-# Balm Mod Dependency
-
-### [Balm](https://modrinth.com/mod/balm) is now *required* in order to use this mod. It is available for all platforms, and this decision has been made to make developing on multiple platforms easier.
-
----
-
-# 1.21.1 Support
-
-## Quality of Queso now supports 1.21.1 for Fabric, Forge, and NeoForged *(for now)*. However, a few features are unavailable in this version, due to compatability issues:
-
-- Transparent search bar
-- Custom debug huds (show in-game time, simple coordinates, etc.)
-- Fluid FOV modification
-- The "sort container" keybind is unbounded by default in this version.
-- No "All Fog" option. You must toggle manually via "Overworld Fog" and "Nether Fog".
-
-### Important note for this backport:
-I have done plenty of testing with all features, but please, if you find *any* bugs, report them to the [GitHub repository.](https://github.com/Dillon8775/Quality-of-Queso/issues)
-
----
-
-## NeoForged Changes
-
-- Added icon to mod list.
-- Added homepage link.
+## Management Changes
+- Management button sounds (the bundle sounds) are now separate from Minecraft's bundle sound files, meaning they are separate sound files, allowing for easy sound changing with resource packs. This also means management buttons have their own custom subtitle, ex. "Management Succeeds" or "Management Drops".
 
 ## Bugs Fixed
-- Fixed bug where you cannot search by match case with the */itemframesearcher* command.
+- Fixed bug where you cannot search for an item by its item name if the item has a custom name.
 
-## Technical Changes
-
-- Renamed packets.
-- Optimizations.
+## Other Changes
+- Tweaks and optimizations.

@@ -1,4 +1,4 @@
-package net.dillon.qualityofqueso.screen.gui.widget.button;
+package net.dillon.qualityofqueso.button;
 
 import net.dillon.qualityofqueso.util.ButtonUtil;
 import net.minecraft.client.Minecraft;

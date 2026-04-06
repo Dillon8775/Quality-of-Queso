@@ -1,4 +1,4 @@
-package net.dillon.qualityofqueso.screen.gui.widget.button;
+package net.dillon.qualityofqueso.button;
 
 import net.dillon.qualityofqueso.keybind.ModKeybinds;
 import net.dillon.qualityofqueso.util.ButtonUtil;

@@ -85,9 +85,10 @@ public abstract class AbstractModOptionsScreen extends OptionsSubScreen {
             ButtonUtil.drawTooltip(Component.translatable(tooltip), graphics, this.font, mouseX, mouseY);
         }
 
+        graphics.centeredText(this.font, ModUtil.VERSION, this.width - 20, this.height - 21, CommonColors.WHITE);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, ofQoQ("textures/gui/sprites/" + CHEESE_WHEEL_TEXTURE + ".png"), this.width - 50, this.height - 26, 0.0F, 0.0F, 18, 18, 18, 18);
+
         if (this.doneButton != null) {
-            graphics.centeredText(this.font, ModUtil.VERSION, this.width - 25, this.doneButton.getY() + 5, CommonColors.WHITE);
-            graphics.blit(RenderPipelines.GUI_TEXTURED, ofQoQ("textures/gui/sprites/" + CHEESE_WHEEL_TEXTURE + ".png"), this.width - 57, this.doneButton.getY(), 0.0F, 0.0F, 18, 18, 18, 18);
             if (this.screenshotsButton == null) {
                 this.screenshotsButton = this.addRenderableWidget(SpriteIconButton.builder(ModTexts.BLANK, (button) -> {
                     Util.getPlatform().openFile(new File(Minecraft.getInstance().gameDirectory, "screenshots"));

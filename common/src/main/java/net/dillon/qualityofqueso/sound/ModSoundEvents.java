@@ -11,17 +11,22 @@ import static net.dillon.qualityofqueso.util.ModUtil.ofQoQ;
  * Custom sound events for {@code Quality of Queso.}
  */
 public class ModSoundEvents {
+    public static SoundEvent MANAGEMENT_SUCCEED = qoqSound("qualityofqueso.management.succeed");
+    public static SoundEvent MANAGEMENT_REJECT = qoqSound("qualityofqueso.management.reject");
+    public static SoundEvent MANAGEMENT_DROP = qoqSound("qualityofqueso.management.drop");
+
+    private static SoundEvent qoqSound(String id) {
+        return Registry.register(BuiltInRegistries.SOUND_EVENT, id, SoundEvent.createVariableRangeEvent(ofQoQ(id)));
+    }
+
     public static final Identifier FORTNITE_BATTLE_PASS_ID = ofQoQ("fortnite_battle_pass");
     public static SoundEvent FORTNITE_BATTLE_PASS = SoundEvent.createVariableRangeEvent(FORTNITE_BATTLE_PASS_ID);
 
-    /**
-     * Binds NeoForge-registered sound events to the common references.
-     */
-    public static void bindFortniteBattlePass(SoundEvent soundEvent) {
+    public static void bindSounds(SoundEvent soundEvent) {
         FORTNITE_BATTLE_PASS = soundEvent;
     }
 
-    public static void registerSoundEvents() {
+    public static void registerBoundSoundEvents() {
         FORTNITE_BATTLE_PASS = Registry.register(BuiltInRegistries.SOUND_EVENT, FORTNITE_BATTLE_PASS_ID, FORTNITE_BATTLE_PASS);
     }
 }

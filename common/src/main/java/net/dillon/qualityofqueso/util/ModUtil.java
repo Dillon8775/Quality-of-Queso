@@ -1,6 +1,7 @@
 package net.dillon.qualityofqueso.util;
 
 import net.blay09.mods.balm.Balm;
+import net.dillon.qualityofqueso.button.SwapButton;
 import net.dillon.qualityofqueso.option.base.BaseOptions;
 import net.dillon.qualityofqueso.option.instance.ModClientOptions;
 import net.dillon.qualityofqueso.option.instance.ModCommonOptions;
@@ -9,7 +10,6 @@ import net.dillon.qualityofqueso.option.instance.UniversalOptions;
 import net.dillon.qualityofqueso.packet.ClientPreferencesC2SPacket;
 import net.dillon.qualityofqueso.packet.GlowSearchC2SPacket;
 import net.dillon.qualityofqueso.platform.MultiLoader;
-import net.dillon.qualityofqueso.screen.gui.widget.button.SwapButton;
 import net.dillon.qualityofqueso.server.ServerStorage;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;

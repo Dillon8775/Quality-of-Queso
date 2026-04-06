@@ -1,6 +1,6 @@
 package net.dillon.qualityofqueso.mixin.client.screen;
 
-import net.dillon.qualityofqueso.screen.gui.search.SearchField;
+import net.dillon.qualityofqueso.screen.gui.SearchField;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
