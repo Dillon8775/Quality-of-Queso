@@ -12,6 +12,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.util.CommonColors;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.CrossbowItem;
@@ -21,8 +22,7 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 
-import static net.dillon.qualityofqueso.util.ModUtil.ofQoQ;
-import static net.dillon.qualityofqueso.util.ModUtil.options;
+import static net.dillon.qualityofqueso.util.ModUtil.*;
 
 /**
  * Utility class for GUI-related things.
@@ -70,6 +70,28 @@ public class GuiUtil {
             }
         }
         return false;
+    }
+
+    /**
+     * @return the count color to display.
+     */
+    public static int getCountColor(int count) {
+        if (count < 6) {
+            return CommonColors.RED;
+        } else if (count < 11) {
+            return CommonColors.SOFT_RED;
+        } else if (count < 21) {
+            return CommonColors.YELLOW;
+        } else {
+            return CommonColors.GREEN;
+        }
+    }
+
+    /**
+     * @return an increased X-value, based on the user's main hand.
+     */
+    public static int increasedBasedOnHand(Minecraft minecraft, int negIncrease) {
+        return isLeftHanded(minecraft) ? Math.abs(negIncrease) : negIncrease;
     }
 
     /**

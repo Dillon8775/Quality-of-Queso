@@ -15,8 +15,8 @@ public class QoQ implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        Balm.initializeMod(ModUtil.MOD_ID, FabricLoadContext.INSTANCE, Main::initialize);
-
         registerFabricCommands();
+
+        Balm.initializeMod(ModUtil.MOD_ID, FabricLoadContext.INSTANCE, Main::initialize);
     }
 }

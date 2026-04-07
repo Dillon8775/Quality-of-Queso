@@ -1,7 +1,7 @@
 package net.dillon.qualityofqueso.button;
 
 import net.dillon.qualityofqueso.screen.FilterItemsScreen;
-import net.dillon.qualityofqueso.util.ContainerTracker;
+import net.dillon.qualityofqueso.util.ContainerUtil;
 import net.dillon.qualityofqueso.util.ModTexts;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -27,12 +27,12 @@ public class FillWhatsPresentButton extends ToggleableButton {
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDouble) {
-        if (ContainerTracker.IS_TRACKED_CONTAINER) {
+        if (ContainerUtil.IS_TRACKED_CONTAINER) {
             if (event.button() == 1) {
-                ContainerTracker.OPENING_PLACEHOLDER_SCREEN = true;
+                ContainerUtil.OPENING_PLACEHOLDER_SCREEN = true;
                 this.minecraft.setScreen(new FilterItemsScreen(this.parent));
             } else {
-                ContainerTracker.toggleCurrentFilterMode();
+                ContainerUtil.toggleCurrentFilterMode();
                 this.playDownSound(Minecraft.getInstance().getSoundManager());
             }
             return true;
@@ -49,10 +49,10 @@ public class FillWhatsPresentButton extends ToggleableButton {
 
     @Override
     protected String onTextureId() {
-        if (!ContainerTracker.IS_TRACKED_CONTAINER) {
+        if (!ContainerUtil.IS_TRACKED_CONTAINER) {
             return of("fill_whats_present");
         } else {
-            if (ContainerTracker.CURRENT_FILTER_MODE.tag()) {
+            if (ContainerUtil.CURRENT_FILTER_MODE.tag()) {
                 return of("filtered_tag");
             } else {
                 return of("filtered");
@@ -72,15 +72,15 @@ public class FillWhatsPresentButton extends ToggleableButton {
 
     @Override
     protected Component getTooltipToRender() {
-        if (ContainerTracker.IS_TRACKED_CONTAINER) {
-            String filterModeKey = ContainerTracker.CURRENT_FILTER_MODE.tag()
+        if (ContainerUtil.IS_TRACKED_CONTAINER) {
+            String filterModeKey = ContainerUtil.CURRENT_FILTER_MODE.tag()
                     ? "qualityofqueso.gui.tag_filtered"
                     : "qualityofqueso.gui.item_filtered";
             return Component.translatable(
                     "qualityofqueso.gui.filtered_mode",
                     // params
                     Component.translatable(filterModeKey).copy()
-                            .withColor(ContainerTracker.CURRENT_FILTER_MODE.tag() ? ModTexts.TAG_COLOR : ModTexts.ITEM_COLOR),
+                            .withColor(ContainerUtil.CURRENT_FILTER_MODE.tag() ? ModTexts.TAG_COLOR : ModTexts.ITEM_COLOR),
                     Component.translatable("qualityofqueso.gui.right_click_switch")
             );
         } else {

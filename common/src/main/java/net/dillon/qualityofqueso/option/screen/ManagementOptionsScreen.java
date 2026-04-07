@@ -21,7 +21,7 @@ public class ManagementOptionsScreen extends AbstractModOptionsScreen {
     protected OptionInstance<?>[] options() {
         return new OptionInstance[]{
                 ModListOptions.dragSorting(),
-                ModListOptions.tagSorting()
+                ModListOptions.buttonSounds(),
         };
     }
 
@@ -37,7 +37,6 @@ public class ManagementOptionsScreen extends AbstractModOptionsScreen {
         this.list.addSmall(this.options());
 
         List<AbstractWidget> options = new ArrayList<>(List.of(
-                ModListOptions.buttonSounds().createButton(this.options),
                 Button.builder(Component.translatable("qualityofqueso.gui.button_display_options"), button -> {
                     this.minecraft.setScreen(new ButtonDisplayOptionsScreen(this));
                 }).tooltip(Tooltip.create(Component.translatable("qualityofqueso.gui.button_display_options.tooltip"))).build()

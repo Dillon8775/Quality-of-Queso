@@ -2,6 +2,7 @@ package net.dillon.qualityofqueso.util;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.dillon.qualityofqueso.button.TransferButton;
+import net.dillon.qualityofqueso.option.eum.management.SortingMode;
 import net.dillon.qualityofqueso.option.screen.ModOptionsScreen;
 import net.dillon.qualityofqueso.platform.MultiLoader;
 import net.dillon.qualityofqueso.sound.ModSoundEvents;
@@ -393,7 +394,7 @@ public class ButtonUtil {
      */
     public static boolean matchesFillFilter(ItemStack fromStack, ItemStack toStack) {
         boolean areMatching = fromStack.getItem() == toStack.getItem();
-        if (ContainerTracker.IS_TRACKED_CONTAINER && ContainerTracker.CURRENT_FILTER_MODE.tag()) {
+        if (ContainerUtil.IS_TRACKED_CONTAINER && ContainerUtil.CURRENT_FILTER_MODE.tag()) {
             return areStacksInSameTag(fromStack, toStack) || areMatching;
         }
         return areMatching;
@@ -403,7 +404,7 @@ public class ButtonUtil {
      * @return true if the item is present in the opposing inventory/container.
      */
     public static boolean isPresent(boolean toInventory, Container container, AbstractContainerMenu menu, ItemStack sourceStack) {
-        if (ContainerTracker.IS_TRACKED_CONTAINER) {
+        if (ContainerUtil.IS_TRACKED_CONTAINER) {
             return toInventory || itemMatchesPlaceholder(sourceStack);
         }
 
@@ -422,11 +423,11 @@ public class ButtonUtil {
      * @return true if the stack matches any placeholder in the current tracked container.
      */
     public static boolean itemMatchesPlaceholder(ItemStack sourceStack) {
-        if (!ContainerTracker.IS_TRACKED_CONTAINER) {
+        if (!ContainerUtil.IS_TRACKED_CONTAINER) {
             return false;
         }
 
-        for (ItemStack placeholderStack : ContainerTracker.getCurrentPlaceholderStacks()) {
+        for (ItemStack placeholderStack : ContainerUtil.getCurrentPlaceholderStacks()) {
             if (!placeholderStack.isEmpty() && matchesFillFilter(sourceStack, placeholderStack)) {
                 return true;
             }
@@ -551,48 +552,59 @@ public class ButtonUtil {
             return;
         }
 
-        // Merge all stacks
-        for (int i = 0; i < containerSize; i++) {
-            Slot source = handler.slots.get(i);
-            if (!source.hasItem()) {
-                continue;
-            }
-
-            ItemStack sourceStack = source.getItem();
-
-            // Already full, skip
-            if (sourceStack.getCount() >= sourceStack.getMaxStackSize()) {
-                continue;
-            }
-
-            for (int j = i + 1; j < containerSize; j++) {
-                Slot target = handler.slots.get(j);
-                if (!target.hasItem()) {
+        // Merge all stacks. Keep sweeping until a full pass makes no changes.
+        boolean mergedAnyInPass;
+        do {
+            mergedAnyInPass = false;
+            for (int i = 0; i < containerSize; i++) {
+                Slot source = handler.slots.get(i);
+                if (!source.hasItem()) {
                     continue;
                 }
 
-                ItemStack targetStack = target.getItem();
+                ItemStack sourceStack = source.getItem();
 
-                if (!canCombine(sourceStack, targetStack)) {
+                // Already full, skip
+                if (sourceStack.getCount() >= sourceStack.getMaxStackSize()) {
                     continue;
                 }
 
-                // Pick up target
-                clickSlot(client, handler, j);
-                // Click source to merge
-                clickSlot(client, handler, i);
+                for (int j = i + 1; j < containerSize; j++) {
+                    Slot target = handler.slots.get(j);
+                    if (!target.hasItem()) {
+                        continue;
+                    }
 
-                // If cursor still has items, put them back
-                if (!client.player.containerMenu.getCarried().isEmpty()) {
+                    ItemStack targetStack = target.getItem();
+
+                    if (!canCombine(sourceStack, targetStack)) {
+                        continue;
+                    }
+
+                    int sourceBefore = source.getItem().getCount();
+                    int targetBefore = target.getItem().getCount();
+
+                    // Pick up target
                     clickSlot(client, handler, j);
-                }
+                    // Click source to merge
+                    clickSlot(client, handler, i);
 
-                // Stop if source is now full
-                if (source.getItem().getCount() >= sourceStack.getMaxStackSize()) {
-                    break;
+                    // If cursor still has items, put them back
+                    if (!client.player.containerMenu.getCarried().isEmpty()) {
+                        clickSlot(client, handler, j);
+                    }
+
+                    if (source.getItem().getCount() != sourceBefore || target.getItem().getCount() != targetBefore) {
+                        mergedAnyInPass = true;
+                    }
+
+                    // Stop if source is now full
+                    if (source.getItem().getCount() >= sourceStack.getMaxStackSize()) {
+                        break;
+                    }
                 }
             }
-        }
+        } while (mergedAnyInPass);
 
         // Build list from LIVE slots AFTER merge
         List<ItemStack> stacks = new ArrayList<>();
@@ -609,7 +621,7 @@ public class ButtonUtil {
         for (ItemStack stack : stacks) {
             String tagKey = "";
 
-            if (options().management.tagSorting) {
+            if (options().management.sortingMode.tag()) {
                 tagKey = stack.tags()
                         .map(tag -> {
                             String location = tag.location().toString();
@@ -623,13 +635,21 @@ public class ButtonUtil {
             tagCache.put(stack, tagKey);
         }
 
-        stacks.sort(Comparator.comparing((ItemStack stack) -> tagCache.get(stack).isEmpty())
-                .thenComparing(tagCache::get)
-                .thenComparing(stack ->
-                        stack.getCustomName() != null
-                                ? stack.getCustomName().getString()
-                                : stack.getItemName().getString()
-                ));
+        boolean countSort = options().management.sortingMode.count();
+        if (countSort) {
+            Comparator<ItemStack> comp = options().management.sortingMode == SortingMode.COUNT_DESCENDING
+                    ? Comparator.comparingInt(ItemStack::getCount).reversed()
+                    : Comparator.comparingInt(ItemStack::getCount);
+            stacks.sort(comp);
+        } else {
+            stacks.sort(Comparator.comparing((ItemStack stack) -> tagCache.get(stack).isEmpty())
+                    .thenComparing(tagCache::get)
+                    .thenComparing(stack ->
+                            stack.getCustomName() != null
+                                    ? stack.getCustomName().getString()
+                                    : stack.getItemName().getString()
+                    ));
+        }
 
         // Pad with empties
         while (stacks.size() < containerSize) {
@@ -641,11 +661,11 @@ public class ButtonUtil {
             ItemStack desired = stacks.get(target);
             ItemStack actual = handler.slots.get(target).getItem();
 
-            if (areEquivalentSortStacks(actual, desired)) {
+            if (areEquivalentSortStacks(actual, desired, countSort)) {
                 continue;
             }
 
-            int source = findMatchingSlot(handler, desired, target, containerSize);
+            int source = findMatchingSlot(handler, desired, target, containerSize, countSort);
             if (source == -1) {
                 continue;
             }
@@ -667,14 +687,14 @@ public class ButtonUtil {
      *
      * @return the slot index.
      */
-    private static int findMatchingSlot(AbstractContainerMenu handler, ItemStack target, int start, int limit) {
+    private static int findMatchingSlot(AbstractContainerMenu handler, ItemStack target, int start, int limit, boolean strictCountMatch) {
         if (target.isEmpty()) {
             return -1;
         }
 
         for (int i = start + 1; i < limit; i++) {
             ItemStack stack = handler.slots.get(i).getItem();
-            if (areEquivalentSortStacks(stack, target)) {
+            if (areEquivalentSortStacks(stack, target, strictCountMatch)) {
                 return i;
             }
         }
@@ -688,8 +708,9 @@ public class ButtonUtil {
         ItemStack aStack = handler.slots.get(a).getItem();
         ItemStack bStack = handler.slots.get(b).getItem();
 
-        // Bundle interaction consumes carried items, so route bundle swaps through an empty temp slot.
-        if (isBundle(aStack) || isBundle(bStack)) {
+        // Bundle or same-item stack interactions can consume/merge carried items,
+        // so route these swaps through an empty temp slot to force a true swap.
+        if (isBundle(aStack) || isBundle(bStack) || canCombine(aStack, bStack)) {
             int temp = findTemporaryEmptySlot(handler, a, b, totalSlots);
             if (temp != -1) {
                 clickSlot(client, handler, a);
@@ -736,14 +757,14 @@ public class ButtonUtil {
     /**
      * @return if stacks match, and handles bundling.
      */
-    private static boolean areEquivalentSortStacks(ItemStack a, ItemStack b) {
+    private static boolean areEquivalentSortStacks(ItemStack a, ItemStack b, boolean strictCountMatch) {
         if (a.isEmpty() || b.isEmpty()) {
             return a.isEmpty() && b.isEmpty();
         }
-        if (isBundle(a) || isBundle(b)) {
-            return ItemStack.isSameItemSameComponents(a, b);
-        }
-        return ItemStack.isSameItem(a, b);
+        boolean sameItem = isBundle(a) || isBundle(b)
+                ? ItemStack.isSameItemSameComponents(a, b)
+                : ItemStack.isSameItem(a, b);
+        return sameItem && (!strictCountMatch || a.getCount() == b.getCount());
     }
 
     /**

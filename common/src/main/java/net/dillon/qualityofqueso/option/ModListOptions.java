@@ -186,11 +186,6 @@ public class ModListOptions {
                 ON_OFF_TEXT, options().management.dragSorting, value -> options().management.dragSorting = value);
     }
 
-    public static OptionInstance<Boolean> tagSorting() {
-        return OptionInstance.createBoolean("qualityofqueso.options.tag_sorting", OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.tag_sorting.tooltip")),
-                ON_OFF_TEXT, options().management.tagSorting, value -> options().management.tagSorting = value);
-    }
-
     public static OptionInstance<DisplayIncludeHotbar> displayIncludeHotbar() {
         return new OptionInstance<>(
                 "qualityofqueso.options.display_include_hotbar",

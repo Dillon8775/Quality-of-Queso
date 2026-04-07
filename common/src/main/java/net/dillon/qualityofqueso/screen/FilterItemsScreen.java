@@ -1,6 +1,6 @@
 package net.dillon.qualityofqueso.screen;
 
-import net.dillon.qualityofqueso.util.ContainerTracker;
+import net.dillon.qualityofqueso.util.ContainerUtil;
 import net.dillon.qualityofqueso.util.ModTexts;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -62,7 +62,7 @@ public class FilterItemsScreen extends Screen {
             this.placeholders.add(ItemStack.EMPTY);
         }
 
-        List<ItemStack> saved = ContainerTracker.getCurrentPlaceholderStacks();
+        List<ItemStack> saved = ContainerUtil.getCurrentPlaceholderStacks();
         for (int i = 0; i < Math.min(saved.size(), size); i++) {
             ItemStack stack = saved.get(i);
             if (!stack.isEmpty()) {
@@ -78,8 +78,8 @@ public class FilterItemsScreen extends Screen {
      */
     @Override
     public void onClose() {
-        ContainerTracker.setCurrentPlaceholderStacks(this.placeholders);
-        ContainerTracker.RETURNING_FROM_PLACEHOLDER_SCREEN = true;
+        ContainerUtil.setCurrentPlaceholderStacks(this.placeholders);
+        ContainerUtil.RETURNING_FROM_PLACEHOLDER_SCREEN = true;
         this.minecraft.setScreen(this.parentScreen);
         playButtonSound(this.minecraft);
     }

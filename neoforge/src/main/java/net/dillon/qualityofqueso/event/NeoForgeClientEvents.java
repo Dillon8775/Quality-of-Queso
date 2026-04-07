@@ -35,11 +35,6 @@ public class NeoForgeClientEvents {
     }
 
     @SubscribeEvent
-    public static void onClientRespawn(ClientPlayerNetworkEvent.Clone event) {
-        ClientEvents.afterLevelChangeOrRespawn();
-    }
-
-    @SubscribeEvent
     public static void onClientDisconnect(ClientPlayerNetworkEvent.LoggingOut event) {
         ClientEvents.onPlayerDisconnect(Minecraft.getInstance());
     }

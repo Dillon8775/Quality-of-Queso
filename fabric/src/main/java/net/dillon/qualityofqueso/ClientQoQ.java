@@ -17,10 +17,10 @@ public class ClientQoQ implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        Balm.initializeMod(ModUtil.MOD_ID, FabricLoadContext.INSTANCE, ClientMain::cInitialize);
-
         registerFabricClientEvents();
         registerFabricKeyBindings();
         registerBoundSoundEvents();
+
+        Balm.initializeMod(ModUtil.MOD_ID, FabricLoadContext.INSTANCE, ClientMain::cInitialize);
     }
 }

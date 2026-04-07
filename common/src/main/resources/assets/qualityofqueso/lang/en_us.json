@@ -119,7 +119,7 @@
   "qualityofqueso.gui.quick_drop_button.with_search_query.inventory": "Drop all items containing \"%s\"",
   "qualityofqueso.gui.quick_drop_button.inventory": "Drop all items\nHold shift to only drop one of each item\nDoes not drop armor items or offhand items",
   "qualityofqueso.gui.swap_button": "Swap all items in this container with inventory, with it's respective slot",
-  "qualityofqueso.gui.sort_button": "Sort all items in this container\nSorting %s\nRight-click to change sort mode",
+  "qualityofqueso.gui.sort_button": "Sort all items in this container\nSorting %s\nScroll to change sort mode",
   "qualityofqueso.gui.include_hotbar": "Including hotbar\nClick to disable",
   "qualityofqueso.gui.exclude_hotbar": "Ignoring hotbar\nClick to include",
   "qualityofqueso.gui.filtered_mode": "This container is marked as \"filtered\"\nMode: %s\n%s",

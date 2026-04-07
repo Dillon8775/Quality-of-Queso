@@ -47,11 +47,10 @@ public class ModClientOptions {
         public Swapping swapping = Swapping.OFF;
 
         public boolean dragSorting = true;
-        public boolean tagSorting = false;
-
         public ButtonSounds buttonSounds = ButtonSounds.ALL;
 
         // Config-only
+        public SortingMode sortingMode = SortingMode.ALPHABETICAL;
         public boolean alwaysQuickMove = false;
         public boolean saveExcludedSlots = false;
         public boolean fillWhatsPreset = false;

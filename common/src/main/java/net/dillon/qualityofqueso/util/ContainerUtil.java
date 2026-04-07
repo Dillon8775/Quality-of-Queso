@@ -24,9 +24,9 @@ import java.util.*;
 import static net.dillon.qualityofqueso.util.ModUtil.trackedContainers;
 
 /**
- * Tracks client-selected container positions that should auto-enable fill-what's-present.
+ * Tracks client-selected containers.
  */
-public class ContainerTracker {
+public class ContainerUtil {
     public enum FilterMode {
         ITEM,
         TAG;
@@ -86,7 +86,7 @@ public class ContainerTracker {
      * @return the key for the tracked chests.
      */
     private static String key(Level level, BlockPos pos) {
-        String world = worldKey(level);
+        String world = worldKey();
         String dimension = level.dimension() == Level.END ? "minecraft:end"
                 : level.dimension() == Level.NETHER ? "minecraft:nether"
                   : level.dimension() == Level.OVERWORLD ? "minecraft:overworld" : level.dimension().toString();
@@ -100,7 +100,7 @@ public class ContainerTracker {
     /**
      * @return a world/session key so container tracking does not collide across saves/servers.
      */
-    private static String worldKey(Level level) {
+    private static String worldKey() {
         Minecraft minecraft = Minecraft.getInstance();
         if (minecraft.getSingleplayerServer() != null) {
             return "singleplayer:" + minecraft.getSingleplayerServer().getWorldData().getLevelName();

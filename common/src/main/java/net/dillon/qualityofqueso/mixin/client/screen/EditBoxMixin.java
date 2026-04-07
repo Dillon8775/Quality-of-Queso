@@ -62,9 +62,9 @@ public abstract class EditBoxMixin extends AbstractWidget {
     @ModifyArg(method = "extractWidgetRenderState", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIII)V"), index = 1)
     private Identifier applySearchFieldTexture(Identifier original) {
         Identifier newId = NEW_SPRITES.get(this.isActive(), this.isFocused());
-        return (EditBox) (Object) this instanceof SearchField && !options().accessibility.useOldSearchBarTexture
-                ? options().searching.transparentSearchBar ? ofQoQ("widget/search_field_transparent") : newId
-                : original;
+        return (EditBox) (Object) this instanceof SearchField
+                ? options().searching.transparentSearchBar ? ofQoQ("widget/search_field_transparent")
+                  : !options().accessibility.useOldSearchBarTexture ? newId : original : original;
     }
 
     /**

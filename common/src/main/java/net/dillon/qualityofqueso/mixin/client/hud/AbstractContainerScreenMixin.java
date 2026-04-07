@@ -8,7 +8,7 @@ import net.dillon.qualityofqueso.button.widget.WidgetLayoutHolder;
 import net.dillon.qualityofqueso.keybind.ModKeybinds;
 import net.dillon.qualityofqueso.option.instance.ModClientOptions;
 import net.dillon.qualityofqueso.screen.gui.SearchField;
-import net.dillon.qualityofqueso.util.ContainerTracker;
+import net.dillon.qualityofqueso.util.ContainerUtil;
 import net.dillon.qualityofqueso.util.EnchantingHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -157,18 +157,18 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             }
 
             // Handle tracked containers
-            if (ContainerTracker.RETURNING_FROM_PLACEHOLDER_SCREEN) {
-                ContainerTracker.RETURNING_FROM_PLACEHOLDER_SCREEN = false;
-                ContainerTracker.IS_TRACKED_CONTAINER = true;
-            } else if (ContainerTracker.consumePendingOpenIsTracked()) {
-                ContainerTracker.IS_TRACKED_CONTAINER = true;
+            if (ContainerUtil.RETURNING_FROM_PLACEHOLDER_SCREEN) {
+                ContainerUtil.RETURNING_FROM_PLACEHOLDER_SCREEN = false;
+                ContainerUtil.IS_TRACKED_CONTAINER = true;
+            } else if (ContainerUtil.consumePendingOpenIsTracked()) {
+                ContainerUtil.IS_TRACKED_CONTAINER = true;
                 if (!options().management.fillWhatsPreset) {
                     options().management.fillWhatsPreset = true;
                     ModClientOptions.CLIENT.save();
                     this.disableFillWhatsPresentOnClose = true;
                 }
             } else {
-                ContainerTracker.IS_TRACKED_CONTAINER = false;
+                ContainerUtil.IS_TRACKED_CONTAINER = false;
             }
 
             if (options().searching.containerSearching) {
@@ -799,7 +799,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             }
 
             // MOVE MATCHING ITEMS BUTTON
-            if (ContainerTracker.IS_TRACKED_CONTAINER || !options().buttonDisplayOptions.displayFillWhatsPresent.filteredContainersOnly() &&
+            if (ContainerUtil.IS_TRACKED_CONTAINER || !options().buttonDisplayOptions.displayFillWhatsPresent.filteredContainersOnly() &&
                     (containerScreen && options().management.containerFiltering && options().management.transferring.orKeyOnly())) {
                 this.fillWhatsPresentButton = this.addWidget(
                         new FillWhatsPresentButton(
@@ -808,7 +808,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                                 this.getSearchFieldText(),
                                 "fill_whats_present",
                                 b -> {
-                                    if (!ContainerTracker.IS_TRACKED_CONTAINER) {
+                                    if (!ContainerUtil.IS_TRACKED_CONTAINER) {
                                         options().management.fillWhatsPreset = !options().management.fillWhatsPreset;
                                         ModClientOptions.CLIENT.save();
                                     }
@@ -1096,6 +1096,18 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
     private void closeButtonOnClickOutOfBounds(Slot slot, int slotId, int buttonNum, ContainerInput containerInput, CallbackInfo ci) {
         if (modEnabled(this.minecraft) && options().misc.quickGuiExit && this.menu.getCarried().isEmpty() && buttonNum == 0 && slot == null) {
             this.onClose();
+        }
+    }
+
+    /**
+     * Changes sorting mode when scrolling over it.
+     */
+    @Inject(method = "mouseScrolled", at = @At("HEAD"))
+    private void changeSortMode(double x, double y, double scrollX, double scrollY, CallbackInfoReturnable<Boolean> cir) {
+        if (buttonHoveredAndActive(this.sortButton)) {
+            options().management.sortingMode = options().management.sortingMode.next(scrollY > 0);
+            ModClientOptions.CLIENT.save();
+            playDefaultSound(Minecraft.getInstance().getSoundManager());
         }
     }
 
@@ -1462,12 +1474,12 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
         }
 
         if (isContainerScreen(this.screen)) {
-            if (ContainerTracker.OPENING_PLACEHOLDER_SCREEN) {
-                ContainerTracker.OPENING_PLACEHOLDER_SCREEN = false;
+            if (ContainerUtil.OPENING_PLACEHOLDER_SCREEN) {
+                ContainerUtil.OPENING_PLACEHOLDER_SCREEN = false;
                 return;
             }
-            ContainerTracker.clearActiveContainer();
-            ContainerTracker.IS_TRACKED_CONTAINER = false;
+            ContainerUtil.clearActiveContainer();
+            ContainerUtil.IS_TRACKED_CONTAINER = false;
         }
     }
 
@@ -1481,7 +1493,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             String text = this.getSearchFieldText();
             boolean refocus = this.containerSearchField.isFocused();
             // Gets current tracked container
-            boolean trackedContainer = ContainerTracker.IS_TRACKED_CONTAINER;
+            boolean trackedContainer = ContainerUtil.IS_TRACKED_CONTAINER;
             // Prevents ConcurrentModificationException
             Set<Integer> temp = new HashSet<>(this.excludedSlots);
             this.excludedSlots.clear();
@@ -1494,7 +1506,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             this.containerSearchField.setValue(text);
             this.containerSearchField.setFocused(refocus);
             // Reset tracked container
-            ContainerTracker.IS_TRACKED_CONTAINER = trackedContainer;
+            ContainerUtil.IS_TRACKED_CONTAINER = trackedContainer;
         }
     }
 }

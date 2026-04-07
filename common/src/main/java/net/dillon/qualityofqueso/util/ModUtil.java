@@ -3,10 +3,7 @@ package net.dillon.qualityofqueso.util;
 import net.blay09.mods.balm.Balm;
 import net.dillon.qualityofqueso.button.SwapButton;
 import net.dillon.qualityofqueso.option.base.BaseOptions;
-import net.dillon.qualityofqueso.option.instance.ModClientOptions;
-import net.dillon.qualityofqueso.option.instance.ModCommonOptions;
-import net.dillon.qualityofqueso.option.instance.TrackedContainers;
-import net.dillon.qualityofqueso.option.instance.UniversalOptions;
+import net.dillon.qualityofqueso.option.instance.*;
 import net.dillon.qualityofqueso.packet.ClientPreferencesC2SPacket;
 import net.dillon.qualityofqueso.packet.GlowSearchC2SPacket;
 import net.dillon.qualityofqueso.platform.MultiLoader;
@@ -257,6 +254,20 @@ public class ModUtil {
      */
     public static TrackedContainers trackedContainers() {
         return TrackedContainers.TRACKED_CONTAINERS.getInstance();
+    }
+
+    /**
+     * @return locked player slots, respective to the client-player.
+     */
+    public static LockedPlayerSlots lockedPlayerSlots() {
+        return LockedPlayerSlots.LOCKED_PLAYER_SLOTS.getInstance();
+    }
+
+    /**
+     * @return locked container slots, for each container in a world.
+     */
+    public static LockedContainerSlots lockedContainerSlots() {
+        return LockedContainerSlots.LOCKED_CONTAINER_SLOTS.getInstance();
     }
 
     /**
@@ -524,8 +535,8 @@ public class ModUtil {
      * Handles all cooldown-related timers.
      */
     public static void handleCooldownTimers() {
-        if (options().management.containerFiltering && ContainerTracker.COOLDOWN > 0) {
-            ContainerTracker.COOLDOWN--;
+        if (options().management.containerFiltering && ContainerUtil.COOLDOWN > 0) {
+            ContainerUtil.COOLDOWN--;
         }
 
         if (options().management.swapping.orKeyOnly() && SwapButton.SWAP_COOLDOWN > 0) {

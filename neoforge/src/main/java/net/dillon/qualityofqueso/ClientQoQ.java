@@ -17,9 +17,6 @@ import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 public class ClientQoQ {
 
     public ClientQoQ(ModContainer container, IEventBus modEventBus) {
-        final var context = new NeoForgeLoadContext(container, modEventBus);
-        Balm.initializeMod(ModUtil.MOD_ID, context, ClientMain::cInitialize);
-
         NeoForgeSoundEvents.register(modEventBus);
         modEventBus.addListener(this::clientSetup);
 
@@ -27,6 +24,9 @@ public class ClientQoQ {
                 IConfigScreenFactory.class,
                 (mc, parent) -> new ModOptionsScreen(parent)
         );
+
+        final var context = new NeoForgeLoadContext(container, modEventBus);
+        Balm.initializeMod(ModUtil.MOD_ID, context, ClientMain::cInitialize);
     }
 
     private void clientSetup(final FMLClientSetupEvent event) {

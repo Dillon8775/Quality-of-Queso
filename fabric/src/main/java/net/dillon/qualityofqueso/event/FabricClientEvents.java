@@ -36,10 +36,6 @@ public class FabricClientEvents {
             ClientEvents.afterLevelChangeOrRespawn();
         });
 
-        ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
-            ClientEvents.afterScreenInit(screen);
-        });
-
         ClientPlayConnectionEvents.DISCONNECT.register((handler, minecraft) -> {
             ClientEvents.onPlayerDisconnect(minecraft);
         });

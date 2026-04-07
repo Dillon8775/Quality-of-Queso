@@ -1,6 +1,7 @@
 package net.dillon.qualityofqueso.mixin.client.util;
 
 import com.mojang.authlib.GameProfile;
+import net.dillon.qualityofqueso.event.ClientEvents;
 import net.dillon.qualityofqueso.util.ItemHudTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -166,5 +167,13 @@ public class LocalPlayerMixin extends AbstractClientPlayer {
         if (!hasInfinity(useItem) || !projectile.is(Items.ARROW)) {
             ItemHudTracker.setStack(projectile.isEmpty() ? new ItemStack(Items.ARROW) : projectile.copyWithCount(1), true);
         }
+    }
+
+    /**
+     * Clears the armor status hud when respawning.
+     */
+    @Inject(method = "respawn", at = @At("TAIL"))
+    private void resetArmorStateWhenRespawning(CallbackInfo ci) {
+        ClientEvents.afterLevelChangeOrRespawn();
     }
 }

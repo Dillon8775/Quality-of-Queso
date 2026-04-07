@@ -1,6 +1,6 @@
 package net.dillon.qualityofqueso.mixin.client.util;
 
-import net.dillon.qualityofqueso.util.ContainerTracker;
+import net.dillon.qualityofqueso.util.ContainerUtil;
 import net.dillon.qualityofqueso.util.ItemHudTracker;
 import net.dillon.qualityofqueso.util.ModTexts;
 import net.minecraft.ChatFormatting;
@@ -30,7 +30,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import static net.dillon.qualityofqueso.util.ButtonUtil.playButtonSound;
-import static net.dillon.qualityofqueso.util.ContainerTracker.isValidBlockEntity;
+import static net.dillon.qualityofqueso.util.ContainerUtil.isValidBlockEntity;
 import static net.dillon.qualityofqueso.util.ModUtil.modEnabled;
 import static net.dillon.qualityofqueso.util.ModUtil.options;
 
@@ -43,7 +43,7 @@ public class MultiPlayerGameModeMixin {
     @Inject(method = "startDestroyBlock", at = @At("HEAD"), cancellable = true)
     private void onStartDestroyBlock(BlockPos pos, Direction direction, CallbackInfoReturnable<Boolean> cir) {
         Minecraft minecraft = Minecraft.getInstance();
-        if (!modEnabled(minecraft) || !options().management.containerFiltering || minecraft.player == null || minecraft.level == null || !minecraft.player.isShiftKeyDown() || ContainerTracker.COOLDOWN > 0) {
+        if (!modEnabled(minecraft) || !options().management.containerFiltering || minecraft.player == null || minecraft.level == null || !minecraft.player.isShiftKeyDown() || ContainerUtil.COOLDOWN > 0) {
             return;
         }
 
@@ -52,7 +52,7 @@ public class MultiPlayerGameModeMixin {
             return;
         }
 
-        boolean tracked = ContainerTracker.toggleTracked(minecraft.level, pos);
+        boolean tracked = ContainerUtil.toggleTracked(minecraft.level, pos);
         Component container = blockEntity instanceof ShulkerBoxBlockEntity ? Component.literal("shulker box").withStyle(ChatFormatting.LIGHT_PURPLE)
                 : blockEntity instanceof BarrelBlockEntity ? Component.literal("barrel").withStyle(ChatFormatting.GOLD)
                   : Component.literal("chest").withStyle(ChatFormatting.GOLD);
@@ -66,7 +66,7 @@ public class MultiPlayerGameModeMixin {
                 Component.translatable("qualityofqueso.gui.filtered_container").withColor(ModTexts.ITEM_COLOR)
         ));
         playButtonSound(minecraft, false);
-        ContainerTracker.COOLDOWN = ContainerTracker.DEFAULT_COOLDOWN;
+        ContainerUtil.COOLDOWN = ContainerUtil.DEFAULT_COOLDOWN;
         cir.setReturnValue(false);
         cir.cancel();
     }
@@ -121,9 +121,9 @@ public class MultiPlayerGameModeMixin {
 
         BlockEntity blockEntity = player.level().getBlockEntity(hitResult.getBlockPos());
         if (isValidBlockEntity(blockEntity)) {
-            ContainerTracker.rememberOpened(player.level(), hitResult.getBlockPos());
+            ContainerUtil.rememberOpened(player.level(), hitResult.getBlockPos());
         } else {
-            ContainerTracker.clearPendingOpened();
+            ContainerUtil.clearPendingOpened();
         }
     }
 

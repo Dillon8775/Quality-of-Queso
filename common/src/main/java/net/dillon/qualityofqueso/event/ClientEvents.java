@@ -28,12 +28,6 @@ public class ClientEvents {
         resetArmorHudState();
     }
 
-    public static void afterScreenInit(Screen screen) {
-        if (screen instanceof DeathScreen) {
-            resetArmorHudState();
-        }
-    }
-
     public static void onPlayerDisconnect(Minecraft minecraft) {
         resetArmorHudState();
 
