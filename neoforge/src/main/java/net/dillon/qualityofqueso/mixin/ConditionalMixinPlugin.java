@@ -1,6 +1,6 @@
 package net.dillon.qualityofqueso.mixin;
 
-import net.dillon.qualityofqueso.plugin.MixinPluginUtil;
+import net.dillon.qualityofqueso.util.MixinPluginUtil;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 

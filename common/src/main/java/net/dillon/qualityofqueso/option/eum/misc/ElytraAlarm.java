@@ -1,21 +1,21 @@
 package net.dillon.qualityofqueso.option.eum.misc;
 
 import com.mojang.serialization.Codec;
+import net.dillon.qualityofqueso.option.eum.OptionEnum;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.StringRepresentable;
+import org.jspecify.annotations.NonNull;
 
-public enum ElytraAlarm implements StringRepresentable {
-    ON(0, "on", "qualityofqueso.options.elytra_alarm.on"),
-    INDICATOR_ONLY(1, "indicator_only", "qualityofqueso.options.elytra_alarm.indicator_only"),
-    OFF(2, "off", "qualityofqueso.options.elytra_alarm.off");
+public enum ElytraAlarm implements StringRepresentable, OptionEnum {
+    ON("on", "qualityofqueso.options.elytra_alarm.on"),
+    INDICATOR_ONLY("indicator_only", "qualityofqueso.options.elytra_alarm.indicator_only"),
+    OFF("off", "qualityofqueso.options.elytra_alarm.off");
 
-    public static final Codec<ElytraAlarm> Codec = StringRepresentable.fromEnum(ElytraAlarm::values);
-    private final int ordinal;
+    public static final Codec<ElytraAlarm> CODEC = StringRepresentable.fromEnum(ElytraAlarm::values);
     private final String name;
     private final Component translationKey;
 
-    ElytraAlarm(final int ordinal, final String name, final String translationKey) {
-        this.ordinal = ordinal;
+    ElytraAlarm(final String name, final String translationKey) {
         this.name = name;
         this.translationKey = Component.translatable(translationKey);
     }
@@ -28,15 +28,13 @@ public enum ElytraAlarm implements StringRepresentable {
         return this == INDICATOR_ONLY;
     }
 
-    public int getId() {
-        return this.ordinal;
-    }
-
-    public String getSerializedName() {
+    @Override
+    public @NonNull String getSerializedName() {
         return this.name;
     }
 
-    public Component getText() {
+    @Override
+    public Component getTranslationKey() {
         return this.translationKey;
     }
 }

@@ -1,21 +1,21 @@
 package net.dillon.qualityofqueso.option.eum.hud;
 
 import com.mojang.serialization.Codec;
+import net.dillon.qualityofqueso.option.eum.OptionEnum;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.StringRepresentable;
+import org.jspecify.annotations.NonNull;
 
-public enum ArmorStatus implements StringRepresentable {
-    ON(0, "on", "qualityofqueso.options.armor_status.on"),
-    ON_UPDATE(1, "on_update", "qualityofqueso.options.armor_status.on_update"),
-    OFF(2, "off", "qualityofqueso.options.armor_status.off");
+public enum ArmorStatus implements StringRepresentable, OptionEnum {
+    ALWAYS("always", "qualityofqueso.options.armor_status.always"),
+    ON_UPDATE("on_update", "qualityofqueso.options.armor_status.on_update"),
+    OFF("off", "qualityofqueso.options.armor_status.off");
 
-    public static final Codec<ArmorStatus> Codec = StringRepresentable.fromEnum(ArmorStatus::values);
-    private final int ordinal;
+    public static final Codec<ArmorStatus> CODEC = StringRepresentable.fromEnum(ArmorStatus::values);
     private final String name;
     private final Component translationKey;
 
-    ArmorStatus(final int ordinal, final String name, final String translationKey) {
-        this.ordinal = ordinal;
+    ArmorStatus(final String name, final String translationKey) {
         this.name = name;
         this.translationKey = Component.translatable(translationKey);
     }
@@ -28,15 +28,16 @@ public enum ArmorStatus implements StringRepresentable {
         return this == ON_UPDATE;
     }
 
-    public int getId() {
-        return this.ordinal;
+    public boolean always() {
+        return this == ALWAYS;
     }
 
-    public String getSerializedName() {
+    public @NonNull String getSerializedName() {
         return this.name;
     }
 
-    public Component getText() {
+    @Override
+    public Component getTranslationKey() {
         return this.translationKey;
     }
 }

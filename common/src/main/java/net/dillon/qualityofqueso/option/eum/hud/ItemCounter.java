@@ -1,21 +1,21 @@
 package net.dillon.qualityofqueso.option.eum.hud;
 
 import com.mojang.serialization.Codec;
+import net.dillon.qualityofqueso.option.eum.OptionEnum;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.StringRepresentable;
+import org.jspecify.annotations.NonNull;
 
-public enum ItemCounter implements StringRepresentable {
-    TOTAL(0, "always", "qualityofqueso.options.item_counter.total"),
-    STACKS(1, "stacks", "qualityofqueso.options.item_counter.stacks"),
-    OFF(1, "off", "qualityofqueso.options.item_counter.off");
+public enum ItemCounter implements StringRepresentable, OptionEnum {
+    TOTAL("always", "qualityofqueso.options.item_counter.total"),
+    STACKS("stacks", "qualityofqueso.options.item_counter.stacks"),
+    OFF("off", "qualityofqueso.options.item_counter.off");
 
-    public static final Codec<ItemCounter> Codec = StringRepresentable.fromEnum(ItemCounter::values);
-    private final int ordinal;
+    public static final Codec<ItemCounter> CODEC = StringRepresentable.fromEnum(ItemCounter::values);
     private final String name;
     private final Component translationKey;
 
-    ItemCounter(final int ordinal, final String name, final String translationKey) {
-        this.ordinal = ordinal;
+    ItemCounter(final String name, final String translationKey) {
         this.name = name;
         this.translationKey = Component.translatable(translationKey);
     }
@@ -24,15 +24,12 @@ public enum ItemCounter implements StringRepresentable {
         return this != OFF;
     }
 
-    public int getId() {
-        return this.ordinal;
-    }
-
-    public String getSerializedName() {
+    public @NonNull String getSerializedName() {
         return this.name;
     }
 
-    public Component getText() {
+    @Override
+    public Component getTranslationKey() {
         return this.translationKey;
     }
 }

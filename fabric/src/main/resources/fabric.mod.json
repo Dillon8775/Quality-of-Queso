@@ -20,6 +20,9 @@
     "client": [
       "net.dillon.qualityofqueso.ClientQoQ"
     ],
+    "server": [
+      "net.dillon.qualityofqueso.ServerQoQ"
+    ],
     "main": [
       "net.dillon.qualityofqueso.QoQ"
     ],
@@ -32,7 +35,7 @@
   ],
   "depends": {
     "fabricloader": ">=${fabric_loader_version}",
-    "minecraft": ">=26.1-pre.2",
+    "minecraft": "26.1.2",
     "java": ">=${java_version}",
     "fabric-api": "*",
     "balm-fabric": ">=${balm_version}"

@@ -8,6 +8,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.LevelChunk;
 import org.jspecify.annotations.Nullable;
 
+import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
+
 /**
  * Displays your facing direction, accurately (ex. northwest, northeast, southwest, etc.)
  */
@@ -16,11 +18,19 @@ public class AccurateFacingHudEntry extends QoQScreenEntry {
     @Override
     public void display(DebugScreenDisplayer displayer, @Nullable Level serverOrClientLevel, @Nullable LevelChunk clientChunk, @Nullable LevelChunk serverChunk) {
         Minecraft minecraft = Minecraft.getInstance();
+
+        // Return out of the mod isn't enabled
+        if (!modEnabled(minecraft)) {
+            return;
+        }
+
         Entity entity = minecraft.getCameraEntity();
+        // Ensure entity isn't null
         if (entity == null) {
             return;
         }
 
+        // Create absolute values for directions; we can remove the negative if positive
         int northA = -110;
         int northB = -160;
         int southA = -70;
@@ -31,6 +41,7 @@ public class AccurateFacingHudEntry extends QoQScreenEntry {
         int southAAbs = Math.abs(southA);
         int southBAbs = Math.abs(southB);
 
+        // Determine the direction facing
         String facing;
         float yaw = Mth.wrapDegrees(entity.getYRot());
         if (yaw > northAAbs && yaw < northBAbs) {
@@ -50,6 +61,7 @@ public class AccurateFacingHudEntry extends QoQScreenEntry {
             };
         }
 
+        // Add the facing line
         displayer.addLine("Facing: " + facing);
     }
 }

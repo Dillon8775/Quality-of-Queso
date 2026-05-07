@@ -1,6 +1,7 @@
 package net.dillon.qualityofqueso.screen;
 
-import net.dillon.qualityofqueso.util.ContainerUtil;
+import net.dillon.qualityofqueso.helper.ContainerHelper;
+import net.dillon.qualityofqueso.util.ModConstants;
 import net.dillon.qualityofqueso.util.ModTexts;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -21,8 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static net.dillon.qualityofqueso.util.AccessorUtil.key;
-import static net.dillon.qualityofqueso.util.ButtonUtil.playButtonSound;
+import static net.dillon.qualityofqueso.helper.ManagementHelper.playButtonSound;
+import static net.dillon.qualityofqueso.helper.MethodHelper.key;
 
 /**
  * Set filtered items in a container (fully 100% client-side).
@@ -31,6 +32,8 @@ public class FilterItemsScreen extends Screen {
     private static final int SLOT_SIZE = 18;
     private static final int COLUMNS = 9;
     private static final int PLACEHOLDER_ROWS = 6;
+    private static final int MAX_PLACEHOLDER_SLOTS = 504;
+    private static final int MAX_PLACEHOLDER_ROWS = MAX_PLACEHOLDER_SLOTS / COLUMNS;
     private static final int GUI_WIDTH = 176;
     private static final int GUI_HEIGHT = 222;
     private static final int INVENTORY_START_Y = 139;
@@ -42,6 +45,7 @@ public class FilterItemsScreen extends Screen {
     private final List<ItemStack> placeholders = new ArrayList<>();
     private ItemStack selectedStack = ItemStack.EMPTY;
     private int selectedSourceSlot = -1;
+    private int scrollRow = 0;
     private int lastMouseX;
     private int lastMouseY;
 
@@ -51,60 +55,45 @@ public class FilterItemsScreen extends Screen {
     }
 
     /**
-     * Constructs the screen, and retrieves all filtered items.
+     * This is not a pause screen.
      */
-    @Override
-    protected void init() {
-        playButtonSound(this.minecraft);
-        this.placeholders.clear();
-        int size = PLACEHOLDER_ROWS * COLUMNS;
-        for (int i = 0; i < size; i++) {
-            this.placeholders.add(ItemStack.EMPTY);
-        }
-
-        List<ItemStack> saved = ContainerUtil.getCurrentPlaceholderStacks();
-        for (int i = 0; i < Math.min(saved.size(), size); i++) {
-            ItemStack stack = saved.get(i);
-            if (!stack.isEmpty()) {
-                ItemStack copy = stack.copy();
-                copy.setCount(1);
-                this.placeholders.set(i, copy);
-            }
-        }
-    }
-
-    /**
-     * Closes the filtered item screen properly.
-     */
-    @Override
-    public void onClose() {
-        ContainerUtil.setCurrentPlaceholderStacks(this.placeholders);
-        ContainerUtil.RETURNING_FROM_PLACEHOLDER_SCREEN = true;
-        this.minecraft.setScreen(this.parentScreen);
-        playButtonSound(this.minecraft);
-    }
-
     @Override
     public boolean isPauseScreen() {
         return false;
     }
 
+    /**
+     * @return the panel X for the screen.
+     */
     private int panelX() {
         return (this.width - GUI_WIDTH) / 2;
     }
 
+    /**
+     * @return the pane Y for the screen.
+     */
     private int panelY() {
         return (this.height - GUI_HEIGHT) / 2;
     }
 
+    /**
+     * @return the starting point for the panel Y.
+     */
     private int sourceStartY() {
         return this.panelY() + INVENTORY_START_Y;
     }
 
+    /**
+     * @return the starting point for the placeholders panel Y.
+
+     */
     private int placeholderStartY() {
         return this.panelY() + 18;
     }
 
+    /**
+     * @return a source slot at the mouse's position (from the player's inventory).
+     */
     private int sourceSlotAt(int mouseX, int mouseY) {
         int startX = this.panelX() + 8;
         int topInvY = this.sourceStartY();
@@ -123,6 +112,9 @@ public class FilterItemsScreen extends Screen {
         return -1;
     }
 
+    /**
+     * @return a placeholder slot from the filtered items list.
+     */
     private int placeholderSlotAt(int mouseX, int mouseY) {
         int startX = this.panelX() + 8;
         int startY = this.placeholderStartY();
@@ -131,19 +123,106 @@ public class FilterItemsScreen extends Screen {
                 int x = startX + col * SLOT_SIZE;
                 int y = startY + row * SLOT_SIZE;
                 if (mouseX >= x && mouseX < x + 16 && mouseY >= y && mouseY < y + 16) {
-                    return row * COLUMNS + col;
+                    int visibleSlot = row * COLUMNS + col;
+                    int absoluteSlot = this.scrollRow * COLUMNS + visibleSlot;
+                    return absoluteSlot < this.placeholders.size() ? absoluteSlot : -1;
                 }
             }
         }
         return -1;
     }
 
+    /**
+     * @return the maximum scroll Y for filtered items.
+     */
+    private int maxScrollRow() {
+        return Math.max(0, MAX_PLACEHOLDER_ROWS - PLACEHOLDER_ROWS);
+    }
+
+    /**
+     * @return the current source stack (from player inventory).
+     */
     private ItemStack sourceStackAt(int sourceIndex) {
         int slotIndexInMenu = this.parentScreen.getMenu().slots.size() - 36 + sourceIndex;
         Slot slot = this.parentScreen.getMenu().getSlot(slotIndexInMenu);
         return slot.getItem();
     }
 
+    /**
+     * @return the first empty placeholder slot, or available slot.
+     */
+    private int firstEmptyPlaceholderSlot() {
+        for (int i = 0; i < this.placeholders.size(); i++) {
+            if (this.placeholders.get(i).isEmpty()) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * @return {@code true} if the container already has stack in filtered list.
+     */
+    private boolean alreadyHasPlaceholderItem(ItemStack stack) {
+        for (ItemStack placeholder : this.placeholders) {
+            if (!placeholder.isEmpty() && ItemStack.isSameItemSameComponents(placeholder, stack)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Saves placeholder/filter items, ensures that we are returning from a placeholder screen, and closes the screen with the sound.
+     */
+    @Override
+    public void onClose() {
+        ContainerHelper.setCurrentPlaceholderStacks(this.placeholders);
+        ContainerHelper.RETURNING_FROM_PLACEHOLDER_SCREEN = true;
+        this.minecraft.setScreen(this.parentScreen);
+        playButtonSound(this.minecraft);
+    }
+
+    /**
+     * Handles closing the screen correctly.
+
+     */
+    @Override
+    public boolean keyPressed(KeyEvent input) {
+        if (input.key() == GLFW.GLFW_KEY_ESCAPE || input.key() == key(Minecraft.getInstance().options.keyInventory).getValue()) {
+            this.onClose();
+            return true;
+        }
+        return super.keyPressed(input);
+    }
+
+    /**
+     * Constructs the screen, and adds all placeholder items from data.
+     */
+    @Override
+    protected void init() {
+        playButtonSound(this.minecraft);
+        this.placeholders.clear();
+        this.scrollRow = 0;
+        int size = MAX_PLACEHOLDER_SLOTS;
+        for (int i = 0; i < size; i++) {
+            this.placeholders.add(ItemStack.EMPTY);
+        }
+
+        List<ItemStack> saved = ContainerHelper.getCurrentPlaceholderStacks();
+        for (int i = 0; i < Math.min(saved.size(), size); i++) {
+            ItemStack stack = saved.get(i);
+            if (!stack.isEmpty()) {
+                ItemStack copy = stack.copy();
+                copy.setCount(1);
+                this.placeholders.set(i, copy);
+            }
+        }
+    }
+
+    /**
+     * Handles all mouse clicking events, from adding/removing placeholder slots.
+     */
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDouble) {
         if (super.mouseClicked(event, isDouble)) {
@@ -157,6 +236,22 @@ public class FilterItemsScreen extends Screen {
         if (sourceSlot >= 0 && event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             ItemStack stack = this.sourceStackAt(sourceSlot);
             if (!stack.isEmpty()) {
+                if (event.hasShiftDown()) {
+                    if (this.alreadyHasPlaceholderItem(stack)) {
+                        return false;
+                    }
+                    int placeholderSlot = this.firstEmptyPlaceholderSlot();
+                    if (placeholderSlot >= 0) {
+                        ItemStack copy = stack.copy();
+                        copy.setCount(1);
+                        this.placeholders.set(placeholderSlot, copy);
+                        this.selectedStack = ItemStack.EMPTY;
+                        this.selectedSourceSlot = -1;
+                        playButtonSound(this.minecraft);
+                    }
+                    return true;
+                }
+
                 ItemStack copy = stack.copy();
                 copy.setCount(1);
                 this.selectedStack = copy;
@@ -174,6 +269,9 @@ public class FilterItemsScreen extends Screen {
                 return true;
             }
             if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+                if (this.alreadyHasPlaceholderItem(this.selectedStack)) {
+                    return false;
+                }
                 if (!this.selectedStack.isEmpty()) {
                     ItemStack copy = this.selectedStack.copy();
                     copy.setCount(1);
@@ -198,15 +296,23 @@ public class FilterItemsScreen extends Screen {
         return true;
     }
 
+    /**
+     * Handles scrolling through the filtered items list.
+     */
     @Override
-    public boolean keyPressed(KeyEvent input) {
-        if (input.key() == GLFW.GLFW_KEY_ESCAPE || input.key() == key(Minecraft.getInstance().options.keyInventory).getValue()) {
-            this.onClose();
-            return true;
+    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
+        if (verticalAmount > 0) {
+            this.scrollRow = Math.max(0, this.scrollRow - 1);
+        } else if (verticalAmount < 0) {
+            this.scrollRow = Math.min(this.maxScrollRow(), this.scrollRow + 1);
         }
-        return super.keyPressed(input);
+
+        return true;
     }
 
+    /**
+     * Extracts background textures, items and tooltips.
+     */
     @Override
     public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks) {
         this.lastMouseX = mouseX;
@@ -223,12 +329,13 @@ public class FilterItemsScreen extends Screen {
         graphics.blit(RenderPipelines.GUI_TEXTURED, CHEST_TEXTURE, panelX, panelY, 0, 0, GUI_WIDTH, TOP_BACKGROUND_HEIGHT, 256, 256);
         graphics.blit(RenderPipelines.GUI_TEXTURED, CHEST_TEXTURE, panelX, panelY + TOP_BACKGROUND_HEIGHT, 0, 126, GUI_WIDTH, BOTTOM_BACKGROUND_HEIGHT, 256, 256);
 
-        graphics.text(this.font, Component.translatable("qualityofqueso.gui.placeholder_editor"), panelX + 8, panelY + 6, ModTexts.TEXT_COLOR, false);
-        graphics.text(this.font, Component.translatable("container.inventory"), panelX + 8, panelY + (GUI_HEIGHT - 94), ModTexts.TEXT_COLOR, false);
+        graphics.text(this.font, Component.translatable("qualityofqueso.gui.placeholder_editor"), panelX + 8, panelY + 6, ModConstants.DEFAULT_TRANSPARENT_SEARCH_BAR_TEXT_COLOR, false);
+        graphics.text(this.font, Component.translatable("container.inventory"), panelX + 8, panelY + (GUI_HEIGHT - 94), ModConstants.DEFAULT_TRANSPARENT_SEARCH_BAR_TEXT_COLOR, false);
 
         for (int row = 0; row < PLACEHOLDER_ROWS; row++) {
             for (int col = 0; col < COLUMNS; col++) {
-                int slot = row * COLUMNS + col;
+                int visibleSlot = row * COLUMNS + col;
+                int slot = this.scrollRow * COLUMNS + visibleSlot;
                 int x = startX + col * SLOT_SIZE;
                 int y = placeholderStartY + row * SLOT_SIZE;
 
@@ -236,6 +343,7 @@ public class FilterItemsScreen extends Screen {
                 if (!stack.isEmpty()) {
                     graphics.fakeItem(stack, x, y);
                     graphics.itemDecorations(this.font, stack, x, y);
+
                 }
             }
         }
@@ -248,7 +356,7 @@ public class FilterItemsScreen extends Screen {
                     ? sourceStartY + row * SLOT_SIZE
                     : hotbarY;
             if (this.selectedSourceSlot == i) {
-                graphics.fill(x - 1, y - 1, x + 17, y + 17, 0x66A0A0FF);
+                graphics.fill(x - 1, y - 1, x + 17, y + 17, ModTexts.PLACEHOLDER);
             }
 
             ItemStack stack = this.sourceStackAt(i);

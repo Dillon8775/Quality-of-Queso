@@ -1,6 +1,6 @@
 package net.dillon.qualityofqueso.mixin.main;
 
-import net.dillon.qualityofqueso.server.ServerStorage;
+import net.dillon.qualityofqueso.server.DedicatedServerStorage;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ChestMenu;
@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.UUID;
 
-import static net.dillon.qualityofqueso.util.AccessorUtil.moveItemStack;
+import static net.dillon.qualityofqueso.helper.MethodHelper.moveItemStack;
 
 @Mixin(value = {ChestMenu.class, ShulkerBoxMenu.class})
 public class ContainerMenusMixin {
@@ -23,9 +23,9 @@ public class ContainerMenusMixin {
      * The new {@code Quality of Queso quick moving system}, where items move perpendicular instead of parallel.
      */
     @Inject(method = "quickMoveStack", at = @At("HEAD"), cancellable = true)
-    private void redirectQuickMove(Player player, int slotIndex, CallbackInfoReturnable<ItemStack> cir) {
+    private void modifyQuickMoving(Player player, int slotIndex, CallbackInfoReturnable<ItemStack> cir) {
         UUID uuid = player.getUUID();
-        if (ServerStorage.shouldUsePerpendicularQuickMoving(uuid)) {
+        if (DedicatedServerStorage.shouldUsePerpendicularQuickMoving(uuid)) {
             AbstractContainerMenu menu = (AbstractContainerMenu) (Object) this;
 
             Slot slot = menu.slots.get(slotIndex);
@@ -37,24 +37,24 @@ public class ContainerMenusMixin {
             ItemStack original = stack.copy();
 
             int containerSize = menu.slots.size() - 36;
-            boolean allowHotbar = ServerStorage.shouldIncludeHotbar(uuid);
+            boolean allowHotbar = DedicatedServerStorage.shouldIncludeHotbar(uuid);
             int playerInvEnd = containerSize + (allowHotbar ? 36 : 27); // inventory only, no hotbar
 
-            // FROM container → player inventory (NO hotbar)
+            // From container -> player inventory (no hotbar)
             if (slotIndex < containerSize) {
                 if (!moveItemStack(menu, stack, containerSize, playerInvEnd, false)) {
                     cir.setReturnValue(ItemStack.EMPTY);
                     return;
                 }
             }
-            // FROM player inventory → container
+            // From player inventory -> container
             else if (slotIndex < playerInvEnd) {
                 if (!moveItemStack(menu, stack, 0, containerSize, false)) {
                     cir.setReturnValue(ItemStack.EMPTY);
                     return;
                 }
             }
-            // FROM hotbar → container (allowed)
+            // From hotbar -> container (allowed)
             else {
                 if (!moveItemStack(menu, stack, 0, containerSize, false)) {
                     cir.setReturnValue(ItemStack.EMPTY);

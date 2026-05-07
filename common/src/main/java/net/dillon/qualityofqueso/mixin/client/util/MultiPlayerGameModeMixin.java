@@ -1,6 +1,6 @@
 package net.dillon.qualityofqueso.mixin.client.util;
 
-import net.dillon.qualityofqueso.util.ContainerUtil;
+import net.dillon.qualityofqueso.helper.ContainerHelper;
 import net.dillon.qualityofqueso.util.ItemHudTracker;
 import net.dillon.qualityofqueso.util.ModTexts;
 import net.minecraft.ChatFormatting;
@@ -21,87 +21,64 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.ChargedProjectiles;
 import net.minecraft.world.level.block.entity.BarrelBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.EnderChestBlockEntity;
 import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import static net.dillon.qualityofqueso.util.ButtonUtil.playButtonSound;
-import static net.dillon.qualityofqueso.util.ContainerUtil.isValidBlockEntity;
-import static net.dillon.qualityofqueso.util.ModUtil.modEnabled;
-import static net.dillon.qualityofqueso.util.ModUtil.options;
+import static net.dillon.qualityofqueso.helper.ContainerHelper.isValidBlockEntity;
+import static net.dillon.qualityofqueso.helper.GuiHelper.isHoldingItem;
+import static net.dillon.qualityofqueso.helper.ManagementHelper.playButtonSound;
+import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
+import static net.dillon.qualityofqueso.helper.ModHelper.options;
+import static net.dillon.qualityofqueso.util.ModConstants.DEFAULT_TRACKED_CONTAINER_COOLDOWN;
+import static net.dillon.qualityofqueso.util.ModConstants.TRACKED_CONTAINER_COOLDOWN;
 
 @Mixin(MultiPlayerGameMode.class)
 public class MultiPlayerGameModeMixin {
+    @Unique
+    private ItemStack stackBeforeGuiThrow = ItemStack.EMPTY;
+    @Unique
+    private int slotBeforeGuiThrow = -1;
 
     /**
-     * Toggles chest tracking with shift + left click.
+     * Tracks the item that the player is going to drop {@code from a GUI screen.}
      */
-    @Inject(method = "startDestroyBlock", at = @At("HEAD"), cancellable = true)
-    private void onStartDestroyBlock(BlockPos pos, Direction direction, CallbackInfoReturnable<Boolean> cir) {
-        Minecraft minecraft = Minecraft.getInstance();
-        if (!modEnabled(minecraft) || !options().management.containerFiltering || minecraft.player == null || minecraft.level == null || !minecraft.player.isShiftKeyDown() || ContainerUtil.COOLDOWN > 0) {
+    @Inject(method = "handleContainerInput", at = @At("HEAD"))
+    private void cacheStackBeforeThrowFromGUI(int containerId, int slotIndex, int buttonNum, ContainerInput containerInput, Player player, CallbackInfo ci) {
+        this.stackBeforeGuiThrow = ItemStack.EMPTY;
+        this.slotBeforeGuiThrow = -1;
+        if (containerInput != ContainerInput.THROW || player == null || slotIndex < 0) {
             return;
         }
 
-        BlockEntity blockEntity = minecraft.level.getBlockEntity(pos);
-        if (!isValidBlockEntity(blockEntity)) {
-            return;
+        try {
+            this.stackBeforeGuiThrow = player.containerMenu.getSlot(slotIndex).getItem().copy();
+            this.slotBeforeGuiThrow = slotIndex;
+        } catch (IndexOutOfBoundsException ignored) {
         }
-
-        boolean tracked = ContainerUtil.toggleTracked(minecraft.level, pos);
-        Component container = blockEntity instanceof ShulkerBoxBlockEntity ? Component.literal("shulker box").withStyle(ChatFormatting.LIGHT_PURPLE)
-                : blockEntity instanceof BarrelBlockEntity ? Component.literal("barrel").withStyle(ChatFormatting.GOLD)
-                  : Component.literal("chest").withStyle(ChatFormatting.GOLD);
-        minecraft.player.sendSystemMessage(Component.translatable(
-                tracked ? "qualityofqueso.gui.save_filtered_container"
-                        : "qualityofqueso.gui.remove_filtered_container",
-                container.copy().withStyle(ChatFormatting.BOLD),
-                pos.getX(),
-                pos.getY(),
-                pos.getZ(),
-                Component.translatable("qualityofqueso.gui.filtered_container").withColor(ModTexts.ITEM_COLOR)
-        ));
-        playButtonSound(minecraft, false);
-        ContainerUtil.COOLDOWN = ContainerUtil.DEFAULT_COOLDOWN;
-        cir.setReturnValue(false);
-        cir.cancel();
-    }
-
-    /**
-     * Prevents creative instant-break in creative mode when shift + left clicking to toggle container tracking.
-     */
-    @Inject(method = "destroyBlock", at = @At("HEAD"), cancellable = true)
-    private void onDestroyBlock(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
-        Minecraft minecraft = Minecraft.getInstance();
-        if (!modEnabled(minecraft) || !options().management.containerFiltering || minecraft.player == null || minecraft.level == null || !minecraft.player.isCreative() || !minecraft.player.isShiftKeyDown()) {
-            return;
-        }
-
-        BlockEntity blockEntity = minecraft.level.getBlockEntity(pos);
-        if (!isValidBlockEntity(blockEntity)) {
-            return;
-        }
-
-        cir.setReturnValue(false);
-        cir.cancel();
     }
 
     /**
      * Tracks items to display total count near hotbar (when thrown {@code from a GUI screen}).
      */
     @Inject(method = "handleContainerInput", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientPacketListener;send(Lnet/minecraft/network/protocol/Packet;)V"))
-    private void dropOnThrowGUI(int containerId, int slotIndex, int buttonNum, ContainerInput containerInput, Player player, CallbackInfo ci) {
-        if (!modEnabled(Minecraft.getInstance()) || !options().hud.displayOnThrow || containerInput != ContainerInput.THROW) {
+    private void onThrowFromGUI(int containerId, int slotIndex, int buttonNum, ContainerInput containerInput, Player player, CallbackInfo ci) {
+        if (!modEnabled(Minecraft.getInstance()) || !options().itemCounter.displayOnThrow || containerInput != ContainerInput.THROW) {
             return;
         }
 
         try {
             ItemStack stack = player.containerMenu.getSlot(slotIndex).getItem();
-            if (stack.isEmpty()) {
+            if (stack.isEmpty() && slotIndex == this.slotBeforeGuiThrow) {
+                stack = this.stackBeforeGuiThrow;
+            }
+            if (stack.isEmpty() || !stack.isStackable()) {
                 return;
             }
 
@@ -111,32 +88,15 @@ public class MultiPlayerGameModeMixin {
     }
 
     /**
-     * Remembers container use so the next opening container screen can be identified.
-     */
-    @Inject(method = "useItemOn", at = @At("HEAD"))
-    private void rememberContainer(LocalPlayer player, InteractionHand hand, BlockHitResult hitResult, CallbackInfoReturnable<InteractionResult> cir) {
-        if (!modEnabled(Minecraft.getInstance()) || !options().management.containerFiltering) {
-            return;
-        }
-
-        BlockEntity blockEntity = player.level().getBlockEntity(hitResult.getBlockPos());
-        if (isValidBlockEntity(blockEntity)) {
-            ContainerUtil.rememberOpened(player.level(), hitResult.getBlockPos());
-        } else {
-            ContainerUtil.clearPendingOpened();
-        }
-    }
-
-    /**
      * Tracks arrows to display total count near hotbar when a charged crossbow is fired.
      */
     @Inject(method = "useItem", at = @At("HEAD"))
-    private void onCrossbowFireOrUse(Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
+    private void onCrossbowUse(Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
         if (!(player instanceof LocalPlayer localPlayer)) {
             return;
         }
 
-        if (!modEnabled(Minecraft.getInstance()) || localPlayer.isCreative() || !localPlayer.level().isClientSide() || !options().hud.showArrowCounter) {
+        if (!modEnabled(Minecraft.getInstance()) || localPlayer.isCreative() || !localPlayer.level().isClientSide() || !options().itemCounter.arrowCounter) {
             return;
         }
 
@@ -147,5 +107,98 @@ public class MultiPlayerGameModeMixin {
 
         ChargedProjectiles chargedProjectiles = player.getItemInHand(hand).get(DataComponents.CHARGED_PROJECTILES);
         ItemHudTracker.setStack(chargedProjectiles.isEmpty() ? new ItemStack(Items.ARROW) : chargedProjectiles.itemCopies().get(0), true);
+    }
+
+    /**
+     * Filters a container when shift + left clicking on it.
+     */
+    @Inject(method = "startDestroyBlock", at = @At("HEAD"), cancellable = true)
+    private void filterContainer(BlockPos pos, Direction direction, CallbackInfoReturnable<Boolean> cir) {
+        Minecraft minecraft = Minecraft.getInstance();
+        if (!modEnabled(minecraft) || !options().management.filtering || TRACKED_CONTAINER_COOLDOWN > 0
+                || minecraft.player == null || minecraft.level == null || !minecraft.player.isShiftKeyDown() || isHoldingItem(minecraft.player, DataComponents.TOOL)) {
+            return;
+        }
+
+        BlockEntity blockEntity = minecraft.level.getBlockEntity(pos);
+        if (!isValidBlockEntity(blockEntity)) {
+            return;
+        }
+
+        boolean tracked = ContainerHelper.toggleTracked(minecraft.level, pos);
+        boolean isEnderChest = blockEntity instanceof EnderChestBlockEntity;
+        boolean isShulkerBox = blockEntity instanceof ShulkerBoxBlockEntity;
+        Component container = blockEntity instanceof ShulkerBoxBlockEntity ? Component.translatable("qualityofqueso.gui.shulker_box").withStyle(ChatFormatting.LIGHT_PURPLE)
+                : blockEntity instanceof BarrelBlockEntity ? Component.translatable("qualityofqueso.gui.barrel").withStyle(ChatFormatting.GOLD)
+                : isEnderChest ? Component.translatable("qualityofqueso.gui.ender_chest").withStyle(ChatFormatting.AQUA)
+                  : Component.translatable("qualityofqueso.gui.chest").withStyle(ChatFormatting.GOLD);
+        Component filteredContainer = Component.translatable("qualityofqueso.gui.filtered_container").withColor(ModTexts.ITEM_COLOR);
+        Component filtered = Component.translatable("qualityofqueso.gui.filtered").withColor(ModTexts.ITEM_COLOR);
+        String message = tracked ? "qualityofqueso.gui.save_filtered_container" : "qualityofqueso.gui.remove_filtered_container";
+        if (isEnderChest) {
+            if (tracked) {
+                message = "qualityofqueso.gui.save_filtered_ender_chest";
+            } else {
+                message = "qualityofqueso.gui.remove_filtered_ender_chest";
+            }
+        } else if (isShulkerBox) {
+            if (tracked) {
+                message = "qualityofqueso.gui.save_filtered_shulker_box";
+            } else {
+                message = "qualityofqueso.gui.remove_filtered_shulker_box";
+            }
+        }
+        minecraft.player.sendSystemMessage(Component.translatable(
+                message,
+                container.copy().withStyle(ChatFormatting.BOLD),
+                isEnderChest
+                        ? filteredContainer
+                        : isShulkerBox
+                          ? filtered : pos.getX(),
+                pos.getY(),
+                pos.getZ(),
+                filteredContainer
+        ));
+        playButtonSound(minecraft, false);
+        TRACKED_CONTAINER_COOLDOWN = DEFAULT_TRACKED_CONTAINER_COOLDOWN;
+        cir.cancel();
+        cir.setReturnValue(false);
+    }
+
+    /**
+     * Remembers container use so the next opening container screen can be identified.
+     */
+    @Inject(method = "useItemOn", at = @At("HEAD"))
+    private void rememberContainer(LocalPlayer player, InteractionHand hand, BlockHitResult hitResult, CallbackInfoReturnable<InteractionResult> cir) {
+        if (!modEnabled(Minecraft.getInstance())) {
+            return;
+        }
+
+        BlockEntity blockEntity = player.level().getBlockEntity(hitResult.getBlockPos());
+        if (isValidBlockEntity(blockEntity)) {
+            ContainerHelper.rememberOpened(player.level(), hitResult.getBlockPos());
+        } else {
+            ContainerHelper.clearPendingOpened();
+        }
+    }
+
+    /**
+     * Prevents creative instant-break in creative mode when shift + left clicking to toggle container tracking. Warning: this is buggy.
+     */
+    @Deprecated
+    @Inject(method = "destroyBlock", at = @At("HEAD"), cancellable = true)
+    private void filterContainerInCreativeMode(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
+        Minecraft minecraft = Minecraft.getInstance();
+        if (!modEnabled(minecraft) || !options().management.filtering || minecraft.player == null || minecraft.level == null || !minecraft.player.isCreative() || !minecraft.player.isShiftKeyDown()) {
+            return;
+        }
+
+        BlockEntity blockEntity = minecraft.level.getBlockEntity(pos);
+        if (!isValidBlockEntity(blockEntity)) {
+            return;
+        }
+
+        cir.cancel();
+        cir.setReturnValue(false);
     }
 }

@@ -1,22 +1,22 @@
 package net.dillon.qualityofqueso.option.eum.searching;
 
 import com.mojang.serialization.Codec;
+import net.dillon.qualityofqueso.option.eum.OptionEnum;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.StringRepresentable;
+import org.jspecify.annotations.NonNull;
 
-public enum QuickSearch implements StringRepresentable {
-    ON(0, "on", "qualityofqueso.options.quick_search.on"),
-    RECIPE_BOOK(1, "recipe_book", "qualityofqueso.options.quick_search.recipe_book"),
-    SEARCH_BAR(2, "search_bar", "qualityofqueso.options.quick_search.search_bar"),
-    OFF(3, "off", "qualityofqueso.options.quick_search.off");
+public enum QuickSearch implements StringRepresentable, OptionEnum {
+    ON("on", "qualityofqueso.options.quick_search.on"),
+    RECIPE_BOOK("recipe_book", "qualityofqueso.options.quick_search.recipe_book"),
+    SEARCH_BAR("search_bar", "qualityofqueso.options.quick_search.search_bar"),
+    OFF("off", "qualityofqueso.options.quick_search.off");
 
-    public static final Codec<QuickSearch> Codec = StringRepresentable.fromEnum(QuickSearch::values);
-    private final int ordinal;
+    public static final Codec<QuickSearch> CODEC = StringRepresentable.fromEnum(QuickSearch::values);
     private final String name;
     private final Component translationKey;
 
-    QuickSearch(final int ordinal, final String name, final String translationKey) {
-        this.ordinal = ordinal;
+    QuickSearch(final String name, final String translationKey) {
         this.name = name;
         this.translationKey = Component.translatable(translationKey);
     }
@@ -37,15 +37,13 @@ public enum QuickSearch implements StringRepresentable {
         return this == SEARCH_BAR;
     }
 
-    public int getId() {
-        return this.ordinal;
-    }
-
-    public String getSerializedName() {
+    @Override
+    public @NonNull String getSerializedName() {
         return this.name;
     }
 
-    public Component getText() {
+    @Override
+    public Component getTranslationKey() {
         return this.translationKey;
     }
 }

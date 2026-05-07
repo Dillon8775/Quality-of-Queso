@@ -1,14 +1,13 @@
 package net.dillon.qualityofqueso.mixin.client.util;
 
 import net.dillon.qualityofqueso.util.ItemHudTracker;
+import net.dillon.qualityofqueso.util.MobHitDingTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.protocol.game.ClientboundDamageEventPacket;
 import net.minecraft.network.protocol.game.ClientboundTakeItemEntityPacket;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -22,8 +21,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static net.dillon.qualityofqueso.util.ModUtil.modEnabled;
-import static net.dillon.qualityofqueso.util.ModUtil.options;
+import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
+import static net.dillon.qualityofqueso.helper.ModHelper.options;
 
 @Mixin(ClientPacketListener.class)
 public class ClientPacketListenerMixin {
@@ -35,7 +34,7 @@ public class ClientPacketListenerMixin {
      */
     @Inject(method = "handleTakeItemEntity", at = @At("HEAD"))
     private void trackPickedUpItem(ClientboundTakeItemEntityPacket packet, CallbackInfo ci) {
-        if (!modEnabled(Minecraft.getInstance()) || !options().hud.displayOnPickup) {
+        if (!modEnabled(Minecraft.getInstance()) || !options().itemCounter.displayOnPickup) {
             return;
         }
 
@@ -48,9 +47,6 @@ public class ClientPacketListenerMixin {
         }
 
         Entity entity = this.level.getEntity(packet.getItemId());
-        if (!(entity instanceof ItemEntity itemEntity)) {
-            return;
-        }
 
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) {
@@ -69,22 +65,33 @@ public class ClientPacketListenerMixin {
             throw new NullPointerException("Unable to send item pickup status because \"ClientLevel.getEntity(int)\" is null.");
         }
 
-        ItemStack stack = itemEntity.getItem();
+        ItemStack stack ;
+        if (entity instanceof ItemEntity itemEntity) {
+            stack = itemEntity.getItem();
+        } else if (entity instanceof AbstractArrow arrow) {
+            stack = arrow.getPickupItemStackOrigin();
+        } else {
+            return;
+        }
+
+        if (!stack.isStackable()) {
+            return;
+        }
         ItemHudTracker.setStack(stack, false);
     }
 
     /**
-     * Plays the "ding" sound effect when hitting a mob from at least a certain amount of blocks away.
+     * Queues the {@code mob, hit, ding!} sound effect when hitting a mob from a certain amount of blocks away.
      */
-    @Inject(method = "handleDamageEvent", at = @At("TAIL"))
-    private void playHitSoundOnMob(ClientboundDamageEventPacket packet, CallbackInfo ci) {
+    @Inject(method = "handleDamageEvent", at = @At("HEAD"))
+    private void playMobHitDing(ClientboundDamageEventPacket packet, CallbackInfo ci) {
         Minecraft minecraft = Minecraft.getInstance();
         if (!modEnabled(minecraft) || !options().misc.mobHitDing || minecraft.player == null) {
             return;
         }
 
         Entity hitEntity = this.level.getEntity(packet.entityId());
-        if (!(hitEntity instanceof LivingEntity living) || living instanceof Player) {
+        if (!(hitEntity instanceof LivingEntity)) {
             return;
         }
 
@@ -97,7 +104,8 @@ public class ClientPacketListenerMixin {
 
         double minDistance = options().misc.minMobHitDingDistance;
         if (minecraft.player.distanceToSqr(hitEntity) >= minDistance * minDistance) {
-            minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.ARROW_HIT_PLAYER, 1.0F));
+            // Evaluate kill state one tick later, after the client receives health/death updates.
+            MobHitDingTracker.queueHit(hitEntity.getId(), this.level.getGameTime() + 1L, hitEntity instanceof Player);
         }
     }
 }

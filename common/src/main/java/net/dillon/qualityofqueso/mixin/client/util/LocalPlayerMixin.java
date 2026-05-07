@@ -1,7 +1,7 @@
 package net.dillon.qualityofqueso.mixin.client.util;
 
 import com.mojang.authlib.GameProfile;
-import net.dillon.qualityofqueso.event.ClientEvents;
+import net.dillon.qualityofqueso.main.ClientEvents;
 import net.dillon.qualityofqueso.util.ItemHudTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -24,8 +24,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-import static net.dillon.qualityofqueso.util.GuiUtil.*;
-import static net.dillon.qualityofqueso.util.ModUtil.*;
+import static net.dillon.qualityofqueso.helper.GuiHelper.*;
+import static net.dillon.qualityofqueso.helper.ModHelper.*;
+import static net.dillon.qualityofqueso.util.ModConstants.PLAYER_FALL_DISTANCE;
+import static net.dillon.qualityofqueso.util.ModConstants.SHOULD_WARN_OF_ELYTRA;
 
 @Mixin(LocalPlayer.class)
 public class LocalPlayerMixin extends AbstractClientPlayer {
@@ -46,11 +48,23 @@ public class LocalPlayerMixin extends AbstractClientPlayer {
     }
 
     /**
+     * Clears the armor status hud when respawning.
+     */
+    @Inject(method = "respawn", at = @At("TAIL"))
+    private void resetArmorStateWhenRespawning(CallbackInfo ci) {
+        if (!modEnabled(this.minecraft)) {
+            return;
+        }
+
+        ClientEvents.afterLevelChangeOrRespawn();
+    }
+
+    /**
      * Tracks items to display total count near hotbar (when thrown {@code in-game}).
      */
     @Inject(method = "drop", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientPacketListener;send(Lnet/minecraft/network/protocol/Packet;)V"), locals = LocalCapture.CAPTURE_FAILHARD)
     private void onThrowFromInGame(boolean entireStack, CallbackInfoReturnable<Boolean> cir, ServerboundPlayerActionPacket.Action action, ItemStack itemStack) {
-        if (!modEnabled(Minecraft.getInstance()) || !options().hud.displayOnThrow) {
+        if (!modEnabled(Minecraft.getInstance()) || !options().itemCounter.displayOnThrow || !itemStack.isStackable()) {
             return;
         }
 
@@ -58,19 +72,41 @@ public class LocalPlayerMixin extends AbstractClientPlayer {
     }
 
     /**
+     * Tracks arrows to display total count near hotbar after firing a bow.
+     */
+    @Inject(method = "stopUsingItem", at = @At("HEAD"))
+    private void onBowUse(CallbackInfo ci) {
+        LocalPlayer player = (LocalPlayer) (Object) this;
+        if (!modEnabled(Minecraft.getInstance()) || player.isCreative() || !player.level().isClientSide() || !options().itemCounter.arrowCounter) {
+            return;
+        }
+
+        ItemStack useItem = player.getUseItem();
+        if (!(useItem.getItem() instanceof ProjectileWeaponItem) || BowItem.getPowerForTime(player.getTicksUsingItem()) < 0.1F) {
+            return;
+        }
+
+        ItemStack projectile = player.getProjectile(useItem);
+
+        if (!hasInfinity(useItem) || !projectile.is(Items.ARROW)) {
+            ItemHudTracker.setStack(projectile.isEmpty() ? new ItemStack(Items.ARROW) : projectile.copyWithCount(1), true);
+        }
+    }
+
+    /**
      * Warns when the player is falling far enough to need an elytra while one exists in inventory but is not equipped. Also implements armor ding effects.
      */
     @Inject(method = "tick", at = @At("TAIL"))
-    private void playElytraWarningSound(CallbackInfo ci) {
-        LocalPlayer player = (LocalPlayer) (Object) this;
-
+    private void playDingSounds(CallbackInfo ci) {
         if (!modEnabled(Minecraft.getInstance())) {
             return;
         }
 
+        LocalPlayer player = (LocalPlayer) (Object) this;
+
         if (options().misc.armorDing) {
             for (int i = 0; i < this.playedDing.length; i++) {
-                EquipmentSlot slot = SLOTS[i];
+                EquipmentSlot slot = equipmentSlots()[i];
                 ItemStack stack = this.getItemBySlot(slot);
 
                 boolean lowDurability = getItemHealthPercentage(stack) < 0.11F;
@@ -101,7 +137,7 @@ public class LocalPlayerMixin extends AbstractClientPlayer {
             }
         }
 
-        if (!options().elytraAlarm.elytraAlarm.enabled()) {
+        if (!options().elytraAlarm.enableElytraAlarm.enabled()) {
             this.elytraWarningCooldown = 0;
             return;
         }
@@ -133,7 +169,7 @@ public class LocalPlayerMixin extends AbstractClientPlayer {
             }
         }
 
-        if (!SHOULD_WARN_OF_ELYTRA || options().elytraAlarm.elytraAlarm.indicatorOnly()) {
+        if (!SHOULD_WARN_OF_ELYTRA || options().elytraAlarm.enableElytraAlarm.indicatorOnly()) {
             this.elytraWarningCooldown = 0;
             return;
         }
@@ -145,35 +181,5 @@ public class LocalPlayerMixin extends AbstractClientPlayer {
         }
 
         this.elytraWarningCooldown--;
-    }
-
-    /**
-     * Tracks arrows to display total count near hotbar after firing a bow.
-     */
-    @Inject(method = "stopUsingItem", at = @At("HEAD"))
-    private void onBowFired(CallbackInfo ci) {
-        LocalPlayer player = (LocalPlayer) (Object) this;
-        if (!modEnabled(Minecraft.getInstance()) || player.isCreative() || !player.level().isClientSide() || !options().hud.showArrowCounter) {
-            return;
-        }
-
-        ItemStack useItem = player.getUseItem();
-        if (!(useItem.getItem() instanceof ProjectileWeaponItem) || BowItem.getPowerForTime(player.getTicksUsingItem()) < 0.1F) {
-            return;
-        }
-
-        ItemStack projectile = player.getProjectile(useItem);
-
-        if (!hasInfinity(useItem) || !projectile.is(Items.ARROW)) {
-            ItemHudTracker.setStack(projectile.isEmpty() ? new ItemStack(Items.ARROW) : projectile.copyWithCount(1), true);
-        }
-    }
-
-    /**
-     * Clears the armor status hud when respawning.
-     */
-    @Inject(method = "respawn", at = @At("TAIL"))
-    private void resetArmorStateWhenRespawning(CallbackInfo ci) {
-        ClientEvents.afterLevelChangeOrRespawn();
     }
 }

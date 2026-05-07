@@ -3,7 +3,7 @@ package net.dillon.qualityofqueso;
 import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.fabric.platform.runtime.FabricLoadContext;
 import net.dillon.qualityofqueso.main.ClientMain;
-import net.dillon.qualityofqueso.util.ModUtil;
+import net.dillon.qualityofqueso.util.ModConstants;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -21,6 +21,6 @@ public class ClientQoQ implements ClientModInitializer {
         registerFabricKeyBindings();
         registerBoundSoundEvents();
 
-        Balm.initializeMod(ModUtil.MOD_ID, FabricLoadContext.INSTANCE, ClientMain::cInitialize);
+        Balm.initializeMod(ModConstants.MOD_ID, FabricLoadContext.INSTANCE, ClientMain::cInitialize);
     }
 }

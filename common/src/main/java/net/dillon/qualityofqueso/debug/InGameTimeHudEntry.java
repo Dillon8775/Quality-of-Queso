@@ -7,18 +7,23 @@ import net.minecraft.world.level.chunk.LevelChunk;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
-import static net.dillon.qualityofqueso.util.ModUtil.modEnabled;
+import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
 
 /**
  * A debug hud to display Minecraft's in-game time.
  */
 public class InGameTimeHudEntry extends QoQScreenEntry {
+    protected static boolean DISPLAYING_IN_GAME_TIME = false;
 
     @Override
     public void display(@NonNull DebugScreenDisplayer lines, @Nullable Level level, @Nullable LevelChunk clientChunk, @Nullable LevelChunk chunk) {
+        // Return out of the mod isn't enabled, or the player is not in a world
         if (!modEnabled(Minecraft.getInstance()) || level == null) {
+            DISPLAYING_IN_GAME_TIME = false;
             return;
         }
+
+        // Calculate the time
         long time = level.getOverworldClockTime() % 24000;
 
         time = (time + 6000) % 24000;
@@ -26,10 +31,13 @@ public class InGameTimeHudEntry extends QoQScreenEntry {
         int hours = (int) (time / 1000);
         int minutes = (int) ((time % 1000) * 60 / 1000);
 
+        // Determine AM or PM
         String amPm = hours >= 12 ? "PM" : "AM";
 
+        // Calculate total minutes
         int totalMinutes = hours * 60 + minutes;
 
+        // Determine time of day
         String description = "Night";
         if (totalMinutes >= 0 && totalMinutes < 60) { // 12:00 AM - 12:59 AM
             description = "Midnight";
@@ -51,12 +59,15 @@ public class InGameTimeHudEntry extends QoQScreenEntry {
             description = "Sunset";
         }
 
+        // Fix hours
         hours = hours % 12;
         if (hours == 0) {
             hours = 12;
         }
 
+        // Add the world's in-game time to the hud
         String formatted = String.format("%d:%02d %s", hours, minutes, amPm);
         lines.addLine(description + " (" + formatted + ", in-game)");
+        DISPLAYING_IN_GAME_TIME = true;
     }
 }

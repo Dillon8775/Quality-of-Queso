@@ -1,46 +1,43 @@
 package net.dillon.qualityofqueso.option.eum.effects;
 
 import com.mojang.serialization.Codec;
+import net.dillon.qualityofqueso.option.eum.OptionEnum;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.StringRepresentable;
+import org.jspecify.annotations.NonNull;
 
-public enum Bows implements StringRepresentable {
-    ON(0, "on", "qualityofqueso.options.fov_effects.bows.on"),
-    QUICK_PULL(1, "quick_pull", "qualityofqueso.options.fov_effects.bows.quick_pull"),
-    OFF(2, "off", "qualityofqueso.options.fov_effects.bows.off");
+public enum Bows implements StringRepresentable, OptionEnum {
+    DEFAULT("default", "qualityofqueso.options.fov_effects.bows.default"),
+    QUICK_PULL("quick_pull", "qualityofqueso.options.fov_effects.bows.quick_pull"),
+    OFF("off", "qualityofqueso.options.fov_effects.bows.off");
 
-    public static final Codec<Bows> Codec = StringRepresentable.fromEnum(Bows::values);
-    private final int ordinal;
+    public static final Codec<Bows> CODEC = StringRepresentable.fromEnum(Bows::values);
     private final String name;
     private final Component translationKey;
 
-    Bows(final int ordinal, final String name, final String translationKey) {
-        this.ordinal = ordinal;
+    Bows(final String name, final String translationKey) {
         this.name = name;
         this.translationKey = Component.translatable(translationKey);
     }
 
     public boolean enabled() {
-        return this == ON || this == QUICK_PULL;
+        return this == DEFAULT || this == QUICK_PULL;
     }
 
-    public boolean on() {
-        return this == ON;
+    public boolean ddefault() {
+        return this == DEFAULT;
     }
 
     public boolean quickPull() {
         return this == QUICK_PULL;
     }
 
-    public int getId() {
-        return this.ordinal;
-    }
-
-    public String getSerializedName() {
+    public @NonNull String getSerializedName() {
         return this.name;
     }
 
-    public Component getText() {
+    @Override
+    public Component getTranslationKey() {
         return this.translationKey;
     }
 }

@@ -11,8 +11,8 @@ import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 
-import static net.dillon.qualityofqueso.util.ModUtil.canApplyEffect;
-import static net.dillon.qualityofqueso.util.ModUtil.options;
+import static net.dillon.qualityofqueso.helper.ModHelper.canApplyEffect;
+import static net.dillon.qualityofqueso.helper.ModHelper.options;
 
 @Mixin(AbstractClientPlayer.class)
 public abstract class AbstractClientPlayerMixin extends Player {
@@ -22,7 +22,7 @@ public abstract class AbstractClientPlayerMixin extends Player {
     }
 
     /**
-     * Implements FOV modifiers.
+     * Modifies FOV multipliers, such as sprinting, flying, and potion effects.
      */
     @Overwrite
     public float getFieldOfViewModifier(boolean firstPerson, float effectScale) {
@@ -37,8 +37,8 @@ public abstract class AbstractClientPlayerMixin extends Player {
         if (walkingSpeed != 0.0F) {
             float effectiveSpeed = walkingSpeed;
 
-            if (options().fovEffects.sprinting && this.isSprinting()) {
-                effectiveSpeed *= 1.3F;
+            if (options().fovEffects.sprinting > 99 && this.isSprinting()) {
+                effectiveSpeed *= (1.3F * ((float) options().fovEffects.sprinting / 100));
             }
 
             if (options().fovEffects.potionEffects.enabled()) {

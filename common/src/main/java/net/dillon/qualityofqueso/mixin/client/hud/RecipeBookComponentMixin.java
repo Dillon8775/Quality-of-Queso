@@ -11,6 +11,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
+
 @Mixin(RecipeBookComponent.class)
 public class RecipeBookComponentMixin {
     @Shadow
@@ -24,6 +26,10 @@ public class RecipeBookComponentMixin {
      */
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
     private void cancelOutChatKey(KeyEvent input, CallbackInfoReturnable<Boolean> cir) {
+        if (!modEnabled(this.minecraft)) {
+            return;
+        }
+
         if (this.minecraft.options.keyChat.matches(input) && this.searchBox != null && !this.searchBox.isFocused()) {
             cir.setReturnValue(false);
             cir.cancel();
