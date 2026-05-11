@@ -1,0 +1,53 @@
+{
+  "required": true,
+  "package": "net.dillon.qualityofqueso.mixin",
+  "plugin": "net.dillon.qualityofqueso.mixin.ConditionalMixinPlugin",
+  "compatibilityLevel": "JAVA_25",
+  "client": [
+    "CameraMixin",
+    "FogRendererMixin",
+    "client.accessor.AbstractContainerScreenAccessor",
+    "client.accessor.AbstractRecipeBookScreenAccessor",
+    "client.accessor.BrewingStandMenuAccessor",
+    "client.accessor.DebugOptionsScreenAccessor",
+    "client.accessor.DebugScreenEntriesAccessor",
+    "client.accessor.DispenserMenuAccessor",
+    "client.accessor.HopperMenuAccessor",
+    "client.accessor.KeyBindsScreenAccessor",
+    "client.accessor.KeyMappingAccessor",
+    "client.accessor.RecipeBookComponentAccessor",
+    "client.accessor.ScreenAccessor",
+    "client.accessor.ShulkerBoxMenuAccessor",
+    "client.hud.AbstractRecipeBookScreenMixin",
+    "client.hud.EditBoxMixin",
+    "client.hud.GuiMixin",
+    "client.hud.RecipeBookComponentMixin",
+    "client.hud.RecipeButtonMixin",
+    "client.render.EquipmentLayerRendererMixin",
+    "client.render.SkyRendererMixin",
+    "client.screen.AbstractContainerScreenMixin",
+    "client.screen.CreativeModeInventoryScreenMixin",
+    "client.screen.InventoryScreenMixin",
+    "client.screen.KeyBindsScreenMixin",
+    "client.screen.PauseScreenMixin",
+    "client.screen.TitleScreenMixin",
+    "client.util.AbstractClientPlayerMixin",
+    "client.util.ClientClockManagerMixin",
+    "client.util.ClientPacketListenerMixin",
+    "client.util.LocalPlayerMixin",
+    "client.util.MinecraftMixin",
+    "client.util.MultiPlayerGameModeMixin",
+    "neoforged.NeoForgedAbstractContainerScreenMixin"
+  ],
+  "mixins": [
+    "main.AbstractContainerMenuAccessor",
+    "main.BlockItemMixin",
+    "main.ContainerMenusMixin",
+    "main.ItemFrameMixin",
+    "main.ShulkerBoxBlockEntityMixin",
+    "main.ShulkerBoxBlockMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

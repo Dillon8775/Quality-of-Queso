@@ -1,0 +1,126 @@
+import net.darkhax.curseforgegradle.TaskPublishCurseForge
+
+plugins {
+    id 'multiloader-loader'
+    id 'net.fabricmc.fabric-loom'
+    alias libs.plugins.curseForgeGradle
+    alias libs.plugins.modrinthMinotaur
+}
+
+repositories {
+    maven {
+        url "https://maven.terraformersmc.com/releases/"
+    }
+    maven {
+        url = 'https://maven.twelveiterations.com/repository/maven-public/'
+        content {
+            includeGroup 'net.blay09.mods'
+        }
+    }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${minecraft_version}"
+    implementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
+
+    implementation "com.terraformersmc:modmenu:${project.modmenu_version}"
+
+    implementation("net.blay09.mods:balm-fabric:${balm_version}") {
+        changing = balm_version.contains('SNAPSHOT')
+    }
+}
+
+loom {
+    def aw = project(':common').file("src/main/resources/${mod_id}.accessWidener")
+    if (aw.exists()) {
+        accessWidenerPath.set(aw)
+    }
+    mixin {
+        defaultRefmapName.set("${mod_id}.refmap.json")
+    }
+    runs {
+        client {
+            client()
+            setConfigName('Fabric Client')
+            ideConfigGenerated(true)
+            runDir('runs/client')
+        }
+        server {
+            server()
+            setConfigName('Fabric Server')
+            ideConfigGenerated(true)
+            runDir('runs/server')
+        }
+    }
+}
+
+// Implement mcgradleconventions loader attribute
+def loaderAttribute = Attribute.of('io.github.mcgradleconventions.loader', String)
+['apiElements', 'runtimeElements', 'sourcesElements', 'javadocElements', 'includeInternal', 'modCompileClasspath'].each { variant ->
+    configurations.named("$variant") {
+        attributes {
+            attribute(loaderAttribute, 'fabric')
+        }
+    }
+}
+sourceSets.configureEach {
+    [it.compileClasspathConfigurationName, it.runtimeClasspathConfigurationName].each { variant ->
+        configurations.named("$variant") {
+            attributes {
+                attribute(loaderAttribute, 'fabric')
+            }
+        }
+    }
+}
+
+tasks.register('curseforge', TaskPublishCurseForge) {
+    dependsOn('build')
+    description = 'Publishes the Fabric build to CurseForge.'
+    group = 'publishing'
+
+    apiToken = project.findProperty("curseforge.api_key") ?: System.getenv("CURSEFORGE_TOKEN") ?: "none"
+
+    def projectId = findProperty("curseforge_project_id")
+    onlyIf {
+        projectId != null
+    }
+    if (projectId) {
+        def mainFile = upload(findProperty("curseforge_project_id"), tasks.named("jar", Jar).get().archiveFile.get().asFile)
+        mainFile.displayName = "[${mc_version.substring(2)}] $mod_name ${mod_version}"
+        mainFile.changelog = rootProject.file("${changelog_file}").text
+        mainFile.addRequirement("fabric-api")
+        mainFile.addRequirement("balm")
+        def supportedVersions = supported_mc_versions
+                .split(",")
+                .collect { it.trim() }
+        supportedVersions.each { v ->
+            mainFile.addGameVersion(v)
+        }
+        mainFile.releaseType = "release"
+        project.findProperty("curseforge_environments")?.split(",")?.toList()?.each { mainFile.addEnvironment(it) }
+    }
+}
+
+modrinth {
+    token = project.findProperty("modrinth.token") ?: System.getenv("MODRINTH_TOKEN") ?: "none"
+    projectId = findProperty("modrinth_project_id")
+
+    versionNumber = project.mod_version.toString()
+    versionName = "[mc${minecraft_version}] ${mod_name} ${project.mod_version}"
+
+    uploadFile = tasks.named("jar")
+    def changelogFile = rootProject.file("${changelog_file}")
+    if (changelogFile.exists()) {
+        changelog = changelogFile.text
+    }
+    def supportedVersions = supported_mc_versions
+            .split(",")
+            .collect { it.trim() }
+    gameVersions = supportedVersions
+    loaders = ['fabric']
+    dependencies {
+        required.project "fabric-api"
+        required.project "balm"
+    }
+}

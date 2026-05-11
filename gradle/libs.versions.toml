@@ -1,0 +1,11 @@
+[versions]
+fabric-loom = "1.16.0-alpha.11"
+modrinth-minotaur = "2.9.0"
+curseforgegradle = "1.2.30"
+neoforge-moddev = "2.0.141"
+
+[plugins]
+fabricLoom = { id = "net.fabricmc.fabric-loom", version.ref = "fabric-loom" }
+modrinthMinotaur = { id = "com.modrinth.minotaur", version.ref = "modrinth-minotaur" }
+curseForgeGradle = { id = "net.darkhax.curseforgegradle", version.ref = "curseforgegradle" }
+modDevGradle = { id = "net.neoforged.moddev", version.ref = "neoforge-moddev" }

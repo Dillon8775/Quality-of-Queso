@@ -1,0 +1,74 @@
+package net.dillon.qualityofqueso.mixin.main;
+
+import net.dillon.qualityofqueso.server.DedicatedServerStorage;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ChestMenu;
+import net.minecraft.world.inventory.ShulkerBoxMenu;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.UUID;
+
+import static net.dillon.qualityofqueso.helper.MethodHelper.moveItemStack;
+
+@Mixin(value = {ChestMenu.class, ShulkerBoxMenu.class})
+public class ContainerMenusMixin {
+
+    /**
+     * The new {@code Quality of Queso quick moving system}, where items move perpendicular instead of parallel.
+     */
+    @Inject(method = "quickMoveStack", at = @At("HEAD"), cancellable = true)
+    private void modifyQuickMoving(Player player, int slotIndex, CallbackInfoReturnable<ItemStack> cir) {
+        UUID uuid = player.getUUID();
+        if (DedicatedServerStorage.shouldUsePerpendicularQuickMoving(uuid)) {
+            AbstractContainerMenu menu = (AbstractContainerMenu) (Object) this;
+
+            Slot slot = menu.slots.get(slotIndex);
+            if (slot == null || !slot.hasItem()) {
+                return;
+            }
+
+            ItemStack stack = slot.getItem();
+            ItemStack original = stack.copy();
+
+            int containerSize = menu.slots.size() - 36;
+            boolean allowHotbar = DedicatedServerStorage.shouldIncludeHotbar(uuid);
+            int playerInvEnd = containerSize + (allowHotbar ? 36 : 27); // inventory only, no hotbar
+
+            // From container -> player inventory (no hotbar)
+            if (slotIndex < containerSize) {
+                if (!moveItemStack(menu, stack, containerSize, playerInvEnd, false)) {
+                    cir.setReturnValue(ItemStack.EMPTY);
+                    return;
+                }
+            }
+            // From player inventory -> container
+            else if (slotIndex < playerInvEnd) {
+                if (!moveItemStack(menu, stack, 0, containerSize, false)) {
+                    cir.setReturnValue(ItemStack.EMPTY);
+                    return;
+                }
+            }
+            // From hotbar -> container (allowed)
+            else {
+                if (!moveItemStack(menu, stack, 0, containerSize, false)) {
+                    cir.setReturnValue(ItemStack.EMPTY);
+                    return;
+                }
+            }
+
+            if (stack.isEmpty()) {
+                slot.setByPlayer(ItemStack.EMPTY);
+            } else {
+                slot.setChanged();
+            }
+
+            cir.setReturnValue(original);
+        }
+    }
+}

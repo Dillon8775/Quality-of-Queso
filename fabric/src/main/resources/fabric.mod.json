@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "id": "${mod_id}",
+  "version": "${mod_version}+${mc_version}",
+  "name": "${mod_name}",
+  "description": "${description}",
+  "authors": [
+    "Dillon8775",
+    "MannyQUESO"
+  ],
+  "contact": {
+    "homepage": "${homepage}",
+    "sources": "${sources}",
+    "issues": "${issues}"
+  },
+  "license": "${license}",
+  "icon": "${logo}.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "net.dillon.qualityofqueso.ClientQoQ"
+    ],
+    "server": [
+      "net.dillon.qualityofqueso.ServerQoQ"
+    ],
+    "main": [
+      "net.dillon.qualityofqueso.QoQ"
+    ],
+    "modmenu": [
+      "net.dillon.qualityofqueso.impl.ModMenuImpl"
+    ]
+  },
+  "mixins": [
+    "qualityofqueso.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${fabric_loader_version}",
+    "minecraft": "26.1.2",
+    "java": ">=${java_version}",
+    "fabric-api": "*",
+    "balm-fabric": ">=${balm_version}"
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "${discord}"
+      }
+    }
+  }
+}

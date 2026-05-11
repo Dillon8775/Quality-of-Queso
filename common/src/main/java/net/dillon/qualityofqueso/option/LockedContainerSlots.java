@@ -1,0 +1,34 @@
+package net.dillon.qualityofqueso.option;
+
+import net.dillon.qualityofqueso.util.ModConstants;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * Stores locked container slots for each container in a world.
+ */
+public class LockedContainerSlots {
+    public static final ModOptionsHandler INSTANCE = new ModOptionsHandler();
+
+    public static class ModOptionsHandler extends BaseOptions<LockedContainerSlots> {
+
+        protected ModOptionsHandler() {
+            super(ModConstants.DEFAULT_LOCKED_CONTAINER_SLOTS_FILE_NAME);
+            this.load();
+        }
+
+        @Override
+        protected LockedContainerSlots createDefault() {
+            return new LockedContainerSlots();
+        }
+
+        @Override
+        protected Class<LockedContainerSlots> getConfigClass() {
+            return LockedContainerSlots.class;
+        }
+    }
+
+    public Map<String, List<Integer>> lockedContainerSlots = new HashMap<>();
+}
