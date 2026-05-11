@@ -1,5 +1,6 @@
 package net.dillon.qualityofqueso.screen;
 
+import net.dillon.qualityofqueso.helper.MethodHelper;
 import net.dillon.qualityofqueso.keybind.ModKeyMappings;
 import net.dillon.qualityofqueso.screen.option.*;
 import net.dillon.qualityofqueso.util.MixinPluginUtil;
@@ -11,6 +12,7 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.debug.DebugOptionsScreen;
 import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
@@ -20,7 +22,7 @@ import static net.dillon.qualityofqueso.helper.GuiHelper.drawTooltip;
 import static net.dillon.qualityofqueso.helper.ModHelper.*;
 
 public class MainMenuScreen extends AbstractModOptionsScreen {
-    private AbstractWidget searchingOptions, managementOptions, itemFrameSearchingOptions, openItemFrameSearchGUIOptions, hudOptions, itemCounterOptions, fogOptions, fovEffects, miscOptions, accessibilityOptions, keybinds, clientTime, enableMod, help;
+    private AbstractWidget searchingOptions, managementOptions, itemFrameSearchingOptions, openItemFrameSearchGUIOptions, hudOptions, itemCounterOptions, fogOptions, fovEffects, miscOptions, accessibilityOptions, keybinds, clientTime, enableMod, debugHuds, resources;
 
     public MainMenuScreen(Screen parent) {
         super(parent, Component.translatable("qualityofqueso.gui.options.title").withStyle(ChatFormatting.GOLD));
@@ -84,7 +86,7 @@ public class MainMenuScreen extends AbstractModOptionsScreen {
 
         this.clientTime = this.addWidget(Button.builder(
                 Component.translatable("qualityofqueso.gui.visual_time"),
-                button -> this.minecraft.setScreen(new ClientTimeOptionsScreen(this))
+                button -> this.minecraft.setScreen(new VisualTimeOptionsScreen(this))
         ).tooltip(Tooltip.create(Component.translatable("qualityofqueso.gui.visual_time.tooltip"))).build());
         buttons.add(this.clientTime);
 
@@ -110,12 +112,22 @@ public class MainMenuScreen extends AbstractModOptionsScreen {
         this.enableMod = ListOptions.enableMod().createButton(this.options);
         buttons.add(this.enableMod);
 
-        this.help = Button.builder(Component.translatable("qualityofqueso.gui.resources"), button -> {
+        this.debugHuds = Button.builder(Component.translatable("qualityofqueso.gui.debug_huds"), button -> {
+            this.minecraft.setScreen(new DebugOptionsScreen());
+            if (Minecraft.getInstance().screen instanceof DebugOptionsScreen debugOptionsScreen) {
+                MethodHelper.getDebugScreenSearchBox(debugOptionsScreen).setValue("qualityofqueso");
+            }
+        }).tooltip(
+                Tooltip.create(Component.translatable("qualityofqueso.gui.debug_huds.tooltip"))
+        ).build();
+        buttons.add(this.debugHuds);
+
+        this.resources = Button.builder(Component.translatable("qualityofqueso.gui.resources"), button -> {
             this.minecraft.setScreen(new ResourcesScreen(this));
         }).tooltip(
                 Tooltip.create(Component.translatable("qualityofqueso.gui.resources.tooltip"))
         ).build();
-        buttons.add(this.help);
+        buttons.add(this.resources);
 
         this.list.addSmall(buttons);
     }

@@ -54,7 +54,7 @@ public class KeyPressInstance extends ManagementInstance {
             return;
         }
 
-        if (options().management.sorting.buttonOrKeyOrKeyOnly() && kumaKeyPressed(ModKeyMappings.SORT, event)) {
+        if (options().sorting.sortingEnabled.buttonOrKeyOrKeyOnly() && kumaKeyPressed(ModKeyMappings.SORT, event)) {
             sortingInstance().trySort();
         }
 

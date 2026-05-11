@@ -6,6 +6,8 @@ import net.dillon.qualityofqueso.option.eum.effects.Bows;
 import net.dillon.qualityofqueso.option.eum.effects.PotionEffects;
 import net.dillon.qualityofqueso.option.eum.hud.ArmorStatus;
 import net.dillon.qualityofqueso.option.eum.management.*;
+import net.dillon.qualityofqueso.option.eum.management.sorting.CurrentSortingMode;
+import net.dillon.qualityofqueso.option.eum.management.sorting.GlobalSortingMode;
 import net.dillon.qualityofqueso.option.eum.misc.EChestButton;
 import net.dillon.qualityofqueso.option.eum.searching.QuickSearch;
 import net.dillon.qualityofqueso.option.eum.searching.SearchBarColor;
@@ -44,6 +46,7 @@ public class ModClientOptions {
 
     public Searching searching = new Searching();
     public Management management = new Management();
+    public Sorting sorting = new Sorting();
     public LockedSlots lockedSlots = new LockedSlots();
     public ButtonDisplayOptions buttonDisplayOptions = new ButtonDisplayOptions();
     public Hud hud = new Hud();
@@ -71,8 +74,6 @@ public class ModClientOptions {
 
     public static class Management {
         public Transferring transferring = Transferring.BUTTON_OR_KEY;
-        public Sorting sorting = Sorting.BUTTON_OR_KEY;
-        public SortingMode sortingMode = SortingMode.ALPHABETICAL;
         public boolean filtering = true;
         public QuickDrop quickDrop = QuickDrop.KEY_ONLY;
         public boolean singularMoving = true;
@@ -133,6 +134,13 @@ public class ModClientOptions {
      */
     public void toggleAlwaysQuickMove() {
         this.management.alwaysQuickMove = !this.management.alwaysQuickMove;
+    }
+
+    public static class Sorting {
+        public net.dillon.qualityofqueso.option.eum.management.sorting.Sorting sortingEnabled = net.dillon.qualityofqueso.option.eum.management.sorting.Sorting.BUTTON_OR_KEY;
+        public boolean useGlobalSortingMode = false;
+        public CurrentSortingMode currentSortingMode = CurrentSortingMode.ALPHABETICAL;
+        public GlobalSortingMode globalSortingMode = GlobalSortingMode.ALPHABETICALLY;
     }
 
     public static class LockedSlots {
@@ -216,6 +224,7 @@ public class ModClientOptions {
         public boolean overrideClientTime = false;
         public int visualTime = 0;
         public int visualTimeSpeed = 0;
+        public boolean matchWithIrlTime = false;
     }
 
     public static class Fog {

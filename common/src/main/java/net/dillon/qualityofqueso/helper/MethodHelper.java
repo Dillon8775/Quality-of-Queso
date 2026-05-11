@@ -14,6 +14,7 @@ import net.minecraft.client.gui.components.debug.DebugScreenEntry;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.debug.DebugOptionsScreen;
 import net.minecraft.client.gui.screens.inventory.*;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import net.minecraft.client.input.KeyEvent;
@@ -185,6 +186,13 @@ public class MethodHelper {
      */
     public static Container shulkerBox(ShulkerBoxScreen shulkerBoxScreen) {
         return ((ShulkerBoxMenuAccessor) shulkerBoxScreen.getMenu()).getShulkerBoxContainer();
+    }
+
+    /**
+     * @return the debug options screen search box.
+     */
+    public static EditBox getDebugScreenSearchBox(DebugOptionsScreen debugOptionsScreen) {
+        return ((DebugOptionsScreenAccessor)debugOptionsScreen).getSearchBox();
     }
 
     /**

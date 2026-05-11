@@ -136,7 +136,6 @@ public class ManagementInstance implements ModInstance {
         return modEnabled(Minecraft.getInstance())
                 && event.button() == 0
                 && !isExcludingOrLockingSlots()
-                && isValidScreenForSingularMoving(instance().getScreen(), true)
                 && instance().getManagementButtons().alwaysQuickMove() != null
                 && !transferInstance().canSingularMove()
                 ? options().isAlwaysQuickMove() || event.hasShiftDown()

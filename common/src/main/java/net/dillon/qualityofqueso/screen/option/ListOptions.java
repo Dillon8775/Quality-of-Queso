@@ -11,6 +11,9 @@ import net.dillon.qualityofqueso.option.eum.effects.PotionEffects;
 import net.dillon.qualityofqueso.option.eum.hud.ArmorStatus;
 import net.dillon.qualityofqueso.option.eum.hud.ItemCounter;
 import net.dillon.qualityofqueso.option.eum.management.*;
+import net.dillon.qualityofqueso.option.eum.management.sorting.CurrentSortingMode;
+import net.dillon.qualityofqueso.option.eum.management.sorting.GlobalSortingMode;
+import net.dillon.qualityofqueso.option.eum.management.sorting.Sorting;
 import net.dillon.qualityofqueso.option.eum.misc.EChestButton;
 import net.dillon.qualityofqueso.option.eum.misc.ElytraAlarm;
 import net.dillon.qualityofqueso.option.eum.searching.QuickSearch;
@@ -75,6 +78,12 @@ public class ListOptions {
     protected static OptionInstance<Boolean> dragMoving() {
         return createClientBooleanOption("drag_moving", true, options().management.dragMoving,
                 (options, value) -> options.management.dragMoving = value
+        );
+    }
+
+    protected static OptionInstance<Boolean> useGlobalSortingMode() {
+        return createClientBooleanOption("use_global_sorting_mode", false, options().sorting.useGlobalSortingMode,
+                (options, value) -> options.sorting.useGlobalSortingMode = value
         );
     }
 
@@ -292,6 +301,12 @@ public class ListOptions {
     protected static OptionInstance<Boolean> overrideClientTime() {
         return createClientBooleanOption("override_client_time", true, options().visualTime.overrideClientTime,
                 (options, value) -> options.visualTime.overrideClientTime = value
+        );
+    }
+
+    protected static OptionInstance<Boolean> matchWithIRLTIme() {
+        return createClientBooleanOption("match_with_irl_time", false, options().visualTime.matchWithIrlTime,
+                (options, value) -> options.visualTime.matchWithIrlTime = value
         );
     }
 
@@ -634,8 +649,43 @@ public class ListOptions {
                 },
                 Sorting.values(),
                 Sorting.CODEC,
-                options().management.sorting,
-                (options, value) -> options.management.sorting = value
+                options().sorting.sortingEnabled,
+                (options, value) -> options.sorting.sortingEnabled = value
+        );
+    }
+
+    protected static OptionInstance<GlobalSortingMode> globalSortingMode() {
+        return createEnumOption(
+                "global_sorting_mode",
+                option -> {
+                    Component text = ModTexts.BLANK;
+                    switch (option) {
+                        case ALPHABETICALLY -> text = Component.translatable("qualityofqueso.options.global_sorting_mode.alphabetically.tooltip");
+                        case BY_TAG -> text = Component.translatable("qualityofqueso.options.global_sorting_mode.by_tag.tooltip");
+                        case DESCENDING -> text = Component.translatable("qualityofqueso.options.global_sorting_mode.descending.tooltip");
+                        case ASCENDING -> text = Component.translatable("qualityofqueso.options.global_sorting_mode.ascending.tooltip");
+                        case CREATIVE_MENU -> text = Component.translatable("qualityofqueso.options.global_sorting_mode.creative_menu.tooltip");
+                    }
+                    String appended = !text.equals(ModTexts.BLANK) ? "\n\n" : "";
+                    return Tooltip.create(Component.translatable("qualityofqueso.options.global_sorting_mode.tooltip").append(appended).append(text));
+                },
+                GlobalSortingMode.values(),
+                GlobalSortingMode.CODEC,
+                options().sorting.globalSortingMode,
+                (options, value) -> {
+                    if (value.equals(GlobalSortingMode.ALPHABETICALLY)) {
+                        options.sorting.currentSortingMode = CurrentSortingMode.ALPHABETICAL;
+                    } else if (value.equals(GlobalSortingMode.BY_TAG)) {
+                        options.sorting.currentSortingMode = CurrentSortingMode.TAG;
+                    } else if (value.equals(GlobalSortingMode.DESCENDING)) {
+                        options.sorting.currentSortingMode = CurrentSortingMode.COUNT_DESCENDING;
+                    } else if (value.equals(GlobalSortingMode.ASCENDING)) {
+                        options.sorting.currentSortingMode = CurrentSortingMode.COUNT_ASCENDING;
+                    } else if (value.equals(GlobalSortingMode.CREATIVE_MENU)) {
+                        options.sorting.currentSortingMode = CurrentSortingMode.CREATIVE_MENU;
+                    }
+                    options.sorting.globalSortingMode = value;
+                }
         );
     }
 

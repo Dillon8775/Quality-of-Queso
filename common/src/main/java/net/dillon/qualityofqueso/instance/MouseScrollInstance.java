@@ -3,7 +3,7 @@ package net.dillon.qualityofqueso.instance;
 import net.dillon.qualityofqueso.helper.ContainerHelper;
 import net.dillon.qualityofqueso.instance.context.ManagementButtons;
 import net.dillon.qualityofqueso.option.ModClientOptions;
-import net.dillon.qualityofqueso.option.eum.management.SortingMode;
+import net.dillon.qualityofqueso.option.eum.management.sorting.CurrentSortingMode;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.world.inventory.Slot;
@@ -28,9 +28,9 @@ public record MouseScrollInstance(
      */
     public void changeSortMode(double scrollY) {
         if (buttonHoveredAndActive(managementButtons.sort())) {
-            SortingMode nextMode = options().management.sortingMode.next(scrollY > 0);
+            CurrentSortingMode nextMode = options().sorting.currentSortingMode.next(scrollY > 0);
             ModClientOptions.INSTANCE.update(options -> {
-                options.management.sortingMode = nextMode;
+                options.sorting.currentSortingMode = nextMode;
             });
             ContainerHelper.storeActiveSortMode(nextMode);
             if (SORT_SOUND_COOLDOWN == 0) {
@@ -51,7 +51,7 @@ public record MouseScrollInstance(
         boolean validHoveredSlot = hoveredSlotHasItem(hoveredSlot) && hoveredSlot.getItem().count() > 1;
         if (!isCreativeInventoryScreen(screen) && instance().getCanMoveOne() && (validHoveredSlot && hasDropOnlyOneItemKeyDown())
                 || buttonHoveredAndActive(managementButtons.quickDrop()) ? hasDropOnlyOneItemKeyDown()
-                : ((validHoveredSlot || buttonHoveredAndActive(managementButtons.transferContainer()) || buttonHoveredAndActive(managementButtons.transferInventory())) && hasMoveSingleModifierDown(screen))) {
+                : ((validHoveredSlot || buttonHoveredAndActive(managementButtons.transferContainer()) || buttonHoveredAndActive(managementButtons.transferInventory())) && hasMoveSingleModifierDown())) {
             MOVE_AMOUNT += (int)scrollY;
             if (MOVE_AMOUNT < 1) {
                 MOVE_AMOUNT = 1;

@@ -1,10 +1,10 @@
-package net.dillon.qualityofqueso.option.eum.management;
+package net.dillon.qualityofqueso.option.eum.management.sorting;
 
 import net.dillon.qualityofqueso.util.ModTexts;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.CommonColors;
 
-public enum SortingMode {
+public enum CurrentSortingMode {
     ALPHABETICAL("", Component.literal("alphabetically").withColor(ModTexts.ITEM_COLOR)),
     TAG("_tag", Component.literal("by ").append(Component.literal("tag").withColor(ModTexts.TAG_COLOR))),
     COUNT_DESCENDING("_descending", Component.literal("descending").withColor(CommonColors.SOFT_RED)),
@@ -14,7 +14,7 @@ public enum SortingMode {
     private final String appended;
     private final Component tooltip;
 
-    SortingMode(String appended, Component tooltip) {
+    CurrentSortingMode(String appended, Component tooltip) {
         this.appended = appended;
         this.tooltip = tooltip;
     }
@@ -35,18 +35,18 @@ public enum SortingMode {
         return this.tooltip;
     }
 
-    public SortingMode next(boolean forward) {
-        SortingMode[] values = values();
+    public CurrentSortingMode next(boolean forward) {
+        CurrentSortingMode[] values = values();
         int index = (ordinal() + (forward ? 1 : -1) + values.length) % values.length;
         return values[index];
     }
 
-    public static SortingMode fromName(String name) {
+    public static CurrentSortingMode fromName(String name) {
         if (name == null || name.isBlank()) {
             return ALPHABETICAL;
         }
 
-        for (SortingMode mode : values()) {
+        for (CurrentSortingMode mode : values()) {
             if (mode.name().equalsIgnoreCase(name)) {
                 return mode;
             }

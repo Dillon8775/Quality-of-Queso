@@ -93,11 +93,6 @@ public class ModTooltipInstance extends ManagementInstance {
             ci.cancel();
         }
 
-        // Don't continue if the screen isn't valid
-        if (!isValidScreen(instance().getScreen()) && !isDropperDispenserOrHopperScreen(instance().getScreen())) {
-            return;
-        }
-
         // Create variables to determine if the tooltips should be modified, based on quick dropping actions and moving singular items
         Slot hoveredSlot = instance().getScreensHoveredSlot();
         boolean hoveredSlotHasItem = hoveredSlotHasItem(hoveredSlot);
@@ -111,7 +106,7 @@ public class ModTooltipInstance extends ManagementInstance {
         // Check if a shortcut key is held down
         // If quick drop is hovered, then we only check for if shift is held (to only drop one of each item)
         // Otherwise, check if the quick drop keys are down (CTRL + ALT), OR if CTRL/move single modifier itself is held down, to move singular items
-        boolean hasKeyDown = quickDropHovered ? hasDropOnlyOneItemKeyDown() : hasQuickDropKeysDown() || hasMoveSingleModifierDown(instance().getScreen());
+        boolean hasKeyDown = quickDropHovered ? hasDropOnlyOneItemKeyDown() : hasQuickDropKeysDown() || hasMoveSingleModifierDown();
         boolean droppingOne = hoveredSlotHasItem && hasDropOnlyOneItemKeyDown();
 
         // The boolean expression to modify tooltips based on the conditions above

@@ -4,7 +4,7 @@ import net.blay09.mods.balm.Balm;
 import net.dillon.qualityofqueso.option.ContainerData;
 import net.dillon.qualityofqueso.option.LockedContainerSlots;
 import net.dillon.qualityofqueso.option.LockedPlayerSlots;
-import net.dillon.qualityofqueso.option.eum.management.SortingMode;
+import net.dillon.qualityofqueso.option.eum.management.sorting.CurrentSortingMode;
 import net.dillon.qualityofqueso.packet.RequestShulkerStateC2SPacket;
 import net.dillon.qualityofqueso.packet.SyncShulkerStateS2CPacket;
 import net.dillon.qualityofqueso.packet.UpdateShulkerStateC2SPacket;
@@ -53,6 +53,7 @@ public class ContainerHelper {
     public static boolean OPENING_PLACEHOLDER_SCREEN = false;
     public static boolean RETURNING_FROM_PLACEHOLDER_SCREEN = false;
     public static FilterMode CURRENT_FILTER_MODE = FilterMode.ITEM;
+    private static boolean capturedGlobalSortingModeForActiveContainer = false;
     private static Set<String> pendingOpenedContainerKeys = null;
     private static Set<String> activeContainerKeys = null;
     private static BlockPos pendingOpenedShulkerPos = null;
@@ -73,6 +74,7 @@ public class ContainerHelper {
         activeContainerKeys = null;
         activeShulkerPos = null;
         CURRENT_FILTER_MODE = FilterMode.ITEM;
+        capturedGlobalSortingModeForActiveContainer = false;
     }
 
     /**
@@ -201,38 +203,46 @@ public class ContainerHelper {
             return;
         }
 
-        // Store the current sorting mode as a "global sorting mode" variable, to reset later when a container closes
-        ModConstants.GLOBAL_SORTING_MODE = options().management.sortingMode;
+        // Do not set sorting mode based on container if user is using a global sorting mode.
+        if (options().sorting.useGlobalSortingMode) {
+            return;
+        }
+
+        // Capture the pre-container sort mode once so close-screen restore is stable.
+        if (!capturedGlobalSortingModeForActiveContainer) {
+            ModConstants.GLOBAL_SORTING_MODE = options().sorting.currentSortingMode;
+            capturedGlobalSortingModeForActiveContainer = true;
+        }
 
         // Get the active shulker's sorting mode, and set the sorting mode to it
         if (activeShulkerPos != null) {
             ShulkerState state = shulkerStateCache.get(activeShulkerPos);
-            ModHelper.options().management.sortingMode = SortingMode.fromName(state == null ? null : state.sortingMode);
+            ModHelper.options().sorting.currentSortingMode = CurrentSortingMode.fromName(state == null ? null : state.sortingMode);
             return;
         }
 
         // Otherwise, get a container's sorting mode, and set the sorting mode to it
         String key = activeSortKey();
         if (key.isEmpty()) {
-            ModHelper.options().management.sortingMode = SortingMode.ALPHABETICAL;
+            ModHelper.options().sorting.currentSortingMode = CurrentSortingMode.ALPHABETICAL;
             return;
         }
 
         // If the container or object does not have a sorting mode, automatically set it to alphabetical
         String stored = containerSortingModes().get(key);
         if (stored == null || stored.isBlank()) {
-            ModHelper.options().management.sortingMode = SortingMode.ALPHABETICAL;
+            ModHelper.options().sorting.currentSortingMode = CurrentSortingMode.ALPHABETICAL;
             return;
         }
 
         // Set the sorting mode to the sorting mode's name
-        ModHelper.options().management.sortingMode = SortingMode.fromName(stored);
+        ModHelper.options().sorting.currentSortingMode = CurrentSortingMode.fromName(stored);
     }
 
     /**
      * Persists current sort mode for active context.
      */
-    public static void storeActiveSortMode(SortingMode mode) {
+    public static void storeActiveSortMode(CurrentSortingMode mode) {
         if (mode == null || !hasActiveSortContext()) {
             return;
         }
@@ -870,6 +880,6 @@ public class ContainerHelper {
         boolean tagFiltered;
         List<String> filterItems = new ArrayList<>();
         List<Integer> lockedSlots = new ArrayList<>();
-        String sortingMode = SortingMode.ALPHABETICAL.name();
+        String sortingMode = CurrentSortingMode.ALPHABETICAL.name();
     }
 }

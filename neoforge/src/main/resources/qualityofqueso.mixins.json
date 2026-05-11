@@ -9,6 +9,7 @@
     "client.accessor.AbstractContainerScreenAccessor",
     "client.accessor.AbstractRecipeBookScreenAccessor",
     "client.accessor.BrewingStandMenuAccessor",
+    "client.accessor.DebugOptionsScreenAccessor",
     "client.accessor.DebugScreenEntriesAccessor",
     "client.accessor.DispenserMenuAccessor",
     "client.accessor.HopperMenuAccessor",

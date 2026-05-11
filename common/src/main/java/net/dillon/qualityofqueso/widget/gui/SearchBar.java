@@ -24,14 +24,14 @@ import static net.dillon.qualityofqueso.util.ModConstants.DEFAULT_TRANSPARENT_SE
 import static net.dillon.qualityofqueso.util.ModConstants.SEARCH_TEXTURE;
 
 /**
- * An representation of a search field.
+ * An representation of a search bar.
  */
-public class SearchField extends EditBox {
+public class SearchBar extends EditBox {
     private static final int OVERLAY_WIDTH = 96;
     private static final int OVERLAY_HEIGHT = 18;
     private final Font font;
 
-    public SearchField(Font font, int x, int y) {
+    public SearchBar(Font font, int x, int y) {
         super(font, x, y, 90, 12, Component.empty());
         this.font = font;
         if (options().searching.saveSearchText) {
@@ -61,19 +61,19 @@ public class SearchField extends EditBox {
      */
     public static WidgetSprites getSprites() {
         return new WidgetSprites(
-                ofQoQ("widget/search/" + getWidgetPath() + "search_field"), ofQoQ("widget/search/" + getWidgetPath() + "search_field_highlighted")
+                ofQoQ("widget/search/" + getWidgetPath() + "search_bar"), ofQoQ("widget/search/" + getWidgetPath() + "search_bar_highlighted")
         );
     }
 
     /**
-     * Cancels out closing the screen if the search field was pressed.
+     * Cancels out closing the screen if the search bar was pressed.
      */
     public static void hasClickedOnBox(double mx, double my, EditBox editBox, CallbackInfoReturnable<Boolean> cir) throws CancellationException {
-        if (!(editBox instanceof SearchField searchField)) {
+        if (!(editBox instanceof SearchBar searchBar)) {
             return;
         }
 
-        if (searchField.isMouseOver(mx, my)) {
+        if (searchBar.isMouseOver(mx, my)) {
             cir.setReturnValue(false);
         }
     }
@@ -123,7 +123,7 @@ public class SearchField extends EditBox {
     public void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks) {
         if (!options().searching.searchBarColor.black()) {
             if ((this.isFocused() || !options().searching.searchBarColor.transparent()) && options().searching.searchBarPosition.top()) {
-                graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ofQoQ("widget/search/" + getWidgetPath() + "search_field_overlay"),
+                graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ofQoQ("widget/search/" + getWidgetPath() + "search_bar_overlay"),
                         this.getX() - 3, this.getY() - 3, OVERLAY_WIDTH, OVERLAY_HEIGHT);
             }
             if (!this.isFocused() && this.getValue().isEmpty() && options().accessibility.widgetTheme.searchBarTransparent()) {

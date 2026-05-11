@@ -5,10 +5,10 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
-public class ClientTimeOptionsScreen extends AbstractModOptionsScreen {
-    private AbstractWidget visualTime, visualTimeSpeed;
+public class VisualTimeOptionsScreen extends AbstractModOptionsScreen {
+    private AbstractWidget visualTime, visualTimeSpeed, matchWithIRLTime;
 
-    public ClientTimeOptionsScreen(Screen parent) {
+    public VisualTimeOptionsScreen(Screen parent) {
         super(parent, Component.translatable("qualityofqueso.gui.title.visual_time"));
     }
 
@@ -18,14 +18,17 @@ public class ClientTimeOptionsScreen extends AbstractModOptionsScreen {
                 createOption(ListOptions.overrideClientTime()),
                 this.visualTime = createOption(ListOptions.visualTime()),
 
-                this.visualTimeSpeed = createOption(ListOptions.visualTimeSpeed())
+                this.visualTimeSpeed = createOption(ListOptions.visualTimeSpeed()),
+                this.matchWithIRLTime = createOption(ListOptions.matchWithIRLTIme())
         };
     }
 
     @Override
     protected void activateButtons() {
         boolean overrideClientTime = ModHelper.options().visualTime.overrideClientTime;
-        this.visualTime.active = overrideClientTime && ModHelper.options().visualTime.visualTimeSpeed == 0;
-        this.visualTimeSpeed.active = overrideClientTime;
+        boolean matchWithIRLTime = ModHelper.options().visualTime.matchWithIrlTime;
+        this.visualTime.active = overrideClientTime && ModHelper.options().visualTime.visualTimeSpeed == 0 && !matchWithIRLTime;
+        this.visualTimeSpeed.active = overrideClientTime && !matchWithIRLTime;
+        this.matchWithIRLTime.active = overrideClientTime;
     }
 }

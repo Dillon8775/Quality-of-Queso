@@ -39,7 +39,7 @@ public class MixinPluginUtil {
             if (abstractClientPlayerMixin) {
                 for (String mod : FOV_EFFECT_BLACKLISTED_MODS) {
                     if (MultiLoader.getPlatform().isModLoaded(mod)) {
-                        LOGGER.error("Mod \"{}\" is loaded, and due to incompatibility, not applying {}.", mod, mixinClassName);
+                        LOGGER.warn("Mod \"{}\" is loaded, and due to incompatibility, not applying {}.", mod, mixinClassName);
                         ACTIVE_FOV_EFFECT_BLACKLISTED_MODS.add(mod);
                         return false;
                     }

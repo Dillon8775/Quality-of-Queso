@@ -182,7 +182,7 @@ public class ExtractingInstance extends ManagementInstance {
     public boolean shouldGrayout(Slot slot) {
         boolean inventoryScreen = isInventoryScreen(instance().getScreen());
         boolean shortcutKeyReady = inventoryScreen
-                ? options().management.sorting.buttonOrKeyOrKeyOnly() ? hasAnyManagementModifierDown() : hasQuickDropKeysDown()
+                ? options().sorting.sortingEnabled.buttonOrKeyOrKeyOnly() ? hasAnyManagementModifierDown() : hasQuickDropKeysDown()
                 : hasAnyManagementModifierDown();
         return shortcutKeyReady
                 || (!inventoryScreen && shiftHeld(false))
@@ -237,7 +237,7 @@ public class ExtractingInstance extends ManagementInstance {
 
         // Only add these buttons in container, inventory, hopper and dropper screens
         if (validScreen || dropperDispenserOrHopperScreen) {
-            if (options().management.sorting.buttonOrKey()) {
+            if (options().sorting.sortingEnabled.buttonOrKey()) {
                 // SORT BUTTON
                 widgetHandler().getManagementButtons().initSort(
                         widgetHandlerInstance().addWidget(widgetHandlerInstance().createSort()));

@@ -1,6 +1,6 @@
 package net.dillon.qualityofqueso.util;
 
-import net.dillon.qualityofqueso.option.eum.management.SortingMode;
+import net.dillon.qualityofqueso.option.eum.management.sorting.CurrentSortingMode;
 import net.dillon.qualityofqueso.platform.MultiLoader;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -53,7 +53,7 @@ public class ModConstants {
 
     // Other global variables
     public static Map<Integer, Set<Integer>> SAVED_EXCLUDED_SLOTS = new HashMap<>();
-    public static SortingMode GLOBAL_SORTING_MODE = options().management.sortingMode;
+    public static CurrentSortingMode GLOBAL_SORTING_MODE = options().sorting.currentSortingMode;
 
     // Texture constants
     public static final String CHEESE_WHEEL_TEXTURE = "widget/logo";

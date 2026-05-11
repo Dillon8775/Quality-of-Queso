@@ -49,7 +49,7 @@ public class TransferInstance extends ManagementInstance {
      * @return if the user can single move an item.
      */
     public boolean canSingularMove() {
-        return options().management.singularMoving && hasMoveSingleModifierDown(instance().getScreen());
+        return options().management.singularMoving && hasMoveSingleModifierDown();
     }
 
     /**
@@ -100,7 +100,7 @@ public class TransferInstance extends ManagementInstance {
         }
 
         boolean movedItem = false;
-        boolean singleMoveMode = canSingleMove && !drop && hasMoveSingleModifierDown(instance().getScreen());
+        boolean singleMoveMode = canSingleMove && !drop && hasMoveSingleModifierDown();
         ItemStack cursorFilterStack = getCursorStack().copy();
         boolean canSingleWithCursor = cursorFilterStack.isEmpty() || findTemporaryEmptySlotForCursor() != -1;
 
@@ -208,7 +208,7 @@ public class TransferInstance extends ManagementInstance {
     public boolean tryMoveSingleFromHovered(MouseButtonEvent event) {
         if (event.button() != GLFW.GLFW_MOUSE_BUTTON_LEFT
                 || !options().management.singularMoving
-                || !hasMoveSingleModifierDown(instance().getScreen())
+                || !hasMoveSingleModifierDown()
                 || instance().getScreensHoveredSlot() == null
                 || !instance().getScreensHoveredSlot().hasItem()) {
             return false;

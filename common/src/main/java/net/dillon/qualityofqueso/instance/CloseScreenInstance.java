@@ -84,7 +84,9 @@ public class CloseScreenInstance extends ManagementInstance {
             }
             ContainerHelper.clearActiveContainer();
             ContainerHelper.IS_TRACKED_CONTAINER = false;
-            options().management.sortingMode = GLOBAL_SORTING_MODE;
+            if (!options().sorting.useGlobalSortingMode) {
+                options().sorting.currentSortingMode = GLOBAL_SORTING_MODE;
+            }
         }
     }
 }

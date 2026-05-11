@@ -1,13 +1,12 @@
 package net.dillon.qualityofqueso.mixin.client.hud;
 
-import net.dillon.qualityofqueso.widget.gui.SearchField;
+import net.dillon.qualityofqueso.widget.gui.SearchBar;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -25,14 +24,8 @@ public abstract class EditBoxMixin extends AbstractWidget {
     private Font font;
     @Shadow
     private int textX;
-
     @Shadow
     public abstract boolean isBordered();
-
-    @Shadow
-    private boolean textShadow;
-    @Shadow
-    private @Nullable Component hint;
     @Shadow
     private String value;
     @Shadow
@@ -45,23 +38,23 @@ public abstract class EditBoxMixin extends AbstractWidget {
     }
 
     /**
-     * Applies a vanilla-like search field texture.
+     * Applies a vanilla-like search bar texture.
      */
     @ModifyArg(method = "extractWidgetRenderState", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIII)V"), index = 1)
-    private Identifier applySearchFieldTexture(Identifier original) {
+    private Identifier applySearchBarTexture(Identifier original) {
         if (!modEnabled(Minecraft.getInstance())) {
             return original;
         }
 
-        if (!((EditBox)(Object) this instanceof SearchField)) {
+        if (!((EditBox)(Object) this instanceof SearchBar)) {
             return original;
         }
 
-        Identifier newId = SearchField.getSprites().get(this.isActive(), this.isFocused());
+        Identifier newId = SearchBar.getSprites().get(this.isActive(), this.isFocused());
         if (options().searching.searchBarColor.black()) {
             return original;
         } else if (options().accessibility.widgetTheme.searchBarTransparent()) {
-            return ofQoQ("widget/search/transparent/search_field_transparent");
+            return ofQoQ("widget/search/transparent/search_bar_transparent");
         } else {
             return newId;
         }
@@ -72,7 +65,7 @@ public abstract class EditBoxMixin extends AbstractWidget {
      */
     @Inject(method = "updateTextPosition", at = @At("TAIL"))
     private void rightAlignText(CallbackInfo ci) {
-        if (!((EditBox) (Object) this instanceof SearchField) || this.font == null
+        if (!((EditBox) (Object) this instanceof SearchBar) || this.font == null
                 || options().searching.searchBarColor.black() || !options().accessibility.widgetTheme.searchBarTransparent()) {
             return;
         }

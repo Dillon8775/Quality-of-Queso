@@ -2,6 +2,8 @@ package net.dillon.qualityofqueso.util;
 
 import net.minecraft.client.Minecraft;
 
+import java.time.LocalTime;
+
 import static net.dillon.qualityofqueso.helper.ModHelper.options;
 import static net.dillon.qualityofqueso.screen.option.ListOptionUtil.visualTimeStepToTicks;
 
@@ -18,6 +20,10 @@ public class VisualTimeTracker {
      * @return the visual time to display, {@code client-side.}
      */
     public static long getVisualTime(Minecraft minecraft) {
+        if (options().visualTime.matchWithIrlTime) {
+            return getIrlVisualTime();
+        }
+
         int configBaseTime = visualTimeStepToTicks(options().visualTime.visualTime);
         int speed = options().visualTime.visualTimeSpeed;
 
@@ -63,6 +69,17 @@ public class VisualTimeTracker {
         }
 
         return currentVisualTime;
+    }
+
+    /**
+     * Maps local IRL time-of-day to the matching Minecraft day time.
+     */
+    private static long getIrlVisualTime() {
+        LocalTime now = LocalTime.now();
+        long secondsOfDay = now.toSecondOfDay();
+        long ticksFromMidnight = (secondsOfDay * 24000L) / 86400L;
+
+        return Math.floorMod(ticksFromMidnight - 6000L, 24000L);
     }
 
     /**

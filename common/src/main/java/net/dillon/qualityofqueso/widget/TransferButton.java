@@ -227,7 +227,7 @@ public class TransferButton extends Button {
     protected boolean movingOrDroppingOne() {
         return options().management.singularMoving && (this.buttonName.equals(QUICK_DROP_BUTTON_NAME)
                 ? hasDropOnlyOneItemKeyDown()
-                : Minecraft.getInstance().screen instanceof AbstractContainerScreen<?> abstractContainerScreen && hasMoveSingleModifierDown(abstractContainerScreen));
+                : Minecraft.getInstance().screen instanceof AbstractContainerScreen<?> && hasMoveSingleModifierDown());
     }
 
     /**

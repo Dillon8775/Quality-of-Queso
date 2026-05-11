@@ -5,10 +5,8 @@ import net.blay09.mods.kuma.api.*;
 import net.dillon.qualityofqueso.screen.EnderChestPreviewScreen;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.input.MouseButtonEvent;
 
-import static net.dillon.qualityofqueso.helper.ManagementHelper.isValidScreenForSingularMoving;
 import static net.dillon.qualityofqueso.helper.MethodHelper.kumaAnyModifierDown;
 import static net.dillon.qualityofqueso.helper.MethodHelper.kumaMousePressed;
 import static net.dillon.qualityofqueso.helper.ModHelper.*;
@@ -109,7 +107,7 @@ public final class ModKeyMappings {
      */
     public static boolean hasAnyManagementModifierDown() {
         return (options().management.transferring.buttonOrKeyOrKeyOnly() && (kumaAnyModifierDown(MOVE_TO_CONTAINER) || kumaAnyModifierDown(MOVE_TO_INVENTORY)))
-                || (options().management.sorting.buttonOrKeyOrKeyOnly() && kumaAnyModifierDown(SORT))
+                || (options().sorting.sortingEnabled.buttonOrKeyOrKeyOnly() && kumaAnyModifierDown(SORT))
                 || (options().management.quickDrop.buttonOrKeyOrKeyOnly() && hasQuickDropKeysDown())
                 || (options().management.swapping.buttonOrKeyOrKeyOnly() && kumaAnyModifierDown(SWAP_ITEMS));
     }
@@ -117,9 +115,8 @@ public final class ModKeyMappings {
     /**
      * @return if the user has the "move single modifier" key down.
      */
-    public static boolean hasMoveSingleModifierDown(AbstractContainerScreen<?> screen) {
-        return isValidScreenForSingularMoving(screen, false)
-                && options().management.singularMoving && MOVE_SINGLE_ITEM.isActiveAndDown();
+    public static boolean hasMoveSingleModifierDown() {
+        return options().management.singularMoving && MOVE_SINGLE_ITEM.isActiveAndDown();
     }
 
     /**

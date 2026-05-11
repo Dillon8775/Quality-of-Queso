@@ -22,13 +22,13 @@ public class SortButton extends TransferButton {
 
     @Override
     protected Component getTooltipToRender() {
-        return Component.translatable("qualityofqueso.gui." + this.buttonName + "_button", options().management.sortingMode.getTooltip());
+        return Component.translatable("qualityofqueso.gui." + this.buttonName + "_button", options().sorting.currentSortingMode.getTooltip());
     }
 
     @Override
     protected void renderBaseButtonTexture(String id, AbstractWidget buttonReference, GuiGraphicsExtractor graphics) {
         this.renderBaseTexture(graphics);
-        ButtonHelper.drawButtonTexture(graphics, id + (!this.canBeActive.get() ? "" : options().management.sortingMode.getAppended()), this);
+        ButtonHelper.drawButtonTexture(graphics, id + (!this.canBeActive.get() ? "" : options().sorting.currentSortingMode.getAppended()), this);
         this.renderHoveredTexture(graphics);
     }
 }

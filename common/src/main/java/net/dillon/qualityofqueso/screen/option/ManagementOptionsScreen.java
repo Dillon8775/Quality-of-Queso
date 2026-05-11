@@ -21,7 +21,10 @@ public class ManagementOptionsScreen extends AbstractModOptionsScreen {
     protected AbstractWidget[] options() {
         return new AbstractWidget[]{
                 createOption(ListOptions.transferring()),
-                createOption(ListOptions.sorting()),
+                Button.builder(
+                        Component.translatable("qualityofqueso.gui.sorting"),
+                        button -> this.minecraft.setScreen(new SortingOptionsScreen(this))
+                ).tooltip(Tooltip.create(Component.translatable("qualityofqueso.gui.sorting.tooltip"))).build(),
 
                 createOption(ListOptions.filtering()),
                 createOption(ListOptions.quickDrop()),

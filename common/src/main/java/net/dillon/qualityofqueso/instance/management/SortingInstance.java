@@ -1,7 +1,7 @@
 package net.dillon.qualityofqueso.instance.management;
 
 import net.dillon.qualityofqueso.instance.QuesoScreen;
-import net.dillon.qualityofqueso.option.eum.management.SortingMode;
+import net.dillon.qualityofqueso.option.eum.management.sorting.CurrentSortingMode;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
@@ -216,7 +216,7 @@ public class SortingInstance extends ManagementInstance {
         for (ItemStack stack : stacks) {
             String tagKey = "";
 
-            if (options().management.sortingMode.tag()) {
+            if (options().sorting.currentSortingMode.tag()) {
                 tagKey = stack.tags()
                         .map(tag -> {
                             String location = tag.location().toString();
@@ -230,8 +230,8 @@ public class SortingInstance extends ManagementInstance {
             tagCache.put(stack, tagKey);
         }
 
-        boolean countSort = options().management.sortingMode.count();
-        boolean creativeTabSort = options().management.sortingMode == SortingMode.CREATIVE_MENU;
+        boolean countSort = options().sorting.currentSortingMode.count();
+        boolean creativeTabSort = options().sorting.currentSortingMode == CurrentSortingMode.CREATIVE_MENU;
         Map<Item, Integer> creativeOrder = creativeTabSort ? getCreativeSearchTabOrder() : Collections.emptyMap();
         Comparator<ItemStack> alphaComparator = Comparator.comparing((ItemStack stack) -> tagCache.get(stack).isEmpty())
                 .thenComparing(tagCache::get)
@@ -247,7 +247,7 @@ public class SortingInstance extends ManagementInstance {
                     .comparingInt((ItemStack stack) -> creativeOrder.getOrDefault(stack.getItem(), Integer.MAX_VALUE))
                     .thenComparing(alphaComparator));
         } else if (countSort) {
-            Comparator<ItemStack> comp = options().management.sortingMode == SortingMode.COUNT_DESCENDING
+            Comparator<ItemStack> comp = options().sorting.currentSortingMode == CurrentSortingMode.COUNT_DESCENDING
                     ? Comparator.comparingInt(ItemStack::getCount).reversed()
                     : Comparator.comparingInt(ItemStack::getCount);
             stacks.sort(comp.thenComparing(alphaComparator));

@@ -294,7 +294,7 @@ public class ModHelper {
             LOCKED_SLOT_SOUND_COOLDOWN--;
         }
 
-        if (options().management.sorting.buttonOrKeyOrKeyOnly() && SORT_SOUND_COOLDOWN > 0) {
+        if (options().sorting.sortingEnabled.buttonOrKeyOrKeyOnly() && SORT_SOUND_COOLDOWN > 0) {
             SORT_SOUND_COOLDOWN--;
         }
 

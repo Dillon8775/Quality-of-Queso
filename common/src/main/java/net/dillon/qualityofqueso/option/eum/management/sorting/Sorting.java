@@ -1,4 +1,4 @@
-package net.dillon.qualityofqueso.option.eum.management;
+package net.dillon.qualityofqueso.option.eum.management.sorting;
 
 import com.mojang.serialization.Codec;
 import net.dillon.qualityofqueso.option.eum.OptionEnum;

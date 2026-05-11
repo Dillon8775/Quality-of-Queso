@@ -68,7 +68,7 @@ public class MouseClickInstance extends ManagementInstance {
         boolean quickDropping = buttonHoveredAndActive(instance().getManagementButtons().quickDrop());
         if (options().management.singularMoving) {
             boolean dropOnlyOne = hasDropOnlyOneItemKeyDown();
-            boolean hasSingleModifierDown = hasMoveSingleModifierDown(instance().getScreen());
+            boolean hasSingleModifierDown = hasMoveSingleModifierDown();
             boolean hasKeyDown = quickDropping ? dropOnlyOne : hasSingleModifierDown;
             if (event.button() == 1 && ((((dropOnlyOne || hasSingleModifierDown) && hoveredSlotHasItem(instance().getScreensHoveredSlot())))
                     || buttonHoveredAndActive(instance().getManagementButtons().transferInventory())

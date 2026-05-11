@@ -2,7 +2,7 @@ package net.dillon.qualityofqueso.instance.management;
 
 import net.dillon.qualityofqueso.instance.QuesoScreen;
 import net.dillon.qualityofqueso.option.eum.accessibility.WidgetTheme;
-import net.dillon.qualityofqueso.widget.gui.SearchField;
+import net.dillon.qualityofqueso.widget.gui.SearchBar;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -35,10 +35,10 @@ public class SearchInstance extends ManagementInstance {
     }
 
     /**
-     * Base method for initializing the {@link SearchField}.
+     * Base method for initializing the {@link SearchBar}.
      */
-    public SearchField initializeSearchField(boolean inventory) {
-        return new SearchField(Minecraft.getInstance().font,
+    public SearchBar initializeSearchField(boolean inventory) {
+        return new SearchBar(Minecraft.getInstance().font,
                 instance().getScreen().width / 2 +  getBarWidth(getImageWidth(instance().getScreen())) / 2 - (inventory ? 60 : 64),
                 getTopPos(instance().getScreen()) + getTitleLabelY(instance().getScreen()) - 2 + (options().searching.searchBarPosition.top() ? (options().searching.searchBarColor.black() ? -19 : -21) : 0));
     }
