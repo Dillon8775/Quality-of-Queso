@@ -1,0 +1,111 @@
+package net.dillon.qualityofqueso.option.screen;
+
+import com.google.common.collect.ImmutableList;
+import net.dillon.qualityofqueso.option.ModListOptions;
+import net.dillon.qualityofqueso.util.ButtonUtil;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.OptionInstance;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static net.dillon.qualityofqueso.util.ModUtil.uoptions;
+
+/**
+ * Advanced and technical options.
+ */
+public class AccessibilityOptionsScreen extends AbstractModOptionsScreen {
+    private EditBox blacklistedServersField;
+    private List<String> blacklistedServers = new ArrayList<>();
+
+    public AccessibilityOptionsScreen(Screen parent) {
+        super(parent, Component.translatable("qualityofqueso.gui.title.accessibility_options"));
+    }
+
+    @Override
+    protected OptionInstance<?>[] options() {
+        return new OptionInstance[]{
+                ModListOptions.helpfulTooltips(),
+                ModListOptions.preventEFromTyping(),
+
+                ModListOptions.searchInventory(),
+                ModListOptions.showButtonShortcuts(),
+
+                ModListOptions.autoCloseRecipeBook(),
+                ModListOptions.ignoreFabricTags(),
+        };
+    }
+
+    @Override
+    protected void init() {
+        super.init();
+        this.list.addSmall(this.options());
+
+        this.blacklistedServers = new ArrayList<>(uoptions().main.blacklistedServers);
+        this.blacklistedServersField = new EditBox(
+                this.font,
+                0, // x=irrelevant
+                0, // y=irrelevant
+                150,
+                20,
+                Component.empty()
+        );
+        this.blacklistedServersField.setMaxLength(Integer.MAX_VALUE);
+        this.blacklistedServersField.setHint(Component.translatable("qualityofqueso.options.blacklisted_servers").withStyle(ChatFormatting.GRAY));
+        this.blacklistedServersField.setValue(String.join(", ", this.blacklistedServers));
+        this.blacklistedServersField.setResponder(this::onTextChanged);
+
+        List<AbstractWidget> widgets = ImmutableList.of(
+                ModListOptions.useOldSearchBarTexture().createButton(this.options),
+                ModListOptions.perpendicularQuickMoving().createButton(this.options),
+
+                ModListOptions.elytraAlarmSoundDelay().createButton(this.options),
+                ModListOptions.menuButton().createButton(this.options),
+
+                ModListOptions.multiServerConfigs().createButton(this.options),
+                this.blacklistedServersField
+        );
+        this.list.addSmall(widgets);
+    }
+
+    /**
+     * Clears and writes the new blacklisted servers to the {@code blacklisted servers option.}
+     */
+    private void onTextChanged(String newText) {
+        // Clear the current list
+        this.blacklistedServers.clear();
+
+        // Split by comma and trim each entry
+        String[] servers = newText.split(",");
+        for (String server : servers) {
+            String trimmed = server.trim();
+            if (!trimmed.isEmpty()) {
+                this.blacklistedServers.add(trimmed);
+            }
+        }
+    }
+
+    @Override
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float deltaTicks) {
+        super.render(graphics, mouseX, mouseY, deltaTicks);
+        if (this.blacklistedServersField.isHovered()) {
+            ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.options.blacklisted_servers.tooltip"), graphics, this.font, mouseX, mouseY);
+        }
+    }
+
+    @Override
+    public void onClose() {
+        uoptions().main.blacklistedServers.clear();
+        uoptions().main.blacklistedServers.addAll(this.blacklistedServers);
+        super.onClose();
+    }
+
+    protected boolean addOptionsByDefault() {
+        return false;
+    }
+}

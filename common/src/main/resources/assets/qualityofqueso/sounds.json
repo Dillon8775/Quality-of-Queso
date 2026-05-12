@@ -1,0 +1,52 @@
+{
+  "qualityofqueso.management.succeed": {
+    "subtitle": "qualityofqueso.gui.management_succeed",
+    "sounds": [
+      "qualityofqueso:management_succeeds",
+      "qualityofqueso:management_succeeds_1",
+      "qualityofqueso:management_succeeds_2"
+    ]
+  },
+  "qualityofqueso.management.reject": {
+    "subtitle": "qualityofqueso.gui.management_reject",
+    "sounds": [
+      "qualityofqueso:management_rejects"
+    ]
+  },
+  "qualityofqueso.management.drop": {
+    "subtitle": "qualityofqueso.gui.management_drop",
+    "sounds": [
+      "qualityofqueso:management_drop",
+      "qualityofqueso:management_drop_1",
+      "qualityofqueso:management_drop_2"
+    ]
+  },
+  "fortnite_battle_pass": {
+    "sounds": [
+      "qualityofqueso:fortnite_battle_pass/aaagghh",
+      "qualityofqueso:fortnite_battle_pass/aahh",
+      "qualityofqueso:fortnite_battle_pass/aahh_ahhh",
+      "qualityofqueso:fortnite_battle_pass/ah",
+      "qualityofqueso:fortnite_battle_pass/cmhere_little_buddy",
+      "qualityofqueso:fortnite_battle_pass/fortnite_battle_pass",
+      "qualityofqueso:fortnite_battle_pass/hahaha",
+      "qualityofqueso:fortnite_battle_pass/help",
+      "qualityofqueso:fortnite_battle_pass/hey_guys",
+      "qualityofqueso:fortnite_battle_pass/i_love_you",
+      "qualityofqueso:fortnite_battle_pass/i_think_im_gonna_miss_this_block",
+      "qualityofqueso:fortnite_battle_pass/manny_no",
+      "qualityofqueso:fortnite_battle_pass/my_pookiebear",
+      "qualityofqueso:fortnite_battle_pass/ohhhh",
+      "qualityofqueso:fortnite_battle_pass/please_find_me",
+      "qualityofqueso:fortnite_battle_pass/rarrhhg",
+      "qualityofqueso:fortnite_battle_pass/six_or_seven",
+      "qualityofqueso:fortnite_battle_pass/slap_that",
+      "qualityofqueso:fortnite_battle_pass/thirtteen",
+      "qualityofqueso:fortnite_battle_pass/weeeee",
+      "qualityofqueso:fortnite_battle_pass/woah_cool_name",
+      "qualityofqueso:fortnite_battle_pass/wrong_bow",
+      "qualityofqueso:fortnite_battle_pass/you_can_throw_fireballs",
+      "qualityofqueso:fortnite_battle_pass/you_should_add_a_feature"
+    ]
+  }
+}
