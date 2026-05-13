@@ -1,26 +1,61 @@
-# Quality of Queso Version 1.7.1 (MC Fabric/NeoForged 26.1):
+# Quality of Queso Version 1.7.1 *(1.20.1, 1.21.1, 1.21.11 & 26.1.2)*
 
 ---
 
-# Sorting Changes
+# Backports
+- Backported to `1.21.11 (Fabric and NeoForged)`, `1.21.1 (Fabric and NeoForged)`, and `1.20.1 (Fabric and Forge)!`
+- Some features *are not available* on the `backported versions,` which include:
+
+### 1.21.11 *(and below)* Unsupported Features
+- The `fluids` FOV modifier is `not available` in this version, or `any version below this.`
+
+## 1.21.1 *(and below)* Unsupported Features
+- `Bulk crafting`
+- `Fading animations for armor status`
+- `Red armor tint`
+- `Transparent search bar`
+- `Darker overlay`
+- `Overworld fog intensity`
+- `Keybind modifiers`
+
+## 1.20.1 *(and below)* Unsupported Features
+- `Colored highlighting`
+- `Warning indicators`
+- `Slot highlighting for armor status`
+
+### Version Notes:
+- `Options are laid out slightly different in this version.`
+- `Certain colored texts` are `not the same` as in other versions (like item counter, button texts, and option texts).
+- This version has `no resources screen`.
+- `Tracked containers in ender chests do not count toward item counter`.
+- Arrows  from a `charged crossbow` are not counted toward the `item counter.`.
+- Picking up `arrows entities doesn't display the arrow counter`.
+
+---
+
+# New Version Changes
+
+## Sorting Addition
 - You can now `change the sort mode if you only use the keybind for sorting.`
     - To do this, under `Management` options -> `Sorting...`, enable `Use Global Sorting Mode`.
     - `"Use Global Sorting Mode"` will use a global sorting mode for all containers, rather than giving each container it's own sorting mode.
     - This also allows you to `disable the feature where each container has it's own sorting mode.`
 
-# Management Changes
+## Visual Time Addition
+- A new visual time option, to `match your visual time with your local IRL time.`
+
+## Management Changes
 - You can now `move single items`, `drop single items` and `drag quick-move` in *any* screen (not restricted to just container screens).
   - Note that some screens will `not fully work,` because `that's how they're supposed to function.`
 
-# Visual Time Addition
-- A new visual time option, to `match your visual time with your local IRL time.`
-
 ## Other Changes
 - Added a `"Debug HUDs..."` option in the Quality of Queso main menu, which takes you straight to Minecraft's `debug options screen,` with `"qualityofqueso"` already entered in as the search query, so you can `easily toggle Quality of Queso's new debug huds.`
+- `For older Minecraft versions,` it simply takes you to a custom screen, which lets you enable the custom hud's there.
 
 ### Technical Changes
 - Renamed all `"search_field"` texture files to `"search_bar".`
 - Mixins that don't apply no longer use error messages, but instead `warning` messages, to appear less critical (because it's not that critical).
 
 ## Bugs Fixed
+- Fixed bug where attempting to filter a container in creative mode breaks the container.
 - Fixed small bug with shulker boxes stored sorting mode.

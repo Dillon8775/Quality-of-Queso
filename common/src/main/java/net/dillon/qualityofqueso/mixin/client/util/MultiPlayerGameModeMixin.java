@@ -115,13 +115,17 @@ public class MultiPlayerGameModeMixin {
     @Inject(method = "startDestroyBlock", at = @At("HEAD"), cancellable = true)
     private void filterContainer(BlockPos pos, Direction direction, CallbackInfoReturnable<Boolean> cir) {
         Minecraft minecraft = Minecraft.getInstance();
-        if (!modEnabled(minecraft) || !options().management.filtering || TRACKED_CONTAINER_COOLDOWN > 0
-                || minecraft.player == null || minecraft.level == null || !minecraft.player.isShiftKeyDown() || isHoldingItem(minecraft.player, DataComponents.TOOL)) {
+        if (!shouldCancelForContainerFilter(minecraft, pos)) {
             return;
         }
-
         BlockEntity blockEntity = minecraft.level.getBlockEntity(pos);
-        if (!isValidBlockEntity(blockEntity)) {
+
+        // Never allow breaking while attempting to filter a tracked container
+        cir.cancel();
+        cir.setReturnValue(false);
+
+        // Avoid retriggering toggle while the mouse is held down.
+        if (TRACKED_CONTAINER_COOLDOWN > 0) {
             return;
         }
 
@@ -161,6 +165,28 @@ public class MultiPlayerGameModeMixin {
         ));
         playButtonSound(minecraft, false);
         TRACKED_CONTAINER_COOLDOWN = DEFAULT_TRACKED_CONTAINER_COOLDOWN;
+    }
+
+    /**
+     * Keeps held-click and creative instant-break from destroying filtered containers.
+     */
+    @Inject(method = "continueDestroyBlock", at = @At("HEAD"), cancellable = true)
+    private void preventFilterBreakOnContinue(BlockPos pos, Direction direction, CallbackInfoReturnable<Boolean> cir) {
+        if (!shouldCancelForContainerFilter(Minecraft.getInstance(), pos)) {
+            return;
+        }
+        cir.cancel();
+        cir.setReturnValue(false);
+    }
+
+    /**
+     * Final creative break guard in case direct destroy calls bypass start/continue flow.
+     */
+    @Inject(method = "destroyBlock", at = @At("HEAD"), cancellable = true)
+    private void preventFilterBreakOnDestroy(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
+        if (!shouldCancelForContainerFilter(Minecraft.getInstance(), pos)) {
+            return;
+        }
         cir.cancel();
         cir.setReturnValue(false);
     }
@@ -183,22 +209,14 @@ public class MultiPlayerGameModeMixin {
     }
 
     /**
-     * Prevents creative instant-break in creative mode when shift + left clicking to toggle container tracking. Warning: this is buggy.
+     * @return if injection point should be canceled out after filtering.
      */
-    @Deprecated
-    @Inject(method = "destroyBlock", at = @At("HEAD"), cancellable = true)
-    private void filterContainerInCreativeMode(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
-        Minecraft minecraft = Minecraft.getInstance();
-        if (!modEnabled(minecraft) || !options().management.filtering || minecraft.player == null || minecraft.level == null || !minecraft.player.isCreative() || !minecraft.player.isShiftKeyDown()) {
-            return;
+    @Unique
+    private static boolean shouldCancelForContainerFilter(Minecraft minecraft, BlockPos pos) {
+        if (!modEnabled(minecraft) || !options().management.filtering || minecraft.player == null || minecraft.level == null
+                || !minecraft.player.isShiftKeyDown() || isHoldingItem(minecraft.player, DataComponents.TOOL)) {
+            return false;
         }
-
-        BlockEntity blockEntity = minecraft.level.getBlockEntity(pos);
-        if (!isValidBlockEntity(blockEntity)) {
-            return;
-        }
-
-        cir.cancel();
-        cir.setReturnValue(false);
+        return isValidBlockEntity(minecraft.level.getBlockEntity(pos));
     }
 }

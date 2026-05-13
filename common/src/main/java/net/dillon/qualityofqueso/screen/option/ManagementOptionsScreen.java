@@ -22,7 +22,7 @@ public class ManagementOptionsScreen extends AbstractModOptionsScreen {
         return new AbstractWidget[]{
                 createOption(ListOptions.transferring()),
                 Button.builder(
-                        Component.translatable("qualityofqueso.gui.sorting"),
+                        Component.translatable("qualityofqueso.gui.sorting").withColor(ModTexts.ITEM_COLOR),
                         button -> this.minecraft.setScreen(new SortingOptionsScreen(this))
                 ).tooltip(Tooltip.create(Component.translatable("qualityofqueso.gui.sorting.tooltip"))).build(),
 
