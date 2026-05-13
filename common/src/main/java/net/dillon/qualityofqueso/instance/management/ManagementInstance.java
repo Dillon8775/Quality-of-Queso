@@ -18,7 +18,7 @@ import net.minecraft.network.protocol.game.ServerboundContainerClickPacket;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerInput;
+import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -374,7 +374,7 @@ public class ManagementInstance implements ModInstance {
      * @return if a stack is in a tag.
      */
     public boolean areStacksInSameTag(ItemStack fromStack, ItemStack toStack) {
-        return fromStack.tags().anyMatch(tag -> !isFabricTag(tag.location().toString()) && toStack.is(tag));
+        return fromStack.getTags().anyMatch(tag -> !isFabricTag(tag.location().toString()) && toStack.is(tag));
     }
 
     /**
@@ -444,11 +444,11 @@ public class ManagementInstance implements ModInstance {
      * Performs the {@code click action} to sort items.
      */
     public void clickSlot(int slotId) {
-        instance().getMinecraft().gameMode.handleContainerInput(
+        instance().getMinecraft().gameMode.handleInventoryMouseClick(
                 instance().getScreenMenu().containerId,
                 slotId,
                 0,
-                ContainerInput.PICKUP,
+                ClickType.PICKUP,
                 instance().getMinecraft().player
         );
     }
@@ -457,15 +457,15 @@ public class ManagementInstance implements ModInstance {
      * Sends a "swap slot" click packet.
      */
     public void sendSwapSlotPacket(int source, int index) {
-        sendClickSlotPacket(source, ContainerInput.PICKUP);
-        sendClickSlotPacket(index, ContainerInput.PICKUP);
-        sendClickSlotPacket(source, ContainerInput.PICKUP);
+        sendClickSlotPacket(source, ClickType.PICKUP);
+        sendClickSlotPacket(index, ClickType.PICKUP);
+        sendClickSlotPacket(source, ClickType.PICKUP);
     }
 
     /**
      * Sends a click slot packet.
      */
-    public void sendClickSlotPacket(int slotIndex, ContainerInput containerInput) {
+    public void sendClickSlotPacket(int slotIndex, ClickType containerInput) {
         Minecraft client = Minecraft.getInstance();
         ClientPacketListener packetListener = client.getConnection();
 
@@ -477,10 +477,10 @@ public class ManagementInstance implements ModInstance {
         int syncId = handler.containerId;
         int stateId = handler.getStateId();
 
-        if (containerInput == ContainerInput.THROW) {
+        if (containerInput == ClickType.THROW) {
             ItemStack clickedStack = handler.getSlot(slotIndex).getItem();
             if (!clickedStack.isEmpty()) {
-                client.gameMode.handleContainerInput(syncId, slotIndex, hasDropOnlyOneItemKeyDown() ? 0 : 1, containerInput, client.player);
+                client.gameMode.handleInventoryMouseClick(syncId, slotIndex, hasDropOnlyOneItemKeyDown() ? 0 : 1, containerInput, client.player);
             }
             return;
         }

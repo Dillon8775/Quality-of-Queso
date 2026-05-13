@@ -3,7 +3,7 @@ package net.dillon.qualityofqueso.instance.management;
 import net.dillon.qualityofqueso.helper.ContainerHelper;
 import net.dillon.qualityofqueso.instance.QuesoScreen;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.world.inventory.Slot;
@@ -31,7 +31,7 @@ public class LockedSlotsInstance extends ManagementInstance {
     /**
      * Renders the unlocked slot texture over slots.
      */
-    public void renderUnlockedSlot(GuiGraphicsExtractor graphics, boolean isSlotLocked, int mouseX, int mouseY) {
+    public void renderUnlockedSlot(GuiGraphics graphics, boolean isSlotLocked, int mouseX, int mouseY) {
         int xy = 10;
         graphics.blit(RenderPipelines.GUI_TEXTURED, ofQoQ("textures/gui/sprites/locked_slot/" + (isSlotLocked ? "key" : "unlock") + ".png"), mouseX - 6, mouseY + 2, 0.0F, 0.0F, xy, xy, xy, xy);
     }
@@ -66,7 +66,7 @@ public class LockedSlotsInstance extends ManagementInstance {
     /**
      * Renders a slot as "locked".
      */
-    public void renderLockedSlot(GuiGraphicsExtractor graphics, Slot slot, boolean lockOnly) {
+    public void renderLockedSlot(GuiGraphics graphics, Slot slot, boolean lockOnly) {
         boolean containerSlot = isContainerScreen(instance().getScreen()) && slot.index < getContainerSize();
         boolean locked;
         if (containerSlot) {

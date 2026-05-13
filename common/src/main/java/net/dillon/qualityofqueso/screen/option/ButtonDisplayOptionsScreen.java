@@ -1,6 +1,6 @@
 package net.dillon.qualityofqueso.screen.option;
 
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -41,7 +41,7 @@ public class ButtonDisplayOptionsScreen extends AbstractModOptionsScreen {
     }
 
     @Override
-    protected void blitYouTubeSprite(GuiGraphicsExtractor graphics) {
+    protected void blitYouTubeSprite(GuiGraphics graphics) {
         graphics.blit(RenderPipelines.GUI_TEXTURED, ofQoQ("textures/gui/button/fill_stacks/fill_stacks.png"), this.youtubeButton.getX() + 10, this.youtubeButton.getY() - 5, 0.0F, 0.0F, 12, 12, 12, 12);
     }
 }

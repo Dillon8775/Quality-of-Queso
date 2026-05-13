@@ -24,7 +24,7 @@ public class InGameTimeHudEntry extends QoQScreenEntry {
         }
 
         // Calculate the time
-        long time = level.getOverworldClockTime() % 24000;
+        long time = level.getGameTime() % 24000;
 
         time = (time + 6000) % 24000;
 

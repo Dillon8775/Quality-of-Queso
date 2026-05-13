@@ -31,12 +31,12 @@ public final class ClientEvents {
         if (isOnServer(minecraft) && minecraft.player != null) {
             for (String server : bannedServers) {
                 if (minecraft.getCurrentServer().ip.contains(server)) {
-                    minecraft.player.sendSystemMessage(Component.translatable("qualityofqueso.gui.banned_server",
-                            Component.literal(minecraft.getCurrentServer().ip).withStyle(ChatFormatting.DARK_RED)));
+                    minecraft.player.displayClientMessage(Component.translatable("qualityofqueso.gui.banned_server",
+                            Component.literal(minecraft.getCurrentServer().ip).withStyle(ChatFormatting.DARK_RED)), false);
                 }
             }
             if (!uoptions().main.multiServerConfigs) {
-                minecraft.player.sendSystemMessage(Component.translatable("qualityofqueso.gui.enable_multi_server_configs"));
+                minecraft.player.displayClientMessage(Component.translatable("qualityofqueso.gui.enable_multi_server_configs"), false);
             }
         }
         sendClientOptionsToServer();
@@ -59,7 +59,7 @@ public final class ClientEvents {
         }
 
         if (minecraft.player != null) {
-            minecraft.player.sendSystemMessage(Component.translatable("qualityofqueso.gui.mod_not_installed"));
+            minecraft.player.displayClientMessage(Component.translatable("qualityofqueso.gui.mod_not_installed"), false);
         }
     }
 }

@@ -8,7 +8,7 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerInput;
+import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.lwjgl.glfw.GLFW;
@@ -67,7 +67,7 @@ public class TransferInstance extends ManagementInstance {
      */
     public void performSingularDrop() {
         for (int i = 0; i < MOVE_AMOUNT; i++) {
-            sendClickSlotPacket(instance().getScreensHoveredSlot().index, ContainerInput.THROW);
+            sendClickSlotPacket(instance().getScreensHoveredSlot().index, ClickType.THROW);
         }
     }
 
@@ -137,7 +137,7 @@ public class TransferInstance extends ManagementInstance {
             if (!fromStack.isEmpty()) {
                 ItemStack cursorStack = getCursorStack();
                 // Only transfer items if the query matches whatever the cursor is holding
-                ContainerInput slotActionType = drop ? ContainerInput.THROW : ContainerInput.QUICK_MOVE;
+                ClickType slotActionType = drop ? ClickType.THROW : ClickType.QUICK_MOVE;
 
                 if (options().isFillStacksEnabled() && options().buttonDisplayOptions.displayFillStacks && !drop) {
                     if (!cursorStack.isEmpty() && !canMoveCursorItem(fromSlot, false, toInventory)) {
@@ -271,7 +271,7 @@ public class TransferInstance extends ManagementInstance {
             }
 
             Slot parkedSlot = instance().getScreenMenu().getSlot(parkedCursorSlot);
-            performClickSlot(instance().getScreen(), parkedSlot, parkedCursorSlot, 0, ContainerInput.PICKUP);
+            performClickSlot(instance().getScreen(), parkedSlot, parkedCursorSlot, 0, ClickType.PICKUP);
         }
 
         try {
@@ -310,7 +310,7 @@ public class TransferInstance extends ManagementInstance {
             if (parkedCursorSlot != -1 && instance().getScreenMenu().getCarried().isEmpty()) {
                 Slot parkedSlot = instance().getScreenMenu().getSlot(parkedCursorSlot);
                 if (parkedSlot.hasItem()) {
-                    performClickSlot(instance().getScreen(), parkedSlot, parkedCursorSlot, 0, ContainerInput.PICKUP);
+                    performClickSlot(instance().getScreen(), parkedSlot, parkedCursorSlot, 0, ClickType.PICKUP);
                 }
             }
         }
@@ -334,7 +334,7 @@ public class TransferInstance extends ManagementInstance {
         int slotId = sourceSlot.index;
 
         // Pick up full stack
-        performClickSlot(instance().getScreen(), sourceSlot, slotId, 0, ContainerInput.PICKUP);
+        performClickSlot(instance().getScreen(), sourceSlot, slotId, 0, ClickType.PICKUP);
 
         ItemStack carried = instance().getScreenMenu().getCarried();
         if (carried.isEmpty()) {
@@ -359,7 +359,7 @@ public class TransferInstance extends ManagementInstance {
             }
 
             // Right-click places 1 item
-            performClickSlot(instance().getScreen(), target, target.index, 1, ContainerInput.PICKUP);
+            performClickSlot(instance().getScreen(), target, target.index, 1, ClickType.PICKUP);
 
             movedOne = true;
             // Only move one item total per source sourceSlot
@@ -371,7 +371,7 @@ public class TransferInstance extends ManagementInstance {
             for (Iterator<Slot> it = emptySlots.iterator(); it.hasNext();) {
                 Slot empty = it.next();
 
-                performClickSlot(instance().getScreen(), empty, empty.index, 1, ContainerInput.PICKUP);
+                performClickSlot(instance().getScreen(), empty, empty.index, 1, ClickType.PICKUP);
 
                 if (empty.hasItem()) {
                     nonEmptySlots.add(empty);
@@ -385,7 +385,7 @@ public class TransferInstance extends ManagementInstance {
 
         // Return leftovers to original sourceSlot
         if (!instance().getScreenMenu().getCarried().isEmpty()) {
-            performClickSlot(instance().getScreen(), sourceSlot, slotId, 0, ContainerInput.PICKUP);
+            performClickSlot(instance().getScreen(), sourceSlot, slotId, 0, ClickType.PICKUP);
         }
 
         return movedOne;

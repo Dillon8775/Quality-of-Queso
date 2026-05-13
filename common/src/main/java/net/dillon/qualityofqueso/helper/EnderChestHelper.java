@@ -14,7 +14,6 @@ import net.minecraft.world.Container;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.component.BundleContents;
 import net.minecraft.world.item.component.ItemContainerContents;
 
@@ -139,14 +138,14 @@ public class EnderChestHelper {
 
         ItemContainerContents container = stack.get(DataComponents.CONTAINER);
         if (container != null) {
-            for (ItemStackTemplate containerStack : container.nonEmptyItems()) {
+            for (ItemStack containerStack : container.nonEmptyItems()) {
                 addContainedTemplate(serialized, containerStack);
             }
         }
 
         BundleContents bundleContents = stack.get(DataComponents.BUNDLE_CONTENTS);
         if (bundleContents != null) {
-            for (ItemStackTemplate bundleStack : bundleContents.items()) {
+            for (ItemStack bundleStack : bundleContents.items()) {
                 addContainedTemplate(serialized, bundleStack);
             }
         }
@@ -157,8 +156,8 @@ public class EnderChestHelper {
     /**
      * Adds a contained item template for transportable containers inside ender chests.
      */
-    private static void addContainedTemplate(List<ContainerData.StoredEnderChestStack> serialized, ItemStackTemplate template) {
-        ItemStack inner = template.create();
+    private static void addContainedTemplate(List<ContainerData.StoredEnderChestStack> serialized, ItemStack template) {
+        ItemStack inner = template;
         if (inner.isEmpty()) {
             return;
         }
@@ -170,7 +169,7 @@ public class EnderChestHelper {
 
         ContainerData.StoredEnderChestStack storedInner = new ContainerData.StoredEnderChestStack();
         storedInner.itemId = innerId.toString();
-        storedInner.count = template.count();
+        storedInner.count = template.getCount();
         storedInner.components = inner.getComponents().toString();
         storedInner.containedItems = serializeContainedItems(inner);
         serialized.add(storedInner);

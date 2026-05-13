@@ -4,7 +4,7 @@ import net.dillon.qualityofqueso.helper.EnderChestHelper;
 import net.dillon.qualityofqueso.option.ContainerData;
 import net.dillon.qualityofqueso.util.ModConstants;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.KeyEvent;
@@ -106,7 +106,7 @@ public class EnderChestPreviewScreen extends Screen {
     }
 
     @Override
-    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks) {
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float deltaTicks) {
         int panelX = (this.width - GUI_WIDTH) / 2;
         int panelY = (this.height - GUI_HEIGHT) / 2;
         int slotStartX = panelX + 8;
@@ -114,7 +114,7 @@ public class EnderChestPreviewScreen extends Screen {
 
         graphics.blit(RenderPipelines.GUI_TEXTURED, CHEST_TEXTURE, panelX, panelY, 0, 0, GUI_WIDTH, TOP_BACKGROUND_HEIGHT, 256, 256);
         graphics.blit(RenderPipelines.GUI_TEXTURED, CHEST_TEXTURE, panelX, panelY + TOP_BACKGROUND_HEIGHT, 0, BOTTOM_CAP_V, GUI_WIDTH, BOTTOM_CAP_HEIGHT, 256, 256);
-        graphics.text(this.font, this.title, panelX + 8, panelY + 6, ModConstants.DEFAULT_TRANSPARENT_SEARCH_BAR_TEXT_COLOR, false);
+        graphics.drawString(this.font, this.title, panelX + 8, panelY + 6, ModConstants.DEFAULT_TRANSPARENT_SEARCH_BAR_TEXT_COLOR, false);
 
         int hoveredSlot = hoveredSlotAt(mouseX, mouseY, slotStartX, slotStartY);
         for (int row = 0; row < ROWS; row++) {
@@ -127,8 +127,8 @@ public class EnderChestPreviewScreen extends Screen {
 
                 int x = slotStartX + col * SLOT_SIZE;
                 int y = slotStartY + row * SLOT_SIZE;
-                graphics.fakeItem(stack, x, y);
-                graphics.itemDecorations(this.font, stack, x, y);
+                graphics.renderFakeItem(stack, x, y);
+                graphics.renderItemDecorations(this.font, stack, x, y);
             }
         }
 
@@ -149,7 +149,7 @@ public class EnderChestPreviewScreen extends Screen {
             }
         }
 
-        super.extractRenderState(graphics, mouseX, mouseY, deltaTicks);
+        super.render(graphics, mouseX, mouseY, deltaTicks);
     }
 
     private int hoveredSlotAt(int mouseX, int mouseY, int slotStartX, int slotStartY) {

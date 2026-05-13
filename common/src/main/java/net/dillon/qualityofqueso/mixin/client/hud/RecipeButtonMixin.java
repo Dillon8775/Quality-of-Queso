@@ -3,7 +3,7 @@ package net.dillon.qualityofqueso.mixin.client.hud;
 import net.dillon.qualityofqueso.mixin.client.accessor.RecipeBookComponentAccessor;
 import net.dillon.qualityofqueso.util.ModConstants;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.AbstractRecipeBookScreen;
@@ -33,8 +33,8 @@ public abstract class RecipeButtonMixin extends AbstractWidget {
     /**
      * Renders a selected sprite over top of a selected recipe, when bulk crafting.
      */
-    @Inject(method = "extractWidgetRenderState", at = @At("TAIL"))
-    private void extractSelectedRecipe(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a, CallbackInfo ci) {
+    @Inject(method = "renderWidget", at = @At("TAIL"))
+    private void extractSelectedRecipe(GuiGraphics graphics, int mouseX, int mouseY, float a, CallbackInfo ci) {
         Minecraft minecraft = Minecraft.getInstance();
         if (!modEnabled(minecraft) || !options().management.craftAll || !options().buttonDisplayOptions.displayCraftAll) {
             return;

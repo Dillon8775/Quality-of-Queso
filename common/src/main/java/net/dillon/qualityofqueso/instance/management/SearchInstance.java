@@ -4,7 +4,7 @@ import net.dillon.qualityofqueso.instance.QuesoScreen;
 import net.dillon.qualityofqueso.option.eum.accessibility.WidgetTheme;
 import net.dillon.qualityofqueso.widget.gui.SearchBar;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
@@ -86,7 +86,7 @@ public class SearchInstance extends ManagementInstance {
     /**
      * Grays out a search, typically from search queries or excluding hotbar.
      */
-    public void renderGrayedSlot(GuiGraphicsExtractor graphics, Slot slot, boolean hotbarOverlay) {
+    public void renderGrayedSlot(GuiGraphics graphics, Slot slot, boolean hotbarOverlay) {
         String id = "grayed";
         if (hotbarOverlay) {
             id = "grayed_hotbar";
@@ -127,7 +127,7 @@ public class SearchInstance extends ManagementInstance {
         }
 
         ItemContainerContents containerContents = stack.get(DataComponents.CONTAINER);
-        if (containerContents != null && containerContents.nonEmptyItemCopyStream().anyMatch(contained -> matchesQuery(searchQuery, contained))) {
+        if (containerContents != null && containerContents.nonEmptyStream().anyMatch(contained -> matchesQuery(searchQuery, contained))) {
             return true;
         }
 
@@ -168,12 +168,12 @@ public class SearchInstance extends ManagementInstance {
                 String tagSearch = term.substring(1).toLowerCase();
 
                 // Return false if tag list is empty
-                if (stack.tags().toList().isEmpty()) {
+                if (stack.getTags().toList().isEmpty()) {
                     return false;
                 }
 
                 // Then search through all item's tags
-                for (TagKey<Item> tag : stack.tags().toList()) {
+                for (TagKey<Item> tag : stack.getTags().toList()) {
                     Identifier location = tag.location();
 
                     if (location.getPath().toLowerCase().contains(tagSearch)

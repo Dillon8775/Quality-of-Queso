@@ -4,7 +4,7 @@ import net.blay09.mods.balm.Balm;
 import net.dillon.qualityofqueso.helper.ModHelper;
 import net.dillon.qualityofqueso.option.eum.accessibility.WidgetTheme;
 import net.dillon.qualityofqueso.widget.gui.BlacklistedServersField;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -64,8 +64,8 @@ public class AccessibilityOptionsScreen extends AbstractModOptionsScreen {
     }
 
     @Override
-    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks) {
-        super.extractRenderState(graphics, mouseX, mouseY, deltaTicks);
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float deltaTicks) {
+        super.render(graphics, mouseX, mouseY, deltaTicks);
         if (this.blacklistedServersField.isHovered()) {
             drawTooltip(Component.translatable("qualityofqueso.options.blacklisted_servers.tooltip"), graphics, this.font, mouseX, mouseY);
         }

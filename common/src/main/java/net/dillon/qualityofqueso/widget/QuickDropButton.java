@@ -2,7 +2,7 @@ package net.dillon.qualityofqueso.widget;
 
 import net.dillon.qualityofqueso.helper.ButtonHelper;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -35,7 +35,7 @@ public class QuickDropButton extends TransferButton {
      * Removes the "with stack" option, since it's a vanilla feature we can't work around (for now).
      */
     @Override
-    protected void renderBaseButtonTexture(String id, AbstractWidget buttonReference, GuiGraphicsExtractor graphics) {
+    protected void renderBaseButtonTexture(String id, AbstractWidget buttonReference, GuiGraphics graphics) {
         String transferableString = this.searchFieldText.startsWith("!") ?
                 "_excluding.png" : this.searchFieldText.startsWith("#") ?
                                    "_tag.png" : this.searchFieldText.startsWith(":") ?

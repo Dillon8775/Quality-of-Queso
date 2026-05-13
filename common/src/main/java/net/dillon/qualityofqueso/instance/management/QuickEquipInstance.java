@@ -6,7 +6,7 @@ import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.inventory.ContainerInput;
+import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -71,7 +71,7 @@ public class QuickEquipInstance extends ManagementInstance {
                 Minecraft client = Minecraft.getInstance();
                 ItemStack equippedStack = client.player.getItemBySlot(targetSlot);
                 if (equippedStack.isEmpty()) {
-                    sendClickSlotPacket(instance().getScreensHoveredSlot().index, ContainerInput.QUICK_MOVE);
+                    sendClickSlotPacket(instance().getScreensHoveredSlot().index, ClickType.QUICK_MOVE);
                 } else {
                     quickSwap(instance().getScreensHoveredSlot().index, targetSlot);
                 }

@@ -2,7 +2,7 @@ package net.dillon.qualityofqueso.instance;
 
 import net.dillon.qualityofqueso.instance.management.ManagementInstance;
 import net.minecraft.client.input.MouseButtonEvent;
-import net.minecraft.world.inventory.ContainerInput;
+import net.minecraft.world.inventory.ClickType;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import static net.dillon.qualityofqueso.helper.ManagementHelper.hoveredSlotHasItem;
@@ -33,7 +33,7 @@ public class MouseDragInstance extends ManagementInstance {
                 && !lockedSlotsInstance().isLockedSlot(instance().getScreensHoveredSlot().index)
                 && !isExcludedSlot(instance().getScreensHoveredSlot().index)
                 && (options().isAlwaysQuickMove() || (options().management.dragMoving && event.hasShiftDown()))) {
-            sendClickSlotPacket(instance().getScreensHoveredSlot().index, ContainerInput.QUICK_MOVE);
+            sendClickSlotPacket(instance().getScreensHoveredSlot().index, ClickType.QUICK_MOVE);
         }
     }
 }

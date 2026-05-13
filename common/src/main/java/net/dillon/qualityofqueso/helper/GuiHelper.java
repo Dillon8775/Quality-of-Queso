@@ -6,7 +6,7 @@ import net.dillon.qualityofqueso.widget.layout.WidgetLayout;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.AbstractRecipeBookScreen;
@@ -26,7 +26,10 @@ import net.minecraft.util.CommonColors;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.BowItem;
+import net.minecraft.world.item.CrossbowItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.BundleContents;
 import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -48,28 +51,28 @@ public class GuiHelper {
     /**
      * @return the GUI width.
      */
-    public static int getGuiWidth(GuiGraphicsExtractor context) {
+    public static int getGuiWidth(GuiGraphics context) {
         return context.guiWidth() / 2;
     }
 
     /**
      * @return the GUI height.
      */
-    public static int getGuiHeight(GuiGraphicsExtractor context) {
+    public static int getGuiHeight(GuiGraphics context) {
         return context.guiHeight() - 20;
     }
 
     /**
      * Draws a tooltip on a screen for anything other than a search bar.
      */
-    public static void drawTooltip(Component tooltip, GuiGraphicsExtractor graphics, Font font, int mouseX, int mouseY) {
+    public static void drawTooltip(Component tooltip, GuiGraphics graphics, Font font, int mouseX, int mouseY) {
         drawTooltip(tooltip, graphics,font, mouseX, mouseY, false);
     }
 
     /**
      * Draws a tooltip in a screen.
      */
-    public static void drawTooltip(Component tooltip, GuiGraphicsExtractor graphics, Font font, int mouseX, int mouseY, boolean searchBar) {
+    public static void drawTooltip(Component tooltip, GuiGraphics graphics, Font font, int mouseX, int mouseY, boolean searchBar) {
         Screen screen = getCurrentScreen();
         boolean validScreen = isValidScreen(screen) || isOtherValidScreen(screen);
         int x = validScreen ? getTooltipX(graphics, screen, mouseX) : mouseX;
@@ -81,7 +84,7 @@ public class GuiHelper {
      * Draws rendered text on the screen.
      */
     @Deprecated
-    public static void drawTextTooltip(Component tooltip, GuiGraphicsExtractor graphics, Font font, Container container, AbstractContainerScreen<?> screen) {
+    public static void drawTextTooltip(Component tooltip, GuiGraphics graphics, Font font, Container container, AbstractContainerScreen<?> screen) {
         WidgetLayout widgetLayout = ((QuesoScreen)screen).getWidgetLayout();
         int width = isInventoryScreen(screen)
                 && !options().management.layout.horizontal()
@@ -91,7 +94,7 @@ public class GuiHelper {
         int x = getTextTooltipX(screen ,graphics, font, tooltip, width);
         int y = getTextTooltipY(container, screen);
         List<ClientTooltipComponent> lines = getTooltipLines(font, tooltip, width);
-        graphics.tooltip(font, lines, x, y, DefaultTooltipPositioner.INSTANCE, null);
+        graphics.renderTooltip(font, lines, x, y, DefaultTooltipPositioner.INSTANCE, null);
     }
 
     /**
@@ -106,7 +109,7 @@ public class GuiHelper {
     /**
      * @return the {@code X-position} for tooltips. Only counts for {@link AbstractContainerScreen}s and {@link InventoryScreen}s.
      */
-    public static int getTooltipX(GuiGraphicsExtractor graphics, Screen screen, int mouseX) {
+    public static int getTooltipX(GuiGraphics graphics, Screen screen, int mouseX) {
         if (!options().accessibility.tooltips.ddefault()) {
             return mouseX;
         }
@@ -159,7 +162,7 @@ public class GuiHelper {
     /**
      * @return the x-position for text-rendered tooltips.
      */
-    public static int getTextTooltipX(AbstractContainerScreen<?> screen, GuiGraphicsExtractor graphics, Font font, Component tooltip, int width) {
+    public static int getTextTooltipX(AbstractContainerScreen<?> screen, GuiGraphics graphics, Font font, Component tooltip, int width) {
         int textWidth = 0;
         for (ClientTooltipComponent line : getTooltipLines(font, tooltip, width)) {
             int lineWidth = line.getWidth(font);
@@ -361,21 +364,21 @@ public class GuiHelper {
     /**
      * Draws an equipped stack item.
      */
-    public static void drawItem(Minecraft minecraft, GuiGraphicsExtractor context, ItemStack stack, int x, boolean overlay) {
+    public static void drawItem(Minecraft minecraft, GuiGraphics context, ItemStack stack, int x, boolean overlay) {
         drawItem(minecraft, context, stack, x, overlay, 0);
     }
 
     /**
      * Draws an equipped stack item with a vertical offset.
      */
-    public static void drawItem(Minecraft minecraft, GuiGraphicsExtractor context, ItemStack stack, int x, boolean overlay, int yOffset) {
+    public static void drawItem(Minecraft minecraft, GuiGraphics context, ItemStack stack, int x, boolean overlay, int yOffset) {
         int i = getGuiWidth(context);
         int y = getGuiHeight(context) + 1 + yOffset;
         int fx = i + x;
         if (!stack.isEmpty()) {
-            context.item(stack, fx, y);
+            context.renderFakeItem(stack, fx, y);
             if (overlay) {
-                context.itemDecorations(minecraft.font, stack, fx, y, null);
+                context.renderItemDecorations(minecraft.font, stack, fx, y, null);
             }
         }
     }
@@ -405,18 +408,18 @@ public class GuiHelper {
         BundleContents bundleContents = invStack.get(DataComponents.BUNDLE_CONTENTS);
 
         if (container != null) {
-            for (ItemStackTemplate containerStack : container.nonEmptyItems()) {
-                if (itemMatchesInventoryItem(heldStack, containerStack.create())) {
-                    itemInTransportableCount += containerStack.count();
-                    items.add(containerStack.count());
+            for (ItemStack containerStack : container.nonEmptyItems()) {
+                if (itemMatchesInventoryItem(heldStack, containerStack)) {
+                    itemInTransportableCount += containerStack.getCount();
+                    items.add(containerStack.getCount());
                 }
             }
         }
         if (bundleContents != null) {
-            for (ItemStackTemplate bundleStack : bundleContents.items()) {
-                if (itemMatchesInventoryItem(heldStack, bundleStack.create())) {
-                    itemInTransportableCount += bundleStack.count();
-                    items.add(bundleStack.count());
+            for (ItemStack bundleStack : bundleContents.items()) {
+                if (itemMatchesInventoryItem(heldStack, bundleStack)) {
+                    itemInTransportableCount += bundleStack.getCount();
+                    items.add(bundleStack.getCount());
                 }
             }
         }

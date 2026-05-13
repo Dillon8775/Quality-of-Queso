@@ -8,7 +8,7 @@ import net.minecraft.client.AttackIndicatorStatus;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.NonNullList;
@@ -60,7 +60,7 @@ public class GuiMixin {
      * Tries to render an item on the screen.
      */
     @Unique
-    private void tryRenderItem(GuiGraphicsExtractor graphics, ItemStack mainHandItem, ItemStack offHandItem) {
+    private void tryRenderItem(GuiGraphics graphics, ItemStack mainHandItem, ItemStack offHandItem) {
         // Get the persisted data from the player's last known ender chest
         EnderChestHelper.persistEnderChestContentsIfOpen(this.minecraft, this.minecraft.player);
         // Then get the current picked up/dropped item stack
@@ -105,7 +105,7 @@ public class GuiMixin {
      * @return the x-position that the slot should render under the armor item.
      */
     @Unique
-    private int getArmorBarX(Minecraft minecraft, GuiGraphicsExtractor graphics) {
+    private int getArmorBarX(Minecraft minecraft, GuiGraphics graphics) {
         return getGuiWidth(graphics) + this.getEquipmentSlotX(minecraft, EquipmentSlot.HEAD) - 3;
     }
 
@@ -113,7 +113,7 @@ public class GuiMixin {
      * @return the x-position that the highlighted slot should render under the armor item.
      */
     @Unique
-    private int getHighlightedSlotX(Minecraft minecraft, GuiGraphicsExtractor graphics, EquipmentSlot slot) {
+    private int getHighlightedSlotX(Minecraft minecraft, GuiGraphics graphics, EquipmentSlot slot) {
         return getGuiWidth(graphics) + this.getEquipmentSlotX(minecraft, slot) - 4;
     }
 
@@ -121,7 +121,7 @@ public class GuiMixin {
      * Renders the highlighted texture around a slot.
      */
     @Unique
-    private void renderHighlightedArmorSlot(Minecraft minecraft, Identifier defaultSprite, GuiGraphicsExtractor graphics, EquipmentSlot slot, boolean warning, int yOffset, float alpha) {
+    private void renderHighlightedArmorSlot(Minecraft minecraft, Identifier defaultSprite, GuiGraphics graphics, EquipmentSlot slot, boolean warning, int yOffset, float alpha) {
         if (alpha <= 0.0F || !(options().hud.highlightArmor)) {
             return;
         }
@@ -141,7 +141,7 @@ public class GuiMixin {
      * Renders the {@code warning texture} around armor items.
      */
     @Unique
-    private void renderWarningIndicator(Minecraft minecraft, GuiGraphicsExtractor graphics, int slot, int itemX, EquipmentSlot equipmentSlot, int yOffset) {
+    private void renderWarningIndicator(Minecraft minecraft, GuiGraphics graphics, int slot, int itemX, EquipmentSlot equipmentSlot, int yOffset) {
         if (!options().hud.warningIndicators) {
             return;
         }
@@ -159,7 +159,7 @@ public class GuiMixin {
     /**
      * Renders the modified selection slot.
      */
-    @ModifyArg(method = "extractItemHotbar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIII)V", ordinal = 1), index = 1)
+    @ModifyArg(method = "renderItemHotbar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIII)V", ordinal = 1), index = 1)
     private Identifier modifyHighlightedSlot(Identifier original) {
         if (!modEnabled(this.minecraft) || this.minecraft.player == null) {
             return original;
@@ -170,8 +170,8 @@ public class GuiMixin {
     /**
      * Renders things overtop of everything.
      */
-    @Inject(method = "extractItemHotbar", at = @At("TAIL"))
-    private void renderAllWarningIndicators(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+    @Inject(method = "renderItemHotbar", at = @At("TAIL"))
+    private void renderAllWarningIndicators(GuiGraphics graphics, DeltaTracker deltaTracker, CallbackInfo ci) {
         if (!modEnabled(this.minecraft)) {
             return;
         }
@@ -197,8 +197,8 @@ public class GuiMixin {
     /**
      * Implements the {@code armor status} feature.
      */
-    @Inject(method = "extractItemHotbar", at = @At("HEAD"))
-    private void renderArmorStatusAndTryRenderItem(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+    @Inject(method = "renderItemHotbar", at = @At("HEAD"))
+    private void renderArmorStatusAndTryRenderItem(GuiGraphics graphics, DeltaTracker deltaTracker, CallbackInfo ci) {
         if (!modEnabled(this.minecraft) || this.minecraft.player == null) {
             return;
         }
@@ -341,7 +341,7 @@ public class GuiMixin {
      * Renders an item.
      */
     @Unique
-    private boolean renderItem(GuiGraphicsExtractor graphics, ItemStack heldStack, boolean trackedItem) {
+    private boolean renderItem(GuiGraphics graphics, ItemStack heldStack, boolean trackedItem) {
         boolean holdingArrowDisplayableProjectileWeapon = holdingArrowDisplayableProjectileWeapon(this.minecraft, heldStack);
         if (!options().itemCounter.enableItemCounter.enabled() || (!heldStack.isStackable() && !holdingArrowDisplayableProjectileWeapon)) {
             if (!heldStack.is(ItemTags.SHULKER_BOXES) && !heldStack.is(ItemTags.BUNDLES)) {
@@ -493,9 +493,9 @@ public class GuiMixin {
             if (textLength == 1) {
                 textX += 3;
             }
-            graphics.text(this.minecraft.font, text, ((graphics.guiWidth() / 2) + textX), graphics.guiHeight() - (hasInfinity ? 9 : 10) + itemAnimationYOffset, color, true);
+            graphics.drawString(this.minecraft.font, text, ((graphics.guiWidth() / 2) + textX), graphics.guiHeight() - (hasInfinity ? 9 : 10) + itemAnimationYOffset, color, true);
             if (options().itemCounter.displayTotalWithStacks && count > 64 && (evenStack || options().itemCounter.enableItemCounter == ItemCounter.STACKS)) {
-                graphics.text(this.minecraft.font, "(" + String.format("%,d", count) + ")", ((graphics.guiWidth() / 2) + textX), graphics.guiHeight() - 22 + itemAnimationYOffset, color, true);
+                graphics.drawString(this.minecraft.font, "(" + String.format("%,d", count) + ")", ((graphics.guiWidth() / 2) + textX), graphics.guiHeight() - 22 + itemAnimationYOffset, color, true);
             }
 
             return true;

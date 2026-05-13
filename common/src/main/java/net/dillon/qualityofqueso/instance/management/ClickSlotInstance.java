@@ -9,7 +9,7 @@ import net.minecraft.client.gui.screens.inventory.AbstractRecipeBookScreen;
 import net.minecraft.client.gui.screens.inventory.MerchantScreen;
 import net.minecraft.network.protocol.game.ServerboundSelectTradePacket;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerInput;
+import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.MerchantMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.crafting.display.RecipeDisplayId;
@@ -65,7 +65,7 @@ public class ClickSlotInstance extends ManagementInstance {
     /**
      * Trades with all resources for the selected trade.
      */
-    public void tradeAllForSelectedOffer(int slotId, ContainerInput containerInput, CallbackInfo ci) {
+    public void tradeAllForSelectedOffer(int slotId, ClickType containerInput, CallbackInfo ci) {
         if (processingQueuedTradeAllClick) {
             return;
         }
@@ -80,7 +80,7 @@ public class ClickSlotInstance extends ManagementInstance {
         }
 
         // Only when player actually tries to take result
-        if (containerInput != ContainerInput.PICKUP && containerInput != ContainerInput.QUICK_MOVE) {
+        if (containerInput != ClickType.PICKUP && containerInput != ClickType.QUICK_MOVE) {
             return;
         }
 
@@ -104,7 +104,7 @@ public class ClickSlotInstance extends ManagementInstance {
     /**
      * Crafts all resources for the selected recipe.
      */
-    public void craftAllForSelectedRecipe(int slotId, ContainerInput containerInput, CallbackInfo ci) {
+    public void craftAllForSelectedRecipe(int slotId, ClickType containerInput, CallbackInfo ci) {
         if (processingQueuedCraftAllClick) {
             return;
         }
@@ -119,7 +119,7 @@ public class ClickSlotInstance extends ManagementInstance {
         }
 
         // Only when player actually tries to take result
-        if (containerInput != ContainerInput.PICKUP && containerInput != ContainerInput.QUICK_MOVE) {
+        if (containerInput != ClickType.PICKUP && containerInput != ClickType.QUICK_MOVE) {
             return;
         }
 
@@ -186,7 +186,7 @@ public class ClickSlotInstance extends ManagementInstance {
 
         processingQueuedTradeAllClick = true;
         try {
-            performClickSlot(merchantScreen, merchantMenu.getSlot(2), 2, 0, ContainerInput.QUICK_MOVE);
+            performClickSlot(merchantScreen, merchantMenu.getSlot(2), 2, 0, ClickType.QUICK_MOVE);
         } finally {
             processingQueuedTradeAllClick = false;
         }
@@ -237,7 +237,7 @@ public class ClickSlotInstance extends ManagementInstance {
 
         processingQueuedCraftAllClick = true;
         try {
-            performClickSlot(screen, menu.getSlot(0), 0, 0, ContainerInput.QUICK_MOVE);
+            performClickSlot(screen, menu.getSlot(0), 0, 0, ClickType.QUICK_MOVE);
         } finally {
             processingQueuedCraftAllClick = false;
         }

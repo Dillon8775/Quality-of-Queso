@@ -8,7 +8,7 @@ import net.dillon.qualityofqueso.option.eum.management.IncludeHotbar;
 import net.dillon.qualityofqueso.widget.TransferButton;
 import net.dillon.qualityofqueso.widget.layout.WidgetLayout;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.inventory.AbstractRecipeBookScreen;
@@ -37,7 +37,7 @@ public class ExtractingInstance extends ManagementInstance {
     /**
      * Renders the blue "locked" overlay for locked slots (not the lock icon, the color itself)
      */
-    public void extractLockedSlotColor(GuiGraphicsExtractor graphics) {
+    public void extractLockedSlotColor(GuiGraphics graphics) {
         if (!options().lockedSlots.enableLockedSlots || !isValidScreenForRenderingLockedSlotOverlay(instance().getScreen())) {
             return;
         }
@@ -51,7 +51,7 @@ public class ExtractingInstance extends ManagementInstance {
     /**
      * Renders the process of unlocking / locking slots.
      */
-    public void extractLockingUnlockingSlots(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+    public void extractLockingUnlockingSlots(GuiGraphics graphics, int mouseX, int mouseY) {
         // Only render other locked slot textures on valid screens
         if (isValidScreen(instance().getScreen())) {
             // Renders the key, or unlocked slot texture beside the mouse, indicating that the user is attempting to lock/unlock slots
@@ -73,7 +73,7 @@ public class ExtractingInstance extends ManagementInstance {
     /**
      * Grays out filtered slots (or hotbar slots), and renders the locked slot texture.
      */
-    public void grayoutSlotsAndExtractLockedIcon(GuiGraphicsExtractor graphics) {
+    public void grayoutSlotsAndExtractLockedIcon(GuiGraphics graphics) {
         // Begin iterating slots to gray out
         boolean inventorySearchFieldPresent = instance().getSearchFields().inventory() != null;
         boolean validScreen = isValidScreen(instance().getScreen());
@@ -160,10 +160,10 @@ public class ExtractingInstance extends ManagementInstance {
     /**
      * Renders and extracts all search fields.
      */
-    public void extractSearchFields(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+    public void extractSearchFields(GuiGraphics graphics, int mouseX, int mouseY, float a) {
         // Render the search field
         if (instance().getSearchFields().container() != null) {
-            instance().getSearchFields().container().extractWidgetRenderState(graphics, mouseX, mouseY, a);
+            instance().getSearchFields().container().renderWidget(graphics, mouseX, mouseY, a);
         }
 
         // Render inventory search field
@@ -172,7 +172,7 @@ public class ExtractingInstance extends ManagementInstance {
             instance().getSearchFields().inventory().setX(instance().getScreen().width / 2 + getBarWidth(getImageWidth(instance().getScreen())) / 2 - (
                     instance().getScreen() instanceof AbstractRecipeBookScreen<?> recipeBookScreen && getRecipeBookComponent(recipeBookScreen).isVisible() ? -16 : 60
             ));
-            instance().getSearchFields().inventory().extractWidgetRenderState(graphics, mouseX, mouseY, a);
+            instance().getSearchFields().inventory().renderWidget(graphics, mouseX, mouseY, a);
         }
     }
 
@@ -209,7 +209,7 @@ public class ExtractingInstance extends ManagementInstance {
     /**
      * Renders and extracts all buttons, including management buttons and layouts.
      */
-    public void extractButtons(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+    public void extractButtons(GuiGraphics graphics, int mouseX, int mouseY, float a) {
         // Create variables to reference what screens certain buttons should be added to
         boolean containerScreen = isContainerScreen(instance().getScreen());
         boolean inventoryScreen = isInventoryScreen(instance().getScreen());
@@ -391,7 +391,7 @@ public class ExtractingInstance extends ManagementInstance {
             instance().setWidgetLayout(WidgetLayout.initializeLayout(instance().getScreen(),
                     instance().getCachedContainer(), getTopPos(instance().getScreen()), getTitleLabelY(instance().getScreen()), finalLayout
             ));
-            instance().getWidgetLayout().extractRenderState(graphics, mouseX, mouseY, a);
+            instance().getWidgetLayout().render(graphics, mouseX, mouseY, a);
         }
     }
 }

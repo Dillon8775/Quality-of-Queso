@@ -1,7 +1,7 @@
 package net.dillon.qualityofqueso.mixin.client.accessor;
 
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.world.inventory.ContainerInput;
+import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
@@ -22,5 +22,5 @@ public interface AbstractContainerScreenAccessor {
     int getTitleLabelY();
 
     @Invoker("slotClicked")
-    void performClickSlot(Slot slot, int slotId, int buttonNum, ContainerInput containerInput);
+    void performClickSlot(Slot slot, int slotId, int buttonNum, ClickType containerInput);
 }

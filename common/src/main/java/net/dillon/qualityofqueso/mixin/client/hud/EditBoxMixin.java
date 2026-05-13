@@ -40,7 +40,7 @@ public abstract class EditBoxMixin extends AbstractWidget {
     /**
      * Applies a vanilla-like search bar texture.
      */
-    @ModifyArg(method = "extractWidgetRenderState", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIII)V"), index = 1)
+    @ModifyArg(method = "renderWidget", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIII)V"), index = 1)
     private Identifier applySearchBarTexture(Identifier original) {
         if (!modEnabled(Minecraft.getInstance())) {
             return original;

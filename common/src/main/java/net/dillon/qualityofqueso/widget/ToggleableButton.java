@@ -1,7 +1,7 @@
 package net.dillon.qualityofqueso.widget;
 
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -53,7 +53,7 @@ public abstract class ToggleableButton extends TransferButton {
      * Renders the textures and tooltips for the button.
      */
     @Override
-    protected void extractContents(GuiGraphicsExtractor context, int mouseX, int mouseY, float deltaTicks) {
+    protected void renderContents(GuiGraphics context, int mouseX, int mouseY, float deltaTicks) {
         this.renderBaseButtonTexture(this.option() ? this.onTextureId() : this.offTextureId(), this, context);
         if (this.isHovered() && options().accessibility.tooltips.on()) {
             drawTooltip(this.getTooltipToRender(), context, this.font, mouseX, mouseY);

@@ -1,10 +1,9 @@
 {
   "required": true,
   "package": "net.dillon.qualityofqueso.mixin",
-  "compatibilityLevel": "JAVA_25",
+  "compatibilityLevel": "JAVA_21",
   "plugin": "net.dillon.qualityofqueso.mixin.ConditionalMixinPlugin",
   "client": [
-    "CameraMixin",
     "FogRendererMixin",
     "client.accessor.AbstractContainerScreenAccessor",
     "client.accessor.AbstractRecipeBookScreenAccessor",
@@ -33,7 +32,7 @@
     "client.screen.PauseScreenMixin",
     "client.screen.TitleScreenMixin",
     "client.util.AbstractClientPlayerMixin",
-    "client.util.ClientClockManagerMixin",
+    "client.util.ClientLevelDataMixin",
     "client.util.ClientPacketListenerMixin",
     "client.util.LocalPlayerMixin",
     "client.util.MinecraftMixin",

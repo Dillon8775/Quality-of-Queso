@@ -4,7 +4,7 @@ import net.dillon.qualityofqueso.option.eum.accessibility.WidgetTheme;
 import net.dillon.qualityofqueso.util.ModConstants;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
@@ -120,7 +120,7 @@ public class SearchBar extends EditBox {
     }
 
     @Override
-    public void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks) {
+    public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float deltaTicks) {
         if (!options().searching.searchBarColor.black()) {
             if ((this.isFocused() || !options().searching.searchBarColor.transparent()) && options().searching.searchBarPosition.top()) {
                 graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ofQoQ("widget/search/" + getWidgetPath() + "search_bar_overlay"),
@@ -130,7 +130,7 @@ public class SearchBar extends EditBox {
                 graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SEARCH_TEXTURE, this.getX() + (getCurrentScreen() instanceof InventoryScreen ? 78 : 80), this.getY(), 12, 12);
             }
         }
-        super.extractWidgetRenderState(graphics, mouseX, mouseY, deltaTicks);
+        super.renderWidget(graphics, mouseX, mouseY, deltaTicks);
         if (options().accessibility.tooltips.on() && this.isHovered() && this.getValue().isEmpty()) {
             Component matchCase = Component.literal(":").withStyle(ChatFormatting.BOLD).withColor(0xC4FFD7);
             Component multiple = Component.literal(",").withStyle(ChatFormatting.ITALIC);

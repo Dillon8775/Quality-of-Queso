@@ -1,7 +1,7 @@
 package net.dillon.qualityofqueso.widget.layout;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -176,7 +176,7 @@ public class WidgetLayout extends AbstractWidget {
      * Renders all buttons in an orderly manner.
      */
     @Override
-    protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+    protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float a) {
         LocalPlayer player = Minecraft.getInstance().player;
 
         this.setX(this.getPanelX(player));
@@ -257,7 +257,7 @@ public class WidgetLayout extends AbstractWidget {
                     y += addition;
                 }
             }
-            widget.extractRenderState(graphics, mouseX, mouseY, a);
+            widget.render(graphics, mouseX, mouseY, a);
             buttons++;
         }
 
@@ -267,7 +267,7 @@ public class WidgetLayout extends AbstractWidget {
     /**
      * Extracts the widget panel for the vertical button layout.
      */
-    private void extractPanel(GuiGraphicsExtractor graphics, LocalPlayer player) {
+    private void extractPanel(GuiGraphics graphics, LocalPlayer player) {
         int panelX = this.getX();
         int panelY = this.getPanelY(player);
         float xScale = this.getPanelWidth() / (float) LAYOUT_BASE_WIDTH;

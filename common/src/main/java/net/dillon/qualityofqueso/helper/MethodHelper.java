@@ -22,7 +22,7 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerInput;
+import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
@@ -156,7 +156,7 @@ public class MethodHelper {
         return ((AbstractContainerMenuAccessor) menu).invokeMoveItemStackTo(itemStack, startSlot, endSlot, backwards);
     }
 
-    public static void performClickSlot(AbstractContainerScreen<?> screen, Slot slot, int slotId, int buttonNum, ContainerInput containerInput) {
+    public static void performClickSlot(AbstractContainerScreen<?> screen, Slot slot, int slotId, int buttonNum, ClickType containerInput) {
         ((AbstractContainerScreenAccessor)screen).performClickSlot(slot, slotId, buttonNum, containerInput);
     }
 

@@ -3,7 +3,7 @@ package net.dillon.qualityofqueso.screen.option;
 import net.dillon.qualityofqueso.helper.ModHelper;
 import net.dillon.qualityofqueso.widget.gui.ColorField;
 import net.dillon.qualityofqueso.widget.gui.LockedSlotColorField;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -66,13 +66,13 @@ public class LockedSlotsOptionsScreen extends AbstractModOptionsScreen {
     }
 
     @Override
-    protected void blitYouTubeSprite(GuiGraphicsExtractor graphics) {
+    protected void blitYouTubeSprite(GuiGraphics graphics) {
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ofQoQ(LOCKED_TEXTURE), this.youtubeButton.getX() + 12, this.youtubeButton.getY() - 6, 12, 12);
     }
 
     @Override
-    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks) {
-        super.extractRenderState(graphics, mouseX, mouseY, deltaTicks);
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float deltaTicks) {
+        super.render(graphics, mouseX, mouseY, deltaTicks);
         if (this.lockedSlotTextColorField.isHovered() && !this.lockedSlotTextColorField.isFocused()) {
             drawTooltip(this.lockedSlotTextColorField.getCurrentTooltip(), graphics, this.font, mouseX, mouseY);
         }

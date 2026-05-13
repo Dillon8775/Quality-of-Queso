@@ -2,7 +2,7 @@ package net.dillon.qualityofqueso.screen.option;
 
 import net.dillon.qualityofqueso.helper.ModHelper;
 import net.dillon.qualityofqueso.widget.gui.ColorField;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -69,13 +69,13 @@ public class SearchingOptionsScreen extends AbstractModOptionsScreen {
     }
 
     @Override
-    protected void blitYouTubeSprite(GuiGraphicsExtractor graphics) {
+    protected void blitYouTubeSprite(GuiGraphics graphics) {
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SEARCH_TEXTURE, this.youtubeButton.getX() + 12, this.youtubeButton.getY() - 3, 10, 10);
     }
 
     @Override
-    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks) {
-        super.extractRenderState(graphics, mouseX, mouseY, deltaTicks);
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float deltaTicks) {
+        super.render(graphics, mouseX, mouseY, deltaTicks);
         if (this.searchBarTextColorField.isHovered() && !this.searchBarTextColorField.isFocused()) {
             drawTooltip(this.searchBarTextColorField.getCurrentTooltip(), graphics, this.font, mouseX, mouseY);
         }

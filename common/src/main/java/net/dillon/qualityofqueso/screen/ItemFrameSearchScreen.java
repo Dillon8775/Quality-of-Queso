@@ -5,7 +5,7 @@ import net.dillon.qualityofqueso.packet.GlowSearchC2SPacket;
 import net.dillon.qualityofqueso.screen.option.ListOptions;
 import net.dillon.qualityofqueso.util.ModTexts;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
@@ -60,11 +60,11 @@ public class ItemFrameSearchScreen extends Screen {
     }
 
     @Override
-    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks) {
+    public void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float deltaTicks) {
         if (this.minecraft.level == null) {
-            this.extractPanorama(graphics, deltaTicks);
+            this.renderPanorama(graphics, deltaTicks);
         }
-        this.extractMenuBackground(graphics);
+        this.renderMenuBackground(graphics);
     }
 
     @Override
@@ -104,13 +104,13 @@ public class ItemFrameSearchScreen extends Screen {
     }
 
     @Override
-    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks) {
-        this.searchField.extractWidgetRenderState(graphics, mouseX, mouseY, deltaTicks);
-        super.extractRenderState(graphics, mouseX, mouseY, deltaTicks);
-        graphics.text(this.font, Component.translatable("qualityofqueso.gui.search_item_frames"), this.width / 2 - 135, this.height / 2 - 110, CommonColors.WHITE);
-        graphics.text(this.font, Component.translatable("qualityofqueso.gui.search_item_frames.warning.line1"), this.width / 2 - 175, this.height / 2 - 90, CommonColors.WHITE);
-        graphics.text(this.font, Component.translatable("qualityofqueso.gui.search_item_frames.warning.line2"), this.width / 2 - 110, this.height / 2 - 70, CommonColors.WHITE);
-        graphics.text(this.font, Component.translatable("qualityofqueso.gui.search_item_frames.line3"), this.width / 2 - 155, this.height / 2 - 50, CommonColors.WHITE);
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float deltaTicks) {
+        this.searchField.render(graphics, mouseX, mouseY, deltaTicks);
+        super.render(graphics, mouseX, mouseY, deltaTicks);
+        graphics.drawString(this.font, Component.translatable("qualityofqueso.gui.search_item_frames"), this.width / 2 - 135, this.height / 2 - 110, CommonColors.WHITE);
+        graphics.drawString(this.font, Component.translatable("qualityofqueso.gui.search_item_frames.warning.line1"), this.width / 2 - 175, this.height / 2 - 90, CommonColors.WHITE);
+        graphics.drawString(this.font, Component.translatable("qualityofqueso.gui.search_item_frames.warning.line2"), this.width / 2 - 110, this.height / 2 - 70, CommonColors.WHITE);
+        graphics.drawString(this.font, Component.translatable("qualityofqueso.gui.search_item_frames.line3"), this.width / 2 - 155, this.height / 2 - 50, CommonColors.WHITE);
         this.searchButton.active = !this.searchField.getValue().isEmpty();
         if (!this.searchField.getValue().isEmpty() && this.searchButton.isHovered()) {
             drawTooltip(Component.translatable("qualityofqueso.gui.search.tooltip", this.searchField.getValue()), graphics, this.font, mouseX, mouseY);
@@ -121,6 +121,6 @@ public class ItemFrameSearchScreen extends Screen {
         if (options().accessibility.tooltips.on() && this.searchField.isHovered() && this.searchField.getValue().isEmpty()) {
             drawTooltip(Component.translatable("qualityofqueso.gui.search_item_frames.search_filtering"), graphics, this.font, mouseX, mouseY);
         }
-        this.extractBlurredBackground(graphics);
+        this.renderBlurredBackground(graphics);
     }
 }

@@ -8,7 +8,7 @@ import net.dillon.qualityofqueso.instance.management.ExtractingInstance;
 import net.dillon.qualityofqueso.instance.management.ManagementInstance;
 import net.dillon.qualityofqueso.widget.layout.WidgetLayout;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -19,7 +19,7 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerInput;
+import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
@@ -232,8 +232,8 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
     /**
      * Renders the locked slot overlay overtop of slots.
      */
-    @Inject(method = "extractContents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;extractLabels(Lnet/minecraft/client/gui/GuiGraphicsExtractor;II)V"))
-    private void renderLockedSlotsOverlay(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a, CallbackInfo ci) {
+    @Inject(method = "renderContents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;renderLabels(Lnet/minecraft/client/gui/GuiGraphics;II)V"))
+    private void renderLockedSlotsOverlay(GuiGraphics graphics, int mouseX, int mouseY, float a, CallbackInfo ci) {
         if (!modEnabled(this.minecraft)) {
             return;
         }
@@ -247,8 +247,8 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
     /**
      * Renders widgets, including management buttons, search fields, and the {@link WidgetLayout}.
      */
-    @Inject(method = "extractContents", at = @At("TAIL"))
-    private void renderAndInitializeWidgets(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a, CallbackInfo ci) {
+    @Inject(method = "renderContents", at = @At("TAIL"))
+    private void renderAndInitializeWidgets(GuiGraphics graphics, int mouseX, int mouseY, float a, CallbackInfo ci) {
         if (!modEnabled(this.minecraft)) {
             return;
         }
@@ -265,8 +265,8 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
     /**
      * Grays out any slot which doesn't contain the query name being searched, and renders the lock texture for locked slots.
      */
-    @Inject(method = "extractContents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;extractSlotHighlightFront(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V", shift = At.Shift.AFTER))
-    private void grayOutAndRenderLockTexture(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a, CallbackInfo ci) {
+    @Inject(method = "renderContents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;renderSlotHighlightFront(Lnet/minecraft/client/gui/GuiGraphics;)V", shift = At.Shift.AFTER))
+    private void grayOutAndRenderLockTexture(GuiGraphics graphics, int mouseX, int mouseY, float a, CallbackInfo ci) {
         if (!modEnabled(this.minecraft)) {
             return;
         }
@@ -280,8 +280,8 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
     /**
      * Renders mod tooltips with the help of the {@link ModTooltipInstance} record.
      */
-    @Inject(method = "extractTooltip", at = @At("HEAD"), cancellable = true)
-    private void modifyExistingAndNewTooltips(GuiGraphicsExtractor graphics, int mouseX, int mouseY, CallbackInfo ci) {
+    @Inject(method = "renderTooltip", at = @At("HEAD"), cancellable = true)
+    private void modifyExistingAndNewTooltips(GuiGraphics graphics, int mouseX, int mouseY, CallbackInfo ci) {
         if (!modEnabled(this.minecraft)) {
             return;
         }
@@ -320,7 +320,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
      * Handles slot clicking with the help of the {@link ClickSlotInstance} record.
      */
     @Inject(method = "slotClicked", at = @At("HEAD"), cancellable = true)
-    private void handleSlotClicked(Slot slot, int slotId, int buttonNum, ContainerInput containerInput, CallbackInfo ci) {
+    private void handleSlotClicked(Slot slot, int slotId, int buttonNum, ClickType containerInput, CallbackInfo ci) {
         if (!modEnabled(this.minecraft)) {
             return;
         }
@@ -337,7 +337,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
     /**
      * Handles mouse-releasing events with the help of the {@link MouseReleaseInstance} record.
      */
-    @Inject(method = "mouseReleased", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;slotClicked(Lnet/minecraft/world/inventory/Slot;IILnet/minecraft/world/inventory/ContainerInput;)V", ordinal = 0), cancellable = true, locals = LocalCapture.CAPTURE_FAILEXCEPTION)
+    @Inject(method = "mouseReleased", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;slotClicked(Lnet/minecraft/world/inventory/Slot;IILnet/minecraft/world/inventory/ClickType;)V", ordinal = 0), cancellable = true, locals = LocalCapture.CAPTURE_FAILEXCEPTION)
     private void handleMouseReleased(MouseButtonEvent event, CallbackInfoReturnable<Boolean> cir, Slot slot, int xo, int yo, boolean clickedOutside, int slotId, Iterator var7, Slot target) {
         if (!modEnabled(this.minecraft)) {
             return;

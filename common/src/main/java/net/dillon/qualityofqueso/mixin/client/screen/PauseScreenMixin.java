@@ -3,7 +3,7 @@ package net.dillon.qualityofqueso.mixin.client.screen;
 import net.dillon.qualityofqueso.helper.ButtonHelper;
 import net.dillon.qualityofqueso.screen.EnderChestPreviewScreen;
 import net.dillon.qualityofqueso.screen.MainMenuScreen;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
@@ -113,8 +113,8 @@ public class PauseScreenMixin extends Screen {
     /**
      * Renders toolips and textures over top of the {@code Quality of Queso buttons.}
      */
-    @Inject(method = "extractRenderState", at = @At("TAIL"))
-    private void renderTooltipsAndTextures(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks, CallbackInfo ci) {
+    @Inject(method = "render", at = @At("TAIL"))
+    private void renderTooltipsAndTextures(GuiGraphics graphics, int mouseX, int mouseY, float deltaTicks, CallbackInfo ci) {
         if (!this.showPauseMenu) {
             return;
         }

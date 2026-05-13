@@ -567,7 +567,7 @@ public class ModHelper {
         // Send appropriate message
         String message = !configExists ? "qualityofqueso.created_server_config" : "qualityofqueso.loaded_server_config";
         if (instance.player != null) {
-            instance.player.sendSystemMessage(Component.translatable(message).withStyle(ChatFormatting.GOLD));
+            instance.player.displayClientMessage(Component.translatable(message).withStyle(ChatFormatting.GOLD), false);
         }
 
         // Log the multi-server config
@@ -602,7 +602,7 @@ public class ModHelper {
         // Send reset message
         Minecraft instance = Minecraft.getInstance();
         if (instance.player != null) {
-            instance.player.sendSystemMessage(Component.translatable("qualityofqueso.unloaded_server_config").withStyle(ChatFormatting.GOLD));
+            instance.player.displayClientMessage(Component.translatable("qualityofqueso.unloaded_server_config").withStyle(ChatFormatting.GOLD), false);
         }
         // Log the message
         if (uoptions().main.multiServerConfigs) {

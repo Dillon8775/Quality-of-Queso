@@ -14,7 +14,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.ContainerInput;
+import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -49,11 +49,11 @@ public class MultiPlayerGameModeMixin {
     /**
      * Tracks the item that the player is going to drop {@code from a GUI screen.}
      */
-    @Inject(method = "handleContainerInput", at = @At("HEAD"))
-    private void cacheStackBeforeThrowFromGUI(int containerId, int slotIndex, int buttonNum, ContainerInput containerInput, Player player, CallbackInfo ci) {
+    @Inject(method = "handleInventoryMouseClick", at = @At("HEAD"))
+    private void cacheStackBeforeThrowFromGUI(int containerId, int slotIndex, int buttonNum, ClickType containerInput, Player player, CallbackInfo ci) {
         this.stackBeforeGuiThrow = ItemStack.EMPTY;
         this.slotBeforeGuiThrow = -1;
-        if (containerInput != ContainerInput.THROW || player == null || slotIndex < 0) {
+        if (containerInput != ClickType.THROW || player == null || slotIndex < 0) {
             return;
         }
 
@@ -67,9 +67,9 @@ public class MultiPlayerGameModeMixin {
     /**
      * Tracks items to display total count near hotbar (when thrown {@code from a GUI screen}).
      */
-    @Inject(method = "handleContainerInput", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientPacketListener;send(Lnet/minecraft/network/protocol/Packet;)V"))
-    private void onThrowFromGUI(int containerId, int slotIndex, int buttonNum, ContainerInput containerInput, Player player, CallbackInfo ci) {
-        if (!modEnabled(Minecraft.getInstance()) || !options().itemCounter.displayOnThrow || containerInput != ContainerInput.THROW) {
+    @Inject(method = "handleInventoryMouseClick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientPacketListener;send(Lnet/minecraft/network/protocol/Packet;)V"))
+    private void onThrowFromGUI(int containerId, int slotIndex, int buttonNum, ClickType containerInput, Player player, CallbackInfo ci) {
+        if (!modEnabled(Minecraft.getInstance()) || !options().itemCounter.displayOnThrow || containerInput != ClickType.THROW) {
             return;
         }
 
@@ -106,7 +106,7 @@ public class MultiPlayerGameModeMixin {
         }
 
         ChargedProjectiles chargedProjectiles = player.getItemInHand(hand).get(DataComponents.CHARGED_PROJECTILES);
-        ItemHudTracker.setStack(chargedProjectiles.isEmpty() ? new ItemStack(Items.ARROW) : chargedProjectiles.itemCopies().get(0), true);
+        ItemHudTracker.setStack(chargedProjectiles.isEmpty() ? new ItemStack(Items.ARROW) : chargedProjectiles.getItems().get(0), true);
     }
 
     /**
@@ -115,13 +115,17 @@ public class MultiPlayerGameModeMixin {
     @Inject(method = "startDestroyBlock", at = @At("HEAD"), cancellable = true)
     private void filterContainer(BlockPos pos, Direction direction, CallbackInfoReturnable<Boolean> cir) {
         Minecraft minecraft = Minecraft.getInstance();
-        if (!modEnabled(minecraft) || !options().management.filtering || TRACKED_CONTAINER_COOLDOWN > 0
-                || minecraft.player == null || minecraft.level == null || !minecraft.player.isShiftKeyDown() || isHoldingItem(minecraft.player, DataComponents.TOOL)) {
+        if (!shouldCancelForContainerFilter(minecraft, pos)) {
             return;
         }
-
         BlockEntity blockEntity = minecraft.level.getBlockEntity(pos);
-        if (!isValidBlockEntity(blockEntity)) {
+
+        // Never allow breaking while attempting to filter a tracked container
+        cir.cancel();
+        cir.setReturnValue(false);
+
+        // Avoid retriggering toggle while the mouse is held down.
+        if (TRACKED_CONTAINER_COOLDOWN > 0) {
             return;
         }
 
@@ -148,7 +152,7 @@ public class MultiPlayerGameModeMixin {
                 message = "qualityofqueso.gui.remove_filtered_shulker_box";
             }
         }
-        minecraft.player.sendSystemMessage(Component.translatable(
+        minecraft.player.displayClientMessage(Component.translatable(
                 message,
                 container.copy().withStyle(ChatFormatting.BOLD),
                 isEnderChest
@@ -158,9 +162,33 @@ public class MultiPlayerGameModeMixin {
                 pos.getY(),
                 pos.getZ(),
                 filteredContainer
-        ));
+        ), false);
         playButtonSound(minecraft, false);
         TRACKED_CONTAINER_COOLDOWN = DEFAULT_TRACKED_CONTAINER_COOLDOWN;
+        cir.cancel();
+        cir.setReturnValue(false);
+    }
+
+    /**
+     * Keeps held-click and creative instant-break from destroying filtered containers.
+     */
+    @Inject(method = "continueDestroyBlock", at = @At("HEAD"), cancellable = true)
+    private void preventFilterBreakOnContinue(BlockPos pos, Direction direction, CallbackInfoReturnable<Boolean> cir) {
+        if (!shouldCancelForContainerFilter(Minecraft.getInstance(), pos)) {
+            return;
+        }
+        cir.cancel();
+        cir.setReturnValue(false);
+    }
+
+    /**
+     * Final creative break guard in case direct destroy calls bypass start/continue flow.
+     */
+    @Inject(method = "destroyBlock", at = @At("HEAD"), cancellable = true)
+    private void preventFilterBreakOnDestroy(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
+        if (!shouldCancelForContainerFilter(Minecraft.getInstance(), pos)) {
+            return;
+        }
         cir.cancel();
         cir.setReturnValue(false);
     }
@@ -183,22 +211,14 @@ public class MultiPlayerGameModeMixin {
     }
 
     /**
-     * Prevents creative instant-break in creative mode when shift + left clicking to toggle container tracking. Warning: this is buggy.
+     * @return if injection point should be canceled out after filtering.
      */
-    @Deprecated
-    @Inject(method = "destroyBlock", at = @At("HEAD"), cancellable = true)
-    private void filterContainerInCreativeMode(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
-        Minecraft minecraft = Minecraft.getInstance();
-        if (!modEnabled(minecraft) || !options().management.filtering || minecraft.player == null || minecraft.level == null || !minecraft.player.isCreative() || !minecraft.player.isShiftKeyDown()) {
-            return;
+    @Unique
+    private static boolean shouldCancelForContainerFilter(Minecraft minecraft, BlockPos pos) {
+        if (!modEnabled(minecraft) || !options().management.filtering || minecraft.player == null || minecraft.level == null
+                || !minecraft.player.isShiftKeyDown() || isHoldingItem(minecraft.player, DataComponents.TOOL)) {
+            return false;
         }
-
-        BlockEntity blockEntity = minecraft.level.getBlockEntity(pos);
-        if (!isValidBlockEntity(blockEntity)) {
-            return;
-        }
-
-        cir.cancel();
-        cir.setReturnValue(false);
+        return isValidBlockEntity(minecraft.level.getBlockEntity(pos));
     }
 }

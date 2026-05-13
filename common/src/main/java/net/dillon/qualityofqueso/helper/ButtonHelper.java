@@ -4,7 +4,7 @@ import net.dillon.qualityofqueso.platform.MultiLoader;
 import net.dillon.qualityofqueso.screen.option.AbstractModOptionsScreen;
 import net.dillon.qualityofqueso.util.ModTexts;
 import net.dillon.qualityofqueso.widget.TransferButton;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.SpriteIconButton;
 import net.minecraft.client.gui.screens.ConfirmLinkScreen;
@@ -27,14 +27,14 @@ public class ButtonHelper {
     /**
      * Draws a texture over a button without a custom fade.
      */
-    public static void drawTexture(GuiGraphicsExtractor graphics, String name, Button button) {
+    public static void drawTexture(GuiGraphics graphics, String name, Button button) {
         drawTexture(graphics, name, button, 1.0F);
     }
 
     /**
      * Draws the texture for a {@code inventory management button.}
      */
-    public static void drawButtonTexture(GuiGraphicsExtractor graphics, String name, TransferButton button) {
+    public static void drawButtonTexture(GuiGraphics graphics, String name, TransferButton button) {
         int xy = getTransferButtonXY(button);
         graphics.blit(RenderPipelines.GUI_TEXTURED, Identifier.parse("qualityofqueso:textures/gui/button/" + name + ".png"), button.getX() - 1, button.getY() - 1, 0.0F, 0.0F, xy, xy, xy, xy);
     }
@@ -42,7 +42,7 @@ public class ButtonHelper {
     /**
      * Draws a texture over a button.
      */
-    public static void drawTexture(GuiGraphicsExtractor graphics, String name, Button button, float f) {
+    public static void drawTexture(GuiGraphics graphics, String name, Button button, float f) {
         graphics.blit(RenderPipelines.GUI_TEXTURED, Identifier.parse("qualityofqueso:textures/gui/" + name + ".png"), button.getX() + 2, button.getY() + 2, 0.0F, 0.0F, 16, 16, 16, 16, ARGB.color(f, CommonColors.WHITE));
     }
 

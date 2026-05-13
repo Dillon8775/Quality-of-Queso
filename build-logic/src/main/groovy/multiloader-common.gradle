@@ -4,17 +4,22 @@ plugins {
 }
 
 base {
-    archivesName = "${mod_id}-${project.name}-mc${minecraft_version}"
+    archivesName = "${mod_id}-${project.name}-${libs.minecraft.get().version}"
 }
 
 tasks.named('jar', Jar) {
-    archiveFileName.set("${mod_id}-${mod_version}_${project.name}-mc${minecraft_version}.jar")
+    archiveFileName.set("${mod_id}-${mod_version}_${project.name}-mc${libs.minecraft.get().version}.jar")
 }
 
 java {
     toolchain.languageVersion = JavaLanguageVersion.of(java_version)
     withSourcesJar()
     withJavadocJar()
+}
+
+tasks.withType(Javadoc).configureEach {
+    failOnError false
+    options.addStringOption('Xdoclint:-missing', '-quiet')
 }
 
 repositories {
@@ -27,7 +32,7 @@ repositories {
                 url = 'https://repo.spongepowered.org/repository/maven-public'
             }
         }
-        filter { includeGroupAndSubgroups('org.spongepowered') }
+        filter { includeGroupAndSubgroups("org.spongepowered") }
     }
     exclusiveContent {
         forRepositories(
@@ -36,40 +41,28 @@ repositories {
                     url = 'https://maven.parchmentmc.org/'
                 },
                 maven {
-                    name = "NeoForge"
+                    name = 'NeoForge'
                     url = 'https://maven.neoforged.net/releases'
                 }
         )
         filter { includeGroup('org.parchmentmc.data') }
     }
-    maven {
-        name = 'BlameJared'
-        url = 'https://maven.blamejared.com'
-    }
 }
 
-// Declare capabilities on the outgoing configurations.
-// Read more about capabilities here: https://docs.gradle.org/current/userguide/component_capabilities.html#sec:declaring-additional-capabilities-for-a-local-component
 ['apiElements', 'runtimeElements', 'sourcesElements', 'javadocElements'].each { variant ->
-    configurations."$variant".outgoing {
-        capability("$group:${project.name}:$version")
-        capability("$group:${base.archivesName.get()}:$version")
-        capability("$group:$mod_id-${project.name}-${minecraft_version}:$version")
-        capability("$group:$mod_id:$version")
-    }
     publishing.publications.configureEach {
         suppressPomMetadataWarningsFor(variant)
     }
 }
 
 sourcesJar {
-    from(rootProject.file('LICENSE')) {
+    from(rootProject.file("LICENSE")) {
         rename { "${it}_${mod_name}" }
     }
 }
 
 jar {
-    from(rootProject.file('LICENSE')) {
+    from(rootProject.file("LICENSE")) {
         rename { "${it}_${mod_name}" }
     }
 
@@ -81,41 +74,43 @@ jar {
                 'Implementation-Title'  : project.name,
                 'Implementation-Version': project.jar.archiveVersion,
                 'Implementation-Vendor' : mod_author,
-                'Built-On-Minecraft'    : minecraft_version
+                'Built-On-Minecraft'    : libs.minecraft.get().version,
+                'MixinConfigs'          : "${mod_id}.mixins.json,${mod_id}.${project.name}.mixins.json",
         ])
     }
 }
 
 processResources {
-    var expandProps = [
-            'version': version,
-            'mod_id': mod_id,
+    def expandProps = [
+            "version": version,
+            "group": project.group, //Else we target the task's group.
+            "minecraft_version": libs.minecraft.get().version.replace('-pre', '-beta.'),
+            "forge_version": libs.forge.get().version,
+            "fabric_api_version": libs.fabricApi.get().version,
+            "fabric_loader_version": libs.fabricLoader.get().version,
+            "mod_name": mod_name,
+            "mod_main": mod_name.split(/\s+/).collect { word -> word.capitalize() }.join(""),
             'mod_version': mod_version,
-            'mod_name' : mod_name,
-            'description' : project.description,
-            'mod_author' : mod_author,
-            'credits' : credits,
-            'license' : license,
-            'logo' : logo,
+            "mod_author": mod_author,
             'mc_version' : mc_version,
+            'logo' : logo,
             'supported_mc_versions': supported_mc_versions,
             'minecraft_version_range' : minecraft_version_range,
-            'group' : project.group,
-            'homepage' : homepage,
-            'sources' : sources,
-            'issues' : issues,
-            'discord' : discord,
-            'java_version' : java_version,
-            'minecraft_version' : minecraft_version,
-            'balm_version' : balm_version,
-            'fabric_version' : fabric_version,
-            'fabric_loader_version' : fabric_loader_version,
-            'modmenu_version' : modmenu_version,
-            'neoforge_version'             : neoforge_version,
             'neoforge_loader_version_range': neoforge_loader_version_range,
+            "mod_id": mod_id,
+            "license": license,
+            "description": project.description,
+            "neoforge_version": libs.neoForge.get().version,
+            "credits": credits,
+            "java_version": java_version,
+            "homepage": homepage,
+            "discord": discord,
+            "issues": issues,
+            "sources": sources,
+            "balm_version": libs.versions.balm.get().split('\\+')[0],
     ]
 
-    var jsonExpandProps = expandProps.collectEntries {
+    def jsonExpandProps = expandProps.collectEntries {
         key, value -> [(key): value instanceof String ? value.replace("\n", "\\\\n") : value]
     }
 
@@ -133,13 +128,19 @@ processResources {
 publishing {
     publications {
         register('mavenJava', MavenPublication) {
-            artifactId base.archivesName.get()
+            version = project.version
+            artifactId = "${mod_id.replace('_', '-')}-${project.name}"
             from components.java
         }
     }
     repositories {
-        maven {
-            url System.getenv('local_maven_url')
+        def repoUrl = version.toString().endsWith("SNAPSHOT") ? findProperty("maven_snapshots") : findProperty("maven_releases")
+        if (repoUrl != null) {
+            maven {
+                url = uri(repoUrl)
+                name = "maven"
+                credentials(PasswordCredentials)
+            }
         }
     }
 }

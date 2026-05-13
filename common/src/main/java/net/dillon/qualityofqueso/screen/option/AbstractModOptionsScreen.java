@@ -8,7 +8,7 @@ import net.dillon.qualityofqueso.util.KeybindScrollHelper;
 import net.dillon.qualityofqueso.util.VersionType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.OptionInstance;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.SpriteIconButton;
@@ -148,7 +148,7 @@ public abstract class AbstractModOptionsScreen extends OptionsSubScreen {
      * Renders the tooltip for the done button.
      */
     @Override
-    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks) {
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float deltaTicks) {
         if (this.doneButton != null && this.doneButton.isHovered()) {
             String tooltip = Minecraft.getInstance().hasShiftDown() ? "qualityofqueso.gui.open_config_directory" : "qualityofqueso.gui.open_config_directory.help";
             drawTooltip(Component.translatable(tooltip), graphics, this.font, mouseX, mouseY);
@@ -158,7 +158,7 @@ public abstract class AbstractModOptionsScreen extends OptionsSubScreen {
         int textHeight = this.height - 21;
         int imageWidth = this.width - (MultiLoader.getPlatform().getVersionType() == VersionType.RELEASE ? 50 : 53);
         int imageHeight = this.height - 26;
-        graphics.centeredText(this.font, VERSION, textWidth, textHeight, CommonColors.WHITE);
+        graphics.drawCenteredString(this.font, VERSION, textWidth, textHeight, CommonColors.WHITE);
         graphics.blit(RenderPipelines.GUI_TEXTURED, ofQoQ("textures/gui/sprites/" + CHEESE_WHEEL_TEXTURE + ".png"), imageWidth, imageHeight, 0.0F, 0.0F, 18, 18, 18, 18);
 
         int leftIndex = 0;
@@ -207,7 +207,7 @@ public abstract class AbstractModOptionsScreen extends OptionsSubScreen {
         }
 
         this.activateButtons();
-        super.extractRenderState(graphics, mouseX, mouseY, deltaTicks);
+        super.render(graphics, mouseX, mouseY, deltaTicks);
 
         if (buttonActive(this.youtubeButton)) {
             this.blitYouTubeSprite(graphics);
@@ -237,7 +237,7 @@ public abstract class AbstractModOptionsScreen extends OptionsSubScreen {
     /**
      * The additional YouTube sprite to render over top of the YouTube button.
      */
-    protected void blitYouTubeSprite(GuiGraphicsExtractor graphics) {
+    protected void blitYouTubeSprite(GuiGraphics graphics) {
     }
 
     /**

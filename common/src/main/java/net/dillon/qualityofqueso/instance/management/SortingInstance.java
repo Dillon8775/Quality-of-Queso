@@ -217,7 +217,7 @@ public class SortingInstance extends ManagementInstance {
             String tagKey = "";
 
             if (options().sorting.currentSortingMode.tag()) {
-                tagKey = stack.tags()
+                tagKey = stack.getTags()
                         .map(tag -> {
                             String location = tag.location().toString();
                             return !isFabricTag(location) ? location : "";

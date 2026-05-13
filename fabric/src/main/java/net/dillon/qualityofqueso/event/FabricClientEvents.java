@@ -5,7 +5,6 @@ import net.dillon.qualityofqueso.main.ClientEvents;
 import net.dillon.qualityofqueso.packet.GlowSearchC2SPacket;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLevelEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 
@@ -29,10 +28,6 @@ public class FabricClientEvents {
             if (!ClientPlayNetworking.canSend(GlowSearchC2SPacket.PACKET_TYPE)) {
                 ClientEvents.warnModNotPresent(minecraft);
             }
-        });
-
-        ClientLevelEvents.AFTER_CLIENT_LEVEL_CHANGE.register((level, minecraft) -> {
-            ClientEvents.afterLevelChangeOrRespawn();
         });
 
         ClientPlayConnectionEvents.DISCONNECT.register((handler, minecraft) -> {

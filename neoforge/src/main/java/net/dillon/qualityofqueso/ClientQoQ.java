@@ -27,7 +27,7 @@ public class ClientQoQ {
                 (mc, parent) -> new MainMenuScreen(parent)
         );
 
-        final var context = new NeoForgeLoadContext(container, modEventBus);
+        final var context = new NeoForgeLoadContext(modEventBus);
         Balm.initializeMod(ModConstants.MOD_ID, context, ClientMain::cInitialize);
     }
 

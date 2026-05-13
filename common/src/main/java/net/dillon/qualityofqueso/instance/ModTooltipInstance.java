@@ -6,7 +6,7 @@ import net.dillon.qualityofqueso.util.EnchantingHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
@@ -49,7 +49,7 @@ public class ModTooltipInstance extends ManagementInstance {
     /**
      * Displays all item tags on the hovered item.
      */
-    public void displayTagsOnItems(GuiGraphicsExtractor graphics, Font font, int mouseX, int mouseY, CallbackInfo ci) {
+    public void displayTagsOnItems(GuiGraphics graphics, Font font, int mouseX, int mouseY, CallbackInfo ci) {
         if (!hoveredSlotHasItem(instance().getScreensHoveredSlot())) {
             return;
         }
@@ -66,7 +66,7 @@ public class ModTooltipInstance extends ManagementInstance {
             }
 
             // Loop through item's tags
-            for (TagKey<Item> tag : stack.tags().toList()) {
+            for (TagKey<Item> tag : stack.getTags().toList()) {
                 // Add each tag to the query hovered
                 String location = tag.location().getNamespace().equals("c") ? "fabric:" + tag.location().getPath() : tag.location().toString();
                 String tagString = "#" + location;
@@ -75,7 +75,7 @@ public class ModTooltipInstance extends ManagementInstance {
 
             // If tags were found in the query add it to the tooltip and render
             // cancel out original method to prevent overlapping tooltips
-            if (stack.tags().toList().isEmpty()) {
+            if (stack.getTags().toList().isEmpty()) {
                 originalTooltip.add(1, Component.translatable("qualityofqueso.gui.no_tags_found").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
             }
             graphics.setTooltipForNextFrame(font, originalTooltip, Optional.empty(), mouseX, mouseY);
@@ -86,7 +86,7 @@ public class ModTooltipInstance extends ManagementInstance {
     /**
      * Displays tooltips for singular moving or dropping.
      */
-    public void displaySingleMovingTooltips(GuiGraphicsExtractor graphics, Font font, int mouseX, int mouseY, CallbackInfo ci) {
+    public void displaySingleMovingTooltips(GuiGraphics graphics, Font font, int mouseX, int mouseY, CallbackInfo ci) {
         // If the user is attempting to lock slots or drag sort (and as long as they don't have "CTRL"/management modifier down, to prevent redundant removal of tooltips)...
         // ...then remove all tooltips, so the user can clearly read and see slots
         if (isExcludingOrLockingSlots() && !hasAnyManagementModifierDown()) {
@@ -118,7 +118,7 @@ public class ModTooltipInstance extends ManagementInstance {
         List<Component> tooltipToRender = new ArrayList<>();
 
         // If bl is true, and the hovered slot's count is more than 1 (because if you are moving 1 singular, the count must be more than 1), OR if the user isn't hovering over a slot at all, begin modifying tooltips
-        if (!isCreativeInventoryScreen(instance().getScreen()) && bl && (hoveredSlot == null || hoveredSlot.getItem().count() > 1)) {
+        if (!isCreativeInventoryScreen(instance().getScreen()) && bl && (hoveredSlot == null || hoveredSlot.getItem().getCount() > 1)) {
             // Create the new tooltip variable
             List<Component> moveAmountTooltip = new ArrayList<>();
             // Determine the translation for the tooltip
@@ -185,7 +185,7 @@ public class ModTooltipInstance extends ManagementInstance {
     /**
      * Displays all enchantment helper tooltips.
      */
-    public void displayEnchantmentHelperTooltips(GuiGraphicsExtractor graphics, Font font, int mouseX, int mouseY, CallbackInfo ci) {
+    public void displayEnchantmentHelperTooltips(GuiGraphics graphics, Font font, int mouseX, int mouseY, CallbackInfo ci) {
         // Any further injection here will not be applied if the hovered slot is null or doesn't have an item
         if (!hoveredSlotHasItem(instance().getScreensHoveredSlot())) {
             return;

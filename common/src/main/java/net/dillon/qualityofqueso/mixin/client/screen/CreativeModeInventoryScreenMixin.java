@@ -8,7 +8,7 @@ import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.ContainerInput;
+import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
@@ -47,7 +47,7 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
      * Closes the screen when clicking outside of the menu.
      */
     @Inject(method = "slotClicked", at = @At("HEAD"))
-    private void quickGuiClose(Slot slot, int slotId, int mouseButton, ContainerInput type, CallbackInfo ci) {
+    private void quickGuiClose(Slot slot, int slotId, int mouseButton, ClickType type, CallbackInfo ci) {
         if (!modEnabled(this.minecraft)) {
             return;
         }

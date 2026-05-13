@@ -3,7 +3,7 @@ package net.dillon.qualityofqueso.widget;
 import net.dillon.qualityofqueso.util.ModTexts;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
@@ -92,7 +92,7 @@ public class TransferButton extends Button {
     /**
      * Renders a button's base texture.
      */
-    protected void renderBaseTexture(GuiGraphicsExtractor graphics) {
+    protected void renderBaseTexture(GuiGraphics graphics) {
         String name = BASE_BUTTON_NAME;
         drawButtonTexture(graphics, "base/" + getWidgetPath() + (!this.canBeActive.get() ? name + "_inactive" : name), this);
     }
@@ -100,7 +100,7 @@ public class TransferButton extends Button {
     /**
      * Renders the hovered button texture.
      */
-    protected void renderHoveredTexture(GuiGraphicsExtractor graphics) {
+    protected void renderHoveredTexture(GuiGraphics graphics) {
         if (!this.canBeActive.get() || !this.isHovered()) {
             return;
         }
@@ -111,7 +111,7 @@ public class TransferButton extends Button {
     /**
      * Renders the button texture.
      */
-    private void renderButtonTexture(String id, AbstractWidget buttonReference, GuiGraphicsExtractor graphics) {
+    private void renderButtonTexture(String id, AbstractWidget buttonReference, GuiGraphics graphics) {
         int xy = getTransferButtonXY(this);
         this.renderBaseTexture(graphics);
         graphics.blit(RenderPipelines.GUI_TEXTURED, ofQoQ("textures/gui/button/" + id + this.getAppendedTexture()), buttonReference.getX() - 1, buttonReference.getY() - 1, 0.0F, 0.0F, xy, xy, xy, xy);
@@ -121,7 +121,7 @@ public class TransferButton extends Button {
     /**
      * Renders a transfer button texture.
      */
-    protected void renderBaseButtonTexture(String id, AbstractWidget buttonReference, GuiGraphicsExtractor graphics) {
+    protected void renderBaseButtonTexture(String id, AbstractWidget buttonReference, GuiGraphics graphics) {
         this.renderButtonTexture(id, buttonReference, graphics);
 
         if (!hasAnyManagementModifierDown() || !this.isValidButtonName(false)) {
@@ -142,7 +142,7 @@ public class TransferButton extends Button {
      * Renders the textures and tooltips for the button.
      */
     @Override
-    protected void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks) {
+    protected void renderContents(GuiGraphics graphics, int mouseX, int mouseY, float deltaTicks) {
         this.active = this.canBeActive.get();
 
         this.renderBaseButtonTexture(this.resourceLocation + this.buttonName + (!this.canBeActive.get() ? "_inactive" : ""), this, graphics);
@@ -233,7 +233,7 @@ public class TransferButton extends Button {
     /**
      * The tooltip to display for single-move items.
      */
-    private void extractMoveAmountTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+    private void extractMoveAmountTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
         Component tooltip = Component.translatable(this.buttonName.equals(QUICK_DROP_BUTTON_NAME)
                         ? "qualityofqueso.gui.quick_drop_button.move_amount"
                         : "qualityofqueso.gui.move_amount_each",

@@ -1,7 +1,7 @@
 package net.dillon.qualityofqueso.screen.option;
 
 import net.dillon.qualityofqueso.util.ModTexts;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
@@ -22,7 +22,7 @@ public class ManagementOptionsScreen extends AbstractModOptionsScreen {
         return new AbstractWidget[]{
                 createOption(ListOptions.transferring()),
                 Button.builder(
-                        Component.translatable("qualityofqueso.gui.sorting"),
+                        Component.translatable("qualityofqueso.gui.sorting").withColor(ModTexts.ITEM_COLOR),
                         button -> this.minecraft.setScreen(new SortingOptionsScreen(this))
                 ).tooltip(Tooltip.create(Component.translatable("qualityofqueso.gui.sorting.tooltip"))).build(),
 
@@ -63,7 +63,7 @@ public class ManagementOptionsScreen extends AbstractModOptionsScreen {
     }
 
     @Override
-    protected void blitYouTubeSprite(GuiGraphicsExtractor graphics) {
+    protected void blitYouTubeSprite(GuiGraphics graphics) {
         graphics.blit(RenderPipelines.GUI_TEXTURED, ofQoQ("textures/gui/button/sort/sort_creative_menu.png"), this.youtubeButton.getX() + 10, this.youtubeButton.getY() - 5, 0.0F, 0.0F, 12, 12, 12, 12);
     }
 }

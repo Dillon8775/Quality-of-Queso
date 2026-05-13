@@ -12,7 +12,7 @@ import net.neoforged.fml.common.Mod;
 public final class QoQ {
 
     public QoQ(ModContainer container, IEventBus modEventBus) {
-        final var context = new NeoForgeLoadContext(container, modEventBus);
+        final var context = new NeoForgeLoadContext(modEventBus);
         Balm.initializeMod(ModConstants.MOD_ID, context, CommonMain::initialize);
     }
 }

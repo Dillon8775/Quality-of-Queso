@@ -2,7 +2,7 @@ import net.darkhax.curseforgegradle.TaskPublishCurseForge
 
 plugins {
     id 'multiloader-loader'
-    id 'net.fabricmc.fabric-loom'
+    alias libs.plugins.fabricLoom
     alias libs.plugins.curseForgeGradle
     alias libs.plugins.modrinthMinotaur
 }
@@ -11,67 +11,62 @@ repositories {
     maven {
         url "https://maven.terraformersmc.com/releases/"
     }
-    maven {
-        url = 'https://maven.twelveiterations.com/repository/maven-public/'
-        content {
-            includeGroup 'net.blay09.mods'
-        }
-    }
 }
 
 dependencies {
-    minecraft "com.mojang:minecraft:${minecraft_version}"
-    implementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
-    implementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
-
-    implementation "com.terraformersmc:modmenu:${project.modmenu_version}"
-
-    implementation("net.blay09.mods:balm-fabric:${balm_version}") {
-        changing = balm_version.contains('SNAPSHOT')
+    minecraft libs.minecraft
+    mappings loom.layered() {
+        officialMojangMappings()
+        parchment variantOf(libs.parchment) {
+            artifactType('zip')
+        }
     }
+    modImplementation libs.fabricLoader
+    modImplementation libs.fabricApi
+    modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
 }
 
+apply from: rootProject.file('repositories.gradle')
+apply from: 'dependencies.gradle'
+
 loom {
-    def aw = project(':common').file("src/main/resources/${mod_id}.accessWidener")
+    def aw = project(":common").file("src/main/resources/${mod_id}.accesswidener")
     if (aw.exists()) {
         accessWidenerPath.set(aw)
     }
+
     mixin {
         defaultRefmapName.set("${mod_id}.refmap.json")
     }
+
     runs {
         client {
             client()
-            setConfigName('Fabric Client')
+            setConfigName("fabric Client")
             ideConfigGenerated(true)
-            runDir('runs/client')
+            runDir("runs/client")
         }
         server {
             server()
-            setConfigName('Fabric Server')
+            setConfigName("fabric Server")
             ideConfigGenerated(true)
-            runDir('runs/server')
+            runDir("runs/server")
+        }
+        data {
+            inherit client
+            setConfigName("fabric Data")
+            ideConfigGenerated(true)
+            runDir("build/datagen")
+
+            vmArg "-Dfabric-api.datagen"
+            vmArg "-Dfabric-api.datagen.output-dir=${project(":common").file("src/generated/resources")}"
+            vmArg "-Dfabric-api.datagen.modid=${mod_id}"
         }
     }
 }
 
-// Implement mcgradleconventions loader attribute
-def loaderAttribute = Attribute.of('io.github.mcgradleconventions.loader', String)
-['apiElements', 'runtimeElements', 'sourcesElements', 'javadocElements', 'includeInternal', 'modCompileClasspath'].each { variant ->
-    configurations.named("$variant") {
-        attributes {
-            attribute(loaderAttribute, 'fabric')
-        }
-    }
-}
-sourceSets.configureEach {
-    [it.compileClasspathConfigurationName, it.runtimeClasspathConfigurationName].each { variant ->
-        configurations.named("$variant") {
-            attributes {
-                attribute(loaderAttribute, 'fabric')
-            }
-        }
-    }
+tasks.named('remapJar') {
+    archiveFileName.set("${mod_id}-${mod_version}_${project.name}-mc${libs.minecraft.get().version}.jar")
 }
 
 tasks.register('curseforge', TaskPublishCurseForge) {
@@ -86,17 +81,11 @@ tasks.register('curseforge', TaskPublishCurseForge) {
         projectId != null
     }
     if (projectId) {
-        def mainFile = upload(findProperty("curseforge_project_id"), tasks.named("jar", Jar).get().archiveFile.get().asFile)
-        mainFile.displayName = "[${mc_version.substring(2)}] $mod_name ${mod_version}"
-        mainFile.changelog = rootProject.file("${changelog_file}").text
+        def mainFile = upload(findProperty("curseforge_project_id"), remapJar.archiveFile.get().asFile)
+        mainFile.changelog = rootProject.file('CHANGELOG.md').text
         mainFile.addRequirement("fabric-api")
         mainFile.addRequirement("balm")
-        def supportedVersions = supported_mc_versions
-                .split(",")
-                .collect { it.trim() }
-        supportedVersions.each { v ->
-            mainFile.addGameVersion(v)
-        }
+        mainFile.addGameVersion(libs.minecraft.get().version)
         mainFile.releaseType = "release"
         project.findProperty("curseforge_environments")?.split(",")?.toList()?.each { mainFile.addEnvironment(it) }
     }
@@ -105,19 +94,14 @@ tasks.register('curseforge', TaskPublishCurseForge) {
 modrinth {
     token = project.findProperty("modrinth.token") ?: System.getenv("MODRINTH_TOKEN") ?: "none"
     projectId = findProperty("modrinth_project_id")
-
-    versionNumber = project.mod_version.toString()
-    versionName = "[mc${minecraft_version}] ${mod_name} ${project.mod_version}"
-
-    uploadFile = tasks.named("jar")
-    def changelogFile = rootProject.file("${changelog_file}")
+    versionType = "release"
+    versionNumber = project.version + "+fabric-" + libs.minecraft.get().version
+    uploadFile = remapJar
+    def changelogFile = rootProject.file("CHANGELOG.md")
     if (changelogFile.exists()) {
         changelog = changelogFile.text
     }
-    def supportedVersions = supported_mc_versions
-            .split(",")
-            .collect { it.trim() }
-    gameVersions = supportedVersions
+    gameVersions = [libs.minecraft.get().version]
     loaders = ['fabric']
     dependencies {
         required.project "fabric-api"

@@ -2,7 +2,7 @@ package net.dillon.qualityofqueso.widget;
 
 import net.dillon.qualityofqueso.helper.ButtonHelper;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -26,7 +26,7 @@ public class SortButton extends TransferButton {
     }
 
     @Override
-    protected void renderBaseButtonTexture(String id, AbstractWidget buttonReference, GuiGraphicsExtractor graphics) {
+    protected void renderBaseButtonTexture(String id, AbstractWidget buttonReference, GuiGraphics graphics) {
         this.renderBaseTexture(graphics);
         ButtonHelper.drawButtonTexture(graphics, id + (!this.canBeActive.get() ? "" : options().sorting.currentSortingMode.getAppended()), this);
         this.renderHoveredTexture(graphics);

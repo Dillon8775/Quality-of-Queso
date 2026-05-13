@@ -4,6 +4,7 @@ import net.dillon.qualityofqueso.helper.ContainerHelper;
 import net.dillon.qualityofqueso.instance.context.ManagementButtons;
 import net.dillon.qualityofqueso.option.ModClientOptions;
 import net.dillon.qualityofqueso.option.eum.management.sorting.CurrentSortingMode;
+import net.dillon.qualityofqueso.option.eum.management.sorting.GlobalSortingMode;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.world.inventory.Slot;
@@ -31,6 +32,17 @@ public record MouseScrollInstance(
             CurrentSortingMode nextMode = options().sorting.currentSortingMode.next(scrollY > 0);
             ModClientOptions.INSTANCE.update(options -> {
                 options.sorting.currentSortingMode = nextMode;
+                if (options().sorting.currentSortingMode == CurrentSortingMode.ALPHABETICAL) {
+                    options.sorting.globalSortingMode = GlobalSortingMode.ALPHABETICALLY;
+                } else if (options.sorting.currentSortingMode == CurrentSortingMode.TAG) {
+                    options.sorting.globalSortingMode = GlobalSortingMode.BY_TAG;
+                } else if (options.sorting.currentSortingMode == CurrentSortingMode.COUNT_DESCENDING) {
+                    options.sorting.globalSortingMode = GlobalSortingMode.DESCENDING;
+                } else if (options.sorting.currentSortingMode == CurrentSortingMode.COUNT_ASCENDING) {
+                    options.sorting.globalSortingMode = GlobalSortingMode.ASCENDING;
+                } else if (options.sorting.currentSortingMode == CurrentSortingMode.CREATIVE_MENU) {
+                    options.sorting.globalSortingMode = GlobalSortingMode.CREATIVE_MENU;
+                }
             });
             ContainerHelper.storeActiveSortMode(nextMode);
             if (SORT_SOUND_COOLDOWN == 0) {
@@ -48,7 +60,7 @@ public record MouseScrollInstance(
             return;
         }
 
-        boolean validHoveredSlot = hoveredSlotHasItem(hoveredSlot) && hoveredSlot.getItem().count() > 1;
+        boolean validHoveredSlot = hoveredSlotHasItem(hoveredSlot) && hoveredSlot.getItem().getCount() > 1;
         if (!isCreativeInventoryScreen(screen) && instance().getCanMoveOne() && (validHoveredSlot && hasDropOnlyOneItemKeyDown())
                 || buttonHoveredAndActive(managementButtons.quickDrop()) ? hasDropOnlyOneItemKeyDown()
                 : ((validHoveredSlot || buttonHoveredAndActive(managementButtons.transferContainer()) || buttonHoveredAndActive(managementButtons.transferInventory())) && hasMoveSingleModifierDown())) {
