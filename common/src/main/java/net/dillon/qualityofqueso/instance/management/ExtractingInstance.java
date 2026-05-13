@@ -51,7 +51,7 @@ public class ExtractingInstance extends ManagementInstance {
         // Only render other locked slot textures on valid screens
         if (isValidScreen(instance().getScreen())) {
             // Renders the key, or unlocked slot texture beside the mouse, indicating that the user is attempting to lock/unlock slots
-            if (options().lockedSlots.enableLockedSlots && options().lockedSlots.showLock && instance().getScreensHoveredSlot() != null && instance().getExcludedSlots().isEmpty()
+            if (options().lockedSlots.enableLockedSlots && options().lockedSlots.showLock.inScreens() && instance().getScreensHoveredSlot() != null && instance().getExcludedSlots().isEmpty()
                     && hasLockSlotModifierDown() && !hasAnyManagementModifierDown() && !Screen.hasControlDown() && !Screen.hasShiftDown()) {
                 lockedSlotsInstance().renderUnlockedSlot(graphics, lockedSlotsInstance().isLockedSlot(instance().getScreensHoveredSlot().index), mouseX, mouseY);
             }
@@ -128,7 +128,7 @@ public class ExtractingInstance extends ManagementInstance {
     public void extractLockedSlotIcon(GuiGraphics graphics) {
         if (!isValidScreen(instance().getScreen())
                 || !options().lockedSlots.enableLockedSlots
-                || !options().lockedSlots.showLock
+                || !options().lockedSlots.showLock.inScreens()
                 || !instance().getSearchFields().searchText().isEmpty()
                 || !instance().getExcludedSlots().isEmpty()) {
             return;

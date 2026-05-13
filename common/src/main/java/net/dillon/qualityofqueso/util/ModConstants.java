@@ -72,6 +72,7 @@ public class ModConstants {
     public static final ResourceLocation SLOT_LOW = ofQoQ("hud/colored_slot/slot_low");
     public static final ResourceLocation SLOT_AVERAGE = ofQoQ("hud/colored_slot/slot_average");
     public static final ResourceLocation SLOT_GOOD = ofQoQ("hud/colored_slot/slot_good");
+    public static final ResourceLocation SLOT_LOCKED = ofQoQ("hud/colored_slot/slot_locked");
     @Deprecated
     public static final ResourceLocation SELECTED_RECIPE = ofQoQ("slot/selected_recipe");
 

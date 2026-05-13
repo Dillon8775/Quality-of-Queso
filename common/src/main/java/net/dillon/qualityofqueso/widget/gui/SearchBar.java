@@ -108,8 +108,9 @@ public class SearchBar extends EditBox {
             Component multiple = Component.literal(",").withStyle(ChatFormatting.ITALIC);
             Component tag = Component.literal("#").withStyle(ChatFormatting.ITALIC).withColor(0x7FFFFF);
             Component exclude = Component.literal("!").withStyle(ChatFormatting.BOLD).withColor(0xFF4242);
+            Component mod = Component.literal("@").withStyle(ChatFormatting.ITALIC);
             drawTooltip(Component.translatable("qualityofqueso.gui.chest_search.search_filtering",
-                    matchCase.copy(), multiple.copy(), tag.copy(), exclude.copy()
+                    matchCase.copy(), multiple.copy(), tag.copy(), exclude.copy(), mod.copy()
             ), graphics, this.font, mouseX, mouseY, true);
         }
     }

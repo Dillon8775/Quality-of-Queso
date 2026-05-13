@@ -149,7 +149,7 @@ public class ModClientOptions {
     public static class LockedSlots {
         public boolean enableLockedSlots = true;
         public boolean hardLockSlots = false;
-        public boolean showLock = true;
+        public ShowLock showLock = ShowLock.EVERYWHERE;
         public boolean lockSound = true;
         public int lockedSlotColor = DEFAULT_LOCKED_SLOT_COLOR;
     }

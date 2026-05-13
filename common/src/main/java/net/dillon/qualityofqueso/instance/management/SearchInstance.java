@@ -7,6 +7,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.inventory.Slot;
@@ -173,6 +174,19 @@ public class SearchInstance extends ManagementInstance {
                             || location.toString().toLowerCase().contains(tagSearch)) {
                         return true;
                     }
+                }
+            }
+
+            // Mod namespace search logic
+            if (term.startsWith("@")) {
+                String modNamespaceSearch = term.substring(1).toLowerCase();
+
+                ResourceLocation id = BuiltInRegistries.ITEM.getKey(stack.getItem());
+                String namespace = id.getNamespace().toLowerCase();
+
+                // If item contains namespace searched, return true
+                if (namespace.contains(modNamespaceSearch)) {
+                    return true;
                 }
             }
 

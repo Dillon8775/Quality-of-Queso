@@ -130,6 +130,11 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
         return new ManagementInstance((QuesoScreen) this.screen);
     }
 
+    @Unique
+    private ModTooltipInstance modTooltipInstance() {
+        return new ModTooltipInstance((QuesoScreen) this.screen);
+    }
+
     @Override
     public void setCachedContainer(Container container) {
         this.container = container;
@@ -311,12 +316,16 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             return;
         }
 
-        ModTooltipInstance modTooltips = new ModTooltipInstance(
-                (QuesoScreen) this.screen
-        );
-        modTooltips.displaySingleMovingTooltips(graphics, this.font, mouseX, mouseY, ci);
-        modTooltips.displayEnchantmentHelperTooltips(graphics, this.font, mouseX, mouseY, ci);
-        modTooltips.displayTagsOnItems(graphics, this.font, mouseX, mouseY, ci);
+        this.modTooltipInstance().displayEnchantmentHelperTooltips(graphics, this.font, mouseX, mouseY, ci);
+        this.modTooltipInstance().displayTagsOnItems(graphics, this.font, mouseX, mouseY, ci);
+    }
+
+    /**
+     * Cancels out default tooltips, and renders the single moving tooltips.
+     */
+    @Inject(method = "renderTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;renderTooltip(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;II)V"), cancellable = true)
+    private void cancelOutToRenderSingleMovingTooltips(GuiGraphics graphics, int mouseX, int mouseY, CallbackInfo ci) {
+        this.modTooltipInstance().displaySingleMovingTooltips(graphics, this.font, mouseX, mouseY, ci);
     }
 
     /**
@@ -407,7 +416,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                 this.getManagementButtons()
         );
         mouseScrollInstance.changeSortMode(mouseX, mouseY, scrollY);
-        mouseScrollInstance.setMoveAmount(this.hoveredSlot, mouseX, mouseY, scrollY);
+        mouseScrollInstance.moveHoveredItem(mouseX, mouseY, scrollY);
 
         return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
     }

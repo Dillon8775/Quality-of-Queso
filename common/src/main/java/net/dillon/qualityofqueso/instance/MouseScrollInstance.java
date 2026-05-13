@@ -2,6 +2,7 @@ package net.dillon.qualityofqueso.instance;
 
 import net.dillon.qualityofqueso.helper.ContainerHelper;
 import net.dillon.qualityofqueso.instance.context.ManagementButtons;
+import net.dillon.qualityofqueso.instance.management.TransferInstance;
 import net.dillon.qualityofqueso.option.ModClientOptions;
 import net.dillon.qualityofqueso.option.eum.management.sorting.CurrentSortingMode;
 import net.dillon.qualityofqueso.option.eum.management.sorting.GlobalSortingMode;
@@ -72,6 +73,21 @@ public record MouseScrollInstance(
             } else if (hoveredSlotHasItem(hoveredSlot) && MOVE_AMOUNT > hoveredSlot.getItem().getMaxStackSize()) {
                 MOVE_AMOUNT = hoveredSlot.getItem().getMaxStackSize();
             }
+        }
+    }
+
+    /**
+     * Moves one hovered item by scrolling.
+     */
+    public void moveHoveredItem(double mouseX, double mouseY, double scrollY) {
+        if (!isCreativeInventoryScreen(screen)
+                && options().management.singularMoving
+                && hasMoveSingleModifierDown()
+                && !hasDropOnlyOneItemKeyDown()
+                && new TransferInstance(instance()).tryMoveSingleFromScroll(instance().getScreensHoveredSlot(), scrollY)) {
+            return;
+        } else {
+            setMoveAmount(instance().getScreensHoveredSlot(), mouseX, mouseY, scrollY);
         }
     }
 
