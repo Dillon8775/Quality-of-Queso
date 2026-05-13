@@ -2,12 +2,14 @@ package net.dillon.qualityofqueso.instance;
 
 import net.dillon.qualityofqueso.helper.ContainerHelper;
 import net.dillon.qualityofqueso.instance.context.ManagementButtons;
+import net.dillon.qualityofqueso.instance.management.TransferInstance;
 import net.dillon.qualityofqueso.option.ModClientOptions;
 import net.dillon.qualityofqueso.option.eum.management.sorting.CurrentSortingMode;
 import net.dillon.qualityofqueso.option.eum.management.sorting.GlobalSortingMode;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.world.inventory.Slot;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
 import static net.dillon.qualityofqueso.helper.ModHelper.options;
@@ -72,6 +74,21 @@ public record MouseScrollInstance(
             } else if (hoveredSlotHasItem(hoveredSlot) && MOVE_AMOUNT > hoveredSlot.getItem().getMaxStackSize()) {
                 MOVE_AMOUNT = hoveredSlot.getItem().getMaxStackSize();
             }
+        }
+    }
+
+    /**
+     * Moves one hovered item by scrolling.
+     */
+    public void moveHoveredItem(double scrollY, CallbackInfoReturnable<Boolean> cir) {
+        if (!isCreativeInventoryScreen(screen)
+                && options().management.singularMoving
+                && hasMoveSingleModifierDown()
+                && !hasDropOnlyOneItemKeyDown()
+                && new TransferInstance(instance()).tryMoveSingleFromScroll(instance().getScreensHoveredSlot(), scrollY)) {
+            cir.setReturnValue(true);
+        } else {
+            setMoveAmount(instance().getScreensHoveredSlot(), scrollY);
         }
     }
 

@@ -4,14 +4,12 @@ import net.dillon.qualityofqueso.instance.QuesoScreen;
 import net.dillon.qualityofqueso.server.DedicatedServerStorage;
 import net.dillon.qualityofqueso.widget.SwapButton;
 import net.minecraft.client.input.KeyEvent;
-import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import org.lwjgl.glfw.GLFW;
 
 import java.util.*;
 
@@ -201,52 +199,88 @@ public class TransferInstance extends ManagementInstance {
     }
 
     /**
-     * Moves one item from the currently hovered slot when clicking with the move-single modifier.
+     * Moves one item matching the hovered stack based on scroll direction.
      *
-     * @return {@code true} if the click was handled.
+     * <p>Scrolling up transfers from inventory to container.
+     * Scrolling down transfers from container to inventory.</p>
+     *
+     * @return {@code true} if the scroll was handled.
      */
-    public boolean tryMoveSingleFromHovered(MouseButtonEvent event) {
-        if (event.button() != GLFW.GLFW_MOUSE_BUTTON_LEFT
-                || !options().management.singularMoving
-                || !hasMoveSingleModifierDown()
-                || instance().getScreensHoveredSlot() == null
-                || !instance().getScreensHoveredSlot().hasItem()) {
+    public boolean tryMoveSingleFromScroll(Slot hoveredSlot, double scrollY) {
+        if (!options().management.singularMoving
+                || hoveredSlot == null
+                || !hoveredSlot.hasItem()
+                || scrollY == 0
+                || getContainerSize() <= 0) {
             return false;
         }
 
+        boolean toContainer = scrollY > 0;
+        boolean toInventory = !toContainer;
         int containerSize = getContainerSize();
         int totalSlots = getTotalSlots();
-        int sourceIndex = instance().getScreensHoveredSlot().index;
+        int fromStart = toContainer ? containerSize : 0;
+        int fromEnd = toContainer ? totalSlots : containerSize;
+        int toStart = toContainer ? 0 : containerSize;
+        int toEnd = toContainer ? containerSize : totalSlots;
+        ItemStack targetItem = hoveredSlot.getItem();
+        int hoveredIndex = hoveredSlot.index;
 
-        boolean fromContainer = sourceIndex < containerSize;
-        if (!fromContainer && containerSize <= 0) {
-            return true;
+        if (hoveredIndex >= fromStart
+                && hoveredIndex < fromEnd
+                && canUseScrollSourceSlot(hoveredSlot, targetItem, toContainer, totalSlots)) {
+            return moveSingleFromSourceSlot(
+                    hoveredSlot,
+                    toStart,
+                    toEnd,
+                    1,
+                    toInventory,
+                    targetItem,
+                    !getCursorStack().isEmpty(),
+                    !options().isFillStacksEnabled()
+            );
         }
 
-        if (isExcludedSlot(sourceIndex)
-                || (options().lockedSlots.enableLockedSlots && options().lockedSlots.hardLockSlots && lockedSlotsInstance().isLockedSlot(sourceIndex))) {
-            return true;
+        for (int i = fromStart; i < fromEnd; i++) {
+            Slot sourceSlot = instance().getScreenMenu().getSlot(i);
+            if (sourceSlot.index == hoveredIndex || !canUseScrollSourceSlot(sourceSlot, targetItem, toContainer, totalSlots)) {
+                continue;
+            }
+
+            return moveSingleFromSourceSlot(
+                    sourceSlot,
+                    toStart,
+                    toEnd,
+                    1,
+                    toInventory,
+                    targetItem,
+                    !getCursorStack().isEmpty(),
+                    !options().isFillStacksEnabled()
+            );
         }
+        return false;
+    }
 
-        if (!fromContainer && !options().management.includeHotbar && isHotbarSlot(totalSlots, sourceIndex)) {
-            return true;
+    /**
+     * @return if the user can use singular moving.
+     */
+    private boolean canUseScrollSourceSlot(Slot sourceSlot, ItemStack targetItem, boolean toContainer, int totalSlots) {
+        if (!sourceSlot.hasItem()) {
+            return false;
         }
-
-        int toStart = fromContainer ? containerSize : 0;
-        int toEnd = fromContainer ? totalSlots : containerSize;
-
-        moveSingleFromSourceSlot(
-                instance().getScreensHoveredSlot(),
-                toStart,
-                toEnd,
-                MOVE_AMOUNT,
-                fromContainer,
-                ItemStack.EMPTY,
-                !getCursorStack().isEmpty(),
-                !options().isFillStacksEnabled()
-        );
-
-        return true;
+        if (!ItemStack.isSameItemSameComponents(sourceSlot.getItem(), targetItem)) {
+            return false;
+        }
+        if (isExcludedSlot(sourceSlot.index)) {
+            return false;
+        }
+        if (options().lockedSlots.enableLockedSlots && options().lockedSlots.hardLockSlots && lockedSlotsInstance().isLockedSlot(sourceSlot.index)) {
+            return false;
+        }
+        if (toContainer && !options().management.includeHotbar && isHotbarSlot(totalSlots, sourceSlot.index)) {
+            return false;
+        }
+        return !searchInstance().isFilteredBySearch(sourceSlot, false);
     }
 
     /**
@@ -275,7 +309,7 @@ public class TransferInstance extends ManagementInstance {
         }
 
         try {
-            if (!filterStack.isEmpty() && !canMoveCursorItem(sourceSlot, false, toInventory)) {
+            if (!filterStack.isEmpty() && !ItemStack.isSameItemSameComponents(sourceSlot.getItem(), filterStack)) {
                 return false;
             }
 

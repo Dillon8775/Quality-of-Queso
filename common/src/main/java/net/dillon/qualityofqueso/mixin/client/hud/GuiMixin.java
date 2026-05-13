@@ -1,5 +1,6 @@
 package net.dillon.qualityofqueso.mixin.client.hud;
 
+import net.dillon.qualityofqueso.helper.ContainerHelper;
 import net.dillon.qualityofqueso.helper.EnderChestHelper;
 import net.dillon.qualityofqueso.option.ContainerData;
 import net.dillon.qualityofqueso.option.eum.hud.ItemCounter;
@@ -34,6 +35,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static net.dillon.qualityofqueso.helper.GuiHelper.*;
 import static net.dillon.qualityofqueso.helper.ModHelper.*;
@@ -128,7 +130,7 @@ public class GuiMixin {
 
         graphics.blitSprite(
                 RenderPipelines.GUI_TEXTURED,
-                warning ? SLOT_CRITICAL : getHighlightedSlotTexture(defaultSprite, getItemBySlot(minecraft, slot)),
+                warning ? SLOT_CRITICAL : getHighlightedSlotTexture(minecraft, defaultSprite, getItemBySlot(minecraft, slot)),
                 this.getHighlightedSlotX(minecraft, graphics, slot),
                 getGuiHeight(graphics) - 3 + yOffset,
                 24,
@@ -157,6 +159,36 @@ public class GuiMixin {
     }
 
     /**
+     * Renders lock icons on locked hotbar slots.
+     */
+    @Unique
+    private void renderLockedHotbarSlots(GuiGraphicsExtractor graphics) {
+        if (!options().lockedSlots.enableLockedSlots || !options().lockedSlots.showLock.inGui() || this.minecraft.player == null) {
+            return;
+        }
+
+        Set<Integer> lockedPlayerSlots = ContainerHelper.getLockedSlots(false);
+        if (lockedPlayerSlots.isEmpty()) {
+            return;
+        }
+
+        for (int slot = 0; slot < 9; slot++) {
+            if (!lockedPlayerSlots.contains(slot)) {
+                continue;
+            }
+
+            graphics.blitSprite(
+                    RenderPipelines.GUI_TEXTURED,
+                    ofQoQ(LOCKED_TEXTURE),
+                    getGuiWidth(graphics) - 91 + (slot * 20),
+                    getGuiHeight(graphics) + 11,
+                    10,
+                    10
+            );
+        }
+    }
+
+    /**
      * Renders the modified selection slot.
      */
     @ModifyArg(method = "extractItemHotbar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIII)V", ordinal = 1), index = 1)
@@ -164,14 +196,14 @@ public class GuiMixin {
         if (!modEnabled(this.minecraft) || this.minecraft.player == null) {
             return original;
         }
-        return getHighlightedSlotTexture(HOTBAR_SELECTION_SPRITE, this.minecraft.player.getInventory().getItem(this.minecraft.player.getInventory().getSelectedSlot()));
+        return getHighlightedSlotTexture(this.minecraft, HOTBAR_SELECTION_SPRITE, this.minecraft.player.getInventory().getItem(this.minecraft.player.getInventory().getSelectedSlot()));
     }
 
     /**
      * Renders things overtop of everything.
      */
     @Inject(method = "extractItemHotbar", at = @At("TAIL"))
-    private void renderAllWarningIndicators(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+    private void renderAllSprites(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker, CallbackInfo ci) {
         if (!modEnabled(this.minecraft)) {
             return;
         }
@@ -192,6 +224,8 @@ public class GuiMixin {
                 this.renderWarningIndicator(this.minecraft, graphics, 0, 0, EquipmentSlot.OFFHAND, 0);
             }
         }
+
+        this.renderLockedHotbarSlots(graphics);
     }
 
     /**

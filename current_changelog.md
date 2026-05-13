@@ -35,6 +35,24 @@
 
 # New Version Changes
 
+## Searching Addition
+- You can now use `@` to search items by mod name (example `@minecraft` searches all items in default Minecraft ,`@speedrunnermod` searches all items in `the speedrunner mod`).
+
+## Move Single Changes
+- Scrolling up/down no longer changes the move amount when holding CTRL; `holding CTRL + scrolling now moves single items to container and inventory.`
+- You can still hold `SHIFT and scroll` to drop a certain amount of items.
+- *This change is not present in the 1.20.1 version of the mod, due to faulty and buggy functionality w/ 1.20.1.*
+
+## Locked Slots Change
+- You can `no longer drop a slot that is locked.`
+  - However, you can hold `SHIFT and use the drop amount` feature to `ignore locked slots`, and drop the item.
+- In addition to this, `locked slot icons render on the hotbar, in-game.`
+  - This comes with a change to the `"Lock Slot" option`: it now has 3 different modes
+    - `"Everywhere"` renders the locked slot icon in `menu screens` and the `GUI hotbar.`
+    - `"GUI only"` _only_ renders the locked slot icon on the `GUI hotbar.`
+    - `"Screen only"` _only_ renders the locked slot icon in `menu screens.`
+    - `"OFF"` don't render locked slot icon at all
+
 ## Sorting Addition
 - You can now `change the sort mode if you only use the keybind for sorting.`
     - To do this, under `Management` options -> `Sorting...`, enable `Use Global Sorting Mode`.
@@ -51,6 +69,7 @@
 ## Other Changes
 - Added a `"Debug HUDs..."` option in the Quality of Queso main menu, which takes you straight to Minecraft's `debug options screen,` with `"qualityofqueso"` already entered in as the search query, so you can `easily toggle Quality of Queso's new debug huds.`
 - `For older Minecraft versions,` it simply takes you to a custom screen, which lets you enable the custom hud's there.
+- `Tweaked tooltip positions.`
 
 ### Technical Changes
 - Renamed all `"search_field"` texture files to `"search_bar".`

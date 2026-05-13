@@ -371,7 +371,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
     /**
      * Handles mouse scrolling events with the help of the {@link MouseScrollInstance} record.
      */
-    @Inject(method = "mouseScrolled", at = @At("HEAD"))
+    @Inject(method = "mouseScrolled", at = @At("HEAD"), cancellable = true)
     private void handleMouseScrolling(double x, double y, double scrollX, double scrollY, CallbackInfoReturnable<Boolean> cir) {
         if (!modEnabled(this.minecraft)) {
             return;
@@ -383,7 +383,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                 this.getManagementButtons()
         );
         mouseScrollInstance.changeSortMode(scrollY);
-        mouseScrollInstance.setMoveAmount(this.hoveredSlot, scrollY);
+        mouseScrollInstance.moveHoveredItem(scrollY, cir);
     }
 
     /**

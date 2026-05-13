@@ -55,7 +55,7 @@ public class ExtractingInstance extends ManagementInstance {
         // Only render other locked slot textures on valid screens
         if (isValidScreen(instance().getScreen())) {
             // Renders the key, or unlocked slot texture beside the mouse, indicating that the user is attempting to lock/unlock slots
-            if (options().lockedSlots.enableLockedSlots && options().lockedSlots.showLock && instance().getScreensHoveredSlot() != null && instance().getExcludedSlots().isEmpty()
+            if (options().lockedSlots.enableLockedSlots && options().lockedSlots.showLock.inScreens() && instance().getScreensHoveredSlot() != null && instance().getExcludedSlots().isEmpty()
                     && hasLockSlotModifierDown() && !hasAnyManagementModifierDown() && !Minecraft.getInstance().hasControlDown() && !Minecraft.getInstance().hasShiftDown()) {
                 lockedSlotsInstance().renderUnlockedSlot(graphics, lockedSlotsInstance().isLockedSlot(instance().getScreensHoveredSlot().index), mouseX, mouseY);
             }
@@ -98,7 +98,7 @@ public class ExtractingInstance extends ManagementInstance {
                     }
                 }
                 // Renders the lock texture on locked slots (yes, the lock icon itself, not the color)
-                if (options().lockedSlots.showLock && options().lockedSlots.enableLockedSlots && instance().getSearchFields().searchText().isEmpty() && instance().getExcludedSlots().isEmpty()) {
+                if (options().lockedSlots.showLock.inScreens() && options().lockedSlots.enableLockedSlots && instance().getSearchFields().searchText().isEmpty() && instance().getExcludedSlots().isEmpty()) {
                     lockedSlotsInstance().renderLockedSlot(graphics, slot, true);
                 }
             }

@@ -72,6 +72,7 @@ public class ModConstants {
     public static final Identifier SLOT_LOW = ofQoQ("hud/colored_slot/slot_low");
     public static final Identifier SLOT_AVERAGE = ofQoQ("hud/colored_slot/slot_average");
     public static final Identifier SLOT_GOOD = ofQoQ("hud/colored_slot/slot_good");
+    public static final Identifier SLOT_LOCKED = ofQoQ("hud/colored_slot/slot_locked");
     public static final Identifier SELECTED_RECIPE = ofQoQ("slot/selected_recipe");
 
     // Config constants

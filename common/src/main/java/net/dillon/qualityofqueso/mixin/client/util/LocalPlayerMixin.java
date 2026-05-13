@@ -25,6 +25,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import static net.dillon.qualityofqueso.helper.GuiHelper.*;
+import static net.dillon.qualityofqueso.helper.ManagementHelper.playButtonInactiveSound;
 import static net.dillon.qualityofqueso.helper.ModHelper.*;
 import static net.dillon.qualityofqueso.util.ModConstants.PLAYER_FALL_DISTANCE;
 import static net.dillon.qualityofqueso.util.ModConstants.SHOULD_WARN_OF_ELYTRA;
@@ -57,6 +58,21 @@ public class LocalPlayerMixin extends AbstractClientPlayer {
         }
 
         ClientEvents.afterLevelChangeOrRespawn();
+    }
+
+    /**
+     * Prevents dropping locked hotbar slots while in-game.
+     */
+    @Inject(method = "drop", at = @At("HEAD"), cancellable = true)
+    private void preventDropFromLockedSlot(boolean entireStack, CallbackInfoReturnable<Boolean> cir) {
+        if (!modEnabled(this.minecraft) || !options().lockedSlots.enableLockedSlots) {
+            return;
+        }
+
+        if (isLockedHotbarSlot(this.minecraft, true)) {
+            playButtonInactiveSound(this.minecraft);
+            cir.setReturnValue(false);
+        }
     }
 
     /**

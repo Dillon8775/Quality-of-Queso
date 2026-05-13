@@ -70,6 +70,7 @@
             <li>Search items <b>by tag</b> by starting query with <i><b>#</b></i></li>
             <li>Match case by starting query with <i><b>:</b></i></li>
             <li>Exclude items from searching with a <i><b>!</b></i></li>
+            <li>Search items by <b>mod name</b> by starting query with a <i>@</i></li>
             <br>
             <li><b>Searches inside transportable containers</b></li>
             <li>Right-click to clear the search bar</li>
@@ -85,6 +86,7 @@
             <img alt = "Tag Search" width="250" src="https://raw.githubusercontent.com/Dillon8775/ImageGIFs/refs/heads/qoq/NEW%20GIFS/Tag%20Search.gif">
             <img alt = "Search Inside Transportables" width="250" src="https://raw.githubusercontent.com/Dillon8775/ImageGIFs/refs/heads/qoq/NEW%20GIFS/Shulker%20searching.gif">
             <img alt = "Inventory Searching" width="250" src="https://raw.githubusercontent.com/Dillon8775/ImageGIFs/refs/heads/qoq/NEW%20GIFS/Inventory%20Searching.gif">
+            <img alt = "Mod Name Search" width="250" src="https://raw.githubusercontent.com/Dillon8775/ImageGIFs/refs/heads/qoq/NEW%20GIFS/mod%20search.gif">
         </p>
         </ul>
 </details>
@@ -97,7 +99,7 @@
             <li><b>Quickly transfer items</b> from inventory -> container, and vise-versa</li>
             <li><b>Fully client-side container filtering</b> by adding your filtered items into a container GUI</li>
             <li><b>Lock slots,</b> to prevent them from being affected by transferring or sorting (ALT + MIDDLE CLICK)</li>
-            <li><b>Quick move one item</b> out of a stack (CTRL to move, SHIFT to drop, scroll to increase/decrease amount)</li>
+            <li><b>Quick move one item</b> out of a stack by scrolling (hold SHIFT to drop, and scroll to increase/decrease amount)</li>
             <br>
             <li><b>Move only matching items</b> and fill stacks</li>
             <li><b>Sort</b> alphabetically, by item tag, ascending/descending, or by the creative menu order</li>
