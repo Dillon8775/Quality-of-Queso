@@ -28,11 +28,15 @@ public class KeyPressInstance extends ManagementInstance {
     /**
      * Handles management shortcut keys while the modifier key is held.
      */
-    private void handleManagementKeybinds(int keycode) {
+    private void handleManagementKeybinds(int keycode, CallbackInfoReturnable<Boolean> cir) {
         boolean quickDropShortcutPressed = keycode == key(getDropKey()).getValue() && hasQuickDropKeysDown();
 
         if (!quickDropShortcutPressed && !isCreativeInventoryScreen(instance().getScreen()) && transferInstance().canSingularQuickDrop(keycode)) {
             transferInstance().performSingularDrop();
+        }
+
+        if (keycode == key(getDropKey()).getValue() && instance().getScreensHoveredSlot() != null && lockedSlotsInstance().isLockedSlot(instance().getScreensHoveredSlot().index)) {
+            cir.setReturnValue(false);
         }
 
         if (!hasAnyManagementModifierDown()) {
@@ -112,7 +116,7 @@ public class KeyPressInstance extends ManagementInstance {
         if (handleInventoryCloseKey(keycode, cir)) {
             return;
         }
-        handleManagementKeybinds(keycode);
+        handleManagementKeybinds(keycode, cir);
 
         // Quick equip logic
         if (keycode == key(ModKeybinds.QUICK_EQUIP).getValue()) {

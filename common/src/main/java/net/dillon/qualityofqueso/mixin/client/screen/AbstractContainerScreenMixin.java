@@ -387,8 +387,17 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                 (QuesoScreen) this.screen
         );
         mouseClickInstance.trySelectingOrLockingSlot(bl, cir);
+        if (cir.isCancelled()) {
+            return;
+        }
         mouseClickInstance.moveOnlyOne(mouseX, mouseY, bl, cir);
+        if (cir.isCancelled()) {
+            return;
+        }
         mouseClickInstance.quickEquipItem(bl, cir);
+        if (cir.isCancelled()) {
+            return;
+        }
         mouseClickInstance.handleInventorySearchFieldClicking(mouseX, mouseY, bl);
         mouseClickInstance.handleButtonInactiveSounds(mouseX, mouseY);
     }

@@ -81,6 +81,8 @@ public class ModConstants {
     @Deprecated
     public static final ResourceLocation SLOT_GOOD = ofQoQ("hud/colored_slot/slot_good");
     @Deprecated
+    public static final ResourceLocation SLOT_LOCKED = ofQoQ("hud/colored_slot/slot_locked");
+    @Deprecated
     public static final ResourceLocation SELECTED_RECIPE = ofQoQ("slot/selected_recipe");
 
     // Config constants

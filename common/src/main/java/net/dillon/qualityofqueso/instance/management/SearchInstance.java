@@ -5,6 +5,7 @@ import net.dillon.qualityofqueso.widget.gui.SearchBar;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -180,6 +181,19 @@ public class SearchInstance extends ManagementInstance {
                             || location.toString().toLowerCase().contains(tagSearch)) {
                         return true;
                     }
+                }
+            }
+
+            // Mod namespace search logic
+            if (term.startsWith("@")) {
+                String modNamespaceSearch = term.substring(1).toLowerCase();
+
+                ResourceLocation id = BuiltInRegistries.ITEM.getKey(stack.getItem());
+                String namespace = id.getNamespace().toLowerCase();
+
+                // If item contains namespace searched, return true
+                if (namespace.contains(modNamespaceSearch)) {
+                    return true;
                 }
             }
 

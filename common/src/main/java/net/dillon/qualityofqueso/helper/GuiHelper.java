@@ -33,6 +33,7 @@ import net.minecraft.world.item.enchantment.Enchantments;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
 import static net.dillon.qualityofqueso.helper.MethodHelper.*;
@@ -124,13 +125,13 @@ public class GuiHelper {
         int y = 0;
         int l;
         if (screen instanceof InventoryScreen inventoryScreen) {
-            l = 8;
+            l = options().management.layout.horizontal() ? -12 : 8;
             if (!options().management.layout.horizontal()) {
                 l += (RENDERED_BUTTONS > 4 ? l * 2 : l);
             }
             y = getTopPos(inventoryScreen) + getTitleLabelY(inventoryScreen) + containerY + l;
         } else if (screen instanceof AbstractContainerScreen<?> abstractContainerScreen) {
-            l = 36;
+            l = options().management.layout.horizontal() ? 14 : 36;
             if (!options().management.layout.horizontal()) {
                 if (RENDERED_BUTTONS > 8) {
                     l += l / 3 + (RENDERED_BUTTONS > 10 ? 12 : 0);
@@ -324,7 +325,8 @@ public class GuiHelper {
     /**
      * @return the correct sprite to use.
      */
-    public static ResourceLocation getHighlightedSlotTexture(ResourceLocation defaultSprite, ItemStack stack) {
+    @Deprecated
+    public static ResourceLocation getHighlightedSlotTexture(Minecraft minecraft, ResourceLocation defaultSprite, ItemStack stack) {
         float healthPercentage = getItemHealthPercentage(stack);
 
         if (!options().hud.coloredHighlighting) {
@@ -337,8 +339,32 @@ public class GuiHelper {
             return SLOT_AVERAGE;
         } else if (healthPercentage < 1.0F) {
             return SLOT_GOOD;
+        } else if (isLockedHotbarSlot(minecraft, false)) {
+            return SLOT_LOCKED;
         }
         return defaultSprite;
+    }
+
+    /**
+     * @return if a hotbar slot is locked.
+     */
+    public static boolean isLockedHotbarSlot(Minecraft minecraft, boolean checkForEmpty) {
+        if (!options().lockedSlots.enableLockedSlots) {
+            return false;
+        }
+
+        Set<Integer> lockedPlayerSlots = ContainerHelper.getLockedSlots(false);
+        if (checkForEmpty && lockedPlayerSlots.isEmpty()) {
+            return false;
+        }
+
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player == null || (checkForEmpty && getMainHandStack(player).isEmpty())) {
+            return false;
+        }
+
+        int selectedHotbarSlot = minecraft.player.getInventory().selected;
+        return lockedPlayerSlots.contains(selectedHotbarSlot);
     }
 
     /**

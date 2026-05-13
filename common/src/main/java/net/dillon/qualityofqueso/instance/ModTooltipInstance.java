@@ -153,11 +153,13 @@ public class ModTooltipInstance extends ManagementInstance {
             // Create helper tooltips for the user to use singular moving
             Component scroll = Component.translatable("qualityofqueso.gui.scroll_to_change_amount");
             Component reset = Component.translatable("qualityofqueso.gui.move_amount.reset");
+            Component ignoresLockedSlots = Component.translatable("qualityofqueso.gui.move_amount.ignores_locked_slots");
 
             // Add those helper tooltips to the rendered tooltip if we can
             if (options().accessibility.tooltips.on() && canContinueToAddTooltips) {
                 moveAmountTooltip.add(scroll);
                 moveAmountTooltip.add(reset);
+                moveAmountTooltip.add(ignoresLockedSlots);
             }
 
             // As long as there was never an original tooltip to render, render the tooltip and return true

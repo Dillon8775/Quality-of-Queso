@@ -199,12 +199,19 @@ public class TransferInstance extends ManagementInstance {
     }
 
     /**
+     * @return the menu slot index.
+     */
+    private int getMenuSlotId(Slot slot) {
+        return instance().getScreenMenu().slots.indexOf(slot);
+    }
+
+    /**
      * Moves one item from the currently hovered slot when clicking with the move-single modifier.
      *
      * @return {@code true} if the click was handled.
      */
     public boolean tryMoveSingleFromHovered(int bl) {
-        if (bl != GLFW.GLFW_MOUSE_BUTTON_LEFT
+        if ((bl != GLFW.GLFW_MOUSE_BUTTON_LEFT && bl != GLFW.GLFW_MOUSE_BUTTON_RIGHT)
                 || !options().management.singularMoving
                 || !hasMoveSingleModifierDown()
                 || instance().getScreensHoveredSlot() == null
@@ -214,7 +221,7 @@ public class TransferInstance extends ManagementInstance {
 
         int containerSize = getContainerSize();
         int totalSlots = getTotalSlots();
-        int sourceIndex = instance().getScreensHoveredSlot().index;
+        int sourceIndex = getMenuSlotId(instance().getScreensHoveredSlot());
 
         boolean fromContainer = sourceIndex < containerSize;
         if (!fromContainer && containerSize <= 0) {
@@ -287,7 +294,7 @@ public class TransferInstance extends ManagementInstance {
 
             for (int i = start; i != endExclusive; i += step) {
                 Slot target = instance().getScreenMenu().getSlot(i);
-                if (target.index == parkedCursorSlot) {
+                if (getMenuSlotId(target) == parkedCursorSlot) {
                     continue;
                 }
                 if (target.hasItem()) {
@@ -332,7 +339,7 @@ public class TransferInstance extends ManagementInstance {
         int slotId = sourceSlot.index;
 
         // Pick up full stack
-        performClickSlot(instance().getScreen(), sourceSlot, slotId, 0, ClickType.PICKUP);
+        performClickSlot(instance().getScreen(), sourceSlot, getMenuSlotId(sourceSlot), 0, ClickType.PICKUP);
 
         ItemStack carried = instance().getScreenMenu().getCarried();
         if (carried.isEmpty()) {
@@ -357,7 +364,7 @@ public class TransferInstance extends ManagementInstance {
             }
 
             // Right-click places 1 item
-            performClickSlot(instance().getScreen(), target, target.index, 1, ClickType.PICKUP);
+            performClickSlot(instance().getScreen(), target, getMenuSlotId(target), 1, ClickType.PICKUP);
 
             movedOne = true;
             // Only move one item total per source sourceSlot
@@ -369,7 +376,7 @@ public class TransferInstance extends ManagementInstance {
             for (Iterator<Slot> it = emptySlots.iterator(); it.hasNext();) {
                 Slot empty = it.next();
 
-                performClickSlot(instance().getScreen(), empty, empty.index, 1, ClickType.PICKUP);
+                performClickSlot(instance().getScreen(), empty, getMenuSlotId(empty), 1, ClickType.PICKUP);
 
                 if (empty.hasItem()) {
                     nonEmptySlots.add(empty);
@@ -383,7 +390,7 @@ public class TransferInstance extends ManagementInstance {
 
         // Return leftovers to original sourceSlot
         if (!instance().getScreenMenu().getCarried().isEmpty()) {
-            performClickSlot(instance().getScreen(), sourceSlot, slotId, 0, ClickType.PICKUP);
+            performClickSlot(instance().getScreen(), sourceSlot, getMenuSlotId(sourceSlot), 0, ClickType.PICKUP);
         }
 
         return movedOne;

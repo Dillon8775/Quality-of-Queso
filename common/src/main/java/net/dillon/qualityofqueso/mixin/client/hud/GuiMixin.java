@@ -1,6 +1,7 @@
 package net.dillon.qualityofqueso.mixin.client.hud;
 
 import com.google.common.base.Strings;
+import net.dillon.qualityofqueso.helper.ContainerHelper;
 import net.dillon.qualityofqueso.helper.DebugHudHelper;
 import net.dillon.qualityofqueso.helper.EnderChestHelper;
 import net.dillon.qualityofqueso.option.ContainerData;
@@ -30,10 +31,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static net.dillon.qualityofqueso.helper.ButtonHelper.isStackShulker;
 import static net.dillon.qualityofqueso.helper.GuiHelper.*;
@@ -123,7 +121,7 @@ public class GuiMixin {
         }
 
         graphics.blit(
-                warning ? SLOT_CRITICAL : getHighlightedSlotTexture(defaultSprite, getItemBySlot(minecraft, slot)),
+                warning ? SLOT_CRITICAL : getHighlightedSlotTexture(minecraft, defaultSprite, getItemBySlot(minecraft, slot)),
                 this.getHighlightedSlotX(minecraft, graphics, slot),
                 getGuiHeight(graphics) - 3 + yOffset,
                 0.0F,
@@ -156,6 +154,50 @@ public class GuiMixin {
                 16,
                 16
         );
+    }
+
+    /**
+     * Renders lock icons on locked hotbar slots.
+     */
+    @Unique
+    private void renderLockedHotbarSlots(GuiGraphics graphics) {
+        if (!options().lockedSlots.enableLockedSlots || !options().lockedSlots.showLock.inGui() || this.minecraft.player == null) {
+            return;
+        }
+
+        Set<Integer> lockedPlayerSlots = ContainerHelper.getLockedSlots(false);
+        if (lockedPlayerSlots.isEmpty()) {
+            return;
+        }
+
+        for (int slot = 0; slot < 9; slot++) {
+            if (!lockedPlayerSlots.contains(slot)) {
+                continue;
+            }
+
+            graphics.pose().pushPose();
+            graphics.pose().translate(0.0F, 0.0F, 200.0F);
+            graphics.blit(
+                    ofQoQ(LOCKED_TEXTURE),
+                    getGuiWidth(graphics) - 91 + (slot * 20),
+                    getGuiHeight(graphics) + 11,
+                    0.0F,
+                    0.0F,
+                    10,
+                    10,
+                    10,
+                    10
+            );
+            graphics.pose().popPose();
+        }
+    }
+
+    /**
+     * Renders locked hotbar slots.
+     */
+    @Inject(method = "renderHotbar", at = @At("TAIL"))
+    private void renderAllSprites(float partialTick, GuiGraphics graphics, CallbackInfo ci) {
+        this.renderLockedHotbarSlots(graphics);
     }
 
     /**
