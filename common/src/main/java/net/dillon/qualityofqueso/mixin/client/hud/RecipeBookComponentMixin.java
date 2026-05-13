@@ -10,6 +10,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
+
 @Mixin(RecipeBookComponent.class)
 public class RecipeBookComponentMixin {
     @Shadow
@@ -22,8 +24,12 @@ public class RecipeBookComponentMixin {
      * Fixes an odd bug where if the chat key is pressed, it focuses into the search field.
      */
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
-    private void cancelOutChatKey(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-        if (this.minecraft.options.keyChat.matches(keyCode, scanCode) && this.searchBox != null && !this.searchBox.isFocused()) {
+    private void cancelOutChatKey(int keycode, int scancode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
+        if (!modEnabled(this.minecraft)) {
+            return;
+        }
+
+        if (this.minecraft.options.keyChat.matches(keycode, scancode) && this.searchBox != null && !this.searchBox.isFocused()) {
             cir.setReturnValue(false);
             cir.cancel();
         }

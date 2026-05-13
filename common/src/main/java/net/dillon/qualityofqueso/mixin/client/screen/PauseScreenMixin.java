@@ -1,10 +1,10 @@
 package net.dillon.qualityofqueso.mixin.client.screen;
 
-import net.dillon.qualityofqueso.util.ButtonUtil;
-import net.dillon.qualityofqueso.util.ModTexts;
+import net.dillon.qualityofqueso.helper.ButtonHelper;
+import net.dillon.qualityofqueso.screen.EnderChestPreviewScreen;
+import net.dillon.qualityofqueso.screen.MainMenuScreen;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.SpriteIconButton;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -16,9 +16,11 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static net.dillon.qualityofqueso.util.ButtonUtil.getConfigButtonX;
-import static net.dillon.qualityofqueso.util.ButtonUtil.getConfigButtonY;
-import static net.dillon.qualityofqueso.util.ModUtil.*;
+import static net.dillon.qualityofqueso.helper.ButtonHelper.getConfigButtonX;
+import static net.dillon.qualityofqueso.helper.ButtonHelper.getConfigButtonY;
+import static net.dillon.qualityofqueso.helper.GuiHelper.drawTooltip;
+import static net.dillon.qualityofqueso.helper.ModHelper.*;
+import static net.dillon.qualityofqueso.util.ModConstants.*;
 
 @Mixin(PauseScreen.class)
 public class PauseScreenMixin extends Screen {
@@ -28,68 +30,10 @@ public class PauseScreenMixin extends Screen {
     @Shadow
     private Button disconnectButton;
     @Unique
-    private Button blacklistServerButton;
+    private Button blacklistServerButton, viewEnderChestButton;
 
     public PauseScreenMixin(Component pTitle) {
         super(pTitle);
-    }
-
-    /**
-     * Adds all {@code Quality of Queso} configuration buttons.
-     */
-    @Inject(method = "init", at = @At("TAIL"))
-    private void init(CallbackInfo ci) {
-        if (this.showPauseMenu) {
-            if (this.disconnectButton != null && options().misc.preventRageQuitting) {
-                this.disconnectButton.active = false;
-            }
-            if (options().accessibility.menuButton.everywhere()) {
-                int index = 0;
-                SpriteIconButton settingsButton = this.addRenderableWidget(ButtonUtil.initializeButton(this.minecraft, this));
-                settingsButton.setPosition(getConfigButtonX(this.width, 0), getConfigButtonY(this.height, index));
-                index++;
-
-                if (!(this.minecraft.getCurrentServer() == null)) {
-                    String address = this.getServerAddress();
-                    this.blacklistServerButton = this.addRenderableWidget(Button.builder(ModTexts.BLANK, button -> {
-                        if (uoptions().main.blacklistedServers.contains(address)) {
-                            uoptions().main.blacklistedServers.remove(address);
-                        } else {
-                            uoptions().main.blacklistedServers.add(address);
-                        }
-                        saveAll(this.minecraft);
-                    }).bounds(getConfigButtonX(this.width, 1), getConfigButtonY(this.height, index), 20, 20).build());
-                }
-            }
-        }
-    }
-
-    /**
-     * Renders toolips and textures over top of the {@code Quality of Queso buttons.}
-     */
-    @Inject(method = "render", at = @At("TAIL"))
-    private void renderTooltipsAndTextures(GuiGraphics graphics, int mouseX, int mouseY, float deltaTicks, CallbackInfo ci) {
-        if (this.showPauseMenu) {
-            if (options().misc.preventRageQuitting && options().accessibility.helpfulTooltips && this.disconnectButton != null && this.disconnectButton.isHovered()) {
-                ButtonUtil.drawTooltip(Component.translatable("qualityofqueso.gui.disconnect"), graphics, this.font, mouseX, mouseY);
-            }
-            if (options().accessibility.menuButton.everywhere() && !(this.minecraft.getCurrentServer() == null)) {
-                if (this.blacklistServerButton != null) {
-                    this.blacklistServerButton.active = isOnServer(this.minecraft);
-                    String address = this.getServerAddress();
-
-                    if (this.blacklistServerButton.isHovered()) {
-                        ButtonUtil.drawTexture(graphics, this.isServerBlacklisted(address) ? ButtonUtil.QOQ_ENABLED_TEXTURE : ButtonUtil.QOQ_DISABLED_TEXTURE, this.blacklistServerButton);
-                        ButtonUtil.drawTooltip(this.tooltipWithPrefix(this.isServerBlacklisted(address) ?
-                                        Component.translatable("qualityofqueso.gui.remove_blacklisted_server") :
-                                        Component.translatable("qualityofqueso.gui.add_blacklisted_server")),
-                                graphics, this.font, mouseX, mouseY);
-                    } else {
-                        ButtonUtil.drawTexture(graphics, this.isServerBlacklisted(address) ? ButtonUtil.QOQ_DISABLED_TEXTURE : ButtonUtil.QOQ_ENABLED_TEXTURE, this.blacklistServerButton);
-                    }
-                }
-            }
-        }
     }
 
     /**
@@ -114,5 +58,99 @@ public class PauseScreenMixin extends Screen {
     @Unique
     private boolean isServerBlacklisted(String serverAddress) {
         return uoptions().main.blacklistedServers.contains(serverAddress);
+    }
+
+    /**
+     * Adds all {@code Quality of Queso} configuration buttons.
+     */
+    @Inject(method = "init", at = @At("TAIL"))
+    private void init(CallbackInfo ci) {
+        if (this.showPauseMenu) {
+            if (this.disconnectButton != null && options().misc.preventRageQuitting) {
+                this.disconnectButton.active = false;
+            }
+            if (uoptions().main.menuButton.everywhere()) {
+                int index = 0;
+                this.addRenderableWidget(ButtonHelper.createMenuButton(
+                        getConfigButtonX(this.width, index),
+                        getConfigButtonY(this.height, index),
+                        (button) -> this.minecraft.setScreen(new MainMenuScreen(this)))
+                );
+                index++;
+
+                if (!(this.minecraft.getCurrentServer() == null)) {
+                    String address = this.getServerAddress();
+
+                    this.blacklistServerButton = this.addRenderableWidget(ButtonHelper.createMenuButton(
+                            getConfigButtonX(this.width, index),
+                            getConfigButtonY(this.height, index),
+                            (button) -> {
+                                if (uoptions().main.blacklistedServers.contains(address)) {
+                                    uoptions().main.blacklistedServers.remove(address);
+                                } else {
+                                    uoptions().main.blacklistedServers.add(address);
+                                }
+                                saveAndApplyConfigs(this.minecraft);
+                            }));
+                    index++;
+                }
+
+                if (options().accessibility.eChestButton.pauseScreen()) {
+                    this.viewEnderChestButton = this.addRenderableWidget(ButtonHelper.createSpriteIconButton(
+                            ofQoQ(ENDER_CHEST),
+                            getConfigButtonX(this.width, index),
+                            getConfigButtonY(this.height, index),
+                            (button) -> {
+                                this.minecraft.setScreen(new EnderChestPreviewScreen());
+                            }
+                    ));
+                }
+            }
+        }
+    }
+
+    /**
+     * Renders toolips and textures over top of the {@code Quality of Queso buttons.}
+     */
+    @Inject(method = "render", at = @At("TAIL"))
+    private void renderTooltipsAndTextures(GuiGraphics graphics, int mouseX, int mouseY, float deltaTicks, CallbackInfo ci) {
+        if (!this.showPauseMenu) {
+            return;
+        }
+
+        if (options().misc.preventRageQuitting && options().accessibility.tooltips.on() && this.disconnectButton != null && this.disconnectButton.isMouseOver(mouseX, mouseY)) {
+            drawTooltip(Component.translatable("qualityofqueso.gui.disconnect"), graphics, this.font, mouseX, mouseY);
+        }
+
+        if (uoptions().main.menuButton.everywhere() && !(this.minecraft.getCurrentServer() == null)) {
+            if (this.blacklistServerButton != null) {
+                this.blacklistServerButton.active = isOnServer(this.minecraft);
+                String address = this.getServerAddress();
+
+                if (uoptions().main.multiServerConfigs) {
+                    graphics.blitSprite(ofQoQ(MULTI_CONFIG_TEXTURE), this.blacklistServerButton.getX() - 2, this.blacklistServerButton.getY() - 1, 16, 16);
+                }
+                ButtonHelper.drawTexture(graphics, this.isServerBlacklisted(address) ? DISABLED_TEXTURE : ENABLED_TEXTURE, this.blacklistServerButton);
+
+                Component tooltip = this.isServerBlacklisted(address) ?
+                        Component.translatable("qualityofqueso.gui.remove_blacklisted_server") :
+                        Component.translatable("qualityofqueso.gui.add_blacklisted_server");
+                Component finalTooltip = tooltip;
+                if (uoptions().main.multiServerConfigs) {
+                    finalTooltip = tooltip.copy().append(Component.translatable("qualityofqueso.gui.multi_server_configs_enabled"));
+                }
+                if (this.blacklistServerButton.isMouseOver(mouseX, mouseY)) {
+                    drawTooltip(this.tooltipWithPrefix(finalTooltip),
+                            graphics, this.font, mouseX, mouseY);
+                }
+            }
+        }
+
+        if (this.viewEnderChestButton != null) {
+            this.viewEnderChestButton.active = modEnabled(this.minecraft);
+            if (options().accessibility.tooltips.on() && this.viewEnderChestButton.isMouseOver(mouseX, mouseY)) {
+                drawTooltip(Component.translatable("qualityofqueso.gui.view_ender_chest.tooltip"), graphics, this.font, mouseX, mouseY);
+            }
+        }
     }
 }

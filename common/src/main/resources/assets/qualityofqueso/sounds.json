@@ -21,6 +21,26 @@
       "qualityofqueso:management_drop_2"
     ]
   },
+  "qualityofqueso.management.sort": {
+    "subtitle": "qualityofqueso.gui.management_sort",
+    "sounds": [
+      "qualityofqueso:management_sort",
+      "qualityofqueso:management_sort_1",
+      "qualityofqueso:management_sort_2"
+    ]
+  },
+  "qualityofqueso.management.lock_slot": {
+    "subtitle": "qualityofqueso.gui.slot_locked",
+    "sounds": [
+      "qualityofqueso:slot_locked"
+    ]
+  },
+  "qualityofqueso.management.unlock_slot": {
+    "subtitle": "qualityofqueso.gui.slot_unlocked",
+    "sounds": [
+      "qualityofqueso:slot_unlocked"
+    ]
+  },
   "fortnite_battle_pass": {
     "sounds": [
       "qualityofqueso:fortnite_battle_pass/aaagghh",
