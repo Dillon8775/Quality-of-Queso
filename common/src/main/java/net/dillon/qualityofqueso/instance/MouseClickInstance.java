@@ -65,17 +65,13 @@ public class MouseClickInstance extends ManagementInstance {
      * Handles moving only one or dropping one item in a stack.
      */
     public void moveOnlyOne(MouseButtonEvent event, CallbackInfoReturnable<Boolean> cir) {
-        boolean quickDropping = buttonHoveredAndActive(instance().getManagementButtons().quickDrop());
         if (options().management.singularMoving) {
             boolean dropOnlyOne = hasDropOnlyOneItemKeyDown();
             boolean hasSingleModifierDown = hasMoveSingleModifierDown();
-            boolean hasKeyDown = quickDropping ? dropOnlyOne : hasSingleModifierDown;
             if (event.button() == 1 && ((((dropOnlyOne || hasSingleModifierDown) && hoveredSlotHasItem(instance().getScreensHoveredSlot())))
                     || buttonHoveredAndActive(instance().getManagementButtons().transferInventory())
                     || buttonHoveredAndActive(instance().getManagementButtons().transferContainer()))) {
                 MOVE_AMOUNT = 1;
-                cir.setReturnValue(true);
-            } else if (hasKeyDown && transferInstance().tryMoveSingleFromHovered(event)) {
                 cir.setReturnValue(true);
             }
         }

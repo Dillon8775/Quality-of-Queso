@@ -3,6 +3,7 @@ package net.dillon.qualityofqueso.instance;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.dillon.qualityofqueso.instance.management.ManagementInstance;
 import net.dillon.qualityofqueso.util.EnchantingHelper;
+import net.dillon.qualityofqueso.util.ModTexts;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -157,11 +158,15 @@ public class ModTooltipInstance extends ManagementInstance {
             // Create helper tooltips for the user to use singular moving
             Component scroll = Component.translatable("qualityofqueso.gui.scroll_to_change_amount");
             Component reset = Component.translatable("qualityofqueso.gui.move_amount.reset");
+            Component ignoresLockedSlots = Component.translatable("qualityofqueso.gui.move_amount.ignores_locked_slots").withColor(ModTexts.LOCKED_SLOT_TEXT);
 
             // Add those helper tooltips to the rendered tooltip if we can
             if (options().accessibility.tooltips.on() && canContinueToAddTooltips) {
-                moveAmountTooltip.add(scroll);
-                moveAmountTooltip.add(reset);
+                if (!(instance().getScreensHoveredSlot() != null && instance().getScreensHoveredSlot().hasItem() && MOVE_SINGLE_ITEM.isActiveAndDown())) {
+                    moveAmountTooltip.add(scroll);
+                    moveAmountTooltip.add(reset);
+                    moveAmountTooltip.add(ignoresLockedSlots);
+                }
             }
 
             // As long as there was never an original tooltip to render, render the tooltip and return true

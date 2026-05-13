@@ -351,12 +351,6 @@ public class ListOptions {
                 (options, value) -> options.accessibility.searchInventory = value);
     }
 
-    protected static OptionInstance<Boolean> showLock() {
-        return createClientBooleanOption("show_lock", false, options().lockedSlots.showLock,
-                (options, value) -> options.lockedSlots.showLock = value
-        );
-    }
-
     protected static OptionInstance<Boolean> autoCloseRecipeBook() {
         return createClientBooleanOption("auto_close_recipe_book", true, options().accessibility.autoCloseRecipeBook,
                 (options, value) -> options.accessibility.autoCloseRecipeBook = value
@@ -727,6 +721,22 @@ public class ListOptions {
                 Swapping.CODEC,
                 options().management.swapping,
                 (options, value) -> options.management.swapping = value
+        );
+    }
+
+    protected static OptionInstance<ShowLock> showLock() {
+        return createEnumOption(
+                "show_lock",
+                option -> switch (option) {
+                    case EVERYWHERE -> Tooltip.create(Component.translatable("qualityofqueso.options.show_lock.everywhere.tooltip"));
+                    case GUI_ONLY -> Tooltip.create(Component.translatable("qualityofqueso.options.show_lock.gui_only.tooltip"));
+                    case SCREEN_ONLY -> Tooltip.create(Component.translatable("qualityofqueso.options.show_lock.screen_only.tooltip"));
+                    case OFF -> Tooltip.create(Component.translatable("qualityofqueso.options.show_lock.off.tooltip"));
+                },
+                ShowLock.values(),
+                ShowLock.CODEC,
+                options().lockedSlots.showLock,
+                (options, value) -> options.lockedSlots.showLock = value
         );
     }
 
