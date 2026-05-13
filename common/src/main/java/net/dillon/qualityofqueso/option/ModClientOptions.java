@@ -13,6 +13,7 @@ import net.dillon.qualityofqueso.option.eum.searching.QuickSearch;
 import net.dillon.qualityofqueso.option.eum.searching.SearchBarColor;
 import net.dillon.qualityofqueso.option.eum.searching.SearchBarPosition;
 import net.dillon.qualityofqueso.util.ModConstants;
+import net.dillon.qualityofqueso.util.SearchSyncMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,7 +70,7 @@ public class ModClientOptions {
         @Deprecated
         public boolean underlineText = false;
         public boolean saveSearchText = false;
-
+        public SearchSyncMode searchSyncMode = SearchSyncMode.OFF;
         // Config-only
         public boolean searchTransportables = true;
     }

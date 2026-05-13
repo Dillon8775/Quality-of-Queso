@@ -546,5 +546,15 @@
   "qualityofqueso.options.fov_effects.bows.default.tooltip": "Use normal bow pulling FOV effect.",
   "qualityofqueso.options.fov_effects.bows.quick_pull.tooltip": "Quickly zooms in when pulling back a bow.",
   "qualityofqueso.options.fov_effects.bows.off.tooltip": "Do not allow bow pulling to alter FOV.",
-  "qualityofqueso.fortnite_battle_pass": "Fortnite battle pass..."
+  "qualityofqueso.fortnite_battle_pass": "Fortnite battle pass...",
+  "qualityofqueso.options.search_sync_mode": "Search Syncing",
+  "qualityofqueso.options.sync.disabled": "§8Jei/Emi/Rei Not Installed",
+  "qualityofqueso.options.sync.off": "§7OFF",
+  "qualityofqueso.options.sync.push": "§6Push",
+  "qualityofqueso.options.sync.pull": "§6Pull",
+  "qualityofqueso.options.sync.both": "§6Both",
+  "qualityofqueso.options.sync.off.tooltip": "Disabled search text syncing.",
+  "qualityofqueso.options.sync.push.tooltip": "Pushes search text to other mods.",
+  "qualityofqueso.options.sync.pull.tooltip": "Pulls search text from other mods.",
+  "qualityofqueso.options.sync.both.tooltip": "Syncs search text both ways."
 }

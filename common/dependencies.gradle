@@ -4,7 +4,10 @@ dependencies {
     }
     implementation(libs.kumaCommon)
 
-    // You can add other dependencies here as well.
-    // Note that CurseMaven and Modrinth Maven, while convenient, does not include transitive dependencies.
-    // If you are getting errors about missing classes in dependencies, try using their respective Maven repositories directly instead.
+    compileOnly "mezz.jei:jei-1.21.1-common-api:19.22.0.315"
+    compileOnly "mezz.jei:jei-1.21.1-neoforge:19.22.0.315"
+    compileOnly "dev.emi:emi-xplat-intermediary:1.1.19+1.21.1"
+    compileOnly "dev.emi:emi-neoforge:1.1.19+1.21.1"
+    compileOnly "me.shedaniel:RoughlyEnoughItems-api:16.0.799"
+    compileOnly "me.shedaniel:RoughlyEnoughItems-neoforge:16.0.799"
 }

@@ -19,7 +19,9 @@ import net.dillon.qualityofqueso.option.eum.misc.ElytraAlarm;
 import net.dillon.qualityofqueso.option.eum.searching.QuickSearch;
 import net.dillon.qualityofqueso.option.eum.searching.SearchBarColor;
 import net.dillon.qualityofqueso.option.eum.searching.SearchBarPosition;
+import net.dillon.qualityofqueso.util.CheckForRecipeMod;
 import net.dillon.qualityofqueso.util.ModTexts;
+import net.dillon.qualityofqueso.util.SearchSyncMode;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.OptionInstance;
@@ -932,6 +934,33 @@ public class ListOptions {
                 Bows.CODEC,
                 options().fovEffects.bows,
                 (options, value) -> options.fovEffects.bows = value
+        );
+    }
+
+    protected static OptionInstance<SearchSyncMode> searchSyncMode() {
+        boolean anyInstalled = CheckForRecipeMod.isAnyViewerInstalled();
+
+        return new OptionInstance<>(
+                "qualityofqueso.options.search_sync_mode",
+                option -> {
+                    if (!anyInstalled) {
+                        return Tooltip.create(Component.translatable("qualityofqueso.options.sync.disabled"));
+                    }
+                    return switch (option) {
+                        case OFF -> Tooltip.create(Component.translatable("qualityofqueso.options.sync.off.tooltip"));
+                        case PUSH -> Tooltip.create(Component.translatable("qualityofqueso.options.sync.push.tooltip"));
+                        case PULL -> Tooltip.create(Component.translatable("qualityofqueso.options.sync.pull.tooltip"));
+                        case BOTH -> Tooltip.create(Component.translatable("qualityofqueso.options.sync.both.tooltip"));
+                    };
+                },
+                (caption, value) -> CheckForRecipeMod.getStatusComponent(value),
+                new OptionInstance.Enum<>(java.util.Arrays.asList(SearchSyncMode.values()), SearchSyncMode.CODEC),
+                anyInstalled ? options().searching.searchSyncMode : SearchSyncMode.OFF,
+                value -> {
+                    if (anyInstalled) {
+                        options().searching.searchSyncMode = value;
+                    }
+                }
         );
     }
 }

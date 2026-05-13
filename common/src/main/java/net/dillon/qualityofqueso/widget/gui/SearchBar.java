@@ -1,6 +1,8 @@
 package net.dillon.qualityofqueso.widget.gui;
 
 import net.dillon.qualityofqueso.util.ModConstants;
+import net.dillon.qualityofqueso.util.SearchSyncHelper;
+import net.dillon.qualityofqueso.util.SearchSyncMode;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -16,12 +18,13 @@ import static net.dillon.qualityofqueso.helper.ModHelper.ofQoQ;
 import static net.dillon.qualityofqueso.helper.ModHelper.options;
 
 /**
- * An representation of a search bar.
+ * A representation of a search bar.
  */
 public class SearchBar extends EditBox {
     private static final int OVERLAY_WIDTH = 96;
     private static final int OVERLAY_HEIGHT = 18;
     private final Font font;
+    private boolean isSyncing = false;
 
     public SearchBar(Font font, int x, int y) {
         super(font, x, y, 90, 12, Component.empty());
@@ -31,6 +34,25 @@ public class SearchBar extends EditBox {
         }
         this.setMaxLength(50);
         this.setHint(Component.translatable("qualityofqueso.gui.search.placeholder").withStyle(ChatFormatting.ITALIC));
+
+        this.setResponder(text -> {
+            if (!isSyncing) {
+                ModConstants.SAVED_TEXT = text;
+                SearchSyncHelper.updateExternal(text);
+            }
+        });
+    }
+
+
+    public void setTextFromExternal(String text) {
+        SearchSyncMode mode = options().searching.searchSyncMode;
+        if (mode == SearchSyncMode.OFF || mode == SearchSyncMode.PUSH) {
+            return;
+        }
+
+        this.isSyncing = true;
+        this.setValue(text);
+        this.isSyncing = false;
     }
 
     /**

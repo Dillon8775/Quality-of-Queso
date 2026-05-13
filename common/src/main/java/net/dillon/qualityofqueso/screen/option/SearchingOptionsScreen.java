@@ -1,6 +1,7 @@
 package net.dillon.qualityofqueso.screen.option;
 
 import net.dillon.qualityofqueso.helper.ModHelper;
+import net.dillon.qualityofqueso.util.CheckForRecipeMod;
 import net.dillon.qualityofqueso.widget.gui.ColorField;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -12,7 +13,7 @@ import static net.dillon.qualityofqueso.util.ModConstants.DEFAULT_TRANSPARENT_SE
 import static net.dillon.qualityofqueso.util.ModConstants.SEARCH_TEXTURE;
 
 public class SearchingOptionsScreen extends AbstractModOptionsScreen {
-    private AbstractWidget searchBarPosition, searchBarColor, underlineText;
+    private AbstractWidget searchBarPosition, searchBarColor, underlineText, searchSyncMode;
     private ColorField searchBarTextColorField;
 
     public SearchingOptionsScreen(Screen parent) {
@@ -31,27 +32,31 @@ public class SearchingOptionsScreen extends AbstractModOptionsScreen {
         this.searchBarPosition = createOption(ListOptions.searchBarPosition());
         this.searchBarColor = createOption(ListOptions.searchBarColor());
         this.underlineText = createOption(ListOptions.underlineText());
+        this.searchSyncMode = createOption(ListOptions.searchSyncMode());
 
         return new AbstractWidget[]{
                 createOption(ListOptions.containerSearching()),
                 createOption(ListOptions.inventorySearching()),
-
                 createOption(ListOptions.quickSearch()),
                 this.searchBarPosition,
-
                 this.searchBarColor,
                 this.searchBarTextColorField,
-
                 this.underlineText,
                 createOption(ListOptions.saveSearchText()),
+                this.searchSyncMode
         };
     }
 
     @Override
     protected void activateButtons() {
         boolean searchingEnabled = ModHelper.options().searching.containerSearching || ModHelper.options().searching.inventorySearching;
+        boolean recipeViewerInstalled = CheckForRecipeMod.isAnyViewerInstalled();
+
         this.searchBarPosition.active = searchingEnabled;
         this.searchBarColor.active = searchingEnabled;
+
+        this.searchSyncMode.active = searchingEnabled && recipeViewerInstalled;
+
         this.searchBarTextColorField.active = false;
         this.underlineText.active = false;
     }
