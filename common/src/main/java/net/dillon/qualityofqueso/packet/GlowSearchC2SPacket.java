@@ -1,40 +1,27 @@
 package net.dillon.qualityofqueso.packet;
 
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
-
-import static net.dillon.qualityofqueso.util.ModUtil.ofQoQ;
+import net.minecraft.network.FriendlyByteBuf;
 
 /**
  * The payload (or packet) for taking in the data required to make item frames glow.
  */
-public record GlowSearchC2SPacket(String query, boolean matchCase, boolean clear, int timer,
-                                  int radius) implements CustomPacketPayload {
-    private static final ResourceLocation ID = ofQoQ("glow_search");
-    public static final Type<GlowSearchC2SPacket> PACKET_TYPE = new Type<>(ID);
-    public static final StreamCodec<RegistryFriendlyByteBuf, GlowSearchC2SPacket> CODEC =
-            StreamCodec.composite(
-                    ByteBufCodecs.STRING_UTF8,
-                    GlowSearchC2SPacket::query,
-                    ByteBufCodecs.BOOL,
-                    GlowSearchC2SPacket::matchCase,
-                    ByteBufCodecs.BOOL,
-                    GlowSearchC2SPacket::clear,
-                    ByteBufCodecs.INT,
-                    GlowSearchC2SPacket::timer,
-                    ByteBufCodecs.INT,
-                    GlowSearchC2SPacket::radius,
-                    GlowSearchC2SPacket::new
-            );
+public record GlowSearchC2SPacket(String query, boolean matchCase, boolean clear, int timer, int radius) {
 
     /**
-     * Returns the {@code id} for the Glow Search payload.
+     * Decoding for glow search packet.
      */
-    @Override
-    public Type<? extends CustomPacketPayload> type() {
-        return PACKET_TYPE;
+    public GlowSearchC2SPacket(FriendlyByteBuf buf) {
+        this(buf.readUtf(), buf.readBoolean(), buf.readBoolean(), buf.readInt(), buf.readInt());
+    }
+
+    /**
+     * Encoding for glow search packet.
+     */
+    public void encode(FriendlyByteBuf buf) {
+        buf.writeUtf(this.query);
+        buf.writeBoolean(this.matchCase);
+        buf.writeBoolean(this.clear);
+        buf.writeInt(this.timer);
+        buf.writeInt(this.radius);
     }
 }

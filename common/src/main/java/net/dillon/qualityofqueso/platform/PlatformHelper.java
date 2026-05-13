@@ -1,6 +1,8 @@
 package net.dillon.qualityofqueso.platform;
 
 import net.blay09.mods.balm.api.Balm;
+import net.dillon.qualityofqueso.util.MixinPluginUtil;
+import net.dillon.qualityofqueso.util.VersionType;
 
 import java.nio.file.Path;
 
@@ -10,7 +12,14 @@ public interface PlatformHelper {
      * @return the mod version.
      */
     default String getModVersion() {
-        return "1.7";
+        return "1.7.1";
+    }
+
+    /**
+     * @return the version type.
+     */
+    default VersionType getVersionType() {
+        return VersionType.PATCH;
     }
 
     /**
@@ -21,7 +30,19 @@ public interface PlatformHelper {
     }
 
     /**
+     * @return if the platform is on Forge.
+     */
+    default boolean isForge() {
+        return Balm.getPlatform().equals("forge");
+    }
+
+    /**
      * Gets the config directory for the supported platform.
      */
     Path getConfigDir();
+
+    /**
+     * @return if a mod is loaded on a specific platform. Used only in {@link MixinPluginUtil}.
+     */
+    boolean isModLoaded(String modId);
 }

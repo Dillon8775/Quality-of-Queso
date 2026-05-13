@@ -1,0 +1,26 @@
+package net.dillon.qualityofqueso.screen.option;
+
+import net.minecraft.client.OptionInstance;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+
+public class DebugOptionsScreen extends AbstractModOptionsScreen {
+
+    public DebugOptionsScreen(Screen parent) {
+        super(parent, Component.translatable("qualityofqueso.gui.title.debug_huds"));
+    }
+
+    @Override
+    protected OptionInstance<?>[] options() {
+        return new OptionInstance[]{
+                ListOptions.inGameTime(),
+                ListOptions.realLifeTime(),
+
+                ListOptions.date(),
+                ListOptions.simpleCoordinates(),
+
+                ListOptions.accurateFacing(),
+                ListOptions.fastestFlight()
+        };
+    }
+}

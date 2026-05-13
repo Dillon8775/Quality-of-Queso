@@ -35,10 +35,6 @@ repositories {
                     name = 'ParchmentMC'
                     url = 'https://maven.parchmentmc.org/'
                 },
-                maven {
-                    name = 'NeoForge'
-                    url = 'https://maven.neoforged.net/releases'
-                }
         )
         filter { includeGroup('org.parchmentmc.data') }
     }
@@ -86,7 +82,6 @@ processResources {
             "forge_version"                : libs.forge.get().version,
             "fabric_api_version"           : libs.fabricApi.get().version,
             "fabric_loader_version"        : libs.fabricLoader.get().version,
-            "neoforge_loader_version_range": neoforge_loader_version_range,
             "mod_name"                     : mod_name,
             "mod_main"                     : mod_name.split(/\s+/).collect { word -> word.capitalize() }.join(""),
             "logo"                         : logo,
@@ -94,7 +89,6 @@ processResources {
             "mod_id"                       : mod_id,
             "license"                      : license,
             "description"                  : project.description,
-            "neoforge_version"             : libs.neoForge.get().version,
             "credits"                      : credits,
             "balm_version"                 : balm_version,
             "java_version"                 : java_version,

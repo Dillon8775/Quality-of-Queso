@@ -1,19 +1,17 @@
 plugins {
     id 'multiloader-common'
-    alias libs.plugins.modDevGradle
-}
-
-neoForge {
-    neoFormVersion = libs.neoForm.get().version
-    // Automatically enable AccessTransformers if the file exists
-    def at = file('src/main/resources/META-INF/accesstransformer.cfg')
-    if (at.exists()) {
-        accessTransformers.from(at.absolutePath)
-    }
-    parchment.parchmentArtifact = libs.parchment.get().toString()
+    alias libs.plugins.fabricLoom
 }
 
 dependencies {
+    minecraft libs.minecraft
+    mappings loom.layered() {
+        officialMojangMappings()
+        parchment variantOf(libs.parchment) {
+            artifactType('zip')
+        }
+    }
+    modCompileOnly libs.fabricLoader
     compileOnly libs.mixin
 }
 

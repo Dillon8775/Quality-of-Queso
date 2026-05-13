@@ -25,20 +25,6 @@ public abstract class ItemFrameMixin extends HangingEntity implements GlowCountd
         super(p_31703_, p_31704_);
     }
 
-    @Override
-    public void tick() {
-        // Decrement timer
-        if (this.glowTicksRemaining > 0) {
-            this.glowTicksRemaining--;
-
-            // Once timer reaches 0, turn off glow effect
-            if (this.glowTicksRemaining == 0) {
-                ((ItemFrame) (Object) this).setGlowingTag(false);
-            }
-        }
-        super.tick();
-    }
-
     /**
      * Sets the glow ticks remaining.
      */
@@ -51,15 +37,29 @@ public abstract class ItemFrameMixin extends HangingEntity implements GlowCountd
      * Writes the glow ticks remaining to NBT.
      */
     @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
-    private void writeGlowTicks(CompoundTag tag, CallbackInfo ci) {
-        tag.putInt("GlowTicksRemaining", this.glowTicksRemaining);
+    private void writeGlowTicks(CompoundTag output, CallbackInfo ci) {
+        output.putInt("GlowTicksRemaining", this.glowTicksRemaining);
     }
 
     /**
      * Reads the glow ticks remaining to NBT.
      */
     @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
-    private void readGlowTicks(CompoundTag tag, CallbackInfo ci) {
-        this.glowTicksRemaining = tag.getInt("GlowTicksRemaining");
+    private void readGlowTicks(CompoundTag input, CallbackInfo ci) {
+        this.glowTicksRemaining = input.getInt("GlowTicksRemaining");
+    }
+
+    @Override
+    public void tick() {
+        // Decrement timer
+        if (this.glowTicksRemaining > 0) {
+            this.glowTicksRemaining--;
+
+            // Once timer reaches 0, turn off glow effect
+            if (this.glowTicksRemaining == 0) {
+                ((ItemFrame) (Object) this).setGlowingTag(false);
+            }
+        }
+        super.tick();
     }
 }

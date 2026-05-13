@@ -10,7 +10,6 @@ import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
-import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
@@ -21,8 +20,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Objects;
 
-import static net.dillon.qualityofqueso.util.AccessorUtil.key;
-import static net.dillon.qualityofqueso.util.ModUtil.*;
+import static net.dillon.qualityofqueso.helper.ManagementHelper.hoveredSlotHasItem;
+import static net.dillon.qualityofqueso.helper.MethodHelper.key;
+import static net.dillon.qualityofqueso.helper.ModHelper.*;
 
 @Mixin(CreativeModeInventoryScreen.class)
 public abstract class CreativeModeInventoryScreenMixin extends AbstractContainerScreen<CreativeModeInventoryScreen.ItemPickerMenu> {
@@ -47,26 +47,59 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
      * Closes the screen when clicking outside of the menu.
      */
     @Inject(method = "slotClicked", at = @At("HEAD"))
-    private void closeButtonOnClickOutOfBounds(Slot slot, int slotId, int mouseButton, ClickType type, CallbackInfo ci) {
-        if (modEnabled(this.minecraft) && options().misc.quickGuiExit && this.menu.getCarried().isEmpty() && mouseButton == 0 && slot == null) {
+    private void quickGuiClose(Slot slot, int slotId, int mouseButton, ClickType type, CallbackInfo ci) {
+        if (!modEnabled(this.minecraft)) {
+            return;
+        }
+
+        if (options().misc.quickGuiExit && this.menu.getCarried().isEmpty() && mouseButton == 0 && slot == null) {
             this.onClose();
         }
     }
 
     /**
-     * Allows pressing of any minecraft hotbar keybind to unfocus search bar and bring item into inventory.
+     * Handles key pressing in the creative mode tab screen and fixes a weird bug with the creative tab search.
      */
-    @Inject(method = "keyPressed", at = @At(value = "HEAD"), cancellable = true)
-    private void unfocusSearchBox(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-        if (!modEnabled(this.minecraft) || selectedTab.getType() != CreativeModeTab.Type.SEARCH || this.hoveredSlot == null || !this.hoveredSlot.hasItem() || this.searchBox == null || !this.searchBox.isFocused()) {
+    @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
+    private void allowCharsUnfocusSearchBar(int keycode, int scancode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
+        if (!modEnabled(this.minecraft)) {
             return;
         }
 
-        for (int i = 0; i < 9; i++) {
-            if (Minecraft.getInstance().options.keyHotbarSlots[i].matches(keyCode, scanCode)) {
+        if (selectedTab.getType() == CreativeModeTab.Type.SEARCH && hoveredSlotHasItem(this.hoveredSlot) && this.searchBox != null && this.searchBox.isFocused()) {
+            for (int i = 0; i < 9; i++) {
+                if (Minecraft.getInstance().options.keyHotbarSlots[i].matches(keycode, scancode)) {
+                    this.ignoreTextInput = true;
+                    this.searchBox.setFocused(true);
+                    cir.setReturnValue(super.keyPressed(keycode, scancode, modifiers));
+                }
+            }
+        }
+
+        if (options().searching.quickSearch.enabled()) {
+            if (hoveredSlotHasItem(this.hoveredSlot) && !this.searchBox.isFocused()) {
                 this.ignoreTextInput = true;
-                this.searchBox.setFocused(true);
-                cir.setReturnValue(super.keyPressed(keyCode, scanCode, modifiers));
+                cir.setReturnValue(super.keyPressed(keycode, scancode, modifiers));
+            }
+
+            if (options().accessibility.preventEFromTyping && keycode == key(Minecraft.getInstance().options.keyInventory).getValue() && !this.searchBox.isFocused()) {
+                this.ignoreTextInput = true;
+                this.onClose();
+                cir.setReturnValue(true);
+            }
+
+            for (int key : popularKeys()) {
+                if (keycode == key) {
+                    this.ignoreTextInput = false;
+                    cir.setReturnValue(true);
+                }
+            }
+
+            for (int key : allDisallowedKeys()) {
+                if (keycode == key) {
+                    this.ignoreTextInput = true;
+                    cir.setReturnValue(super.keyPressed(keycode, scancode, modifiers));
+                }
             }
         }
     }
@@ -75,7 +108,7 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
      * Allow typing in creative menu regardless of what menu.
      */
     @Overwrite
-    public boolean charTyped(char c, int l) {
+    public boolean charTyped(char ch, int scancode) {
         if (this.ignoreTextInput || (!(options().searching.quickSearch.enabled()) && selectedTab.getType() != CreativeModeTab.Type.SEARCH)) {
             return false;
         } else {
@@ -92,7 +125,7 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
                 }
             }
             String s = this.searchBox.getValue();
-            if (this.searchBox.charTyped(c, l)) {
+            if (this.searchBox.charTyped(ch, scancode)) {
                 if (!Objects.equals(s, this.searchBox.getValue())) {
                     this.refreshSearchResults();
                 }
@@ -100,39 +133,6 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
                 return true;
             } else {
                 return false;
-            }
-        }
-    }
-
-    /**
-     * Handles key pressing in the creative mode tab screen.
-     */
-    @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
-    private void allowCertainChars(int keyCode, int scanCode, int modifiers, CallbackInfoReturnable<Boolean> cir) {
-        if (modEnabled(this.minecraft) && options().searching.quickSearch.enabled()) {
-            if (this.hoveredSlot != null && this.hoveredSlot.getItem() != ItemStack.EMPTY && !this.searchBox.isFocused()) {
-                this.ignoreTextInput = true;
-                cir.setReturnValue(super.keyPressed(keyCode, scanCode, modifiers));
-            }
-
-            if (options().accessibility.preventEFromTyping && keyCode == key(Minecraft.getInstance().options.keyInventory).getValue() && !this.searchBox.isFocused()) {
-                this.ignoreTextInput = true;
-                this.onClose();
-                cir.setReturnValue(true);
-            }
-
-            for (int key : popularKeys) {
-                if (keyCode == key) {
-                    this.ignoreTextInput = false;
-                    cir.setReturnValue(true);
-                }
-            }
-
-            for (int key : disallowedKeys) {
-                if (keyCode == key) {
-                    this.ignoreTextInput = true;
-                    cir.setReturnValue(super.keyPressed(keyCode, scanCode, modifiers));
-                }
             }
         }
     }

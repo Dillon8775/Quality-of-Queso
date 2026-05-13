@@ -1,6 +1,10 @@
 dependencies {
+    modImplementation(libs.balmCommon) {
+        changing = libs.versions.balm.get().contains("SNAPSHOT")
+    }
     modImplementation(libs.balmFabric) {
         changing = libs.versions.balm.get().contains("SNAPSHOT")
+        exclude group: "net.blay09.mods", module: "shared-bridge"
     }
     modImplementation(libs.kumaFabric)
 

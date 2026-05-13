@@ -1,0 +1,39 @@
+package net.dillon.qualityofqueso.instance;
+
+import net.dillon.qualityofqueso.instance.management.ManagementInstance;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.world.inventory.ClickType;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import static net.dillon.qualityofqueso.helper.ManagementHelper.hoveredSlotHasItem;
+import static net.dillon.qualityofqueso.helper.ModHelper.options;
+import static net.dillon.qualityofqueso.keybind.ModKeybinds.hasClickedToLock;
+
+/**
+ * Handles mouse dragging events.
+ */
+public class MouseDragInstance extends ManagementInstance {
+
+    public MouseDragInstance(QuesoScreen screen) {
+        super(screen);
+    }
+
+    /**
+     * Handles drag-sorting, and selecting/locking slots when dragging the mouse.
+     */
+    public void handleSingularMovingAndLockingOrSelectingSlots(int bl, CallbackInfoReturnable<Boolean> cir) {
+        if (isExcludingOrLockingSlots() && hasClickedToLock(bl)) {
+            lockedSlotsInstance().selectOrLockSlot(bl, cir);
+        }
+
+        if (bl == 0
+                && hoveredSlotHasItem(instance().getScreensHoveredSlot()) && instance().getCurrentInventory() != null
+                && !transferInstance().canSingularMove()
+                && !isExcludingOrLockingSlots()
+                && !lockedSlotsInstance().isLockedSlot(instance().getScreensHoveredSlot().index)
+                && !isExcludedSlot(instance().getScreensHoveredSlot().index)
+                && (options().isAlwaysQuickMove() || (options().management.dragMoving && Screen.hasShiftDown()))) {
+            sendClickSlotPacket(instance().getScreensHoveredSlot().index, ClickType.QUICK_MOVE);
+        }
+    }
+}

@@ -1,0 +1,118 @@
+package net.dillon.qualityofqueso.util;
+
+import net.dillon.qualityofqueso.option.eum.management.sorting.CurrentSortingMode;
+import net.dillon.qualityofqueso.platform.MultiLoader;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
+import static net.dillon.qualityofqueso.helper.ModHelper.ofQoQ;
+import static net.dillon.qualityofqueso.helper.ModHelper.options;
+
+/**
+ * Constant variables and cooldowns for Quality of Queso.
+ */
+public class ModConstants {
+    // Common constants
+    public static final String MOD_ID = "qualityofqueso";
+    public static final Component VERSION = Component.literal(MultiLoader.getPlatform().getModVersion()).withStyle(ChatFormatting.GOLD);
+    public static final String WIKI_LINK = "https://quality-of-queso.fandom.com/wiki/Quality_of_Queso_Wiki";
+    public static final String DISCORD_LINK = "https://discord.gg/vfqEAn4YFy";
+    public static final String SHOWCASE_VIDEO_LINK = "https://youtu.be/02wfcgHkPmQ";
+    public static final String HEX_COLOR_PICKER = "https://share.google/mamZCaKR5jkRueJ7k";
+    @Deprecated
+    public static final String RESOURCE_PACK_TEMPLATE = "https://1drv.ms/f/c/dde4bd527f59679e/IgAnwmEFKQchQ727NndBW9D9AbeVC4Jl8CuXTXMQ_CWUorw?e=Q5gEW0";
+
+    // Static variables for management
+    public static int RENDERED_BUTTONS = 0;
+    public static int MOVE_AMOUNT = 1;
+    public static Container CURRENT_CONTAINER = null;
+
+    // Button names and paths
+    public static final String TRANSFER_INVENTORY_BUTTON_NAME = "transfer_inventory";
+    public static final String TRANSFER_INVENTORY_BUTTON_PATH = "transfer/inventory/";
+    public static final String TRANSFER_CONTAINER_BUTTON_NAME = "transfer_container";
+    public static final String TRANSFER_CONTAINER_BUTTON_PATH = "transfer/container/";
+    public static final String QUICK_DROP_BUTTON_NAME = "quick_drop";
+    public static final String MOVE_ONE_PATH = "singular_moving/move_one";
+    public static final String BASE_BUTTON_NAME = "button";
+    public static final String BASE_BUTTON_HOVERED_PATH = "base/hovered/basic_hovered";
+
+    // Cooldowns
+    public static final int DEFAULT_LOCKED_SLOT_SOUND_COOLDOWN = 3;
+    public static int LOCKED_SLOT_SOUND_COOLDOWN = DEFAULT_LOCKED_SLOT_SOUND_COOLDOWN;
+    public static final int DEFAULT_SORT_SOUND_COOLDOWN = 2;
+    public static int SORT_SOUND_COOLDOWN = DEFAULT_SORT_SOUND_COOLDOWN;
+    public static final int DEFAULT_TRACKED_CONTAINER_COOLDOWN = 2;
+    public static int TRACKED_CONTAINER_COOLDOWN = DEFAULT_TRACKED_CONTAINER_COOLDOWN;
+
+    // Other global variables
+    public static Map<Integer, Set<Integer>> SAVED_EXCLUDED_SLOTS = new HashMap<>();
+    public static CurrentSortingMode GLOBAL_SORTING_MODE = options().sorting.currentSortingMode;
+
+    // Texture constants
+    public static final String CHEESE_WHEEL_TEXTURE = "widget/logo";
+    public static final String CHEESE_WHEEL_BUTTON_TEXTURE = "textures/gui/sprites/widget/cheese_wheel.png";
+    public static final String ENABLED_TEXTURE = "sprites/widget/enabled";
+    public static final String DISABLED_TEXTURE = "sprites/widget/disabled";
+    public static final String OPEN_SCREENSHOTS_DIRECTORY_TEXTURE = "textures/gui/sprites/widget/screenshots.png";
+    public static final String OPEN_WORLD_DIRECTORY_TEXTURE = "textures/gui/sprites/widget/world_folder.png";
+    public static final String ENDER_CHEST = "textures/gui/sprites/widget/ender_chest.png";
+    public static final String DISCORD_TEXTURE = "textures/gui/sprites/widget/discord.png";
+    public static final String YOUTUBE_TEXTURE = "textures/gui/sprites/widget/youtube.png";
+    @Deprecated
+    public static final String LOCKED_TEXTURE = "textures/gui/sprites/locked_slot/locked.png";
+    public static final String WIKI_TEXTURE = "textures/gui/sprites/widget/wiki.png";
+    public static final String MULTI_CONFIG_TEXTURE = "textures/gui/sprites/widget/multi_config.png";
+    @Deprecated
+    public static final ResourceLocation SEARCH_TEXTURE = new ResourceLocation("icon/search");
+    @Deprecated
+    public static final ResourceLocation SLOT_CRITICAL = ofQoQ("hud/colored_slot/slot_critical");
+    @Deprecated
+    public static final ResourceLocation SLOT_LOW = ofQoQ("hud/colored_slot/slot_low");
+    @Deprecated
+    public static final ResourceLocation SLOT_AVERAGE = ofQoQ("hud/colored_slot/slot_average");
+    @Deprecated
+    public static final ResourceLocation SLOT_GOOD = ofQoQ("hud/colored_slot/slot_good");
+    @Deprecated
+    public static final ResourceLocation SELECTED_RECIPE = ofQoQ("slot/selected_recipe");
+
+    // Config constants
+    public static final String ROOT_CONFIG_DIR = "qualityofqueso";
+    public static final String DEFAULT_CONFIG_DIR = "qualityofqueso/global";
+    public static final String DEFAULT_SERVER_CONFIG_DIR = "qualityofqueso/server-configs/";
+    public static final String DEFAULT_CLIENT_CONFIG_FILE_NAME = "client.json";
+    public static final String DEFAULT_COMMON_CONFIG_FILE_NAME = "common.json";
+    public static final String DEFAULT_UNIVERSAL_CONFIG_FILE_NAME = "universal.json";
+    public static final String DEFAULT_CONTAINER_DATA_FILE_NAME = "container_data.json";
+    public static final String DEFAULT_LOCKED_CONTAINER_SLOTS_FILE_NAME = "locked_container_slots.json";
+    public static final String DEFAULT_LOCKED_PLAYER_SLOTS_FILE_NAME = "locked_player_slots.json";
+
+    // HUD constants
+    public static double PLAYER_FALL_DISTANCE;
+    public static boolean SHOULD_WARN_OF_ELYTRA;
+    public static boolean CAN_ACTUALLY_RENDER_ARMOR_HOTBAR;
+    public static final int[] ARMOR_TIMERS = new int[4];
+    public static final ItemStack[] LAST_ARMOR_STACKS = new ItemStack[4];
+
+    // Shulker state constants
+    public static final String FILTERED = "filtered";
+    public static final String TAG_FILTERED = "tag_filtered";
+    public static final String FILTER_ITEMS = "filter_items";
+    public static final String LOCKED_SLOTS = "locked_slots";
+    public static final String SORTING_MODE = "sorting_mode";
+
+    // Search bar constants
+    public static String SAVED_TEXT = "";
+    public static String SAVED_ITEM_FRAME_TEXT = "";
+
+    // Search field colors
+    public static final int DEFAULT_TRANSPARENT_SEARCH_BAR_TEXT_COLOR = -12566464;
+    public static final int DEFAULT_LOCKED_SLOT_COLOR = 1721803007;
+}
