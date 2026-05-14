@@ -12,6 +12,7 @@ import net.dillon.qualityofqueso.option.eum.hud.ArmorStatus;
 import net.dillon.qualityofqueso.option.eum.hud.ItemCounter;
 import net.dillon.qualityofqueso.option.eum.management.*;
 import net.dillon.qualityofqueso.option.eum.management.sorting.CurrentSortingMode;
+import net.dillon.qualityofqueso.option.eum.management.sorting.DefaultSortingMode;
 import net.dillon.qualityofqueso.option.eum.management.sorting.GlobalSortingMode;
 import net.dillon.qualityofqueso.option.eum.management.sorting.Sorting;
 import net.dillon.qualityofqueso.option.eum.misc.EChestButton;
@@ -102,6 +103,12 @@ public class ListOptions {
     protected static OptionInstance<Boolean> lockSound() {
         return createClientBooleanOption("lock_sound", true, options().lockedSlots.lockSound,
                 (options, value) -> options.lockedSlots.lockSound = value
+        );
+    }
+
+    protected static OptionInstance<Boolean> preventDropping() {
+        return createClientBooleanOption("prevent_dropping", true, options().lockedSlots.preventDropping,
+                (options, value) -> options.lockedSlots.preventDropping = value
         );
     }
 
@@ -310,15 +317,15 @@ public class ListOptions {
         );
     }
 
-    protected static OptionInstance<Boolean> preventRageQuitting() {
-        return createClientBooleanOption("prevent_rage_quitting", false, options().misc.preventRageQuitting,
-                (options, value) -> options.misc.preventRageQuitting = value
+    protected static OptionInstance<Boolean> antiRageQuit() {
+        return createClientBooleanOption("anti_rage_quit", true, options().misc.antiRageQuit,
+                (options, value) -> options.misc.antiRageQuit = value
         );
     }
 
-    protected static OptionInstance<Boolean> alwaysPreventRageQuitting() {
-        return createClientBooleanOption("always_prevent_rage_quitting", false, options().misc.alwaysPreventRageQuitting,
-                (options, value) -> options.misc.alwaysPreventRageQuitting = value
+    protected static OptionInstance<Boolean> forceAntiRageQuit() {
+        return createClientBooleanOption("force_anti_rage_quit", true, options().misc.forceAntiRageQuit,
+                (options, value) -> options.misc.forceAntiRageQuit = value
         );
     }
 
@@ -654,11 +661,11 @@ public class ListOptions {
                 option -> {
                     Component text = ModTexts.BLANK;
                     switch (option) {
-                        case ALPHABETICALLY -> text = Component.translatable("qualityofqueso.options.global_sorting_mode.alphabetically.tooltip");
-                        case BY_TAG -> text = Component.translatable("qualityofqueso.options.global_sorting_mode.by_tag.tooltip");
-                        case DESCENDING -> text = Component.translatable("qualityofqueso.options.global_sorting_mode.descending.tooltip");
-                        case ASCENDING -> text = Component.translatable("qualityofqueso.options.global_sorting_mode.ascending.tooltip");
-                        case CREATIVE_MENU -> text = Component.translatable("qualityofqueso.options.global_sorting_mode.creative_menu.tooltip");
+                        case ALPHABETICALLY -> text = Component.translatable("qualityofqueso.options.sorting_mode.alphabetically.tooltip");
+                        case BY_TAG -> text = Component.translatable("qualityofqueso.options.sorting_mode.by_tag.tooltip");
+                        case DESCENDING -> text = Component.translatable("qualityofqueso.options.sorting_mode.descending.tooltip");
+                        case ASCENDING -> text = Component.translatable("qualityofqueso.options.sorting_mode.ascending.tooltip");
+                        case CREATIVE_MENU -> text = Component.translatable("qualityofqueso.options.sorting_mode.creative_menu.tooltip");
                     }
                     String appended = !text.equals(ModTexts.BLANK) ? "\n\n" : "";
                     return Tooltip.create(Component.translatable("qualityofqueso.options.global_sorting_mode.tooltip").append(appended).append(text));
@@ -680,6 +687,28 @@ public class ListOptions {
                     }
                     options.sorting.globalSortingMode = value;
                 }
+        );
+    }
+
+    protected static OptionInstance<DefaultSortingMode> defaultSortingMode() {
+        return createEnumOption(
+                "default_sorting_mode",
+                option -> {
+                    Component text = ModTexts.BLANK;
+                    switch (option) {
+                        case ALPHABETICALLY -> text = Component.translatable("qualityofqueso.options.sorting_mode.alphabetically.tooltip");
+                        case BY_TAG -> text = Component.translatable("qualityofqueso.options.sorting_mode.by_tag.tooltip");
+                        case DESCENDING -> text = Component.translatable("qualityofqueso.options.sorting_mode.descending.tooltip");
+                        case ASCENDING -> text = Component.translatable("qualityofqueso.options.sorting_mode.ascending.tooltip");
+                        case CREATIVE_MENU -> text = Component.translatable("qualityofqueso.options.sorting_mode.creative_menu.tooltip");
+                    }
+                    String appended = !text.equals(ModTexts.BLANK) ? "\n\n" : "";
+                    return Tooltip.create(Component.translatable("qualityofqueso.options.default_sorting_mode.tooltip").append(appended).append(text));
+                },
+                DefaultSortingMode.values(),
+                DefaultSortingMode.CODEC,
+                options().sorting.defaultSortingMode,
+                (options, value) -> options.sorting.defaultSortingMode = value
         );
     }
 
@@ -729,7 +758,7 @@ public class ListOptions {
                 "show_lock",
                 option -> switch (option) {
                     case EVERYWHERE -> Tooltip.create(Component.translatable("qualityofqueso.options.show_lock.everywhere.tooltip"));
-                    case GUI_ONLY -> Tooltip.create(Component.translatable("qualityofqueso.options.show_lock.gui_only.tooltip"));
+                    case HUD_ONLY -> Tooltip.create(Component.translatable("qualityofqueso.options.show_lock.hud_only.tooltip"));
                     case SCREEN_ONLY -> Tooltip.create(Component.translatable("qualityofqueso.options.show_lock.screen_only.tooltip"));
                     case OFF -> Tooltip.create(Component.translatable("qualityofqueso.options.show_lock.off.tooltip"));
                 },

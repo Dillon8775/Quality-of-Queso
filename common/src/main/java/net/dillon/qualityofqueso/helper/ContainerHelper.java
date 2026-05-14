@@ -5,6 +5,7 @@ import net.dillon.qualityofqueso.option.ContainerData;
 import net.dillon.qualityofqueso.option.LockedContainerSlots;
 import net.dillon.qualityofqueso.option.LockedPlayerSlots;
 import net.dillon.qualityofqueso.option.eum.management.sorting.CurrentSortingMode;
+import net.dillon.qualityofqueso.option.eum.management.sorting.DefaultSortingMode;
 import net.dillon.qualityofqueso.packet.RequestShulkerStateC2SPacket;
 import net.dillon.qualityofqueso.packet.SyncShulkerStateS2CPacket;
 import net.dillon.qualityofqueso.packet.UpdateShulkerStateC2SPacket;
@@ -217,26 +218,60 @@ public class ContainerHelper {
         // Get the active shulker's sorting mode, and set the sorting mode to it
         if (activeShulkerPos != null) {
             ShulkerState state = shulkerStateCache.get(activeShulkerPos);
-            ModHelper.options().sorting.currentSortingMode = CurrentSortingMode.fromName(state == null ? null : state.sortingMode);
+            String sortingMode = state == null ? null : state.sortingMode;
+            if (sortingMode == null || sortingMode.isBlank()) {
+                CurrentSortingMode mode = getDefaultSortingModeForContainer();
+                ModHelper.options().sorting.currentSortingMode = mode;
+                if (state != null) {
+                    state.sortingMode = mode.name();
+                    pushActiveShulkerStateToServer();
+                }
+            } else {
+                ModHelper.options().sorting.currentSortingMode = CurrentSortingMode.fromName(sortingMode);
+            }
             return;
         }
 
         // Otherwise, get a container's sorting mode, and set the sorting mode to it
         String key = activeSortKey();
         if (key.isEmpty()) {
-            ModHelper.options().sorting.currentSortingMode = CurrentSortingMode.ALPHABETICAL;
+            ModHelper.options().sorting.currentSortingMode = getDefaultSortingModeForContainer();
             return;
         }
 
         // If the container or object does not have a sorting mode, automatically set it to alphabetical
         String stored = containerSortingModes().get(key);
         if (stored == null || stored.isBlank()) {
-            ModHelper.options().sorting.currentSortingMode = CurrentSortingMode.ALPHABETICAL;
+            CurrentSortingMode mode = getDefaultSortingModeForContainer();
+            ModHelper.options().sorting.currentSortingMode = mode;
+            containerSortingModes().put(key, mode.name());
+            ContainerData.INSTANCE.save();
             return;
         }
 
         // Set the sorting mode to the sorting mode's name
         ModHelper.options().sorting.currentSortingMode = CurrentSortingMode.fromName(stored);
+    }
+
+    /**
+     * @return the default sorting mode to use for unsorted containers.
+     */
+    private static CurrentSortingMode getDefaultSortingModeForContainer() {
+        if (options().sorting.useGlobalSortingMode) {
+            return CurrentSortingMode.ALPHABETICAL;
+        } else {
+            if (options().sorting.defaultSortingMode == DefaultSortingMode.BY_TAG) {
+                return CurrentSortingMode.TAG;
+            } else if (options().sorting.defaultSortingMode == DefaultSortingMode.ASCENDING) {
+                return CurrentSortingMode.COUNT_ASCENDING;
+            } else if (options().sorting.defaultSortingMode == DefaultSortingMode.DESCENDING) {
+                return CurrentSortingMode.COUNT_DESCENDING;
+            } else if (options().sorting.defaultSortingMode == DefaultSortingMode.CREATIVE_MENU) {
+                return CurrentSortingMode.CREATIVE_MENU;
+            }
+        }
+
+        return CurrentSortingMode.ALPHABETICAL;
     }
 
     /**
@@ -880,6 +915,6 @@ public class ContainerHelper {
         boolean tagFiltered;
         List<String> filterItems = new ArrayList<>();
         List<Integer> lockedSlots = new ArrayList<>();
-        String sortingMode = CurrentSortingMode.ALPHABETICAL.name();
+        String sortingMode = getDefaultSortingModeForContainer().name();
     }
 }

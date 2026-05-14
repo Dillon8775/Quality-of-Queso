@@ -31,7 +31,7 @@ public class ShulkerBoxBlockEntityMixin implements ShulkerStateHolder {
     @Unique
     private List<Integer> lockedSlots = new ArrayList<>();
     @Unique
-    private String sortingMode = "ALPHABETICAL";
+    private String sortingMode = "";
 
     /**
      * @return whether this shulker is filtered.
@@ -125,7 +125,7 @@ public class ShulkerBoxBlockEntityMixin implements ShulkerStateHolder {
     @Override
     public void setSortingMode(String sortingMode) {
         if (sortingMode == null || sortingMode.isBlank()) {
-            this.sortingMode = "ALPHABETICAL";
+            this.sortingMode = "";
             return;
         }
         this.sortingMode = sortingMode;
@@ -156,7 +156,7 @@ public class ShulkerBoxBlockEntityMixin implements ShulkerStateHolder {
                 .distinct()
                 .sorted()
                 .collect(Collectors.toCollection(ArrayList::new));
-        this.sortingMode = input.getStringOr(SORTING_MODE, "ALPHABETICAL");
+        this.sortingMode = input.getStringOr(SORTING_MODE, "");
     }
 
     /**

@@ -10,6 +10,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.AbstractRecipeBookScreen;
+import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
@@ -136,7 +137,7 @@ public class GuiHelper {
             }
             y = getTopPos(inventoryScreen) + getTitleLabelY(inventoryScreen) + containerY + l;
         } else if (screen instanceof AbstractContainerScreen<?> abstractContainerScreen) {
-            l = options().management.layout.horizontal() ? 14 : 36;
+            l = options().management.layout.horizontal() && abstractContainerScreen instanceof ContainerScreen ? 14 : 36;
             if (!options().management.layout.horizontal()) {
                 if (RENDERED_BUTTONS > 8) {
                     l += l / 3 + (RENDERED_BUTTONS > 10 ? 12 : 0);
@@ -265,7 +266,7 @@ public class GuiHelper {
      * Plays a generic ding sound.
      */
     public static void playDingSound(Minecraft minecraft) {
-        minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.ARROW_HIT_PLAYER, 0.2F, 1.0F));
+        minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.ARROW_HIT_PLAYER, 0.2F, 0.72F));
     }
 
     /**
