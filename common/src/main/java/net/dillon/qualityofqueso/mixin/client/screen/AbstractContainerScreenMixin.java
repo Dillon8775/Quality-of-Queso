@@ -130,6 +130,11 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
         return new ManagementInstance((QuesoScreen) this.screen);
     }
 
+    @Unique
+    private ModTooltipInstance modTooltipInstance() {
+        return new ModTooltipInstance((QuesoScreen) this.screen);
+    }
+
     @Override
     public void setCachedContainer(Container container) {
         this.container = container;
@@ -312,12 +317,8 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             return;
         }
 
-        ModTooltipInstance modTooltips = new ModTooltipInstance(
-                (QuesoScreen) this.screen
-        );
-        modTooltips.displaySingleMovingTooltips(graphics, this.font, mouseX, mouseY, ci);
-        modTooltips.displayEnchantmentHelperTooltips(graphics, this.font, mouseX, mouseY, ci);
-        modTooltips.displayTagsOnItems(graphics, this.font, mouseX, mouseY, ci);
+        this.modTooltipInstance().displayEnchantmentHelperTooltips(graphics, this.font, mouseX, mouseY, ci);
+        this.modTooltipInstance().displayTagsOnItems(graphics, this.font, mouseX, mouseY, ci);
     }
 
     /**

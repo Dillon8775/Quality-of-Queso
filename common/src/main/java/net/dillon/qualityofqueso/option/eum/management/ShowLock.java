@@ -7,7 +7,7 @@ import net.minecraft.util.StringRepresentable;
 
 public enum ShowLock implements StringRepresentable, OptionEnum {
     EVERYWHERE("button_or_key", "qualityofqueso.options.show_lock.everywhere"),
-    GUI_ONLY("gui_only", "qualityofqueso.options.show_lock.gui_only"),
+    HUD_ONLY("hud_only", "qualityofqueso.options.show_lock.hud_only"),
     SCREEN_ONLY("screen_only", "qualityofqueso.options.show_lock.screen_only"),
     OFF("off", "qualityofqueso.options.show_lock.off");
 
@@ -19,8 +19,8 @@ public enum ShowLock implements StringRepresentable, OptionEnum {
         return this == EVERYWHERE || this == SCREEN_ONLY;
     }
 
-    public boolean inGui() {
-        return this == EVERYWHERE || this == GUI_ONLY;
+    public boolean inHud() {
+        return this == EVERYWHERE || this == HUD_ONLY;
     }
 
     ShowLock(final String name, final String translationKey) {

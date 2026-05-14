@@ -19,23 +19,26 @@ public class ManagementOptionsScreen extends AbstractModOptionsScreen {
                 ListOptions.useGlobalSortingMode(),
                 ListOptions.globalSortingMode(),
 
+                ListOptions.defaultSortingMode(),
+                ListOptions.dragMoving(),
+
+                ListOptions.singularMoving(),
+                ListOptions.dragSorting(),
+
                 ListOptions.filtering(),
                 ListOptions.quickDrop(),
 
-                ListOptions.singularMoving(),
-                ListOptions.dragMoving(),
-
                 ListOptions.swapping(),
-                ListOptions.dragSorting(),
-
-                ListOptions.layout(),
                 ListOptions.lockSlots(),
 
+                ListOptions.layout(),
                 ListOptions.showLock(),
-                ListOptions.hardLockSlots(),
 
+                ListOptions.hardLockSlots(),
                 ListOptions.lockSound(),
-                ListOptions.playSounds(),
+
+                ListOptions.preventDropping(),
+                ListOptions.playSounds()
         };
     }
 

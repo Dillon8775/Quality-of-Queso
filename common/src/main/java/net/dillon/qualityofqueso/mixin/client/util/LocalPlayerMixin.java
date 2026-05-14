@@ -39,9 +39,9 @@ public class LocalPlayerMixin extends AbstractClientPlayer {
     @Unique
     private final boolean[] playedDing = new boolean[4];
     @Unique
-    private final int[] timesToPlay = new int[4];
+    private int armorTimesToPlay;
     @Unique
-    private final int[] dingCooldown = new int[4];
+    private int armorDingCooldown;
 
     public LocalPlayerMixin(ClientLevel level, GameProfile gameProfile) {
         super(level, gameProfile);
@@ -64,7 +64,7 @@ public class LocalPlayerMixin extends AbstractClientPlayer {
      */
     @Inject(method = "drop", at = @At("HEAD"), cancellable = true)
     private void preventDropFromLockedSlot(boolean entireStack, CallbackInfoReturnable<Boolean> cir) {
-        if (!modEnabled(this.minecraft) || !options().lockedSlots.enableLockedSlots) {
+        if (!modEnabled(this.minecraft) || !options().lockedSlots.enableLockedSlots || !options().lockedSlots.preventDropping) {
             return;
         }
 
@@ -120,6 +120,7 @@ public class LocalPlayerMixin extends AbstractClientPlayer {
         LocalPlayer player = (LocalPlayer) (Object) this;
 
         if (options().misc.armorDing) {
+            boolean triggeredNewLowArmor = false;
             for (int i = 0; i < this.playedDing.length; i++) {
                 EquipmentSlot slot = equipmentSlots()[i];
                 ItemStack stack = this.getItemBySlot(slot);
@@ -128,27 +129,29 @@ public class LocalPlayerMixin extends AbstractClientPlayer {
 
                 // First tick entering low durability
                 if (lowDurability && !this.playedDing[i]) {
-                    this.timesToPlay[i] = 3;
                     this.playedDing[i] = true;
-                }
-
-                if (this.dingCooldown[i] > 0) {
-                    this.dingCooldown[i]--;
-                }
-
-                // Play one ding per tick
-                if (this.timesToPlay[i] > 0 && this.dingCooldown[i] == 0) {
-                    playDingSound(this.minecraft);
-                    this.timesToPlay[i]--;
-                    this.dingCooldown[i] = 3;
+                    triggeredNewLowArmor = true;
                 }
 
                 // Reset when durability is no longer low
                 if (!lowDurability) {
                     this.playedDing[i] = false;
-                    this.timesToPlay[i] = 0;
-                    this.dingCooldown[i] = 0;
                 }
+            }
+
+            if (triggeredNewLowArmor) {
+                this.armorTimesToPlay = 3;
+            }
+
+            if (this.armorDingCooldown > 0) {
+                this.armorDingCooldown--;
+            }
+
+            // Play one shared ding queue for armor warnings
+            if (this.armorTimesToPlay > 0 && this.armorDingCooldown == 0) {
+                playDingSound(this.minecraft);
+                this.armorTimesToPlay--;
+                this.armorDingCooldown = 3;
             }
         }
 

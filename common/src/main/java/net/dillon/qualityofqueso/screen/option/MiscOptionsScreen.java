@@ -26,9 +26,9 @@ public class MiscOptionsScreen extends AbstractModOptionsScreen {
                 ListOptions.quickGuiExit(),
 
                 ListOptions.fortniteBattlePass(),
-                ListOptions.preventRageQuitting(),
+                ListOptions.antiRageQuit(),
 
-                ListOptions.alwaysPreventRageQuitting(),
+                ListOptions.forceAntiRageQuit(),
         };
     }
 }
