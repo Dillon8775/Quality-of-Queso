@@ -14,7 +14,7 @@ import static net.dillon.qualityofqueso.util.ModConstants.DEFAULT_LOCKED_SLOT_CO
 import static net.dillon.qualityofqueso.util.ModConstants.LOCKED_TEXTURE;
 
 public class LockedSlotsOptionsScreen extends AbstractModOptionsScreen {
-    private AbstractWidget showLock, hardLockSlots, lockSound;
+    private AbstractWidget showLock, hardLockSlots, lockSound, preventDropping;
     private LockedSlotColorField lockedSlotTextColorField;
 
     public LockedSlotsOptionsScreen(Screen parent) {
@@ -33,6 +33,7 @@ public class LockedSlotsOptionsScreen extends AbstractModOptionsScreen {
         this.showLock = createOption(ListOptions.showLock());
         this.hardLockSlots = createOption(ListOptions.hardLockSlots());
         this.lockSound = createOption(ListOptions.lockSound());
+        this.preventDropping = createOption(ListOptions.preventDropping());
 
         return new AbstractWidget[]{
                 createOption(ListOptions.lockSlots()),
@@ -41,6 +42,7 @@ public class LockedSlotsOptionsScreen extends AbstractModOptionsScreen {
                 this.hardLockSlots,
                 this.lockSound,
 
+                this.preventDropping,
                 this.lockedSlotTextColorField
         };
     }
@@ -51,6 +53,7 @@ public class LockedSlotsOptionsScreen extends AbstractModOptionsScreen {
         this.showLock.active = lockSlotsEnabled;
         this.hardLockSlots.active = lockSlotsEnabled;
         this.lockSound.active = lockSlotsEnabled;
+        this.preventDropping.active = lockSlotsEnabled;
         this.lockedSlotTextColorField.active = lockSlotsEnabled;
     }
 

@@ -66,7 +66,7 @@ public class PauseScreenMixin extends Screen {
     @Inject(method = "init", at = @At("TAIL"))
     private void init(CallbackInfo ci) {
         if (this.showPauseMenu) {
-            if (this.disconnectButton != null && options().misc.preventRageQuitting) {
+            if (this.disconnectButton != null && options().misc.antiRageQuit) {
                 this.disconnectButton.active = false;
             }
             if (uoptions().main.menuButton.everywhere()) {
@@ -118,7 +118,7 @@ public class PauseScreenMixin extends Screen {
             return;
         }
 
-        if (options().misc.preventRageQuitting && options().accessibility.tooltips.on() && this.disconnectButton != null && this.disconnectButton.isMouseOver(mouseX, mouseY)) {
+        if (options().misc.antiRageQuit && options().accessibility.tooltips.on() && this.disconnectButton != null && this.disconnectButton.isMouseOver(mouseX, mouseY)) {
             drawTooltip(Component.translatable("qualityofqueso.gui.disconnect"), graphics, this.font, mouseX, mouseY);
         }
 

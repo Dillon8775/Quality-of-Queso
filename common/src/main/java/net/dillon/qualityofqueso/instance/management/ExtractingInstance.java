@@ -126,8 +126,8 @@ public class ExtractingInstance extends ManagementInstance {
      * Renders lock icons at screen-tail using container-local slot coordinates.
      */
     public void extractLockedSlotIcon(GuiGraphics graphics) {
-        if (!isValidScreen(instance().getScreen())
-                || !options().lockedSlots.enableLockedSlots
+        if (!options().lockedSlots.enableLockedSlots
+                || !isValidScreenForRenderingLockedSlotOverlay(instance().getScreen())
                 || !options().lockedSlots.showLock.inScreens()
                 || !instance().getSearchFields().searchText().isEmpty()
                 || !instance().getExcludedSlots().isEmpty()) {

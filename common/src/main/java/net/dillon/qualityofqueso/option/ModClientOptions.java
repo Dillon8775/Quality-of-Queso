@@ -7,6 +7,7 @@ import net.dillon.qualityofqueso.option.eum.effects.PotionEffects;
 import net.dillon.qualityofqueso.option.eum.hud.ArmorStatus;
 import net.dillon.qualityofqueso.option.eum.management.*;
 import net.dillon.qualityofqueso.option.eum.management.sorting.CurrentSortingMode;
+import net.dillon.qualityofqueso.option.eum.management.sorting.DefaultSortingMode;
 import net.dillon.qualityofqueso.option.eum.management.sorting.GlobalSortingMode;
 import net.dillon.qualityofqueso.option.eum.misc.EChestButton;
 import net.dillon.qualityofqueso.option.eum.searching.QuickSearch;
@@ -144,13 +145,15 @@ public class ModClientOptions {
         public boolean useGlobalSortingMode = false;
         public CurrentSortingMode currentSortingMode = CurrentSortingMode.ALPHABETICAL;
         public GlobalSortingMode globalSortingMode = GlobalSortingMode.ALPHABETICALLY;
+        public DefaultSortingMode defaultSortingMode = DefaultSortingMode.ALPHABETICALLY;
     }
 
     public static class LockedSlots {
         public boolean enableLockedSlots = true;
         public boolean hardLockSlots = false;
-        public ShowLock showLock = ShowLock.EVERYWHERE;
+        public ShowLock showLock = ShowLock.SCREEN_ONLY;
         public boolean lockSound = true;
+        public boolean preventDropping = true;
         public int lockedSlotColor = DEFAULT_LOCKED_SLOT_COLOR;
     }
 
@@ -214,8 +217,8 @@ public class ModClientOptions {
         public boolean armorDing = true;
         public boolean enchantmentHelper = true;
 
-        public boolean preventRageQuitting = false;
-        public boolean alwaysPreventRageQuitting = false;
+        public boolean antiRageQuit = false;
+        public boolean forceAntiRageQuit = false;
 
         @Deprecated
         public boolean redArmorTint = false;

@@ -52,7 +52,7 @@ public class BlockItemMixin {
         boolean tagMode = false;
         List<String> filterItems = new ArrayList<>();
         List<Integer> lockedSlots = new ArrayList<>();
-        String sortingMode = "ALPHABETICAL";
+        String sortingMode = "";
 
         CustomData customData = stack.get(DataComponents.CUSTOM_DATA);
         if (customData != null) {

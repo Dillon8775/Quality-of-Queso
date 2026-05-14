@@ -321,14 +321,6 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
     }
 
     /**
-     * Cancels out default tooltips, and renders the single moving tooltips.
-     */
-    @Inject(method = "renderTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;renderTooltip(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;II)V"), cancellable = true)
-    private void cancelOutToRenderSingleMovingTooltips(GuiGraphics graphics, int mouseX, int mouseY, CallbackInfo ci) {
-        this.modTooltipInstance().displaySingleMovingTooltips(graphics, this.font, mouseX, mouseY, ci);
-    }
-
-    /**
      * Handles clicking outside the GUI screen, for the {@link WidgetLayout}.
      */
     @Inject(method = "hasClickedOutside", at = @At("HEAD"), cancellable = true)

@@ -24,8 +24,8 @@ public final class ClientEvents {
             ModHelper.LOADED = true;
             loadServerConfig();
         }
-        if (isOnServer(minecraft) && options().misc.alwaysPreventRageQuitting) {
-            options().misc.preventRageQuitting = true;
+        if (isOnServer(minecraft) && options().misc.forceAntiRageQuit) {
+            options().misc.antiRageQuit = true;
             saveAndApplyConfigs(minecraft);
         }
         if (isOnServer(minecraft) && minecraft.player != null) {

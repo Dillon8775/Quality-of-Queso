@@ -32,10 +32,10 @@ public class MiscOptionsScreen extends AbstractModOptionsScreen {
                 createOption(ListOptions.quickGuiExit()),
 
                 this.redArmorTint,
-                createOption(ListOptions.preventRageQuitting()),
+                createOption(ListOptions.antiRageQuit()),
 
                 createOption(ListOptions.fortniteBattlePass()),
-                createOption(ListOptions.alwaysPreventRageQuitting()),
+                createOption(ListOptions.forceAntiRageQuit()),
         };
     }
 

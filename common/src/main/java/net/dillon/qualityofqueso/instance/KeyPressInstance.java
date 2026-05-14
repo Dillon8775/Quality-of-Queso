@@ -35,7 +35,7 @@ public class KeyPressInstance extends ManagementInstance {
             transferInstance().performSingularDrop();
         }
 
-        if (keycode == key(getDropKey()).getValue() && instance().getScreensHoveredSlot() != null && lockedSlotsInstance().isLockedSlot(instance().getScreensHoveredSlot().index)) {
+        if (options().lockedSlots.enableLockedSlots && options().lockedSlots.preventDropping && keycode == key(getDropKey()).getValue() && instance().getScreensHoveredSlot() != null && lockedSlotsInstance().isLockedSlot(instance().getScreensHoveredSlot().index)) {
             cir.setReturnValue(false);
         }
 
