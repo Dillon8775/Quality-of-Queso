@@ -163,7 +163,7 @@ public class GuiMixin {
      */
     @Unique
     private void renderLockedHotbarSlots(GuiGraphicsExtractor graphics) {
-        if (!options().lockedSlots.enableLockedSlots || !options().lockedSlots.showLock.inGui() || this.minecraft.player == null) {
+        if (!options().lockedSlots.enableLockedSlots || !options().lockedSlots.showLock.inHud() || this.minecraft.player == null) {
             return;
         }
 

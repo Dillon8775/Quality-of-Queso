@@ -52,7 +52,7 @@ public class BlockItemMixin {
         boolean tagMode = false;
         List<String> filterItems = new ArrayList<>();
         List<Integer> lockedSlots = new ArrayList<>();
-        String sortingMode = "ALPHABETICAL";
+        String sortingMode = "";
 
         CustomData customData = stack.get(DataComponents.CUSTOM_DATA);
         if (customData != null) {
@@ -74,7 +74,7 @@ public class BlockItemMixin {
                     .distinct()
                     .sorted()
                     .collect(Collectors.toCollection(ArrayList::new));
-            sortingMode = customData.copyTag().getStringOr(SORTING_MODE, "ALPHABETICAL");
+            sortingMode = customData.copyTag().getStringOr(SORTING_MODE, "");
         }
 
         stateHolder.setFiltered(filtered);

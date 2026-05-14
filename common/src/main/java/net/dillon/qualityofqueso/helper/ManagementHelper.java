@@ -245,7 +245,7 @@ public class ManagementHelper {
             return;
         }
 
-        client.getSoundManager().play(SimpleSoundInstance.forUI(lock ? ModSoundEvents.LOCK_SLOT : ModSoundEvents.UNLOCK_SLOT, 1.0F, 0.15F));
+        client.getSoundManager().play(SimpleSoundInstance.forUI(lock ? ModSoundEvents.LOCK_SLOT : ModSoundEvents.UNLOCK_SLOT, 1.0F, 0.10F));
         LOCKED_SLOT_SOUND_COOLDOWN = DEFAULT_LOCKED_SLOT_SOUND_COOLDOWN;
     }
 

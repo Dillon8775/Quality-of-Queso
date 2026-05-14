@@ -97,10 +97,10 @@ public class ExtractingInstance extends ManagementInstance {
                         alreadyExcluded = true;
                     }
                 }
-                // Renders the lock texture on locked slots (yes, the lock icon itself, not the color)
-                if (options().lockedSlots.showLock.inScreens() && options().lockedSlots.enableLockedSlots && instance().getSearchFields().searchText().isEmpty() && instance().getExcludedSlots().isEmpty()) {
-                    lockedSlotsInstance().renderLockedSlot(graphics, slot, true);
-                }
+            }
+            // Renders the lock texture on locked slots (yes, the lock icon itself, not the color)
+            if (isValidScreenForRenderingLockedSlotOverlay(instance().getScreen()) && options().lockedSlots.showLock.inScreens() && options().lockedSlots.enableLockedSlots && instance().getSearchFields().searchText().isEmpty() && instance().getExcludedSlots().isEmpty()) {
+                lockedSlotsInstance().renderLockedSlot(graphics, slot, true);
             }
 
             // Return out for further code if not valid screen

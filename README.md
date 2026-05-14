@@ -457,19 +457,7 @@
 ---
 
 # FAQ
-### *Q:* Can you backport to older Minecraft versions, such as *1.21.1* or *1.20.1*?
-### *A:* Unfortunately, *no.*
-- `Maintaining multiple Minecraft versions with this mod is very difficult.`
-- There are `older versions of the mod` available for 1.20.1/1.21.1, but `they will not have the newest features.`
-- `I have a life that I also want to enjoy, not spending all of my time maintaining a Minecraft mod.`
-- Also, `if something doesn't work on an older version of Minecraft, please test it on the latest version before reporting an issue!`
-
-### *Q:* The game crashes with Zoomify, Ok Zoomer, and/or Tweakeroo!
-### *A:* This issue is fixed in version *1.7.*
-- In older versions, you need to `disable the "apply_FOV_effects" function`, located in the global config *(.minecraft/config)*
-- In *version 1.7 and above,* the `FOV Effects feature automatically disables if one of these mods are loaded`, to allow the game to launch.
-
-### *Q:* Does this mod work with Iron Chests, backpacks, etc.?
+### *Q:* Does this mod work with mods like *sophisticated backpacks, iron chests,* etc?
 ### *A:* Not right now.
 - `I may consider adding support` for mods like these in the future. `But please, don't ask for it!`
 
