@@ -57,7 +57,8 @@ tasks.register('curseforge', TaskPublishCurseForge) {
     }
     if (projectId) {
         def mainFile = upload(findProperty("curseforge_project_id"), jar.archiveFile.get().asFile)
-        mainFile.changelog = rootProject.file('CHANGELOG.md').text
+        mainFile.displayName = "[${mc_version.substring(2)}] $mod_name ${mod_version}"
+        mainFile.changelog = rootProject.file("${changelog_file}").text
         mainFile.addRequirement("balm")
         mainFile.addGameVersion(libs.minecraft.get().version)
         mainFile.releaseType = "release"
@@ -70,9 +71,12 @@ modrinth {
     token = project.findProperty("modrinth.token") ?: System.getenv("MODRINTH_TOKEN") ?: "none"
     projectId = findProperty("modrinth_project_id")
     versionType = "release"
-    versionNumber = project.version + "+neoforge-" + libs.minecraft.get().version
+
+    versionNumber = project.mod_version.toString()
+    versionName = "[mc${libs.minecraft.get().version}] ${mod_name} ${project.mod_version}"
+
     uploadFile = jar
-    def changelogFile = rootProject.file("CHANGELOG.md")
+    def changelogFile = rootProject.file("${changelog_file}")
     if (changelogFile.exists()) {
         changelog = changelogFile.text
     }
