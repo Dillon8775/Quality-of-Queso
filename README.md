@@ -447,7 +447,7 @@
     <iframe width="280" height="157" src="https://www.youtube-nocookie.com/embed/7OecgUuZ080" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
     <br><br>
     <iframe width="280" height="157" src="https://www.youtube-nocookie.com/embed/dwcWn7q6Q20" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-    <iframe width="280" height="157" src="https://www.youtube-nocookie.com/embed/dwcWn7q6Q20" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+    <br><br>
     <iframe width="280" height="157" src="https://www.youtube-nocookie.com/embed/ogvkRYyt83c" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 </div>
 
@@ -481,6 +481,25 @@ Does this mod work with mods like [sophisticated backpacks](https://modrinth.com
 - I may consider adding support for mods like these in the future. But please, don't ask for it!
 
 ---
+# Older Version Support
+Currently, [Quality of Queso](https://modrinth.com/mod/quality-of-queso) ***does*** support older versions of Minecraft, however, certain features are ***currently unsupported.***
+### MC 1.21.11 *(and below)* Unsupported Features
+- [Fluid FOV Effect](https://quality-of-queso.fandom.com/wiki/FOV_Modifiers)
+### MC 1.21.1 *(and below)* Unsupported Features
+- [Craft All (aka. bulk crafting)](https://quality-of-queso.fandom.com/wiki/Craft_All)
+- [Red Armor Tint](https://quality-of-queso.fandom.com/wiki/Red_Armor_Tint)
+- [Transparent Search Bar](https://quality-of-queso.fandom.com/wiki/Search_Bar#Customizable_Search_Bar)
+- [Overworld Fog Intensity](https://quality-of-queso.fandom.com/wiki/Remove_Fog#Fog_Intensity)
+- Darker Overlay setting
+- Fading Animations with the armor status
+- `Keybind Modifiers`
+### MC 1.20.1 *(and below)* Unsupported Features
+- [Colored Highlighting](https://quality-of-queso.fandom.com/wiki/Colored_Highlighting)
+- [Warning Indicators](https://quality-of-queso.fandom.com/wiki/Warning_Indicators)
+- Slot Highlighting on Armor Status (outline when armor piece gets updated)
+
+---
+
 Created and regularly maintained by: [Dillon8775](https://www.youtube.com/@dillon8775) and [MannyQUESO](https://www.youtube.com/@MannyQUESO).
 
 #### All rights reserved unless explicitly stated.
