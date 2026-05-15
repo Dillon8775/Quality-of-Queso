@@ -39,7 +39,9 @@ public class KeyPressInstance extends ManagementInstance {
 
         if (options().lockedSlots.enableLockedSlots && options().lockedSlots.preventDropping && event.key() == key(getDropKey()).getValue() && instance().getScreensHoveredSlot() != null && lockedSlotsInstance().isLockedSlot(instance().getScreensHoveredSlot().index)) {
             if (hasMoveSingleModifierDown() && hasDropOnlyOneItemKeyDown()) {
-                performClickSlot(instance().getScreen(), instance().getScreensHoveredSlot(), instance().getScreensHoveredSlot().index, 1, ClickType.THROW);
+                if (!Minecraft.getInstance().hasAltDown()) {
+                    performClickSlot(instance().getScreen(), instance().getScreensHoveredSlot(), instance().getScreensHoveredSlot().index, 1, ClickType.THROW);
+                }
             } else {
                 cir.setReturnValue(false);
             }
