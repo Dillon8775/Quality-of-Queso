@@ -171,6 +171,7 @@
   "qualityofqueso.gui.quick_drop_button.move_amount.type": "Throw out %s from each stack of \"%s\"",
   "qualityofqueso.gui.quick_drop_button.move_amount.type.all": "Throw out all \"%s\"",
   "qualityofqueso.gui.quick_drop_button.move_amount.single": "Throw out %s",
+  "qualityofqueso.gui.quick_drop_button.move_amount.full": "Throw out entire stack",
   "qualityofqueso.gui.quick_drop_button.no_items_found": "No \"%s\" found in this container",
   "qualityofqueso.gui.quick_drop_button.move_amount.with_search_query.exclude.inventory": "Drop %s from each stack §onot§r containing \"%s\"",
   "qualityofqueso.gui.quick_drop_button.move_amount.with_search_query.tag.inventory": "Drop %s from each stack with tag \"%s\"",

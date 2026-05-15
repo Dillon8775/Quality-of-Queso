@@ -121,7 +121,7 @@ public class GuiMixin {
         }
 
         graphics.blit(
-                warning ? SLOT_CRITICAL : getHighlightedSlotTexture(minecraft, defaultSprite, getItemBySlot(minecraft, slot)),
+                warning ? SLOT_CRITICAL : getHighlightedSlotTexture(minecraft, defaultSprite, getItemBySlot(minecraft, slot), slot),
                 this.getHighlightedSlotX(minecraft, graphics, slot),
                 getGuiHeight(graphics) - 3 + yOffset,
                 0.0F,
@@ -502,7 +502,12 @@ public class GuiMixin {
                     stackToRender = ItemHudTracker.getStack();
                 }
             } else if (trackedItem && trackedArrowDisplay && !holdingArrowDisplayableProjectileWeapon) {
-                stackToRender = arrow.copy();
+                ItemStack trackedStack = ItemHudTracker.getStack();
+                if (!trackedStack.isEmpty() && isStackArrow(trackedStack)) {
+                    stackToRender = trackedStack.copyWithCount(Math.max(1, count));
+                } else {
+                    stackToRender = arrow.copy();
+                }
             } else if (holdingArrowDisplayableProjectileWeapon) {
                 if (isProjectileWeapon(ItemHudTracker.getStack().getItem())) {
                     stackToRender = arrow.copy();
