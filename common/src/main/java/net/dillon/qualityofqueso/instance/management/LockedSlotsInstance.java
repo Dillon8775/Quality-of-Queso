@@ -16,8 +16,7 @@ import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
 import static net.dillon.qualityofqueso.helper.MethodHelper.kumaMousePressed;
 import static net.dillon.qualityofqueso.helper.ModHelper.ofQoQ;
 import static net.dillon.qualityofqueso.helper.ModHelper.options;
-import static net.dillon.qualityofqueso.keybind.ModKeyMappings.LOCK_SLOT;
-import static net.dillon.qualityofqueso.keybind.ModKeyMappings.hasLockSlotModifierDown;
+import static net.dillon.qualityofqueso.keybind.ModKeyMappings.*;
 
 /**
  * Handles locked slot colors, overlays, and functions.
@@ -61,6 +60,25 @@ public class LockedSlotsInstance extends ManagementInstance {
             int playerSlotId = toPlayerLockSlotId(slotIndex);
             return playerSlotId != -1 && getLockedPlayerSlots().contains(playerSlotId);
         }
+    }
+
+    /**
+     * @return if the user is attempting to drop an entire locked slot stack.
+     */
+    public boolean droppingEntireLockedSlotStack() {
+        return MOVE_SINGLE_ITEM.isActiveAndDown() && hasDropOnlyOneItemKeyDown() && instance().getScreensHoveredSlot() != null && lockedSlotsInstance().isLockedSlot(instance().getScreensHoveredSlot().index);
+    }
+
+    /**
+     * @return if a locked slot drop full stack is valid.
+     */
+    public boolean shouldCancelDrop() {
+        if (lockedSlotsInstance().droppingEntireLockedSlotStack()
+                ? lockedSlotsInstance().droppingEntireLockedSlotStack() && hasMoveSingleModifierDown()
+                : hasMoveSingleModifierDown() && !hasDropOnlyOneItemKeyDown()) {
+            return !(hasMoveSingleModifierDown() && hasDropOnlyOneItemKeyDown() && Minecraft.getInstance().hasAltDown());
+        }
+        return false;
     }
 
     /**
