@@ -8,7 +8,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
@@ -136,6 +135,7 @@ public class ModTooltipInstance extends ManagementInstance {
 
             // Create temp boolean to determine if we can continue adding tooltips after the fact, if the hovered item is found in the container (for quick dropping only)
             boolean canContinueToAddTooltips = true;
+            boolean skip = false;
             // Create ignores locked slots variable
             Component ignoresLockedSlots = Component.translatable("qualityofqueso.gui.move_amount.ignores_locked_slots").withColor(ModTexts.LOCKED_SLOT_TEXT);
             // If the quick drop keys are down and the hovered slot has an item, continue through this statement
@@ -155,12 +155,12 @@ public class ModTooltipInstance extends ManagementInstance {
                     }
                 }
             } else { // Otherwise just add the raw translation for a singular move amount for a single item
-                boolean droppingEntireStack = Screen.hasControlDown() && hasDropOnlyOneItemKeyDown();
-                if (droppingEntireStack) {
+                if (lockedSlotsInstance().droppingEntireLockedSlotStack()) {
                     translation = "qualityofqueso.gui.quick_drop_button.move_amount.full";
+                    skip = true;
                 }
                 moveAmountTooltip.add(Component.translatable(translation, getActualMoveAmount()));
-                if (droppingEntireStack) {
+                if (lockedSlotsInstance().droppingEntireLockedSlotStack()) {
                     moveAmountTooltip.add(ignoresLockedSlots);
                 }
             }
@@ -170,8 +170,8 @@ public class ModTooltipInstance extends ManagementInstance {
             Component reset = Component.translatable("qualityofqueso.gui.move_amount.reset");
 
             // Add those helper tooltips to the rendered tooltip if we can
-            if (options().accessibility.tooltips.on() && canContinueToAddTooltips) {
-                if (!(instance().getScreensHoveredSlot() != null && instance().getScreensHoveredSlot().hasItem() && Screen.hasControlDown())) {
+            if (options().accessibility.tooltips.on() && canContinueToAddTooltips && !skip) {
+                if (!(instance().getScreensHoveredSlot() != null && instance().getScreensHoveredSlot().hasItem() && (hasMoveSingleModifierDown() && !hasDropOnlyOneItemKeyDown()))) {
                     moveAmountTooltip.add(scroll);
                     moveAmountTooltip.add(reset);
                     moveAmountTooltip.add(ignoresLockedSlots);
