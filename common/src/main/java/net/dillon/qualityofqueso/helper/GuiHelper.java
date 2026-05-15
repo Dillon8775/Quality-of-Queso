@@ -327,7 +327,7 @@ public class GuiHelper {
     /**
      * @return the correct sprite to use.
      */
-    public static Identifier getHighlightedSlotTexture(Minecraft minecraft, Identifier defaultSprite, ItemStack stack) {
+    public static Identifier getHighlightedSlotTexture(Minecraft minecraft, Identifier defaultSprite, ItemStack stack, EquipmentSlot equipmentSlot) {
         float healthPercentage = getItemHealthPercentage(stack);
 
         if (!options().hud.coloredHighlighting) {
@@ -340,7 +340,7 @@ public class GuiHelper {
             return SLOT_AVERAGE;
         } else if (healthPercentage < 1.0F) {
             return SLOT_GOOD;
-        } else if (isLockedHotbarSlot(minecraft, false)) {
+        } else if (isLockedHotbarSlot(minecraft, false) && equipmentSlot == null) {
             return SLOT_LOCKED;
         }
         return defaultSprite;

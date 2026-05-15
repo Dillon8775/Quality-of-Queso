@@ -62,6 +62,10 @@ public record MouseScrollInstance(
             return;
         }
 
+        if (hasMoveSingleModifierDown()) {
+            return;
+        }
+
         boolean validHoveredSlot = hoveredSlotHasItem(hoveredSlot) && hoveredSlot.getItem().count() > 1;
         if (!isCreativeInventoryScreen(screen) && instance().getCanMoveOne() && (validHoveredSlot && hasDropOnlyOneItemKeyDown())
                 || buttonHoveredAndActive(managementButtons.quickDrop()) ? hasDropOnlyOneItemKeyDown()

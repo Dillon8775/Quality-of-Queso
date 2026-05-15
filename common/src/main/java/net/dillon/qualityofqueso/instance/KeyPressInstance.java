@@ -7,6 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractRecipeBookScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.input.KeyEvent;
+import net.minecraft.world.inventory.ContainerInput;
 import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -37,7 +38,11 @@ public class KeyPressInstance extends ManagementInstance {
         }
 
         if (options().lockedSlots.enableLockedSlots && options().lockedSlots.preventDropping && event.key() == key(getDropKey()).getValue() && instance().getScreensHoveredSlot() != null && lockedSlotsInstance().isLockedSlot(instance().getScreensHoveredSlot().index)) {
-            cir.setReturnValue(false);
+            if (hasMoveSingleModifierDown() && hasDropOnlyOneItemKeyDown()) {
+                performClickSlot(instance().getScreen(), instance().getScreensHoveredSlot(), instance().getScreensHoveredSlot().index, 1, ContainerInput.THROW);
+            } else {
+                cir.setReturnValue(false);
+            }
         }
 
         if (!hasAnyManagementModifierDown()) {
