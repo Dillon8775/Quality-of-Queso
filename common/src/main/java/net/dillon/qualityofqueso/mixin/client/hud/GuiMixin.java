@@ -132,7 +132,7 @@ public class GuiMixin {
         }
 
         graphics.blitSprite(
-                warning ? SLOT_CRITICAL : getHighlightedSlotTexture(minecraft, defaultSprite, getItemBySlot(minecraft, slot)),
+                warning ? SLOT_CRITICAL : getHighlightedSlotTexture(minecraft, defaultSprite, getItemBySlot(minecraft, slot), slot),
                 this.getHighlightedSlotX(minecraft, graphics, slot),
                 getGuiHeight(graphics) - 3 + yOffset,
                 24,
@@ -201,7 +201,7 @@ public class GuiMixin {
         if (!modEnabled(this.minecraft) || this.minecraft.player == null) {
             return original;
         }
-        return getHighlightedSlotTexture(this.minecraft, HOTBAR_SELECTION_SPRITE, this.minecraft.player.getInventory().getItem(this.minecraft.player.getInventory().selected));
+        return getHighlightedSlotTexture(this.minecraft, HOTBAR_SELECTION_SPRITE, this.minecraft.player.getInventory().getItem(this.minecraft.player.getInventory().selected), null);
     }
 
     /**

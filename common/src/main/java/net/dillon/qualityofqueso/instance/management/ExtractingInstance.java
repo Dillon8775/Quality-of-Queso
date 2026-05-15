@@ -291,7 +291,10 @@ public class ExtractingInstance extends ManagementInstance {
                         widgetHandlerInstance().addWidget(widgetHandlerInstance().createQuickDrop()));
             }
 
-            if (options().buttonDisplayOptions.displaySearchTransportables && ((options().searching.containerSearching && containerScreen) || (options().searching.inventorySearching && inventoryScreen))) {
+            if ((
+                    (instance().getSearchFields().inventory() != null && !instance().getSearchFields().inventory().getValue().isEmpty())
+                            || (instance().getSearchFields().container() != null && !instance().getSearchFields().container().getValue().isEmpty())
+            ) && options().buttonDisplayOptions.displaySearchTransportables && ((options().searching.containerSearching && containerScreen) || (options().searching.inventorySearching && inventoryScreen))) {
                 boolean canRenderTransportablesButton = false;
                 for (int i = 0; i < searchInstance().getSearchSlotCount(); i++) {
                     ItemStack stack = instance().getScreenMenu().getSlot(i).getItem();

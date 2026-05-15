@@ -6,6 +6,7 @@ import net.dillon.qualityofqueso.keybind.ModKeybinds;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.world.inventory.ClickType;
 import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -36,7 +37,11 @@ public class KeyPressInstance extends ManagementInstance {
         }
 
         if (options().lockedSlots.enableLockedSlots && options().lockedSlots.preventDropping && keycode == key(getDropKey()).getValue() && instance().getScreensHoveredSlot() != null && lockedSlotsInstance().isLockedSlot(instance().getScreensHoveredSlot().index)) {
-            cir.setReturnValue(false);
+            if (hasMoveSingleModifierDown() && hasDropOnlyOneItemKeyDown()) {
+                performClickSlot(instance().getScreen(), instance().getScreensHoveredSlot(), instance().getScreensHoveredSlot().index, 1, ClickType.THROW);
+            } else {
+                cir.setReturnValue(false);
+            }
         }
 
         if (!hasAnyManagementModifierDown()) {

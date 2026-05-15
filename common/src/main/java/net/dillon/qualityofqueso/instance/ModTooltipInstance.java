@@ -136,6 +136,8 @@ public class ModTooltipInstance extends ManagementInstance {
 
             // Create temp boolean to determine if we can continue adding tooltips after the fact, if the hovered item is found in the container (for quick dropping only)
             boolean canContinueToAddTooltips = true;
+            // Create ignores locked slots variable
+            Component ignoresLockedSlots = Component.translatable("qualityofqueso.gui.move_amount.ignores_locked_slots").withColor(ModTexts.LOCKED_SLOT_TEXT);
             // If the quick drop keys are down and the hovered slot has an item, continue through this statement
             if (hasQuickDropKeysDown() && hoveredSlotHasItem(hoveredSlot)) {
                 boolean containerScreen = isContainerScreen(instance().getScreen());
@@ -153,13 +155,19 @@ public class ModTooltipInstance extends ManagementInstance {
                     }
                 }
             } else { // Otherwise just add the raw translation for a singular move amount for a single item
+                boolean droppingEntireStack = Screen.hasControlDown() && hasDropOnlyOneItemKeyDown();
+                if (droppingEntireStack) {
+                    translation = "qualityofqueso.gui.quick_drop_button.move_amount.full";
+                }
                 moveAmountTooltip.add(Component.translatable(translation, getActualMoveAmount()));
+                if (droppingEntireStack) {
+                    moveAmountTooltip.add(ignoresLockedSlots);
+                }
             }
 
             // Create helper tooltips for the user to use singular moving
             Component scroll = Component.translatable("qualityofqueso.gui.scroll_to_change_amount");
             Component reset = Component.translatable("qualityofqueso.gui.move_amount.reset");
-            Component ignoresLockedSlots = Component.translatable("qualityofqueso.gui.move_amount.ignores_locked_slots").withColor(ModTexts.LOCKED_SLOT_TEXT);
 
             // Add those helper tooltips to the rendered tooltip if we can
             if (options().accessibility.tooltips.on() && canContinueToAddTooltips) {
