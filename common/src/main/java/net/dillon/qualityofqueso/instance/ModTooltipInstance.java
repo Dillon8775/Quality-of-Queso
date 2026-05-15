@@ -6,7 +6,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.FormattedCharSequence;
@@ -150,12 +149,11 @@ public class ModTooltipInstance extends ManagementInstance {
                     }
                 }
             } else { // Otherwise just add the raw translation for a singular move amount for a single item
-                boolean droppingEntireStack = Screen.hasControlDown() && hasDropOnlyOneItemKeyDown();
-                if (droppingEntireStack) {
+                if (lockedSlotsInstance().droppingEntireLockedSlotStack()) {
                     translation = "qualityofqueso.gui.quick_drop_button.move_amount.full";
                 }
                 moveAmountTooltip.add(Component.translatable(translation, getActualMoveAmount()));
-                if (droppingEntireStack) {
+                if (lockedSlotsInstance().droppingEntireLockedSlotStack()) {
                     moveAmountTooltip.add(ignoresLockedSlots);
                 }
             }
@@ -166,7 +164,7 @@ public class ModTooltipInstance extends ManagementInstance {
 
             // Add those helper tooltips to the rendered tooltip if we can
             if (options().accessibility.tooltips.on() && canContinueToAddTooltips) {
-                if (!(instance().getScreensHoveredSlot() != null && instance().getScreensHoveredSlot().hasItem() && Screen.hasControlDown())) {
+                if (!(instance().getScreensHoveredSlot() != null && instance().getScreensHoveredSlot().hasItem() && lockedSlotsInstance().droppingEntireLockedSlotStack())) {
                     moveAmountTooltip.add(scroll);
                     moveAmountTooltip.add(reset);
                     moveAmountTooltip.add(ignoresLockedSlots);

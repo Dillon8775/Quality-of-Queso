@@ -1,12 +1,11 @@
 package net.dillon.qualityofqueso.instance;
 
 import net.dillon.qualityofqueso.helper.ContainerHelper;
-import net.dillon.qualityofqueso.instance.context.ManagementButtons;
+import net.dillon.qualityofqueso.instance.management.ManagementInstance;
 import net.dillon.qualityofqueso.option.ModClientOptions;
 import net.dillon.qualityofqueso.option.eum.management.sorting.CurrentSortingMode;
 import net.dillon.qualityofqueso.option.eum.management.sorting.GlobalSortingMode;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.world.inventory.Slot;
 
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
@@ -18,17 +17,17 @@ import static net.dillon.qualityofqueso.util.ModConstants.*;
 /**
  * Handles mouse scrolling events.
  */
-public record MouseScrollInstance(
-        Minecraft minecraft,
-        AbstractContainerScreen<?> screen,
-        ManagementButtons managementButtons
-) implements ModInstance {
+public class MouseScrollInstance extends ManagementInstance {
+
+    public MouseScrollInstance(QuesoScreen screen) {
+        super(screen);
+    }
 
     /**
      * Changes the sort mode when scrolling on the sort button.
      */
     public void changeSortMode(double mouseX, double mouseY, double scrollY) {
-        if (buttonHoveredAndActive(managementButtons.sort(), mouseX, mouseY)) {
+        if (buttonHoveredAndActive(instance().getManagementButtons().sort(), mouseX, mouseY)) {
             CurrentSortingMode nextMode = options().sorting.currentSortingMode.next(scrollY > 0);
             ModClientOptions.INSTANCE.update(options -> {
                 options.sorting.currentSortingMode = nextMode;
@@ -47,7 +46,7 @@ public record MouseScrollInstance(
             ContainerHelper.storeActiveSortMode(nextMode);
             if (SORT_SOUND_COOLDOWN == 0) {
                 SORT_SOUND_COOLDOWN = DEFAULT_SORT_SOUND_COOLDOWN;
-                playSortSound(minecraft);
+                playSortSound(instance().getMinecraft());
             }
         }
     }
@@ -60,10 +59,14 @@ public record MouseScrollInstance(
             return;
         }
 
+        if (lockedSlotsInstance().droppingEntireLockedSlotStack() && !Screen.hasAltDown()) {
+            return;
+        }
+
         boolean validHoveredSlot = hoveredSlotHasItem(hoveredSlot) && hoveredSlot.getItem().getCount() > 1;
-        if (!isCreativeInventoryScreen(screen) && instance().getCanMoveOne() && (validHoveredSlot && hasDropOnlyOneItemKeyDown())
-                || buttonHoveredAndActive(managementButtons.quickDrop(), mouseX, mouseY) ? hasDropOnlyOneItemKeyDown()
-                : ((validHoveredSlot || buttonHoveredAndActive(managementButtons.transferContainer(), mouseX, mouseY) || buttonHoveredAndActive(managementButtons.transferInventory(), mouseX, mouseY)) && hasMoveSingleModifierDown())) {
+        if (!isCreativeInventoryScreen(instance().getScreen()) && instance().getCanMoveOne() && (validHoveredSlot && hasDropOnlyOneItemKeyDown())
+                || buttonHoveredAndActive(instance().getManagementButtons().quickDrop(), mouseX, mouseY) ? hasDropOnlyOneItemKeyDown()
+                : ((validHoveredSlot || buttonHoveredAndActive(instance().getManagementButtons().transferContainer(), mouseX, mouseY) || buttonHoveredAndActive(instance().getManagementButtons().transferInventory(), mouseX, mouseY)) && hasMoveSingleModifierDown())) {
             MOVE_AMOUNT += (int)scrollY;
             if (MOVE_AMOUNT < 1) {
                 MOVE_AMOUNT = 1;
@@ -73,10 +76,5 @@ public record MouseScrollInstance(
                 MOVE_AMOUNT = hoveredSlot.getItem().getMaxStackSize();
             }
         }
-    }
-
-    @Override
-    public QuesoScreen instance() {
-        return (QuesoScreen) this.screen;
     }
 }

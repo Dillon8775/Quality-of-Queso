@@ -413,9 +413,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
         }
 
         MouseScrollInstance mouseScrollInstance = new MouseScrollInstance(
-                this.minecraft,
-                this.screen,
-                this.getManagementButtons()
+                (QuesoScreen) this.screen
         );
         mouseScrollInstance.changeSortMode(mouseX, mouseY, delta);
         mouseScrollInstance.setMoveAmount(this.hoveredSlot, mouseX, mouseY, delta);

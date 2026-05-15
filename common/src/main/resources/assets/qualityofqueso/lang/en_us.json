@@ -336,7 +336,7 @@
   "qualityofqueso.options.lock_sound": "Lock Sound",
   "qualityofqueso.options.lock_sound.tooltip": "Plays a sound when locking/unlocking a slot.",
   "qualityofqueso.options.prevent_dropping": "Prevent Dropping",
-  "qualityofqueso.options.prevent_dropping.tooltip": "Prevents locked slots from being dropped in-game and in menu screens.\n\nYou can still use the \"Singular Moving\" feature by holding shift to drop items out of a locked slot.",
+  "qualityofqueso.options.prevent_dropping.tooltip": "Prevents locked slots from being dropped in-game and in menu screens.\n\nYou can still use the \"Singular Moving\" feature by holding shift+ctrl to drop items out of a locked slot.",
   "qualityofqueso.options.include_hotbar": "Hotbar",
   "qualityofqueso.options.include_hotbar.always": "§aAlways",
   "qualityofqueso.options.include_hotbar.always.tooltip": "Always display the include/exclude hotbar button.",
