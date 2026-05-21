@@ -47,6 +47,7 @@ public class ListOptions {
                 (options, value) -> options.searching.inventorySearching = value);
     }
 
+    @Deprecated
     protected static OptionInstance<Boolean> underlineText() {
         return createClientBooleanOption("underline_text", false, options().searching.underlineText,
                 (options, value) -> options.searching.underlineText = value);
@@ -160,12 +161,19 @@ public class ListOptions {
                 keyMappingAsString(ModKeybinds.OPEN_SEARCH_ITEM_FRAMES_GUI, false));
     }
 
+    protected static OptionInstance<Boolean> inventoryLocking() {
+        return createCommonBooleanOption("inventory_locking", true, coptions().inventoryLocking,
+                (options, value) -> options.inventoryLocking = value);
+    }
+
+    @Deprecated
     protected static OptionInstance<Boolean> coloredHighlighting() {
         return createClientBooleanOption("colored_highlighting", true, options().hud.coloredHighlighting,
                 (options, value) -> options.hud.coloredHighlighting = value
         );
     }
 
+    @Deprecated
     protected static OptionInstance<Boolean> warningIndicators() {
         return createClientBooleanOption("warning_indicators", true, options().hud.warningIndicators,
                 (options, value) -> options.hud.warningIndicators = value
@@ -188,6 +196,7 @@ public class ListOptions {
                 });
     }
 
+    @Deprecated
     protected static OptionInstance<Boolean> highlightArmor() {
         return createClientBooleanOption("highlight_armor", false, options().hud.highlightArmor,
                 (options, value) -> {
@@ -335,6 +344,7 @@ public class ListOptions {
         );
     }
 
+    @Deprecated
     protected static OptionInstance<Boolean> redArmorTint() {
         return createClientBooleanOption("red_armor_tint", true, options().misc.redArmorTint,
                 (options, value) -> options.misc.redArmorTint = value
@@ -382,12 +392,14 @@ public class ListOptions {
         );
     }
 
+    @Deprecated
     protected static OptionInstance<Boolean> darkerOverlay() {
         return createClientBooleanOption("darker_overlay", true, options().accessibility.darkerOverlay,
                 (options, value) -> options.accessibility.darkerOverlay = value
         );
     }
 
+    @Deprecated
     protected static OptionInstance<Boolean> darkDisc() {
         return createClientBooleanOption("dark_disc", true, options().accessibility.darkDisc,
                 (options, value) -> options.accessibility.darkDisc = value
@@ -406,6 +418,7 @@ public class ListOptions {
         );
     }
 
+    @Deprecated
     protected static OptionInstance<Boolean> fluids() {
         return createClientBooleanOption("fov_effects.fluids", true, options().fovEffects.fluids,
                 (options, value) -> options.fovEffects.fluids = value);
@@ -511,6 +524,7 @@ public class ListOptions {
         );
     }
 
+    @Deprecated
     protected static OptionInstance<Integer> overworldFogIntensity() {
         return createIntegerOption(
                 "overworld_fog_intensity",
@@ -616,6 +630,7 @@ public class ListOptions {
         );
     }
 
+    @Deprecated
     protected static OptionInstance<SearchBarColor> searchBarColor() {
         return createEnumOption(
                 "search_bar_color",

@@ -368,6 +368,8 @@
   "qualityofqueso.options.bulk_craft.tooltip": "Display the button to bulk craft a selected item.",
   "qualityofqueso.options.safe_bulk": "Safe Bulk",
   "qualityofqueso.options.safe_bulk.tooltip": "Automatically disables bulk crafting and bulk trading when closing a screen, to prevent accidentally bulk crafting or trading.",
+  "qualityofqueso.options.inventory_locking": "Inventory Locking",
+  "qualityofqueso.options.inventory_locking.tooltip": "Allows the player to lock their inventory to prevent items from being picked up.",
   "qualityofqueso.options.lock_inventory": "Lock Inventory",
   "qualityofqueso.options.lock_inventory.tooltip": "Display the button to lock your inventory.",
   "qualityofqueso.options.item_frame_searching": "Item Frame Searching",

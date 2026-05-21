@@ -38,7 +38,9 @@ public class ManagementOptionsScreen extends AbstractModOptionsScreen {
                 ListOptions.lockSound(),
 
                 ListOptions.preventDropping(),
-                ListOptions.playSounds()
+                ListOptions.playSounds(),
+
+                ListOptions.inventoryLocking()
         };
     }
 

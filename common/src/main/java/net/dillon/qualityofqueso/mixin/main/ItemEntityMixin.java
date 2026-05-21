@@ -8,6 +8,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import static net.dillon.qualityofqueso.helper.ModHelper.coptions;
+
 @Mixin(ItemEntity.class)
 public class ItemEntityMixin {
 
@@ -16,7 +18,7 @@ public class ItemEntityMixin {
      */
     @Inject(method = "playerTouch", at = @At("HEAD"), cancellable = true)
     private void blockAutomaticPickupWhenLocked(Player player, CallbackInfo ci) {
-        if (!DedicatedServerStorage.isLockedInventory(player.getUUID())) {
+        if (!coptions().inventoryLocking || !DedicatedServerStorage.isLockedInventory(player.getUUID())) {
             return;
         }
 
