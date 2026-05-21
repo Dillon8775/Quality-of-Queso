@@ -1,8 +1,12 @@
 package net.dillon.qualityofqueso.instance.management;
 
+import net.dillon.qualityofqueso.helper.ContainerHelper;
 import net.dillon.qualityofqueso.instance.QuesoScreen;
+import net.dillon.qualityofqueso.option.eum.management.FilteringMode;
 import net.dillon.qualityofqueso.server.DedicatedServerStorage;
 import net.dillon.qualityofqueso.widget.SwapButton;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.inventory.AbstractFurnaceScreen;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.player.Inventory;
@@ -10,6 +14,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 import java.util.*;
 
@@ -33,7 +38,8 @@ public class TransferInstance extends ManagementInstance {
      * Helper method to drop all selected items in the respective inventory/container.
      */
     public void dropItems(boolean fromInventory) {
-        moveItems(true, true, fromInventory, false);
+        boolean dropFromInventory = isInventoryScreen(instance().getScreen());
+        moveItems(true, true, dropFromInventory, false);
     }
 
     /**
@@ -47,14 +53,14 @@ public class TransferInstance extends ManagementInstance {
      * @return if the user can single move an item.
      */
     public boolean canSingularMove() {
-        return options().management.singularMoving && hasMoveSingleModifierDown();
+        return options().management.scrollMoving && hasMoveSingleModifierDown();
     }
 
     /**
      * @return if the user can singular quick drop an item.
      */
     public boolean canSingularQuickDrop(KeyEvent event) {
-        return options().management.singularMoving
+        return options().management.scrollMoving
                 && event.key() == key(getDropKey()).getValue()
                 && hasDropOnlyOneItemKeyDown()
                 && hoveredSlotHasItem(instance().getScreensHoveredSlot());
@@ -73,18 +79,24 @@ public class TransferInstance extends ManagementInstance {
      * Transfers items from one container to another.
      */
     public void moveItems(boolean toInventory, boolean drop, boolean fromInventory, boolean canSingleMove) {
-        int containerSize = getContainerSize();
         int totalSlots = getTotalSlots();
+        int playerStorageStart = findPlayerStorageStartIndex();
+        int playerStorageEnd = findPlayerStorageEndIndexExclusive();
+        int containerSize = getContainerSize();
         ItemStack hoveredDropFilter = drop && hoveredSlotHasItem(instance().getScreensHoveredSlot()) ? instance().getScreensHoveredSlot().getItem().copy() : ItemStack.EMPTY;
 
-        int fromStart = toInventory ? 0 : containerSize;
-        int fromEnd = toInventory ? containerSize : totalSlots;
-        int toStart = toInventory ? containerSize : 0;
-        int toEnd = toInventory ? totalSlots : containerSize;
+        int containerEnd = playerStorageStart != -1 ? playerStorageStart : Math.max(0, Math.min(containerSize, totalSlots));
+        int effectivePlayerStart = playerStorageStart != -1 ? playerStorageStart : containerEnd;
+        int effectivePlayerEnd = playerStorageEnd > effectivePlayerStart ? playerStorageEnd : totalSlots;
+
+        int fromStart = toInventory ? 0 : effectivePlayerStart;
+        int fromEnd = toInventory ? containerEnd : effectivePlayerEnd;
+        int toStart = toInventory ? effectivePlayerStart : 0;
+        int toEnd = toInventory ? effectivePlayerEnd : containerEnd;
 
         if (drop && fromInventory) {
-            fromStart = 9;
-            fromEnd = 45;
+            fromStart = effectivePlayerStart;
+            fromEnd = effectivePlayerEnd;
         }
 
         if (isBrewingStandScreen(instance().getScreen())) {
@@ -126,7 +138,7 @@ public class TransferInstance extends ManagementInstance {
 
             if (options().lockedSlots.enableLockedSlots && lockedSlotsInstance().isLockedSlot(fromSlot.index)) { // Skip locked slots (always)
                 continue;
-            } else if (!drop && options().management.moveMatchingItems && !isPresent(toInventory, fromStack)) { // Skip items that aren't already present/filtered
+            } else if (!drop && shouldApplyMatchingFilter() && !isPresent(toInventory, fromStack)) { // Skip items that aren't already present/filtered
                 continue;
             } else if (drop && !hoveredDropFilter.isEmpty() && !fromSlot.getItem().is(hoveredDropFilter.getItem())) { // Only drop items matching the initially hovered item
                 continue;
@@ -137,7 +149,7 @@ public class TransferInstance extends ManagementInstance {
                 // Only transfer items if the query matches whatever the cursor is holding
                 ContainerInput slotActionType = drop ? ContainerInput.THROW : ContainerInput.QUICK_MOVE;
 
-                if (options().isFillStacksEnabled() && options().buttonDisplayOptions.displayFillStacks && !drop) {
+                if (shouldFillStacksOnly() && !drop) {
                     if (!cursorStack.isEmpty() && !canMoveCursorItem(fromSlot, false, toInventory)) {
                         continue;
                     }
@@ -207,28 +219,63 @@ public class TransferInstance extends ManagementInstance {
      * @return {@code true} if the scroll was handled.
      */
     public boolean tryMoveSingleFromScroll(Slot hoveredSlot, double scrollY) {
-        if (!options().management.singularMoving
+        if (!options().management.scrollMoving
                 || hoveredSlot == null
                 || !hoveredSlot.hasItem()
-                || scrollY == 0
-                || getContainerSize() <= 0) {
+                || scrollY == 0) {
             return false;
         }
 
         boolean toContainer = scrollY > 0;
         boolean toInventory = !toContainer;
-        int containerSize = getContainerSize();
         int totalSlots = getTotalSlots();
-        int fromStart = toContainer ? containerSize : 0;
-        int fromEnd = toContainer ? totalSlots : containerSize;
-        int toStart = toContainer ? 0 : containerSize;
-        int toEnd = toContainer ? containerSize : totalSlots;
+        int fromStart;
+        int fromEnd;
+        int toStart;
+        int toEnd;
+
+        if (isInventoryScreen(instance().getScreen())) {
+            // Inventory screen layout:
+            // 0 result, 1-4 crafting input, 5-8 armor, 9-35 inventory, 36-44 hotbar, 45 offhand.
+            int playerStorageStart = 9;
+            int playerStorageEnd = Math.min(totalSlots, 45);
+            int craftingStart = 1;
+            int craftingEnd = Math.min(totalSlots, 5);
+
+            if (toContainer) {
+                fromStart = playerStorageStart;
+                fromEnd = playerStorageEnd;
+                toStart = craftingStart;
+                toEnd = craftingEnd;
+            } else {
+                fromStart = craftingStart;
+                fromEnd = craftingEnd;
+                toStart = playerStorageStart;
+                toEnd = playerStorageEnd;
+            }
+        } else {
+            int containerSize = getContainerBoundaryForSingleMove();
+            if (containerSize <= 0) {
+                return false;
+            }
+
+            fromStart = toContainer ? containerSize : 0;
+            fromEnd = toContainer ? totalSlots : containerSize;
+            toStart = toContainer ? 0 : containerSize;
+            toEnd = toContainer ? containerSize : totalSlots;
+        }
+
         ItemStack targetItem = hoveredSlot.getItem();
         int hoveredIndex = hoveredSlot.index;
+        boolean allowEmptyTargets = true;
 
         if (hoveredIndex >= fromStart
                 && hoveredIndex < fromEnd
                 && canUseScrollSourceSlot(hoveredSlot, targetItem, toContainer, totalSlots)) {
+            if (tryMoveIntoPreferredFurnaceFuelSlot(hoveredSlot, toContainer, targetItem)) {
+                return true;
+            }
+
             return moveSingleFromSourceSlot(
                     hoveredSlot,
                     toStart,
@@ -237,7 +284,8 @@ public class TransferInstance extends ManagementInstance {
                     toInventory,
                     targetItem,
                     !getCursorStack().isEmpty(),
-                    !options().isFillStacksEnabled()
+                    allowEmptyTargets,
+                    true
             );
         }
 
@@ -245,6 +293,10 @@ public class TransferInstance extends ManagementInstance {
             Slot sourceSlot = instance().getScreenMenu().getSlot(i);
             if (sourceSlot.index == hoveredIndex || !canUseScrollSourceSlot(sourceSlot, targetItem, toContainer, totalSlots)) {
                 continue;
+            }
+
+            if (tryMoveIntoPreferredFurnaceFuelSlot(sourceSlot, toContainer, targetItem)) {
+                return true;
             }
 
             return moveSingleFromSourceSlot(
@@ -255,10 +307,84 @@ public class TransferInstance extends ManagementInstance {
                     toInventory,
                     targetItem,
                     !getCursorStack().isEmpty(),
-                    !options().isFillStacksEnabled()
+                    allowEmptyTargets,
+                    true
             );
         }
         return false;
+    }
+
+    /**
+     * Tries to move into the furnace fuel slot first when applicable.
+     */
+    private boolean tryMoveIntoPreferredFurnaceFuelSlot(Slot sourceSlot, boolean toContainer, ItemStack targetItem) {
+        if (!toContainer || !(instance().getScreen() instanceof AbstractFurnaceScreen<?> furnaceScreen)) {
+            return false;
+        }
+
+        Level level = Minecraft.getInstance().level;
+        if (level == null) {
+            return false;
+        }
+
+        if (!level.fuelValues().isFuel(sourceSlot.getItem())) {
+            return false;
+        }
+
+        // Furnace slot layout: 0=input, 1=fuel, 2=result.
+        return moveSingleFromSourceSlot(
+                sourceSlot,
+                1,
+                2,
+                1,
+                false,
+                targetItem,
+                !getCursorStack().isEmpty(),
+                true,
+                true
+        );
+    }
+
+    /**
+     * @return the container/player boundary index used for single-item moving.
+     */
+    private int getContainerBoundaryForSingleMove() {
+        int containerSize = getContainerSize();
+        if (containerSize > 0) {
+            return containerSize;
+        }
+
+        int playerStorageStart = findPlayerStorageStartIndex();
+        if (playerStorageStart > 0) {
+            return playerStorageStart;
+        }
+
+        return isCraftingScreen(instance().getScreen()) ? 5 : 0;
+    }
+
+    /**
+     * @return the first screen slot index that belongs to player storage (main inventory or hotbar).
+     */
+    private int findPlayerStorageStartIndex() {
+        if (instance().getMinecraft().player == null) {
+            return -1;
+        }
+
+        Inventory playerInventory = instance().getMinecraft().player.getInventory();
+        int firstPlayerStorageSlot = Integer.MAX_VALUE;
+
+        for (Slot slot : instance().getScreenMenu().slots) {
+            if (slot.container != playerInventory) {
+                continue;
+            }
+
+            int playerSlot = slot.getContainerSlot();
+            if (playerSlot >= 0 && playerSlot <= 35) {
+                firstPlayerStorageSlot = Math.min(firstPlayerStorageSlot, slot.index);
+            }
+        }
+
+        return firstPlayerStorageSlot == Integer.MAX_VALUE ? -1 : firstPlayerStorageSlot;
     }
 
     /**
@@ -293,6 +419,17 @@ public class TransferInstance extends ManagementInstance {
      * @return {@code true} if one item was moved.
      */
     public boolean moveSingleFromSourceSlot(Slot sourceSlot, int toStart, int toEnd, int amount, boolean toInventory, ItemStack filterStack, boolean preserveCarriedStack, boolean allowEmptyTargets) {
+        return moveSingleFromSourceSlot(sourceSlot, toStart, toEnd, amount, toInventory, filterStack, preserveCarriedStack, allowEmptyTargets, false);
+    }
+
+    /**
+     * Moves one item from a single source slot into the target range.
+     *
+     * @param ignoreContainerFiltering if true, skip tracked-container filter restrictions.
+     *
+     * @return {@code true} if one item was moved.
+     */
+    public boolean moveSingleFromSourceSlot(Slot sourceSlot, int toStart, int toEnd, int amount, boolean toInventory, ItemStack filterStack, boolean preserveCarriedStack, boolean allowEmptyTargets, boolean ignoreContainerFiltering) {
         if (sourceSlot == null || !sourceSlot.hasItem()) {
             return false;
         }
@@ -335,27 +472,63 @@ public class TransferInstance extends ManagementInstance {
 
             boolean movedOne = false;
             for (int i = 0; i < amount; i++) {
-                if (quickTransferSingle(emptySlots, nonEmptySlots, sourceSlot)) {
+                if (quickTransferSingle(emptySlots, nonEmptySlots, sourceSlot, ignoreContainerFiltering)) {
                     movedOne = true;
                 }
             }
             return movedOne;
         } finally {
-            if (parkedCursorSlot != -1 && instance().getScreenMenu().getCarried().isEmpty()) {
-                Slot parkedSlot = instance().getScreenMenu().getSlot(parkedCursorSlot);
-                if (parkedSlot.hasItem()) {
-                    performClickSlot(instance().getScreen(), parkedSlot, parkedCursorSlot, 0, ContainerInput.PICKUP);
+            if (parkedCursorSlot != -1) {
+                // If a move path left something on the cursor, attempt to return it to source first.
+                if (!instance().getScreenMenu().getCarried().isEmpty()) {
+                    Slot freshSourceSlot = instance().getScreenMenu().getSlot(sourceSlot.index);
+                    performClickSlot(instance().getScreen(), freshSourceSlot, sourceSlot.index, 0, ContainerInput.PICKUP);
+                }
+
+                // Restore the originally parked carried stack when possible.
+                if (instance().getScreenMenu().getCarried().isEmpty()) {
+                    Slot parkedSlot = instance().getScreenMenu().getSlot(parkedCursorSlot);
+                    if (parkedSlot.hasItem()) {
+                        performClickSlot(instance().getScreen(), parkedSlot, parkedCursorSlot, 0, ContainerInput.PICKUP);
+                    }
                 }
             }
         }
     }
 
     /**
+     * @return the index after the last screen slot that belongs to player storage (main inventory or hotbar).
+     */
+    private int findPlayerStorageEndIndexExclusive() {
+        if (instance().getMinecraft().player == null) {
+            return -1;
+        }
+
+        Inventory playerInventory = instance().getMinecraft().player.getInventory();
+        int lastPlayerStorageSlot = -1;
+
+        for (Slot slot : instance().getScreenMenu().slots) {
+            if (slot.container != playerInventory) {
+                continue;
+            }
+
+            int playerSlot = slot.getContainerSlot();
+            if (playerSlot >= 0 && playerSlot <= 35) {
+                lastPlayerStorageSlot = Math.max(lastPlayerStorageSlot, slot.index);
+            }
+        }
+
+        return lastPlayerStorageSlot == -1 ? -1 : lastPlayerStorageSlot + 1;
+    }
+
+    /**
      * Quickly moves {@code one item} from the {@code source slot.}
+     *
+     * @param ignoreContainerFiltering if true, skip tracked-container filter restrictions.
      *
      * @return {@code true} if exactly one item was moved from the source slot.
      */
-    public boolean quickTransferSingle(Deque<Slot> emptySlots, List<Slot> nonEmptySlots, Slot sourceSlot) {
+    public boolean quickTransferSingle(Deque<Slot> emptySlots, List<Slot> nonEmptySlots, Slot sourceSlot, boolean ignoreContainerFiltering) {
         ItemStack original = sourceSlot.getItem();
         if (original.isEmpty()) {
             return false;
@@ -383,6 +556,18 @@ public class TransferInstance extends ManagementInstance {
                 break;
             }
 
+            if (!target.mayPlace(carried)) {
+                continue;
+            }
+
+            if (!ignoreContainerFiltering
+                    && ContainerHelper.IS_TRACKED_CONTAINER
+                    && options().management.containerFiltering
+                    && ContainerHelper.CURRENT_FILTER_MODE == FilteringMode.CURRENT_STACKS
+                    && !itemMatchesPlaceholder(target.getItem())) {
+                continue;
+            }
+
             if (!ItemStack.isSameItemSameComponents(carried, target.getItem())) {
                 continue;
             }
@@ -405,21 +590,31 @@ public class TransferInstance extends ManagementInstance {
             for (Iterator<Slot> it = emptySlots.iterator(); it.hasNext();) {
                 Slot empty = it.next();
 
+                if (!empty.mayPlace(carried)) {
+                    continue;
+                }
+
                 performClickSlot(instance().getScreen(), empty, empty.index, 1, ContainerInput.PICKUP);
 
                 if (empty.hasItem()) {
                     nonEmptySlots.add(empty);
                     it.remove();
                     movedOne = true;
+                    break;
                 }
-
-                break;
             }
         }
 
         // Return leftovers to original sourceSlot
         if (!instance().getScreenMenu().getCarried().isEmpty()) {
-            performClickSlot(instance().getScreen(), sourceSlot, slotId, 0, ContainerInput.PICKUP);
+            Slot freshSourceSlot = instance().getScreenMenu().getSlot(slotId);
+            performClickSlot(instance().getScreen(), freshSourceSlot, slotId, 0, ContainerInput.PICKUP);
+
+            // Defensive second pass: in edge cases (e.g., transient slot mutation), first restore can fail.
+            if (!instance().getScreenMenu().getCarried().isEmpty()) {
+                freshSourceSlot = instance().getScreenMenu().getSlot(slotId);
+                performClickSlot(instance().getScreen(), freshSourceSlot, slotId, 0, ContainerInput.PICKUP);
+            }
         }
 
         return movedOne;

@@ -53,10 +53,28 @@ public class MouseScrollInstance extends ManagementInstance {
     }
 
     /**
+     * Changes filter type (item/tag) when scrolling on the filtering button.
+     */
+    public void changeFilterType(double scrollY) {
+        if (scrollY == 0) {
+            return;
+        }
+        if (!ContainerHelper.isTrackedFilteringActive()) {
+            return;
+        }
+        if (!buttonHoveredAndActive(instance().getManagementButtons().filtering())) {
+            return;
+        }
+
+        ContainerHelper.toggleCurrentFilterMode();
+        playSortSound(instance().getMinecraft());
+    }
+
+    /**
      * Sets the move amount when scrolling.
      */
     public void setMoveAmount(Slot hoveredSlot, double scrollY) {
-        if (!options().management.singularMoving) {
+        if (!options().management.scrollMoving) {
             return;
         }
 
@@ -84,7 +102,7 @@ public class MouseScrollInstance extends ManagementInstance {
      */
     public void moveHoveredItem(double scrollY, CallbackInfoReturnable<Boolean> cir) {
         if (!isCreativeInventoryScreen(instance().getScreen())
-                && options().management.singularMoving
+                && options().management.scrollMoving
                 && hasMoveSingleModifierDown()
                 && !hasDropOnlyOneItemKeyDown()
                 && new TransferInstance(instance()).tryMoveSingleFromScroll(instance().getScreensHoveredSlot(), scrollY)) {

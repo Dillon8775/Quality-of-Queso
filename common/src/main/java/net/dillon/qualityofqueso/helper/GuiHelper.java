@@ -112,7 +112,7 @@ public class GuiHelper {
         if (!options().accessibility.tooltips.ddefault()) {
             return mouseX;
         }
-        int x = screen instanceof AbstractRecipeBookScreen<?> recipeBookScreen && getRecipeBookComponent(recipeBookScreen).isVisible() ? 161 : 84;
+        int x = options().misc.shiftRecipeBook && screen instanceof AbstractRecipeBookScreen<?> recipeBookScreen && getRecipeBookComponent(recipeBookScreen).isVisible() ? 161 : 84;
         return graphics.guiWidth() / 2 + x;
     }
 
@@ -191,7 +191,7 @@ public class GuiHelper {
      * @return the y-position for text-rendered tooltips.
      */
     public static int getTextTooltipY(Container container, AbstractContainerScreen<?> screen) {
-        int y = screen instanceof AbstractRecipeBookScreen<?> recipeBookScreen && getRecipeBookComponent(recipeBookScreen).isVisible() ? 82 : -40;
+        int y = options().misc.shiftRecipeBook && screen instanceof AbstractRecipeBookScreen<?> recipeBookScreen && getRecipeBookComponent(recipeBookScreen).isVisible() ? 82 : -40;
         if (isDropperDispenserOrHopperScreen(screen)) {
             y = -10;
         }
@@ -340,7 +340,7 @@ public class GuiHelper {
             return SLOT_AVERAGE;
         } else if (healthPercentage < 1.0F) {
             return SLOT_GOOD;
-        } else if (isLockedHotbarSlot(minecraft, false) && equipmentSlot == null) {
+        } else if ((options().lockedSlots.preventDropping || options().lockedSlots.showLock.inHud()) && isLockedHotbarSlot(minecraft, false) && equipmentSlot == null) {
             return SLOT_LOCKED;
         }
         return defaultSprite;

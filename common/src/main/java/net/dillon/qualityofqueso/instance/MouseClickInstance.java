@@ -65,7 +65,7 @@ public class MouseClickInstance extends ManagementInstance {
      * Handles moving only one or dropping one item in a stack.
      */
     public void moveOnlyOne(MouseButtonEvent event, CallbackInfoReturnable<Boolean> cir) {
-        if (options().management.singularMoving) {
+        if (options().management.scrollMoving) {
             boolean dropOnlyOne = hasDropOnlyOneItemKeyDown();
             boolean hasSingleModifierDown = hasMoveSingleModifierDown();
             if (event.button() == 1 && ((((dropOnlyOne || hasSingleModifierDown) && hoveredSlotHasItem(instance().getScreensHoveredSlot())))

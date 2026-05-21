@@ -1,5 +1,6 @@
 package net.dillon.qualityofqueso.widget.layout;
 
+import net.dillon.qualityofqueso.widget.BulkCraftButton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -156,7 +157,7 @@ public class WidgetLayout extends AbstractWidget {
             case 8 -> height = 43;
             case 10 -> height = 52;
             default -> height = 61;
-        };
+        }
         return height + this.getLayoutRows() * 3;
     }
 
@@ -197,7 +198,8 @@ public class WidgetLayout extends AbstractWidget {
 
         int recipeBookModifier = getRecipeBookModifier(this.screen);
         int x = finalX + recipeBookModifier;
-        int y = inventoryScreen ? -33 : -34;
+        int inventoryBaseY = -33;
+        int y = inventoryScreen ? inventoryBaseY : -34;
 
         int newX = finalX;
         boolean alreadyAddedModifier = false;
@@ -218,6 +220,7 @@ public class WidgetLayout extends AbstractWidget {
                 continue;
             }
 
+            boolean bulkCraft = options().management.layout.horizontal() && widget instanceof BulkCraftButton;
             if (options().management.layout.horizontal() && !isDropperDispenserOrHopperScreen(this.screen)) {
                 widget.setX(getManagementButtonX(this.screen, getImageWidth(this.screen), this.screen.width, buttons));
                 widget.setY(getManagementButtonY(this.screen, this.container, this.topPos, this.titleLabelY));
@@ -230,8 +233,13 @@ public class WidgetLayout extends AbstractWidget {
                     int column = buttons % 3;
                     int row = buttons / 3;
 
-                    widget.setX(originalX - (column * addition));
-                    widget.setY(originalY - (row * addition));
+                    if (bulkCraft) {
+                        widget.setX(this.screen.width / 2 + getImageWidth(this.screen) / 2 + recipeBookModifier - 41);
+                        widget.setY(inventoryBaseY + this.getContainerY() - 27);
+                    } else {
+                        widget.setX(originalX - (column * addition));
+                        widget.setY(originalY - (row * addition));
+                    }
                 } else if (merchantScreen) {
                     widget.setX(widget.getX() + 12);
                     widget.setY(widget.getY() + 22);
@@ -258,7 +266,9 @@ public class WidgetLayout extends AbstractWidget {
                 }
             }
             widget.extractRenderState(graphics, mouseX, mouseY, a);
-            buttons++;
+            if (!bulkCraft) {
+                buttons++;
+            }
         }
 
         RENDERED_BUTTONS = buttons;

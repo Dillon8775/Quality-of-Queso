@@ -6,7 +6,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
 public class ItemFrameSearchingOptionsScreen extends AbstractModOptionsScreen {
-    private AbstractWidget itemFrameSearchGlowDuration, itemFrameSearchRadius;
+    private AbstractWidget itemFrameSearching, itemFrameSearchGlowDuration, itemFrameSearchRadius;
 
     public ItemFrameSearchingOptionsScreen(Screen parent) {
         super(parent, Component.translatable("qualityofqueso.gui.title.item_frame_searching_options"));
@@ -14,11 +14,12 @@ public class ItemFrameSearchingOptionsScreen extends AbstractModOptionsScreen {
 
     @Override
     protected AbstractWidget[] options() {
+        this.itemFrameSearching = createOption(ListOptions.itemFrameSearching());
         this.itemFrameSearchGlowDuration = createOption(ListOptions.itemFrameSearchGlowDuration());
         this.itemFrameSearchRadius = createOption(ListOptions.itemFrameSearchRadius());
 
         return new AbstractWidget[]{
-                createOption(ListOptions.itemFrameSearching()),
+                this.itemFrameSearching,
                 this.itemFrameSearchGlowDuration,
 
                 this.itemFrameSearchRadius,

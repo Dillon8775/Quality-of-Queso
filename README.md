@@ -101,6 +101,7 @@
             <li><b>Fully client-side container filtering</b> by adding your filtered items into a container GUI</li>
             <br>
             <li><b>Lock slots,</b> to prevent them from being affected by transferring, dropping or sorting (ALT + MIDDLE CLICK)</li>
+            <li><b>Lock your inventory</b> to prevent items from being picked up</li>
             <li><b>Quick move one item</b> out of a stack by scrolling (hold SHIFT to drop, and scroll to increase/decrease amount)</li>
             <br>
             <li><b>Move only matching items</b> and fill stacks</li>
@@ -507,7 +508,6 @@ Currently, [Quality of Queso](https://modrinth.com/mod/quality-of-queso) ***does
 ### MC 1.21.11 *(and below)* Unsupported Features
 - [Fluid FOV Effect](https://quality-of-queso.fandom.com/wiki/FOV_Modifiers)
 ### MC 1.21.1 *(and below)* Unsupported Features
-- [Craft All (aka. bulk crafting)](https://quality-of-queso.fandom.com/wiki/Craft_All)
 - [Red Armor Tint](https://quality-of-queso.fandom.com/wiki/Red_Armor_Tint)
 - [Transparent Search Bar](https://quality-of-queso.fandom.com/wiki/Search_Bar#Customizable_Search_Bar)
 - [Overworld Fog Intensity](https://quality-of-queso.fandom.com/wiki/Remove_Fog#Fog_Intensity)

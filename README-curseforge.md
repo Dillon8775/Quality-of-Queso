@@ -50,6 +50,7 @@
 - <b>Fully client-side container filtering</b> by adding your filtered items into a container GUI
 <br><br>
 - <b>Lock slots,</b> to prevent them from being affected by transferring or sorting (ALT + MIDDLE CLICK)
+- <b>Lock your inventory</b> to prevent items from being picked up
 - <b>Quick move one item</b> out of a stack (CTRL to move, SHIFT to drop, scroll to increase/decrease amount)
 <br><br>
 - <b>Move only matching items</b> and fill stacks

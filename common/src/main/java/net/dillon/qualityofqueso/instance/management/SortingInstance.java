@@ -6,6 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.CreativeModeTabs;
@@ -34,7 +35,7 @@ public class SortingInstance extends ManagementInstance {
         int sortStart = inventory ? 9 : 0;
         int sortEnd = inventory
                 ? (options().management.includeHotbar ? 45 : 36)
-                : getContainerSize();
+                : getSortableContainerSize();
 
         boolean hasSortableItem = false;
         for (int i = sortStart; i < sortEnd; i++) {
@@ -124,7 +125,7 @@ public class SortingInstance extends ManagementInstance {
                 }
             }
         } else {
-            int containerSize = getContainerSize();
+            int containerSize = getSortableContainerSize();
             if (containerSize <= 0) {
                 return;
             }
@@ -282,6 +283,41 @@ public class SortingInstance extends ManagementInstance {
         }
 
         clearCarriedStack(sortableSlots);
+    }
+
+    /**
+     * @return the container slot count that should be sortable on the current screen.
+     * Falls back for modded container screens that do not expose a direct container instance.
+     */
+    private int getSortableContainerSize() {
+        int directSize = getContainerSize();
+        if (directSize > 0) {
+            return directSize;
+        }
+
+        int totalSlots = getTotalSlots();
+        if (totalSlots <= 0) {
+            return 0;
+        }
+
+        // Prefer locating where the player's inventory section actually begins.
+        // This avoids assuming a fixed 36-slot tail on modded menus that expose extra player slots.
+        if (instance().getMinecraft().player != null) {
+            AbstractContainerMenu menu = instance().getScreenMenu();
+            Inventory playerInventory = instance().getMinecraft().player.getInventory();
+            for (int i = 0; i < totalSlots; i++) {
+                if (menu.getSlot(i).container == playerInventory) {
+                    return i;
+                }
+            }
+        }
+
+        // Fallback for menus that still follow vanilla-style trailing player inventory layout.
+        if (totalSlots > 36) {
+            return totalSlots - 36;
+        }
+
+        return totalSlots;
     }
 
     /**

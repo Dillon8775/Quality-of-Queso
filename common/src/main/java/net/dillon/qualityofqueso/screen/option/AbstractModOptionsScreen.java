@@ -67,7 +67,7 @@ public abstract class AbstractModOptionsScreen extends OptionsSubScreen {
         saveAndApplyConfigs(this.minecraft);
         ModHelper.debug("Saved changes.");
         if (this.minecraft.level != null) {
-            sendClientOptionsToServer();
+            sendClientPreferencesToServer();
         }
         super.onClose();
     }
@@ -215,7 +215,7 @@ public abstract class AbstractModOptionsScreen extends OptionsSubScreen {
     }
 
     /**
-     * Determines if buttons can be active.
+     * Determines if buttons can be active, and renders custom tooltips on them.
      */
     protected void activateButtons() {
     }

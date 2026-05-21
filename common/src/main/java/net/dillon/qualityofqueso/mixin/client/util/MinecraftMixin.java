@@ -48,15 +48,18 @@ public abstract class MinecraftMixin {
      */
     @Inject(method = "tick", at = @At("TAIL"))
     private void tickModEvents(CallbackInfo ci) {
-        if (!modEnabled(Minecraft.getInstance())) {
+        Minecraft minecraft = Minecraft.getInstance();
+
+        if (!modEnabled(minecraft)) {
             return;
         }
 
         ModHelper.tickCooldowns();
+        ModHelper.tickManualItemPickup(minecraft);
 
         ClickSlotInstance.tickTradeAllTask();
-        ClickSlotInstance.tickCraftAllTask();
-        MobHitDingTracker.tick(Minecraft.getInstance());
+        ClickSlotInstance.tickBulkCraftTask();
+        MobHitDingTracker.tick(minecraft);
 
         if (!options().misc.fortniteBattlePass) {
             return;

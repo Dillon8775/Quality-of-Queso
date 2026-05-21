@@ -14,7 +14,7 @@ import static net.dillon.qualityofqueso.helper.ModHelper.*;
 /**
  * Keybindings for the {@code Quality of Queso} mod.
  */
-public final class ModKeyMappings {
+public class ModKeyMappings {
     public static final KeyMapping.Category QOQ_KEY_CATEGORY = KeyMapping.Category.register(ofQoQ("quality_of_queso"));
 
     public static final ManagedKeyMapping LOCK_SLOT = Kuma.createKeyMapping(ofQoQ("lock_slot"))
@@ -22,7 +22,7 @@ public final class ModKeyMappings {
             .withDefault(InputBinding.mouse(InputConstants.MOUSE_BUTTON_MIDDLE, KeyModifiers.of(KeyModifier.ALT)))
             .build();
 
-    public static final ManagedKeyMapping MOVE_SINGLE_ITEM = Kuma.createKeyMapping(ofQoQ("move_single"))
+    public static final ManagedKeyMapping SCROLL_MOVE = Kuma.createKeyMapping(ofQoQ("scroll_move"))
             .overrideCategory(QOQ_KEY_CATEGORY)
             .withDefault(InputBinding.key(InputConstants.KEY_LCONTROL))
             .build();
@@ -116,7 +116,7 @@ public final class ModKeyMappings {
      * @return if the user has the "move single modifier" key down.
      */
     public static boolean hasMoveSingleModifierDown() {
-        return options().management.singularMoving && MOVE_SINGLE_ITEM.isActiveAndDown();
+        return options().management.scrollMoving && SCROLL_MOVE.isActiveAndDown();
     }
 
     /**

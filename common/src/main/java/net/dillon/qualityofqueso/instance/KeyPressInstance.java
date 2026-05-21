@@ -4,6 +4,7 @@ import net.dillon.qualityofqueso.helper.MethodHelper;
 import net.dillon.qualityofqueso.instance.management.ManagementInstance;
 import net.dillon.qualityofqueso.keybind.ModKeyMappings;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.AbstractRecipeBookScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.input.KeyEvent;
@@ -33,7 +34,9 @@ public class KeyPressInstance extends ManagementInstance {
     private void handleManagementKeybinds(KeyEvent event, CallbackInfoReturnable<Boolean> cir) {
         boolean quickDropShortcutPressed = kumaKeyPressed(QUICK_DROP, event);
 
-        if (!quickDropShortcutPressed && !isCreativeInventoryScreen(instance().getScreen()) && transferInstance().canSingularQuickDrop(event)) {
+        if (!quickDropShortcutPressed
+                && !isCreativeInventoryScreen(instance().getScreen())
+                && transferInstance().canSingularQuickDrop(event)) {
             transferInstance().performSingularDrop();
         }
 
@@ -51,8 +54,11 @@ public class KeyPressInstance extends ManagementInstance {
             return;
         }
 
-        if ((isContainerScreen(instance().getScreen()) || isOtherValidScreen(instance().getScreen()))
-                && options().management.transferring.buttonOrKeyOrKeyOnly()) {
+        if (!(instance().getScreen() instanceof AbstractContainerScreen<?>)) {
+            return;
+        }
+
+        if (options().management.transferring.buttonOrKeyOrKeyOnly()) {
             if (kumaKeyPressed(ModKeyMappings.MOVE_TO_INVENTORY, event)) {
                 transferInstance().transferItems(true, false);
             }
@@ -61,23 +67,19 @@ public class KeyPressInstance extends ManagementInstance {
             }
         }
 
-        if (!isValidScreen(instance().getScreen()) && !isDropperDispenserOrHopperScreen(instance().getScreen())) {
-            return;
-        }
-
-        if (options().sorting.sortingEnabled.buttonOrKeyOrKeyOnly() && kumaKeyPressed(ModKeyMappings.SORT, event)) {
+        if (options().sorting.sortingEnabled.buttonOrKeyOrKeyOnly()
+                && kumaKeyPressed(ModKeyMappings.SORT, event)) {
             sortingInstance().trySort();
         }
 
-        if (!isValidScreen(instance().getScreen())) {
-            return;
-        }
-
-        if (isContainerScreen(instance().getScreen()) && options().management.swapping.buttonOrKeyOrKeyOnly() && kumaKeyPressed(ModKeyMappings.SWAP_ITEMS, event)) {
-            transferInstance().trySwap();
-        }
         if (options().management.quickDrop.buttonOrKeyOrKeyOnly() && quickDropShortcutPressed) {
             transferInstance().dropItems(!isContainerScreen(instance().getScreen()));
+        }
+
+        if (isContainerScreen(instance().getScreen())
+                && options().management.swapping.buttonOrKeyOrKeyOnly()
+                && kumaKeyPressed(ModKeyMappings.SWAP_ITEMS, event)) {
+            transferInstance().trySwap();
         }
     }
 

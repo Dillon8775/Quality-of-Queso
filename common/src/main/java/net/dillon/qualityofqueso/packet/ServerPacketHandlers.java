@@ -12,6 +12,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.decoration.ItemFrame;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -50,6 +51,21 @@ public class ServerPacketHandlers {
     public static void handleClientToServerOptions(ServerPlayer player, ClientPreferencesC2SPacket packet) {
         DedicatedServerStorage.setIncludeHotbar(player.getUUID(), packet.includeHotbar());
         DedicatedServerStorage.setPerpendicularQuickMoving(player.getUUID(), packet.perpendicularQuickMoving());
+        DedicatedServerStorage.setLockedInventory(player.getUUID(), packet.lockInventory());
+    }
+
+    /**
+     * Performs manual pickup by allowing one-shot touch on the targeted item entity.
+     */
+    public static void handleManualItemPickupIntent(ServerPlayer player, ManualItemPickupC2SPacket packet) {
+        if (!DedicatedServerStorage.isLockedInventory(player.getUUID()) || !player.isShiftKeyDown()) {
+            return;
+        }
+
+        if (player.level().getEntity(packet.entityId()) instanceof ItemEntity itemEntity) {
+            DedicatedServerStorage.allowManualPickup(player.getUUID(), itemEntity.getId(), player.level().getGameTime() + 2L);
+            itemEntity.playerTouch(player);
+        }
     }
 
     /**

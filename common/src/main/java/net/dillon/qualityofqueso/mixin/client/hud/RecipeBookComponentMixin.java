@@ -1,5 +1,6 @@
 package net.dillon.qualityofqueso.mixin.client.hud;
 
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
@@ -9,9 +10,11 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
+import static net.dillon.qualityofqueso.helper.ModHelper.options;
 
 @Mixin(RecipeBookComponent.class)
 public class RecipeBookComponentMixin {
@@ -20,6 +23,30 @@ public class RecipeBookComponentMixin {
     @Shadow
     @Nullable
     public EditBox searchBox;
+
+    /**
+     * Prevents the actual screen from shifting when opening the recipe book.
+     */
+    @ModifyReturnValue(method = "updateScreenPosition", at = @At("RETURN"))
+    private int removeRecipeBookScreenShift(int original, int width, int imageWidth) {
+        return !options().misc.shiftRecipeBook ? (width - imageWidth) / 2 : original;
+    }
+
+    /**
+     * The {@code X origin} position for the recipe book.
+     */
+    @ModifyReturnValue(method = "getXOrigin", at = @At("RETURN"))
+    private int changeRecipeBookPosition(int original) {
+        return !options().misc.shiftRecipeBook ? original - 77 : original;
+    }
+
+    /**
+     * Updates tabs accordingly when removing the shift from the recipe book.
+     */
+    @ModifyArg(method = "updateTabs", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/recipebook/RecipeBookTabButton;setPosition(II)V"), index = 0)
+    private int changeRecipeBookTabButtonPosition(int original) {
+        return !options().misc.shiftRecipeBook ? original - 77 : original;
+    }
 
     /**
      * Fixes an odd bug where if the chat key is pressed, it focuses into the search field.

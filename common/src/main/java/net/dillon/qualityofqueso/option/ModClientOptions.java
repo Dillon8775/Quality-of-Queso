@@ -75,45 +75,60 @@ public class ModClientOptions {
 
     public static class Management {
         public Transferring transferring = Transferring.BUTTON_OR_KEY;
-        public boolean filtering = true;
+        public boolean containerFiltering = true;
         public QuickDrop quickDrop = QuickDrop.KEY_ONLY;
-        public boolean singularMoving = true;
+        public boolean scrollMoving = true;
         public boolean dragSorting = true;
         public boolean dragMoving = true;
         public Swapping swapping = Swapping.OFF;
+        public LockInventory lockInventory = LockInventory.UNLOCKED;
 
         public Layout layout = Layout.HORIZONTAL;
-        public boolean tradeAll = false;
-        public boolean craftAll = false;
+        public boolean bulkTrade = false;
+        public boolean bulkCraft = false;
         public boolean playSounds = true;
 
         // Config-only
         public boolean includeHotbar = true;
-        public boolean moveMatchingItems = false;
-        protected boolean fillStacks = false;
+        public FilteringMode filteringMode = FilteringMode.NONE;
         protected boolean alwaysQuickMove = false;
         public boolean saveExcludedSlots = false;
     }
 
     /**
-     * @return if fill stacks is enabled.
+     * @return if move-matching behavior is enabled.
      */
-    public boolean isFillStacksEnabled() {
-        return this.buttonDisplayOptions.displayFillStacks && this.management.fillStacks;
+    public boolean isFiltering() {
+        return this.management.filteringMode.matchingOrCurrentStacks();
     }
 
     /**
-     * @return fill stacks.
+     * @return if fill current stacks behavior is enabled.
      */
-    public boolean getFillStacks() {
-        return this.management.fillStacks;
+    public boolean isFillingCurrentStacks() {
+        return this.management.filteringMode == FilteringMode.CURRENT_STACKS;
     }
 
     /**
-     * Toggles fill stacks.
+     * Cycles filtering mode for the combined filtering button.
      */
-    public void toggleFillStacks() {
-        this.management.fillStacks = !this.management.fillStacks;
+    public void cycleFilteringMode() {
+        this.management.filteringMode = switch (this.management.filteringMode) {
+            case NONE -> FilteringMode.MATCHING;
+            case MATCHING -> FilteringMode.CURRENT_STACKS;
+            case CURRENT_STACKS -> FilteringMode.NONE;
+        };
+    }
+
+    /**
+     * Cycles locked inventory modes.
+     */
+    public void cycleLockedInventoryMode() {
+        this.management.lockInventory = switch (this.management.lockInventory) {
+            case UNLOCKED -> LockInventory.LOCKED;
+            case LOCKED -> LockInventory.SOFT_LOCKED;
+            case SOFT_LOCKED -> LockInventory.UNLOCKED;
+        };
     }
 
     /**
@@ -156,12 +171,13 @@ public class ModClientOptions {
 
     public static class ButtonDisplayOptions {
         public IncludeHotbar displayIncludeHotbar = IncludeHotbar.ALWAYS;
-        public MoveMatchingItems displayMoveMatchingItems = MoveMatchingItems.ALWAYS;
+        public FilteringButton displayFiltering = FilteringButton.ALWAYS;
         public boolean displaySearchTransportables = true;
         public boolean displayAlwaysQuickMove = false;
-        public boolean displayFillStacks = false;
-        public boolean displayTradeAll = true;
-        public boolean displayCraftAll = true;
+        public boolean displayBulkTrade = true;
+        public boolean displayBulkCraft = true;
+        public boolean safeBulk = true;
+        public boolean displayLockInventory = true;
     }
 
     public static class Hud {
@@ -219,6 +235,9 @@ public class ModClientOptions {
         public boolean redArmorTint = false;
         public boolean fortniteBattlePass = false;
 
+        public boolean shiftRecipeBook = true;
+        public boolean autoCloseRecipeBook = true;
+
         public int itemFrameSearchGlowDuration = 0;
         public int itemFrameSearchRadius = 150;
     }
@@ -251,8 +270,6 @@ public class ModClientOptions {
 
         public Tooltips tooltips = Tooltips.DEFAULT;
         public boolean preventEFromTyping = true;
-
-        public boolean autoCloseRecipeBook = true;
 
         public boolean searchInventory = true;
         public boolean darkerOverlay = false;

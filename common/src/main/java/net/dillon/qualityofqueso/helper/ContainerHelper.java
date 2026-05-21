@@ -4,6 +4,7 @@ import net.blay09.mods.balm.Balm;
 import net.dillon.qualityofqueso.option.ContainerData;
 import net.dillon.qualityofqueso.option.LockedContainerSlots;
 import net.dillon.qualityofqueso.option.LockedPlayerSlots;
+import net.dillon.qualityofqueso.option.eum.management.FilteringMode;
 import net.dillon.qualityofqueso.option.eum.management.sorting.CurrentSortingMode;
 import net.dillon.qualityofqueso.option.eum.management.sorting.DefaultSortingMode;
 import net.dillon.qualityofqueso.packet.RequestShulkerStateC2SPacket;
@@ -38,7 +39,7 @@ import static net.dillon.qualityofqueso.helper.ModHelper.trackedContainers;
  * Tracks client-selected containers.
  */
 public class ContainerHelper {
-    public enum FilterMode {
+    public enum FilteringType {
         ITEM,
         TAG;
 
@@ -53,13 +54,21 @@ public class ContainerHelper {
     public static boolean IS_TRACKED_CONTAINER = false;
     public static boolean OPENING_PLACEHOLDER_SCREEN = false;
     public static boolean RETURNING_FROM_PLACEHOLDER_SCREEN = false;
-    public static FilterMode CURRENT_FILTER_MODE = FilterMode.ITEM;
+    public static FilteringType CURRENT_FILTER_TYPE = FilteringType.ITEM;
+    public static FilteringMode CURRENT_FILTER_MODE = FilteringMode.MATCHING;
     private static boolean capturedGlobalSortingModeForActiveContainer = false;
     private static Set<String> pendingOpenedContainerKeys = null;
     private static Set<String> activeContainerKeys = null;
     private static BlockPos pendingOpenedShulkerPos = null;
     private static BlockPos activeShulkerPos = null;
     private static final Map<BlockPos, ShulkerState> shulkerStateCache = new HashMap<>();
+
+    /**
+     * @return {@code true} when tracked-container filtering behavior should be active.
+     */
+    public static boolean isTrackedFilteringActive() {
+        return IS_TRACKED_CONTAINER && options().management.containerFiltering;
+    }
 
     /**
      * @return valid block entities for tracking.
@@ -74,7 +83,8 @@ public class ContainerHelper {
     public static void clearActiveContainer() {
         activeContainerKeys = null;
         activeShulkerPos = null;
-        CURRENT_FILTER_MODE = FilterMode.ITEM;
+        CURRENT_FILTER_TYPE = FilteringType.ITEM;
+        CURRENT_FILTER_MODE = FilteringMode.MATCHING;
         capturedGlobalSortingModeForActiveContainer = false;
     }
 
@@ -124,6 +134,16 @@ public class ContainerHelper {
             trackedContainers().containerSortingModes = new HashMap<>();
         }
         return trackedContainers().containerSortingModes;
+    }
+
+    /**
+     * @return the tracked filtering modes by container key group.
+     */
+    private static Map<String, String> containerFilteringModes() {
+        if (trackedContainers().containerFilteringModes == null) {
+            trackedContainers().containerFilteringModes = new HashMap<>();
+        }
+        return trackedContainers().containerFilteringModes;
     }
 
     /**
@@ -302,6 +322,53 @@ public class ContainerHelper {
     }
 
     /**
+     * Applies saved filtering mode for the active tracked context.
+     */
+    private static void applyActiveTrackedFilteringMode() {
+        if (!IS_TRACKED_CONTAINER) {
+            return;
+        }
+        String key = activeSortKey();
+        if (key.isEmpty()) {
+            CURRENT_FILTER_MODE = getDefaultFilteringModeForContainer();
+            return;
+        }
+
+        String stored = containerFilteringModes().get(key);
+        if (stored == null || stored.isBlank()) {
+            FilteringMode mode = getDefaultFilteringModeForContainer();
+            CURRENT_FILTER_MODE = mode;
+            containerFilteringModes().put(key, mode.name());
+            ContainerData.INSTANCE.save();
+            return;
+        }
+
+        CURRENT_FILTER_MODE = FilteringMode.valueOf(stored);
+    }
+
+    /**
+     * @return the default filtering mode to use for unconfigured containers.
+     */
+    private static FilteringMode getDefaultFilteringModeForContainer() {
+        return options().isFillingCurrentStacks() ? FilteringMode.CURRENT_STACKS : FilteringMode.MATCHING;
+    }
+
+    /**
+     * Persists current filtering mode for the active tracked context.
+     */
+    private static void storeActiveFilteringMode(FilteringMode mode) {
+        if (mode == null || !IS_TRACKED_CONTAINER) {
+            return;
+        }
+        String key = activeSortKey();
+        if (key.isEmpty()) {
+            return;
+        }
+        containerFilteringModes().put(key, mode.name());
+        ContainerData.INSTANCE.save();
+    }
+
+    /**
      * Removes persisted sort mode for a container key group.
      */
     private static void clearStoredSortModeForContainer(Set<String> keys) {
@@ -312,6 +379,20 @@ public class ContainerHelper {
 
         // Remove container sorting mode if it's not null
         if (containerSortingModes().remove(groupKey) != null) {
+            ContainerData.INSTANCE.save();
+        }
+    }
+
+    /**
+     * Removes persisted filtering mode for a container key group.
+     */
+    private static void clearStoredFilteringModeForContainer(Set<String> keys) {
+        String groupKey = containerGroupKey(keys);
+        if (groupKey.isEmpty()) {
+            return;
+        }
+
+        if (containerFilteringModes().remove(groupKey) != null) {
             ContainerData.INSTANCE.save();
         }
     }
@@ -394,9 +475,17 @@ public class ContainerHelper {
             BlockPos immutablePos = pos.immutable();
             ShulkerState state = shulkerState(immutablePos);
             state.filtered = !state.filtered;
+            if (!state.filtered) {
+                String shulkerKey = shulkerSortKey(immutablePos);
+                if (!shulkerKey.isEmpty()) {
+                    containerSortingModes().remove(shulkerKey);
+                    containerFilteringModes().remove(shulkerKey);
+                    ContainerData.INSTANCE.save();
+                }
+            }
             // Store the current filtering mode from the shulker pos
             if (activeShulkerPos != null && activeShulkerPos.equals(immutablePos)) {
-                CURRENT_FILTER_MODE = state.tagFiltered ? FilterMode.TAG : FilterMode.ITEM;
+                CURRENT_FILTER_TYPE = state.tagFiltered ? FilteringType.TAG : FilteringType.ITEM;
             }
             // Store the active shulker pos as the shulker's position
             activeShulkerPos = immutablePos;
@@ -414,6 +503,7 @@ public class ContainerHelper {
             itemFilteredContainers().removeAll(keys);
             tagFilteredContainers().removeAll(keys);
             clearStoredSortModeForContainer(keys);
+            clearStoredFilteringModeForContainer(keys);
             tracked = false;
         } else {
             itemFilteredContainers().addAll(keys);
@@ -472,14 +562,16 @@ public class ContainerHelper {
             // Set the filter mode
             ShulkerState state = shulkerStateCache.get(activeShulkerPos);
             if (state == null) {
-                CURRENT_FILTER_MODE = FilterMode.ITEM;
+                CURRENT_FILTER_TYPE = FilteringType.ITEM;
+                CURRENT_FILTER_MODE = FilteringMode.MATCHING;
                 return false;
             }
 
             // Set the current filtering mode, and if the shulker is a tracked container
-            CURRENT_FILTER_MODE = state.tagFiltered ? FilterMode.TAG : FilterMode.ITEM;
+            CURRENT_FILTER_TYPE = state.tagFiltered ? FilteringType.TAG : FilteringType.ITEM;
             IS_TRACKED_CONTAINER = state.filtered;
             // Apply changes, return if filtered
+            applyActiveTrackedFilteringMode();
             applyActiveTrackedSortMode();
             return state.filtered;
         }
@@ -495,12 +587,28 @@ public class ContainerHelper {
         boolean tag = activeContainerKeys.stream().anyMatch(k -> tagFilteredContainers().contains(k));
         boolean tracked = activeContainerKeys.stream().anyMatch(k -> itemFilteredContainers().contains(k)) || tag;
         // Store the current filter mode for the container
-        CURRENT_FILTER_MODE = tag ? FilterMode.TAG : FilterMode.ITEM;
+        CURRENT_FILTER_TYPE = tag ? FilteringType.TAG : FilteringType.ITEM;
         // Apply changes, return if filtered
         pendingOpenedContainerKeys = null;
         IS_TRACKED_CONTAINER = tracked;
+        applyActiveTrackedFilteringMode();
         applyActiveTrackedSortMode();
         return tracked;
+    }
+
+    /**
+     * Cycles filtering mode for the currently opened tracked container.
+     */
+    public static void cycleCurrentFilteringMode() {
+        if (!IS_TRACKED_CONTAINER) {
+            return;
+        }
+        CURRENT_FILTER_MODE = switch (CURRENT_FILTER_MODE) {
+            case NONE -> FilteringMode.MATCHING;
+            case MATCHING -> FilteringMode.CURRENT_STACKS;
+            case CURRENT_STACKS -> FilteringMode.MATCHING;
+        };
+        storeActiveFilteringMode(CURRENT_FILTER_MODE);
     }
 
     /**
@@ -516,20 +624,20 @@ public class ContainerHelper {
             }
             // Set filtering modes, send to server, return out
             state.tagFiltered = !state.tagFiltered;
-            CURRENT_FILTER_MODE = state.tagFiltered ? FilterMode.TAG : FilterMode.ITEM;
+            CURRENT_FILTER_TYPE = state.tagFiltered ? FilteringType.TAG : FilteringType.ITEM;
             pushActiveShulkerStateToServer();
             return;
         }
 
         // Handle item filtering
-        if (CURRENT_FILTER_MODE == FilterMode.ITEM) {
+        if (CURRENT_FILTER_TYPE == FilteringType.ITEM) {
             itemFilteredContainers().removeAll(activeContainerKeys);
             tagFilteredContainers().addAll(activeContainerKeys);
-            CURRENT_FILTER_MODE = FilterMode.TAG;
+            CURRENT_FILTER_TYPE = FilteringType.TAG;
         } else { // Handle tag filtering
             tagFilteredContainers().removeAll(activeContainerKeys);
             itemFilteredContainers().addAll(activeContainerKeys);
-            CURRENT_FILTER_MODE = FilterMode.ITEM;
+            CURRENT_FILTER_TYPE = FilteringType.ITEM;
         }
         // Save the data
         ContainerData.INSTANCE.save();
@@ -800,7 +908,7 @@ public class ContainerHelper {
         // Apply the data to the client, from server
         if (activeShulkerPos != null && activeShulkerPos.equals(pos)) {
             IS_TRACKED_CONTAINER = state.filtered;
-            CURRENT_FILTER_MODE = state.tagFiltered ? FilterMode.TAG : FilterMode.ITEM;
+            CURRENT_FILTER_TYPE = state.tagFiltered ? FilteringType.TAG : FilteringType.ITEM;
             applyActiveTrackedSortMode();
         }
     }

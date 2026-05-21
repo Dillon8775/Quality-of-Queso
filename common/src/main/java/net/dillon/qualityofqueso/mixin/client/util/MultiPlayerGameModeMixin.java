@@ -213,7 +213,7 @@ public class MultiPlayerGameModeMixin {
      */
     @Unique
     private static boolean shouldCancelForContainerFilter(Minecraft minecraft, BlockPos pos) {
-        if (!modEnabled(minecraft) || !options().management.filtering || minecraft.player == null || minecraft.level == null
+        if (!modEnabled(minecraft) || !options().management.containerFiltering || minecraft.player == null || minecraft.level == null
                 || !minecraft.player.isShiftKeyDown() || isHoldingItem(minecraft.player, DataComponents.TOOL)) {
             return false;
         }
