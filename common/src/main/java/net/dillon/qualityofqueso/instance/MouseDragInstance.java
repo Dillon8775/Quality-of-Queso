@@ -27,7 +27,7 @@ public class MouseDragInstance extends ManagementInstance {
         }
 
         if (event.button() == 0
-                && hoveredSlotHasItem(instance().getScreensHoveredSlot()) && instance().getCurrentInventory() != null
+                && hoveredSlotHasItem(instance().getScreensHoveredSlot())
                 && !transferInstance().canSingularMove()
                 && !isExcludingOrLockingSlots()
                 && !lockedSlotsInstance().isLockedSlot(instance().getScreensHoveredSlot().index)

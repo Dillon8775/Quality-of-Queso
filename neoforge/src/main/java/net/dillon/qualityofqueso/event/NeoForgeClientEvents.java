@@ -2,7 +2,7 @@ package net.dillon.qualityofqueso.event;
 
 import net.dillon.qualityofqueso.keybind.ModKeyMappings;
 import net.dillon.qualityofqueso.main.ClientEvents;
-import net.dillon.qualityofqueso.packet.GlowSearchC2SPacket;
+import net.dillon.qualityofqueso.platform.MultiLoader;
 import net.dillon.qualityofqueso.util.ModConstants;
 import net.minecraft.client.Minecraft;
 import net.neoforged.api.distmarker.Dist;
@@ -11,7 +11,6 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
-import net.neoforged.neoforge.network.registration.NetworkRegistry;
 
 @EventBusSubscriber(modid = ModConstants.MOD_ID, value = Dist.CLIENT)
 public class NeoForgeClientEvents {
@@ -26,7 +25,7 @@ public class NeoForgeClientEvents {
         Minecraft minecraft = Minecraft.getInstance();
         ClientEvents.onPlayerJoin(minecraft);
 
-        if (!NetworkRegistry.hasChannel(event.getPlayer().connection, GlowSearchC2SPacket.ID)) {
+        if (!MultiLoader.getPlatform().canSendPacket(event.getPlayer())) {
             minecraft.execute(() -> ClientEvents.warnModNotPresent(minecraft));
         }
     }

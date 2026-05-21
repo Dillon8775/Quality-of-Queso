@@ -54,6 +54,7 @@ public abstract class ToggleableButton extends TransferButton {
      */
     @Override
     protected void renderContents(GuiGraphics context, int mouseX, int mouseY, float deltaTicks) {
+        this.activateButton();
         this.renderBaseButtonTexture(this.option() ? this.onTextureId() : this.offTextureId(), this, context);
         if (this.isHovered() && options().accessibility.tooltips.on()) {
             drawTooltip(this.getTooltipToRender(), context, this.font, mouseX, mouseY);

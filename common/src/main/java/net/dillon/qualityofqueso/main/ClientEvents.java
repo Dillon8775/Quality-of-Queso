@@ -39,7 +39,7 @@ public final class ClientEvents {
                 minecraft.player.displayClientMessage(Component.translatable("qualityofqueso.gui.enable_multi_server_configs"), false);
             }
         }
-        sendClientOptionsToServer();
+        sendClientPreferencesToServer();
     }
 
     public static void onPlayerDisconnect(Minecraft minecraft) {

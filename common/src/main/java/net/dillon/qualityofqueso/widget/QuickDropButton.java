@@ -55,7 +55,7 @@ public class QuickDropButton extends TransferButton {
             ButtonHelper.drawButtonTexture(graphics, "quick_drop/" + outline, this);
         }
         if (hasDropOnlyOneItemKeyDown()
-                && ((options().management.singularMoving && ((this.isHovered()) || getCurrentScreen() instanceof AbstractContainerScreen<?> screen && getHoveredSlot(screen) != null && getHoveredSlot(screen).hasItem())) || shortcutKeyPressed)) {
+                && ((options().management.scrollMoving && ((this.isHovered()) || getCurrentScreen() instanceof AbstractContainerScreen<?> screen && getHoveredSlot(screen) != null && getHoveredSlot(screen).hasItem())) || shortcutKeyPressed)) {
             ButtonHelper.drawButtonTexture(graphics, MOVE_ONE_PATH, this);
         }
     }

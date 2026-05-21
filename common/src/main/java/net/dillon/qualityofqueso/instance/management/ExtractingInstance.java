@@ -91,7 +91,7 @@ public class ExtractingInstance extends ManagementInstance {
                 // Otherwise, gray out slots that don't match the search
                 else if (!options().management.includeHotbar
                         && (isInventoryScreen(instance().getScreen()) ? isInventoryHotbarSlot(true, slot.index) : isHotbarSlot(instance().getScreenMenu().slots.size(), slot.index))
-                        && (options().management.transferring.buttonOrKeyOrKeyOnly() || options().management.singularMoving)) {
+                        && (options().management.transferring.buttonOrKeyOrKeyOnly() || options().management.scrollMoving)) {
                     if (shouldGrayout(slot)) {
                         searchInstance().renderGrayedSlot(graphics, slot, slot.hasItem());
                         alreadyExcluded = true;
@@ -170,7 +170,7 @@ public class ExtractingInstance extends ManagementInstance {
         if (instance().getSearchFields().inventory() != null) {
             // Re-position the inventory search field if the recipe book screen is open
             instance().getSearchFields().inventory().setX(instance().getScreen().width / 2 + getBarWidth(getImageWidth(instance().getScreen())) / 2 - (
-                    instance().getScreen() instanceof AbstractRecipeBookScreen<?> recipeBookScreen && getRecipeBookComponent(recipeBookScreen).isVisible() ? -16 : 60
+                    options().misc.shiftRecipeBook && instance().getScreen() instanceof AbstractRecipeBookScreen<?> recipeBookScreen && getRecipeBookComponent(recipeBookScreen).isVisible() ? -16 : 60
             ));
             instance().getSearchFields().inventory().renderWidget(graphics, mouseX, mouseY, a);
         }
@@ -244,17 +244,11 @@ public class ExtractingInstance extends ManagementInstance {
             }
 
             if (!inventoryScreen
-                    && (ContainerHelper.IS_TRACKED_CONTAINER || !options().buttonDisplayOptions.displayMoveMatchingItems.filteredContainersOnly()
-                    && ((containerScreen || dropperDispenserOrHopperScreen) && options().management.filtering && options().management.transferring.buttonOrKeyOrKeyOnly()))) {
+                    && (ContainerHelper.IS_TRACKED_CONTAINER || !options().buttonDisplayOptions.displayFiltering.filteredContainersOnly()
+                    && ((containerScreen || dropperDispenserOrHopperScreen) && options().management.containerFiltering && options().management.transferring.buttonOrKeyOrKeyOnly()))) {
                 // MOVE MATCHING ITEMS BUTTON
-                widgetHandler().getManagementButtons().initMoveMatchingItems(
-                        widgetHandlerInstance().addWidget(widgetHandlerInstance().createMoveMatchingItems()));
-            }
-
-            if (!inventoryScreen && options().buttonDisplayOptions.displayFillStacks && options().management.transferring.buttonOrKeyOrKeyOnly()) {
-                // FILL STACKS BUTTON
-                widgetHandler().getManagementButtons().initFillStacks(
-                        widgetHandlerInstance().addWidget(widgetHandlerInstance().createFillStacks()));
+                widgetHandler().getManagementButtons().initFiltering(
+                        widgetHandlerInstance().addWidget(widgetHandlerInstance().createFiltering()));
             }
         }
 
@@ -317,16 +311,21 @@ public class ExtractingInstance extends ManagementInstance {
             }
         }
 
-        if (options().buttonDisplayOptions.displayTradeAll && merchantScreen) {
+        if (options().buttonDisplayOptions.displayBulkTrade && merchantScreen) {
             // TRADE ALL BUTTON
             widgetHandler().getManagementButtons().initTradeAll(
                     widgetHandlerInstance().addWidget(widgetHandlerInstance().createTradeAll()));
         }
 
-        if (options().buttonDisplayOptions.displayCraftAll && (craftingScreen || inventoryScreen)) {
+        if (options().buttonDisplayOptions.displayBulkCraft && (craftingScreen || inventoryScreen)) {
             // CRAFT ALL BUTTON
-            widgetHandler().getManagementButtons().initCraftAll(
-                    widgetHandlerInstance().addWidget(widgetHandlerInstance().createCraftAll()));
+            widgetHandler().getManagementButtons().initBulkCraft(
+                    widgetHandlerInstance().addWidget(widgetHandlerInstance().createBulkCraft()));
+        }
+
+        if (options().buttonDisplayOptions.displayLockInventory && inventoryScreen) {
+            widgetHandler().getManagementButtons().initLockInventory(
+                    widgetHandlerInstance().addWidget(widgetHandlerInstance().createLockInventory()));
         }
 
         // Finally, render the widget layout
@@ -337,19 +336,19 @@ public class ExtractingInstance extends ManagementInstance {
                     instance().getManagementButtons().transferInventory(),
                     instance().getManagementButtons().transferContainer(),
 
+                    instance().getManagementButtons().sort(),
                     instance().getManagementButtons().includeHotbar(),
+
+                    instance().getManagementButtons().lockInventory(),
                     instance().getManagementButtons().alwaysQuickMove(),
 
-                    instance().getManagementButtons().sort(),
-                    instance().getManagementButtons().craftAll(),
-                    instance().getManagementButtons().moveMatchingItems(),
+                    instance().getManagementButtons().bulkCraft(),
+                    instance().getManagementButtons().filtering(),
 
                     instance().getManagementButtons().quickDrop(),
-                    instance().getManagementButtons().fillStacks(),
-
                     instance().getManagementButtons().swap(),
-                    instance().getManagementButtons().searchTransportables(),
 
+                    instance().getManagementButtons().searchTransportables(),
                     instance().getManagementButtons().clearExcludedSlots()
             );
 
@@ -359,14 +358,15 @@ public class ExtractingInstance extends ManagementInstance {
                     instance().getManagementButtons().transferContainer(),
                     instance().getManagementButtons().transferInventory(),
 
+                    instance().getManagementButtons().lockInventory(),
+
                     instance().getManagementButtons().includeHotbar(),
                     instance().getManagementButtons().alwaysQuickMove(),
 
-                    instance().getManagementButtons().moveMatchingItems(),
-                    instance().getManagementButtons().fillStacks(),
-
+                    instance().getManagementButtons().filtering(),
                     instance().getManagementButtons().sort(),
-                    instance().getManagementButtons().craftAll(),
+
+                    instance().getManagementButtons().bulkCraft(),
                     inventoryScreen ? instance().getManagementButtons().quickDrop() : instance().getManagementButtons().searchTransportables(),
 
                     instance().getManagementButtons().swap(),
@@ -384,9 +384,8 @@ public class ExtractingInstance extends ManagementInstance {
                         instance().getManagementButtons().transferInventory(),
                         instance().getManagementButtons().transferContainer(),
                         instance().getManagementButtons().sort(),
-                        instance().getManagementButtons().moveMatchingItems(),
-                        instance().getManagementButtons().alwaysQuickMove(),
-                        instance().getManagementButtons().fillStacks()
+                        instance().getManagementButtons().filtering(),
+                        instance().getManagementButtons().alwaysQuickMove()
                 );
             }
 

@@ -22,7 +22,7 @@ public final class ModKeyMappings {
             .withDefault(InputBinding.mouse(InputConstants.MOUSE_BUTTON_MIDDLE, KeyModifiers.of(KeyModifier.ALT)))
             .build();
 
-    public static final ManagedKeyMapping MOVE_SINGLE_ITEM = Kuma.createKeyMapping(ofQoQ("move_single"))
+    public static final ManagedKeyMapping SCROLL_MOVE = Kuma.createKeyMapping(ofQoQ("move_single"))
             .overrideCategory(QOQ_KEY_CATEGORY)
             .withDefault(InputBinding.key(InputConstants.KEY_LCONTROL))
             .build();
@@ -116,7 +116,7 @@ public final class ModKeyMappings {
      * @return if the user has the "move single modifier" key down.
      */
     public static boolean hasMoveSingleModifierDown() {
-        return options().management.singularMoving && MOVE_SINGLE_ITEM.isActiveAndDown();
+        return options().management.scrollMoving && SCROLL_MOVE.isActiveAndDown();
     }
 
     /**

@@ -79,14 +79,14 @@ public interface QuesoScreen {
     boolean getCanMoveOne();
 
     /**
-     * Determines if "move matching items" should be disabled when closing the screen.
+     * Determines if "filtering" should be disabled when closing the screen.
      */
-    void setDisableMoveMatchingItemsOnClose(boolean value);
+    void setDisableFilteringOnClose(boolean value);
 
     /**
-     * @return if "move matching items" should be disabled when closing the screen.
+     * @return if "filtering" should be disabled when closing the screen.
      */
-    boolean getDisableMoveMatchingItemsOnClose();
+    boolean getDisableFilteringOnClose();
 
     /**
      * Sets the last locked slot index for a screen.

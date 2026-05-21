@@ -58,15 +58,15 @@ public class ListOptions {
         );
     }
 
-    protected static OptionInstance<Boolean> singularMoving() {
-        return createClientBooleanOption("singular_moving", true, options().management.singularMoving,
-                (options, value) -> options.management.singularMoving = value, kumaKeyMappingAsString(ModKeyMappings.MOVE_SINGLE_ITEM, false)
+    protected static OptionInstance<Boolean> scrollMoving() {
+        return createClientBooleanOption("scroll_moving", true, options().management.scrollMoving,
+                (options, value) -> options.management.scrollMoving = value, kumaKeyMappingAsString(ModKeyMappings.SCROLL_MOVE, false)
         );
     }
 
-    protected static OptionInstance<Boolean> filtering() {
-        return createClientBooleanOption("filtering", true, options().management.filtering,
-                (options, value) -> options.management.filtering = value
+    protected static OptionInstance<Boolean> containerFiltering() {
+        return createClientBooleanOption("container_filtering", true, options().management.containerFiltering,
+                (options, value) -> options.management.containerFiltering = value
         );
     }
 
@@ -130,21 +130,27 @@ public class ListOptions {
         );
     }
 
-    protected static OptionInstance<Boolean> displayFillStacks() {
-        return createClientBooleanOption("fill_stacks", true, options().buttonDisplayOptions.displayFillStacks,
-                (options, value) -> options.buttonDisplayOptions.displayFillStacks = value
+    protected static OptionInstance<Boolean> displayBulkTrade() {
+        return createClientBooleanOption("bulk_trade", true, options().buttonDisplayOptions.displayBulkTrade,
+                (options, value) -> options.buttonDisplayOptions.displayBulkTrade = value
         );
     }
 
-    protected static OptionInstance<Boolean> displayTradeAll() {
-        return createClientBooleanOption("trade_all", true, options().buttonDisplayOptions.displayTradeAll,
-                (options, value) -> options.buttonDisplayOptions.displayTradeAll = value
+    protected static OptionInstance<Boolean> displayBulkCraft() {
+        return createClientBooleanOption("bulk_craft", true, options().buttonDisplayOptions.displayBulkCraft,
+                (options, value) -> options.buttonDisplayOptions.displayBulkCraft = value
         );
     }
 
-    protected static OptionInstance<Boolean> displayCraftAll() {
-        return createClientBooleanOption("craft_all", true, options().buttonDisplayOptions.displayCraftAll,
-                (options, value) -> options.buttonDisplayOptions.displayCraftAll = value
+    protected static OptionInstance<Boolean> safeBulk() {
+        return createClientBooleanOption("safe_bulk", true, options().buttonDisplayOptions.safeBulk,
+                (options, value) -> options.buttonDisplayOptions.safeBulk = value
+        );
+    }
+
+    protected static OptionInstance<Boolean> displayLockInventory() {
+        return createClientBooleanOption("lock_inventory", true, options().buttonDisplayOptions.displayLockInventory,
+                (options, value) -> options.buttonDisplayOptions.displayLockInventory = value
         );
     }
 
@@ -152,6 +158,11 @@ public class ListOptions {
         return createCommonBooleanOption("item_frame_searching", true, coptions().itemFrameSearching,
                 (options, value) -> options.itemFrameSearching = value,
                 kumaKeyMappingAsString(ModKeyMappings.OPEN_SEARCH_ITEM_FRAMES_GUI, false));
+    }
+
+    protected static OptionInstance<Boolean> inventoryLocking() {
+        return createCommonBooleanOption("inventory_locking", true, coptions().inventoryLocking,
+                (options, value) -> options.inventoryLocking = value);
     }
 
     protected static OptionInstance<Boolean> coloredHighlighting() {
@@ -335,6 +346,18 @@ public class ListOptions {
         );
     }
 
+    protected static OptionInstance<Boolean> shiftRecipeBook() {
+        return createClientBooleanOption("shift_recipe_book", false, options().misc.shiftRecipeBook,
+                (options, value) -> options.misc.shiftRecipeBook = value
+        );
+    }
+
+    protected static OptionInstance<Boolean> autoCloseRecipeBook() {
+        return createClientBooleanOption("auto_close_recipe_book", true, options().misc.autoCloseRecipeBook,
+                (options, value) -> options.misc.autoCloseRecipeBook = value
+        );
+    }
+
     protected static OptionInstance<Boolean> fortniteBattlePass() {
         return createClientBooleanOption("fortnite_battle_pass", true, options().misc.fortniteBattlePass,
                 (options, value) -> options.misc.fortniteBattlePass = value
@@ -356,12 +379,6 @@ public class ListOptions {
     protected static OptionInstance<Boolean> searchInventory() {
         return createClientBooleanOption("search_inventory", false, options().accessibility.searchInventory,
                 (options, value) -> options.accessibility.searchInventory = value);
-    }
-
-    protected static OptionInstance<Boolean> autoCloseRecipeBook() {
-        return createClientBooleanOption("auto_close_recipe_book", true, options().accessibility.autoCloseRecipeBook,
-                (options, value) -> options.accessibility.autoCloseRecipeBook = value
-        );
     }
 
     protected static OptionInstance<Boolean> ignoreFabricTags() {
@@ -394,6 +411,7 @@ public class ListOptions {
         );
     }
 
+    @Deprecated
     protected static OptionInstance<Boolean> fluids() {
         return createClientBooleanOption("fov_effects.fluids", true, options().fovEffects.fluids,
                 (options, value) -> options.fovEffects.fluids = value);
@@ -784,17 +802,17 @@ public class ListOptions {
         );
     }
 
-    protected static OptionInstance<MoveMatchingItems> displayMoveMatchingItems() {
+    protected static OptionInstance<FilteringButton> displayFiltering() {
         return createEnumOption(
-                "move_matching_items",
+                "filtering",
                 option -> switch (option) {
-                    case ALWAYS -> Tooltip.create(Component.translatable("qualityofqueso.options.move_matching_items.always.tooltip"));
-                    case FILTERED_CONTAINERS_ONLY -> Tooltip.create(Component.translatable("qualityofqueso.options.move_matching_items.filtered_containers_only.tooltip"));
+                    case ALWAYS -> Tooltip.create(Component.translatable("qualityofqueso.options.filtering.always.tooltip"));
+                    case FILTERED_CONTAINERS_ONLY -> Tooltip.create(Component.translatable("qualityofqueso.options.filtering.filtered_containers_only.tooltip"));
                 },
-                MoveMatchingItems.values(),
-                MoveMatchingItems.CODEC,
-                options().buttonDisplayOptions.displayMoveMatchingItems,
-                (options, value) -> options.buttonDisplayOptions.displayMoveMatchingItems = value
+                FilteringButton.values(),
+                FilteringButton.CODEC,
+                options().buttonDisplayOptions.displayFiltering,
+                (options, value) -> options.buttonDisplayOptions.displayFiltering = value
         );
     }
 

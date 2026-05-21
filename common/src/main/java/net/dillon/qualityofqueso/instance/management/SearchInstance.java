@@ -5,6 +5,7 @@ import net.dillon.qualityofqueso.option.eum.accessibility.WidgetTheme;
 import net.dillon.qualityofqueso.widget.gui.SearchBar;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
@@ -81,7 +82,14 @@ public class SearchInstance extends ManagementInstance {
         if (isInventoryScreen(instance().getScreen())) {
             return instance().getScreenMenu().slots.size();
         }
-        return getInventorySize();
+        int searchSize = getInventorySize();
+        if (searchSize > 0) {
+            return searchSize;
+        }
+        if (instance().getScreen() instanceof AbstractContainerScreen<?>) {
+            return instance().getScreenMenu().slots.size();
+        }
+        return 0;
     }
 
     /**

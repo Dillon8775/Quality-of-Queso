@@ -42,6 +42,7 @@
     "main.AbstractContainerMenuAccessor",
     "main.BlockItemMixin",
     "main.ContainerMenusMixin",
+    "main.ItemEntityMixin",
     "main.ItemFrameMixin",
     "main.ShulkerBoxBlockEntityMixin",
     "main.ShulkerBoxBlockMixin"

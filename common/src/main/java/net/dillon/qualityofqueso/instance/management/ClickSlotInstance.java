@@ -28,11 +28,11 @@ import static net.dillon.qualityofqueso.helper.ModHelper.options;
 public class ClickSlotInstance extends ManagementInstance {
     private static ActiveTradeAllTask activeTradeAllTask;
     private static boolean processingQueuedTradeAllClick;
-    private static ActiveCraftAllTask activeCraftAllTask;
-    private static boolean processingQueuedCraftAllClick;
+    private static ActiveBulkCraftTask activeBulkCraftTask;
+    private static boolean processingQueuedBulkCraftClick;
 
     private record ActiveTradeAllTask(int containerId, int selectedTradeIndex, int remainingClicks, int emptyResultTicks) {}
-    private record ActiveCraftAllTask(int containerId, @Nullable RecipeDisplayId recipeId, int remainingClicks, int emptyResultTicks) {}
+    private record ActiveBulkCraftTask(int containerId, @Nullable RecipeDisplayId recipeId, int remainingClicks, int emptyResultTicks) {}
 
     public ClickSlotInstance(QuesoScreen screen) {
         super(screen);
@@ -70,7 +70,7 @@ public class ClickSlotInstance extends ManagementInstance {
             return;
         }
 
-        if ((!options().management.tradeAll || !options().buttonDisplayOptions.displayTradeAll) || !options().buttonDisplayOptions.displayTradeAll || !(instance().getScreen() instanceof MerchantScreen merchantScreen)) {
+        if ((!options().management.bulkTrade || !options().buttonDisplayOptions.displayBulkTrade) || !options().buttonDisplayOptions.displayBulkTrade || !(instance().getScreen() instanceof MerchantScreen merchantScreen)) {
             return;
         }
 
@@ -104,12 +104,12 @@ public class ClickSlotInstance extends ManagementInstance {
     /**
      * Crafts all resources for the selected recipe.
      */
-    public void craftAllForSelectedRecipe(int slotId, ClickType containerInput, CallbackInfo ci) {
-        if (processingQueuedCraftAllClick) {
+    public void bulkCraftForSelectedRecipe(int slotId, ClickType containerInput, CallbackInfo ci) {
+        if (processingQueuedBulkCraftClick) {
             return;
         }
 
-        if ((!options().management.craftAll || !options().buttonDisplayOptions.displayCraftAll) || !(isCraftingScreen(instance().getScreen()) || isInventoryScreen(instance().getScreen()))) {
+        if ((!options().management.bulkCraft || !options().buttonDisplayOptions.displayBulkCraft) || !(isCraftingScreen(instance().getScreen()) || isInventoryScreen(instance().getScreen()))) {
             return;
         }
 
@@ -140,7 +140,7 @@ public class ClickSlotInstance extends ManagementInstance {
 
         // Cancel the original click and process craft-all via paced client ticks.
         ci.cancel();
-        activeCraftAllTask = new ActiveCraftAllTask(menu.containerId, recipeId, 256, 0);
+        activeBulkCraftTask = new ActiveBulkCraftTask(menu.containerId, recipeId, 256, 0);
     }
 
     /**
@@ -198,53 +198,53 @@ public class ClickSlotInstance extends ManagementInstance {
     }
 
     /**
-     * Ticks any active "craft all" task.
+     * Ticks any active "bulk craft" task.
      */
-    public static void tickCraftAllTask() {
+    public static void tickBulkCraftTask() {
         Minecraft client = Minecraft.getInstance();
 
-        if (activeCraftAllTask == null || client.player == null || client.gameMode == null) {
+        if (activeBulkCraftTask == null || client.player == null || client.gameMode == null) {
             return;
         }
 
         if (!isCraftingScreen(client.screen) && !isInventoryScreen(client.screen)) {
-            activeCraftAllTask = null;
+            activeBulkCraftTask = null;
             return;
         }
 
         if (!(client.screen instanceof AbstractContainerScreen<?> screen)) {
-            activeCraftAllTask = null;
+            activeBulkCraftTask = null;
             return;
         }
 
         AbstractContainerMenu menu = screen.getMenu();
-        if (menu.containerId != activeCraftAllTask.containerId()) {
-            activeCraftAllTask = null;
+        if (menu.containerId != activeBulkCraftTask.containerId()) {
+            activeBulkCraftTask = null;
             return;
         }
 
         if (!menu.getSlot(0).hasItem()) {
-            if (activeCraftAllTask.recipeId() != null) {
-                client.gameMode.handlePlaceRecipe(menu.containerId, activeCraftAllTask.recipeId(), true);
+            if (activeBulkCraftTask.recipeId() != null) {
+                client.gameMode.handlePlaceRecipe(menu.containerId, activeBulkCraftTask.recipeId(), true);
             }
 
-            int emptyResultTicks = activeCraftAllTask.emptyResultTicks() + 1;
-            activeCraftAllTask = emptyResultTicks > 10
+            int emptyResultTicks = activeBulkCraftTask.emptyResultTicks() + 1;
+            activeBulkCraftTask = emptyResultTicks > 10
                     ? null
-                    : new ActiveCraftAllTask(activeCraftAllTask.containerId(), activeCraftAllTask.recipeId(), activeCraftAllTask.remainingClicks(), emptyResultTicks);
+                    : new ActiveBulkCraftTask(activeBulkCraftTask.containerId(), activeBulkCraftTask.recipeId(), activeBulkCraftTask.remainingClicks(), emptyResultTicks);
             return;
         }
 
-        processingQueuedCraftAllClick = true;
+        processingQueuedBulkCraftClick = true;
         try {
             performClickSlot(screen, menu.getSlot(0), 0, 0, ClickType.QUICK_MOVE);
         } finally {
-            processingQueuedCraftAllClick = false;
+            processingQueuedBulkCraftClick = false;
         }
 
-        int remainingClicks = activeCraftAllTask.remainingClicks() - 1;
-        activeCraftAllTask = remainingClicks > 0
-                ? new ActiveCraftAllTask(activeCraftAllTask.containerId(), activeCraftAllTask.recipeId(), remainingClicks, 0)
+        int remainingClicks = activeBulkCraftTask.remainingClicks() - 1;
+        activeBulkCraftTask = remainingClicks > 0
+                ? new ActiveBulkCraftTask(activeBulkCraftTask.containerId(), activeBulkCraftTask.recipeId(), remainingClicks, 0)
                 : null;
     }
 }

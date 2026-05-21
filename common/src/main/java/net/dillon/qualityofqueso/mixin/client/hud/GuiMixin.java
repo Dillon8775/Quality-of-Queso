@@ -177,6 +177,10 @@ public class GuiMixin {
                 continue;
             }
 
+            if (this.minecraft.player.getInventory().getItem(slot).isEmpty()) {
+                continue;
+            }
+
             graphics.blitSprite(
                     RenderPipelines.GUI_TEXTURED,
                     ofQoQ(LOCKED_TEXTURE),

@@ -28,14 +28,6 @@ public class LockedSlotsInstance extends ManagementInstance {
     }
 
     /**
-     * Renders the unlocked slot texture over slots.
-     */
-    public void renderUnlockedSlot(GuiGraphics graphics, boolean isSlotLocked, int mouseX, int mouseY) {
-        int xy = 10;
-        graphics.blit(RenderPipelines.GUI_TEXTURED, ofQoQ("textures/gui/sprites/locked_slot/" + (isSlotLocked ? "key" : "unlock") + ".png"), mouseX - 6, mouseY + 2, 0.0F, 0.0F, xy, xy, xy, xy);
-    }
-
-    /**
      * @return the set of locked container slots.
      */
     public Set<Integer> getLockedContainerSlots() {
@@ -66,7 +58,7 @@ public class LockedSlotsInstance extends ManagementInstance {
      * @return if the user is attempting to drop an entire locked slot stack.
      */
     public boolean droppingEntireLockedSlotStack() {
-        return MOVE_SINGLE_ITEM.isActiveAndDown() && hasDropOnlyOneItemKeyDown() && instance().getScreensHoveredSlot() != null && lockedSlotsInstance().isLockedSlot(instance().getScreensHoveredSlot().index);
+        return SCROLL_MOVE.isActiveAndDown() && hasDropOnlyOneItemKeyDown() && instance().getScreensHoveredSlot() != null && lockedSlotsInstance().isLockedSlot(instance().getScreensHoveredSlot().index);
     }
 
     /**
@@ -79,6 +71,14 @@ public class LockedSlotsInstance extends ManagementInstance {
             return !(hasMoveSingleModifierDown() && hasDropOnlyOneItemKeyDown() && Minecraft.getInstance().hasAltDown());
         }
         return false;
+    }
+
+    /**
+     * Renders the unlocked slot texture over slots.
+     */
+    public void renderUnlockedSlot(GuiGraphics graphics, boolean isSlotLocked, int mouseX, int mouseY) {
+        int xy = 10;
+        graphics.blit(RenderPipelines.GUI_TEXTURED, ofQoQ("textures/gui/sprites/locked_slot/" + (isSlotLocked ? "key" : "unlock") + ".png"), mouseX - 6, mouseY + 2, 0.0F, 0.0F, xy, xy, xy, xy);
     }
 
     /**
@@ -95,8 +95,10 @@ public class LockedSlotsInstance extends ManagementInstance {
         }
         if (locked) {
             if (lockOnly) {
-                int xy = 10;
-                graphics.blit(RenderPipelines.GUI_TEXTURED, ofQoQ("textures/gui/sprites/locked_slot/locked.png"), slot.x - 3, slot.y + 9, 0.0F, 0.0F, xy, xy, xy, xy);
+                if (slot.hasItem()) {
+                    int xy = 10;
+                    graphics.blit(RenderPipelines.GUI_TEXTURED, ofQoQ("textures/gui/sprites/locked_slot/locked.png"), slot.x - 3, slot.y + 9, 0.0F, 0.0F, xy, xy, xy, xy);
+                }
             } else {
                 graphics.fill(slot.x - 1, slot.y - 1, slot.x + 17, slot.y + 17, options().lockedSlots.lockedSlotColor);
             }
