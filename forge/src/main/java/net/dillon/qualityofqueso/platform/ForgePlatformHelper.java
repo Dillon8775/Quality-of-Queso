@@ -1,5 +1,6 @@
 package net.dillon.qualityofqueso.platform;
 
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.fml.loading.FMLPaths;
 
@@ -15,5 +16,10 @@ public class ForgePlatformHelper implements PlatformHelper {
     @Override
     public boolean isModLoaded(String modId) {
         return FMLLoader.getLoadingModList().getModFileById(modId) != null;
+    }
+
+    @Override
+    public boolean canSendPacket(LocalPlayer localPlayer) {
+        return true;
     }
 }

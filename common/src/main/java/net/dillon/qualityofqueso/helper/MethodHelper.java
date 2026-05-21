@@ -58,14 +58,20 @@ public class MethodHelper {
     /**
      * @return a recipe book component on a screen.
      */
-    public static RecipeBookComponent getRecipeBookComponent(InventoryScreen recipeBookScreen) {
-        return ((AbstractRecipeBookScreenAccessor) recipeBookScreen).getRecipeBookComponent();
+    public static RecipeBookComponent getRecipeBookComponent(Screen recipeBookScreen) {
+        if (recipeBookScreen instanceof InventoryScreen inventoryScreen) {
+            return ((InventoryRecipeBookScreenAccessor) inventoryScreen).getRecipeBookComponent();
+        } else if (recipeBookScreen instanceof CraftingScreen craftingScreen) {
+            return ((CraftingRecipeBookScreenAccessor) craftingScreen).getRecipeBookComponent();
+        }
+
+        throw new IllegalArgumentException("Screen does not have a recipe book component: " + recipeBookScreen.getClass().getName());
     }
 
     /**
      * @return a search box in the recipe book component.
      */
-    public static EditBox getSearchBoxInsideRecipeBook(InventoryScreen recipeBookScreen) {
+    public static EditBox getSearchBoxInsideRecipeBook(Screen recipeBookScreen) {
         return ((RecipeBookComponentAccessor) getRecipeBookComponent(recipeBookScreen)).getSearchBox();
     }
 

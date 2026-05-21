@@ -7,35 +7,35 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import static net.dillon.qualityofqueso.helper.ModHelper.options;
 
 /**
- * A button to only fill present stacks in a container.
+ * A button which bulk crafts a selected recipe.
  */
-public class FillStacksButton extends ToggleableButton {
+public class BulkCraftButton extends ToggleableButton {
 
-    public FillStacksButton(AbstractContainerMenu screenHandler, Font font, String searchFieldText, String buttonName, OnPress onPress) {
+    public BulkCraftButton(AbstractContainerMenu screenHandler, Font font, String searchFieldText, String buttonName, OnPress onPress) {
         super(screenHandler, font, searchFieldText, buttonName, onPress);
     }
 
     @Override
     protected String onTextureId() {
-        return "fill_stacks/fill_stacks";
+        return "bulk_craft/bulk_craft";
     }
 
     @Override
     protected String offTextureId() {
-        return "fill_stacks/fill_all";
+        return "bulk_craft/normal_craft";
     }
 
     @Override
     protected boolean option() {
-        return options().getFillStacks();
+        return options().management.bulkCraft;
     }
 
     @Override
     protected Component getTooltipToRender() {
         return Component.translatable(
                 this.option()
-                        ? "qualityofqueso.gui.fill_stacks"
-                        : "qualityofqueso.gui.fill_all"
+                        ? "qualityofqueso.gui.bulk_craft"
+                        : "qualityofqueso.gui.normal_craft"
         );
     }
 }

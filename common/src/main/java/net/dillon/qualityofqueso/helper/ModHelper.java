@@ -3,6 +3,7 @@ package net.dillon.qualityofqueso.helper;
 import net.blay09.mods.balm.api.Balm;
 import net.dillon.qualityofqueso.option.*;
 import net.dillon.qualityofqueso.packet.ClientPreferencesC2SPacket;
+import net.dillon.qualityofqueso.packet.ManualItemPickupC2SPacket;
 import net.dillon.qualityofqueso.platform.MultiLoader;
 import net.dillon.qualityofqueso.util.GlowCountdown;
 import net.dillon.qualityofqueso.widget.SwapButton;
@@ -24,6 +25,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.decoration.ItemFrame;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -52,6 +54,8 @@ public class ModHelper {
     public static boolean LOADED = false;
     private static boolean UNLOADED = false;
     private static boolean CONTINUE = true;
+
+    private static boolean KEY_ATTACK_WASDOWN;
 
     public static final List<Item> shulkerBoxes = List.of(
             Items.SHULKER_BOX,
@@ -209,15 +213,17 @@ public class ModHelper {
     public static boolean isOnServer(Minecraft client) {
         return !client.isSingleplayer() && !(client.getCurrentServer() == null);
     }
+
     /**
      * Sends client options to server, for reference.
      */
-    public static void sendClientOptionsToServer() {
+    public static void sendClientPreferencesToServer() {
         Balm.getNetworking().sendToServer(new ClientPreferencesC2SPacket(
                 options().management.includeHotbar,
-                !options().management.includeHotbar || options().accessibility.perpendicularQuickMoving));
+                !options().management.includeHotbar || options().accessibility.perpendicularQuickMoving,
+                !options().buttonDisplayOptions.displayLockInventory ? "UNLOCKED" : options().management.lockInventory.name()
+        ));
     }
-
     /**
      * Clears armor HUD timer/cache state.
      */
@@ -293,7 +299,7 @@ public class ModHelper {
      * Handles all cooldown-related timers.
      */
     public static void tickCooldowns() {
-        if (options().management.filtering && TRACKED_CONTAINER_COOLDOWN > 0) {
+        if (options().management.containerFiltering && TRACKED_CONTAINER_COOLDOWN > 0) {
             TRACKED_CONTAINER_COOLDOWN--;
         }
 
@@ -308,6 +314,57 @@ public class ModHelper {
         if (options().management.swapping.buttonOrKeyOrKeyOnly() && SwapButton.SWAP_COOLDOWN > 0) {
             SwapButton.SWAP_COOLDOWN--;
         }
+    }
+
+    /**
+     * Allows the player to manually pickup an item with a locked inventory.
+     */
+    public static void tickManualItemPickup(Minecraft minecraft) {
+        boolean useDown = minecraft.options.keyAttack.isDown();
+        if (!useDown) {
+            KEY_ATTACK_WASDOWN = false;
+        } else if (!KEY_ATTACK_WASDOWN
+                && minecraft.player != null
+                && options().management.lockInventory.inventoryLocked()
+                && minecraft.player.isShiftKeyDown()) {
+            ItemEntity target = ModHelper.raycastItemEntity(minecraft);
+            if (target != null) {
+                Balm.getNetworking().sendToServer(new ManualItemPickupC2SPacket(target.getId()));
+                KEY_ATTACK_WASDOWN = true;
+            }
+        }
+    }
+
+    /**
+     * @return the most accurate raycasted {@link ItemEntity} to use to manually pickup an item.
+     */
+    private static ItemEntity raycastItemEntity(Minecraft minecraft) {
+        if (minecraft.player == null || minecraft.level == null) {
+            return null;
+        }
+
+        Vec3 from = minecraft.player.getEyePosition();
+        Vec3 to = from.add(minecraft.player.getViewVector(1.0F).scale(1.5));
+        AABB bounds = minecraft.player.getBoundingBox().expandTowards(to.subtract(from)).inflate(1.0);
+
+        ItemEntity best = null;
+        double bestDistSqr = Double.MAX_VALUE;
+
+        for (ItemEntity item : minecraft.level.getEntitiesOfClass(ItemEntity.class, bounds, ItemEntity::isAlive)) {
+            AABB box = item.getBoundingBox().inflate(0.02);
+            var hit = box.clip(from, to);
+            if (hit.isEmpty()) {
+                continue;
+            }
+
+            double d = from.distanceToSqr(hit.get());
+            if (d < bestDistSqr) {
+                bestDistSqr = d;
+                best = item;
+            }
+        }
+
+        return best;
     }
 
     /**

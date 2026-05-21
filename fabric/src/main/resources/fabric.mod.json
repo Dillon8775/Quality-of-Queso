@@ -46,5 +46,9 @@
         "modmenu.discord": "${discord}"
       }
     }
+  },
+  "breaks": {
+    "controlify": "*",
+    "norecipebookshift": "*"
   }
 }

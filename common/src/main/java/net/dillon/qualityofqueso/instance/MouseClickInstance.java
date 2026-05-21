@@ -71,7 +71,7 @@ public class MouseClickInstance extends ManagementInstance {
     public void moveOnlyOne(double mouseX, double mouseY, int bl, CallbackInfoReturnable<Boolean> cir) {
         boolean quickDropping = buttonHoveredAndActive(instance().getManagementButtons().quickDrop(), mouseX, mouseY);
 
-        if (!options().management.singularMoving) {
+        if (!options().management.scrollMoving) {
             return;
         }
 
@@ -79,13 +79,13 @@ public class MouseClickInstance extends ManagementInstance {
         boolean hasSingleModifierDown = hasMoveSingleModifierDown();
         boolean hasKeyDown = quickDropping ? dropOnlyOne : hasSingleModifierDown;
 
-        if (hasSingleModifierDown && bl == GLFW.GLFW_MOUSE_BUTTON_RIGHT && hoveredSlotHasItem(instance().getScreensHoveredSlot())) {
+        if ((hasSingleModifierDown || dropOnlyOne) && bl == GLFW.GLFW_MOUSE_BUTTON_RIGHT && hoveredSlotHasItem(instance().getScreensHoveredSlot())) {
             MOVE_AMOUNT = 1;
             cir.setReturnValue(true);
             return;
         }
 
-        if (hasKeyDown && transferInstance().tryMoveSingleFromHovered(bl)) {
+        if (hasKeyDown && transferInstance().tryMoveSingleFromHovered(instance().getScreensHoveredSlot(), bl)) {
             cir.setReturnValue(true);
         }
     }

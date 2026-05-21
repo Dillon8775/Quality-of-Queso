@@ -6,10 +6,11 @@
   "client": [
     "FogRendererMixin",
     "client.accessor.AbstractContainerScreenAccessor",
-    "client.accessor.AbstractRecipeBookScreenAccessor",
     "client.accessor.BrewingStandMenuAccessor",
+    "client.accessor.CraftingRecipeBookScreenAccessor",
     "client.accessor.DispenserMenuAccessor",
     "client.accessor.HopperMenuAccessor",
+    "client.accessor.InventoryRecipeBookScreenAccessor",
     "client.accessor.KeyBindsScreenAccessor",
     "client.accessor.KeyMappingAccessor",
     "client.accessor.MerchantScreenAccessor",
@@ -38,6 +39,7 @@
     "main.AbstractContainerMenuAccessor",
     "main.BlockItemMixin",
     "main.ContainerMenusMixin",
+    "main.ItemEntityMixin",
     "main.ItemFrameMixin",
     "main.ShulkerBoxBlockEntityMixin",
     "main.ShulkerBoxBlockMixin"

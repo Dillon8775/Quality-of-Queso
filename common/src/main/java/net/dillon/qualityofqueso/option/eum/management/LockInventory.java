@@ -5,21 +5,22 @@ import net.dillon.qualityofqueso.option.eum.OptionEnum;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.StringRepresentable;
 
-public enum MoveMatchingItems implements StringRepresentable, OptionEnum {
-    ALWAYS("always", "qualityofqueso.options.move_matching_items.always"),
-    FILTERED_CONTAINERS_ONLY("filtered_containers_only", "qualityofqueso.options.move_matching_items.filtered_containers_only");
+public enum LockInventory implements StringRepresentable, OptionEnum {
+    UNLOCKED("unlocked", "qualityofqueso.options.lock_inventory.unlocked"),
+    SOFT_LOCKED("soft_locked", "qualityofqueso.options.lock_inventory.soft_locked"),
+    LOCKED("locked", "qualityofqueso.options.lock_inventory.locked");
 
-    public static final Codec<MoveMatchingItems> CODEC = StringRepresentable.fromEnum(MoveMatchingItems::values);
+    public static final Codec<LockInventory> CODEC = StringRepresentable.fromEnum(LockInventory::values);
     private final String name;
     private final Component translationKey;
 
-    MoveMatchingItems(final String name, final String translationKey) {
+    LockInventory(final String name, final String translationKey) {
         this.name = name;
         this.translationKey = Component.translatable(translationKey);
     }
 
-    public boolean filteredContainersOnly() {
-        return this == FILTERED_CONTAINERS_ONLY;
+    public boolean inventoryLocked() {
+        return this != UNLOCKED;
     }
 
     public String getSerializedName() {

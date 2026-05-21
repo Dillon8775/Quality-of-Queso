@@ -107,7 +107,7 @@ public class ModTooltipInstance extends ManagementInstance {
 
         // The boolean expression to modify tooltips based on the conditions above
         // We can modify tooltips if we are attempting to drop one, or if we have a shortcut key down and one of the buttons are hovered/the hovered slot has an item (for quick dropping)
-        boolean bl = options().management.singularMoving && (droppingOne || (hasKeyDown && (buttonHovered || hoveredSlotHasItem)));
+        boolean bl = options().management.scrollMoving && (droppingOne || (hasKeyDown && (buttonHovered || hoveredSlotHasItem)));
         instance().setCanMoveOne(bl);
 
         // Create a new tooltip to render

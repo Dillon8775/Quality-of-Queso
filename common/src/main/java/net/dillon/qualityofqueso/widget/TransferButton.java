@@ -70,6 +70,13 @@ public class TransferButton extends Button {
     }
 
     /**
+     * Activates a buttons state, if needed.
+     */
+    protected void activateButton() {
+        this.active = this.canBeActive.get();
+    }
+
+    /**
      * Fully blocks sound and click if button shouldn't be activated.
      */
     @Override
@@ -127,7 +134,7 @@ public class TransferButton extends Button {
         }
 
         Screen screen = getCurrentScreen();
-        if (options().management.singularMoving && (isValidScreenForSingularMoving(screen, true))) {
+        if (options().management.scrollMoving && (isValidScreenForSingularMoving(screen, true))) {
             if (this.isMouseOver(mouseX, mouseY) ||
                     (getCurrentScreen() instanceof AbstractContainerScreen<?> abstractContainerScreen
                             && getHoveredSlot(abstractContainerScreen) != null && getHoveredSlot(abstractContainerScreen).hasItem())) {
@@ -141,7 +148,7 @@ public class TransferButton extends Button {
      */
     @Override
     protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float deltaTicks) {
-        this.active = this.canBeActive.get();
+        this.activateButton();
 
         this.renderBaseButtonTexture(this.resourceLocation + this.buttonName + (!this.canBeActive.get() ? "_inactive" : ""), this, graphics, mouseX, mouseY);
 
@@ -223,7 +230,7 @@ public class TransferButton extends Button {
      * @return if the user is dropping or moving one of an item.
      */
     protected boolean movingOrDroppingOne() {
-        return options().management.singularMoving && (this.buttonName.equals(QUICK_DROP_BUTTON_NAME)
+        return options().management.scrollMoving && (this.buttonName.equals(QUICK_DROP_BUTTON_NAME)
                 ? hasDropOnlyOneItemKeyDown()
                 : Minecraft.getInstance().screen instanceof AbstractContainerScreen<?> && hasMoveSingleModifierDown());
     }

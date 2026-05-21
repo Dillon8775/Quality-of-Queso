@@ -22,10 +22,10 @@ public class ManagementOptionsScreen extends AbstractModOptionsScreen {
                 ListOptions.defaultSortingMode(),
                 ListOptions.dragMoving(),
 
-                ListOptions.singularMoving(),
+                ListOptions.scrollMoving(),
                 ListOptions.dragSorting(),
 
-                ListOptions.filtering(),
+                ListOptions.containerFiltering(),
                 ListOptions.quickDrop(),
 
                 ListOptions.swapping(),

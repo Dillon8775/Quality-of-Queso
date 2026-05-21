@@ -2,6 +2,7 @@ package net.dillon.qualityofqueso.mixin.client.screen;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.network.chat.Component;
@@ -66,7 +67,7 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
             return;
         }
 
-        if (selectedTab.getType() == CreativeModeTab.Type.SEARCH && hoveredSlotHasItem(this.hoveredSlot) && this.searchBox != null && this.searchBox.isFocused()) {
+        if (!Screen.hasShiftDown() && selectedTab.getType() == CreativeModeTab.Type.SEARCH && hoveredSlotHasItem(this.hoveredSlot) && this.searchBox != null && this.searchBox.isFocused()) {
             for (int i = 0; i < 9; i++) {
                 if (Minecraft.getInstance().options.keyHotbarSlots[i].matches(keycode, scancode)) {
                     this.ignoreTextInput = true;
@@ -95,8 +96,8 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
                 }
             }
 
-            for (int key : allDisallowedKeys()) {
-                if (keycode == key) {
+            for (int i = 9; i < allDisallowedKeys().size(); i++) {
+                if (!Screen.hasShiftDown() && keycode == allDisallowedKeys().get(i)) {
                     this.ignoreTextInput = true;
                     cir.setReturnValue(super.keyPressed(keycode, scancode, modifiers));
                 }

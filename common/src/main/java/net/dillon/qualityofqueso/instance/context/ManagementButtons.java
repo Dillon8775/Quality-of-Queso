@@ -12,16 +12,16 @@ public class ManagementButtons {
     private TransferButton transferContainer;
     private TransferButton transferInventory;
     private TransferButton includeHotbar;
-    private TransferButton moveMatchingItems;
+    private TransferButton filtering;
     private TransferButton quickDrop;
     private TransferButton swap;
     private TransferButton sort;
     private TransferButton searchTransportables;
-    private TransferButton fillStacks;
     private TransferButton alwaysQuickMove;
     private TransferButton clearExcludedSlots;
     private TransferButton tradeAll;
-    private TransferButton craftAll;
+    private TransferButton bulkCraft;
+    private TransferButton lockInventory;
 
     public TransferButton transferContainer() {
         return this.transferContainer;
@@ -47,12 +47,12 @@ public class ManagementButtons {
         this.includeHotbar = button;
     }
 
-    public TransferButton moveMatchingItems() {
-        return this.moveMatchingItems;
+    public TransferButton filtering() {
+        return this.filtering;
     }
 
-    public void initMoveMatchingItems(TransferButton button) {
-        this.moveMatchingItems = button;
+    public void initFiltering(TransferButton button) {
+        this.filtering = button;
     }
 
     public TransferButton quickDrop() {
@@ -87,14 +87,6 @@ public class ManagementButtons {
         this.searchTransportables = button;
     }
 
-    public TransferButton fillStacks() {
-        return this.fillStacks;
-    }
-
-    public void initFillStacks(TransferButton button) {
-        this.fillStacks = button;
-    }
-
     public TransferButton alwaysQuickMove() {
         return this.alwaysQuickMove;
     }
@@ -119,12 +111,20 @@ public class ManagementButtons {
         this.tradeAll = button;
     }
 
-    public TransferButton craftAll() {
-        return this.craftAll;
+    public TransferButton bulkCraft() {
+        return this.bulkCraft;
     }
 
-    public void initCraftAll(TransferButton button) {
-        this.craftAll = button;
+    public void initBulkCraft(TransferButton button) {
+        this.bulkCraft = button;
+    }
+
+    public TransferButton lockInventory() {
+        return this.lockInventory;
+    }
+
+    public void initLockInventory(TransferButton button) {
+        this.lockInventory = button;
     }
 
     /**
@@ -142,8 +142,8 @@ public class ManagementButtons {
         if (this.includeHotbar != null) {
             buttons.add(this.includeHotbar);
         }
-        if (this.moveMatchingItems != null) {
-            buttons.add(this.moveMatchingItems);
+        if (this.filtering != null) {
+            buttons.add(this.filtering);
         }
         if (this.quickDrop != null) {
             buttons.add(this.quickDrop);
@@ -157,9 +157,6 @@ public class ManagementButtons {
         if (this.searchTransportables != null) {
             buttons.add(this.searchTransportables);
         }
-        if (this.fillStacks != null) {
-            buttons.add(this.fillStacks);
-        }
         if (this.alwaysQuickMove != null) {
             buttons.add(this.alwaysQuickMove);
         }
@@ -169,8 +166,11 @@ public class ManagementButtons {
         if (this.tradeAll != null) {
             buttons.add(this.tradeAll);
         }
-        if (this.craftAll != null) {
-            buttons.add(this.craftAll);
+        if (this.bulkCraft != null) {
+            buttons.add(this.bulkCraft);
+        }
+        if (this.lockInventory != null) {
+            buttons.add(this.lockInventory);
         }
 
         return buttons;
@@ -183,15 +183,15 @@ public class ManagementButtons {
         this.transferContainer = null;
         this.transferInventory = null;
         this.includeHotbar = null;
-        this.moveMatchingItems = null;
+        this.filtering = null;
         this.quickDrop = null;
         this.swap = null;
         this.sort = null;
         this.searchTransportables = null;
-        this.fillStacks = null;
         this.alwaysQuickMove = null;
         this.clearExcludedSlots = null;
         this.tradeAll = null;
-        this.craftAll = null;
+        this.bulkCraft = null;
+        this.lockInventory = null;
     }
 }

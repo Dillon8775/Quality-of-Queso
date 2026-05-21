@@ -68,7 +68,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
     private boolean excludedAll = false;
 
     @Unique
-    private boolean disableMoveMatchingItemsOnClose = false;
+    private boolean disableFilteringOnClose = false;
 
     @Unique
     private int lastLockedSlotIndex = -1;
@@ -156,13 +156,13 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
     }
 
     @Override
-    public void setDisableMoveMatchingItemsOnClose(boolean value) {
-        this.disableMoveMatchingItemsOnClose = value;
+    public void setDisableFilteringOnClose(boolean value) {
+        this.disableFilteringOnClose = value;
     }
 
     @Override
-    public boolean getDisableMoveMatchingItemsOnClose() {
-        return this.disableMoveMatchingItemsOnClose;
+    public boolean getDisableFilteringOnClose() {
+        return this.disableFilteringOnClose;
     }
 
     @Override
@@ -358,6 +358,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
         clickSlotInstance.quickGuiClose(slot, buttonNum);
         clickSlotInstance.handleHardLockedSlots(slot, ci);
         clickSlotInstance.tradeAllForSelectedOffer(slotId, containerInput, ci);
+        clickSlotInstance.bulkCraftForSelectedRecipe(slotId, containerInput, ci);
     }
 
     /**
@@ -416,6 +417,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                 (QuesoScreen) this.screen
         );
         mouseScrollInstance.changeSortMode(mouseX, mouseY, delta);
+        mouseScrollInstance.changeFilterType(mouseX, mouseY, delta);
         mouseScrollInstance.setMoveAmount(this.hoveredSlot, mouseX, mouseY, delta);
 
         return super.mouseScrolled(mouseX, mouseY, delta);

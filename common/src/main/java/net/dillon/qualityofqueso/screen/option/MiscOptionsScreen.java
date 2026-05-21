@@ -25,10 +25,13 @@ public class MiscOptionsScreen extends AbstractModOptionsScreen {
                 ListOptions.enchantmentHelper(),
                 ListOptions.quickGuiExit(),
 
-                ListOptions.fortniteBattlePass(),
                 ListOptions.antiRageQuit(),
+                ListOptions.shiftRecipeBook(),
 
                 ListOptions.forceAntiRageQuit(),
+                ListOptions.autoCloseRecipeBook(),
+
+                ListOptions.fortniteBattlePass(),
         };
     }
 }

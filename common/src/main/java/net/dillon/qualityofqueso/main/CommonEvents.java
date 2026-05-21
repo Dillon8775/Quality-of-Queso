@@ -41,6 +41,14 @@ public final class CommonEvents {
         );
 
         Balm.getNetworking().registerServerboundPacket(
+                new ResourceLocation("qualityofqueso", "manual_item_pickup"),
+                ManualItemPickupC2SPacket.class,
+                ManualItemPickupC2SPacket::encode,
+                ManualItemPickupC2SPacket::new,
+                ServerPacketHandlers::handleManualItemPickupIntent
+        );
+
+        Balm.getNetworking().registerServerboundPacket(
                 new ResourceLocation("qualityofqueso", "request_shulker_state"),
                 RequestShulkerStateC2SPacket.class,
                 RequestShulkerStateC2SPacket::encode,

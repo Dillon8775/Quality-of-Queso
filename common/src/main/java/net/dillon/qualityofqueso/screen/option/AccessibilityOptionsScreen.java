@@ -19,18 +19,16 @@ public class AccessibilityOptionsScreen extends AbstractModOptionsScreen {
                 ListOptions.tooltips(),
                 ListOptions.widgetTheme(),
 
-                ListOptions.autoCloseRecipeBook(),
+                ListOptions.perpendicularQuickMoving(),
                 ListOptions.preventEFromTyping(),
 
-                ListOptions.perpendicularQuickMoving(),
+                ListOptions.menuButton(),
                 ListOptions.searchInventory(),
 
-                ListOptions.menuButton(),
                 ListOptions.eChestButton(),
-
-                ListOptions.multiServerConfigs(),
                 ListOptions.elytraAlarmSoundDelay(),
 
+                ListOptions.multiServerConfigs(),
                 ListOptions.ignoreFabricTags()
         };
     }

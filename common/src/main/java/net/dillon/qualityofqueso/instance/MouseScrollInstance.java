@@ -52,10 +52,28 @@ public class MouseScrollInstance extends ManagementInstance {
     }
 
     /**
+     * Changes filter type (item/tag) when scrolling on the filtering button.
+     */
+    public void changeFilterType(double mouseX, double mouseY, double scrollY) {
+        if (scrollY == 0) {
+            return;
+        }
+        if (!ContainerHelper.isTrackedFilteringActive()) {
+            return;
+        }
+        if (!buttonHoveredAndActive(instance().getManagementButtons().filtering(), mouseX, mouseY)) {
+            return;
+        }
+
+        ContainerHelper.toggleCurrentFilterMode();
+        playSortSound(instance().getMinecraft());
+    }
+
+    /**
      * Sets the move amount when scrolling.
      */
     public void setMoveAmount(Slot hoveredSlot, double mouseX, double mouseY, double scrollY) {
-        if (!options().management.singularMoving) {
+        if (!options().management.scrollMoving) {
             return;
         }
 

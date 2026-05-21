@@ -5,6 +5,7 @@ import net.dillon.qualityofqueso.helper.ContainerHelper;
 import net.dillon.qualityofqueso.instance.ModInstance;
 import net.dillon.qualityofqueso.instance.QuesoScreen;
 import net.dillon.qualityofqueso.instance.WidgetHandler;
+import net.dillon.qualityofqueso.option.eum.management.FilteringMode;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractFurnaceScreen;
@@ -153,16 +154,18 @@ public class ManagementInstance implements ModInstance {
         int size = isPlayerInventory ? playerInventory.items.size() : instance().getCurrentInventory().getContainerSize();
         int filledSlots = 0;
 
-        // Determine the size to iterate through
-        if (screen instanceof BrewingStandScreen brewingScreen) {
-            size = brewingStand(brewingScreen).getContainerSize() - 2;
-        } else if (screen instanceof AbstractFurnaceScreen<?> abstractFurnaceScreen
-                && !abstractFurnaceScreen.getMenu().getSlot(abstractFurnaceScreen.getMenu().getResultSlotIndex()).hasItem()) {
-            return false;
-        } else if (screen instanceof DispenserScreen dispenserScreen) {
-            size = dispenser(dispenserScreen).getContainerSize();
-        } else if (screen instanceof HopperScreen hopperScreen) {
-            size = hopper(hopperScreen).getContainerSize();
+        // Determine the size to iterate through for container-side scans only.
+        if (!isPlayerInventory) {
+            if (screen instanceof BrewingStandScreen brewingScreen) {
+                size = brewingStand(brewingScreen).getContainerSize() - 2;
+            } else if (screen instanceof AbstractFurnaceScreen<?> abstractFurnaceScreen
+                    && !abstractFurnaceScreen.getMenu().getSlot(abstractFurnaceScreen.getMenu().getResultSlotIndex()).hasItem()) {
+                return false;
+            } else if (screen instanceof DispenserScreen dispenserScreen) {
+                size = dispenser(dispenserScreen).getContainerSize();
+            } else if (screen instanceof HopperScreen hopperScreen) {
+                size = hopper(hopperScreen).getContainerSize();
+            }
         }
 
         // Loop through all slots
@@ -180,7 +183,7 @@ public class ManagementInstance implements ModInstance {
             }
 
             // Skip slots that are not already present
-            if (applyFillWhatsPresentFilter && options().management.moveMatchingItems && !isPresent(toInventory, !cursorStack.isEmpty() ? cursorStack : stack)) {
+            if (applyFillWhatsPresentFilter && shouldApplyMatchingFilter() && !isPresent(toInventory, !cursorStack.isEmpty() ? cursorStack : stack)) {
                 continue;
             }
 
@@ -221,7 +224,7 @@ public class ManagementInstance implements ModInstance {
         }
         return filledSlots != 0
                 && !areAllSlotsUnavailable(applyFillWhatsPresentFilter, isPlayerInventory, toInventory, isPlayerInventory ? playerInventory : null)
-                && (!applyFillStacksFilter || !options().isFillStacksEnabled() || hasFillStacksTransferCandidate(isPlayerInventory, playerInventory, toInventory, applyFillWhatsPresentFilter));
+                && (!applyFillStacksFilter || !shouldFillStacksOnly() || hasFillStacksTransferCandidate(isPlayerInventory, playerInventory, toInventory, applyFillWhatsPresentFilter));
     }
 
     /**
@@ -242,7 +245,7 @@ public class ManagementInstance implements ModInstance {
 
                 if (searchInstance().search(instance().getSearchFields().searchText(), slot, false)) {
                     if (!lockedSlotsInstance().isLockedSlot(slot.index) && !(isShulkerBoxScreen(instance().getScreen()) && isStackShulker(slot.getItem()))) {
-                        if (!applyFillWhatsPresentFilter || !options().management.moveMatchingItems || isPresent(toInventory, slot.getItem())) {
+                        if (!applyFillWhatsPresentFilter || !shouldApplyMatchingFilter() || isPresent(toInventory, slot.getItem())) {
                             foundQueries++;
                         }
                     }
@@ -373,7 +376,7 @@ public class ManagementInstance implements ModInstance {
      */
     public boolean matchesFillFilter(ItemStack fromStack, ItemStack toStack) {
         boolean areMatching = fromStack.getItem() == toStack.getItem();
-        if (ContainerHelper.IS_TRACKED_CONTAINER && ContainerHelper.CURRENT_FILTER_MODE.tag()) {
+        if (ContainerHelper.IS_TRACKED_CONTAINER && options().management.containerFiltering && ContainerHelper.CURRENT_FILTER_TYPE.tag()) {
             return areStacksInSameTag(fromStack, toStack) || areMatching;
         }
         return areMatching;
@@ -383,11 +386,16 @@ public class ManagementInstance implements ModInstance {
      * @return true if the item is present in the opposing inventory/container.
      */
     public boolean isPresent(boolean toInventory, ItemStack sourceStack) {
-        if (!isContainerScreen(instance().getScreen()) && !isShulkerBoxScreen(instance().getScreen())) {
+        if (!isContainerScreen(instance().getScreen())
+                && !isShulkerBoxScreen(instance().getScreen())
+                && !isDropperDispenserOrHopperScreen(instance().getScreen())) {
             return true;
         }
 
-        if (ContainerHelper.IS_TRACKED_CONTAINER) {
+        if (ContainerHelper.IS_TRACKED_CONTAINER && options().management.containerFiltering) {
+            if (ContainerHelper.CURRENT_FILTER_MODE == FilteringMode.CURRENT_STACKS) {
+                return true;
+            }
             return toInventory || itemMatchesPlaceholder(sourceStack);
         }
 
@@ -406,7 +414,7 @@ public class ManagementInstance implements ModInstance {
      * @return true if the stack matches any placeholder in the current tracked container.
      */
     public boolean itemMatchesPlaceholder(ItemStack sourceStack) {
-        if (!ContainerHelper.IS_TRACKED_CONTAINER) {
+        if (!ContainerHelper.IS_TRACKED_CONTAINER || !options().management.containerFiltering) {
             return false;
         }
 
@@ -505,7 +513,9 @@ public class ManagementInstance implements ModInstance {
         int toStart = toInventory ? containerSize : 0;
         int toEnd = toInventory ? totalSlots : containerSize;
 
-        if (!isContainerScreen(instance().getScreen()) && !isShulkerBoxScreen(instance().getScreen())) {
+        if (!isContainerScreen(instance().getScreen())
+                && !isShulkerBoxScreen(instance().getScreen())
+                && !isDropperDispenserOrHopperScreen(instance().getScreen())) {
             return true;
         }
 
@@ -532,7 +542,7 @@ public class ManagementInstance implements ModInstance {
                 continue;
             }
             if (applyFillWhatsPresentFilter
-                    && options().management.moveMatchingItems
+                    && shouldApplyMatchingFilter()
                     && !isPresent(toInventory, !cursorStack.isEmpty() ? cursorStack : sourceSlot.getItem())) {
                 continue;
             }
@@ -548,6 +558,26 @@ public class ManagementInstance implements ModInstance {
     }
 
     /**
+     * @return true when matching-only filtering should be applied.
+     */
+    public boolean shouldApplyMatchingFilter() {
+        if (ContainerHelper.IS_TRACKED_CONTAINER && options().management.containerFiltering) {
+            return ContainerHelper.CURRENT_FILTER_MODE == FilteringMode.MATCHING;
+        }
+        return options().isFiltering();
+    }
+
+    /**
+     * @return true when fill-stacks-only behavior should be applied.
+     */
+    public boolean shouldFillStacksOnly() {
+        if (ContainerHelper.IS_TRACKED_CONTAINER && options().management.containerFiltering) {
+            return ContainerHelper.CURRENT_FILTER_MODE == FilteringMode.CURRENT_STACKS;
+        }
+        return options().isFillingCurrentStacks();
+    }
+
+    /**
      * @return total free space in matching destination stacks in the target range.
      */
     public int getDestinationFreeSpaceForStack(ItemStack sourceStack, int toStart, int toEnd) {
@@ -556,6 +586,12 @@ public class ManagementInstance implements ModInstance {
             Slot toSlot = instance().getScreenMenu().getSlot(j);
             ItemStack toStack = toSlot.getItem();
             if (toStack.isEmpty()) {
+                continue;
+            }
+            if (ContainerHelper.IS_TRACKED_CONTAINER
+                    && options().management.containerFiltering
+                    && ContainerHelper.CURRENT_FILTER_MODE == FilteringMode.CURRENT_STACKS
+                    && !itemMatchesPlaceholder(toStack)) {
                 continue;
             }
             if (!ItemStack.isSameItemSameTags(sourceStack, toStack)) {

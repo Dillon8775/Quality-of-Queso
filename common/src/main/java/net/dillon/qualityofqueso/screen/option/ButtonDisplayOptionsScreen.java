@@ -14,13 +14,16 @@ public class ButtonDisplayOptionsScreen extends AbstractModOptionsScreen {
     protected OptionInstance<?>[] options() {
         return new OptionInstance[]{
                 ListOptions.displayIncludeHotbar(),
-                ListOptions.displayMoveMatchingItems(),
+                ListOptions.displayFiltering(),
 
                 ListOptions.displaySearchTransportables(),
                 ListOptions.displayAlwaysQuickMove(),
 
-                ListOptions.displayFillStacks(),
-                ListOptions.displayTradeAll()
+                ListOptions.displayBulkTrade(),
+                ListOptions.displayBulkCraft(),
+
+                ListOptions.safeBulk(),
+                ListOptions.displayLockInventory()
         };
     }
 

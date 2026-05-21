@@ -1,0 +1,122 @@
+package net.dillon.qualityofqueso.widget;
+
+import net.dillon.qualityofqueso.helper.ContainerHelper;
+import net.dillon.qualityofqueso.option.eum.management.FilteringMode;
+import net.dillon.qualityofqueso.screen.FilterItemsScreen;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+
+import static net.dillon.qualityofqueso.helper.ManagementHelper.isDropperDispenserOrHopperScreen;
+import static net.dillon.qualityofqueso.helper.ModHelper.getCurrentScreen;
+import static net.dillon.qualityofqueso.helper.ModHelper.options;
+
+/**
+ * A button to only transfer what is present in the opposite container.
+ */
+public class FilteringButton extends ToggleableButton {
+    private final Minecraft minecraft;
+    private final AbstractContainerScreen<?> parent;
+
+    public FilteringButton(AbstractContainerMenu screenHandler, Font font, String searchFieldText, String buttonName, OnPress onPress, Minecraft minecraft, AbstractContainerScreen<?> parent) {
+        super(screenHandler, font, searchFieldText, buttonName, onPress);
+        this.minecraft = minecraft;
+        this.parent = parent;
+    }
+
+    /**
+     * @return a string of "fill what's present".
+     */
+    private static String of(String s) {
+        return "filtering/" + s;
+    }
+
+    @Override
+    protected String onTextureId() {
+        boolean trackedFilteringEnabled = ContainerHelper.isTrackedFilteringActive();
+        if (!trackedFilteringEnabled) {
+            return switch (options().management.filteringMode) {
+                case NONE -> of("move_anything");
+                case MATCHING -> of("move_matching_items");
+                case CURRENT_STACKS -> of("current_stacks");
+            };
+        } else {
+            boolean tagFiltered = ContainerHelper.CURRENT_FILTER_TYPE.tag();
+            if (ContainerHelper.CURRENT_FILTER_MODE == FilteringMode.CURRENT_STACKS) {
+                return of(tagFiltered ? "current_stacks_tag_filtered" : "current_stacks_alphabetical_filtered");
+            } else {
+                return of(tagFiltered ? "matching_tag_filtered" : "matching_alphabetical_filtered");
+            }
+        }
+    }
+
+    @Override
+    protected String offTextureId() {
+        return of("move_anything");
+    }
+
+    @Override
+    protected boolean option() {
+        boolean trackedFilteringEnabled = ContainerHelper.isTrackedFilteringActive();
+        return trackedFilteringEnabled || options().management.filteringMode.matchingOrCurrentStacks();
+    }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int bl) {
+        if (!this.isMouseOver(mouseX, mouseY)) {
+            return super.mouseClicked(mouseX, mouseY, bl);
+        }
+
+        boolean trackedFilteringEnabled = ContainerHelper.isTrackedFilteringActive();
+        if (trackedFilteringEnabled) {
+            if (bl == 1) {
+                ContainerHelper.OPENING_PLACEHOLDER_SCREEN = true;
+                this.minecraft.setScreen(new FilterItemsScreen(this.parent));
+            } else {
+                ContainerHelper.cycleCurrentFilteringMode();
+                this.playDownSound(Minecraft.getInstance().getSoundManager());
+            }
+            return true;
+        }
+        return super.mouseClicked(mouseX, mouseY, bl);
+    }
+
+    @Override
+    protected Component getTooltipToRender() {
+        Component original;
+        switch (options().management.filteringMode) {
+            case MATCHING -> original = Component.translatable("qualityofqueso.gui.move_matching");
+            case CURRENT_STACKS -> original = Component.translatable("qualityofqueso.gui.move_current_stacks");
+            default -> original = Component.translatable("qualityofqueso.gui.move_anything");
+        }
+        boolean trackedFilteringEnabled = ContainerHelper.isTrackedFilteringActive();
+        if (isDropperDispenserOrHopperScreen(getCurrentScreen())) {
+            return original;
+        } else if (trackedFilteringEnabled) { // For filtered containers
+            String filterType = ContainerHelper.CURRENT_FILTER_TYPE.tag()
+                    ? "qualityofqueso.gui.tag_filtered"
+                    : "qualityofqueso.gui.item_filtered";
+            String filterMode = ContainerHelper.CURRENT_FILTER_MODE == FilteringMode.CURRENT_STACKS
+                    ? "qualityofqueso.gui.filter_mode.current_stacks"
+                    : "qualityofqueso.gui.filter_mode.default";
+            return Component.translatable(
+                    "qualityofqueso.gui.filtered_mode",
+                    // filter mode param
+                    Component.translatable(filterMode)
+                            .copy(),
+
+                    // filter type param
+                    Component.translatable(filterType)
+                            .copy(),
+
+                    // appended param
+                    Component.translatable("qualityofqueso.gui.right_click_switch")
+            );
+        } else {
+            Component markContainerText = Component.translatable("qualityofqueso.gui.mark_container");
+            return original.copy().append(markContainerText);
+        }
+    }
+}

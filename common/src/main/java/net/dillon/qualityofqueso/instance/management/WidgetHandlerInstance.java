@@ -13,7 +13,7 @@ import java.util.List;
 
 import static net.dillon.qualityofqueso.helper.ManagementHelper.isContainerScreen;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.isInventoryScreen;
-import static net.dillon.qualityofqueso.helper.ModHelper.sendClientOptionsToServer;
+import static net.dillon.qualityofqueso.helper.ModHelper.sendClientPreferencesToServer;
 import static net.dillon.qualityofqueso.util.ModConstants.*;
 
 /**
@@ -79,7 +79,7 @@ public class WidgetHandlerInstance extends ManagementInstance {
                     ModClientOptions.INSTANCE.update(options -> {
                         options.management.includeHotbar = !options.management.includeHotbar;
                     });
-                    sendClientOptionsToServer();
+                    sendClientPreferencesToServer();
                 });
     }
 
@@ -99,34 +99,19 @@ public class WidgetHandlerInstance extends ManagementInstance {
     /**
      * @return the move matching items button.
      */
-    public TransferButton createMoveMatchingItems() {
-        return new MoveMatchingItemsButton(
+    public TransferButton createFiltering() {
+        return new FilteringButton(
                 instance().getScreenMenu(),
                 instance().getMinecraft().font,
                 searchInstance().getSearchFieldText(),
                 "fill_whats_present",
                 b -> {
-                    if (!ContainerHelper.IS_TRACKED_CONTAINER) {
-                        ModClientOptions.INSTANCE.update(options -> {
-                            options.management.moveMatchingItems = !options.management.moveMatchingItems;
-                        });
+                    if (!ContainerHelper.isTrackedFilteringActive()) {
+                        ModClientOptions.INSTANCE.update(ModClientOptions::cycleFilteringMode);
                     }
                 },
                 instance().getMinecraft(),
                 instance().getScreen());
-    }
-
-    /**
-     * @return the {@code fill stacks} button.
-     */
-    public TransferButton createFillStacks() {
-        return new FillStacksButton(
-                instance().getScreenMenu(),
-                instance().getMinecraft().font,
-                searchInstance().getSearchFieldText(),
-                "fill_stacks",
-                b -> ModClientOptions.INSTANCE.update(ModClientOptions::toggleFillStacks)
-        );
     }
 
     /**
@@ -214,13 +199,13 @@ public class WidgetHandlerInstance extends ManagementInstance {
      * @return the {@code trade all} button.
      */
     public TransferButton createTradeAll() {
-        return new TradeAllButton(
+        return new BulkTradeButton(
                 instance().getScreenMenu(),
                 instance().getMinecraft().font,
                 searchInstance().getSearchFieldText(),
                 "trade_all",
                 b -> ModClientOptions.INSTANCE.update(options -> {
-                    options.management.tradeAll = !options.management.tradeAll;
+                    options.management.bulkTrade = !options.management.bulkTrade;
                 })
         );
     }
@@ -228,15 +213,34 @@ public class WidgetHandlerInstance extends ManagementInstance {
     /**
      * @return the {@code craft all} button.
      */
-    public TransferButton createCraftAll() {
-        return new CraftAllButton(
+    @Deprecated
+    public TransferButton createBulkCraft() {
+        return new BulkCraftButton(
                 instance().getScreenMenu(),
                 instance().getMinecraft().font,
                 searchInstance().getSearchFieldText(),
                 "craft_all",
                 b -> ModClientOptions.INSTANCE.update(options -> {
-                    options.management.craftAll = !options.management.craftAll;
+                    options.management.bulkCraft = !options.management.bulkCraft;
                 })
+        );
+    }
+
+    /**
+     * @return the {@code lock inventory} button.
+     */
+    public TransferButton createLockInventory() {
+        return new LockInventoryButton(
+                instance().getScreenMenu(),
+                instance().getMinecraft().font,
+                searchInstance().getSearchFieldText(),
+                "lock_inventory",
+                b -> {
+                    ModClientOptions.INSTANCE.update(options -> {
+                        ModClientOptions.INSTANCE.update(ModClientOptions::cycleLockedInventoryMode);
+                    });
+                    sendClientPreferencesToServer();
+                }
         );
     }
 }
