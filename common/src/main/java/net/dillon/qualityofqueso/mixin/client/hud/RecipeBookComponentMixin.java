@@ -8,9 +8,12 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
+import static net.dillon.qualityofqueso.helper.ModHelper.options;
 
 @Mixin(RecipeBookComponent.class)
 public class RecipeBookComponentMixin {
@@ -19,6 +22,40 @@ public class RecipeBookComponentMixin {
     @Shadow
     @Nullable
     public EditBox searchBox;
+
+    /**
+     * Prevents the actual screen from shifting when opening the recipe book.
+     */
+    @Inject(method = "updateScreenPosition", at = @At("HEAD"), cancellable = true)
+    private void removeRecipeBookScreenShift(int width, int imageWidth, CallbackInfoReturnable<Integer> cir) {
+        if (!options().misc.shiftRecipeBook) {
+            cir.setReturnValue((width - imageWidth) / 2);
+        }
+    }
+
+    /**
+     * Removes bad visual effects when removing the shift from the recipe book.
+     */
+    @ModifyVariable(method = "initVisuals", at = @At("STORE"), index = 1)
+    private int changeRecipeBookButtonsAndShitPosition(int original) {
+        return !options().misc.shiftRecipeBook ? original - 77 : original;
+    }
+
+    /**
+     * Renders the recipe book component properly.
+     */
+    @ModifyVariable(method = "render", at = @At("STORE"), ordinal = 2)
+    private int changeRecipeBookBackgroundPosition(int original) {
+        return !options().misc.shiftRecipeBook ? original - 77 : original;
+    }
+
+    /**
+     * Updates tabs accordingly when removing the shift from the recipe book.
+     */
+    @ModifyArg(method = "updateTabs", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/recipebook/RecipeBookTabButton;setPosition(II)V"), index = 0)
+    private int changeRecipeBookTabButtonPosition(int original) {
+        return !options().misc.shiftRecipeBook ? original - 77 : original;
+    }
 
     /**
      * Fixes an odd bug where if the chat key is pressed, it focuses into the search field.

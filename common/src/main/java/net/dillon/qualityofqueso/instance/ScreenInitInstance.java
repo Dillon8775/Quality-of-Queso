@@ -4,6 +4,7 @@ import net.dillon.qualityofqueso.helper.ContainerHelper;
 import net.dillon.qualityofqueso.helper.MethodHelper;
 import net.dillon.qualityofqueso.instance.management.ManagementInstance;
 import net.dillon.qualityofqueso.option.ModClientOptions;
+import net.dillon.qualityofqueso.option.eum.management.FilteringMode;
 import net.minecraft.client.gui.screens.inventory.*;
 
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
@@ -33,12 +34,14 @@ public class ScreenInitInstance extends ManagementInstance {
                 ContainerHelper.IS_TRACKED_CONTAINER = true;
             } else if (ContainerHelper.consumePendingOpenIsTracked()) { // Next, check if the container is tracked. Then temporarily set "fill what's present" to true, so that filtering works correctly. Once the screen closes, disable "fill what's present"
                 ContainerHelper.IS_TRACKED_CONTAINER = true;
-                ModClientOptions.INSTANCE.update(options -> {
-                    if (!options().management.moveMatchingItems) {
-                        options.management.moveMatchingItems = true;
-                        instance().setDisableMoveMatchingItemsOnClose(true);
-                    }
-                });
+                if (options().management.containerFiltering) {
+                    ModClientOptions.INSTANCE.update(options -> {
+                        if (!options.isFiltering()) {
+                            options.management.filteringMode = FilteringMode.MATCHING;
+                            instance().setDisableFilteringOnClose(true);
+                        }
+                    });
+                }
             } else { // Otherwise, the container isn't tracked, so mark it as "not tracked"
                 ContainerHelper.IS_TRACKED_CONTAINER = false;
             }

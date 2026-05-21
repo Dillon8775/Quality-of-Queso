@@ -10,7 +10,8 @@ import net.minecraft.resources.ResourceLocation;
  * Sends the player's client-side options to the server.
  */
 public record ClientPreferencesC2SPacket(boolean includeHotbar,
-                                         boolean perpendicularQuickMoving) implements CustomPacketPayload {
+                                         boolean perpendicularQuickMoving,
+                                         String lockInventory) implements CustomPacketPayload {
     private static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath("qualityofqueso", "client_preferences");
     public static final Type<ClientPreferencesC2SPacket> PACKET_TYPE = new Type<>(ID);
     public static final StreamCodec<RegistryFriendlyByteBuf, ClientPreferencesC2SPacket> CODEC =
@@ -19,6 +20,8 @@ public record ClientPreferencesC2SPacket(boolean includeHotbar,
                     ClientPreferencesC2SPacket::includeHotbar,
                     ByteBufCodecs.BOOL,
                     ClientPreferencesC2SPacket::perpendicularQuickMoving,
+                    ByteBufCodecs.STRING_UTF8,
+                    ClientPreferencesC2SPacket::lockInventory,
                     ClientPreferencesC2SPacket::new
             );
 

@@ -26,17 +26,6 @@ public class LockedSlotsInstance extends ManagementInstance {
     }
 
     /**
-     * Renders the unlocked slot texture over slots.
-     */
-    public void renderUnlockedSlot(GuiGraphics graphics, boolean isSlotLocked, int mouseX, int mouseY) {
-        int xy = 10;
-        graphics.pose().pushPose();
-        graphics.pose().translate(0.0F, 0.0F, 400.0F);
-        graphics.blit(ofQoQ("textures/gui/sprites/locked_slot/" + (isSlotLocked ? "key" : "unlock") + ".png"), mouseX - 6, mouseY + 2, 0.0F, 0.0F, xy, xy, xy, xy);
-        graphics.pose().popPose();
-    }
-
-    /**
      * @return the set of locked container slots.
      */
     public Set<Integer> getLockedContainerSlots() {
@@ -83,6 +72,17 @@ public class LockedSlotsInstance extends ManagementInstance {
     }
 
     /**
+     * Renders the unlocked slot texture over slots.
+     */
+    public void renderUnlockedSlot(GuiGraphics graphics, boolean isSlotLocked, int mouseX, int mouseY) {
+        int xy = 10;
+        graphics.pose().pushPose();
+        graphics.pose().translate(0.0F, 0.0F, 400.0F);
+        graphics.blit(ofQoQ("textures/gui/sprites/locked_slot/" + (isSlotLocked ? "key" : "unlock") + ".png"), mouseX - 6, mouseY + 2, 0.0F, 0.0F, xy, xy, xy, xy);
+        graphics.pose().popPose();
+    }
+
+    /**
      * Renders a slot as "locked".
      */
     public void renderLockedSlot(GuiGraphics graphics, Slot slot, boolean lockOnly) {
@@ -96,11 +96,13 @@ public class LockedSlotsInstance extends ManagementInstance {
         }
         if (locked) {
             if (lockOnly) {
-                int xy = 10;
-                graphics.pose().pushPose();
-                graphics.pose().translate(0.0F, 0.0F, 400.0F);
-                graphics.blit(ofQoQ("textures/gui/sprites/locked_slot/locked.png"), slot.x - 3, slot.y + 9, 0.0F, 0.0F, xy, xy, xy, xy);
-                graphics.pose().popPose();
+                if (slot.hasItem()) {
+                    int xy = 10;
+                    graphics.pose().pushPose();
+                    graphics.pose().translate(0.0F, 0.0F, 400.0F);
+                    graphics.blit(ofQoQ("textures/gui/sprites/locked_slot/locked.png"), slot.x - 3, slot.y + 9, 0.0F, 0.0F, xy, xy, xy, xy);
+                    graphics.pose().popPose();
+                }
             } else {
                 graphics.fill(slot.x - 1, slot.y - 1, slot.x + 17, slot.y + 17, options().lockedSlots.lockedSlotColor);
             }

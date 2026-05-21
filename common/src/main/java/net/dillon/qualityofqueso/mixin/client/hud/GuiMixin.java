@@ -180,6 +180,10 @@ public class GuiMixin {
                 continue;
             }
 
+            if (this.minecraft.player.getInventory().getItem(slot).isEmpty()) {
+                continue;
+            }
+
             graphics.pose().pushPose();
             graphics.pose().translate(0.0F, 0.0F, 200.0F);
             graphics.blitSprite(

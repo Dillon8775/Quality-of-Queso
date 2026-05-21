@@ -38,6 +38,13 @@ public final class CommonEvents {
         );
 
         Balm.getNetworking().registerServerboundPacket(
+                ManualItemPickupC2SPacket.PACKET_TYPE,
+                ManualItemPickupC2SPacket.class,
+                ManualItemPickupC2SPacket.CODEC,
+                ServerPacketHandlers::handleManualItemPickupIntent
+        );
+
+        Balm.getNetworking().registerServerboundPacket(
                 RequestShulkerStateC2SPacket.PACKET_TYPE,
                 RequestShulkerStateC2SPacket.class,
                 RequestShulkerStateC2SPacket.CODEC,

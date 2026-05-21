@@ -27,4 +27,5 @@ public class ModCommonOptions {
     }
 
     public boolean itemFrameSearching = true;
+    public boolean inventoryLocking = true;
 }

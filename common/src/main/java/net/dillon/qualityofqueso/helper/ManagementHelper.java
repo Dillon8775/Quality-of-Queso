@@ -133,7 +133,20 @@ public class ManagementHelper {
      * @return if the screen is a valid screen for rendering the locked slot color overlay.
      */
     public static boolean isValidScreenForRenderingLockedSlotOverlay(AbstractContainerScreen<?> screen) {
-        return !isCreativeInventoryScreen(screen)
+        return (
+                isValidScreen(screen)
+                        || isOtherValidScreen(screen)
+                        || isMerchantScreen(screen)
+                        || screen instanceof AnvilScreen
+                        || screen instanceof BeaconScreen
+                        || screen instanceof CartographyTableScreen
+                        || screen instanceof CraftingScreen
+                        || screen instanceof EnchantmentScreen
+                        || screen instanceof GrindstoneScreen
+                        || screen instanceof SmithingScreen
+                        || screen instanceof StonecutterScreen
+        )
+                && !isCreativeInventoryScreen(screen)
                 && !(screen instanceof CrafterScreen);
     }
 
@@ -267,7 +280,9 @@ public class ManagementHelper {
      * @return the modifier to use for recipe books.
      */
     public static int getRecipeBookModifier(Screen screen) {
-        return screen instanceof InventoryScreen recipeBookScreen && getRecipeBookComponent(recipeBookScreen).isVisible() ? 77 : 0;
+        return options().misc.shiftRecipeBook
+                && (screen instanceof InventoryScreen || screen instanceof CraftingScreen)
+                && getRecipeBookComponent(screen).isVisible() ? 77 : 0;
     }
 
     /**
@@ -298,7 +313,7 @@ public class ManagementHelper {
             modifier -= 20;
         } else if (isFurnaceScreen(screen)) {
             modifier -= 16;
-        } else if (screen instanceof InventoryScreen recipeBookScreen && getRecipeBookComponent(recipeBookScreen).isVisible()) {
+        } else if ((screen instanceof InventoryScreen || screen instanceof CraftingScreen) && getRecipeBookComponent(screen).isVisible()) {
             modifier += getRecipeBookModifier(screen);
         }
         return (width / 2 + barWidth / 2 + modifier) - (button * 12);

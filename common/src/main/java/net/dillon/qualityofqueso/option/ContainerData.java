@@ -30,6 +30,7 @@ public class ContainerData {
 
     public Set<String> itemFilteredContainers = new HashSet<>();
     public Set<String> tagFilteredContainers = new HashSet<>();
+    public Map<String, String> containerFilteringModes = new HashMap<>();
     public Map<String, String> containerSortingModes = new HashMap<>();
     public Map<String, List<String>> containerFilterItems = new HashMap<>();
     public Map<String, List<StoredEnderChestStack>> enderChestItems = new HashMap<>();

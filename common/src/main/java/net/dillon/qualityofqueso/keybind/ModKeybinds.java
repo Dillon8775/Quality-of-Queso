@@ -114,7 +114,7 @@ public final class ModKeybinds {
      * @return if the user has the "move single modifier" key down.
      */
     public static boolean hasMoveSingleModifierDown() {
-        return options().management.singularMoving && Screen.hasControlDown();
+        return options().management.scrollMoving && Screen.hasControlDown();
     }
 
     /**

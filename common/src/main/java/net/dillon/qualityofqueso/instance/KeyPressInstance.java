@@ -5,6 +5,7 @@ import net.dillon.qualityofqueso.instance.management.ManagementInstance;
 import net.dillon.qualityofqueso.keybind.ModKeybinds;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.world.inventory.ClickType;
 import org.lwjgl.glfw.GLFW;
@@ -32,7 +33,9 @@ public class KeyPressInstance extends ManagementInstance {
     private void handleManagementKeybinds(int keycode, CallbackInfoReturnable<Boolean> cir) {
         boolean quickDropShortcutPressed = keycode == key(getDropKey()).getValue() && hasQuickDropKeysDown();
 
-        if (!quickDropShortcutPressed && !isCreativeInventoryScreen(instance().getScreen()) && transferInstance().canSingularQuickDrop(keycode)) {
+        if (!quickDropShortcutPressed
+                && !isCreativeInventoryScreen(instance().getScreen())
+                && transferInstance().canSingularQuickDrop(keycode)) {
             transferInstance().performSingularDrop();
         }
 
@@ -50,33 +53,29 @@ public class KeyPressInstance extends ManagementInstance {
             return;
         }
 
-        if ((isContainerScreen(instance().getScreen()) || isOtherValidScreen(instance().getScreen()))
-                && options().management.transferring.buttonOrKeyOrKeyOnly()) {
-            if (keycode == key(ModKeybinds.MOVE_TO_INVENTORY).getValue() && hasAnyManagementModifierDown()) {
+        if (!(instance().getScreen() instanceof AbstractContainerScreen<?>)) {
+            return;
+        }
+
+        if (options().management.transferring.buttonOrKeyOrKeyOnly()) {
+            if (keycode == key(ModKeybinds.MOVE_TO_INVENTORY).getValue()) {
                 transferInstance().transferItems(true, false);
             }
-            if (!isBrewingOrFurnaceScreen(instance().getScreen()) && keycode == key(MOVE_TO_CONTAINER).getValue() && hasAnyManagementModifierDown()) {
+            if (!isBrewingOrFurnaceScreen(instance().getScreen()) && keycode == key(MOVE_TO_CONTAINER).getValue()) {
                 transferInstance().transferItems(false, false);
             }
         }
 
-        if (!isValidScreen(instance().getScreen()) && !isDropperDispenserOrHopperScreen(instance().getScreen())) {
-            return;
-        }
-
-        if (options().sorting.sortingEnabled.buttonOrKeyOrKeyOnly() && keycode == key(ModKeybinds.SORT).getValue() && hasAnyManagementModifierDown()) {
+        if (options().sorting.sortingEnabled.buttonOrKeyOrKeyOnly() && keycode == key(ModKeybinds.SORT).getValue()) {
             sortingInstance().trySort();
         }
 
-        if (!isValidScreen(instance().getScreen())) {
-            return;
-        }
-
-        if (isContainerScreen(instance().getScreen()) && options().management.swapping.buttonOrKeyOrKeyOnly() && keycode == key(ModKeybinds.SWAP_ITEMS).getValue() && hasAnyManagementModifierDown()) {
-            transferInstance().trySwap();
-        }
         if (options().management.quickDrop.buttonOrKeyOrKeyOnly() && quickDropShortcutPressed) {
             transferInstance().dropItems(!isContainerScreen(instance().getScreen()));
+        }
+
+        if (isContainerScreen(instance().getScreen()) && options().management.swapping.buttonOrKeyOrKeyOnly() && keycode == key(ModKeybinds.SWAP_ITEMS).getValue()) {
+            transferInstance().trySwap();
         }
     }
 
@@ -227,8 +226,11 @@ public class KeyPressInstance extends ManagementInstance {
         boolean cannotType = (numberKeyPressed || hotbarKeyPressed || dropKeyPressed || swapKeyPressed) && hoveredSlotHasItem(instance().getScreensHoveredSlot());
 
         // Recipe book search field logic
-        if (instance().getScreen() instanceof InventoryScreen recipeScreen && !Screen.hasControlDown() && !hasAnyManagementModifierDown()) {
-            boolean swapKeyValid = swapKeyPressed && (hoveredSlotHasItem(instance().getScreensHoveredSlot()) || instance().getScreen().getMenu().getSlot(45).hasItem());
+        if ((isInventoryScreen(instance().getScreen()) || isCraftingScreen(instance().getScreen()))
+                && !Screen.hasControlDown() && !hasAnyManagementModifierDown()) {
+            AbstractContainerScreen<?> recipeScreen = instance().getScreen();
+            boolean swapKeyValid = swapKeyPressed && (hoveredSlotHasItem(instance().getScreensHoveredSlot())
+                    || (isInventoryScreen(recipeScreen) && recipeScreen.getMenu().getSlot(45).hasItem()));
             if (!options().accessibility.preventEFromTyping || keycode != key(Minecraft.getInstance().options.keyInventory).getValue()) {
                 if (options().searching.quickSearch.enabled() && !ignoreTyping && !swapKeyValid && !dropKeyPressed && !getRecipeBookComponent(recipeScreen).isVisible() &&
                         (instance().getSearchFields().inventory() == null ||
@@ -264,8 +266,9 @@ public class KeyPressInstance extends ManagementInstance {
         }
         // Inventory search field logic
         if (options().searching.inventorySearching && instance().getSearchFields().inventory() != null) {
-            if (!Screen.hasControlDown() && !hasAnyManagementModifierDown() && instance().getScreen() instanceof InventoryScreen recipeScreen && getRecipeBookComponent(recipeScreen).isVisible() && !instance().getSearchFields().inventory().isFocused()) {
-                getSearchBoxInsideRecipeBook(recipeScreen).setFocused(!cannotType);
+            if (!Screen.hasControlDown() && !hasAnyManagementModifierDown() && (isInventoryScreen(instance().getScreen()) || isCraftingScreen(instance().getScreen()))
+                    && getRecipeBookComponent(instance().getScreen()).isVisible() && !instance().getSearchFields().inventory().isFocused()) {
+                getSearchBoxInsideRecipeBook(instance().getScreen()).setFocused(!cannotType);
             } else if ((options().searching.quickSearch.enabled() || options().searching.quickSearch.searchBar()) && !secondaryIgnoreTyping && (!Screen.hasControlDown() || (Screen.hasControlDown() && keycode == GLFW.GLFW_KEY_A))) {
                 instance().getSearchFields().inventory().setFocused(true);
                 instance().getScreen().setFocused(instance().getSearchFields().inventory());
@@ -274,12 +277,13 @@ public class KeyPressInstance extends ManagementInstance {
             }
 
             // Unfocus and close recipe book when fromInventory search field is focused
-            if (instance().getScreen() instanceof InventoryScreen recipeScreen && getSearchBoxInsideRecipeBook(recipeScreen) != null) {
+            if ((isInventoryScreen(instance().getScreen()) || isCraftingScreen(instance().getScreen()))
+                    && getSearchBoxInsideRecipeBook(instance().getScreen()) != null) {
                 if (instance().getSearchFields().inventory().isFocused()) {
-                    getSearchBoxInsideRecipeBook(recipeScreen).setFocused(false);
-                    if (keycode == GLFW.GLFW_KEY_BACKSPACE && getRecipeBookComponent(recipeScreen).isVisible()) {
+                    getSearchBoxInsideRecipeBook(instance().getScreen()).setFocused(false);
+                    if (keycode == GLFW.GLFW_KEY_BACKSPACE && getRecipeBookComponent(instance().getScreen()).isVisible()) {
                         String text = instance().getSearchFields().searchText();
-                        getRecipeBookComponent(recipeScreen).toggleVisibility();
+                        getRecipeBookComponent(instance().getScreen()).toggleVisibility();
                         MethodHelper.refreshWidgets(instance().getScreen());
                         instance().getSearchFields().inventory().setValue(text.substring(0, text.length() - 1));
                         instance().getSearchFields().inventory().setFocused(true);
@@ -288,7 +292,7 @@ public class KeyPressInstance extends ManagementInstance {
                     return;
                 }
                 // Unfocus fromInventory search field when recipe book search field is focused
-                else if (getSearchBoxInsideRecipeBook(recipeScreen).isFocused()) {
+                else if (getSearchBoxInsideRecipeBook(instance().getScreen()).isFocused()) {
                     instance().getSearchFields().inventory().setFocused(false);
                 }
             }

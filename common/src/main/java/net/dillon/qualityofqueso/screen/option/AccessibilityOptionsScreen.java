@@ -35,23 +35,22 @@ public class AccessibilityOptionsScreen extends AbstractModOptionsScreen {
                 createOption(ListOptions.tooltips()),
                 createOption(ListOptions.widgetTheme()),
 
-                createOption(ListOptions.autoCloseRecipeBook()),
+                createOption(ListOptions.perpendicularQuickMoving()),
                 createOption(ListOptions.preventEFromTyping()),
 
-                createOption(ListOptions.perpendicularQuickMoving()),
+                this.searchInventory,
                 this.darkOverlay,
 
-                this.searchInventory,
-                this.darkDisc,
-
                 createOption(ListOptions.menuButton()),
-                createOption(ListOptions.eChestButton()),
+                createOption(ListOptions.darkDisc()),
 
-                createOption(ListOptions.multiServerConfigs()),
+                createOption(ListOptions.eChestButton()),
                 this.elytraAlarmSoundDelay,
 
-                this.blacklistedServersField,
-                this.ignoreFabricTags
+                createOption(ListOptions.multiServerConfigs()),
+                this.ignoreFabricTags,
+
+                this.blacklistedServersField
         };
     }
 

@@ -25,10 +25,10 @@ public class ManagementOptionsScreen extends AbstractModOptionsScreen {
                         button -> this.minecraft.setScreen(new SortingOptionsScreen(this))
                 ).tooltip(Tooltip.create(Component.translatable("qualityofqueso.gui.sorting.tooltip"))).build(),
 
-                createOption(ListOptions.filtering()),
+                createOption(ListOptions.containerFiltering()),
                 createOption(ListOptions.quickDrop()),
 
-                createOption(ListOptions.singularMoving()),
+                createOption(ListOptions.scrollMoving()),
                 createOption(ListOptions.dragMoving()),
 
                 createOption(ListOptions.swapping()),
@@ -41,13 +41,14 @@ public class ManagementOptionsScreen extends AbstractModOptionsScreen {
                 ).tooltip(Tooltip.create(Component.translatable("qualityofqueso.gui.locked_slots.tooltip"))).build(),
 
                 createOption(ListOptions.playSounds()),
-                Button.builder(Component.translatable("qualityofqueso.gui.button_display_options"), button -> {
-                    this.minecraft.setScreen(new ButtonDisplayOptionsScreen(this));
-                }).tooltip(Tooltip.create(Component.translatable("qualityofqueso.gui.button_display_options.tooltip"))).build(),
+                createOption(ListOptions.inventoryLocking()),
 
                 Button.builder(Component.translatable("qualityofqueso.gui.configure_keybinds"), button -> {
                     this.openKeybinds();
-                }).tooltip(Tooltip.create(Component.translatable("qualityofqueso.gui.keybinds.tooltip"))).build()
+                }).tooltip(Tooltip.create(Component.translatable("qualityofqueso.gui.keybinds.tooltip"))).build(),
+                Button.builder(Component.translatable("qualityofqueso.gui.button_display_options"), button -> {
+                    this.minecraft.setScreen(new ButtonDisplayOptionsScreen(this));
+                }).tooltip(Tooltip.create(Component.translatable("qualityofqueso.gui.button_display_options.tooltip"))).build()
         };
     }
 

@@ -58,14 +58,14 @@ public class MethodHelper {
     /**
      * @return a recipe book component on a screen.
      */
-    public static RecipeBookComponent getRecipeBookComponent(InventoryScreen recipeBookScreen) {
+    public static RecipeBookComponent getRecipeBookComponent(Screen recipeBookScreen) {
         return ((AbstractRecipeBookScreenAccessor) recipeBookScreen).getRecipeBookComponent();
     }
 
     /**
      * @return a search box in the recipe book component.
      */
-    public static EditBox getSearchBoxInsideRecipeBook(InventoryScreen recipeBookScreen) {
+    public static EditBox getSearchBoxInsideRecipeBook(Screen recipeBookScreen) {
         return ((RecipeBookComponentAccessor) getRecipeBookComponent(recipeBookScreen)).getSearchBox();
     }
 

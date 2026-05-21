@@ -1,6 +1,7 @@
 package net.dillon.qualityofqueso.mixin.client.util;
 
 import net.dillon.qualityofqueso.helper.ContainerHelper;
+import net.dillon.qualityofqueso.instance.management.ClickSlotInstance;
 import net.dillon.qualityofqueso.util.ItemHudTracker;
 import net.dillon.qualityofqueso.util.ModTexts;
 import net.minecraft.ChatFormatting;
@@ -19,6 +20,7 @@ import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.ChargedProjectiles;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.entity.BarrelBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.EnderChestBlockEntity;
@@ -211,11 +213,19 @@ public class MultiPlayerGameModeMixin {
     }
 
     /**
+     * Caches the most recently selected recipe-book recipe for bulk crafting.
+     */
+    @Inject(method = "handlePlaceRecipe", at = @At("HEAD"))
+    private void cacheSelectedRecipe(int containerId, RecipeHolder<?> recipe, boolean useMaxItems, CallbackInfo ci) {
+        ClickSlotInstance.setSelectedBulkCraftRecipe(recipe);
+    }
+
+    /**
      * @return if injection point should be canceled out after filtering.
      */
     @Unique
     private static boolean shouldCancelForContainerFilter(Minecraft minecraft, BlockPos pos) {
-        if (!modEnabled(minecraft) || !options().management.filtering || minecraft.player == null || minecraft.level == null
+        if (!modEnabled(minecraft) || !options().management.containerFiltering || minecraft.player == null || minecraft.level == null
                 || !minecraft.player.isShiftKeyDown() || isHoldingItem(minecraft.player, DataComponents.TOOL)) {
             return false;
         }

@@ -2,12 +2,11 @@ package net.dillon.qualityofqueso.event;
 
 import net.dillon.qualityofqueso.keybind.ModKeybinds;
 import net.dillon.qualityofqueso.main.ClientEvents;
-import net.dillon.qualityofqueso.packet.GlowSearchC2SPacket;
+import net.dillon.qualityofqueso.platform.MultiLoader;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 
 @Environment(EnvType.CLIENT)
 public class FabricClientEvents {
@@ -35,7 +34,7 @@ public class FabricClientEvents {
         ClientPlayConnectionEvents.JOIN.register((handler, packet, minecraft) -> {
             ClientEvents.onPlayerJoin(minecraft);
 
-            if (!ClientPlayNetworking.canSend(GlowSearchC2SPacket.PACKET_TYPE)) {
+            if (!MultiLoader.getPlatform().canSendPacket(null)) {
                 ClientEvents.warnModNotPresent(minecraft);
             }
         });

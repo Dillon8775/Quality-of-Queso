@@ -2,8 +2,10 @@ package net.dillon.qualityofqueso.instance;
 
 import net.dillon.qualityofqueso.helper.ContainerHelper;
 import net.dillon.qualityofqueso.helper.MethodHelper;
+import net.dillon.qualityofqueso.instance.management.ClickSlotInstance;
 import net.dillon.qualityofqueso.instance.management.ManagementInstance;
 import net.dillon.qualityofqueso.option.ModClientOptions;
+import net.dillon.qualityofqueso.option.eum.management.FilteringMode;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 
 import java.util.HashSet;
@@ -49,9 +51,15 @@ public class CloseScreenInstance extends ManagementInstance {
      * Disables certain features, like craft all and trade all.
      */
     public void disableFeatures() {
+        ClickSlotInstance.clearSelectedBulkCraftRecipe();
+
+        if (!options().buttonDisplayOptions.safeBulk) {
+            return;
+        }
+
         ModClientOptions.INSTANCE.update(options -> {
-            options.management.craftAll = false;
-            options.management.tradeAll = false;
+            options.management.bulkCraft = false;
+            options.management.bulkTrade = false;
         });
     }
 
@@ -59,7 +67,7 @@ public class CloseScreenInstance extends ManagementInstance {
      * Automatically closes the recipe book when closing a screen.
      */
     public void autoCloseRecipeBook() {
-        if (options().accessibility.autoCloseRecipeBook
+        if (options().misc.autoCloseRecipeBook
                 && instance().getScreen() instanceof InventoryScreen recipeBookScreen
                 && getRecipeBookComponent(recipeBookScreen).isVisible()) {
             getRecipeBookComponent(recipeBookScreen).toggleVisibility();
@@ -71,9 +79,9 @@ public class CloseScreenInstance extends ManagementInstance {
      * Handles tracked containers when closing a screen.
      */
     public void handleTrackedContainers() {
-        if (instance().getDisableMoveMatchingItemsOnClose()) {
+        if (instance().getDisableFilteringOnClose()) {
             ModClientOptions.INSTANCE.update(options -> {
-                options.management.moveMatchingItems = false;
+                options.management.filteringMode = FilteringMode.NONE;
             });
         }
 

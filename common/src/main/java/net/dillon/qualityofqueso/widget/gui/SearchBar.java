@@ -1,5 +1,6 @@
 package net.dillon.qualityofqueso.widget.gui;
 
+import net.dillon.qualityofqueso.option.eum.accessibility.WidgetTheme;
 import net.dillon.qualityofqueso.util.ModConstants;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
@@ -37,8 +38,12 @@ public class SearchBar extends EditBox {
      * @return new widget sprites for the search bar.
      */
     public static WidgetSprites getSprites() {
+        String path = getWidgetPath();
+        if (options().accessibility.widgetTheme == WidgetTheme.TRANSPARENT) {
+            path = !options().searching.searchBarColor.black() ? "vanilla/" : getWidgetPath();
+        }
         return new WidgetSprites(
-                ofQoQ("widget/search/" + getWidgetPath() + "search_bar"), ofQoQ("widget/search/" + getWidgetPath() + "search_bar_highlighted")
+                ofQoQ("widget/search/" + path + "search_bar"), ofQoQ("widget/search/" + path + "search_bar_highlighted")
         );
     }
 

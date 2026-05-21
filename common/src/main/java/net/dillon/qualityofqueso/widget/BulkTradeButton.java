@@ -9,25 +9,25 @@ import static net.dillon.qualityofqueso.helper.ModHelper.options;
 /**
  * A button which trades all supplies with a villager.
  */
-public class TradeAllButton extends ToggleableButton {
+public class BulkTradeButton extends ToggleableButton {
 
-    public TradeAllButton(AbstractContainerMenu screenHandler, Font font, String searchFieldText, String buttonName, OnPress onPress) {
+    public BulkTradeButton(AbstractContainerMenu screenHandler, Font font, String searchFieldText, String buttonName, OnPress onPress) {
         super(screenHandler, font, searchFieldText, buttonName, onPress);
     }
 
     @Override
     protected String onTextureId() {
-        return "trade_all/trade_all";
+        return "bulk_trade/bulk_trade";
     }
 
     @Override
     protected String offTextureId() {
-        return "trade_all/trade_normal";
+        return "bulk_trade/normal_trade";
     }
 
     @Override
     protected boolean option() {
-        return options().management.tradeAll;
+        return options().management.bulkTrade;
     }
 
     @Override
