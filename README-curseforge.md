@@ -213,15 +213,21 @@ Toggle sprinting, potion effects, flying, bow pulling, and submerged in fluid to
 <br><br>
 - Configurable in the mod's <code>Searching</code> tab
 
+## Quick GUI Exit
+- Click anywhere out-of-bounds of a GUI to close it
+<br><br>
+- Configurable in the mod's <code>Miscellaneous</code> tab
+
 ## Auto-Close Recipe Book
 
 - Automatically close the annoying recipe book when closing your inventory
 <br><br>
-- Configurable in the mod's <code>Accessibility</code> tab
+- Configurable in the mod's <code>Miscellaneous</code> tab
 
-## Quick GUI Exit
-- Click anywhere out-of-bounds of a GUI to close it
-<br><br>
+## No Recipe Book Shift
+
+- Prevents the recipe book from shifting the inventory screen over
+<br<br>
 - Configurable in the mod's <code>Miscellaneous</code> tab
 
 ## Red Armor Tint

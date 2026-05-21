@@ -327,21 +327,32 @@
 
 <details>
     <summary>
-        Auto-Close Recipe Book
+        Quick GUI Exit
     </summary>
         <ul>
-            <li>Automatically close the annoying recipe book when closing your inventory</li>
+            <li>Click anywhere out-of-bounds of a GUI to close it</li>
             <br>
-            <li>Configurable in the mod's <code>Accessibility</code> tab</li>
+            <li>Configurable in the mod's <code>Miscellaneous</code> tab</li>
         </ul>
 </details>
 
 <details>
     <summary>
-        Quick GUI Exit
+        Auto-Close Recipe Book
     </summary>
         <ul>
-            <li>Click anywhere out-of-bounds of a GUI to close it</li>
+            <li>Automatically close the annoying recipe book when closing your inventory</li>
+            <br>
+            <li>Configurable in the mod's <code>Miscellaneous</code> tab</li>
+        </ul>
+</details>
+
+<details>
+    <summary>
+        No Recipe Book Shift
+    </summary>
+        <ul>
+            <li>Prevents the recipe book from shifting the inventory screen over</li>
             <br>
             <li>Configurable in the mod's <code>Miscellaneous</code> tab</li>
         </ul>
