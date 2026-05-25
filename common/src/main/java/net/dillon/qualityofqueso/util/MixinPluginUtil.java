@@ -28,7 +28,7 @@ public class MixinPluginUtil {
      */
     private static boolean shouldApply(String mixinClassName) {
         if (mixinClassName.equals("net.dillon.qualityofqueso.mixin.render.FogRendererMixin")) {
-            if (!UniversalOptions.INSTANCE.getInstance().functions.applyFog) {
+            if (!UniversalOptions.INSTANCE.getInstance().getFunctions().applyFog) {
                 REASON = "\"apply_fog\" function is disabled.";
                 return false;
             }
@@ -44,14 +44,14 @@ public class MixinPluginUtil {
                         return false;
                     }
                 }
-            } else if (!UniversalOptions.INSTANCE.getInstance().functions.applyFovEffects) {
+            } else if (!UniversalOptions.INSTANCE.getInstance().getFunctions().applyFovEffects) {
                 REASON = "\"apply_fov_effects\" function is disabled.";
                 return false;
             }
         }
 
         if (mixinClassName.equals("net.dillon.qualityofqueso.mixin.client.render.EquipmentLayerRendererMixin")) {
-            if (!UniversalOptions.INSTANCE.getInstance().functions.applyRedArmorTint) {
+            if (!UniversalOptions.INSTANCE.getInstance().getFunctions().applyRedArmorTint) {
                 REASON = "\"apply_red_armor_tint\" function is disabled.";
                 return false;
             }

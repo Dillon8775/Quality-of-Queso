@@ -30,9 +30,9 @@ import java.util.Map;
 
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
 import static net.dillon.qualityofqueso.helper.MethodHelper.*;
+import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
 import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
-import static net.dillon.qualityofqueso.helper.ModHelper.options;
-import static net.dillon.qualityofqueso.keybind.ModKeyMappings.*;
+import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.*;
 
 /**
  * Holds management related methods.
@@ -112,7 +112,7 @@ public class ManagementInstance implements ModInstance {
      * @return the fromInventory (size) that should be searched.
      */
     public int getInventorySize() {
-        return options().accessibility.searchInventory ? instance().getScreenMenu().slots.size() : instance().getCurrentInventory() == null ? 0 : instance().getCurrentInventory().getContainerSize();
+        return clientOptionsInstance().getAccessibilityOptions().searchInventory ? instance().getScreenMenu().slots.size() : instance().getCurrentInventory() == null ? 0 : instance().getCurrentInventory().getContainerSize();
     }
 
     /**
@@ -120,7 +120,7 @@ public class ManagementInstance implements ModInstance {
      * <p>Automatically returns {@code true} if "ignore fabric tags" is disabled.</p>
      */
     public boolean isFabricTag(String tagLocation) {
-        return options().accessibility.ignoreFabricTags && tagLocation.startsWith("c:");
+        return clientOptionsInstance().getAccessibilityOptions().ignoreFabricTags && tagLocation.startsWith("c:");
     }
 
     /**
@@ -139,7 +139,7 @@ public class ManagementInstance implements ModInstance {
                 && !isExcludingOrLockingSlots()
                 && instance().getManagementButtons().alwaysQuickMove() != null
                 && !transferInstance().canSingularMove()
-                ? options().isAlwaysQuickMove() || event.hasShiftDown()
+                ? clientOptionsInstance().isAlwaysQuickMove() || event.hasShiftDown()
                 : event.hasShiftDown();
     }
 
@@ -187,7 +187,7 @@ public class ManagementInstance implements ModInstance {
             boolean isStackShulker = isShulkerScreen && stack.is(ItemTags.SHULKER_BOXES);
 
             // Skip stacks that are not what the user is attempting to drop
-            if (hoveredSlotHasItem(instance().getScreensHoveredSlot()) && hasQuickDropKeysDown() && !stack.is(instance().getScreensHoveredSlot().getItem().getItem())) {
+            if (hoveredSlotHasItem(instance().getScreensHoveredSlot()) && hasAllQuickDropModifiersDown() && !stack.is(instance().getScreensHoveredSlot().getItem().getItem())) {
                 continue;
             }
 
@@ -320,7 +320,7 @@ public class ManagementInstance implements ModInstance {
      * <p>{@code default start = 9, default end = 36}</p>
      */
     public boolean isAnySlotFilled(boolean checkHotbar, int start, int end) {
-        for (int i = start; i < (options().management.includeHotbar && checkHotbar ? end + 9 : end); i++) {
+        for (int i = start; i < (clientOptionsInstance().getManagementOptions().includingHotbar && checkHotbar ? end + 9 : end); i++) {
             Slot slot = instance().getScreenMenu().getSlot(i);
             if (slot.hasItem()) {
                 return true;
@@ -362,7 +362,7 @@ public class ManagementInstance implements ModInstance {
      */
     public boolean canMoveCursorItem(Slot fromSlot, boolean ignoreComponents, boolean isPlayerInventory) {
         // Cannot move excluded hotbar slot
-        if (!options().management.includeHotbar && isPlayerInventory && isHotbarSlot(getTotalSlots(), fromSlot.index)) {
+        if (!clientOptionsInstance().getManagementOptions().includingHotbar && isPlayerInventory && isHotbarSlot(getTotalSlots(), fromSlot.index)) {
             return false;
         }
 
@@ -385,7 +385,7 @@ public class ManagementInstance implements ModInstance {
      */
     public boolean matchesFillFilter(ItemStack fromStack, ItemStack toStack) {
         boolean areMatching = fromStack.getItem() == toStack.getItem();
-        if (ContainerHelper.IS_TRACKED_CONTAINER && options().management.containerFiltering && ContainerHelper.CURRENT_FILTER_TYPE.tag()) {
+        if (ContainerHelper.IS_TRACKED_CONTAINER && clientOptionsInstance().getManagementOptions().containerFiltering && ContainerHelper.CURRENT_FILTER_TYPE.tag()) {
             return areStacksInSameTag(fromStack, toStack) || areMatching;
         }
         return areMatching;
@@ -401,7 +401,7 @@ public class ManagementInstance implements ModInstance {
             return true;
         }
 
-        if (ContainerHelper.IS_TRACKED_CONTAINER && options().management.containerFiltering) {
+        if (ContainerHelper.IS_TRACKED_CONTAINER && clientOptionsInstance().getManagementOptions().containerFiltering) {
             if (ContainerHelper.CURRENT_FILTER_MODE == FilteringMode.CURRENT_STACKS) {
                 return true;
             }
@@ -423,7 +423,7 @@ public class ManagementInstance implements ModInstance {
      * @return true if the stack matches any placeholder in the current tracked container.
      */
     public boolean itemMatchesPlaceholder(ItemStack sourceStack) {
-        if (!ContainerHelper.IS_TRACKED_CONTAINER || !options().management.containerFiltering) {
+        if (!ContainerHelper.IS_TRACKED_CONTAINER || !clientOptionsInstance().getManagementOptions().containerFiltering) {
             return false;
         }
 
@@ -575,20 +575,20 @@ public class ManagementInstance implements ModInstance {
      * @return true when matching-only filtering should be applied.
      */
     public boolean shouldApplyMatchingFilter() {
-        if (ContainerHelper.IS_TRACKED_CONTAINER && options().management.containerFiltering) {
+        if (ContainerHelper.IS_TRACKED_CONTAINER && clientOptionsInstance().getManagementOptions().containerFiltering) {
             return ContainerHelper.CURRENT_FILTER_MODE == FilteringMode.MATCHING;
         }
-        return options().isFiltering();
+        return clientOptionsInstance().isFiltering();
     }
 
     /**
      * @return true when fill-stacks-only behavior should be applied.
      */
     public boolean shouldFillStacksOnly() {
-        if (ContainerHelper.IS_TRACKED_CONTAINER && options().management.containerFiltering) {
+        if (ContainerHelper.IS_TRACKED_CONTAINER && clientOptionsInstance().getManagementOptions().containerFiltering) {
             return ContainerHelper.CURRENT_FILTER_MODE == FilteringMode.CURRENT_STACKS;
         }
-        return options().isFillingCurrentStacks();
+        return clientOptionsInstance().isFillingCurrentStacks();
     }
 
     /**
@@ -603,7 +603,7 @@ public class ManagementInstance implements ModInstance {
                 continue;
             }
             if (ContainerHelper.IS_TRACKED_CONTAINER
-                    && options().management.containerFiltering
+                    && clientOptionsInstance().getManagementOptions().containerFiltering
                     && ContainerHelper.CURRENT_FILTER_MODE == FilteringMode.CURRENT_STACKS
                     && !itemMatchesPlaceholder(toStack)) {
                 continue;
@@ -625,11 +625,11 @@ public class ManagementInstance implements ModInstance {
      */
     public boolean isContainerFull(boolean inventory) {
         AbstractContainerMenu menu = instance().getScreenMenu();
-        var options = options();
+        var options = clientOptionsInstance();
 
         int containerSize = getContainerSize();
 
-        int inventorySize = options.management.includeHotbar ? 36 : 27;
+        int inventorySize = options.getManagementOptions().includingHotbar ? 36 : 27;
         int inventoryEnd = containerSize + inventorySize;
 
         int fromStart = inventory ? containerSize : 0;
@@ -712,7 +712,7 @@ public class ManagementInstance implements ModInstance {
             if (isExcludedSlot(slot.index)) {
                 continue;
             }
-            if (options().lockedSlots.enableLockedSlots && lockedSlotsInstance().isLockedSlot(slot.index)) {
+            if (clientOptionsInstance().getLockedSlotOptions().lockedSlots && lockedSlotsInstance().isLockedSlot(slot.index)) {
                 continue;
             }
             return slot.index;

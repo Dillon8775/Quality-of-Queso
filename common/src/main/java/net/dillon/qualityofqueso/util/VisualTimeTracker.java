@@ -4,8 +4,8 @@ import net.minecraft.client.Minecraft;
 
 import java.time.LocalTime;
 
-import static net.dillon.qualityofqueso.helper.ModHelper.options;
-import static net.dillon.qualityofqueso.screen.option.ListOptionUtil.visualTimeStepToTicks;
+import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
+import static net.dillon.qualityofqueso.util.ModOptionUtil.visualTimeStepToTicks;
 
 /**
  * Tracks the client-side time using this tracker.
@@ -20,12 +20,12 @@ public class VisualTimeTracker {
      * @return the visual time to display, {@code client-side.}
      */
     public static long getVisualTime(Minecraft minecraft) {
-        if (options().visualTime.matchWithIrlTime) {
+        if (clientOptionsInstance().getVisualTimeOptions().syncLocalTime) {
             return getIrlVisualTime();
         }
 
-        int configBaseTime = visualTimeStepToTicks(options().visualTime.visualTime);
-        int speed = options().visualTime.visualTimeSpeed;
+        int configBaseTime = visualTimeStepToTicks(clientOptionsInstance().getVisualTimeOptions().visualTime);
+        int speed = clientOptionsInstance().getVisualTimeOptions().visualTimeSpeed;
 
         if (minecraft.level == null) {
             return configBaseTime;

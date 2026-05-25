@@ -58,7 +58,7 @@ public class PauseScreenMixin extends Screen {
      */
     @Unique
     private boolean isServerBlacklisted(String serverAddress) {
-        return uoptions().main.blacklistedServers.contains(serverAddress);
+        return universalOptionsInstance().getUniversal().blacklistedServers.contains(serverAddress);
     }
 
     /**
@@ -67,10 +67,10 @@ public class PauseScreenMixin extends Screen {
     @Inject(method = "init", at = @At("TAIL"))
     private void init(CallbackInfo ci) {
         if (this.showPauseMenu) {
-            if (this.disconnectButton != null && options().misc.antiRageQuit) {
+            if (this.disconnectButton != null && clientOptionsInstance().getMiscOptions().antiRageQuit) {
                 this.disconnectButton.active = false;
             }
-            if (uoptions().main.menuButton.everywhere()) {
+            if (universalOptionsInstance().getUniversal().menuButton.everywhere()) {
                 int index = 0;
                 this.addRenderableWidget(ButtonHelper.createMenuButton(
                         getConfigButtonX(this.width, index),
@@ -86,17 +86,17 @@ public class PauseScreenMixin extends Screen {
                             getConfigButtonX(this.width, index),
                             getConfigButtonY(this.height, index),
                             (button) -> {
-                                if (uoptions().main.blacklistedServers.contains(address)) {
-                                    uoptions().main.blacklistedServers.remove(address);
+                                if (universalOptionsInstance().getUniversal().blacklistedServers.contains(address)) {
+                                    universalOptionsInstance().getUniversal().blacklistedServers.remove(address);
                                 } else {
-                                    uoptions().main.blacklistedServers.add(address);
+                                    universalOptionsInstance().getUniversal().blacklistedServers.add(address);
                                 }
                                 saveAndApplyConfigs(this.minecraft);
                             }));
                     index++;
                 }
 
-                if (options().accessibility.eChestButton.pauseScreen()) {
+                if (clientOptionsInstance().getAccessibilityOptions().eChestButton.pauseScreen()) {
                     this.viewEnderChestButton = this.addRenderableWidget(ButtonHelper.createSpriteIconButton(
                             ofQoQ(ENDER_CHEST),
                             getConfigButtonX(this.width, index),
@@ -119,16 +119,16 @@ public class PauseScreenMixin extends Screen {
             return;
         }
 
-        if (options().misc.antiRageQuit && options().accessibility.tooltips.on() && this.disconnectButton != null && this.disconnectButton.isHovered()) {
+        if (clientOptionsInstance().getMiscOptions().antiRageQuit && clientOptionsInstance().getGeneralOptions().tooltips.enabled() && this.disconnectButton != null && this.disconnectButton.isHovered()) {
             drawTooltip(Component.translatable("qualityofqueso.gui.disconnect"), graphics, this.font, mouseX, mouseY);
         }
 
-        if (uoptions().main.menuButton.everywhere() && !(this.minecraft.getCurrentServer() == null)) {
+        if (universalOptionsInstance().getUniversal().menuButton.everywhere() && !(this.minecraft.getCurrentServer() == null)) {
             if (this.blacklistServerButton != null) {
                 this.blacklistServerButton.active = isOnServer(this.minecraft);
                 String address = this.getServerAddress();
 
-                if (uoptions().main.multiServerConfigs) {
+                if (universalOptionsInstance().getUniversal().multiServerConfigs) {
                     graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ofQoQ(MULTI_CONFIG_TEXTURE), this.blacklistServerButton.getX() - 2, this.blacklistServerButton.getY() - 1, 16, 16);
                 }
                 ButtonHelper.drawTexture(graphics, this.isServerBlacklisted(address) ? DISABLED_TEXTURE : ENABLED_TEXTURE, this.blacklistServerButton);
@@ -137,7 +137,7 @@ public class PauseScreenMixin extends Screen {
                         Component.translatable("qualityofqueso.gui.remove_blacklisted_server") :
                         Component.translatable("qualityofqueso.gui.add_blacklisted_server");
                 Component finalTooltip = tooltip;
-                if (uoptions().main.multiServerConfigs) {
+                if (universalOptionsInstance().getUniversal().multiServerConfigs) {
                     finalTooltip = tooltip.copy().append(Component.translatable("qualityofqueso.gui.multi_server_configs_enabled"));
                 }
                 if (this.blacklistServerButton.isHovered()) {
@@ -149,7 +149,7 @@ public class PauseScreenMixin extends Screen {
 
         if (this.viewEnderChestButton != null) {
             this.viewEnderChestButton.active = modEnabled(this.minecraft);
-            if (options().accessibility.tooltips.on() && this.viewEnderChestButton.isHovered()) {
+            if (clientOptionsInstance().getGeneralOptions().tooltips.enabled() && this.viewEnderChestButton.isHovered()) {
                 drawTooltip(Component.translatable("qualityofqueso.gui.view_ender_chest.tooltip"), graphics, this.font, mouseX, mouseY);
             }
         }

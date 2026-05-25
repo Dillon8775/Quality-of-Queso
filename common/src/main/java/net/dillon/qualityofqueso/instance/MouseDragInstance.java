@@ -6,8 +6,8 @@ import net.minecraft.world.inventory.ContainerInput;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import static net.dillon.qualityofqueso.helper.ManagementHelper.hoveredSlotHasItem;
-import static net.dillon.qualityofqueso.helper.ModHelper.options;
-import static net.dillon.qualityofqueso.keybind.ModKeyMappings.hasClickedToLock;
+import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
+import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.hasAttemptedToLockSelectOrDeselect;
 
 /**
  * Handles mouse dragging events.
@@ -22,7 +22,7 @@ public class MouseDragInstance extends ManagementInstance {
      * Handles drag-sorting, and selecting/locking slots when dragging the mouse.
      */
     public void handleSingularMovingAndLockingOrSelectingSlots(MouseButtonEvent event, CallbackInfoReturnable<Boolean> cir) {
-        if (isExcludingOrLockingSlots() && hasClickedToLock(event)) {
+        if (isExcludingOrLockingSlots() && hasAttemptedToLockSelectOrDeselect(event)) {
             lockedSlotsInstance().selectOrLockSlot(event, cir);
         }
 
@@ -32,7 +32,7 @@ public class MouseDragInstance extends ManagementInstance {
                 && !isExcludingOrLockingSlots()
                 && !lockedSlotsInstance().isLockedSlot(instance().getScreensHoveredSlot().index)
                 && !isExcludedSlot(instance().getScreensHoveredSlot().index)
-                && (options().isAlwaysQuickMove() || (options().management.dragMoving && event.hasShiftDown()))) {
+                && (clientOptionsInstance().isAlwaysQuickMove() || (clientOptionsInstance().getManagementOptions().dragMoving && event.hasShiftDown()))) {
             sendClickSlotPacket(instance().getScreensHoveredSlot().index, ContainerInput.QUICK_MOVE);
         }
     }

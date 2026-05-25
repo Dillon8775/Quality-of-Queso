@@ -1,0 +1,13 @@
+dependencies {
+    minecraft "com.mojang:minecraft:${minecraft_version}"
+    implementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
+
+    implementation "com.terraformersmc:modmenu:${project.modmenu_version}"
+
+    implementation("net.blay09.mods:balm-fabric:${balm_version}") {
+        changing = balm_version.contains('SNAPSHOT')
+    }
+
+    implementation "dev.isxander:yet-another-config-lib:${project.yacl_version}+${project.yalc_mc}-fabric"
+}

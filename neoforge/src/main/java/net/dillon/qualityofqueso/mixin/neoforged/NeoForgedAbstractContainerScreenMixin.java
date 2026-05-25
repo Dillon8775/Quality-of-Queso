@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-import static net.dillon.qualityofqueso.helper.ModHelper.options;
+import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
 
 @Mixin(AbstractContainerScreen.class)
 public class NeoForgedAbstractContainerScreenMixin {
@@ -19,6 +19,6 @@ public class NeoForgedAbstractContainerScreenMixin {
     @Redirect(method = "keyPressed", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/KeyMapping;isActiveAndMatches(Lcom/mojang/blaze3d/platform/InputConstants$Key;)Z", ordinal = 2))
     private boolean preventDroppingInFull(KeyMapping original, InputConstants.Key key) {
         boolean bl = original.isActiveAndMatches(key);
-        return options().management.quickDrop.buttonOrKeyOrKeyOnly() ? bl && !Minecraft.getInstance().hasShiftDown() : bl;
+        return clientOptionsInstance().getManagementOptions().quickDrop.buttonOrKeyOrKeyOnly() ? bl && !Minecraft.getInstance().hasShiftDown() : bl;
     }
 }

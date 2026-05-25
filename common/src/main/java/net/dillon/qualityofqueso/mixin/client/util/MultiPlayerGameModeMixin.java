@@ -2,7 +2,7 @@ package net.dillon.qualityofqueso.mixin.client.util;
 
 import net.dillon.qualityofqueso.helper.ContainerHelper;
 import net.dillon.qualityofqueso.util.ItemHudTracker;
-import net.dillon.qualityofqueso.util.ModTexts;
+import net.dillon.qualityofqueso.util.ModConstants;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
@@ -34,8 +34,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import static net.dillon.qualityofqueso.helper.ContainerHelper.isValidBlockEntity;
 import static net.dillon.qualityofqueso.helper.GuiHelper.isHoldingItem;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.playButtonSound;
+import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
 import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
-import static net.dillon.qualityofqueso.helper.ModHelper.options;
 import static net.dillon.qualityofqueso.util.ModConstants.DEFAULT_TRACKED_CONTAINER_COOLDOWN;
 import static net.dillon.qualityofqueso.util.ModConstants.TRACKED_CONTAINER_COOLDOWN;
 
@@ -69,7 +69,7 @@ public class MultiPlayerGameModeMixin {
      */
     @Inject(method = "handleContainerInput", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientPacketListener;send(Lnet/minecraft/network/protocol/Packet;)V"))
     private void onThrowFromGUI(int containerId, int slotIndex, int buttonNum, ContainerInput containerInput, Player player, CallbackInfo ci) {
-        if (!modEnabled(Minecraft.getInstance()) || !options().itemCounter.displayOnThrow || containerInput != ContainerInput.THROW) {
+        if (!modEnabled(Minecraft.getInstance()) || !clientOptionsInstance().getItemCounterOptions().displayOnThrow || containerInput != ContainerInput.THROW) {
             return;
         }
 
@@ -96,7 +96,7 @@ public class MultiPlayerGameModeMixin {
             return;
         }
 
-        if (!modEnabled(Minecraft.getInstance()) || localPlayer.isCreative() || !localPlayer.level().isClientSide() || !options().itemCounter.arrowCounter) {
+        if (!modEnabled(Minecraft.getInstance()) || localPlayer.isCreative() || !localPlayer.level().isClientSide() || !clientOptionsInstance().getItemCounterOptions().arrowCounter) {
             return;
         }
 
@@ -136,8 +136,8 @@ public class MultiPlayerGameModeMixin {
                 : blockEntity instanceof BarrelBlockEntity ? Component.translatable("qualityofqueso.gui.barrel").withStyle(ChatFormatting.GOLD)
                 : isEnderChest ? Component.translatable("qualityofqueso.gui.ender_chest").withStyle(ChatFormatting.AQUA)
                   : Component.translatable("qualityofqueso.gui.chest").withStyle(ChatFormatting.GOLD);
-        Component filteredContainer = Component.translatable("qualityofqueso.gui.filtered_container").withColor(ModTexts.ITEM_COLOR);
-        Component filtered = Component.translatable("qualityofqueso.gui.filtered").withColor(ModTexts.ITEM_COLOR);
+        Component filteredContainer = Component.translatable("qualityofqueso.gui.filtered_container").withColor(ModConstants.ITEM_COLOR);
+        Component filtered = Component.translatable("qualityofqueso.gui.filtered").withColor(ModConstants.ITEM_COLOR);
         String message = tracked ? "qualityofqueso.gui.save_filtered_container" : "qualityofqueso.gui.remove_filtered_container";
         if (isEnderChest) {
             if (tracked) {
@@ -213,7 +213,7 @@ public class MultiPlayerGameModeMixin {
      */
     @Unique
     private static boolean shouldCancelForContainerFilter(Minecraft minecraft, BlockPos pos) {
-        if (!modEnabled(minecraft) || !options().management.containerFiltering || minecraft.player == null || minecraft.level == null
+        if (!modEnabled(minecraft) || !clientOptionsInstance().getManagementOptions().containerFiltering || minecraft.player == null || minecraft.level == null
                 || !minecraft.player.isShiftKeyDown() || isHoldingItem(minecraft.player, DataComponents.TOOL)) {
             return false;
         }

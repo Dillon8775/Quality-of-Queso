@@ -1,0 +1,6 @@
+dependencies {
+    implementation("net.blay09.mods:balm-neoforge:${balm_version}") {
+        changing = balm_version.contains('SNAPSHOT')
+    }
+    implementation "dev.isxander:yet-another-config-lib:${project.yacl_version}+${project.yalc_mc}-neoforge"
+}

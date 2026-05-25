@@ -18,8 +18,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import static net.dillon.qualityofqueso.helper.MethodHelper.getRecipeBookComponent;
+import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
 import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
-import static net.dillon.qualityofqueso.helper.ModHelper.options;
 
 @Mixin(RecipeButton.class)
 public abstract class RecipeButtonMixin extends AbstractWidget {
@@ -36,7 +36,7 @@ public abstract class RecipeButtonMixin extends AbstractWidget {
     @Inject(method = "extractWidgetRenderState", at = @At("TAIL"))
     private void extractSelectedRecipe(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a, CallbackInfo ci) {
         Minecraft minecraft = Minecraft.getInstance();
-        if (!modEnabled(minecraft) || !options().management.bulkCraft || !options().buttonDisplayOptions.displayBulkCraft) {
+        if (!modEnabled(minecraft) || !clientOptionsInstance().getManagementOptions().bulkCraft || !clientOptionsInstance().getButtonDisplayOptions().displayBulkCraft) {
             return;
         }
 

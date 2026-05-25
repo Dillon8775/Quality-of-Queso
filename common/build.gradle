@@ -12,24 +12,8 @@ neoForge {
     }
 }
 
-repositories {
-    maven {
-        url = 'https://maven.twelveiterations.com/repository/maven-public/'
-        content {
-            includeGroup 'net.blay09.mods'
-        }
-    }
-}
-
-dependencies {
-    compileOnly group: 'org.spongepowered', name: 'mixin', version: '0.8.5'
-    // fabric and neoforge both bundle mixinextras, so it is safe to use it in common
-    compileOnly group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.3.5'
-    annotationProcessor group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.3.5'
-    implementation("net.blay09.mods:balm-common:${balm_version}") {
-        changing = balm_version.endsWith('SNAPSHOT')
-    }
-}
+apply from: rootProject.file('repositories.gradle')
+apply from: 'dependencies.gradle'
 
 configurations {
     commonJava {

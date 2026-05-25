@@ -54,9 +54,15 @@ public class MethodHelper {
 
     /**
      * @return if at least one modifier on a {@link Kuma} keybinding is currently down.
+     * <p>
+     * Automatically returns {@code true} if the keybind has {@code no modifiers}.
      */
     public static boolean kumaAnyModifierDown(ManagedKeyMapping kumaKey) {
         KeyModifiers modifiers = kumaKey.getBinding().modifiers();
+
+        if (modifiers.isEmpty()) {
+            return true;
+        }
 
         for (KeyModifier modifier : modifiers.asList()) {
             if (modifier == KeyModifier.SHIFT && Kuma.hasShiftDown()) {

@@ -13,7 +13,7 @@ public interface PlatformHelper {
      * @return the mod version.
      */
     default String getModVersion() {
-        return "1.7.3";
+        return "1.7.4";
     }
 
     /**
@@ -28,6 +28,13 @@ public interface PlatformHelper {
      */
     default boolean isNeoForged() {
         return Balm.platform().name().equals("neoforge");
+    }
+
+    /**
+     * @return if {@code YACL} is loaded.
+     */
+    default boolean isYaclLoaded() {
+        return isModLoaded("yet_another_config_lib_v3");
     }
 
     /**

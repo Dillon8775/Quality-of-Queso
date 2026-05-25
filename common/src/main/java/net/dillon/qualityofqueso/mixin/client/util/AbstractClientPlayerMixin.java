@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 
 import static net.dillon.qualityofqueso.helper.ModHelper.canApplyEffect;
-import static net.dillon.qualityofqueso.helper.ModHelper.options;
+import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
 
 @Mixin(AbstractClientPlayer.class)
 public abstract class AbstractClientPlayerMixin extends Player {
@@ -28,7 +28,7 @@ public abstract class AbstractClientPlayerMixin extends Player {
     public float getFieldOfViewModifier(boolean firstPerson, float effectScale) {
         float modifier = 1.0F;
         // Disables flying FOV
-        if (this.getAbilities().flying && options().fovEffects.flying) {
+        if (this.getAbilities().flying && clientOptionsInstance().getFovEffectOptions().flying) {
             modifier *= 1.1F;
         }
 
@@ -37,11 +37,11 @@ public abstract class AbstractClientPlayerMixin extends Player {
         if (walkingSpeed != 0.0F) {
             float effectiveSpeed = walkingSpeed;
 
-            if (options().fovEffects.sprinting > 99 && this.isSprinting()) {
-                effectiveSpeed *= (1.3F * ((float) options().fovEffects.sprinting / 100));
+            if (clientOptionsInstance().getFovEffectOptions().sprinting > 99 && this.isSprinting()) {
+                effectiveSpeed *= (1.3F * ((float) clientOptionsInstance().getFovEffectOptions().sprinting / 100));
             }
 
-            if (options().fovEffects.potionEffects.enabled()) {
+            if (clientOptionsInstance().getFovEffectOptions().potions.enabled()) {
                 if (this.hasEffect(MobEffects.SPEED)) {
                     MobEffectInstance effect = this.getEffect(MobEffects.SPEED);
                     if (effect != null && canApplyEffect(effect)) {
@@ -63,8 +63,8 @@ public abstract class AbstractClientPlayerMixin extends Player {
 
         // Bow FOV
         if (this.isUsingItem()) {
-            if (this.getUseItem().getItem() instanceof BowItem && options().fovEffects.bows.enabled()) {
-                float scale = options().fovEffects.bows.quickPull() ? 1.0F : Math.min(this.getTicksUsingItem() / 20.0F, 1.0F);
+            if (this.getUseItem().getItem() instanceof BowItem && clientOptionsInstance().getFovEffectOptions().bows.enabled()) {
+                float scale = clientOptionsInstance().getFovEffectOptions().bows.quickPull() ? 1.0F : Math.min(this.getTicksUsingItem() / 20.0F, 1.0F);
                 modifier *= 1.0F - Mth.square(scale) * 0.15F;
             } else if (firstPerson && this.isScoping()) {
                 return 0.1F;

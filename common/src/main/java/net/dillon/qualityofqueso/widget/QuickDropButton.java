@@ -13,14 +13,14 @@ import java.util.function.Supplier;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.isInventoryScreen;
 import static net.dillon.qualityofqueso.helper.MethodHelper.getHoveredSlot;
 import static net.dillon.qualityofqueso.helper.ModHelper.*;
-import static net.dillon.qualityofqueso.keybind.ModKeyMappings.hasDropOnlyOneItemKeyDown;
-import static net.dillon.qualityofqueso.keybind.ModKeyMappings.hasQuickDropKeysDown;
+import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.hasAllQuickDropModifiersDown;
+import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.hasDropOnlyOneItemKeyDown;
 import static net.dillon.qualityofqueso.util.ModConstants.MOVE_ONE_PATH;
 
 /**
  * Representation of the quick drop button.
  */
-public class QuickDropButton extends TransferButton {
+public class QuickDropButton extends QuesoButton {
 
     public QuickDropButton(AbstractContainerMenu screenHandler, Font font, String searchFieldText, String resourceLocation, String buttonName, OnPress onPress, Supplier<Boolean> canBeActive) {
         super(screenHandler, font, searchFieldText, resourceLocation, buttonName, true, onPress, canBeActive);
@@ -37,16 +37,16 @@ public class QuickDropButton extends TransferButton {
     @Override
     protected void renderBaseButtonTexture(String id, AbstractWidget buttonReference, GuiGraphicsExtractor graphics) {
         String transferableString = this.searchFieldText.startsWith("!") ?
-                "_excluding.png" : this.searchFieldText.startsWith("#") ?
-                                   "_tag.png" : this.searchFieldText.startsWith(":") ?
-                                                "_matching.png" : ".png";
+                "_excluding" : this.searchFieldText.startsWith("#") ?
+                                   "_tag" : this.searchFieldText.startsWith(":") ?
+                                                "_matching" : "";
         if (!this.canBeActive.get()) {
-            transferableString = ".png";
+            transferableString = "";
         }
         this.renderBaseTexture(graphics);
-        graphics.blit(RenderPipelines.GUI_TEXTURED, ofQoQ("textures/gui/button/" + id + transferableString), buttonReference.getX() - 1, buttonReference.getY() - 1, 0.0F, 0.0F, 12, 12, 12, 12);
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ofQoQ("button/" + id + transferableString), buttonReference.getX() - 1, buttonReference.getY() - 1, 12, 12);
         this.renderHoveredTexture(graphics);
-        boolean shortcutKeyPressed = hasQuickDropKeysDown();
+        boolean shortcutKeyPressed = hasAllQuickDropModifiersDown();
         if (shortcutKeyPressed) {
             String outline = "quick_drop_all";
             if (getCurrentScreen() instanceof AbstractContainerScreen<?> screen && getHoveredSlot(screen) != null && getHoveredSlot(screen).hasItem()) {
@@ -55,7 +55,7 @@ public class QuickDropButton extends TransferButton {
             ButtonHelper.drawButtonTexture(graphics, "quick_drop/" + outline, this);
         }
         if (hasDropOnlyOneItemKeyDown()
-                && ((options().management.scrollMoving && ((this.isHovered()) || getCurrentScreen() instanceof AbstractContainerScreen<?> screen && getHoveredSlot(screen) != null && getHoveredSlot(screen).hasItem())) || shortcutKeyPressed)) {
+                && ((clientOptionsInstance().getManagementOptions().scrollMoving && ((this.isHovered()) || getCurrentScreen() instanceof AbstractContainerScreen<?> screen && getHoveredSlot(screen) != null && getHoveredSlot(screen).hasItem())) || shortcutKeyPressed)) {
             ButtonHelper.drawButtonTexture(graphics, MOVE_ONE_PATH, this);
         }
     }

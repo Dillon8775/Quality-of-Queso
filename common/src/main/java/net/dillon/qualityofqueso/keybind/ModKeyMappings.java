@@ -5,17 +5,21 @@ import net.blay09.mods.kuma.api.*;
 import net.dillon.qualityofqueso.screen.EnderChestPreviewScreen;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.input.MouseButtonEvent;
 
-import static net.dillon.qualityofqueso.helper.MethodHelper.kumaAnyModifierDown;
-import static net.dillon.qualityofqueso.helper.MethodHelper.kumaMousePressed;
-import static net.dillon.qualityofqueso.helper.ModHelper.*;
+import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
+import static net.dillon.qualityofqueso.helper.ModHelper.ofQoQ;
 
 /**
  * Keybindings for the {@code Quality of Queso} mod.
  */
 public class ModKeyMappings {
     public static final KeyMapping.Category QOQ_KEY_CATEGORY = KeyMapping.Category.register(ofQoQ("quality_of_queso"));
+
+    /**
+     * Initializes Quality of Queso keybinds, using the {@link Kuma} API.
+     */
+    public static void initKeybinds() {
+    }
 
     public static final ManagedKeyMapping LOCK_SLOT = Kuma.createKeyMapping(ofQoQ("lock_slot"))
             .overrideCategory(QOQ_KEY_CATEGORY)
@@ -40,6 +44,12 @@ public class ModKeyMappings {
     public static final ManagedKeyMapping OPEN_SEARCH_ITEM_FRAMES_GUI = Kuma.createKeyMapping(ofQoQ("open_item_frame_search_gui"))
             .overrideCategory(QOQ_KEY_CATEGORY)
             .withDefault(InputBinding.key(InputConstants.KEY_I))
+            .handleWorldInput(event -> false)
+            .build();
+
+    public static final ManagedKeyMapping OPEN_VISUAL_TIME_GUI = Kuma.createKeyMapping(ofQoQ("open_visual_time_gui"))
+            .overrideCategory(QOQ_KEY_CATEGORY)
+            .withDefault(InputBinding.key(InputConstants.KEY_V, KeyModifiers.of(KeyModifier.CONTROL)))
             .handleWorldInput(event -> false)
             .build();
 
@@ -74,76 +84,4 @@ public class ModKeyMappings {
                 return false;
             })
             .build();
-
-    /**
-     * Initializes Quality of Queso keybinds, using the {@link Kuma} API.
-     */
-    public static void initKeybinds() {
-    }
-
-    /**
-     * @return if the user has the quick drop keys held down.
-     */
-    public static boolean hasQuickDropKeysDown() {
-        return Kuma.areModifiersActive(QUICK_DROP.getBinding().modifiers());
-    }
-
-    /**
-     * @return the user's current drop keybinding.
-     */
-    public static KeyMapping getDropKey() {
-        return Minecraft.getInstance().options.keyDrop;
-    }
-
-    /**
-     * @return if the user has the shift key down, to only drop one of each item via quick dropping.
-     */
-    public static boolean hasDropOnlyOneItemKeyDown() {
-        return Minecraft.getInstance().hasShiftDown();
-    }
-
-    /**
-     * @return if the management modifier key is held down.
-     */
-    public static boolean hasAnyManagementModifierDown() {
-        return (options().management.transferring.buttonOrKeyOrKeyOnly() && (kumaAnyModifierDown(MOVE_TO_CONTAINER) || kumaAnyModifierDown(MOVE_TO_INVENTORY)))
-                || (options().sorting.sortingEnabled.buttonOrKeyOrKeyOnly() && kumaAnyModifierDown(SORT))
-                || (options().management.quickDrop.buttonOrKeyOrKeyOnly() && hasQuickDropKeysDown())
-                || (options().management.swapping.buttonOrKeyOrKeyOnly() && kumaAnyModifierDown(SWAP_ITEMS));
-    }
-
-    /**
-     * @return if the user has the "move single modifier" key down.
-     */
-    public static boolean hasMoveSingleModifierDown() {
-        return options().management.scrollMoving && SCROLL_MOVE.isActiveAndDown();
-    }
-
-    /**
-     * @return if the user has the keybind to {@code select} slots down, via drag sorting.
-     */
-    public static boolean hasSelectSlotsKeyDown() {
-        return Minecraft.getInstance().hasAltDown();
-    }
-
-    /**
-     * @return if the user has the keybind to {@code exclude slots} down, via drag sorting.
-     */
-    public static boolean hasExcludeSlotsKeyDown() {
-        return Minecraft.getInstance().hasAltDown() && Minecraft.getInstance().hasShiftDown();
-    }
-
-    /**
-     * @return if the user has attempted to lock, unlock, select or deselect a slot.
-     */
-    public static boolean hasClickedToLock(MouseButtonEvent event) {
-        return (options().lockedSlots.enableLockedSlots && kumaMousePressed(LOCK_SLOT, event)) || event.button() == 0 || event.button() == 1;
-    }
-
-    /**
-     * @return if the lock/unlock slot modifier key is down.
-     */
-    public static boolean hasLockSlotModifierDown() {
-        return options().lockedSlots.enableLockedSlots && kumaAnyModifierDown(LOCK_SLOT);
-    }
 }

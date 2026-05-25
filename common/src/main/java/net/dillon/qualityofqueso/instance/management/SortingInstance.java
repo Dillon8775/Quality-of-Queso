@@ -16,7 +16,7 @@ import net.minecraft.world.item.ItemStack;
 import java.util.*;
 
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
-import static net.dillon.qualityofqueso.helper.ModHelper.options;
+import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
 
 /**
  * Handles sorting features.
@@ -34,7 +34,7 @@ public class SortingInstance extends ManagementInstance {
         boolean inventory = isInventoryScreen(instance().getScreen());
         int sortStart = inventory ? 9 : 0;
         int sortEnd = inventory
-                ? (options().management.includeHotbar ? 45 : 36)
+                ? (clientOptionsInstance().getManagementOptions().includingHotbar ? 45 : 36)
                 : getSortableContainerSize();
 
         boolean hasSortableItem = false;
@@ -117,7 +117,7 @@ public class SortingInstance extends ManagementInstance {
 
         if (inventoryScreen) {
             Set<Integer> lockedPlayerSlots = lockedSlotsInstance().getLockedPlayerSlots();
-            int end = options().management.includeHotbar ? 45 : 36;
+            int end = clientOptionsInstance().getManagementOptions().includingHotbar ? 45 : 36;
             for (int slotIndex = 9; slotIndex < end; slotIndex++) {
                 int playerSlotId = slotIndex >= 36 ? slotIndex - 36 : slotIndex;
                 if (!lockedPlayerSlots.contains(playerSlotId) && !(isExcludedSlot(slotIndex) && instance().getScreenMenu().getSlot(slotIndex).hasItem())) {
@@ -217,7 +217,7 @@ public class SortingInstance extends ManagementInstance {
         for (ItemStack stack : stacks) {
             String tagKey = "";
 
-            if (options().sorting.currentSortingMode.tag()) {
+            if (clientOptionsInstance().getSortingOptions().currentSortingMode.tag()) {
                 tagKey = stack.tags()
                         .map(tag -> {
                             String location = tag.location().toString();
@@ -231,8 +231,8 @@ public class SortingInstance extends ManagementInstance {
             tagCache.put(stack, tagKey);
         }
 
-        boolean countSort = options().sorting.currentSortingMode.count();
-        boolean creativeTabSort = options().sorting.currentSortingMode == CurrentSortingMode.CREATIVE_MENU;
+        boolean countSort = clientOptionsInstance().getSortingOptions().currentSortingMode.count();
+        boolean creativeTabSort = clientOptionsInstance().getSortingOptions().currentSortingMode == CurrentSortingMode.CREATIVE_MENU;
         Map<Item, Integer> creativeOrder = creativeTabSort ? getCreativeSearchTabOrder() : Collections.emptyMap();
         Comparator<ItemStack> alphaComparator = Comparator.comparing((ItemStack stack) -> tagCache.get(stack).isEmpty())
                 .thenComparing(tagCache::get)
@@ -248,7 +248,7 @@ public class SortingInstance extends ManagementInstance {
                     .comparingInt((ItemStack stack) -> creativeOrder.getOrDefault(stack.getItem(), Integer.MAX_VALUE))
                     .thenComparing(alphaComparator));
         } else if (countSort) {
-            Comparator<ItemStack> comp = options().sorting.currentSortingMode == CurrentSortingMode.COUNT_DESCENDING
+            Comparator<ItemStack> comp = clientOptionsInstance().getSortingOptions().currentSortingMode == CurrentSortingMode.COUNT_DESCENDING
                     ? Comparator.comparingInt(ItemStack::getCount).reversed()
                     : Comparator.comparingInt(ItemStack::getCount);
             stacks.sort(comp.thenComparing(alphaComparator));

@@ -1,11 +1,14 @@
 package net.dillon.qualityofqueso.mixin.client.screen;
 
+import net.dillon.qualityofqueso.util.ModConstants;
+import net.dillon.qualityofqueso.widget.SearchBar;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerInput;
@@ -44,6 +47,49 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
     }
 
     /**
+     * Saves current text in the creative menu's search bar.
+     */
+    @Override
+    public void onClose() {
+        if (this.searchBox != null) {
+            ModConstants.SAVED_CREATIVE_MENU_TEXT = this.searchBox.getValue();
+        }
+        super.onClose();
+    }
+
+    /**
+     * Sets the last known text in the search bar.
+     */
+    @Inject(method = "init", at = @At("TAIL"))
+    private void setText(CallbackInfo ci) {
+        if (!modEnabled(this.minecraft) || !clientOptionsInstance().getSearchingOptions().saveSearchText || this.searchBox == null) {
+            return;
+        }
+
+        this.searchBox.setValue(ModConstants.SAVED_CREATIVE_MENU_TEXT);
+    }
+
+    /**
+     * Applies the same functionality that the {@link SearchBar} uses, to the creative menu's search bar.
+     */
+    @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
+    private void handleSearchBarClicking(MouseButtonEvent event, boolean doubleClick, CallbackInfoReturnable<Boolean> cir) {
+        if (!modEnabled(this.minecraft) || this.searchBox == null || !this.searchBox.isHovered()) {
+            return;
+        }
+
+        if (event.button() == 1) {
+            this.searchBox.setValue("");
+            this.setFocused(false);
+            cir.setReturnValue(true);
+        } else if (event.button() == 0) {
+            this.setFocused(true);
+            this.searchBox.onClick(event, doubleClick);
+            cir.setReturnValue(true);
+        }
+    }
+
+    /**
      * Closes the screen when clicking outside of the menu.
      */
     @Inject(method = "slotClicked", at = @At("HEAD"))
@@ -52,7 +98,7 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
             return;
         }
 
-        if (options().misc.quickGuiExit && this.menu.getCarried().isEmpty() && mouseButton == 0 && slot == null) {
+        if (clientOptionsInstance().getMiscOptions().quickGuiExit && this.menu.getCarried().isEmpty() && mouseButton == 0 && slot == null) {
             this.onClose();
         }
     }
@@ -76,13 +122,13 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
             }
         }
 
-        if (options().searching.quickSearch.enabled()) {
+        if (clientOptionsInstance().getSearchingOptions().quickSearch.creativeMenu()) {
             if (hoveredSlotHasItem(this.hoveredSlot) && !this.searchBox.isFocused()) {
                 this.ignoreTextInput = true;
                 cir.setReturnValue(super.keyPressed(event));
             }
 
-            if (options().accessibility.preventEFromTyping && event.key() == key(Minecraft.getInstance().options.keyInventory).getValue() && !this.searchBox.isFocused()) {
+            if (clientOptionsInstance().getAccessibilityOptions().preventEFromTyping && event.key() == key(Minecraft.getInstance().options.keyInventory).getValue() && !this.searchBox.isFocused()) {
                 this.ignoreTextInput = true;
                 this.onClose();
                 cir.setReturnValue(true);
@@ -109,10 +155,10 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
      */
     @Overwrite
     public boolean charTyped(CharacterEvent input) {
-        if (this.ignoreTextInput || (!(options().searching.quickSearch.enabled()) && selectedTab.getType() != CreativeModeTab.Type.SEARCH)) {
+        if (this.ignoreTextInput || (!(clientOptionsInstance().getSearchingOptions().quickSearch.creativeMenu()) && selectedTab.getType() != CreativeModeTab.Type.SEARCH)) {
             return false;
         } else {
-            if (modEnabled(this.minecraft) && options().searching.quickSearch.enabled()) {
+            if (modEnabled(this.minecraft) && clientOptionsInstance().getSearchingOptions().quickSearch.creativeMenu()) {
                 if (this.hoveredSlot != null && this.hoveredSlot.hasItem() && this.searchBox.isFocused()) {
                     for (int i = 0; i < 9; i++) {
                         if (Minecraft.getInstance().options.keyHotbarSlots[i].consumeClick()) {

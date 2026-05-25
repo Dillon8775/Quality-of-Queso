@@ -14,9 +14,11 @@ import java.util.Set;
 
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
 import static net.dillon.qualityofqueso.helper.MethodHelper.kumaMousePressed;
+import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
 import static net.dillon.qualityofqueso.helper.ModHelper.ofQoQ;
-import static net.dillon.qualityofqueso.helper.ModHelper.options;
-import static net.dillon.qualityofqueso.keybind.ModKeyMappings.*;
+import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.*;
+import static net.dillon.qualityofqueso.keybind.ModKeyMappings.LOCK_SLOT;
+import static net.dillon.qualityofqueso.keybind.ModKeyMappings.SCROLL_MOVE;
 
 /**
  * Handles locked slot colors, overlays, and functions.
@@ -31,14 +33,14 @@ public class LockedSlotsInstance extends ManagementInstance {
      * @return the set of locked container slots.
      */
     public Set<Integer> getLockedContainerSlots() {
-        return options().lockedSlots.enableLockedSlots ? ContainerHelper.getLockedSlots(true) : Collections.emptySet();
+        return clientOptionsInstance().getLockedSlotOptions().lockedSlots ? ContainerHelper.getLockedSlots(true) : Collections.emptySet();
     }
 
     /**
      * @return the set of locked player slots.
      */
     public Set<Integer> getLockedPlayerSlots() {
-        return options().lockedSlots.enableLockedSlots ? ContainerHelper.getLockedSlots(false) : Collections.emptySet();
+        return clientOptionsInstance().getLockedSlotOptions().lockedSlots ? ContainerHelper.getLockedSlots(false) : Collections.emptySet();
     }
 
     /**
@@ -66,9 +68,9 @@ public class LockedSlotsInstance extends ManagementInstance {
      */
     public boolean shouldCancelDrop() {
         if (lockedSlotsInstance().droppingEntireLockedSlotStack()
-                ? lockedSlotsInstance().droppingEntireLockedSlotStack() && hasMoveSingleModifierDown()
-                : hasMoveSingleModifierDown() && !hasDropOnlyOneItemKeyDown()) {
-            return !(hasMoveSingleModifierDown() && hasDropOnlyOneItemKeyDown() && Minecraft.getInstance().hasAltDown());
+                ? lockedSlotsInstance().droppingEntireLockedSlotStack() && canScrollMoveAndHasScrollModifierDown()
+                : canScrollMoveAndHasScrollModifierDown() && !hasDropOnlyOneItemKeyDown()) {
+            return !(canScrollMoveAndHasScrollModifierDown() && hasDropOnlyOneItemKeyDown() && Minecraft.getInstance().hasAltDown());
         }
         return false;
     }
@@ -100,7 +102,7 @@ public class LockedSlotsInstance extends ManagementInstance {
                     graphics.blit(RenderPipelines.GUI_TEXTURED, ofQoQ("textures/gui/sprites/locked_slot/locked.png"), slot.x - 3, slot.y + 9, 0.0F, 0.0F, xy, xy, xy, xy);
                 }
             } else {
-                graphics.fill(slot.x - 1, slot.y - 1, slot.x + 17, slot.y + 17, options().lockedSlots.lockedSlotColor);
+                graphics.fill(slot.x - 1, slot.y - 1, slot.x + 17, slot.y + 17, clientOptionsInstance().getLockedSlotOptions().lockedSlotColor);
             }
         }
     }
@@ -147,7 +149,7 @@ public class LockedSlotsInstance extends ManagementInstance {
             return;
         }
 
-        if (isValidScreen(instance().getScreen()) && options().lockedSlots.enableLockedSlots && notExcluding && hasLockSlotModifierDown() && lockingSlot) {
+        if (isValidScreen(instance().getScreen()) && clientOptionsInstance().getLockedSlotOptions().lockedSlots && notExcluding && hasLockSlotModifierDown() && lockingSlot) {
             if (instance().getLastLockedSlotIndex() != slot.index) {
                 if (instance().getLockDragAction() == 0) {
                     instance().setLockDragAction(isLockedSlot(slot.index) ? -1 : 1);
@@ -173,7 +175,7 @@ public class LockedSlotsInstance extends ManagementInstance {
             }
         }
 
-        if (!options().management.dragSorting) {
+        if (!clientOptionsInstance().getManagementOptions().dragSorting) {
             return;
         } else if (!lockingSlot) {
             if (notExcluding && !instance().getExcludedAll()) {

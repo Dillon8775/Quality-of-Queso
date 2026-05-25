@@ -21,7 +21,7 @@ import net.minecraft.world.item.component.ItemContainerContents;
 import java.util.*;
 
 import static net.dillon.qualityofqueso.helper.ContainerHelper.worldKey;
-import static net.dillon.qualityofqueso.helper.ModHelper.trackedContainers;
+import static net.dillon.qualityofqueso.helper.ModHelper.containerDataInstance;
 
 /**
  * Handles persistent ender chest cache storage in container_data.json.
@@ -64,10 +64,10 @@ public class EnderChestHelper {
             serialized.add(storedStack);
         }
 
-        Map<String, List<ContainerData.StoredEnderChestStack>> byWorld = trackedContainers().enderChestItems;
+        Map<String, List<ContainerData.StoredEnderChestStack>> byWorld = containerDataInstance().enderChestItems;
         if (byWorld == null) {
-            trackedContainers().enderChestItems = new HashMap<>();
-            byWorld = trackedContainers().enderChestItems;
+            containerDataInstance().enderChestItems = new HashMap<>();
+            byWorld = containerDataInstance().enderChestItems;
         }
         List<ContainerData.StoredEnderChestStack> cached = byWorld.getOrDefault(worldKey(), new ArrayList<>());
 
@@ -83,7 +83,7 @@ public class EnderChestHelper {
      * @return persisted ender chest items for the current world/server context.
      */
     public static List<ContainerData.StoredEnderChestStack> getPersistedEnderChestItemsForCurrentWorld() {
-        Map<String, List<ContainerData.StoredEnderChestStack>> byWorld = trackedContainers().enderChestItems;
+        Map<String, List<ContainerData.StoredEnderChestStack>> byWorld = containerDataInstance().enderChestItems;
         if (byWorld == null || byWorld.isEmpty()) {
             return new ArrayList<>();
         }

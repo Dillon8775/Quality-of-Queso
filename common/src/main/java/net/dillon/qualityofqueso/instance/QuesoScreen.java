@@ -3,7 +3,7 @@ package net.dillon.qualityofqueso.instance;
 import net.dillon.qualityofqueso.instance.context.ManagementButtons;
 import net.dillon.qualityofqueso.instance.context.SearchFields;
 import net.dillon.qualityofqueso.mixin.client.screen.AbstractContainerScreenMixin;
-import net.dillon.qualityofqueso.widget.layout.WidgetLayout;
+import net.dillon.qualityofqueso.widget.WidgetLayout;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.world.Container;
