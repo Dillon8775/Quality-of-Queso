@@ -1,6 +1,6 @@
 package net.dillon.qualityofqueso.mixin.client.hud;
 
-import net.dillon.qualityofqueso.widget.gui.SearchBar;
+import net.dillon.qualityofqueso.widget.SearchBar;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -51,9 +51,9 @@ public abstract class EditBoxMixin extends AbstractWidget {
         }
 
         Identifier newId = SearchBar.getSprites().get(this.isActive(), this.isFocused());
-        if (options().searching.searchBarColor.black()) {
+        if (clientOptionsInstance().getSearchingOptions().searchBarColor.black()) {
             return original;
-        } else if (options().accessibility.widgetTheme.searchBarTransparent()) {
+        } else if (clientOptionsInstance().getGeneralOptions().widgetTheme.searchBarTransparent()) {
             return ofQoQ("widget/search/transparent/search_bar_transparent");
         } else {
             return newId;
@@ -66,7 +66,7 @@ public abstract class EditBoxMixin extends AbstractWidget {
     @Inject(method = "updateTextPosition", at = @At("TAIL"))
     private void rightAlignText(CallbackInfo ci) {
         if (!((EditBox) (Object) this instanceof SearchBar) || this.font == null
-                || options().searching.searchBarColor.black() || !options().accessibility.widgetTheme.searchBarTransparent()) {
+                || clientOptionsInstance().getSearchingOptions().searchBarColor.black() || !clientOptionsInstance().getGeneralOptions().widgetTheme.searchBarTransparent()) {
             return;
         }
 

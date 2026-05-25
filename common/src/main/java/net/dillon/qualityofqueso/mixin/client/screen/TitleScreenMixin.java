@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static net.dillon.qualityofqueso.helper.ModHelper.uoptions;
+import static net.dillon.qualityofqueso.helper.ModHelper.universalOptionsInstance;
 
 @Mixin(TitleScreen.class)
 public class TitleScreenMixin extends Screen {
@@ -25,7 +25,7 @@ public class TitleScreenMixin extends Screen {
      */
     @Inject(method = "init", at = @At("TAIL"))
     private void init(CallbackInfo ci) {
-        if (uoptions().main.menuButton.enabled()) {
+        if (universalOptionsInstance().getUniversal().menuButton.enabled()) {
             this.addRenderableWidget(ButtonHelper.createMenuButton(
                     this.width / 2 + 128,
                     this.height / 4 + 132 + (MultiLoader.getPlatform().isNeoForged() ? 8 : 0),

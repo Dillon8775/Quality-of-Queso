@@ -7,6 +7,9 @@ plugins {
     alias libs.plugins.modrinthMinotaur
 }
 
+apply from: rootProject.file('repositories.gradle')
+apply from: 'dependencies.gradle'
+
 neoForge {
     version = libs.neoForge.get().version
     // Automatically enable neoforge AccessTransformers if the file exists
@@ -20,7 +23,7 @@ neoForge {
     runs {
         configureEach {
             systemProperty('neoforge.enabledGameTestNamespaces', mod_id)
-            ideName = "NeoForge ${it.name.capitalize()} (${project.path})"
+            ideName = "NeoForge ${it.name.capitalize()} (${project.path})" // Unify the run config names with fabric
         }
 
         client {
@@ -40,9 +43,6 @@ neoForge {
 }
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }
-
-apply from: rootProject.file('repositories.gradle')
-apply from: 'dependencies.gradle'
 
 tasks.register('curseforge', TaskPublishCurseForge) {
     dependsOn('build')

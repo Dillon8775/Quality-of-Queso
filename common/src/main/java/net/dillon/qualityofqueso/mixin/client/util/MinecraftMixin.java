@@ -4,6 +4,7 @@ import net.dillon.qualityofqueso.helper.ModHelper;
 import net.dillon.qualityofqueso.instance.management.ClickSlotInstance;
 import net.dillon.qualityofqueso.keybind.ModKeyMappings;
 import net.dillon.qualityofqueso.screen.ItemFrameSearchScreen;
+import net.dillon.qualityofqueso.screen.VisualTimeScreen;
 import net.dillon.qualityofqueso.sound.ModSoundEvents;
 import net.dillon.qualityofqueso.util.MobHitDingTracker;
 import net.minecraft.client.Minecraft;
@@ -21,6 +22,7 @@ import java.util.Random;
 
 import static net.dillon.qualityofqueso.helper.ModHelper.*;
 import static net.dillon.qualityofqueso.keybind.ModKeyMappings.OPEN_SEARCH_ITEM_FRAMES_GUI;
+import static net.dillon.qualityofqueso.keybind.ModKeyMappings.OPEN_VISUAL_TIME_GUI;
 
 @Mixin(Minecraft.class)
 public abstract class MinecraftMixin {
@@ -36,9 +38,12 @@ public abstract class MinecraftMixin {
      */
     @Inject(method = "handleKeybinds", at = @At("TAIL"))
     private void handleKeyPressing(CallbackInfo ci) {
-        if (modEnabled(Minecraft.getInstance()) && coptions().itemFrameSearching) {
+        if (modEnabled(Minecraft.getInstance()) && commonOptionsInstance().itemFrameSearching) {
             while (OPEN_SEARCH_ITEM_FRAMES_GUI.isActiveAndDown()) {
                 Minecraft.getInstance().setScreen(new ItemFrameSearchScreen(null));
+            }
+            while (OPEN_VISUAL_TIME_GUI.isActiveAndDown()) {
+                Minecraft.getInstance().setScreen(new VisualTimeScreen(null));
             }
         }
     }
@@ -61,7 +66,7 @@ public abstract class MinecraftMixin {
         ClickSlotInstance.tickBulkCraftTask();
         MobHitDingTracker.tick(minecraft);
 
-        if (!options().misc.fortniteBattlePass) {
+        if (!clientOptionsInstance().getMiscOptions().fortniteBattlePass) {
             return;
         }
 

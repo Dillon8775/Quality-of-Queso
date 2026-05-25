@@ -8,12 +8,12 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 
 import static net.dillon.qualityofqueso.helper.GuiHelper.drawTooltip;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.playDefaultSound;
-import static net.dillon.qualityofqueso.helper.ModHelper.options;
+import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
 
 /**
  * A class for the include hotbar button and transportables button.
  */
-public abstract class ToggleableButton extends TransferButton {
+public abstract class ToggleableButton extends QuesoButton {
 
     public ToggleableButton(AbstractContainerMenu screenHandler, Font font, String searchFieldText, String buttonName, OnPress onPress) {
         super(screenHandler, font, searchFieldText, null, buttonName, false, onPress);
@@ -42,7 +42,7 @@ public abstract class ToggleableButton extends TransferButton {
 
     @Override
     public void playDownSound(SoundManager manager) {
-        if (!options().management.playSounds) {
+        if (!clientOptionsInstance().getManagementOptions().playSounds) {
             return;
         }
 
@@ -56,7 +56,7 @@ public abstract class ToggleableButton extends TransferButton {
     protected void renderContents(GuiGraphics context, int mouseX, int mouseY, float deltaTicks) {
         this.activateButton();
         this.renderBaseButtonTexture(this.option() ? this.onTextureId() : this.offTextureId(), this, context);
-        if (this.isHovered() && options().accessibility.tooltips.on()) {
+        if (this.isHovered() && clientOptionsInstance().getGeneralOptions().tooltips.enabled()) {
             drawTooltip(this.getTooltipToRender(), context, this.font, mouseX, mouseY);
         }
     }

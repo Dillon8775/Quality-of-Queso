@@ -1,14 +1,14 @@
 package net.dillon.qualityofqueso.instance;
 
 import net.dillon.qualityofqueso.instance.management.ManagementInstance;
+import net.dillon.qualityofqueso.keybind.ModKeyMappings;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.world.inventory.Slot;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import static net.dillon.qualityofqueso.helper.MethodHelper.kumaMousePressed;
-import static net.dillon.qualityofqueso.helper.ModHelper.options;
-import static net.dillon.qualityofqueso.keybind.ModKeyMappings.LOCK_SLOT;
-import static net.dillon.qualityofqueso.keybind.ModKeyMappings.hasClickedToLock;
+import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
+import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.hasAttemptedToLockSelectOrDeselect;
 
 /**
  * Handles mouse-releasing functions.
@@ -36,11 +36,11 @@ public class MouseReleaseInstance extends ManagementInstance {
      * Tracks locked slots, and selects/locks them.
      */
     public void trackSlotAndLockOrSelect(MouseButtonEvent event, CallbackInfoReturnable<Boolean> cir) {
-        if (isExcludingOrLockingSlots() && hasClickedToLock(event)) {
+        if (isExcludingOrLockingSlots() && hasAttemptedToLockSelectOrDeselect(event)) {
             lockedSlotsInstance().selectOrLockSlot(event, cir);
         }
 
-        if (options().lockedSlots.enableLockedSlots && kumaMousePressed(LOCK_SLOT, event)) {
+        if (clientOptionsInstance().getLockedSlotOptions().lockedSlots && kumaMousePressed(ModKeyMappings.LOCK_SLOT, event)) {
             instance().setLastLockedSlotIndex(-1);
             instance().setLockDragAction(0);
         }

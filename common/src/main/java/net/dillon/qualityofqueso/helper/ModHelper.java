@@ -110,6 +110,13 @@ public class ModHelper {
     }
 
     /**
+     * Rounds a value to the nearest hundredths place.
+     */
+    public static double roundBig(double d) {
+        return Math.round(d * 100.0) / 100.0;
+    }
+
+    /**
      * @return if the player is left-handed.
      */
     public static boolean isLeftHanded(Minecraft minecraft) {
@@ -119,43 +126,43 @@ public class ModHelper {
     /**
      * @return the client-options.
      */
-    public static ModClientOptions options() {
+    public static ModClientOptions clientOptionsInstance() {
         return ModClientOptions.INSTANCE.getInstance();
-    }
-
-    /**
-     * @return tracked containers options.
-     */
-    public static ContainerData trackedContainers() {
-        return ContainerData.INSTANCE.getInstance();
-    }
-
-    /**
-     * @return locked player slots, respective to the client-player.
-     */
-    public static LockedPlayerSlots lockedPlayerSlots() {
-        return LockedPlayerSlots.INSTANCE.getInstance();
-    }
-
-    /**
-     * @return locked container slots, for each container in a world.
-     */
-    public static LockedContainerSlots lockedContainerSlots() {
-        return LockedContainerSlots.INSTANCE.getInstance();
     }
 
     /**
      * @return the common-options.
      */
-    public static ModCommonOptions coptions() {
+    public static ModCommonOptions commonOptionsInstance() {
         return ModCommonOptions.INSTANCE.getInstance();
     }
 
     /**
      * @return universal options, unaffected by server configs.
      */
-    public static UniversalOptions uoptions() {
+    public static UniversalOptions universalOptionsInstance() {
         return UniversalOptions.INSTANCE.getInstance();
+    }
+
+    /**
+     * @return tracked containers options.
+     */
+    public static ContainerData containerDataInstance() {
+        return ContainerData.INSTANCE.getInstance();
+    }
+
+    /**
+     * @return locked player slots, respective to the client-player.
+     */
+    public static LockedPlayerSlots lockedPlayerSlotsInstance() {
+        return LockedPlayerSlots.INSTANCE.getInstance();
+    }
+
+    /**
+     * @return locked container slots, for each container in a world.
+     */
+    public static LockedContainerSlots lockedContainerSlotsInstance() {
+        return LockedContainerSlots.INSTANCE.getInstance();
     }
 
     /**
@@ -171,7 +178,7 @@ public class ModHelper {
         }
 
         // Otherwise, return if enableMod is enabled
-        return options().accessibility.enableMod;
+        return clientOptionsInstance().getGeneralOptions().enableMod;
     }
 
     /**
@@ -186,7 +193,7 @@ public class ModHelper {
         }
 
         // Search through the blacklisted servers lists, and see if current IP address is in the list. Return true if present
-        return uoptions().main.blacklistedServers.contains(instance.getCurrentServer().ip);
+        return universalOptionsInstance().getUniversal().blacklistedServers.contains(instance.getCurrentServer().ip);
     }
 
     /**
@@ -201,10 +208,10 @@ public class ModHelper {
      */
     public static void sendClientPreferencesToServer() {
         Balm.networking().sendToServer(new ClientPreferencesC2SPacket(
-                options().management.includeHotbar,
-                !options().management.includeHotbar || options().accessibility.perpendicularQuickMoving,
-                !options().buttonDisplayOptions.displayLockInventory ? "UNLOCKED" : options().management.lockInventory.name()
-        ));
+                clientOptionsInstance().getManagementOptions().includingHotbar,
+                !clientOptionsInstance().getManagementOptions().includingHotbar || clientOptionsInstance().getAccessibilityOptions().perpendicularQuickMoving,
+                !clientOptionsInstance().getButtonDisplayOptions().displayLockInventory ? "UNLOCKED" : clientOptionsInstance().getManagementOptions().lockInventory.name()
+                ));
     }
 
     /**
@@ -227,7 +234,7 @@ public class ModHelper {
      * Cancels out fluid FOV change.
      */
     public static void cancelFluidFov(FogType state, float fov, CallbackInfoReturnable<Float> cir) {
-        if (!options().fovEffects.fluids && (state == FogType.LAVA || state == FogType.WATER)) {
+        if (!clientOptionsInstance().getFovEffectOptions().fluids && (state == FogType.LAVA || state == FogType.WATER)) {
             cir.setReturnValue(fov);
         }
     }
@@ -278,34 +285,34 @@ public class ModHelper {
      * @return if the passed in effect instance is a beacon effect (or ambient).
      */
     public static boolean canApplyEffect(MobEffectInstance effect) {
-        if (!options().fovEffects.potionEffects.enabled()) {
+        if (!clientOptionsInstance().getFovEffectOptions().potions.enabled()) {
             return false;
         }
 
-        if (options().fovEffects.potionEffects.nonBeacon() && effect.isAmbient()) {
+        if (clientOptionsInstance().getFovEffectOptions().potions.nonBeacon() && effect.isAmbient()) {
             return false;
         }
 
-        return options().fovEffects.potionEffects.enabled();
+        return clientOptionsInstance().getFovEffectOptions().potions.enabled();
     }
 
     /**
      * Handles all cooldown-related timers.
      */
     public static void tickCooldowns() {
-        if (options().management.containerFiltering && TRACKED_CONTAINER_COOLDOWN > 0) {
+        if (clientOptionsInstance().getManagementOptions().containerFiltering && TRACKED_CONTAINER_COOLDOWN > 0) {
             TRACKED_CONTAINER_COOLDOWN--;
         }
 
-        if (options().lockedSlots.enableLockedSlots && LOCKED_SLOT_SOUND_COOLDOWN > 0) {
+        if (clientOptionsInstance().getLockedSlotOptions().lockedSlots && LOCKED_SLOT_SOUND_COOLDOWN > 0) {
             LOCKED_SLOT_SOUND_COOLDOWN--;
         }
 
-        if (options().sorting.sortingEnabled.buttonOrKeyOrKeyOnly() && SORT_SOUND_COOLDOWN > 0) {
+        if (clientOptionsInstance().getSortingOptions().sorting.buttonOrKeyOrKeyOnly() && SORT_SOUND_COOLDOWN > 0) {
             SORT_SOUND_COOLDOWN--;
         }
 
-        if (options().management.swapping.buttonOrKeyOrKeyOnly() && SwapButton.SWAP_COOLDOWN > 0) {
+        if (clientOptionsInstance().getManagementOptions().swapping.buttonOrKeyOrKeyOnly() && SwapButton.SWAP_COOLDOWN > 0) {
             SwapButton.SWAP_COOLDOWN--;
         }
     }
@@ -319,7 +326,7 @@ public class ModHelper {
             KEY_ATTACK_WASDOWN = false;
         } else if (!KEY_ATTACK_WASDOWN
                 && minecraft.player != null
-                && options().management.lockInventory.inventoryLocked()
+                && clientOptionsInstance().getManagementOptions().lockInventory.inventoryLocked()
                 && minecraft.player.isShiftKeyDown()) {
             ItemEntity target = ModHelper.raycastItemEntity(minecraft);
             if (target != null) {
@@ -376,8 +383,8 @@ public class ModHelper {
                 fogtype != FogType.LAVA &&
                 fogtype != FogType.POWDER_SNOW) {
             // Check overworld fog first
-            if (options().fog.overworldFog && entity.level().dimension() == Level.OVERWORLD) {
-                float percent = options().fog.overworldFogIntensity;
+            if (clientOptionsInstance().getFogOptions().overworldFog && entity.level().dimension() == Level.OVERWORLD) {
+                float percent = clientOptionsInstance().getFogOptions().overworldFogIntensity;
                 float safePercent = Math.max(percent, 25F);
                 float distanceScale = 100F / safePercent;
                 distanceScale = Math.min(distanceScale, 4F);
@@ -386,13 +393,13 @@ public class ModHelper {
             }
 
             // Then check all fog types
-            if (!options().fog.allFog
-                    || (!options().fog.overworldFog && entity.level().dimension() == Level.OVERWORLD)
-                    || (!options().fog.netherFog && entity.level().dimension() == Level.NETHER)) {
+            if (!clientOptionsInstance().getFogOptions().allFog
+                    || (!clientOptionsInstance().getFogOptions().overworldFog && entity.level().dimension() == Level.OVERWORLD)
+                    || (!clientOptionsInstance().getFogOptions().netherFog && entity.level().dimension() == Level.NETHER)) {
                 fogData.renderDistanceEnd = Integer.MAX_VALUE;
                 fogData.environmentalEnd = Integer.MAX_VALUE;
-            } else if (options().fog.netherFog && entity.level().dimension() == Level.NETHER) { // Check nether fog
-                float percent = options().fog.netherFogIntensity;
+            } else if (clientOptionsInstance().getFogOptions().netherFog && entity.level().dimension() == Level.NETHER) { // Check nether fog
+                float percent = clientOptionsInstance().getFogOptions().netherFogIntensity;
                 float t = (percent - 10F) / 90F;
                 float fogEnd = 250F + t * (96F - 250F);
 
@@ -407,7 +414,7 @@ public class ModHelper {
      */
     public static void handleGlowPacket(ServerPlayer player, String query, boolean matchCase, boolean clear, int timer,
                                         int radius) {
-        if (coptions().itemFrameSearching) {
+        if (commonOptionsInstance().itemFrameSearching) {
             ServerLevel world = player.level();
 
             Vec3 playerPos = player.position();
@@ -491,14 +498,14 @@ public class ModHelper {
     public static void saveAndApplyConfigs(Minecraft instance) {
         UniversalOptions.INSTANCE.save();
         // Continue if multi-server configs are enabled
-        if (uoptions().main.multiServerConfigs) {
+        if (universalOptionsInstance().getUniversal().multiServerConfigs) {
             CONTINUE = true;
         }
         if (instance.getCurrentServer() != null && instance.getCurrentServer().ip != null) {
             // If the server is blacklisted, and multi-server configs are off, the config hasn't already been unloaded, unload it
-            if (isServerBlacklisted(instance) && !uoptions().main.multiServerConfigs && !UNLOADED) {
+            if (isServerBlacklisted(instance) && !universalOptionsInstance().getUniversal().multiServerConfigs && !UNLOADED) {
                 unload(true);
-            } else if (!uoptions().main.multiServerConfigs && !UNLOADED) { // Otherwise, if multi-server configs are off and it hasn't been unloaded, unload it
+            } else if (!universalOptionsInstance().getUniversal().multiServerConfigs && !UNLOADED) { // Otherwise, if multi-server configs are off and it hasn't been unloaded, unload it
                 unload(true);
             }
             // If we can continue...
@@ -528,7 +535,7 @@ public class ModHelper {
      */
     public static void loadServerConfig() {
         // Don't try to load a new config if multi-server configs are disabled
-        if (!uoptions().main.multiServerConfigs) {
+        if (!universalOptionsInstance().getUniversal().multiServerConfigs) {
             return;
         }
 
@@ -663,7 +670,7 @@ public class ModHelper {
             instance.player.displayClientMessage(Component.translatable("qualityofqueso.unloaded_server_config").withStyle(ChatFormatting.GOLD), false);
         }
         // Log the message
-        if (uoptions().main.multiServerConfigs) {
+        if (universalOptionsInstance().getUniversal().multiServerConfigs) {
             ModHelper.info("Reverting back to global Quality of Queso config.");
         }
     }

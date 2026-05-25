@@ -65,7 +65,7 @@ public class LocalPlayerMixin extends AbstractClientPlayer {
      */
     @Inject(method = "drop", at = @At("HEAD"), cancellable = true)
     private void preventDropFromLockedSlot(boolean entireStack, CallbackInfoReturnable<Boolean> cir) {
-        if (!modEnabled(this.minecraft) || !options().lockedSlots.enableLockedSlots || !options().lockedSlots.preventDropping) {
+        if (!modEnabled(this.minecraft) || !clientOptionsInstance().getLockedSlotOptions().lockedSlots || !clientOptionsInstance().getLockedSlotOptions().preventDropping) {
             return;
         }
 
@@ -80,7 +80,7 @@ public class LocalPlayerMixin extends AbstractClientPlayer {
      */
     @Inject(method = "drop", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientPacketListener;send(Lnet/minecraft/network/protocol/Packet;)V"), locals = LocalCapture.CAPTURE_FAILHARD)
     private void onThrowFromInGame(boolean entireStack, CallbackInfoReturnable<Boolean> cir, ServerboundPlayerActionPacket.Action action, ItemStack itemStack) {
-        if (!modEnabled(Minecraft.getInstance()) || !options().itemCounter.displayOnThrow || !itemStack.isStackable()) {
+        if (!modEnabled(Minecraft.getInstance()) || !clientOptionsInstance().getItemCounterOptions().displayOnThrow || !itemStack.isStackable()) {
             return;
         }
 
@@ -93,7 +93,7 @@ public class LocalPlayerMixin extends AbstractClientPlayer {
     @Inject(method = "stopUsingItem", at = @At("HEAD"))
     private void onBowUse(CallbackInfo ci) {
         LocalPlayer player = (LocalPlayer) (Object) this;
-        if (!modEnabled(Minecraft.getInstance()) || player.isCreative() || !player.level().isClientSide() || !options().itemCounter.arrowCounter) {
+        if (!modEnabled(Minecraft.getInstance()) || player.isCreative() || !player.level().isClientSide() || !clientOptionsInstance().getItemCounterOptions().arrowCounter) {
             return;
         }
 
@@ -120,7 +120,7 @@ public class LocalPlayerMixin extends AbstractClientPlayer {
 
         LocalPlayer player = (LocalPlayer) (Object) this;
 
-        if (options().misc.armorDing) {
+        if (clientOptionsInstance().getMiscOptions().armorDing) {
             boolean triggeredNewLowArmor = false;
             for (int i = 0; i < this.playedDing.length; i++) {
                 EquipmentSlot slot = equipmentSlots()[i];
@@ -156,7 +156,7 @@ public class LocalPlayerMixin extends AbstractClientPlayer {
             }
         }
 
-        if (!options().elytraAlarm.enableElytraAlarm.enabled()) {
+        if (!clientOptionsInstance().getElytraAlarmOptions().elytraAlarm.enabled()) {
             this.elytraWarningCooldown = 0;
             return;
         }
@@ -179,23 +179,23 @@ public class LocalPlayerMixin extends AbstractClientPlayer {
                 && !player.getAbilities().mayfly
                 && !player.getAbilities().flying
                 && (player.gameMode() == GameType.SURVIVAL || player.gameMode() == GameType.ADVENTURE)
-                && PLAYER_FALL_DISTANCE >= options().elytraAlarm.minFallDistance;
+                && PLAYER_FALL_DISTANCE >= clientOptionsInstance().getElytraAlarmOptions().minElytraAlarmFallDistance;
 
-        for (String itemName : options().elytraAlarm.blacklistedItems) {
+        for (String itemName : clientOptionsInstance().getElytraAlarmOptions().elytraAlarmBlacklistedItems) {
             if (isHoldingItem(player, itemName)) {
                 SHOULD_WARN_OF_ELYTRA = false;
                 break;
             }
         }
 
-        if (!SHOULD_WARN_OF_ELYTRA || options().elytraAlarm.enableElytraAlarm.indicatorOnly()) {
+        if (!SHOULD_WARN_OF_ELYTRA || clientOptionsInstance().getElytraAlarmOptions().elytraAlarm.indicatorOnly()) {
             this.elytraWarningCooldown = 0;
             return;
         }
 
         if (this.elytraWarningCooldown <= 0) {
             playDingSound(this.minecraft);
-            this.elytraWarningCooldown = options().elytraAlarm.soundDelayTicks;
+            this.elytraWarningCooldown = clientOptionsInstance().getElytraAlarmOptions().elytraAlarmSoundDelayTicks;
             return;
         }
 

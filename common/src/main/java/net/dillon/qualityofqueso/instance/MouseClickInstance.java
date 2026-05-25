@@ -6,8 +6,8 @@ import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
-import static net.dillon.qualityofqueso.helper.ModHelper.options;
-import static net.dillon.qualityofqueso.keybind.ModKeyMappings.*;
+import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
+import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.*;
 import static net.dillon.qualityofqueso.util.ModConstants.MOVE_AMOUNT;
 
 /**
@@ -23,7 +23,7 @@ public class MouseClickInstance extends ManagementInstance {
      * Attempts to lock or select a slot when clicking.
      */
     public void trySelectingOrLockingSlot(MouseButtonEvent event, CallbackInfoReturnable<Boolean> cir) {
-        if (isExcludingOrLockingSlots() && hasClickedToLock(event)) {
+        if (isExcludingOrLockingSlots() && hasAttemptedToLockSelectOrDeselect(event)) {
             lockedSlotsInstance().selectOrLockSlot(event, cir);
         }
     }
@@ -65,9 +65,9 @@ public class MouseClickInstance extends ManagementInstance {
      * Handles moving only one or dropping one item in a stack.
      */
     public void moveOnlyOne(MouseButtonEvent event, CallbackInfoReturnable<Boolean> cir) {
-        if (options().management.scrollMoving) {
+        if (clientOptionsInstance().getManagementOptions().scrollMoving) {
             boolean dropOnlyOne = hasDropOnlyOneItemKeyDown();
-            boolean hasSingleModifierDown = hasMoveSingleModifierDown();
+            boolean hasSingleModifierDown = canScrollMoveAndHasScrollModifierDown();
             if (event.button() == 1 && ((((dropOnlyOne || hasSingleModifierDown) && hoveredSlotHasItem(instance().getScreensHoveredSlot())))
                     || buttonHoveredAndActive(instance().getManagementButtons().transferInventory())
                     || buttonHoveredAndActive(instance().getManagementButtons().transferContainer()))) {

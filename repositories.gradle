@@ -1,5 +1,8 @@
 repositories {
     maven {
+        url "https://maven.terraformersmc.com/releases/"
+    }
+    maven {
         name = 'Twelve Iterations'
         url = 'https://maven.twelveiterations.com/repository/maven-public/'
         content {
@@ -22,7 +25,12 @@ repositories {
             includeGroup "mezz.jei"
         }
     }
-	
+
+    maven {
+        name = "QuiltMC"
+        url = "https://maven.quiltmc.org/repository/release/"
+    }
+
     exclusiveContent {
         forRepository {
             maven {

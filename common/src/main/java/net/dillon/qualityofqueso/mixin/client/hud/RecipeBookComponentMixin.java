@@ -12,8 +12,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
 import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
-import static net.dillon.qualityofqueso.helper.ModHelper.options;
 
 @Mixin(RecipeBookComponent.class)
 public class RecipeBookComponentMixin {
@@ -23,16 +23,16 @@ public class RecipeBookComponentMixin {
     @Nullable
     public EditBox searchBox;
     @Shadow
-    private int xOffset;
-    @Shadow
     private int width;
+    @Shadow
+    private int xOffset;
 
     /**
      * Prevents the actual screen from shifting when opening the recipe book.
      */
     @Inject(method = "updateScreenPosition", at = @At("HEAD"), cancellable = true)
     private void removeRecipeBookScreenShift(int width, int imageWidth, CallbackInfoReturnable<Integer> cir) {
-        if (!options().misc.shiftRecipeBook) {
+        if (clientOptionsInstance().getMiscOptions().noRecipeBookShift) {
             cir.setReturnValue((width - imageWidth) / 2);
         }
     }
@@ -42,7 +42,7 @@ public class RecipeBookComponentMixin {
      */
     @Inject(method = "getXOrigin", at = @At("HEAD"), cancellable = true)
     private void changeRecipeBookPosition(CallbackInfoReturnable<Integer> cir) {
-        if (!options().misc.shiftRecipeBook) {
+        if (clientOptionsInstance().getMiscOptions().noRecipeBookShift) {
             cir.setReturnValue(((this.width - 147) / 2 - this.xOffset) - 77);
         }
     }
@@ -52,7 +52,7 @@ public class RecipeBookComponentMixin {
      */
     @ModifyArg(method = "updateTabs", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/recipebook/RecipeBookTabButton;setPosition(II)V"), index = 0)
     private int changeRecipeBookTabButtonPosition(int original) {
-        return !options().misc.shiftRecipeBook ? original - 77 : original;
+        return clientOptionsInstance().getMiscOptions().noRecipeBookShift ? original - 77 : original;
     }
 
     /**

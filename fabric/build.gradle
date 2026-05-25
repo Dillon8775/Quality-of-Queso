@@ -7,25 +7,6 @@ plugins {
     alias libs.plugins.modrinthMinotaur
 }
 
-repositories {
-    maven {
-        url "https://maven.terraformersmc.com/releases/"
-    }
-}
-
-dependencies {
-    minecraft libs.minecraft
-    mappings loom.layered() {
-        officialMojangMappings()
-        parchment variantOf(libs.parchment) {
-            artifactType('zip')
-        }
-    }
-    modImplementation libs.fabricLoader
-    modImplementation libs.fabricApi
-    modImplementation "com.terraformersmc:modmenu:${project.modmenu_version}"
-}
-
 apply from: rootProject.file('repositories.gradle')
 apply from: 'dependencies.gradle'
 

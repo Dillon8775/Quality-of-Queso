@@ -1,24 +1,20 @@
 package net.dillon.qualityofqueso.option.eum.searching;
 
 import com.mojang.serialization.Codec;
-import net.dillon.qualityofqueso.option.eum.OptionEnum;
-import net.minecraft.network.chat.Component;
+import net.dillon.qualityofqueso.util.ModConstants;
 import net.minecraft.util.StringRepresentable;
-import org.jspecify.annotations.NonNull;
 
-public enum QuickSearch implements StringRepresentable, OptionEnum {
-    ON("on", "qualityofqueso.options.quick_search.on"),
-    RECIPE_BOOK("recipe_book", "qualityofqueso.options.quick_search.recipe_book"),
-    SEARCH_BAR("search_bar", "qualityofqueso.options.quick_search.search_bar"),
-    OFF("off", "qualityofqueso.options.quick_search.off");
+public enum QuickSearch implements StringRepresentable {
+    ENABLED(ModConstants.ENABLED_SERIALiZED_NAME),
+    RECIPE_BOOK("§bRecipe Book"),
+    SEARCH_BAR("§6Search Bar"),
+    OFF(ModConstants.OFF_SERIALIZED_NAME);
 
     public static final Codec<QuickSearch> CODEC = StringRepresentable.fromEnum(QuickSearch::values);
     private final String name;
-    private final Component translationKey;
 
-    QuickSearch(final String name, final String translationKey) {
+    QuickSearch(final String name) {
         this.name = name;
-        this.translationKey = Component.translatable(translationKey);
     }
 
     public boolean enabled() {
@@ -26,7 +22,7 @@ public enum QuickSearch implements StringRepresentable, OptionEnum {
     }
 
     public boolean on() {
-        return this == ON;
+        return this == ENABLED;
     }
 
     public boolean recipeBook() {
@@ -37,13 +33,12 @@ public enum QuickSearch implements StringRepresentable, OptionEnum {
         return this == SEARCH_BAR;
     }
 
-    @Override
-    public @NonNull String getSerializedName() {
-        return this.name;
+    public boolean creativeMenu() {
+        return this != OFF && this != RECIPE_BOOK;
     }
 
     @Override
-    public Component getTranslationKey() {
-        return this.translationKey;
+    public String getSerializedName() {
+        return this.name;
     }
 }

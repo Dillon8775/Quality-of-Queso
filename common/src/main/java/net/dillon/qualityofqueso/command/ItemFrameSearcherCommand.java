@@ -44,7 +44,7 @@ public class ItemFrameSearcherCommand {
     public static LiteralArgumentBuilder<CommandSourceStack> itemFrameSearcherCommand(CommandBuildContext commandBuildContext) {
         return Commands.literal("itemframesearcher")
                 // Works if the player has item frame searching enabled and the mod is enabled
-                .requires(source -> coptions().itemFrameSearching && options().accessibility.enableMod)
+                .requires(source -> commonOptionsInstance().itemFrameSearching && clientOptionsInstance().getGeneralOptions().enableMod)
                 .then(
                         Commands.literal("clear") // Clear argument, which removes all glow from item frames
                                 .executes(
@@ -53,7 +53,7 @@ public class ItemFrameSearcherCommand {
                                                 "",
                                                 true,
                                                 0,
-                                                options().misc.itemFrameSearchRadius
+                                                clientOptionsInstance().getMiscOptions().itemFrameSearchRadius
                                         )
                                 )
                                 .then( // Radius for the clear argument
@@ -79,7 +79,7 @@ public class ItemFrameSearcherCommand {
                                                                 StringArgumentType.getString(context, ITEM),
                                                                 false,
                                                                 0,
-                                                                options().misc.itemFrameSearchRadius
+                                                                clientOptionsInstance().getMiscOptions().itemFrameSearchRadius
                                                         )
                                                 )
                                                 .then( // Radius argument for searching item frames

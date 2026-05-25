@@ -12,7 +12,7 @@ import java.util.HashSet;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.isContainerScreen;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.isInventoryScreen;
 import static net.dillon.qualityofqueso.helper.MethodHelper.getRecipeBookComponent;
-import static net.dillon.qualityofqueso.helper.ModHelper.options;
+import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
 import static net.dillon.qualityofqueso.util.ModConstants.*;
 
 /**
@@ -28,7 +28,7 @@ public class CloseScreenInstance extends ManagementInstance {
      * Adds excluded slots to store when closing the screen.
      */
     public void putExcludedSlots() {
-        if (options().management.saveExcludedSlots) {
+        if (SAVING_EXCLUDED_SLOTS) {
             SAVED_EXCLUDED_SLOTS.put(getTotalSlots(), new HashSet<>(instance().getExcludedSlots()));
         }
     }
@@ -37,7 +37,7 @@ public class CloseScreenInstance extends ManagementInstance {
      * Saves the search text for search fields.
      */
     public void saveSearchText() {
-        if (options().searching.saveSearchText) {
+        if (clientOptionsInstance().getSearchingOptions().saveSearchText) {
             if (isInventoryScreen(instance().getScreen()) && instance().getSearchFields().inventory() != null) {
                 SAVED_TEXT = instance().getSearchFields().inventory().getValue();
             } else if (isContainerScreen(instance().getScreen()) && instance().getSearchFields().container() != null) {
@@ -50,13 +50,13 @@ public class CloseScreenInstance extends ManagementInstance {
      * Disables certain features, like craft all and trade all.
      */
     public void disableFeatures() {
-        if (!options().buttonDisplayOptions.safeBulk) {
+        if (!clientOptionsInstance().getButtonDisplayOptions().safeBulk) {
             return;
         }
 
         ModClientOptions.INSTANCE.update(options -> {
-            options.management.bulkCraft = false;
-            options.management.bulkTrade = false;
+            options.getManagementOptions().bulkCraft = false;
+            options.getManagementOptions().bulkTrade = false;
         });
     }
 
@@ -64,7 +64,7 @@ public class CloseScreenInstance extends ManagementInstance {
      * Automatically closes the recipe book when closing a screen.
      */
     public void autoCloseRecipeBook() {
-        if (options().misc.autoCloseRecipeBook
+        if (clientOptionsInstance().getMiscOptions().autoCloseRecipeBook
                 && instance().getScreen() instanceof AbstractRecipeBookScreen<?> recipeBookScreen
                 && getRecipeBookComponent(recipeBookScreen).isVisible()) {
             getRecipeBookComponent(recipeBookScreen).toggleVisibility();
@@ -78,7 +78,7 @@ public class CloseScreenInstance extends ManagementInstance {
     public void handleTrackedContainers() {
         if (instance().getDisableFilteringOnClose()) {
             ModClientOptions.INSTANCE.update(options -> {
-                options.management.filteringMode = FilteringMode.NONE;
+                options.getManagementOptions().filteringMode = FilteringMode.NONE;
             });
         }
 
@@ -89,8 +89,8 @@ public class CloseScreenInstance extends ManagementInstance {
             }
             ContainerHelper.clearActiveContainer();
             ContainerHelper.IS_TRACKED_CONTAINER = false;
-            if (!options().sorting.useGlobalSortingMode) {
-                options().sorting.currentSortingMode = GLOBAL_SORTING_MODE;
+            if (!clientOptionsInstance().getSortingOptions().useGlobalSortingMode) {
+                clientOptionsInstance().getSortingOptions().currentSortingMode = GLOBAL_SORTING_MODE;
             }
         }
     }
