@@ -233,6 +233,7 @@ public class ModHelper {
     /**
      * Cancels out fluid FOV change.
      */
+    @Deprecated
     public static void cancelFluidFov(FogType state, float fov, CallbackInfoReturnable<Float> cir) {
         if (!clientOptionsInstance().getFovEffectOptions().fluids && (state == FogType.LAVA || state == FogType.WATER)) {
             cir.setReturnValue(fov);

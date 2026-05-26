@@ -341,7 +341,8 @@ public class ModClientOptions {
     public static class FovEffectOptions {
         public int sprinting = 100;
         public boolean flying = true;
-        public boolean fluids = true;
+        @Deprecated
+        public boolean fluids = false;
         public PotionEffects potions = PotionEffects.ENABLED;
         public Bows bows = Bows.ENABLED;
     }

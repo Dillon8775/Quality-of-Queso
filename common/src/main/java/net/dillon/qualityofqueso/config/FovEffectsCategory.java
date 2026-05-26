@@ -50,9 +50,9 @@ public class FovEffectsCategory {
                                         Option.<Boolean>createBuilder()
                                                 .name(Component.translatable("qualityofqueso.options.fov_effects.fluids"))
                                                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.fov_effects.fluids.description")))
-                                                .binding(true, () -> clientOptionsInstance().getFovEffectOptions().fluids, v -> clientOptionsInstance().getFovEffectOptions().fluids = v)
+                                                .binding(false, () -> clientOptionsInstance().getFovEffectOptions().fluids, v -> clientOptionsInstance().getFovEffectOptions().fluids = v)
                                                 .controller(TickBoxControllerBuilder::create)
-                                                .available(universalOptionsInstance().getFunctions().applyFovEffects)
+                                                .available(false)
                                                 .build()
                                 )
                                 .option(

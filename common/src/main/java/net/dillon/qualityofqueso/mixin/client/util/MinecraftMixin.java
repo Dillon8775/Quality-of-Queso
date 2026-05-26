@@ -38,13 +38,19 @@ public abstract class MinecraftMixin {
      */
     @Inject(method = "handleKeybinds", at = @At("TAIL"))
     private void handleKeyPressing(CallbackInfo ci) {
-        if (modEnabled(Minecraft.getInstance()) && commonOptionsInstance().itemFrameSearching) {
+        Minecraft minecraft = Minecraft.getInstance();
+
+        if (!modEnabled(minecraft)) {
+            return;
+        }
+
+        if (commonOptionsInstance().itemFrameSearching) {
             while (OPEN_SEARCH_ITEM_FRAMES_GUI.isActiveAndDown()) {
                 Minecraft.getInstance().setScreen(new ItemFrameSearchScreen(null));
             }
-            while (OPEN_VISUAL_TIME_GUI.isActiveAndDown()) {
-                Minecraft.getInstance().setScreen(new VisualTimeScreen(null));
-            }
+        }
+        while (OPEN_VISUAL_TIME_GUI.isActiveAndDown()) {
+            Minecraft.getInstance().setScreen(new VisualTimeScreen(null));
         }
     }
 
