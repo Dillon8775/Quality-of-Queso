@@ -38,8 +38,8 @@ public class WidgetHandlerInstance extends ManagementInstance {
     /**
      * @return the {@code transfer container} button.
      */
-    public TransferButton createTransferContainer() {
-        return new TransferButton(
+    public QuesoButton createTransferContainer() {
+        return new QuesoButton(
                 instance().getScreenMenu(),
                 instance().getMinecraft().font,
                 searchInstance().getSearchFieldText(),
@@ -53,8 +53,8 @@ public class WidgetHandlerInstance extends ManagementInstance {
     /**
      * @return the {@code transfer inventory} button.
      */
-    public TransferButton createTransferInventory() {
-        return new TransferButton(
+    public QuesoButton createTransferInventory() {
+        return new QuesoButton(
                 instance().getScreenMenu(),
                 instance().getMinecraft().font,
                 searchInstance().getSearchFieldText(),
@@ -69,7 +69,7 @@ public class WidgetHandlerInstance extends ManagementInstance {
     /**
      * @return the {@code include hotbar} button.
      */
-    public TransferButton createIncludeHotbar() {
+    public QuesoButton createIncludeHotbar() {
         return new IncludeHotbarButton(
                 instance().getScreenMenu(),
                 instance().getMinecraft().font,
@@ -77,7 +77,7 @@ public class WidgetHandlerInstance extends ManagementInstance {
                 "include_hotbar",
                 b -> {
                     ModClientOptions.INSTANCE.update(options -> {
-                        options.management.includeHotbar = !options.management.includeHotbar;
+                        options.getManagementOptions().includingHotbar = !options.getManagementOptions().includingHotbar;
                     });
                     sendClientPreferencesToServer();
                 });
@@ -86,7 +86,7 @@ public class WidgetHandlerInstance extends ManagementInstance {
     /**
      * @return the {@code always quick move} button.
      */
-    public TransferButton createAlwaysQuickMove() {
+    public QuesoButton createAlwaysQuickMove() {
         return new AlwaysQuickMoveButton(
                 instance().getScreenMenu(),
                 instance().getMinecraft().font,
@@ -99,7 +99,7 @@ public class WidgetHandlerInstance extends ManagementInstance {
     /**
      * @return the move matching items button.
      */
-    public TransferButton createFiltering() {
+    public QuesoButton createFiltering() {
         return new FilteringButton(
                 instance().getScreenMenu(),
                 instance().getMinecraft().font,
@@ -117,7 +117,7 @@ public class WidgetHandlerInstance extends ManagementInstance {
     /**
      * @return the {@code sort} button.
      */
-    public TransferButton createSort() {
+    public QuesoButton createSort() {
         return new SortButton(
                 instance().getScreenMenu(),
                 instance().getMinecraft().font,
@@ -132,14 +132,14 @@ public class WidgetHandlerInstance extends ManagementInstance {
     /**
      * @return the {@code search transportables} button.
      */
-    public TransferButton createSearchTransportables() {
+    public QuesoButton createSearchTransportables() {
         return new SearchTransportablesButton(
                 instance().getScreenMenu(),
                 instance().getMinecraft().font,
                 searchInstance().getSearchFieldText(),
                 "search_transportables",
                 b -> ModClientOptions.INSTANCE.update(options -> {
-                    options.searching.searchTransportables = !options.searching.searchTransportables;
+                    SEARCHING_TRANSPORTABLES = !SEARCHING_TRANSPORTABLES;
                 })
         );
     }
@@ -147,7 +147,7 @@ public class WidgetHandlerInstance extends ManagementInstance {
     /**
      * @return the {@code quick drop} button.
      */
-    public TransferButton createQuickDrop() {
+    public QuesoButton createQuickDrop() {
         boolean containerScreen = isContainerScreen(instance().getScreen());
         return new QuickDropButton(
                 instance().getScreenMenu(),
@@ -167,7 +167,7 @@ public class WidgetHandlerInstance extends ManagementInstance {
     /**
      * @return the {@code swap} button.
      */
-    public TransferButton createSwap() {
+    public QuesoButton createSwap() {
         return new SwapButton(
                 instance().getScreenMenu(),
                 instance().getMinecraft().font,
@@ -182,7 +182,7 @@ public class WidgetHandlerInstance extends ManagementInstance {
     /**
      * @return the {@code clear excluded slots} button.
      */
-    public TransferButton createClearExcludedSlots() {
+    public QuesoButton createClearExcludedSlots() {
         return new ClearExcludedSlotsButton(
                 instance().getScreenMenu(),
                 instance().getMinecraft().font,
@@ -198,14 +198,14 @@ public class WidgetHandlerInstance extends ManagementInstance {
     /**
      * @return the {@code trade all} button.
      */
-    public TransferButton createTradeAll() {
+    public QuesoButton createTradeAll() {
         return new BulkTradeButton(
                 instance().getScreenMenu(),
                 instance().getMinecraft().font,
                 searchInstance().getSearchFieldText(),
                 "trade_all",
                 b -> ModClientOptions.INSTANCE.update(options -> {
-                    options.management.bulkTrade = !options.management.bulkTrade;
+                    options.getManagementOptions().bulkTrade = !options.getManagementOptions().bulkTrade;
                 })
         );
     }
@@ -213,14 +213,14 @@ public class WidgetHandlerInstance extends ManagementInstance {
     /**
      * @return the {@code bulk craft} button.
      */
-    public TransferButton createBulkCraft() {
+    public QuesoButton createBulkCraft() {
         return new BulkCraftButton(
                 instance().getScreenMenu(),
                 instance().getMinecraft().font,
                 searchInstance().getSearchFieldText(),
                 "craft_all",
                 b -> ModClientOptions.INSTANCE.update(options -> {
-                    options.management.bulkCraft = !options.management.bulkCraft;
+                    options.getManagementOptions().bulkCraft = !options.getManagementOptions().bulkCraft;
                 })
         );
     }
@@ -228,7 +228,7 @@ public class WidgetHandlerInstance extends ManagementInstance {
     /**
      * @return the {@code lock inventory} button.
      */
-    public TransferButton createLockInventory() {
+    public QuesoButton createLockInventory() {
         return new LockInventoryButton(
                 instance().getScreenMenu(),
                 instance().getMinecraft().font,

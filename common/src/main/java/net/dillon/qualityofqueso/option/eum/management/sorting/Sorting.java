@@ -1,22 +1,19 @@
 package net.dillon.qualityofqueso.option.eum.management.sorting;
 
 import com.mojang.serialization.Codec;
-import net.dillon.qualityofqueso.option.eum.OptionEnum;
-import net.minecraft.network.chat.Component;
+import net.dillon.qualityofqueso.util.ModConstants;
 import net.minecraft.util.StringRepresentable;
 
-public enum Sorting implements StringRepresentable, OptionEnum {
-    BUTTON_OR_KEY("button_or_key", "qualityofqueso.options.button_or_key"),
-    KEY_ONLY("key_only", "qualityofqueso.options.key_only"),
-    OFF("off", "qualityofqueso.options.management_button.off");
+public enum Sorting implements StringRepresentable {
+    BUTTON_OR_KEY(ModConstants.BUTTON_OR_KEY_SERIALIZED_NAME),
+    KEY_ONLY(ModConstants.KEY_ONLY_SERIALIZED_NAME),
+    OFF(ModConstants.OFF_SERIALIZED_NAME);
 
     public static final Codec<Sorting> CODEC = StringRepresentable.fromEnum(Sorting::values);
     private final String name;
-    private final Component translationKey;
 
-    Sorting(final String name, final String translationKey) {
+    Sorting(final String name) {
         this.name = name;
-        this.translationKey = Component.translatable(translationKey);
     }
 
     public boolean buttonOrKey() {
@@ -27,12 +24,8 @@ public enum Sorting implements StringRepresentable, OptionEnum {
         return this == BUTTON_OR_KEY || this == KEY_ONLY;
     }
 
+    @Override
     public String getSerializedName() {
         return this.name;
-    }
-
-    @Override
-    public Component getTranslationKey() {
-        return this.translationKey;
     }
 }

@@ -6,9 +6,9 @@ import net.minecraft.world.inventory.Slot;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import static net.dillon.qualityofqueso.helper.MethodHelper.key;
-import static net.dillon.qualityofqueso.helper.ModHelper.options;
+import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
+import static net.dillon.qualityofqueso.helper.ModKeybindHelper.hasAttemptedToLockSelectOrDeselect;
 import static net.dillon.qualityofqueso.keybind.ModKeybinds.LOCK_SLOT;
-import static net.dillon.qualityofqueso.keybind.ModKeybinds.hasClickedToLock;
 
 /**
  * Handles mouse-releasing functions.
@@ -36,11 +36,11 @@ public class MouseReleaseInstance extends ManagementInstance {
      * Tracks locked slots, and selects/locks them.
      */
     public void trackSlotAndLockOrSelect(int bl, CallbackInfoReturnable<Boolean> cir) {
-        if (isExcludingOrLockingSlots() && hasClickedToLock(bl)) {
+        if (isExcludingOrLockingSlots() && hasAttemptedToLockSelectOrDeselect(bl)) {
             lockedSlotsInstance().selectOrLockSlot(bl, cir);
         }
 
-        if (options().lockedSlots.enableLockedSlots && bl == key(LOCK_SLOT).getValue() && Screen.hasAltDown()) {
+        if (clientOptionsInstance().getLockedSlotOptions().lockedSlots && bl == key(LOCK_SLOT).getValue() && Screen.hasAltDown()) {
             instance().setLastLockedSlotIndex(-1);
             instance().setLockDragAction(0);
         }

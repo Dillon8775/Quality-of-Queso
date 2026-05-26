@@ -4,7 +4,5 @@ dependencies {
     }
     implementation(libs.kumaNeoForge)
 
-    // You can add other dependencies here as well.
-    // Note that CurseMaven and Modrinth Maven, while convenient, does not include transitive dependencies.
-    // If you are getting errors about missing classes in dependencies, try using their respective Maven repositories directly instead.
+    implementation "dev.isxander:yet-another-config-lib:${project.yacl_version}+${project.yalc_mc}-neoforge"
 }

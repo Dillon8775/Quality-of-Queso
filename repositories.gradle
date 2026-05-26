@@ -1,10 +1,21 @@
 repositories {
     maven {
+        url "https://maven.terraformersmc.com/releases/"
+    }
+    maven {
         name = 'Twelve Iterations'
         url = 'https://maven.twelveiterations.com/repository/maven-public/'
         content {
             includeGroup 'net.blay09.mods'
         }
+    }
+    maven {
+        name = 'isXander'
+        url = 'https://maven.isxander.dev/releases'
+    }
+    maven {
+        name = 'Kotlin for Forge'
+        url = 'https://thedarkcolour.github.io/KotlinForForge/'
     }
 
     maven {
@@ -21,6 +32,11 @@ repositories {
         content {
             includeGroup "mezz.jei"
         }
+    }
+
+    maven {
+        name = "QuiltMC"
+        url = "https://maven.quiltmc.org/repository/release/"
     }
 
     exclusiveContent {

@@ -8,8 +8,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
 import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
-import static net.dillon.qualityofqueso.helper.ModHelper.options;
 
 @Mixin(ClientLevel.ClientLevelData.class)
 public class ClientLevelDataMixin {
@@ -20,7 +20,7 @@ public class ClientLevelDataMixin {
     @Inject(method = "getDayTime", at = @At("HEAD"), cancellable = true)
     private void overrideOverworldClockTime(CallbackInfoReturnable<Long> ci) {
         Minecraft minecraft = Minecraft.getInstance();
-        if (!modEnabled(minecraft) || !options().visualTime.overrideClientTime) {
+        if (!modEnabled(minecraft) || !clientOptionsInstance().getVisualTimeOptions().overrideClientTime) {
             return;
         }
 

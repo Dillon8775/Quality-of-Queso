@@ -2,31 +2,37 @@
   "qualityofqueso.management.succeed": {
     "subtitle": "qualityofqueso.gui.management_succeed",
     "sounds": [
-      "qualityofqueso:management_succeeds",
-      "qualityofqueso:management_succeeds_1",
-      "qualityofqueso:management_succeeds_2"
+      {
+        "name": "minecraft:item.bundle.insert",
+        "type": "event"
+      }
     ]
   },
   "qualityofqueso.management.reject": {
     "subtitle": "qualityofqueso.gui.management_reject",
     "sounds": [
-      "qualityofqueso:management_rejects"
+      {
+        "name": "minecraft:item.bundle.insert_fail",
+        "type": "event"
+      }
     ]
   },
   "qualityofqueso.management.drop": {
     "subtitle": "qualityofqueso.gui.management_drop",
     "sounds": [
-      "qualityofqueso:management_drop",
-      "qualityofqueso:management_drop_1",
-      "qualityofqueso:management_drop_2"
+      {
+        "name": "minecraft:item.bundle.drop_contents",
+        "type": "event"
+      }
     ]
   },
   "qualityofqueso.management.sort": {
     "subtitle": "qualityofqueso.gui.management_sort",
     "sounds": [
-      "qualityofqueso:management_sort",
-      "qualityofqueso:management_sort_1",
-      "qualityofqueso:management_sort_2"
+      {
+        "name": "minecraft:item.bundle.remove_one",
+        "type": "event"
+      }
     ]
   },
   "qualityofqueso.management.lock_slot": {

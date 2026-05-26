@@ -32,7 +32,7 @@ public abstract class MinecraftMixin {
      */
     @Inject(method = "handleKeybinds", at = @At("TAIL"))
     private void handleKeyPressing(CallbackInfo ci) {
-        if (modEnabled(Minecraft.getInstance()) && coptions().itemFrameSearching) {
+        if (modEnabled(Minecraft.getInstance()) && commonOptionsInstance().itemFrameSearching) {
             while (OPEN_SEARCH_ITEM_FRAMES_GUI.consumeClick()) {
                 Minecraft.getInstance().setScreen(new ItemFrameSearchScreen(null));
             }
@@ -63,7 +63,7 @@ public abstract class MinecraftMixin {
         ClickSlotInstance.tickBulkCraftTask();
         MobHitDingTracker.tick(minecraft);
 
-        if (!options().misc.fortniteBattlePass) {
+        if (!clientOptionsInstance().getMiscOptions().fortniteBattlePass) {
             return;
         }
 

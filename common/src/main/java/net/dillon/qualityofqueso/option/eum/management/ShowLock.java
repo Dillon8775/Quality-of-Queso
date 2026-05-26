@@ -1,19 +1,21 @@
 package net.dillon.qualityofqueso.option.eum.management;
 
 import com.mojang.serialization.Codec;
-import net.dillon.qualityofqueso.option.eum.OptionEnum;
-import net.minecraft.network.chat.Component;
+import net.dillon.qualityofqueso.util.ModConstants;
 import net.minecraft.util.StringRepresentable;
 
-public enum ShowLock implements StringRepresentable, OptionEnum {
-    EVERYWHERE("button_or_key", "qualityofqueso.options.show_lock.everywhere"),
-    HUD_ONLY("hud_only", "qualityofqueso.options.show_lock.hud_only"),
-    SCREEN_ONLY("screen_only", "qualityofqueso.options.show_lock.screen_only"),
-    OFF("off", "qualityofqueso.options.show_lock.off");
+public enum ShowLock implements StringRepresentable {
+    EVERYWHERE("§aEverywhere"),
+    HUD_ONLY("§bHUD Only"),
+    SCREEN_ONLY("§6Screens Only"),
+    OFF(ModConstants.OFF_SERIALIZED_NAME);
 
     public static final Codec<ShowLock> CODEC = StringRepresentable.fromEnum(ShowLock::values);
     private final String name;
-    private final Component translationKey;
+
+    ShowLock(final String name) {
+        this.name = name;
+    }
 
     public boolean inScreens() {
         return this == EVERYWHERE || this == SCREEN_ONLY;
@@ -23,17 +25,8 @@ public enum ShowLock implements StringRepresentable, OptionEnum {
         return this == EVERYWHERE || this == HUD_ONLY;
     }
 
-    ShowLock(final String name, final String translationKey) {
-        this.name = name;
-        this.translationKey = Component.translatable(translationKey);
-    }
-
+    @Override
     public String getSerializedName() {
         return this.name;
-    }
-
-    @Override
-    public Component getTranslationKey() {
-        return this.translationKey;
     }
 }

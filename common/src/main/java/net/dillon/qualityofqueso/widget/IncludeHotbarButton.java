@@ -4,7 +4,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 
-import static net.dillon.qualityofqueso.helper.ModHelper.options;
+import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
 
 /**
  * A separate class for the include hotbar button.
@@ -27,7 +27,7 @@ public class IncludeHotbarButton extends ToggleableButton {
 
     @Override
     protected boolean option() {
-        return options().management.includeHotbar;
+        return clientOptionsInstance().getManagementOptions().includingHotbar;
     }
 
     @Override

@@ -1,9 +1,9 @@
 package net.dillon.qualityofqueso.helper;
 
 import net.dillon.qualityofqueso.platform.MultiLoader;
-import net.dillon.qualityofqueso.screen.option.AbstractModOptionsScreen;
+import net.dillon.qualityofqueso.screen.AbstractModScreen;
 import net.dillon.qualityofqueso.util.ModTexts;
-import net.dillon.qualityofqueso.widget.TransferButton;
+import net.dillon.qualityofqueso.widget.QuesoButton;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.SpriteIconButton;
@@ -38,16 +38,16 @@ public class ButtonHelper {
     /**
      * Draws the texture for a {@code inventory management button.}
      */
-    public static void drawButtonTexture(GuiGraphics graphics, String name, TransferButton button) {
+    public static void drawButtonTexture(GuiGraphics graphics, String name, QuesoButton button) {
         int xy = getTransferButtonXY(button);
-        graphics.blit(ResourceLocation.parse("qualityofqueso:textures/gui/button/" + name + ".png"), button.getX() - 1, button.getY() - 1, 0.0F, 0.0F, xy, xy, xy, xy);
+        graphics.blit(ofQoQ("textures/gui/sprites/button/" + name + ".png"), button.getX() - 1, button.getY() - 1, 0.0F, 0.0F, xy, xy, xy, xy);
     }
 
     /**
      * Draws a texture over a button.
      */
     public static void drawTexture(GuiGraphics graphics, String name, Button button) {
-        graphics.blit(ResourceLocation.parse("qualityofqueso:textures/gui/" + name + ".png"), button.getX() + 2, button.getY() + 2, 0.0F, 0.0F, 16, 16, 16, 16);
+        graphics.blit(ofQoQ("textures/gui/" + name + ".png"), button.getX() + 2, button.getY() + 2, 0.0F, 0.0F, 16, 16, 16, 16);
     }
 
     /**
@@ -77,14 +77,14 @@ public class ButtonHelper {
     }
 
     /**
-     * @return the {@code width} for a {@link AbstractModOptionsScreen} button, on the {@code left-side} of the screen.
+     * @return the {@code width} for a {@link AbstractModScreen} button, on the {@code left-side} of the screen.
      */
     public static int getLeftButtonPosition(int width, int leftButtonIndex) {
         return width / 2 - 113 - (leftButtonIndex * 24);
     }
 
     /**
-     * @return the {@code width} for a {@link AbstractModOptionsScreen} button, on the {@code right-side} of the screen.
+     * @return the {@code width} for a {@link AbstractModScreen} button, on the {@code right-side} of the screen.
      */
     public static int getRightButtonPosition(int width, int rightButtonIndex) {
         return width / 2 + 92 + (rightButtonIndex * 24);
@@ -94,9 +94,9 @@ public class ButtonHelper {
      * @return the configuration button X position.
      */
     public static int getConfigButtonX(int width, int button) {
-        if (uoptions().main.menuButton.left()) {
+        if (universalOptionsInstance().getUniversal().menuButton.left()) {
             return 8 + (button * 24);
-        } else if (uoptions().main.menuButton.right()) {
+        } else if (universalOptionsInstance().getUniversal().menuButton.right()) {
             return width - 28 - (button * 24);
         } else {
             return width / 2 + 106;
@@ -107,7 +107,7 @@ public class ButtonHelper {
      * @return the configuration button Y position.
      */
     public static int getConfigButtonY(int height, int button) {
-        if (uoptions().main.menuButton.left() || uoptions().main.menuButton.right()) {
+        if (universalOptionsInstance().getUniversal().menuButton.left() || universalOptionsInstance().getUniversal().menuButton.right()) {
             return height - 29;
         } else {
             return height / 4 + 72 + (button * 24) - 16 + (MultiLoader.getPlatform().isNeoForged() ? -6 : 0);
@@ -117,11 +117,12 @@ public class ButtonHelper {
     /**
      * @return the path for a widget.
      */
-    public static String getWidgetPath() {
-        return switch (options().accessibility.widgetTheme) {
-            case DARK -> "dark/";
+    public static String getWidgetPath(boolean forSearchBar) {
+        String appended = !forSearchBar && clientOptionsInstance().getAccessibilityOptions().useLegacyTextures ? "legacy/" : "";
+        return switch (clientOptionsInstance().getGeneralOptions().widgetTheme) {
+            case DARK -> "dark/" + appended;
             case TRANSPARENT -> "transparent/";
-            default -> "vanilla/";
+            default -> "vanilla/" + appended;
         };
     }
 }

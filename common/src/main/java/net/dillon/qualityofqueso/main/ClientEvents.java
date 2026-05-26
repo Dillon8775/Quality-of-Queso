@@ -10,7 +10,7 @@ import static net.dillon.qualityofqueso.helper.ModHelper.*;
 /**
  * Client events for Quality of Queso.
  */
-public final class ClientEvents {
+public class ClientEvents {
     private static final String[] bannedServers = new String[]{
             "hypixel"
     };
@@ -20,12 +20,12 @@ public final class ClientEvents {
     }
 
     public static void onPlayerJoin(Minecraft minecraft) {
-        if (uoptions().main.multiServerConfigs) {
+        if (universalOptionsInstance().getUniversal().multiServerConfigs) {
             ModHelper.LOADED = true;
             loadServerConfig();
         }
-        if (isOnServer(minecraft) && options().misc.forceAntiRageQuit) {
-            options().misc.antiRageQuit = true;
+        if (isOnServer(minecraft) && clientOptionsInstance().getMiscOptions().forceAntiRageQuit) {
+            clientOptionsInstance().getMiscOptions().antiRageQuit = true;
             saveAndApplyConfigs(minecraft);
         }
         if (isOnServer(minecraft) && minecraft.player != null) {
@@ -35,7 +35,7 @@ public final class ClientEvents {
                             Component.literal(minecraft.getCurrentServer().ip).withStyle(ChatFormatting.DARK_RED)), false);
                 }
             }
-            if (!uoptions().main.multiServerConfigs) {
+            if (!universalOptionsInstance().getUniversal().multiServerConfigs) {
                 minecraft.player.displayClientMessage(Component.translatable("qualityofqueso.gui.enable_multi_server_configs"), false);
             }
         }

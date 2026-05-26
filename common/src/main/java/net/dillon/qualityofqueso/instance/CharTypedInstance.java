@@ -8,7 +8,7 @@ import java.util.function.BooleanSupplier;
 
 import static net.dillon.qualityofqueso.helper.ManagementHelper.isInventoryScreen;
 import static net.dillon.qualityofqueso.helper.MethodHelper.getRecipeBookComponent;
-import static net.dillon.qualityofqueso.helper.ModHelper.options;
+import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
 
 /**
  * Handles char typing events.
@@ -19,7 +19,7 @@ public record CharTypedInstance(AbstractContainerScreen<?> screen) implements Mo
      * Ensures variables and stored values aren't lost during resizing of window.
      */
     public boolean handleCharTyped(char ch, int scancode, BooleanSupplier superCharTyped) {
-        if (options().searching.containerSearching && instance().getSearchFields().container() != null && instance().getSearchFields().container().isFocused()) {
+        if (clientOptionsInstance().getSearchingOptions().containerSearching && instance().getSearchFields().container() != null && instance().getSearchFields().container().isFocused()) {
             return instance().getSearchFields().container().charTyped(ch, scancode);
         }
 

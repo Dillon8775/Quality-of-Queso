@@ -12,7 +12,7 @@ import net.minecraft.commands.CommandSourceStack;
 /**
  * Common events for Quality of Queso.
  */
-public final class CommonEvents {
+public class CommonEvents {
 
     public static void registerCommonCommands(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext commandRegistryAccess) {
         if (ModCommonOptions.INSTANCE.getInstance().itemFrameSearching) {

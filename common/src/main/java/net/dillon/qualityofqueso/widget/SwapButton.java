@@ -8,7 +8,7 @@ import java.util.function.Supplier;
 /**
  * A button which swaps inventories.
  */
-public class SwapButton extends TransferButton {
+public class SwapButton extends QuesoButton {
     private static final int DEFAULT_SWAP_COOLDOWN = 20;
     public static int SWAP_COOLDOWN = DEFAULT_SWAP_COOLDOWN;
 

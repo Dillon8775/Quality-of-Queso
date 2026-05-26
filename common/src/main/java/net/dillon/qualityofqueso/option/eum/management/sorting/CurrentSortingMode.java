@@ -1,12 +1,12 @@
 package net.dillon.qualityofqueso.option.eum.management.sorting;
 
-import net.dillon.qualityofqueso.util.ModTexts;
+import net.dillon.qualityofqueso.util.ModConstants;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.CommonColors;
 
 public enum CurrentSortingMode {
-    ALPHABETICAL("", Component.literal("alphabetically").withColor(ModTexts.ITEM_COLOR)),
-    TAG("_tag", Component.literal("by ").append(Component.literal("tag").withColor(ModTexts.TAG_COLOR))),
+    ALPHABETICAL("", Component.literal("alphabetically").withColor(ModConstants.ITEM_COLOR)),
+    TAG("_tag", Component.literal("by ").append(Component.literal("tag").withColor(ModConstants.TAG_COLOR))),
     COUNT_DESCENDING("_descending", Component.literal("descending").withColor(CommonColors.SOFT_RED)),
     COUNT_ASCENDING("_ascending", Component.literal("ascending").withColor(CommonColors.GREEN)),
     CREATIVE_MENU("_creative_menu", Component.literal("by ").append(Component.literal("§ac§br§5e§6a§7t§di§ev§9e§r menu")));

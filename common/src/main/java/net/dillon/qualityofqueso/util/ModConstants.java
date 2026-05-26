@@ -12,8 +12,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
 import static net.dillon.qualityofqueso.helper.ModHelper.ofQoQ;
-import static net.dillon.qualityofqueso.helper.ModHelper.options;
 
 /**
  * Constant variables and cooldowns for Quality of Queso.
@@ -25,13 +25,41 @@ public class ModConstants {
     public static final String WIKI_LINK = "https://quality-of-queso.fandom.com/wiki/Quality_of_Queso_Wiki";
     public static final String DISCORD_LINK = "https://discord.gg/vfqEAn4YFy";
     public static final String SHOWCASE_VIDEO_LINK = "https://youtu.be/02wfcgHkPmQ";
-    public static final String HEX_COLOR_PICKER = "https://share.google/mamZCaKR5jkRueJ7k";
     public static final String RESOURCE_PACK_TEMPLATE = "https://1drv.ms/f/c/dde4bd527f59679e/IgAnwmEFKQchQ727NndBW9D9AbeVC4Jl8CuXTXMQ_CWUorw?e=Q5gEW0";
+    public static boolean SHOWN_BETA_TOAST = false;
 
     // Static variables for management
     public static int RENDERED_BUTTONS = 0;
     public static int MOVE_AMOUNT = 1;
     public static Container CURRENT_CONTAINER = null;
+    public static final String BUTTON_OR_KEY_SERIALIZED_NAME = "§bButton §r§oor §r§eKey";
+    public static final String KEY_ONLY_SERIALIZED_NAME = "§eKey Only";
+    public static final String ALWAYS_SERIALIZED_NAME = "§aAlways";
+    public static final String ENABLED_SERIALiZED_NAME = "§aEnabled";
+    public static final String OFF_SERIALIZED_NAME = "§7OFF";
+    public static final String ALPHABETICALLY_SERIALIZED_NAME = "§aAlphabetically";
+    public static final String BY_TAG_SERIALIZED_NAME = "§bBy Tag";
+    public static final String DESCENDING_SERIALIZED_NAME = "§cDescending";
+    public static final String ASCENDING_SERIALIZED_NAME = "§2Ascending";
+    public static final String CREATIVE_MENU_SERIALIZED_NAME = "§aC§br§5e§6a§7t§di§ev§9e§r§f Menu";
+
+    // Static variables for management button layout lists
+    public static final String TRANSFER_CONTAINER_BUTTON_SERIALIZED_NAME = "Transfer Container Button";
+    public static final String TRANSFER_INVENTORY_BUTTON_SERIALIZED_NAME = "Transfer Inventory Button";
+    public static final String LOCK_INVENTORY_BUTTON_SERIALIZED_NAME = "Lock Inventory Button";
+    public static final String INCLUDE_HOTBAR_BUTTON_SERIALIZED_NAME = "Include Hotbar Button";
+    public static final String ALWAYS_QUICK_MOVE_BUTTON_SERIALIZED_NAME = "Always Quick Move Button";
+    public static final String FILTERING_BUTTON_SERIALIZED_NAME = "Filtering Button";
+    public static final String SORT_BUTTON_SERIALIZED_NAME = "Sort Button";
+    public static final String BULK_CRAFT_BUTTON_SERIALIZED_NAME = "Bulk Craft Button";
+    public static final String QUICK_DROP_BUTTON_SERIALIZED_NAME = "Quick Drop Button";
+    public static final String SWAP_BUTTON_SERIALIZED_NAME = "Swap Button";
+    public static final String SEARCH_TRANSPORTABLES_BUTTON_SERIALIZED_NAME = "Search Transportables Button";
+    public static final String CLEAR_EXCLUDED_SLOTS_BUTTON_SERIALIZED_NAME = "Clear Excluded Slots Button";
+
+    // Variables for management reference
+    public static boolean SEARCHING_TRANSPORTABLES = true;
+    public static boolean SAVING_EXCLUDED_SLOTS = false;
 
     // Button names and paths
     public static final String TRANSFER_INVENTORY_BUTTON_NAME = "transfer_inventory";
@@ -53,7 +81,7 @@ public class ModConstants {
 
     // Other global variables
     public static Map<Integer, Set<Integer>> SAVED_EXCLUDED_SLOTS = new HashMap<>();
-    public static CurrentSortingMode GLOBAL_SORTING_MODE = options().sorting.currentSortingMode;
+    public static CurrentSortingMode GLOBAL_SORTING_MODE = clientOptionsInstance().getSortingOptions().currentSortingMode;
 
     // Texture constants
     public static final String CHEESE_WHEEL_TEXTURE = "widget/logo";
@@ -77,7 +105,6 @@ public class ModConstants {
     public static final ResourceLocation SELECTED_RECIPE = ofQoQ("slot/selected_recipe");
 
     // Config constants
-    public static final String ROOT_CONFIG_DIR = "qualityofqueso";
     public static final String DEFAULT_CONFIG_DIR = "qualityofqueso/global";
     public static final String DEFAULT_SERVER_CONFIG_DIR = "qualityofqueso/server-configs/";
     public static final String DEFAULT_CLIENT_CONFIG_FILE_NAME = "client.json";
@@ -104,8 +131,11 @@ public class ModConstants {
     // Search bar constants
     public static String SAVED_TEXT = "";
     public static String SAVED_ITEM_FRAME_TEXT = "";
+    public static String SAVED_CREATIVE_MENU_TEXT = "";
 
-    // Search field colors
+    // Default colors
     public static final int DEFAULT_TRANSPARENT_SEARCH_BAR_TEXT_COLOR = -12566464;
     public static final int DEFAULT_LOCKED_SLOT_COLOR = 1721803007;
+    public static final int TAG_COLOR = 0x7FFFFF;
+    public static final int ITEM_COLOR = 0x96FFB7;
 }

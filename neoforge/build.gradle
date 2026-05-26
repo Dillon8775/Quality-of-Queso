@@ -7,6 +7,9 @@ plugins {
     alias libs.plugins.modrinthMinotaur
 }
 
+apply from: rootProject.file('repositories.gradle')
+apply from: 'dependencies.gradle'
+
 neoForge {
     version = libs.neoForge.get().version
     // Automatically enable neoforge AccessTransformers if the file exists
@@ -41,9 +44,6 @@ neoForge {
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
-apply from: rootProject.file('repositories.gradle')
-apply from: 'dependencies.gradle'
-
 tasks.register('curseforge', TaskPublishCurseForge) {
     dependsOn('build')
     description = 'Publishes the NeoForge build to CurseForge.'
@@ -60,6 +60,7 @@ tasks.register('curseforge', TaskPublishCurseForge) {
         mainFile.displayName = "[${mc_version.substring(2)}] $mod_name ${mod_version}"
         mainFile.changelog = rootProject.file("${changelog_file}").text
         mainFile.addRequirement("balm")
+        mainFile.addRequirement("yacl")
         mainFile.addGameVersion(libs.minecraft.get().version)
         mainFile.releaseType = "release"
         project.findProperty("curseforge_environments")?.split(",")?.toList()?.each { mainFile.addEnvironment(it) }
@@ -84,6 +85,7 @@ modrinth {
     loaders = ['neoforge']
     dependencies {
         required.project "balm"
+        required.project "yacl"
     }
 }
 

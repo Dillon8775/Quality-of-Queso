@@ -1,12 +1,10 @@
 package net.dillon.qualityofqueso.widget;
 
-import net.dillon.qualityofqueso.option.ModClientOptions;
+import net.dillon.qualityofqueso.util.ModConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-
-import static net.dillon.qualityofqueso.helper.ModHelper.options;
 
 /**
  * A button to clear all excluded slots on the screen.
@@ -29,7 +27,7 @@ public class ClearExcludedSlotsButton extends ToggleableButton {
 
     @Override
     protected boolean option() {
-        return options().management.saveExcludedSlots;
+        return ModConstants.SAVING_EXCLUDED_SLOTS;
     }
 
     @Override
@@ -45,9 +43,7 @@ public class ClearExcludedSlotsButton extends ToggleableButton {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int bl) {
         if (bl == 1) {
-            ModClientOptions.INSTANCE.update((options) -> {
-                options.management.saveExcludedSlots = !options.management.saveExcludedSlots;
-            });
+            ModConstants.SAVING_EXCLUDED_SLOTS = !ModConstants.SAVING_EXCLUDED_SLOTS;
             this.playDownSound(Minecraft.getInstance().getSoundManager());
             return true;
         }

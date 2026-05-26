@@ -11,9 +11,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
-import static net.dillon.qualityofqueso.helper.ModHelper.options;
+import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
 import static net.dillon.qualityofqueso.helper.ModHelper.quicklyEquippables;
-import static net.dillon.qualityofqueso.keybind.ModKeybinds.hasSelectSlotsKeyDown;
+import static net.dillon.qualityofqueso.helper.ModKeybindHelper.hasSelectSlotsKeyDown;
 
 /**
  * Handles quick equip feature and methods.
@@ -49,11 +49,11 @@ public class QuickEquipInstance extends ManagementInstance {
      * Quickly equips an item.
      */
     public void quickEquip() {
-        if (options().management.dragSorting && hasSelectSlotsKeyDown()) {
+        if (clientOptionsInstance().getManagementOptions().dragSorting && hasSelectSlotsKeyDown()) {
             return;
         }
 
-        if (options().misc.quickEquip && instance().getScreensHoveredSlot() != null && (instance().getScreensHoveredSlot().index >= 5) && (instance().getScreen() instanceof InventoryScreen || instance().getScreen() instanceof CreativeModeInventoryScreen)) {
+        if (clientOptionsInstance().getMiscOptions().quickEquip && instance().getScreensHoveredSlot() != null && (instance().getScreensHoveredSlot().index >= 5) && (instance().getScreen() instanceof InventoryScreen || instance().getScreen() instanceof CreativeModeInventoryScreen)) {
             ItemStack stack = instance().getScreensHoveredSlot().getItem();
             EquipmentSlot targetSlot = null;
 
