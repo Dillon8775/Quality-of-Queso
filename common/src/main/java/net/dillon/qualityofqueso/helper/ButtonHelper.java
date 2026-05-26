@@ -36,14 +36,14 @@ public class ButtonHelper {
      */
     public static void drawButtonTexture(GuiGraphicsExtractor graphics, String name, QuesoButton button) {
         int xy = getTransferButtonXY(button);
-        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ofQoQ("button/" + name), button.getX() - 1, button.getY() - 1, xy, xy);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, ofQoQ("textures/gui/sprites/button/" + name + ".png"), button.getX() - 1, button.getY() - 1, 0.0F, 0.0F, xy, xy, xy, xy);
     }
 
     /**
      * Draws a texture over a button.
      */
     public static void drawTexture(GuiGraphicsExtractor graphics, String name, Button button, float f) {
-        graphics.blit(RenderPipelines.GUI_TEXTURED, Identifier.parse("qualityofqueso:textures/gui/" + name + ".png"), button.getX() + 2, button.getY() + 2, 0.0F, 0.0F, 16, 16, 16, 16, ARGB.color(f, CommonColors.WHITE));
+        graphics.blit(RenderPipelines.GUI_TEXTURED, ofQoQ("textures/gui/" + name + ".png"), button.getX() + 2, button.getY() + 2, 0.0F, 0.0F, 16, 16, 16, 16, ARGB.color(f, CommonColors.WHITE));
     }
 
     /**

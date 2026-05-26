@@ -5,6 +5,7 @@ import net.blay09.mods.balm.core.BalmRegistrars;
 import net.dillon.qualityofqueso.option.ModCommonOptions;
 import net.dillon.qualityofqueso.option.UniversalOptions;
 import net.dillon.qualityofqueso.platform.MultiLoader;
+import net.dillon.qualityofqueso.platform.ReleaseType;
 import net.dillon.qualityofqueso.util.ModConstants;
 
 import static net.dillon.qualityofqueso.helper.ModHelper.*;
@@ -24,6 +25,12 @@ public class CommonMain {
         checkCommonConfigs();
         loadCommonConfigs();
         info("Quality of Queso version " + MultiLoader.getPlatform().getModVersion() + " (for " + Balm.platform().name() + ") loaded successfully!");
+
+        if (MultiLoader.getPlatform().getReleaseType() == ReleaseType.BETA) {
+            warn("Please be aware that this version of Quality of Queso is marked as beta, use at your own risk!");
+        } else if (MultiLoader.getPlatform().getReleaseType() == ReleaseType.ALPHA) {
+            error("Please note that this version of Quality of Queso is in the alpha state, so there will be unknown bugs. Use at your own risk!");
+        }
     }
 
     /**

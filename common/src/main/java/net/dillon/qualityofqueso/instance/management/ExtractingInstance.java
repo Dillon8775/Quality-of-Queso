@@ -68,7 +68,6 @@ public class ExtractingInstance extends ManagementInstance {
             // For drag sorting and/or locking slots, set the cursor to "pointing hand", like the user is grabbing onto slots to lock/select them
             if ((clientOptionsInstance().getManagementOptions().dragSorting || clientOptionsInstance().getLockedSlotOptions().lockedSlots)
                     && instance().getScreensHoveredSlot() != null
-                    && !hasAnyManagementModifierDown()
                     && !Minecraft.getInstance().hasControlDown()
                     && Minecraft.getInstance().hasAltDown()) {
                 graphics.requestCursor(CursorTypes.POINTING_HAND);
@@ -122,7 +121,8 @@ public class ExtractingInstance extends ManagementInstance {
 
                         if (isContainerScreen(instance().getScreen())) {
                             // Don't grayout if CTRL is pressed and transfer keys are bounded
-                            if (hasAnyManagementModifierDown()
+                            if (clientOptionsInstance().getManagementOptions().transferring.buttonOrKeyOrKeyOnly()
+                                    && (kumaAnyModifierDown(MOVE_TO_INVENTORY) || kumaAnyModifierDown(MOVE_TO_CONTAINER))
                                     && MOVE_TO_INVENTORY.getBinding().key().getValue() != InputConstants.UNKNOWN.getValue()
                                     && MOVE_TO_CONTAINER.getBinding().key().getValue() != InputConstants.UNKNOWN.getValue()) {
                                 renderUnavailable = false;

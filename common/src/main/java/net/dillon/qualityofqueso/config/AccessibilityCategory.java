@@ -95,7 +95,7 @@ public class AccessibilityCategory {
                                         Option.<Boolean>createBuilder()
                                                 .name(Component.translatable("qualityofqueso.options.dark_disc"))
                                                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.dark_disc.description")))
-                                                .binding(false, () -> clientOptionsInstance().getAccessibilityOptions().darkDisc, v -> clientOptionsInstance().getAccessibilityOptions().darkDisc = v)
+                                                .binding(true, () -> clientOptionsInstance().getAccessibilityOptions().darkDisc, v -> clientOptionsInstance().getAccessibilityOptions().darkDisc = v)
                                                 .controller(BooleanControllerBuilder::create)
                                                 .build()
                                 )

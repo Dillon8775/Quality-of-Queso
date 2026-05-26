@@ -312,7 +312,9 @@ public class ManagementHelper {
             modifier -= 20;
         } else if (isFurnaceScreen(screen)) {
             modifier -= 16;
-        } else if (screen instanceof AbstractRecipeBookScreen<?> recipeBookScreen && getRecipeBookComponent(recipeBookScreen).isVisible()) {
+        }
+
+        if (screen instanceof AbstractRecipeBookScreen<?> recipeBookScreen && getRecipeBookComponent(recipeBookScreen).isVisible()) {
             modifier += getRecipeBookModifier(screen);
         }
         return (width / 2 + barWidth / 2 + modifier) - (button * 12);

@@ -9,8 +9,8 @@ import net.dillon.qualityofqueso.keybind.ModKeyMappings;
 import net.dillon.qualityofqueso.option.eum.misc.ElytraAlarm;
 import net.minecraft.network.chat.Component;
 
-import static net.dillon.qualityofqueso.config.ConfigurationScreen.fixedSizeWebpImage;
-import static net.dillon.qualityofqueso.helper.ModHelper.*;
+import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
+import static net.dillon.qualityofqueso.helper.ModHelper.universalOptionsInstance;
 import static net.dillon.qualityofqueso.util.ModOptionUtil.fullKumaKeyMappingAsString;
 
 /**
@@ -69,11 +69,7 @@ public class MiscellaneousCategory {
                                 .option(
                                         Option.<ElytraAlarm>createBuilder()
                                                 .name(Component.translatable("qualityofqueso.options.elytra_alarm"))
-                                                .description(
-                                                        OptionDescription.createBuilder()
-                                                                .text(Component.translatable("qualityofqueso.options.elytra_alarm.description"))
-                                                                .customImage(fixedSizeWebpImage(ofQoQ("textures/gui/sprites/options/miscellaneous/elytra_alarm.webp"), 154))
-                                                                .build())
+                                                .description(OptionDescription.of(Component.translatable("qualityofqueso.options.elytra_alarm.description")))
                                                 .binding(ElytraAlarm.ENABLED, () -> clientOptionsInstance().getElytraAlarmOptions().elytraAlarm, v -> clientOptionsInstance().getElytraAlarmOptions().elytraAlarm = v)
                                                 .controller(o -> EnumControllerBuilder.create(o)
                                                         .enumClass(ElytraAlarm.class)
@@ -193,11 +189,8 @@ public class MiscellaneousCategory {
                                 .option(
                                         Option.<Boolean>createBuilder()
                                                 .name(Component.translatable("qualityofqueso.options.quick_equip"))
-                                                .description(OptionDescription.createBuilder()
-                                                        .text(Component.translatable("qualityofqueso.options.quick_equip.description",
-                                                                fullKumaKeyMappingAsString(ModKeyMappings.QUICK_EQUIP)))
-                                                        .customImage(fixedSizeWebpImage(ofQoQ("textures/gui/sprites/options/miscellaneous/quick_equip.webp"), 88))
-                                                        .build())
+                                                .description(OptionDescription.of(Component.translatable("qualityofqueso.options.quick_equip.description",
+                                                        fullKumaKeyMappingAsString(ModKeyMappings.QUICK_EQUIP))))
                                                 .binding(true, () -> clientOptionsInstance().getMiscOptions().quickEquip, v -> clientOptionsInstance().getMiscOptions().quickEquip = v)
                                                 .controller(BooleanControllerBuilder::create)
                                                 .build()

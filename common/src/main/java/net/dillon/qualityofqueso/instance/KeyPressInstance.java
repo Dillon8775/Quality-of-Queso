@@ -231,7 +231,7 @@ public class KeyPressInstance extends ManagementInstance {
         boolean cannotType = (numberKeyPressed || hotbarKeyPressed || dropKeyPressed || swapKeyPressed) && hoveredSlotHasItem(instance().getScreensHoveredSlot());
 
         // Recipe book search field logic
-        if (instance().getScreen() instanceof AbstractRecipeBookScreen<?> recipeScreen && !Minecraft.getInstance().hasControlDown() && !hasAnyManagementModifierDown()) {
+        if (instance().getScreen() instanceof AbstractRecipeBookScreen<?> recipeScreen && !Minecraft.getInstance().hasControlDown()) {
             boolean swapKeyValid = swapKeyPressed && (hoveredSlotHasItem(instance().getScreensHoveredSlot()) || instance().getScreen().getMenu().getSlot(45).hasItem());
             if (!clientOptionsInstance().getAccessibilityOptions().preventEFromTyping || event.key() != key(Minecraft.getInstance().options.keyInventory).getValue()) {
                 if (clientOptionsInstance().getSearchingOptions().quickSearch.enabled() && !ignoreTyping && !swapKeyValid && !dropKeyPressed && !getRecipeBookComponent(recipeScreen).isVisible() &&
@@ -268,7 +268,7 @@ public class KeyPressInstance extends ManagementInstance {
         }
         // Inventory search field logic
         if (clientOptionsInstance().getSearchingOptions().inventorySearching && instance().getSearchFields().inventory() != null) {
-            if (!Minecraft.getInstance().hasControlDown() && !hasAnyManagementModifierDown() && instance().getScreen() instanceof AbstractRecipeBookScreen<?> recipeScreen && getRecipeBookComponent(recipeScreen).isVisible() && !instance().getSearchFields().inventory().isFocused()) {
+            if (!Minecraft.getInstance().hasControlDown() && instance().getScreen() instanceof AbstractRecipeBookScreen<?> recipeScreen && getRecipeBookComponent(recipeScreen).isVisible() && !instance().getSearchFields().inventory().isFocused()) {
                 getSearchBoxInsideRecipeBook(recipeScreen).setFocused(!cannotType);
             } else if ((clientOptionsInstance().getSearchingOptions().quickSearch.enabled() || clientOptionsInstance().getSearchingOptions().quickSearch.searchBar()) && !secondaryIgnoreTyping && (!Minecraft.getInstance().hasControlDown() || (Minecraft.getInstance().hasControlDown() && event.key() == GLFW.GLFW_KEY_A))) {
                 instance().getSearchFields().inventory().setFocused(true);
