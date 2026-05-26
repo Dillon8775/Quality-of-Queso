@@ -1,4 +1,4 @@
-# Quality of Queso Version 1.7.4
+# Quality of Queso Version 1.7.4 (MC 26.1.2 and 1.21.11 *only*)
 
 ## Quality of Queso now requires [YetAnotherConfigLib](https://modrinth.com/mod/yacl). This is the configuration system that I have decided to be use from this point forward.
 - It's `simple`, `effective`, and `easy to understand`.

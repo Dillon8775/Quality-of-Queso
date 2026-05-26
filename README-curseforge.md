@@ -271,14 +271,9 @@ Toggle sprinting, potion effects, flying, bow pulling, and submerged in fluid to
 
 ---
 
-# [Requires Balm!](https://modrinth.com/mod/balm/versions)
-### [Requires Fabric API](https://modrinth.com/mod/fabric-api)
+# Requires [Balm](https://modrinth.com/mod/balm/versions) and [YetAnotherConfigLib](https://modrinth.com/mod/yacl/versions)!
 
 ---
-
-# No Config API required.
-- Every feature in this mod is toggleable and fully configurable in the [Quality of Queso main menu.](https://quality-of-queso.fandom.com/wiki/Quality_of_Queso_Main_Menu)
-- [Mod Menu](https://modrinth.com/mod/modmenu) and [NeoForged](https://docs.neoforged.net/docs/misc/config/) config integration is supported.
 
 ## This mod is *mostly client-side.* The only features that are server-dependent are:
 - [Item Frame Searching](https://quality-of-queso.fandom.com/wiki/Item_Frame_Searching)
