@@ -2,7 +2,6 @@ package net.dillon.qualityofqueso.platform;
 
 import net.blay09.mods.balm.Balm;
 import net.dillon.qualityofqueso.util.MixinPluginUtil;
-import net.dillon.qualityofqueso.util.VersionType;
 import net.minecraft.client.player.LocalPlayer;
 
 import java.nio.file.Path;
@@ -13,7 +12,7 @@ public interface PlatformHelper {
      * @return the mod version.
      */
     default String getModVersion() {
-        return "1.7.4";
+        return "1.7.5";
     }
 
     /**
@@ -21,6 +20,13 @@ public interface PlatformHelper {
      */
     default VersionType getVersionType() {
         return VersionType.PATCH;
+    }
+
+    /**
+     * @return the release type.
+     */
+    default ReleaseType getReleaseType() {
+        return ReleaseType.STABLE;
     }
 
     /**

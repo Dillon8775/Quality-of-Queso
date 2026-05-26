@@ -201,7 +201,7 @@ public class QuesoButton extends Button {
     protected final void renderButtonTexture(String id, AbstractWidget buttonReference, GuiGraphics graphics) {
         int xy = getTransferButtonXY(this);
         this.renderBaseTexture(graphics);
-        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ofQoQ("button/" + id + this.getAppendedTexture()), buttonReference.getX() - 1, buttonReference.getY() - 1, xy, xy);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, ofQoQ("textures/gui/sprites/button/" + id + this.getAppendedTexture()), buttonReference.getX() - 1, buttonReference.getY() - 1, 0.0F, 0.0F, xy, xy, xy, xy);
         this.renderHoveredTexture(graphics);
     }
 
@@ -220,11 +220,11 @@ public class QuesoButton extends Button {
      */
     protected final String getAppendedTexture() {
         String transferableString = !this.menu.getCarried().isEmpty() ?
-                "_cursor_stack" : this.searchFieldText.startsWith("!") ?
-                                      "_excluding" : this.searchFieldText.startsWith("#") ?
-                                                         "_tag" : this.searchFieldText.startsWith(":") ?
-                                                                      "_matching" : "";
-        String appended = this.transferrableButton && this.canBeActive.get() ? transferableString : "";
+                "_cursor_stack.png" : this.searchFieldText.startsWith("!") ?
+                                      "_excluding.png" : this.searchFieldText.startsWith("#") ?
+                                                         "_tag.png" : this.searchFieldText.startsWith(":") ?
+                                                                      "_matching.png" : ".png";
+        String appended = this.transferrableButton && this.canBeActive.get() ? transferableString : ".png";
         Screen screen = Minecraft.getInstance().screen;
 
         if (screen == null) {
@@ -232,7 +232,7 @@ public class QuesoButton extends Button {
         }
 
         if (isBrewingOrFurnaceScreen(screen)) {
-            appended = "";
+            appended = ".png";
         }
         return appended;
     }

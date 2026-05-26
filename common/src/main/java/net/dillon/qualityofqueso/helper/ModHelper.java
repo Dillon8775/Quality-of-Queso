@@ -83,7 +83,6 @@ public class ModHelper {
     /**
      * Sends a {@code warning} message to console.
      */
-    @Deprecated
     public static void warn(String message) {
         LOGGER.warn(message);
     }

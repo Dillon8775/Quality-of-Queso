@@ -79,9 +79,9 @@
   "qualityofqueso.options.search_bar_color": "Search Bar Color",
   "qualityofqueso.options.search_bar_color.description": "Determines the color of the search bar.",
   "qualityofqueso.options.search_bar_text_color": "Search Bar Text Color",
-  "qualityofqueso.options.search_bar_text_color.description": "Set the color of the search bar's §otext.§r§f\n\n§7This only applies if the search bar's color is set to \"Default\", or if the Widget Theme is set to \"Transparent\".",
+  "qualityofqueso.options.search_bar_text_color.description": "Set the color of the search bar's §otext.§r§f\n\n§7This only applies if the search bar's color is set to \"Default\", or if the Widget Theme is set to \"Transparent\".\n\n§cFeature not available in Minecraft 1.21.1 or below.",
   "qualityofqueso.options.underline_text": "Underline Text",
-  "qualityofqueso.options.underline_text.description": "Underlines the search bar's §otext.§r§f\n\n§7You can only enable or change this if the search bar is set to \"Default\", or if the Widget Theme is set to \"Transparent\".",
+  "qualityofqueso.options.underline_text.description": "Underlines the search bar's §otext.§r§f\n\n§7You can only enable or change this if the search bar is set to \"Default\", or if the Widget Theme is set to \"Transparent\".\n\n§cFeature not available in Minecraft 1.21.1 or below.",
   "qualityofqueso.options.item_frame_searching": "Item Frame Searching",
   "qualityofqueso.options.item_frame_searching.description": "Search for an item frame with a specific item inside of it and make it glow.\n\nKeybind to open GUI screen = %s\n§7§o(or use /itemframesearcher command)§r§f\n\n§cNote: this option is server-side, meaning if you are playing on a server that doesn't have Quality of Queso installed, this will do nothing. Singleplayer will work just fine.",
   "qualityofqueso.options.item_frame_search_radius": "Radius",
@@ -160,9 +160,9 @@
   "qualityofqueso.options.global_sorting_mode": "Global Sorting Mode",
   "qualityofqueso.options.global_sorting_mode.description": "The sorting mode to use for §oall §r§fcontainers.§r§f\n\n§7Containers will no longer have their own unique sorting mode, instead, all containers will use one global sorting mode, that you can determine here.",
   "qualityofqueso.options.management.button_order.horizontal": "Horizontal Button Order",
-  "qualityofqueso.options.management.button_order.horiztonal.description": "Configure the order that management buttons are displayed with the §ahorizontal layout.\n\nThis option is not available if the \"Layout\" option is set to \"Vertical\".",
+  "qualityofqueso.options.management.button_order.horiztonal.description": "Configure the order that management buttons are displayed with the §ahorizontal layout.§r§f\n\n§cThis option is not available if the \"Layout\" option is set to \"Vertical\".",
   "qualityofqueso.options.management.button_order.vertical": "Vertical Button Order",
-  "qualityofqueso.options.management.button_order.vertical.description": "Configure the order that management buttons are displayed with the §6vertical layout.\n\nThis option is not available if the \"Layout\" option is set to \"Horizontal\".",
+  "qualityofqueso.options.management.button_order.vertical.description": "Configure the order that management buttons are displayed with the §6vertical layout.§r§f\n\n§cThis option is not available if the \"Layout\" option is set to \"Horizontal\".",
 
   "qualityofqueso.options.title.hud": "HUD",
   "qualityofqueso.options.hud.tooltip": "Configure HUD features, like armor status, colored highlighting, and animations.",
@@ -241,7 +241,7 @@
   "qualityofqueso.options.overworld_fog": "Overworld Fog",
   "qualityofqueso.options.overworld_fog.description": "Toggles overworld fog.",
   "qualityofqueso.options.overworld_fog_intensity": "Overworld Fog Intensity",
-  "qualityofqueso.options.overworld_fog_intensity.description": "Determines the overworld fog intensity.",
+  "qualityofqueso.options.overworld_fog_intensity.description": "Determines the overworld fog intensity.\n\n§cFeature not available in Minecraft 1.21.1 or below.",
   "qualityofqueso.options.nether_fog": "Nether Fog",
   "qualityofqueso.options.nether_fog.description": "Toggles nether fog.",
   "qualityofqueso.options.nether_fog_intensity": "Nether Fog Intensity",
@@ -527,6 +527,9 @@
   "qualityofqueso.unloaded_server_config": "Quality of Queso config for this server has been unloaded, now using the global config.",
 
   "qualityofqueso.gui.disconnect": "Control that anger of yours!\n\nManny struggles with this...",
+
+  "qualityofqueso.toast.title.beta_or_alpha": "Mod Warning",
+  "qualityofqueso.toast.beta_or_alpha": "Please be aware that the current Quality of Queso version you are using is in a beta state, so be aware of bugs!",
 
   "qualityofqueso.fortnite_battle_pass": "Fortnite battle pass..."
 }
