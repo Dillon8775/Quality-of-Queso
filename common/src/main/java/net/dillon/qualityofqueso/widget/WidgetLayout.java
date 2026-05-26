@@ -281,7 +281,7 @@ public class WidgetLayout extends AbstractWidget {
         int panelY = this.getPanelY(player);
         float xScale = this.getPanelWidth() / (float) LAYOUT_BASE_WIDTH;
         int panelHeight = this.getPanelHeight();
-        var layoutTexture = ofQoQ("textures/gui/sprites/button/base/" + getWidgetPath(false) + "layout.png");
+        var layoutTexture = ofQoQ("textures/gui/sprites/button/base/" + getWidgetPath(true) + "layout.png");
 
         if (this.getLayoutNumber() == 1) {
             int panelWidth = this.getPanelWidth();

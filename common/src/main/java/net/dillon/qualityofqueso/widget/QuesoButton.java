@@ -13,6 +13,7 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 
@@ -191,7 +192,8 @@ public class QuesoButton extends Button {
             return;
         }
 
-        drawButtonTexture(graphics, BASE_BUTTON_HOVERED_PATH, this);
+        int xy = getTransferButtonXY(this);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, ofQoQ("textures/gui/sprites/button/" + BASE_BUTTON_HOVERED_PATH + ".png"), this.getX() - 1, this.getY() - 1, 0.0F, 0.0F, xy, xy, xy, xy);
     }
 
     /**
