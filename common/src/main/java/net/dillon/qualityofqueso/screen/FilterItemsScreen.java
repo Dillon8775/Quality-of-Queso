@@ -2,7 +2,6 @@ package net.dillon.qualityofqueso.screen;
 
 import net.dillon.qualityofqueso.helper.ContainerHelper;
 import net.dillon.qualityofqueso.util.ModConstants;
-import net.dillon.qualityofqueso.util.ModTexts;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -353,7 +352,7 @@ public class FilterItemsScreen extends Screen {
                     ? sourceStartY + row * SLOT_SIZE
                     : hotbarY;
             if (this.selectedSourceSlot == i) {
-                graphics.fill(x - 1, y - 1, x + 17, y + 17, ModTexts.PLACEHOLDER);
+                graphics.fill(x - 1, y - 1, x + 17, y + 17, 0x66A0A0FF);
             }
 
             ItemStack stack = this.sourceStackAt(i);

@@ -2,7 +2,6 @@ package net.dillon.qualityofqueso.platform;
 
 import net.blay09.mods.balm.api.Balm;
 import net.dillon.qualityofqueso.util.MixinPluginUtil;
-import net.dillon.qualityofqueso.util.VersionType;
 import net.minecraft.client.player.LocalPlayer;
 
 import java.nio.file.Path;
@@ -13,7 +12,7 @@ public interface PlatformHelper {
      * @return the mod version.
      */
     default String getModVersion() {
-        return "1.7.3";
+        return "1.7.5";
     }
 
     /**
@@ -24,6 +23,13 @@ public interface PlatformHelper {
     }
 
     /**
+     * @return the release type.
+     */
+    default ReleaseType getReleaseType() {
+        return ReleaseType.BETA;
+    }
+
+    /**
      * @return if the platform is on NeoForged.
      */
     default boolean isNeoForged() {
@@ -31,10 +37,10 @@ public interface PlatformHelper {
     }
 
     /**
-     * @return if the platform is on Forge.
+     * @return if {@code YACL} is loaded.
      */
-    default boolean isForge() {
-        return Balm.getPlatform().equals("forge");
+    default boolean isYaclLoaded() {
+        return isModLoaded("yet_another_config_lib_v3");
     }
 
     /**

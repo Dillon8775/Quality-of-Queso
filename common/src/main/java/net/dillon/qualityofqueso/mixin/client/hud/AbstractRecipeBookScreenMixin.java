@@ -1,7 +1,7 @@
 package net.dillon.qualityofqueso.mixin.client.hud;
 
 import net.dillon.qualityofqueso.instance.QuesoScreen;
-import net.dillon.qualityofqueso.widget.layout.WidgetLayout;
+import net.dillon.qualityofqueso.widget.WidgetLayout;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import org.spongepowered.asm.mixin.Mixin;

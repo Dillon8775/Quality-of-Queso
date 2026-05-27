@@ -32,7 +32,7 @@ public class DebugHudHelper {
         LocalPlayer localPlayer = minecraft.player;
         Entity entity = minecraft.getCameraEntity();
 
-        if (options().debugHuds.inGameTime && level != null) {
+        if (clientOptionsInstance().getDebugHuds().showInGameTime && level != null) {
             long time = level.getGameTime() % 24000;
             time = (time + 6000) % 24000;
 
@@ -71,24 +71,24 @@ public class DebugHudHelper {
             list.add(description + " (" + formatted + ", in-game)");
         }
 
-        if (options().debugHuds.realLifeTime) {
+        if (clientOptionsInstance().getDebugHuds().showRealLifeTime) {
             LocalTime time = LocalTime.now();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm a");
             list.add(time.format(formatter));
         }
 
-        if (options().debugHuds.date) {
+        if (clientOptionsInstance().getDebugHuds().showDate) {
             LocalDate date = LocalDate.now();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE, MMMM d, yyyy");
             list.add(date.format(formatter));
         }
 
-        if (options().debugHuds.simpleCoordinates && level != null && localPlayer != null) {
+        if (clientOptionsInstance().getDebugHuds().simpleCoordinates && level != null && localPlayer != null) {
             String cords = String.format("XYZ: %s / %s / %s", round(localPlayer.getX()), round(localPlayer.getY()), round(localPlayer.getZ()));
             list.add(cords);
         }
 
-        if (options().debugHuds.accurateFacing && entity != null) {
+        if (clientOptionsInstance().getDebugHuds().accurateFacing && entity != null) {
             int northA = -110;
             int northB = -160;
             int southA = -70;
@@ -121,7 +121,7 @@ public class DebugHudHelper {
             list.add("Facing: " + facing);
         }
 
-        if (options().debugHuds.fastestFlight && entity instanceof LocalPlayer player && player.getItemBySlot(EquipmentSlot.CHEST).is(Items.ELYTRA)) {
+        if (clientOptionsInstance().getDebugHuds().fastestFlight && entity instanceof LocalPlayer player && player.getItemBySlot(EquipmentSlot.CHEST).is(Items.ELYTRA)) {
             list.add(String.valueOf(round(Mth.wrapDegrees(entity.getXRot()))));
         }
     }

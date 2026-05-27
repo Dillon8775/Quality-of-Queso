@@ -8,8 +8,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
 import static net.dillon.qualityofqueso.helper.MethodHelper.getRecipeBookComponent;
 import static net.dillon.qualityofqueso.helper.MethodHelper.getSearchBoxInsideRecipeBook;
-import static net.dillon.qualityofqueso.helper.ModHelper.options;
-import static net.dillon.qualityofqueso.keybind.ModKeybinds.*;
+import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
+import static net.dillon.qualityofqueso.helper.ModKeybindHelper.*;
 import static net.dillon.qualityofqueso.util.ModConstants.MOVE_AMOUNT;
 
 /**
@@ -25,7 +25,7 @@ public class MouseClickInstance extends ManagementInstance {
      * Attempts to lock or select a slot when clicking.
      */
     public void trySelectingOrLockingSlot(int bl, CallbackInfoReturnable<Boolean> cir) {
-        if (isExcludingOrLockingSlots() && hasClickedToLock(bl)) {
+        if (isExcludingOrLockingSlots() && hasAttemptedToLockSelectOrDeselect(bl)) {
             lockedSlotsInstance().selectOrLockSlot(bl, cir);
         }
     }
@@ -71,12 +71,12 @@ public class MouseClickInstance extends ManagementInstance {
     public void moveOnlyOne(double mouseX, double mouseY, int bl, CallbackInfoReturnable<Boolean> cir) {
         boolean quickDropping = buttonHoveredAndActive(instance().getManagementButtons().quickDrop(), mouseX, mouseY);
 
-        if (!options().management.scrollMoving) {
+        if (!clientOptionsInstance().getManagementOptions().scrollMoving) {
             return;
         }
 
         boolean dropOnlyOne = hasDropOnlyOneItemKeyDown();
-        boolean hasSingleModifierDown = hasMoveSingleModifierDown();
+        boolean hasSingleModifierDown = canScrollMoveAndHasScrollModifierDown();
         boolean hasKeyDown = quickDropping ? dropOnlyOne : hasSingleModifierDown;
 
         if ((hasSingleModifierDown || dropOnlyOne) && bl == GLFW.GLFW_MOUSE_BUTTON_RIGHT && hoveredSlotHasItem(instance().getScreensHoveredSlot())) {

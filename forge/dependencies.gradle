@@ -2,12 +2,11 @@ dependencies {
     implementation(fg.deobf(libs.balmCommon)) {
         changing = libs.versions.balm.get().contains("SNAPSHOT")
     }
-    implementation(fg.deobf(libs.balmForge)) {
-        changing = libs.versions.balm.get().contains("SNAPSHOT")
-    }
+implementation(fg.deobf(libs.balmForge)) {
+    changing = libs.versions.balm.get().contains("SNAPSHOT")
+    exclude group: "net.blay09.mods", module: "shared-bridge"
+}
     implementation(fg.deobf(libs.kumaForge))
 
-    // You can add other dependencies here as well.
-    // Note that CurseMaven and Modrinth Maven, while convenient, does not include transitive dependencies.
-    // If you are getting errors about missing classes in dependencies, try using their respective Maven repositories directly instead.
+    implementation "dev.isxander:yet-another-config-lib:${project.yacl_version}+${project.yalc_mc}-forge"
 }

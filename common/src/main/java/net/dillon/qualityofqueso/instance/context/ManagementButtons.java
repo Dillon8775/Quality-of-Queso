@@ -1,6 +1,6 @@
 package net.dillon.qualityofqueso.instance.context;
 
-import net.dillon.qualityofqueso.widget.TransferButton;
+import net.dillon.qualityofqueso.widget.QuesoButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,129 +9,129 @@ import java.util.List;
  * Holds all management buttons.
  */
 public class ManagementButtons {
-    private TransferButton transferContainer;
-    private TransferButton transferInventory;
-    private TransferButton includeHotbar;
-    private TransferButton filtering;
-    private TransferButton quickDrop;
-    private TransferButton swap;
-    private TransferButton sort;
-    private TransferButton searchTransportables;
-    private TransferButton alwaysQuickMove;
-    private TransferButton clearExcludedSlots;
-    private TransferButton tradeAll;
-    private TransferButton bulkCraft;
-    private TransferButton lockInventory;
+    private QuesoButton transferContainer;
+    private QuesoButton transferInventory;
+    private QuesoButton includeHotbar;
+    private QuesoButton filtering;
+    private QuesoButton quickDrop;
+    private QuesoButton swap;
+    private QuesoButton sort;
+    private QuesoButton searchTransportables;
+    private QuesoButton alwaysQuickMove;
+    private QuesoButton clearExcludedSlots;
+    private QuesoButton tradeAll;
+    private QuesoButton bulkCraft;
+    private QuesoButton lockInventory;
 
-    public TransferButton transferContainer() {
+    public QuesoButton transferContainer() {
         return this.transferContainer;
     }
 
-    public void initTransferContainer(TransferButton button) {
+    public void initTransferContainer(QuesoButton button) {
         this.transferContainer = button;
     }
 
-    public TransferButton transferInventory() {
+    public QuesoButton transferInventory() {
         return this.transferInventory;
     }
 
-    public void initTransferInventory(TransferButton button) {
+    public void initTransferInventory(QuesoButton button) {
         this.transferInventory = button;
     }
 
-    public TransferButton includeHotbar() {
+    public QuesoButton includeHotbar() {
         return this.includeHotbar;
     }
 
-    public void initIncludeHotbar(TransferButton button) {
+    public void initIncludeHotbar(QuesoButton button) {
         this.includeHotbar = button;
     }
 
-    public TransferButton filtering() {
+    public QuesoButton filtering() {
         return this.filtering;
     }
 
-    public void initFiltering(TransferButton button) {
+    public void initFiltering(QuesoButton button) {
         this.filtering = button;
     }
 
-    public TransferButton quickDrop() {
+    public QuesoButton quickDrop() {
         return this.quickDrop;
     }
 
-    public void initQuickDrop(TransferButton button) {
+    public void initQuickDrop(QuesoButton button) {
         this.quickDrop = button;
     }
 
-    public TransferButton swap() {
+    public QuesoButton swap() {
         return this.swap;
     }
 
-    public void initSwap(TransferButton button) {
+    public void initSwap(QuesoButton button) {
         this.swap = button;
     }
 
-    public TransferButton sort() {
+    public QuesoButton sort() {
         return this.sort;
     }
 
-    public void initSort(TransferButton button) {
+    public void initSort(QuesoButton button) {
         this.sort = button;
     }
 
-    public TransferButton searchTransportables() {
+    public QuesoButton searchTransportables() {
         return this.searchTransportables;
     }
 
-    public void initSearchTransportables(TransferButton button) {
+    public void initSearchTransportables(QuesoButton button) {
         this.searchTransportables = button;
     }
 
-    public TransferButton alwaysQuickMove() {
+    public QuesoButton alwaysQuickMove() {
         return this.alwaysQuickMove;
     }
 
-    public void initAlwaysQuickMove(TransferButton button) {
+    public void initAlwaysQuickMove(QuesoButton button) {
         this.alwaysQuickMove = button;
     }
 
-    public TransferButton clearExcludedSlots() {
+    public QuesoButton clearExcludedSlots() {
         return this.clearExcludedSlots;
     }
 
-    public void initClearExcludedSlots(TransferButton button) {
+    public void initClearExcludedSlots(QuesoButton button) {
         this.clearExcludedSlots = button;
     }
 
-    public TransferButton tradeAll() {
+    public QuesoButton tradeAll() {
         return this.tradeAll;
     }
 
-    public void initTradeAll(TransferButton button) {
+    public void initTradeAll(QuesoButton button) {
         this.tradeAll = button;
     }
 
-    public TransferButton bulkCraft() {
+    public QuesoButton bulkCraft() {
         return this.bulkCraft;
     }
 
-    public void initBulkCraft(TransferButton button) {
+    public void initBulkCraft(QuesoButton button) {
         this.bulkCraft = button;
     }
 
-    public TransferButton lockInventory() {
+    public QuesoButton lockInventory() {
         return this.lockInventory;
     }
 
-    public void initLockInventory(TransferButton button) {
+    public void initLockInventory(QuesoButton button) {
         this.lockInventory = button;
     }
 
     /**
      * @return this.all non-null management buttons.
      */
-    public List<TransferButton> all() {
-        List<TransferButton> buttons = new ArrayList<>();
+    public List<QuesoButton> all() {
+        List<QuesoButton> buttons = new ArrayList<>();
 
         if (this.transferContainer != null) {
             buttons.add(this.transferContainer);

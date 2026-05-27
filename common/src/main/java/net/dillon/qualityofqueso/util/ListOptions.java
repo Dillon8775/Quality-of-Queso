@@ -1,0 +1,113 @@
+package net.dillon.qualityofqueso.util;
+
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.OptionInstance;
+import net.minecraft.client.Options;
+import net.minecraft.network.chat.Component;
+
+import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
+import static net.dillon.qualityofqueso.util.ModOptionUtil.*;
+
+/**
+ * Options displayed in different Quality of Queso menus.
+ */
+public class ListOptions {
+
+    public static OptionInstance<Boolean> overrideClientTime() {
+        return createClientBooleanOption("override_client_time", true, clientOptionsInstance().getVisualTimeOptions().overrideClientTime,
+                (options, value) -> options.getVisualTimeOptions().overrideClientTime = value
+        );
+    }
+
+    public static OptionInstance<Integer> visualTime() {
+        return new OptionInstance<>("qualityofqueso.options.visual_time",
+                OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.visual_time.tooltip")),
+                (optionText, value) -> Options.genericValueLabel(optionText, Component.literal(formatMinecraftTime(value * 5))),
+                new OptionInstance.IntRange(0, 287), clientOptionsInstance().getVisualTimeOptions().visualTime, value -> clientOptionsInstance().getVisualTimeOptions().visualTime = value);
+    }
+
+    public static OptionInstance<Integer> visualTimeSpeed() {
+        return createIntegerOption(
+                "visual_time_speed",
+                (optionText, value) -> {
+                    if (value == 0) {
+                        return Options.genericValueLabel(optionText, Component.literal("Freeze"));
+                    } else {
+                        return Options.genericValueLabel(optionText, Component.literal(value + "%"));
+                    }
+                },
+                0,
+                100,
+                clientOptionsInstance().getVisualTimeOptions().visualTimeSpeed,
+                (options, value) -> options.getVisualTimeOptions().visualTimeSpeed = value
+        );
+    }
+
+    public static OptionInstance<Boolean> syncLocalTime() {
+        return createClientBooleanOption("sync_local_time", true, clientOptionsInstance().getVisualTimeOptions().syncLocalTime,
+                (options, value) -> options.getVisualTimeOptions().syncLocalTime = value
+        );
+    }
+
+    public static OptionInstance<Integer> itemFrameSearchGlowDuration() {
+        return createIntegerOption(
+                "item_frame_search_glow_duration",
+                (optionText, value) -> {
+                    if (value == 0) {
+                        return Options.genericValueLabel(optionText, Component.literal("Indefinite").withStyle(ChatFormatting.RED));
+                    } else if (value < 60) {
+                        return Options.genericValueLabel(optionText, Component.literal(value + "s"));
+                    } else {
+                        int minutes = value / 60;
+                        int seconds = value % 60;
+                        if (seconds == 0) {
+                            return Options.genericValueLabel(optionText, Component.literal(minutes + "m"));
+                        } else {
+                            return Options.genericValueLabel(optionText, Component.literal(minutes + "m " + seconds + "s"));
+                        }
+                    }
+                },
+                0,
+                180,
+                clientOptionsInstance().getMiscOptions().itemFrameSearchGlowDuration,
+                (options, value) -> options.getMiscOptions().itemFrameSearchGlowDuration = value
+        );
+    }
+
+    public static OptionInstance<Integer> itemFrameSearchRadius() {
+        return new OptionInstance<>("qualityofqueso.options.item_frame_search_radius",
+                OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.item_frame_search_radius.tooltip")),
+                (optionText, value) -> Options.genericValueLabel(optionText, Component.literal(value + " blocks")),
+                new OptionInstance.IntRange(10, 256).xmap(value -> value * 2, value -> value / 2), clientOptionsInstance().getMiscOptions().itemFrameSearchRadius, value -> clientOptionsInstance().getMiscOptions().itemFrameSearchRadius = value);
+    }
+
+    public static OptionInstance<Boolean> inGameTime() {
+        return createClientBooleanOption("in_game_time", true, clientOptionsInstance().getDebugHuds().showInGameTime,
+                (options, value) -> options.getDebugHuds().showInGameTime = value);
+    }
+
+    public static OptionInstance<Boolean> realLifeTime() {
+        return createClientBooleanOption("real_life_time", true, clientOptionsInstance().getDebugHuds().showRealLifeTime,
+                (options, value) -> options.getDebugHuds().showRealLifeTime = value);
+    }
+
+    public static OptionInstance<Boolean> date() {
+        return createClientBooleanOption("date", true, clientOptionsInstance().getDebugHuds().showDate,
+                (options, value) -> options.getDebugHuds().showDate = value);
+    }
+
+    public static OptionInstance<Boolean> simpleCoordinates() {
+        return createClientBooleanOption("simple_coordinates", true, clientOptionsInstance().getDebugHuds().simpleCoordinates,
+                (options, value) -> options.getDebugHuds().simpleCoordinates = value);
+    }
+
+    public static OptionInstance<Boolean> accurateFacing() {
+        return createClientBooleanOption("accurate_facing", true, clientOptionsInstance().getDebugHuds().accurateFacing,
+                (options, value) -> options.getDebugHuds().accurateFacing = value);
+    }
+
+    public static OptionInstance<Boolean> fastestFlight() {
+        return createClientBooleanOption("fastest_flight", true, clientOptionsInstance().getDebugHuds().fastestFlight,
+                (options, value) -> options.getDebugHuds().fastestFlight = value);
+    }
+}

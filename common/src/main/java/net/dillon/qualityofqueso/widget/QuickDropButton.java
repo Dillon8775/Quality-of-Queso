@@ -1,6 +1,7 @@
 package net.dillon.qualityofqueso.widget;
 
 import net.dillon.qualityofqueso.helper.ButtonHelper;
+import net.dillon.qualityofqueso.helper.ModKeybindHelper;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -12,14 +13,13 @@ import java.util.function.Supplier;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.isInventoryScreen;
 import static net.dillon.qualityofqueso.helper.MethodHelper.getHoveredSlot;
 import static net.dillon.qualityofqueso.helper.ModHelper.*;
-import static net.dillon.qualityofqueso.keybind.ModKeybinds.hasDropOnlyOneItemKeyDown;
-import static net.dillon.qualityofqueso.keybind.ModKeybinds.hasQuickDropKeysDown;
+import static net.dillon.qualityofqueso.helper.ModKeybindHelper.hasDropOnlyOneItemKeyDown;
 import static net.dillon.qualityofqueso.util.ModConstants.MOVE_ONE_PATH;
 
 /**
  * Representation of the quick drop button.
  */
-public class QuickDropButton extends TransferButton {
+public class QuickDropButton extends QuesoButton {
 
     public QuickDropButton(AbstractContainerMenu screenHandler, Font font, String searchFieldText, String resourceLocation, String buttonName, OnPress onPress, Supplier<Boolean> canBeActive) {
         super(screenHandler, font, searchFieldText, resourceLocation, buttonName, true, onPress, canBeActive);
@@ -43,9 +43,9 @@ public class QuickDropButton extends TransferButton {
             transferableString = ".png";
         }
         this.renderBaseTexture(graphics);
-        graphics.blit(ofQoQ("textures/gui/button/" + id + transferableString), buttonReference.getX() - 1, buttonReference.getY() - 1, 0.0F, 0.0F, 12, 12, 12, 12);
+        graphics.blit(ofQoQ("textures/gui/sprites/button/" + id + transferableString), buttonReference.getX() - 1, buttonReference.getY() - 1, 0.0F, 0.0F, 12, 12, 12, 12);
         this.renderHoveredTexture(graphics, mouseX, mouseY);
-        boolean shortcutKeyPressed = hasQuickDropKeysDown();
+        boolean shortcutKeyPressed = ModKeybindHelper.hasAllQuickDropModifiersDown();
         if (shortcutKeyPressed) {
             String outline = "quick_drop_all";
             if (getCurrentScreen() instanceof AbstractContainerScreen<?> screen && getHoveredSlot(screen) != null && getHoveredSlot(screen).hasItem()) {
@@ -54,7 +54,7 @@ public class QuickDropButton extends TransferButton {
             ButtonHelper.drawButtonTexture(graphics, "quick_drop/" + outline, this);
         }
         if (hasDropOnlyOneItemKeyDown()
-                && ((options().management.scrollMoving && ((this.isMouseOver(mouseX, mouseY)) || getCurrentScreen() instanceof AbstractContainerScreen<?> screen && getHoveredSlot(screen) != null && getHoveredSlot(screen).hasItem())) || shortcutKeyPressed)) {
+                && ((clientOptionsInstance().getManagementOptions().scrollMoving && ((this.isMouseOver(mouseX, mouseY)) || getCurrentScreen() instanceof AbstractContainerScreen<?> screen && getHoveredSlot(screen) != null && getHoveredSlot(screen).hasItem())) || shortcutKeyPressed)) {
             ButtonHelper.drawButtonTexture(graphics, MOVE_ONE_PATH, this);
         }
     }

@@ -1,10 +1,25 @@
 dependencies {
+    minecraft libs.minecraft
+    mappings loom.layered() {
+        officialMojangMappings()
+        parchment variantOf(libs.parchment) {
+            artifactType('zip')
+        }
+    }
+    modCompileOnly libs.fabricLoader
+    compileOnly libs.mixin
+
+    compileOnly group: 'org.spongepowered', name: 'mixin', version: '0.8.5'
+    // fabric and neoforge both bundle mixinextras, so it is safe to use it in common
+    compileOnly group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.3.5'
+    annotationProcessor group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.3.5'
+
     implementation(libs.balmCommon) {
         changing = libs.versions.balm.get().endsWith("SNAPSHOT")
     }
     implementation(libs.kumaCommon)
 
-    // You can add other dependencies here as well.
-    // Note that CurseMaven and Modrinth Maven, while convenient, does not include transitive dependencies.
-    // If you are getting errors about missing classes in dependencies, try using their respective Maven repositories directly instead.
+    compileOnly ("dev.isxander:yet-another-config-lib:${project.yacl_version}+${project.yalc_mc}-forge") {
+        transitive = false
+    }
 }

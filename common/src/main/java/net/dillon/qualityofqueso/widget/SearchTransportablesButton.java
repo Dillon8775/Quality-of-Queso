@@ -1,5 +1,6 @@
 package net.dillon.qualityofqueso.widget;
 
+import net.dillon.qualityofqueso.util.ModConstants;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
@@ -7,7 +8,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 
-import static net.dillon.qualityofqueso.helper.ModHelper.options;
+import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
 
 /**
  * A button for toggling searching transportables.
@@ -20,12 +21,12 @@ public class SearchTransportablesButton extends ToggleableButton {
 
     @Override
     public void playDownSound(SoundManager manager) {
-        if (!options().management.playSounds) {
+        if (!clientOptionsInstance().getManagementOptions().playSounds) {
             return;
         }
 
         manager.play(SimpleSoundInstance.forUI(
-                options().searching.searchTransportables ? SoundEvents.SHULKER_BOX_CLOSE : SoundEvents.SHULKER_BOX_OPEN,
+                ModConstants.SEARCHING_TRANSPORTABLES ? SoundEvents.SHULKER_BOX_CLOSE : SoundEvents.SHULKER_BOX_OPEN,
                 1.0F
         ));
     }
@@ -42,7 +43,7 @@ public class SearchTransportablesButton extends ToggleableButton {
 
     @Override
     protected boolean option() {
-        return options().searching.searchTransportables;
+        return ModConstants.SEARCHING_TRANSPORTABLES;
     }
 
     @Override

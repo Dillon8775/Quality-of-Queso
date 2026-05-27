@@ -101,8 +101,9 @@ tasks.register('curseforge', TaskPublishCurseForge) {
         mainFile.displayName = "[${mc_version.substring(2)}] $mod_name ${mod_version}"
         mainFile.changelog = rootProject.file("${changelog_file}").text
         mainFile.addRequirement("balm")
+        mainFile.addRequirement("yacl")
         mainFile.addGameVersion(libs.minecraft.get().version)
-        mainFile.releaseType = "release"
+        mainFile.releaseType = "beta"
         project.findProperty("curseforge_environments")?.split(",")?.toList()?.each { mainFile.addEnvironment(it) }
     }
 }
@@ -123,7 +124,9 @@ modrinth {
     loaders = ['forge']
     dependencies {
         required.project "balm"
+        required.project "yacl"
     }
+    versionType = "beta"
 }
 
 sourceSets.each {

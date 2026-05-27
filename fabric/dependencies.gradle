@@ -1,14 +1,20 @@
 dependencies {
-    modImplementation(libs.balmCommon) {
-        changing = libs.versions.balm.get().contains("SNAPSHOT")
+    minecraft libs.minecraft
+    mappings loom.layered() {
+        officialMojangMappings()
+        parchment variantOf(libs.parchment) {
+            artifactType('zip')
+        }
     }
+    modImplementation libs.fabricLoader
+    modImplementation libs.fabricApi
+    modImplementation "com.terraformersmc:modmenu:${modmenu_version}"
+
     modImplementation(libs.balmFabric) {
         changing = libs.versions.balm.get().contains("SNAPSHOT")
         exclude group: "net.blay09.mods", module: "shared-bridge"
     }
     modImplementation(libs.kumaFabric)
 
-    // You can add other dependencies here as well.
-    // Note that CurseMaven and Modrinth Maven, while convenient, does not include transitive dependencies.
-    // If you are getting errors about missing classes in dependencies, try using their respective Maven repositories directly instead.
+    modImplementation "dev.isxander:yet-another-config-lib:${project.yacl_version}+${project.yalc_mc}-fabric"
 }

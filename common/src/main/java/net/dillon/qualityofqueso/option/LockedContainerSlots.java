@@ -11,6 +11,7 @@ import java.util.Map;
  */
 public class LockedContainerSlots {
     public static final ModOptionsHandler INSTANCE = new ModOptionsHandler();
+    public Map<String, List<Integer>> lockedContainerSlots = new HashMap<>();
 
     public static class ModOptionsHandler extends BaseOptions<LockedContainerSlots> {
 
@@ -29,6 +30,4 @@ public class LockedContainerSlots {
             return LockedContainerSlots.class;
         }
     }
-
-    public Map<String, List<Integer>> lockedContainerSlots = new HashMap<>();
 }

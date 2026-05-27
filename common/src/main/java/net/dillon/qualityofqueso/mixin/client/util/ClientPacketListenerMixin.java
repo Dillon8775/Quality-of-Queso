@@ -21,8 +21,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
 import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
-import static net.dillon.qualityofqueso.helper.ModHelper.options;
 
 @Mixin(ClientPacketListener.class)
 public class ClientPacketListenerMixin {
@@ -34,7 +34,7 @@ public class ClientPacketListenerMixin {
      */
     @Inject(method = "handleTakeItemEntity", at = @At("HEAD"))
     private void trackPickedUpItem(ClientboundTakeItemEntityPacket packet, CallbackInfo ci) {
-        if (!modEnabled(Minecraft.getInstance()) || !options().itemCounter.displayOnPickup) {
+        if (!modEnabled(Minecraft.getInstance()) || !clientOptionsInstance().getItemCounterOptions().displayOnPickup) {
             return;
         }
 
@@ -86,7 +86,7 @@ public class ClientPacketListenerMixin {
     @Inject(method = "handleDamageEvent", at = @At("HEAD"))
     private void playMobHitDing(ClientboundDamageEventPacket packet, CallbackInfo ci) {
         Minecraft minecraft = Minecraft.getInstance();
-        if (!modEnabled(minecraft) || !options().misc.mobHitDing || minecraft.player == null) {
+        if (!modEnabled(minecraft) || !clientOptionsInstance().getMiscOptions().mobHitDing || minecraft.player == null) {
             return;
         }
 
@@ -102,7 +102,7 @@ public class ClientPacketListenerMixin {
             return;
         }
 
-        double minDistance = options().misc.minMobHitDingDistance;
+        double minDistance = clientOptionsInstance().getMiscOptions().minMobHitDingDistance;
         if (minecraft.player.distanceToSqr(hitEntity) >= minDistance * minDistance) {
             // Evaluate kill state one tick later, after the client receives health/death updates.
             MobHitDingTracker.queueHit(hitEntity.getId(), this.level.getGameTime() + 1L, hitEntity instanceof Player);

@@ -1,21 +1,17 @@
 package net.dillon.qualityofqueso.option.eum.searching;
 
 import com.mojang.serialization.Codec;
-import net.dillon.qualityofqueso.option.eum.OptionEnum;
-import net.minecraft.network.chat.Component;
 import net.minecraft.util.StringRepresentable;
 
-public enum SearchBarPosition implements StringRepresentable, OptionEnum {
-    OVERLAY("overlay", "qualityofqueso.options.search_bar_position.overlay"),
-    TOP("top", "qualityofqueso.options.search_bar_position.top");
+public enum SearchBarPosition implements StringRepresentable {
+    OVERLAY("§6Overlay"),
+    TOP("§bTop");
 
     public static final Codec<SearchBarPosition> CODEC = StringRepresentable.fromEnum(SearchBarPosition::values);
     private final String name;
-    private final Component translationKey;
 
-    SearchBarPosition(final String name, final String translationKey) {
+    SearchBarPosition(final String name) {
         this.name = name;
-        this.translationKey = Component.translatable(translationKey);
     }
 
     public boolean top() {
@@ -25,10 +21,5 @@ public enum SearchBarPosition implements StringRepresentable, OptionEnum {
     @Override
     public String getSerializedName() {
         return this.name;
-    }
-
-    @Override
-    public Component getTranslationKey() {
-        return this.translationKey;
     }
 }

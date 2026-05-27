@@ -4,6 +4,7 @@ import net.dillon.qualityofqueso.option.ContainerData;
 import net.dillon.qualityofqueso.option.LockedContainerSlots;
 import net.dillon.qualityofqueso.option.LockedPlayerSlots;
 import net.dillon.qualityofqueso.option.ModClientOptions;
+import net.dillon.qualityofqueso.platform.MultiLoader;
 import net.dillon.qualityofqueso.util.ModConstants;
 
 import static net.dillon.qualityofqueso.helper.ModHelper.error;
@@ -18,6 +19,10 @@ public class ClientMain {
      * Initializes client-side features.
      */
     public static void cInitialize() {
+        if (!MultiLoader.getPlatform().isYaclLoaded()) {
+            throw new RuntimeException("YetAnotherConfigLib is required use Quality of Queso! Please install from Modrinth or CurseForge.");
+        }
+
         checkClientConfigs();
         loadClientConfigs();
     }

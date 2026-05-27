@@ -11,6 +11,28 @@ import java.util.List;
  */
 public class UniversalOptions {
     public static final ModOptionsHandler INSTANCE = new ModOptionsHandler();
+    private final Universal universal = new Universal();
+    private final Functions functions = new Functions();
+
+    public Universal getUniversal() {
+        return this.universal;
+    }
+
+    public Functions getFunctions() {
+        return this.functions;
+    }
+
+    public static class Universal {
+        public MenuButton menuButton = MenuButton.EVERYWHERE;
+        public boolean multiServerConfigs = false;
+        public List<String> blacklistedServers = new ArrayList<>();
+    }
+
+    public static class Functions {
+        public boolean applyFog = true;
+        public boolean applyFovEffects = true;
+        public boolean applyRedArmorTint = true;
+    }
 
     public static class ModOptionsHandler extends BaseOptions<UniversalOptions> {
 
@@ -28,20 +50,5 @@ public class UniversalOptions {
         protected Class<UniversalOptions> getConfigClass() {
             return UniversalOptions.class;
         }
-    }
-
-    public Main main = new Main();
-    public Functions functions = new Functions();
-
-    public static class Main {
-        public MenuButton menuButton = MenuButton.EVERYWHERE;
-        public boolean multiServerConfigs = false;
-        public List<String> blacklistedServers = new ArrayList<>();
-    }
-
-    public static class Functions {
-        public boolean applyFog = true;
-        public boolean applyFovEffects = true;
-        public boolean applyRedArmorTint = true;
     }
 }

@@ -8,7 +8,7 @@ import net.dillon.qualityofqueso.instance.management.ClickSlotInstance;
 import net.dillon.qualityofqueso.instance.management.ExtractingInstance;
 import net.dillon.qualityofqueso.instance.management.ManagementInstance;
 import net.dillon.qualityofqueso.mixin.client.accessor.AbstractContainerScreenAccessor;
-import net.dillon.qualityofqueso.widget.layout.WidgetLayout;
+import net.dillon.qualityofqueso.widget.WidgetLayout;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;

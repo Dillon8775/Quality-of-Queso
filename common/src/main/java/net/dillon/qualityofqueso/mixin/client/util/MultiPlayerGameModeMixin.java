@@ -30,8 +30,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import static net.dillon.qualityofqueso.helper.ContainerHelper.isValidBlockEntity;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.playButtonSound;
+import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
 import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
-import static net.dillon.qualityofqueso.helper.ModHelper.options;
 import static net.dillon.qualityofqueso.util.ModConstants.DEFAULT_TRACKED_CONTAINER_COOLDOWN;
 import static net.dillon.qualityofqueso.util.ModConstants.TRACKED_CONTAINER_COOLDOWN;
 
@@ -65,7 +65,7 @@ public class MultiPlayerGameModeMixin {
      */
     @Inject(method = "handleInventoryMouseClick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientPacketListener;send(Lnet/minecraft/network/protocol/Packet;)V"))
     private void onThrowFromGUI(int containerId, int slotIndex, int buttonNum, ClickType containerInput, Player player, CallbackInfo ci) {
-        if (!modEnabled(Minecraft.getInstance()) || !options().itemCounter.displayOnThrow || containerInput != ClickType.THROW) {
+        if (!modEnabled(Minecraft.getInstance()) || !clientOptionsInstance().getItemCounterOptions().displayOnThrow || containerInput != ClickType.THROW) {
             return;
         }
 
@@ -74,7 +74,7 @@ public class MultiPlayerGameModeMixin {
             if (stack.isEmpty() && slotIndex == this.slotBeforeGuiThrow) {
                 stack = this.stackBeforeGuiThrow;
             }
-            if (stack.isEmpty() || stack == null || !stack.isStackable()) {
+            if (stack.isEmpty() || !stack.isStackable()) {
                 return;
             }
 
@@ -197,7 +197,7 @@ public class MultiPlayerGameModeMixin {
      */
     @Unique
     private static boolean shouldCancelForContainerFilter(Minecraft minecraft, BlockPos pos) {
-        if (!modEnabled(minecraft) || !options().management.containerFiltering || minecraft.player == null || minecraft.level == null
+        if (!modEnabled(minecraft) || !clientOptionsInstance().getManagementOptions().containerFiltering || minecraft.player == null || minecraft.level == null
                 || !minecraft.player.isShiftKeyDown()) {
             return false;
         }

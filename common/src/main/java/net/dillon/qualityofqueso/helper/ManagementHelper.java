@@ -2,7 +2,7 @@ package net.dillon.qualityofqueso.helper;
 
 import net.dillon.qualityofqueso.instance.management.ExtractingInstance;
 import net.dillon.qualityofqueso.sound.ModSoundEvents;
-import net.dillon.qualityofqueso.widget.TransferButton;
+import net.dillon.qualityofqueso.widget.QuesoButton;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
@@ -16,7 +16,7 @@ import net.minecraft.world.Container;
 import net.minecraft.world.inventory.Slot;
 
 import static net.dillon.qualityofqueso.helper.MethodHelper.getRecipeBookComponent;
-import static net.dillon.qualityofqueso.helper.ModHelper.options;
+import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
 import static net.dillon.qualityofqueso.util.ModConstants.*;
 
 /**
@@ -202,7 +202,7 @@ public class ManagementHelper {
      * Plays the default button press sound.
      */
     public static void playDefaultSound(SoundManager manager) {
-        if (!options().management.playSounds) {
+        if (!clientOptionsInstance().getManagementOptions().playSounds) {
             return;
         }
 
@@ -220,7 +220,7 @@ public class ManagementHelper {
      * Plays the bundle sounds when using buttons.
      */
     public static void playButtonSound(Minecraft client, boolean drop) {
-        if (!options().management.playSounds) {
+        if (!clientOptionsInstance().getManagementOptions().playSounds) {
             return;
         }
 
@@ -231,7 +231,7 @@ public class ManagementHelper {
      * Plays the bundle sounds when sorting
      */
     public static void playSortSound(Minecraft client) {
-        if (!options().management.playSounds) {
+        if (!clientOptionsInstance().getManagementOptions().playSounds) {
             return;
         }
 
@@ -242,7 +242,7 @@ public class ManagementHelper {
      * Plays the inactive bundle sound.
      */
     public static void playButtonInactiveSound(Minecraft client) {
-        if (!options().management.playSounds) {
+        if (!clientOptionsInstance().getManagementOptions().playSounds) {
             return;
         }
 
@@ -253,7 +253,7 @@ public class ManagementHelper {
      * Plays the lock slot sound.
      */
     public static void playLockSlotSound(Minecraft client, boolean lock) {
-        if (!options().lockedSlots.enableLockedSlots || !options().lockedSlots.lockSound || LOCKED_SLOT_SOUND_COOLDOWN > 0) {
+        if (!clientOptionsInstance().getLockedSlotOptions().lockedSlots || !clientOptionsInstance().getLockedSlotOptions().lockSound || LOCKED_SLOT_SOUND_COOLDOWN > 0) {
             return;
         }
 
@@ -264,7 +264,7 @@ public class ManagementHelper {
     /**
      * @return the width and height for a {@code transfer button.}
      */
-    public static int getTransferButtonXY(TransferButton button) {
+    public static int getTransferButtonXY(QuesoButton button) {
         return 12;
     }
 
@@ -279,9 +279,19 @@ public class ManagementHelper {
      * @return the modifier to use for recipe books.
      */
     public static int getRecipeBookModifier(Screen screen) {
-        return options().misc.shiftRecipeBook
-                && (screen instanceof InventoryScreen || screen instanceof CraftingScreen)
-                && getRecipeBookComponent(screen).isVisible() ? 77 : 0;
+        if (clientOptionsInstance().getMiscOptions().noRecipeBookShift) {
+            return 0;
+        }
+
+        if (screen instanceof InventoryScreen || screen instanceof CraftingScreen) {
+            return getRecipeBookComponent(screen).isVisible() ? 77 : 0;
+        }
+
+        if (screen instanceof AbstractFurnaceScreen<?> abstractFurnaceScreen) {
+            return abstractFurnaceScreen.recipeBookComponent.isVisible() ? 77 : 0;
+        }
+
+        return 0;
     }
 
     /**
@@ -312,7 +322,10 @@ public class ManagementHelper {
             modifier -= 20;
         } else if (isFurnaceScreen(screen)) {
             modifier -= 16;
-        } else if ((screen instanceof InventoryScreen || screen instanceof CraftingScreen) && getRecipeBookComponent(screen).isVisible()) {
+        }
+
+        if ((screen instanceof InventoryScreen || screen instanceof CraftingScreen) && getRecipeBookComponent(screen).isVisible()
+                || screen instanceof AbstractFurnaceScreen<?> abstractFurnaceScreen && abstractFurnaceScreen.recipeBookComponent.isVisible()) {
             modifier += getRecipeBookModifier(screen);
         }
         return (width / 2 + barWidth / 2 + modifier) - (button * 12);

@@ -22,8 +22,8 @@ import java.util.*;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
 import static net.dillon.qualityofqueso.helper.MethodHelper.key;
 import static net.dillon.qualityofqueso.helper.MethodHelper.performClickSlot;
-import static net.dillon.qualityofqueso.helper.ModHelper.options;
-import static net.dillon.qualityofqueso.keybind.ModKeybinds.*;
+import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
+import static net.dillon.qualityofqueso.helper.ModKeybindHelper.*;
 import static net.dillon.qualityofqueso.util.ModConstants.MOVE_AMOUNT;
 
 /**
@@ -54,15 +54,15 @@ public class TransferInstance extends ManagementInstance {
      * @return if the user can single move an item.
      */
     public boolean canSingularMove() {
-        return options().management.scrollMoving && hasMoveSingleModifierDown();
+        return clientOptionsInstance().getManagementOptions().scrollMoving && canScrollMoveAndHasScrollModifierDown();
     }
 
     /**
      * @return if the user can singular quick drop an item.
      */
     public boolean canSingularQuickDrop(int keycode) {
-        return options().management.scrollMoving
-                && keycode == key(getDropKey()).getValue()
+        return clientOptionsInstance().getManagementOptions().scrollMoving
+                && keycode == key(getUsersDropKey()).getValue()
                 && hasDropOnlyOneItemKeyDown()
                 && hoveredSlotHasItem(instance().getScreensHoveredSlot());
     }
@@ -76,7 +76,7 @@ public class TransferInstance extends ManagementInstance {
             return;
         }
         for (int i = 0; i < MOVE_AMOUNT; i++) {
-            sendClickSlotPacket(hoveredMenuSlotId, ClickType.THROW);
+            sendClickSlotPacket(instance().getScreensHoveredSlot().index, ClickType.THROW);
         }
     }
 
@@ -115,7 +115,7 @@ public class TransferInstance extends ManagementInstance {
         }
 
         boolean movedItem = false;
-        boolean singleMoveMode = canSingleMove && !drop && hasMoveSingleModifierDown();
+        boolean singleMoveMode = canSingleMove && !drop && canScrollMoveAndHasScrollModifierDown();
         ItemStack cursorFilterStack = getCursorStack().copy();
         boolean canSingleWithCursor = cursorFilterStack.isEmpty() || findTemporaryEmptySlotForCursor() != -1;
 
@@ -131,7 +131,7 @@ public class TransferInstance extends ManagementInstance {
 
             if (searchInstance().isFilteredBySearch(fromSlot, false)) {
                 continue; // Then skip container slot if query not found via search
-            } else if (!options().management.includeHotbar) {
+            } else if (!clientOptionsInstance().getManagementOptions().includingHotbar) {
                 if (drop) {
                     if (isExcludedInventorySlot(fromSlot.index) || isInventoryHotbarSlot(isInventoryScreen(instance().getScreen()), fromSlot.index)) {
                         continue; // If dropping from InventoryScreen, and it's an excluded slot AND fromInventory hotbar slot, skip slot and continue
@@ -141,7 +141,7 @@ public class TransferInstance extends ManagementInstance {
                 }
             }
 
-            if (options().lockedSlots.enableLockedSlots && lockedSlotsInstance().isLockedSlot(fromSlot.index)) { // Skip locked slots (always)
+            if (clientOptionsInstance().getLockedSlotOptions().lockedSlots && lockedSlotsInstance().isLockedSlot(fromSlot.index)) { // Skip locked slots (always)
                 continue;
             } else if (!drop && shouldApplyMatchingFilter() && !isPresent(toInventory, fromStack)) { // Skip items that aren't already present/filtered
                 continue;
@@ -229,8 +229,8 @@ public class TransferInstance extends ManagementInstance {
      */
     public boolean tryMoveSingleFromHovered(Slot hoveredSlot, int bl) {
         if ((bl != GLFW.GLFW_MOUSE_BUTTON_LEFT && bl != GLFW.GLFW_MOUSE_BUTTON_RIGHT)
-                || !options().management.scrollMoving
-                || !hasMoveSingleModifierDown()
+                || !clientOptionsInstance().getManagementOptions().scrollMoving
+                || !canScrollMoveAndHasScrollModifierDown()
                 || instance().getScreensHoveredSlot() == null
                 || !instance().getScreensHoveredSlot().hasItem()) {
             return false;
@@ -427,10 +427,10 @@ public class TransferInstance extends ManagementInstance {
         if (isExcludedSlot(sourceSlot.index)) {
             return false;
         }
-        if (options().lockedSlots.enableLockedSlots && options().lockedSlots.hardLockSlots && lockedSlotsInstance().isLockedSlot(sourceSlot.index)) {
+        if (clientOptionsInstance().getLockedSlotOptions().lockedSlots && clientOptionsInstance().getLockedSlotOptions().hardLockSlots && lockedSlotsInstance().isLockedSlot(sourceSlot.index)) {
             return false;
         }
-        if (toContainer && !options().management.includeHotbar && isHotbarSlot(totalSlots, sourceSlot.index)) {
+        if (toContainer && !clientOptionsInstance().getManagementOptions().includingHotbar && isHotbarSlot(totalSlots, sourceSlot.index)) {
             return false;
         }
         return !searchInstance().isFilteredBySearch(sourceSlot, false);
@@ -600,7 +600,7 @@ public class TransferInstance extends ManagementInstance {
 
             if (!ignoreContainerFiltering
                     && ContainerHelper.IS_TRACKED_CONTAINER
-                    && options().management.containerFiltering
+                    && clientOptionsInstance().getManagementOptions().containerFiltering
                     && ContainerHelper.CURRENT_FILTER_MODE == FilteringMode.CURRENT_STACKS
                     && !itemMatchesPlaceholder(target.getItem())) {
                 continue;
@@ -734,7 +734,7 @@ public class TransferInstance extends ManagementInstance {
                 continue;
             }
 
-            if (!options().management.includeHotbar && isHotbarSlot(menu.slots.size(), playerSlot.index)) {
+            if (!clientOptionsInstance().getManagementOptions().includingHotbar && isHotbarSlot(menu.slots.size(), playerSlot.index)) {
                 continue;
             }
 

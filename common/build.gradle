@@ -3,18 +3,6 @@ plugins {
     alias libs.plugins.fabricLoom
 }
 
-dependencies {
-    minecraft libs.minecraft
-    mappings loom.layered() {
-        officialMojangMappings()
-        parchment variantOf(libs.parchment) {
-            artifactType('zip')
-        }
-    }
-    modCompileOnly libs.fabricLoader
-    compileOnly libs.mixin
-}
-
 apply from: rootProject.file('repositories.gradle')
 apply from: 'dependencies.gradle'
 

@@ -7,6 +7,8 @@ import net.dillon.qualityofqueso.util.ModConstants;
  */
 public class ModCommonOptions {
     public static final ModServerOptionsHandler INSTANCE = new ModServerOptionsHandler();
+    public boolean itemFrameSearching = true;
+    public boolean inventoryLocking = true;
 
     public static class ModServerOptionsHandler extends BaseOptions<ModCommonOptions> {
 
@@ -25,7 +27,4 @@ public class ModCommonOptions {
             return ModCommonOptions.class;
         }
     }
-
-    public boolean itemFrameSearching = true;
-    public boolean inventoryLocking = true;
 }

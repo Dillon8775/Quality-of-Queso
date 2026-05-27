@@ -9,6 +9,19 @@ import java.util.*;
  */
 public class ContainerData {
     public static final ModOptionsHandler INSTANCE = new ModOptionsHandler();
+    public Set<String> itemFilteredContainers = new HashSet<>();
+    public Set<String> tagFilteredContainers = new HashSet<>();
+    public Map<String, String> containerFilteringModes = new HashMap<>();
+    public Map<String, String> containerSortingModes = new HashMap<>();
+    public Map<String, List<String>> containerFilterItems = new HashMap<>();
+    public Map<String, List<StoredEnderChestStack>> enderChestItems = new HashMap<>();
+
+    public static class StoredEnderChestStack {
+        public String itemId = "";
+        public int count = 0;
+        public String components = "";
+        public List<StoredEnderChestStack> containedItems = new ArrayList<>();
+    }
 
     public static class ModOptionsHandler extends BaseOptions<ContainerData> {
 
@@ -26,19 +39,5 @@ public class ContainerData {
         protected Class<ContainerData> getConfigClass() {
             return ContainerData.class;
         }
-    }
-
-    public Set<String> itemFilteredContainers = new HashSet<>();
-    public Set<String> tagFilteredContainers = new HashSet<>();
-    public Map<String, String> containerFilteringModes = new HashMap<>();
-    public Map<String, String> containerSortingModes = new HashMap<>();
-    public Map<String, List<String>> containerFilterItems = new HashMap<>();
-    public Map<String, List<StoredEnderChestStack>> enderChestItems = new HashMap<>();
-
-    public static class StoredEnderChestStack {
-        public String itemId = "";
-        public int count = 0;
-        public String components = "";
-        public List<StoredEnderChestStack> containedItems = new ArrayList<>();
     }
 }

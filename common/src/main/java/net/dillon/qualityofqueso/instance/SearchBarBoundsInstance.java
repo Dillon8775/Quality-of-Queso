@@ -1,6 +1,6 @@
 package net.dillon.qualityofqueso.instance;
 
-import net.dillon.qualityofqueso.widget.gui.SearchBar;
+import net.dillon.qualityofqueso.widget.SearchBar;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;

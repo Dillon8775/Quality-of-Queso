@@ -10,8 +10,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 
 import static net.dillon.qualityofqueso.helper.ManagementHelper.isDropperDispenserOrHopperScreen;
+import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
 import static net.dillon.qualityofqueso.helper.ModHelper.getCurrentScreen;
-import static net.dillon.qualityofqueso.helper.ModHelper.options;
 
 /**
  * A button to only transfer what is present in the opposite container.
@@ -37,7 +37,7 @@ public class FilteringButton extends ToggleableButton {
     protected String onTextureId() {
         boolean trackedFilteringEnabled = ContainerHelper.isTrackedFilteringActive();
         if (!trackedFilteringEnabled) {
-            return switch (options().management.filteringMode) {
+            return switch (clientOptionsInstance().getManagementOptions().filteringMode) {
                 case NONE -> of("move_anything");
                 case MATCHING -> of("move_matching_items");
                 case CURRENT_STACKS -> of("current_stacks");
@@ -60,7 +60,7 @@ public class FilteringButton extends ToggleableButton {
     @Override
     protected boolean option() {
         boolean trackedFilteringEnabled = ContainerHelper.isTrackedFilteringActive();
-        return trackedFilteringEnabled || options().management.filteringMode.matchingOrCurrentStacks();
+        return trackedFilteringEnabled || clientOptionsInstance().getManagementOptions().filteringMode.matchingOrCurrentStacks();
     }
 
     @Override
@@ -86,7 +86,7 @@ public class FilteringButton extends ToggleableButton {
     @Override
     protected Component getTooltipToRender() {
         Component original;
-        switch (options().management.filteringMode) {
+        switch (clientOptionsInstance().getManagementOptions().filteringMode) {
             case MATCHING -> original = Component.translatable("qualityofqueso.gui.move_matching");
             case CURRENT_STACKS -> original = Component.translatable("qualityofqueso.gui.move_current_stacks");
             default -> original = Component.translatable("qualityofqueso.gui.move_anything");

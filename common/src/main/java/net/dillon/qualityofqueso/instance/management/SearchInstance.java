@@ -1,7 +1,8 @@
 package net.dillon.qualityofqueso.instance.management;
 
 import net.dillon.qualityofqueso.instance.QuesoScreen;
-import net.dillon.qualityofqueso.widget.gui.SearchBar;
+import net.dillon.qualityofqueso.util.ModConstants;
+import net.dillon.qualityofqueso.widget.SearchBar;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -25,7 +26,7 @@ import java.util.Map;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.getBarWidth;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.isInventoryScreen;
 import static net.dillon.qualityofqueso.helper.MethodHelper.*;
-import static net.dillon.qualityofqueso.helper.ModHelper.options;
+import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
 
 /**
  * Handles searching-related functions.
@@ -42,7 +43,7 @@ public class SearchInstance extends ManagementInstance {
     public SearchBar initializeSearchField(boolean inventory) {
         return new SearchBar(Minecraft.getInstance().font,
                 instance().getScreen().width / 2 +  getBarWidth(getImageWidth(instance().getScreen())) / 2 - (inventory ? 60 : 64),
-                getTopPos(instance().getScreen()) + getTitleLabelY(instance().getScreen()) - 2 + (options().searching.searchBarPosition.top() ? (options().searching.searchBarColor.black() ? -19 : -21) : 0));
+                getTopPos(instance().getScreen()) + getTitleLabelY(instance().getScreen()) - 2 + (clientOptionsInstance().getSearchingOptions().searchBarPosition.top() ? (clientOptionsInstance().getSearchingOptions().searchBarColor.black() ? -19 : -21) : 0));
     }
 
     /**
@@ -113,10 +114,10 @@ public class SearchInstance extends ManagementInstance {
 
         // The "search inventory" option only gates container-screen player inventory scanning.
         // InventoryScreen should always keep its own hotbar/include behavior.
-        if (!options().management.includeHotbar
+        if (!clientOptionsInstance().getManagementOptions().includingHotbar
                 && isHotbarSlot(instance().getScreenMenu().slots.size(), dropping ? slot.index + 1 : slot.index)
                 && (!dropping || !isInventoryScreen(instance().getScreen()) || slot.index != 45)) {
-            boolean applyHotbarFilter = options().accessibility.searchInventory || isInventoryScreen(instance().getScreen());
+            boolean applyHotbarFilter = clientOptionsInstance().getAccessibilityOptions().searchInventory || isInventoryScreen(instance().getScreen());
             if (applyHotbarFilter) {
                 return false;
             }
@@ -126,7 +127,7 @@ public class SearchInstance extends ManagementInstance {
             return true;
         }
 
-        if (!options().searching.searchTransportables || !options().buttonDisplayOptions.displaySearchTransportables) {
+        if (!ModConstants.SEARCHING_TRANSPORTABLES || !clientOptionsInstance().getButtonDisplayOptions().displaySearchTransportables) {
             return false;
         }
 
