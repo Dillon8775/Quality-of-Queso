@@ -15,4 +15,6 @@
 - `Drag Sorting` does not work properly.
 - `Transfer button` does not move w/ the `recipe book` in `furnace screens`.
 - `Other buttons` do not move properly w/ the `recipe book` on `1.21.1 and below`.
+- `Inconsistent mod description` on `different Minecraft versions`.
 - `"Dark Disc"`'s `"default"` value is `false`.
+- `View Last Known Ender Chest keybind` does not work if `item frame searching` is disabled.
