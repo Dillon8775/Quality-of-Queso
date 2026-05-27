@@ -62,7 +62,7 @@ tasks.register('curseforge', TaskPublishCurseForge) {
         mainFile.addRequirement("balm")
         mainFile.addRequirement("yacl")
         mainFile.addGameVersion(libs.minecraft.get().version)
-        mainFile.releaseType = "release"
+        mainFile.releaseType = "beta"
         project.findProperty("curseforge_environments")?.split(",")?.toList()?.each { mainFile.addEnvironment(it) }
         mainFile.addModLoader("NeoForge")
     }
@@ -87,6 +87,7 @@ modrinth {
         required.project "balm"
         required.project "yacl"
     }
+    versionType = "beta"
 }
 
 def neoForgeSnapshotUrl = findProperty("neoforge_snapshot_url")

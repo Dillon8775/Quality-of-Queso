@@ -70,7 +70,7 @@ tasks.register('curseforge', TaskPublishCurseForge) {
         mainFile.addRequirement("balm")
         mainFile.addRequirement("yacl")
         mainFile.addGameVersion(libs.minecraft.get().version)
-        mainFile.releaseType = "release"
+        mainFile.releaseType = "beta"
         project.findProperty("curseforge_environments")?.split(",")?.toList()?.each { mainFile.addEnvironment(it) }
     }
 }
@@ -94,4 +94,5 @@ modrinth {
         required.project "balm"
         required.project "yacl"
     }
+    versionType = "beta"
 }

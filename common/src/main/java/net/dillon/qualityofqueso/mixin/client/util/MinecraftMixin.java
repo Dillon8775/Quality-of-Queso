@@ -5,6 +5,7 @@ import net.dillon.qualityofqueso.instance.management.ClickSlotInstance;
 import net.dillon.qualityofqueso.keybind.ModKeybinds;
 import net.dillon.qualityofqueso.screen.EnderChestPreviewScreen;
 import net.dillon.qualityofqueso.screen.ItemFrameSearchScreen;
+import net.dillon.qualityofqueso.screen.VisualTimeScreen;
 import net.dillon.qualityofqueso.sound.ModSoundEvents;
 import net.dillon.qualityofqueso.util.MobHitDingTracker;
 import net.minecraft.client.Minecraft;
@@ -19,8 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.Random;
 
 import static net.dillon.qualityofqueso.helper.ModHelper.*;
-import static net.dillon.qualityofqueso.keybind.ModKeybinds.OPEN_SEARCH_ITEM_FRAMES_GUI;
-import static net.dillon.qualityofqueso.keybind.ModKeybinds.VIEW_LAST_KNOWN_ENDER_CHEST;
+import static net.dillon.qualityofqueso.keybind.ModKeybinds.*;
 
 @Mixin(Minecraft.class)
 public abstract class MinecraftMixin {
@@ -32,16 +32,24 @@ public abstract class MinecraftMixin {
      */
     @Inject(method = "handleKeybinds", at = @At("TAIL"))
     private void handleKeyPressing(CallbackInfo ci) {
-        if (modEnabled(Minecraft.getInstance()) && commonOptionsInstance().itemFrameSearching) {
+        Minecraft minecraft = Minecraft.getInstance();
+
+        if (!modEnabled(minecraft)) {
+            return;
+        }
+
+        if (commonOptionsInstance().itemFrameSearching) {
             while (OPEN_SEARCH_ITEM_FRAMES_GUI.consumeClick()) {
-                Minecraft.getInstance().setScreen(new ItemFrameSearchScreen(null));
+                minecraft.setScreen(new ItemFrameSearchScreen(null));
             }
-            while (VIEW_LAST_KNOWN_ENDER_CHEST.consumeClick()) {
-                Minecraft minecraft =  Minecraft.getInstance();
-                if (modEnabled(minecraft) && minecraft.level != null && minecraft.player != null) {
-                    Minecraft.getInstance().setScreen(new EnderChestPreviewScreen());
-                }
+        }
+        while (VIEW_LAST_KNOWN_ENDER_CHEST.consumeClick()) {
+            if (minecraft.level != null && minecraft.player != null) {
+                minecraft.setScreen(new EnderChestPreviewScreen());
             }
+        }
+        while (OPEN_VISUAL_TIME_GUI.consumeClick()) {
+            minecraft.setScreen(new VisualTimeScreen(null));
         }
     }
 

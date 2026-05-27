@@ -46,6 +46,13 @@ public final class ModKeybinds {
             QOQ_KEY_CATEGORY
     );
 
+    public static final KeyMapping OPEN_VISUAL_TIME_GUI = new KeyMapping(
+            "key.qualityofqueso.open_visual_time_gui",
+            InputConstants.Type.KEYSYM,
+            GLFW.GLFW_KEY_V,
+            QOQ_KEY_CATEGORY
+    );
+
     public static final KeyMapping QUICK_EQUIP = new KeyMapping(
             "key.qualityofqueso.quick_equip",
             InputConstants.Type.KEYSYM,

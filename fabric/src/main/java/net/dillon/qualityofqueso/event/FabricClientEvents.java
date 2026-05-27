@@ -21,6 +21,7 @@ public class FabricClientEvents {
         KeyBindingHelper.registerKeyBinding(ModKeybinds.MOVE_TO_CONTAINER);
         KeyBindingHelper.registerKeyBinding(ModKeybinds.MOVE_TO_INVENTORY);
         KeyBindingHelper.registerKeyBinding(ModKeybinds.OPEN_SEARCH_ITEM_FRAMES_GUI);
+        KeyBindingHelper.registerKeyBinding(ModKeybinds.OPEN_VISUAL_TIME_GUI);
         KeyBindingHelper.registerKeyBinding(ModKeybinds.QUICK_EQUIP);
         KeyBindingHelper.registerKeyBinding(ModKeybinds.SORT);
         KeyBindingHelper.registerKeyBinding(ModKeybinds.SWAP_ITEMS);
