@@ -8,6 +8,9 @@
 - A new option (on by default) which enhances the cursor by relating it to things you are doing in a gui screen.
     - This replaces some tooltips to make it cleaner.
 
+## True Dark Theme
+- A new theme called "True Dark", which makes the armor status mini-hotbar actually dark.
+
 ## Changes
 - Slightly tweaked tooltips (as mentioned above).
   - The "scroll to move 1" tooltip no longer renders. It has been replaced with the enhanced cursor to remove bulkiness.
@@ -33,3 +36,5 @@
 - Enabling the Swapping management feature always displays the "move one" texture on transfer buttons.
 - Cannot change move amount if transfer button is hovered and only holding scroll modifier.
 - Tooltips are positioned incorrectly in accordance to the "No Recipe Book Shift" option.
+- Unable to play sound event "qualityofqueso.management.reject" in MC 1.21.1 and below.
+- Armor status and (other hud features) render without blending in MC 1.21.1 and below.

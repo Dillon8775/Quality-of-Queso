@@ -57,11 +57,13 @@ public class ExtractingInstance extends ManagementInstance {
             return;
         }
 
-        if (canScrollMoveAndHasScrollModifierDown()) {
-            graphics.requestCursor(
-                    hasDropOnlyOneItemKeyDown() || hasAllQuickDropModifiersDown()
-                            ? CursorTypes.CROSSHAIR
-                            : CursorTypes.RESIZE_NS);
+        if (Minecraft.getInstance().hasControlDown()) {
+            if (canScrollMoveAndHasScrollModifierDown()) {
+                graphics.requestCursor(CursorTypes.RESIZE_NS);
+            }
+            if (hasDropOnlyOneItemKeyDown() || hasAllQuickDropModifiersDown()) {
+                graphics.requestCursor(CursorTypes.CROSSHAIR);
+            }
         }
 
         if (isContainerScreen(instance().getScreen()) && hasAllQuickDropModifiersDown() && !shouldButtonBeActive(false, null)) {

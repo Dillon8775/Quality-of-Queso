@@ -3,6 +3,7 @@ package net.dillon.qualityofqueso.mixin.client.hud;
 import net.dillon.qualityofqueso.helper.ContainerHelper;
 import net.dillon.qualityofqueso.helper.EnderChestHelper;
 import net.dillon.qualityofqueso.option.ContainerData;
+import net.dillon.qualityofqueso.option.eum.general.Theme;
 import net.dillon.qualityofqueso.option.eum.hud.ItemCounter;
 import net.dillon.qualityofqueso.util.ItemHudTracker;
 import net.minecraft.client.AttackIndicatorStatus;
@@ -295,7 +296,9 @@ public class GuiMixin {
         if (canRenderArmorHotbar && renderingTheHotbar) {
             graphics.blitSprite(
                     RenderPipelines.GUI_TEXTURED,
-                    ofQoQ("hud/armor_hotbar"),
+                    clientOptionsInstance().getGeneralOptions().theme == Theme.TRUE_DARK
+                            ? ofQoQ("hud/armor_hotbar_true_dark")
+                            : ofQoQ("hud/armor_hotbar"),
                     this.getArmorBarX(this.minecraft, graphics),
                     getGuiHeight(graphics) - 2 + syncArmorAnimationYOffset,
                     82,
