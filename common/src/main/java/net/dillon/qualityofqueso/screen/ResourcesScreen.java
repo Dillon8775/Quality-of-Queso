@@ -37,6 +37,17 @@ public class ResourcesScreen extends AbstractModScreen {
                         ConfirmLinkScreen.confirmLink(this, ModConstants.RESOURCE_PACK_TEMPLATE, false)
                 ).tooltip(
                         Tooltip.create(Component.translatable("qualityofqueso.gui.resource_pack_template.tooltip"))
+                ).build(),
+
+                Button.builder(Component.translatable("qualityofqueso.gui.video_explanations"),
+                        ConfirmLinkScreen.confirmLink(this, ModConstants.VIDEO_EXPLANATIONS_LINK, false)
+                ).tooltip(
+                        Tooltip.create(Component.translatable("qualityofqueso.gui.video_explanations.tooltip"))
+                ).build(),
+                Button.builder(Component.translatable("qualityofqueso.gui.other_qol_mods"),
+                        ConfirmLinkScreen.confirmLink(this, ModConstants.OTHER_QOL_MODS_LINK, false)
+                ).tooltip(
+                        Tooltip.create(Component.translatable("qualityofqueso.gui.other_qol_mods.tooltip"))
                 ).build()
         };
     }

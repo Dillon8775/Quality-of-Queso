@@ -1,10 +1,12 @@
 package net.dillon.qualityofqueso.screen;
 
 import net.dillon.qualityofqueso.config.ConfigurationScreen;
+import net.dillon.qualityofqueso.platform.MultiLoader;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.components.toasts.SystemToast;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
@@ -40,7 +42,16 @@ public class MainMenuScreen extends AbstractModScreen {
 
         return new AbstractWidget[]{
                 Button.builder(Component.translatable("qualityofqueso.gui.configure"), button -> {
-                    this.minecraft.setScreen(ConfigurationScreen.configScreen().generateScreen(this));
+                    if (!MultiLoader.getPlatform().isYaclLoaded()) {
+                        this.minecraft.getToasts().addToast(
+                                SystemToast.multiline(
+                                        this.minecraft,
+                                        SystemToast.SystemToastId.PERIODIC_NOTIFICATION,
+                                        Component.translatable("qualityofqueso.toast.title.yacl").withStyle(ChatFormatting.RED),
+                                        Component.translatable("qualityofqueso.toast.yacl")));
+                    } else {
+                        this.minecraft.setScreen(ConfigurationScreen.configScreen().generateScreen(this));
+                    }
                 }).tooltip(Tooltip.create(Component.translatable("qualityofqueso.gui.configure.tooltip"))).build(),
 
                 this.openItemFrameSearchGUIOptions,
@@ -53,13 +64,13 @@ public class MainMenuScreen extends AbstractModScreen {
 
                 this.visualTime,
 
-                this.debugHuds,
-
                 Button.builder(Component.translatable("qualityofqueso.gui.resources"), button -> {
                     this.minecraft.setScreen(new ResourcesScreen(this));
                 }).tooltip(
                         Tooltip.create(Component.translatable("qualityofqueso.gui.resources.tooltip"))
-                ).build()
+                ).build(),
+
+                this.debugHuds
         };
     }
 

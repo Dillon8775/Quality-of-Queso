@@ -43,15 +43,15 @@
   "qualityofqueso.gui.search.placeholder": "Search items...",
   "qualityofqueso.gui.search.placeholder.small": "Search...",
 
-  "qualityofqueso.gui.configure": "§6Configure...",
+  "qualityofqueso.gui.configure": "§6§nConfigure...",
   "qualityofqueso.gui.configure.tooltip": "Configure Quality of Queso to your liking!",
 
   "qualityofqueso.options.title.general": "General",
   "qualityofqueso.options.general.tooltip": "General functions and options for Quality of Queso.",
   "qualityofqueso.options.enable_mod": "Enable Mod",
   "qualityofqueso.options.enable_mod.description": "Enables all Quality of Queso features.",
-  "qualityofqueso.options.widget_theme": "Widget Theme",
-  "qualityofqueso.options.widget_theme.description": "Sets the theme for Quality of Queso's search bar and management buttons.",
+  "qualityofqueso.options.theme": "Theme",
+  "qualityofqueso.options.theme.description": "Sets the theme for Quality of Queso's search bar and management buttons.",
   "qualityofqueso.options.menu_button": "Menu Button",
   "qualityofqueso.options.menu_button.description": "Determines where the Quality of Queso main menu button should display.\n\nEverywhere → §7in the default position on the pause screen and title screen§r§f\n\nBottom-Left → §7at the bottom left of the pause screen§r§f\n\nBottom-Right → §7at the bottom right of the pause screen§r§f\n\nTitle Only → §7only on the title screen§r§f\n\nOFF → §7do not display the menu button at all. You should only disable this if you have another way of accessing the menu, via Mod Menu or (Neo)Forge's mod list.",
   "qualityofqueso.options.tooltips": "Tooltips",
@@ -281,6 +281,8 @@
   "qualityofqueso.options.red_armor_tint.description": "Applies a red tint to armor when a player (or other living entity) takes damage, just like in older Minecraft.\n\n§cFeature not available in Minecraft 1.21.1 and below.",
   "qualityofqueso.options.enchantment_helper": "Enchantment Helper",
   "qualityofqueso.options.enchantment_helper.description": "See what items an enchanted book can be applied to.",
+  "qualityofqueso.options.enhanced_cursor": "Enhanced Cursor",
+  "qualityofqueso.options.enhanced_cursor.description": "Enhances the cursor by relating it to things you are doing in a screen.\n\n§cFeature not available in Minecraft 1.21.1 and below.",
   "qualityofqueso.options.quick_equip": "Quick Equip",
   "qualityofqueso.options.quick_equip.description": "Quickly equip the hovered item to it's respective equipment slot by right-clicking, or using the keybind.\n\nKeybind = %s",
   "qualityofqueso.options.quick_gui_exit": "Quick GUI Exit",
@@ -329,25 +331,25 @@
   "qualityofqueso.gui.keybinds.tooltip": "Configure Quality of Queso keybinds...",
 
   "qualityofqueso.gui.debug_huds": "Debug HUDs...",
-  "qualityofqueso.gui.debug_huds.tooltip": "Toggle debug huds, such as in-game time, IRL time, etc...",
+  "qualityofqueso.gui.debug_huds.tooltip": "Toggle debug huds, such as world time, local time, and more...",
 
   "qualityofqueso.gui.resources": "Resources...",
-  "qualityofqueso.gui.resources.tooltip": "Ask questions, report a bug, and view other resources...",
+  "qualityofqueso.gui.resources.tooltip": "Ask questions, report a bug, watch video explanations, and more...",
   "qualityofqueso.gui.title.resources": "§6Quality of Queso Resources",
-
   "qualityofqueso.gui.showcase_video": "Showcase Video...",
   "qualityofqueso.gui.showcase_video.tooltip": "Watch a video that goes over the mod's biggest features!",
   "qualityofqueso.gui.showcase.main.tooltip": "Learn more about the mod by watching this video!",
   "qualityofqueso.gui.showcase.searching.tooltip": "Learn more about searching features from this video...",
   "qualityofqueso.gui.showcase.management.tooltip": "Learn more about management features from this video...",
   "qualityofqueso.gui.showcase.locked_slots.tooltip": "Learn more about locked slots from this video...",
-
   "qualityofqueso.gui.resource_pack_template": "Resource Pack Template...",
   "qualityofqueso.gui.resource_pack_template.tooltip": "Download the official Quality of Queso textures, and create your own resource pack!",
-
+  "qualityofqueso.gui.other_qol_mods": "Other QoL Mods...",
+  "qualityofqueso.gui.other_qol_mods.tooltip": "Check out some other Quality of Life mods (not associated with this mod)...",
   "qualityofqueso.gui.ask_questions": "Ask questions...",
   "qualityofqueso.gui.ask_questions.tooltip": "Join Dillon's Discord and ask more questions...",
-
+  "qualityofqueso.gui.video_explanations": "Video Explanations...",
+  "qualityofqueso.gui.video_explanations.tooltip": "A playlist containing Quality of Queso features, showcased in short-formed videos!",
   "qualityofqueso.gui.report_bugs": "Report a bug...",
   "qualityofqueso.gui.report_bugs.tooltip": "Report a bug on the GitHub repository...",
 
@@ -360,8 +362,8 @@
   "qualityofqueso.gui.no": "NO",
 
   "qualityofqueso.gui.no_tags_found": "No tags found.",
-  "qualityofqueso.gui.applicable_on": "§7§o§nCan be added to...",
-  "qualityofqueso.gui.all_purpose": "Any tool, weapon or armor piece",
+  "qualityofqueso.gui.applicable_on": "§e⭐ Suits",
+  "qualityofqueso.gui.all_purpose": "Any tool, weapon, or armor piece",
   "qualityofqueso.gui.armor": "Armor",
   "qualityofqueso.gui.helmets": "Helmets",
   "qualityofqueso.gui.leggings": "Leggings",
@@ -531,6 +533,8 @@
 
   "qualityofqueso.toast.title.beta_or_alpha": "Mod Warning",
   "qualityofqueso.toast.beta_or_alpha": "Please be aware that the current Quality of Queso version you are using is in a beta state, so be aware of bugs!",
+  "qualityofqueso.toast.title.yacl": "YetAnotherConfigLib Required",
+  "qualityofqueso.toast.yacl": "Please download YetAnotherConfigLib (YACL) to configure Quality of Queso.",
 
   "qualityofqueso.fortnite_battle_pass": "Fortnite battle pass..."
 }

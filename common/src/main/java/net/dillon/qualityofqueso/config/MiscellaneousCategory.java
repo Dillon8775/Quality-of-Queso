@@ -173,6 +173,15 @@ public class MiscellaneousCategory {
                                 )
                                 .option(
                                         Option.<Boolean>createBuilder()
+                                                .name(Component.translatable("qualityofqueso.options.enhanced_cursor"))
+                                                .description(OptionDescription.of(Component.translatable("qualityofqueso.options.enhanced_cursor.description")))
+                                                .binding(false, () -> clientOptionsInstance().getMiscOptions().enhancedCursor, v -> clientOptionsInstance().getMiscOptions().enhancedCursor = v)
+                                                .controller(BooleanControllerBuilder::create)
+                                                .available(false)
+                                                .build()
+                                )
+                                .option(
+                                        Option.<Boolean>createBuilder()
                                                 .name(Component.translatable("qualityofqueso.options.quick_equip"))
                                                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.quick_equip.description",
                                                         ModOptionUtil.keyMappingAsString(ModKeybinds.QUICK_EQUIP, false))))

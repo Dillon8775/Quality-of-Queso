@@ -35,6 +35,7 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 
+import java.awt.*;
 import java.util.List;
 import java.util.Set;
 
@@ -112,7 +113,7 @@ public class GuiHelper {
         if (!clientOptionsInstance().getGeneralOptions().tooltips.ddefault()) {
             return mouseX;
         }
-        int x = clientOptionsInstance().getMiscOptions().noRecipeBookShift && screen instanceof InventoryScreen recipeBookScreen && getRecipeBookComponent(recipeBookScreen).isVisible() ? 161 : 84;
+        int x = !clientOptionsInstance().getMiscOptions().noRecipeBookShift && screen instanceof InventoryScreen recipeBookScreen && getRecipeBookComponent(recipeBookScreen).isVisible() ? 161 : 84;
         return graphics.guiWidth() / 2 + x;
     }
 
@@ -338,6 +339,8 @@ public class GuiHelper {
             return SLOT_LOW;
         } else if (healthPercentage < 0.61F) {
             return SLOT_AVERAGE;
+        } else if (healthPercentage < 0.71F) {
+            return SLOT_DECENT;
         } else if (healthPercentage < 1.0F) {
             return SLOT_GOOD;
         } else if ((clientOptionsInstance().getLockedSlotOptions().preventDropping || clientOptionsInstance().getLockedSlotOptions().showLock.inHud()) && isLockedHotbarSlot(minecraft, false) && equipmentSlot == null) {
@@ -416,6 +419,8 @@ public class GuiHelper {
             return CommonColors.SOFT_RED;
         } else if (count < 21) {
             return CommonColors.YELLOW;
+        } else if (count < 31) {
+            return new Color(0x94FF97).getRGB();
         } else {
             return CommonColors.GREEN;
         }

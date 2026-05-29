@@ -25,7 +25,9 @@ public class ModConstants {
     public static final String WIKI_LINK = "https://quality-of-queso.fandom.com/wiki/Quality_of_Queso_Wiki";
     public static final String DISCORD_LINK = "https://discord.gg/vfqEAn4YFy";
     public static final String SHOWCASE_VIDEO_LINK = "https://youtu.be/02wfcgHkPmQ";
+    public static final String VIDEO_EXPLANATIONS_LINK = "https://www.youtube.com/playlist?list=PLwrfa61ofGnXhwobF8j2fBIUmpy6K9e43";
     public static final String RESOURCE_PACK_TEMPLATE = "https://1drv.ms/f/c/dde4bd527f59679e/IgAnwmEFKQchQ727NndBW9D9AbeVC4Jl8CuXTXMQ_CWUorw?e=Q5gEW0";
+    public static final String OTHER_QOL_MODS_LINK = "https://modrinth.com/collection/PDFZoFqE";
     public static boolean SHOWN_BETA_TOAST = false;
 
     // Static variables for management
@@ -99,6 +101,7 @@ public class ModConstants {
     public static final ResourceLocation SLOT_CRITICAL = ofQoQ("hud/colored_slot/slot_critical");
     public static final ResourceLocation SLOT_LOW = ofQoQ("hud/colored_slot/slot_low");
     public static final ResourceLocation SLOT_AVERAGE = ofQoQ("hud/colored_slot/slot_average");
+    public static final ResourceLocation SLOT_DECENT = ofQoQ("hud/colored_slot/slot_decent");
     public static final ResourceLocation SLOT_GOOD = ofQoQ("hud/colored_slot/slot_good");
     public static final ResourceLocation SLOT_LOCKED = ofQoQ("hud/colored_slot/slot_locked");
     @Deprecated
