@@ -131,6 +131,10 @@ public class GuiMixin {
             return;
         }
 
+        RenderSystem.enableBlend();
+        graphics.pose().pushPose();
+        graphics.pose().translate(0.0F, 0.0F, -90.0F);
+
         graphics.blitSprite(
                 warning ? SLOT_CRITICAL : getHighlightedSlotTexture(minecraft, defaultSprite, getItemBySlot(minecraft, slot), slot),
                 this.getHighlightedSlotX(minecraft, graphics, slot),
@@ -138,6 +142,9 @@ public class GuiMixin {
                 24,
                 23
         );
+
+        graphics.pose().popPose();
+        RenderSystem.disableBlend();
     }
 
     /**
@@ -149,8 +156,10 @@ public class GuiMixin {
             return;
         }
 
+        RenderSystem.enableBlend();
         graphics.pose().pushPose();
         graphics.pose().translate(0.0F, 0.0F, 250.0F);
+
         graphics.blitSprite(
                 ResourceLocation.withDefaultNamespace("world_list/error_highlighted"),
                 getGuiWidth(graphics) + (itemX != 0 ? itemX : equipmentSlot == null ? -78 + (slot * 20) : this.getEquipmentSlotX(minecraft, equipmentSlot) + 10),
@@ -158,6 +167,9 @@ public class GuiMixin {
                 16,
                 16
         );
+
+        graphics.pose().popPose();
+        RenderSystem.disableBlend();
     }
 
     /**
@@ -297,6 +309,10 @@ public class GuiMixin {
         boolean canRenderArmorHotbar = clientOptionsInstance().getHudOptions().armorHotbar && (!clientOptionsInstance().getHudOptions().armorStatus.off() || elytraWarning);
         boolean renderingTheHotbar = armorStatusAlways || anyArmorTimerActive || syncArmorAnimating;
         if (canRenderArmorHotbar && renderingTheHotbar) {
+            RenderSystem.enableBlend();
+            graphics.pose().pushPose();
+            graphics.pose().translate(0.0F, 0.0F, -90.0F);
+
             graphics.blitSprite(
                     ofQoQ("hud/armor_hotbar"),
                     this.getArmorBarX(this.minecraft, graphics),
@@ -304,6 +320,9 @@ public class GuiMixin {
                     82,
                     22
             );
+
+            graphics.pose().popPose();
+            RenderSystem.disableBlend();
         }
 
         i = 0;
@@ -524,6 +543,10 @@ public class GuiMixin {
             }
 
             if (shouldRenderArrowUi && (isArrow || holdingArrowDisplayableProjectileWeapon)) {
+                RenderSystem.enableBlend();
+                graphics.pose().pushPose();
+                graphics.pose().translate(0.0F, 0.0F, -90.0F);
+
                 graphics.blitSprite(HOTBAR_OFFHAND_RIGHT_SPRITE,
                         getGuiWidth(graphics) + itemX - 10,
                         getGuiHeight(graphics) - 3 + itemAnimationYOffset,
@@ -541,6 +564,9 @@ public class GuiMixin {
                         24,
                         23
                 );
+
+                graphics.pose().popPose();
+                RenderSystem.disableBlend();
             }
 
             boolean arrowAndZero = count == 0 && (trackedArrow || alwaysShowArrowFallback);
