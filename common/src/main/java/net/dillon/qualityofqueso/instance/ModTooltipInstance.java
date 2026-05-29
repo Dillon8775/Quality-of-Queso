@@ -25,6 +25,7 @@ import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
 import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
 import static net.dillon.qualityofqueso.helper.ModKeybindHelper.*;
 import static net.dillon.qualityofqueso.util.EnchantingHelper.isEnchantmentInGroup;
+import static net.dillon.qualityofqueso.util.ModConstants.MOVE_AMOUNT;
 
 /**
  * Handles tooltip rendering for this mod.
@@ -109,23 +110,28 @@ public class ModTooltipInstance extends ManagementInstance {
         // We can modify tooltips if we are attempting to drop one, or if we have a shortcut key down and one of the buttons are hovered/the hovered slot has an item (for quick dropping)
         boolean bl = clientOptionsInstance().getManagementOptions().scrollMoving && (droppingOne || (hasKeyDown && (buttonHovered || hoveredSlotHasItem)));
         instance().setCanMoveOne(bl);
+        boolean onlySingleMoveModifierDown = MOVE_AMOUNT == 1 && canScrollMoveAndHasScrollModifierDown() && !hasAllQuickDropModifiersDown() && !hasDropOnlyOneItemKeyDown();
 
         // Create a new tooltip to render
         List<Component> tooltipToRender = new ArrayList<>();
 
         // If bl is true, and the hovered slot's count is more than 1 (because if you are moving 1 singular, the count must be more than 1), OR if the user isn't hovering over a slot at all, begin modifying tooltips
-        if (!isCreativeInventoryScreen(instance().getScreen()) && bl && (hoveredSlot == null || hoveredSlot.getItem().getCount() > 1)) {
+        if (!isCreativeInventoryScreen(instance().getScreen()) && bl && !onlySingleMoveModifierDown && (hoveredSlot == null || hoveredSlot.getItem().getCount() > 1)) {
             // Create the new tooltip variable
             List<Component> moveAmountTooltip = new ArrayList<>();
             // Determine the translation for the tooltip
             // If the button is hovered, render "Move *count* of each". Otherwise, render "Move *count*"
-            String translation = buttonHovered ? "qualityofqueso.gui.move_amount_each" : "qualityofqueso.gui.move_amount.old";
+            String translation = "qualityofqueso.gui.move_amount_each";
 
+            boolean canRender = true;
             // If the quick drop button is hovered, render the drop amount of each stack
             if (quickDropHovered) {
-                translation = "qualityofqueso.gui.quick_drop_button.move_amount.old";
+                translation = "qualityofqueso.gui.quick_drop_button.move_amount";
             } else if (droppingOne) { // Otherwise, if we are dropping one, render the drop amount for the singular hovered item
                 translation = "qualityofqueso.gui.quick_drop_button.move_amount.single";
+                if (MOVE_AMOUNT == 1) {
+                    canRender = false;
+                }
             }
 
             // Create temp boolean to determine if we can continue adding tooltips after the fact, if the hovered item is found in the container (for quick dropping only)
@@ -137,7 +143,8 @@ public class ModTooltipInstance extends ManagementInstance {
                 boolean containerScreen = isContainerScreen(instance().getScreen());
                 // If no respective item was found in the container for quick dropping, tell the user "none of this item was found", therefor cannot drop.
                 if (containerScreen && !shouldButtonBeActive(false, null)) {
-                    moveAmountTooltip.add(Component.translatable("qualityofqueso.gui.quick_drop_button.no_items_found", hoveredSlot.getItem().getHoverName()));
+                    moveAmountTooltip.add(Component.translatable("qualityofqueso.gui.quick_drop_button.no_items_found", hoveredSlot.getItem().getHoverName()).copy()
+                            .withStyle(ChatFormatting.RED));
                     canContinueToAddTooltips = false;
                 } else { // Then check if we are attempting to drop only one of each item
                     if (hasDropOnlyOneItemKeyDown()) { // Display that item name w/ the move amount
@@ -156,6 +163,11 @@ public class ModTooltipInstance extends ManagementInstance {
                 if (lockedSlotsInstance().droppingEntireLockedSlotStack()) {
                     moveAmountTooltip.add(ignoresLockedSlots);
                 }
+            }
+
+            // Cancel out if we cannot render tooltip
+            if (!canRender && (!lockedSlotsInstance().isLockedSlot(hoveredSlot.index) || !lockedSlotsInstance().droppingEntireLockedSlotStack())) {
+                return;
             }
 
             // Create helper tooltips for the user to use singular moving

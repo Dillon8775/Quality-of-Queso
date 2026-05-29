@@ -32,6 +32,7 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 
+import java.awt.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -110,7 +111,7 @@ public class GuiHelper {
         if (!clientOptionsInstance().getGeneralOptions().tooltips.ddefault()) {
             return mouseX;
         }
-        int x = clientOptionsInstance().getMiscOptions().noRecipeBookShift && screen instanceof InventoryScreen recipeBookScreen && getRecipeBookComponent(recipeBookScreen).isVisible() ? 161 : 84;
+        int x = !clientOptionsInstance().getMiscOptions().noRecipeBookShift && screen instanceof InventoryScreen recipeBookScreen && getRecipeBookComponent(recipeBookScreen).isVisible() ? 161 : 84;
         return graphics.guiWidth() / 2 + x;
     }
 
@@ -326,24 +327,25 @@ public class GuiHelper {
     /**
      * @return the correct sprite to use.
      */
-    @Deprecated
-    public static ResourceLocation getHighlightedSlotTexture(Minecraft minecraft, ResourceLocation defaultSprite, ItemStack stack, EquipmentSlot equipmentSlot) {
+    public static ResourceLocation getHighlightedSlotTexture(Minecraft minecraft, ItemStack stack, EquipmentSlot equipmentSlot) {
         float healthPercentage = getItemHealthPercentage(stack);
 
-        if (!clientOptionsInstance().getHudOptions().coloredHighlighting) {
-            return defaultSprite;
+        if (!modEnabled(minecraft) || !clientOptionsInstance().getHudOptions().coloredHighlighting) {
+            return SLOT_DEFAULT;
         } else if (healthPercentage < 0.21F) {
             return SLOT_CRITICAL;
         } else if (healthPercentage < 0.41F) {
             return SLOT_LOW;
         } else if (healthPercentage < 0.61F) {
             return SLOT_AVERAGE;
+        } else if (healthPercentage < 0.71F) {
+            return SLOT_DECENT;
         } else if (healthPercentage < 1.0F) {
             return SLOT_GOOD;
         } else if ((clientOptionsInstance().getLockedSlotOptions().preventDropping || clientOptionsInstance().getLockedSlotOptions().showLock.inHud()) && isLockedHotbarSlot(minecraft, false) && equipmentSlot == null) {
             return SLOT_LOCKED;
         }
-        return defaultSprite;
+        return SLOT_DEFAULT;
     }
 
     /**
@@ -408,8 +410,14 @@ public class GuiHelper {
     public static int getCountColor(int count) {
         if (count < 6) {
             return CommonColors.RED;
+        } else if (count < 11) {
+            return -2142128;
+        } else if (count < 21) {
+            return -256;
+        } else if (count < 31) {
+            return new Color(0x94FF97).getRGB();
         } else {
-            return CommonColors.WHITE;
+            return -16711936;
         }
     }
 

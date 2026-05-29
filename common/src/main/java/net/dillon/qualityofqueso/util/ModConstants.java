@@ -25,7 +25,9 @@ public class ModConstants {
     public static final String WIKI_LINK = "https://quality-of-queso.fandom.com/wiki/Quality_of_Queso_Wiki";
     public static final String DISCORD_LINK = "https://discord.gg/vfqEAn4YFy";
     public static final String SHOWCASE_VIDEO_LINK = "https://youtu.be/02wfcgHkPmQ";
+    public static final String VIDEO_EXPLANATIONS_LINK = "https://www.youtube.com/playlist?list=PLwrfa61ofGnXhwobF8j2fBIUmpy6K9e43";
     public static final String RESOURCE_PACK_TEMPLATE = "https://1drv.ms/f/c/dde4bd527f59679e/IgAnwmEFKQchQ727NndBW9D9AbeVC4Jl8CuXTXMQ_CWUorw?e=Q5gEW0";
+    public static final String OTHER_QOL_MODS_LINK = "https://modrinth.com/collection/PDFZoFqE";
     public static boolean SHOWN_BETA_TOAST = false;
 
     // Static variables for management
@@ -99,16 +101,15 @@ public class ModConstants {
     public static final String MULTI_CONFIG_TEXTURE = "textures/gui/sprites/widget/multi_config.png";
     @Deprecated
     public static final ResourceLocation SEARCH_TEXTURE = new ResourceLocation("icon/search");
-    @Deprecated
-    public static final ResourceLocation SLOT_CRITICAL = ofQoQ("hud/colored_slot/slot_critical");
-    @Deprecated
-    public static final ResourceLocation SLOT_LOW = ofQoQ("hud/colored_slot/slot_low");
-    @Deprecated
-    public static final ResourceLocation SLOT_AVERAGE = ofQoQ("hud/colored_slot/slot_average");
-    @Deprecated
-    public static final ResourceLocation SLOT_GOOD = ofQoQ("hud/colored_slot/slot_good");
-    @Deprecated
-    public static final ResourceLocation SLOT_LOCKED = ofQoQ("hud/colored_slot/slot_locked");
+    public static final ResourceLocation SLOT_CRITICAL = ofQoQ("textures/gui/sprites/hud/colored_slot/slot_critical.png");
+    public static final ResourceLocation SLOT_LOW = ofQoQ("textures/gui/sprites/hud/colored_slot/slot_low.png");
+    public static final ResourceLocation SLOT_AVERAGE = ofQoQ("textures/gui/sprites/hud/colored_slot/slot_average.png");
+    public static final ResourceLocation SLOT_DECENT = ofQoQ("textures/gui/sprites/hud/colored_slot/slot_decent.png");
+    public static final ResourceLocation SLOT_GOOD = ofQoQ("textures/gui/sprites/hud/colored_slot/slot_good.png");
+    public static final ResourceLocation SLOT_LOCKED = ofQoQ("textures/gui/sprites/hud/colored_slot/slot_locked.png");
+    public static final ResourceLocation SLOT_DEFAULT = ofQoQ("textures/gui/sprites/hud/colored_slot/slot_default.png");
+    public static final ResourceLocation HOTBAR_OFFHAND_RIGHT = ofQoQ("textures/gui/sprites/hud/hotbar_offhand_right.png");
+    public static final ResourceLocation WARNING_INDICATOR = ofQoQ("textures/gui/sprites/hud/warning_indicator.png");
     @Deprecated
     public static final ResourceLocation SELECTED_RECIPE = ofQoQ("slot/selected_recipe");
 

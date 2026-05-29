@@ -352,14 +352,6 @@ public class ExtractingInstance extends ManagementInstance {
             AbstractList<AbstractWidget> finalLayout = clientOptionsInstance().getManagementOptions().layout.horizontal() ? horizontalLayout : verticalLayout;
             if (merchantScreen) {
                 finalLayout = NonNullList.of(null, instance().getManagementButtons().tradeAll());
-            } else if (dropperDispenserOrHopperScreen) {
-                finalLayout = NonNullList.of(null,
-                        instance().getManagementButtons().transferInventory(),
-                        instance().getManagementButtons().transferContainer(),
-                        instance().getManagementButtons().sort(),
-                        instance().getManagementButtons().filtering(),
-                        instance().getManagementButtons().alwaysQuickMove()
-                );
             }
 
             // Set and initialize the widget layout

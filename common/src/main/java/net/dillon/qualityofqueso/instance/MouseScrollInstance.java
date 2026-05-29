@@ -77,6 +77,13 @@ public class MouseScrollInstance extends ManagementInstance {
             return;
         }
 
+        try {
+            if (canScrollMoveAndHasScrollModifierDown() && (instance().getManagementButtons().transferContainer().isMouseOver(mouseX, mouseY) || instance().getManagementButtons().transferInventory().isMouseOver(mouseX, mouseY))) {
+                changeMountAmount(hoveredSlot, scrollY);
+            }
+        } catch (NullPointerException o) {
+        }
+
         if (lockedSlotsInstance().droppingEntireLockedSlotStack() && !Screen.hasAltDown()) {
             return;
         }
@@ -85,14 +92,21 @@ public class MouseScrollInstance extends ManagementInstance {
         if (!isCreativeInventoryScreen(instance().getScreen()) && instance().getCanMoveOne() && (validHoveredSlot && hasDropOnlyOneItemKeyDown())
                 || buttonHoveredAndActive(instance().getManagementButtons().quickDrop(), mouseX, mouseY) ? hasDropOnlyOneItemKeyDown()
                 : ((validHoveredSlot || buttonHoveredAndActive(instance().getManagementButtons().transferContainer(), mouseX, mouseY) || buttonHoveredAndActive(instance().getManagementButtons().transferInventory(), mouseX, mouseY)) && canScrollMoveAndHasScrollModifierDown())) {
-            MOVE_AMOUNT += (int)scrollY;
-            if (MOVE_AMOUNT < 1) {
-                MOVE_AMOUNT = 1;
-            } else if (MOVE_AMOUNT > 64) {
-                MOVE_AMOUNT = 64;
-            } else if (hoveredSlotHasItem(hoveredSlot) && MOVE_AMOUNT > hoveredSlot.getItem().getMaxStackSize()) {
-                MOVE_AMOUNT = hoveredSlot.getItem().getMaxStackSize();
-            }
+            changeMountAmount(hoveredSlot, scrollY);
+        }
+    }
+
+    /**
+     * Changes the move amount.
+     */
+    private void changeMountAmount(Slot hoveredSlot, double scrollY) {
+        MOVE_AMOUNT += (int)scrollY;
+        if (MOVE_AMOUNT < 1) {
+            MOVE_AMOUNT = 1;
+        } else if (MOVE_AMOUNT > 64) {
+            MOVE_AMOUNT = 64;
+        } else if (hoveredSlotHasItem(hoveredSlot) && MOVE_AMOUNT > hoveredSlot.getItem().getMaxStackSize()) {
+            MOVE_AMOUNT = hoveredSlot.getItem().getMaxStackSize();
         }
     }
 }

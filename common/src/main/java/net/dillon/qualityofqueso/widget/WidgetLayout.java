@@ -164,7 +164,7 @@ public class WidgetLayout extends AbstractWidget {
      */
     @Override
     public boolean isMouseOver(double mouseX, double mouseY) {
-        if (!this.visible || (!isDropperDispenserOrHopperScreen(this.screen) && clientOptionsInstance().getManagementOptions().layout.horizontal()) || RENDERED_BUTTONS <= 0) {
+        if (!this.visible || clientOptionsInstance().getManagementOptions().layout.horizontal() || RENDERED_BUTTONS <= 0) {
             return false;
         }
 
@@ -186,8 +186,10 @@ public class WidgetLayout extends AbstractWidget {
         boolean inventoryScreen = isInventoryScreen(this.screen);
         boolean craftingScreen = isCraftingScreen(this.screen);
         boolean merchantScreen = isMerchantScreen(this.screen);
+        boolean hopperDropperOrDispenser = isDropperDispenserOrHopperScreen(this.screen);
+        boolean dropperOrDispenser = isDropperOrDispenserScreen(this.screen);
 
-        if (RENDERED_BUTTONS > 0 && (!clientOptionsInstance().getManagementOptions().layout.horizontal() || isDropperDispenserOrHopperScreen(this.screen))) {
+        if (RENDERED_BUTTONS > 0 && !clientOptionsInstance().getManagementOptions().layout.horizontal()) {
             this.extractPanel(graphics, player);
         }
 
@@ -219,7 +221,7 @@ public class WidgetLayout extends AbstractWidget {
             }
 
             boolean bulkCraft = clientOptionsInstance().getManagementOptions().layout.horizontal() && widget instanceof BulkCraftButton;
-            if (clientOptionsInstance().getManagementOptions().layout.horizontal() && !isDropperDispenserOrHopperScreen(this.screen)) {
+            if (clientOptionsInstance().getManagementOptions().layout.horizontal()) {
                 widget.setX(getManagementButtonX(this.screen, getImageWidth(this.screen), this.screen.width, buttons));
                 widget.setY(getManagementButtonY(this.screen, this.container, this.topPos, this.titleLabelY));
                 if (inventoryScreen) {
@@ -244,6 +246,9 @@ public class WidgetLayout extends AbstractWidget {
                 } else if (craftingScreen) {
                     widget.setX(widget.getX() - 4);
                     widget.setY(widget.getY() + 20);
+                } else if (hopperDropperOrDispenser) {
+                    widget.setX(widget.getX() + (dropperOrDispenser ? 38 : 20));
+                    widget.setY(widget.getY() + 11);
                 }
             } else {
                 widget.setX(this.screen.width / 2 + getImageWidth(this.screen) / 2 + x);

@@ -136,7 +136,6 @@ public class HudCategory {
                                                                 .build())
                                                 .binding(true, () -> clientOptionsInstance().getHudOptions().coloredHighlighting, v -> clientOptionsInstance().getHudOptions().coloredHighlighting = v)
                                                 .controller(BooleanControllerBuilder::create)
-                                                .available(false)
                                                 .build()
                                 )
                                 .option(
@@ -148,7 +147,6 @@ public class HudCategory {
                                                         .build())
                                                 .binding(true, () -> clientOptionsInstance().getHudOptions().warningIndicators, v -> clientOptionsInstance().getHudOptions().warningIndicators = v)
                                                 .controller(BooleanControllerBuilder::create)
-                                                .available(false)
                                                 .build()
                                 )
                                 .option(

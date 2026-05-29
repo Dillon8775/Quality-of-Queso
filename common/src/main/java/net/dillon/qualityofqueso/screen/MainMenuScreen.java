@@ -34,12 +34,6 @@ public class MainMenuScreen extends AbstractModScreen {
             }
         }).build();
 
-        AbstractWidget keybinds = Button.builder(Component.translatable("qualityofqueso.gui.keybinds"), button -> {
-            this.openKeybinds();
-        }).tooltip(
-                Tooltip.create(Component.translatable("qualityofqueso.gui.keybinds.tooltip"))
-        ).build();
-
         this.visualTime = Button.builder(Component.translatable("qualityofqueso.gui.visual_time"), button ->
                 this.minecraft.setScreen(new VisualTimeScreen(this))
         ).tooltip(
@@ -50,6 +44,12 @@ public class MainMenuScreen extends AbstractModScreen {
             this.minecraft.setScreen(new DebugOptionsScreen(this));
         }).tooltip(
                 Tooltip.create(Component.translatable("qualityofqueso.gui.debug_huds.tooltip"))
+        ).build();
+
+        AbstractWidget keybinds = Button.builder(Component.translatable("qualityofqueso.gui.keybinds"), button -> {
+            this.openKeybinds();
+        }).tooltip(
+                Tooltip.create(Component.translatable("qualityofqueso.gui.keybinds.tooltip"))
         ).build();
 
         GridLayout gridlayout = new GridLayout();

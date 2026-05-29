@@ -1,5 +1,6 @@
 package net.dillon.qualityofqueso.platform;
 
+import net.dillon.qualityofqueso.util.ModConstants;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.player.LocalPlayer;
@@ -8,6 +9,14 @@ import net.minecraft.resources.ResourceLocation;
 import java.nio.file.Path;
 
 public class FabricPlatformHelper implements PlatformHelper {
+
+    @Override
+    public String getModVersion() {
+        return FabricLoader.getInstance()
+                .getModContainer(ModConstants.MOD_ID)
+                .map(c -> c.getMetadata().getVersion().getFriendlyString().split("\\+", 2)[0])
+                .orElse("unknown");
+    }
 
     @Override
     public Path getConfigDir() {
