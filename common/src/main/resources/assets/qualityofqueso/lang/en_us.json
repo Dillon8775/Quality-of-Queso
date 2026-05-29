@@ -282,7 +282,7 @@
   "qualityofqueso.options.enchantment_helper": "Enchantment Helper",
   "qualityofqueso.options.enchantment_helper.description": "See what items an enchanted book can be applied to.",
   "qualityofqueso.options.enhanced_cursor": "Enhanced Cursor",
-  "qualityofqueso.options.enhanced_cursor.description": "Enhances the cursor by relating it to things you are doing in a screen.",
+  "qualityofqueso.options.enhanced_cursor.description": "Enhances the cursor by relating it to things you are doing in a screen.\n\n§cFeature not available in Minecraft 1.21.1 and below.",
   "qualityofqueso.options.quick_equip": "Quick Equip",
   "qualityofqueso.options.quick_equip.description": "Quickly equip the hovered item to it's respective equipment slot by right-clicking, or using the keybind.\n\nKeybind = %s",
   "qualityofqueso.options.quick_gui_exit": "Quick GUI Exit",
