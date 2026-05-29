@@ -183,9 +183,9 @@
   "qualityofqueso.options.hud.appearance": "Appearance",
   "qualityofqueso.options.hud.appearance.tooltip": "Configure what appears on the HUD, like colored highlighting and warning indicators.",
   "qualityofqueso.options.colored_highlighting": "Colored Highlighting",
-  "qualityofqueso.options.colored_highlighting.description": "Highlights slots with a color, based on item durability, or if the slot is locked.\n\n§cFeature not available in Minecraft 1.20.1.",
+  "qualityofqueso.options.colored_highlighting.description": "Highlights slots with a color, based on item durability, or if the slot is locked.",
   "qualityofqueso.options.warning_indicators": "Warning Indicators",
-  "qualityofqueso.options.warning_indicators.description": "Displays an exclamation point next to items with very low durability.\n\n§cFeature not available in Minecraft 1.20.1",
+  "qualityofqueso.options.warning_indicators.description": "Displays an exclamation point next to items with very low durability.",
   "qualityofqueso.options.display_time": "Display Time",
   "qualityofqueso.options.display_time.description": "Sets the display time for armor items, picked up and dropped items.",
 
