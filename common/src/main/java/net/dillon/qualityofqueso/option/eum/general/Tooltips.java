@@ -1,4 +1,4 @@
-package net.dillon.qualityofqueso.option.eum.accessibility;
+package net.dillon.qualityofqueso.option.eum.general;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.util.StringRepresentable;

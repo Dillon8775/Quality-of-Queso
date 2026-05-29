@@ -120,7 +120,7 @@ public class ButtonHelper {
     public static String getWidgetPath(boolean forSearchBar) {
         String appended = !forSearchBar && clientOptionsInstance().getAccessibilityOptions().useLegacyTextures ? "legacy/" : "";
         return switch (clientOptionsInstance().getGeneralOptions().theme) {
-            case DARK -> "dark/" + appended;
+            case DARK, TRUE_DARK -> "dark/" + appended;
             case TRANSPARENT -> "transparent/";
             default -> "vanilla/" + appended;
         };
