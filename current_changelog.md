@@ -24,6 +24,10 @@
   - A button that links the user to a [Modrinth collection](https://modrinth.com/collection/PDFZoFqE) of other QoL mods.
 - The game no longer crashes when YetAnotherConfigLib isn't installed. Instead, if the user tries to press the "Configure" button in the main menu without the mod installed, the user will simply be warned and not be able to configurate the mod.
 
+### MC 1.20.1 Exclusive Changes
+- Colored highlighting and warning indicators are now supported for Minecraft 1.20.1!
+- Colored text now renders appropriately with the arrow counter.
+
 ## Bugs Fixed
 - Unbounding certain Quality of Queso keybinds causes screen bugs and key press bugs.
 - Enabling the Swapping management feature always displays the "move one" texture on transfer buttons.

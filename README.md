@@ -545,10 +545,6 @@
 - Darker Overlay setting
 - Fading Animations with the armor status
 - `Keybind Modifiers`
-### ❌ MC 1.20.1 *(and below)* Unsupported Features
-- [Colored Highlighting](https://quality-of-queso.fandom.com/wiki/Colored_Highlighting)
-- [Warning Indicators](https://quality-of-queso.fandom.com/wiki/Warning_Indicators)
-- Slot Highlighting on Armor Status (outline when armor piece gets updated)
 
 ---
 
