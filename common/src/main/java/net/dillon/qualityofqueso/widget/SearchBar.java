@@ -1,6 +1,6 @@
 package net.dillon.qualityofqueso.widget;
 
-import net.dillon.qualityofqueso.option.eum.accessibility.Theme;
+import net.dillon.qualityofqueso.option.eum.general.Theme;
 import net.dillon.qualityofqueso.util.ModConstants;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;

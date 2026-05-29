@@ -3,7 +3,7 @@ package net.dillon.qualityofqueso.config;
 import dev.isxander.yacl3.api.*;
 import dev.isxander.yacl3.api.controller.*;
 import net.dillon.qualityofqueso.keybind.ModKeyMappings;
-import net.dillon.qualityofqueso.option.eum.accessibility.Theme;
+import net.dillon.qualityofqueso.option.eum.general.Theme;
 import net.dillon.qualityofqueso.option.eum.searching.QuickSearch;
 import net.dillon.qualityofqueso.option.eum.searching.SearchBarColor;
 import net.dillon.qualityofqueso.option.eum.searching.SearchBarPosition;

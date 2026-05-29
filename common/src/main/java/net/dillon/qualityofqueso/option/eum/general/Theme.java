@@ -1,4 +1,4 @@
-package net.dillon.qualityofqueso.option.eum.accessibility;
+package net.dillon.qualityofqueso.option.eum.general;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.util.StringRepresentable;
@@ -8,6 +8,7 @@ import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
 public enum Theme implements StringRepresentable {
     VANILLA("Vanilla"),
     DARK("Dark"),
+    TRUE_DARK("§7True Dark"),
     TRANSPARENT("Transparent");
 
     public static final Codec<Theme> CODEC = StringRepresentable.fromEnum(Theme::values);
