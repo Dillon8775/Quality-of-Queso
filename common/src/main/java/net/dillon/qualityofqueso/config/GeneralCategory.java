@@ -8,8 +8,8 @@ import dev.isxander.yacl3.api.controller.BooleanControllerBuilder;
 import dev.isxander.yacl3.api.controller.EnumControllerBuilder;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
 import net.dillon.qualityofqueso.option.eum.accessibility.MenuButton;
+import net.dillon.qualityofqueso.option.eum.accessibility.Theme;
 import net.dillon.qualityofqueso.option.eum.accessibility.Tooltips;
-import net.dillon.qualityofqueso.option.eum.accessibility.WidgetTheme;
 import net.minecraft.network.chat.Component;
 
 import static net.dillon.qualityofqueso.config.ConfigurationScreen.fixedSizeImage;
@@ -37,21 +37,21 @@ public class GeneralCategory {
                                                 .build()
                                 )
                                 .option(
-                                        Option.<WidgetTheme>createBuilder()
-                                                .name(Component.translatable("qualityofqueso.options.widget_theme"))
+                                        Option.<Theme>createBuilder()
+                                                .name(Component.translatable("qualityofqueso.options.theme"))
                                                 .description(value -> {
                                                     var builder = OptionDescription.createBuilder()
-                                                            .text(Component.translatable("qualityofqueso.options.widget_theme.description"));
+                                                            .text(Component.translatable("qualityofqueso.options.theme.description"));
 
                                                     return switch (value) {
-                                                        case VANILLA -> builder.customImage(fixedSizeImage(ofQoQ("options/widget_theme/vanilla"), 36, 36)).build();
-                                                        case DARK -> builder.customImage(fixedSizeImage(ofQoQ("options/widget_theme/dark"), 36, 36)).build();
-                                                        case TRANSPARENT -> builder.customImage(fixedSizeImage(ofQoQ("options/widget_theme/transparent"), 36, 36)).build();
+                                                        case VANILLA -> builder.customImage(fixedSizeImage(ofQoQ("options/theme/vanilla"), 36, 36)).build();
+                                                        case DARK -> builder.customImage(fixedSizeImage(ofQoQ("options/theme/dark"), 36, 36)).build();
+                                                        case TRANSPARENT -> builder.customImage(fixedSizeImage(ofQoQ("options/theme/transparent"), 36, 36)).build();
                                                     };
                                                 })
-                                                .binding(WidgetTheme.VANILLA, () -> clientOptionsInstance().getGeneralOptions().widgetTheme, v -> clientOptionsInstance().getGeneralOptions().widgetTheme = v)
+                                                .binding(Theme.VANILLA, () -> clientOptionsInstance().getGeneralOptions().theme, v -> clientOptionsInstance().getGeneralOptions().theme = v)
                                                 .controller(o -> EnumControllerBuilder.create(o)
-                                                        .enumClass(WidgetTheme.class)
+                                                        .enumClass(Theme.class)
                                                         .formatValue(v -> Component.literal(v.getSerializedName())))
                                                 .build()
                                 )

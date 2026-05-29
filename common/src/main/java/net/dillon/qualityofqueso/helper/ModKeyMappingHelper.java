@@ -1,5 +1,6 @@
 package net.dillon.qualityofqueso.helper;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.blay09.mods.kuma.api.Kuma;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -28,6 +29,11 @@ public class ModKeyMappingHelper {
      * Automatically returns {@code true} if quick drop has no modifiers.
      */
     public static boolean hasAllQuickDropModifiersDown() {
+        // Return false if unbounded
+        if (QUICK_DROP.getBinding().key() == InputConstants.UNKNOWN) {
+            return false;
+        }
+
         if (QUICK_DROP.getBinding().modifiers().isEmpty()) {
             return true;
         }

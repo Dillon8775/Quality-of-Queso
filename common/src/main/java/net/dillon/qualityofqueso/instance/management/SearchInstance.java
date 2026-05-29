@@ -1,7 +1,7 @@
 package net.dillon.qualityofqueso.instance.management;
 
 import net.dillon.qualityofqueso.instance.QuesoScreen;
-import net.dillon.qualityofqueso.option.eum.accessibility.WidgetTheme;
+import net.dillon.qualityofqueso.option.eum.accessibility.Theme;
 import net.dillon.qualityofqueso.util.ModConstants;
 import net.dillon.qualityofqueso.widget.SearchBar;
 import net.minecraft.client.Minecraft;
@@ -100,7 +100,7 @@ public class SearchInstance extends ManagementInstance {
         String id = "grayed";
         if (hotbarOverlay) {
             id = "grayed_hotbar";
-        } else if (clientOptionsInstance().getAccessibilityOptions().darkerOverlay || clientOptionsInstance().getGeneralOptions().widgetTheme != WidgetTheme.VANILLA) {
+        } else if (clientOptionsInstance().getAccessibilityOptions().darkerOverlay || clientOptionsInstance().getGeneralOptions().theme != Theme.VANILLA) {
             id = "grayed_dark";
         }
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ofQoQ("slot/" + id), slot.x, slot.y, 16, 16);

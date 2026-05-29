@@ -58,6 +58,10 @@ public class MethodHelper {
      * Automatically returns {@code true} if the keybind has {@code no modifiers}.
      */
     public static boolean kumaAnyModifierDown(ManagedKeyMapping kumaKey) {
+        if (kumaKey.getBinding().key() == InputConstants.UNKNOWN) {
+            return false;
+        }
+
         KeyModifiers modifiers = kumaKey.getBinding().modifiers();
 
         if (modifiers.isEmpty()) {

@@ -15,7 +15,18 @@
 
 ---
 
-# Main Features
+<h1>What is <i>Quality of Queso?</i></h1>
+
+- 📦 <b>Quality of Queso</b> is a mod designed <i>specifically</i> for <b>vanilla gameplay</b> by adding <b>various quality-of-life features,</b> including <a href="https://quality-of-queso.fandom.com/wiki/Category:Inventory_Management">precise inventory management</a>, <a href="https://quality-of-queso.fandom.com/wiki/Colored_Highlighting">various HUD features</a>, <a href="https://quality-of-queso.fandom.com/wiki/Search_Bar">container searching</a>, and so much more!
+- 💭 The idea <b>originated</b> from a <b><a href="https://youtu.be/Q7vhqWwDElg">video</a></b> featuring <a href="https://www.youtube.com/@dillon8775">me (Dillon)</a> and my friend, <a href="https://www.youtube.com/@mannyqueso">MannyQUESO</a>, released to celebrate the new year of <b>2025</b> (a pretty big year for us, as it was our graduation 🎓 year).
+- 🛠️ We came up with idea to <b>create a client-side "quality of life" mod</b>, that should add various quality of life features to the game to improve our <b>vanilla experience</b>, and that's exactly what we did!
+- 📈 Starting off with very small, <b>unnoticeable features</b>, quickly branched off into a huge project to further enhance the game when it comes to actual gameplay and managing items, as it can be difficult and annoying sometimes.
+- ✅ <b>That's why this mod was created!</b> To further enhance your <b>Minecraft experience</b> by easily sorting and managing items, adding cool visual effects, remove fog, and so much more! <b>We hope that this mod suits you! :)</b>
+- ❗Please note how I <i>constantly</i> mentioned <b>"vanilla experience"</b>. This mod was <i><b>specifically designed for modern, vanilla Minecraft</b></i>, not for <b>big modpacks</b> or <b>older Minecraft</b>. You <i>can</i> use this mod in modpacks, but please be aware that <b>not all features</b> (<i>especially inventory management</i>) may work with modded containers, blocks or items.
+
+---
+
+# 📃 Main Features 📜
 
 <img alt = "Search Bar" src="https://raw.githubusercontent.com/Dillon8775/ImageGIFs/refs/heads/qoq/Logos/search%20bar.png" width = 350>
 
@@ -110,7 +121,7 @@
 - Search for an item in all nearby item frames
 - Search different radiuses, with timers to remove glow
 <br><br>
-- Configurable in the mod's <code>Item Frame Searching</code> tab
+- Configurable in the mod's <code>Searching</code> tab
 <br><br>
 <img alt = "Item Frame Searching" src="https://github.com/Dillon8775/ImageGIFs/blob/qoq/NEW%20GIFS/Item%20Frame%20Searching.gif?raw=true" width = 700>
 
@@ -127,16 +138,6 @@ Toggle sprinting, potion effects, flying, bow pulling, and submerged in fluid to
 
 ---
 <br>
-<img alt = "Quick Equip" src="https://raw.githubusercontent.com/Dillon8775/ImageGIFs/refs/heads/qoq/Logos/quick%20equip.png" width = 350>
-
-- Right-click an armor item to swap it out with whatever you're wearing
-<br><br>
-- Configurable in the mod's <code>Miscellaneous</code> tab
-<br><br>
-  <img alt = "Quick Equip" src="https://raw.githubusercontent.com/Dillon8775/ImageGIFs/refs/heads/qoq/NEW%20GIFS/Quick%20Equip.gif" width = 300>
-
----
-<br>
 <img alt = "Mob Hit Ding" src="https://raw.githubusercontent.com/Dillon8775/ImageGIFs/refs/heads/qoq/Logos/mob%20hit%20ding.png" width = 350>
 
 - Plays the "player hit" sound when hitting a mob from at least 15 blocks away
@@ -145,14 +146,6 @@ Toggle sprinting, potion effects, flying, bow pulling, and submerged in fluid to
 - Configurable in the mod's <code>Miscellaneous</code> tab
 <br><br>
 <img alt = "Mob Hit Ding" src="https://github.com/Dillon8775/ImageGIFs/blob/qoq/NEW%20GIFS/Mob%20Hit%20Ding.gif?raw=true" width = 600>
-
----
-<br>
-<img alt = "Armor Ding" src="https://raw.githubusercontent.com/Dillon8775/ImageGIFs/refs/heads/qoq/Logos/armor%20ding.png" width = 300>
-
-- Plays a ding sound whenever your armor gets low
-<br><br>
-- Configurable in the mod's <code>Miscellaneous</code> tab
 
 ---
 <br>
@@ -167,18 +160,18 @@ Toggle sprinting, potion effects, flying, bow pulling, and submerged in fluid to
 ---
 
 # Other Features
-## Configurable Widget Themes
+## 🎨 Configurable Themes
 
 - Configure Quality of Queso widgets to use a vanilla theme, dark theme, or transparent theme
 - Works really well with VanillaTweaks dark and transparent theme
 <br><br>
-- Configurable in the mod's <code>Accessibility</code> tab
+- Configurable in the mod's <code>General</code> tab
 <br><br>
   <img alt = "Vanilla Theme" src="https://raw.githubusercontent.com/Dillon8775/ImageGIFs/refs/heads/qoq/Wiki/theme_vanilla.png" width = 250>
   <img alt = "Dark Theme" src="https://raw.githubusercontent.com/Dillon8775/ImageGIFs/refs/heads/qoq/Wiki/theme_darknew.png" width = 250>
   <img alt = "Transparent Theme" src="https://raw.githubusercontent.com/Dillon8775/ImageGIFs/refs/heads/qoq/Wiki/theme_transparent.png" width = 250>
-
-## Enchantment Helper
+ 
+## 🚨 Enchantment Helper
 
 - Displays what items enchanted books can be applied to
 <br><br>
@@ -186,7 +179,40 @@ Toggle sprinting, potion effects, flying, bow pulling, and submerged in fluid to
 <br><br>
   <img alt = "Enchantment Helper" src="https://raw.githubusercontent.com/Dillon8775/ImageGIFs/refs/heads/qoq/Wiki/2026-05-01_16.11.27.png" width = 600>
 
-## Remove Fog
+## 🖱️Enhanced Cursor
+
+- Enhances the cursor by relating it to things you are doing
+<br><br>
+- Configurable in the mod's <code>Miscellaneous</code> tab
+
+## 🌙 Visual Time
+
+- Allows you to change the client-side time, as a visual effect
+<br><br>
+- Configurable from the <code>Main menu</code> tab
+<br><br>
+  <img alt = "Visual Time" src="https://github.com/Dillon8775/ImageGIFs/blob/qoq/NEW%20GIFS/visual%20time.gif?raw=true" width = 600>
+
+## 🕒 Display Local Time
+
+- Display your <b>local time,</b> in-game
+- Display the <b>world's in-game time</b>, with descriptions of what time of day it is
+<br><br>
+- Comes with other helpful things to display, using Minecraft's debug entries
+<br><br>
+- Configurable from the mod's <code>Main menu</code></code>
+<br><br>
+  <img alt = "Show IRL and In-Game Time" src="https://raw.githubusercontent.com/Dillon8775/ImageGIFs/refs/heads/qoq/Wiki/2026-05-28_18.42.21.png" width = 600>
+
+## 🖌️ Red Armor Tint
+
+- Brings back Minecraft's old red armor tint when the player takes damage
+  <br><br>
+- Configurable in the mod's <code>Misc</code> tab
+  <br><br>
+  <img alt = "Red Armor Tint" src="https://raw.githubusercontent.com/Dillon8775/ImageGIFs/refs/heads/qoq/Wiki/2026-04-27_15.25.20.png" width = 600>
+
+## ☁️ Remove Fog
 
 - Remove Minecraft's annoying fog with the click of a button!
 - Set <b>nether fog intensity</b> and <b>overworld fog intensity</b>
@@ -196,56 +222,54 @@ Toggle sprinting, potion effects, flying, bow pulling, and submerged in fluid to
   <img alt = "Remove Fog" src="https://raw.githubusercontent.com/Dillon8775/ImageGIFs/refs/heads/qoq/Wiki/removefog.png" width = 500>
   <img alt = "Remove Fog" src="https://raw.githubusercontent.com/Dillon8775/ImageGIFs/refs/heads/qoq/Wiki/netherfogintensity.png" width = 450>
 
-## Show IRL Time
+## 🔔 Armor Ding
 
-- Display your <b>IRL time,</b> in-game
-- With the option to also display the in-game time, with descriptions of what time of day it is
-- Comes with other helpful things to display, using Minecraft's debug entries
+- Plays a ding sound whenever your armor gets low
 <br><br>
-- Configurable via Minecraft's <code>debug entries screen</code>
-<br><br>
-  <img alt = "Show IRL and In-Game Time" src="https://raw.githubusercontent.com/Dillon8775/ImageGIFs/refs/heads/qoq/Wiki/2026-05-01_16.15.13.png" width = 600>
+- Configurable in the mod's <code>Miscellaneous</code> tab
 
-## Quick Searching
+## 🚫 No Recipe Book Shift
+
+- Prevents the recipe book from shifting the inventory screen over
+<br<br>
+- Configurable in the mod's <code>Miscellaneous</code> tab
+
+## 🔄 Auto-Close Recipe Book
+
+- Automatically close the annoying recipe book when closing your inventory
+  <br><br>
+- Configurable in the mod's <code>Miscellaneous</code> tab
+
+## 🔎 Quick Searching
 
 - Type anywhere on your screen to auto-focus into a search bar
 - Works with recipe book search bar, and this mod's search bar
 <br><br>
 - Configurable in the mod's <code>Searching</code> tab
 
-## Quick GUI Exit
+## ᯓ★ Quick Equip
+
+- Right-click an armor item to swap it out with whatever you're wearing
+<br><br>
+- Configurable in the mod's <code>Miscellaneous</code> tab
+<br><br>
+  <img alt = "Quick Equip" src="https://raw.githubusercontent.com/Dillon8775/ImageGIFs/refs/heads/qoq/NEW%20GIFS/Quick%20Equip.gif" width = 300>
+
+## ᯓ➤ Quick GUI Exit
+
 - Click anywhere out-of-bounds of a GUI to close it
 <br><br>
 - Configurable in the mod's <code>Miscellaneous</code> tab
 
-## Auto-Close Recipe Book
+## 😡 Anti-Rage Quit
 
-- Automatically close the annoying recipe book when closing your inventory
+- Prevents the player from quickly pressing the disconnect button!
 <br><br>
 - Configurable in the mod's <code>Miscellaneous</code> tab
-
-## No Recipe Book Shift
-
-- Prevents the recipe book from shifting the inventory screen over
-<br<br>
-- Configurable in the mod's <code>Miscellaneous</code> tab
-
-## Red Armor Tint
-- Brings back Minecraft's old red armor tint when the player takes damage
 <br><br>
-- Configurable in the mod's <code>Misc</code> tab
-<br><br>
-  <img alt = "Red Armor Tint" src="https://raw.githubusercontent.com/Dillon8775/ImageGIFs/refs/heads/qoq/Wiki/2026-04-27_15.25.20.png" width = 600>
+  <img alt = "Anti-Rage Quit" src="https://github.com/Dillon8775/ImageGIFs/blob/qoq/Prevent%20rage%20quitting.gif?raw=true" width = 600>
 
-## Visual Time
-
-- Allows you to change the client-side time, as a visual effect
-<br><br>
-- Configurable from the <code>Main menu</code> tab
-<br><br>
-  <img alt = "Visual Time" src="https://github.com/Dillon8775/ImageGIFs/blob/qoq/NEW%20GIFS/visual%20time.gif?raw=true" width = 600>
-
-## View Last Known Ender Chest
+## 📊 View Last Known Ender Chest
 
 - Adds a button to the Quality of Queso main menu, which lets you view your last known ender chest
 <br><br>
@@ -253,17 +277,20 @@ Toggle sprinting, potion effects, flying, bow pulling, and submerged in fluid to
 <br><br>
   <img alt = "View Last Known Ender Chest" src="https://raw.githubusercontent.com/Dillon8775/ImageGIFs/refs/heads/qoq/Wiki/2026-04-27_15.27.20.png" width = 600>
 
-## Open Screenshots Folder
+## 🖼️ Open Screenshots Folder
+
  - Adds a button to open your screenshots folder
 <br><br>
 - Found in the mod's <code>main menu</code>
 
-## Open World Directory
+## 🗃️ Open World Directory
+
 - Adds a button to open your world directory folder for singleplayer worlds
 <br><br>
 - Found in the mod's <code>main menu</code>
 
-## Multi-Server Configs and Blacklisted Servers
+## 💾 Multi-Server Configs and Blacklisted Servers
+
 - Create separate Quality of Queso configurations for each server that you play on
 - Additionally, you can block the mod from working on certain servers
 <br><br>
@@ -275,54 +302,57 @@ Toggle sprinting, potion effects, flying, bow pulling, and submerged in fluid to
 
 ---
 
-## This mod is *mostly client-side.* The only features that are server-dependent are:
+## 🌐 This mod is *mostly client-side.* The only features that are server-dependent are:
 - [Item Frame Searching](https://quality-of-queso.fandom.com/wiki/Item_Frame_Searching)
 - [Locking Slots](https://quality-of-queso.fandom.com/wiki/Locked_Slots) in shulker boxes (locking slots in any other container is 100% client-side and stored per world, per server)
     - View more information about this [here.](https://quality-of-queso.fandom.com/wiki/Locked_Slots)
+- [Locking the player's inventory](https://modrinth.com/mod/quality-of-queso/version/LJpYSozL)
 
-## Please read through the [Wiki](https://quality-of-queso.fandom.com/wiki/Quality_of_Queso_Wiki) to fully understand all features. *;)*
+## 📖 Please read through the [Wiki](https://quality-of-queso.fandom.com/wiki/Quality_of_Queso_Wiki) to fully understand all features. *;)*
 
 ---
 
-# FAQ
-### Quality of Queso isn't working with *such and such* mod(s)! → **If you are getting a crash, join my [Discord server](https://discord.gg/vfqEAn4YFy) and send your crash report in the `#modding` channel, so I can help.**
-- Please be aware that some mods don't work with Quality of Queso. ***Confirmed incompatible mods currently include:***
+# ❓FAQ
+### ⛓️‍💥 Quality of Queso isn't working with *such and such* mod(s)! → **If you are getting a crash, join my [Discord server](https://discord.gg/vfqEAn4YFy) and send your crash report in the `#modding` channel, so I can help.**
+- Please be aware that some mods don't work with Quality of Queso.
+- **Confirmed** incompatible mods *currently* include:
   - [Controlify](https://modrinth.com/mod/controlify)
 
-### Can you add *such and such*? → **If and when I feel like it.**
+### ✅ Can you add *such and such*? → **If and when I feel like it.**
 - If you have a feature request *(or if you are asking for mod compatibility)*, your best option is to join my [Discord server](https://discord.gg/vfqEAn4YFy) and post your suggestion in the `#suggestions` channel.
 - **Please report any bugs you may find to the [GitHub Repository](https://github.com/Dillon8775/Quality-of-Queso/issues).**
 
-### Does this mod work with mods like [sophisticated backpacks](https://modrinth.com/mod/sophisticated-backpacks), [iron chests](https://modrinth.com/mod/iron-chests), etc.? → **Not right now.**
+### 🔗 Does this mod work with mods like [sophisticated backpacks](https://modrinth.com/mod/sophisticated-backpacks), [iron chests](https://modrinth.com/mod/iron-chests), etc.? → **Not right now.**
 - I plan to add support for mods like these in the future. But please, don't keep asking for it!
 
-### What version(s) of **Minecraft** does this mod support? → **Quality of Queso is kept up-to-date on the latest version of Minecraft, and then (currently)** ***1.21.11, 1.21.1,*** **and** ***1.20.1***.
+### 🏷️ What version(s) of **Minecraft** does this mod support? → **Quality of Queso is kept up-to-date on the latest version of Minecraft, and then (currently)** ***1.21.11, 1.21.1,*** **and** ***1.20.1***.
 - Support for the **latest Minecraft version** always comes ***first.*** Then I backport to older versions.
 - For version ***1.21.1*** and above, the mod works with **[Fabric](https://fabricmc.net/)** and **[NeoForged](https://neoforged.net/)**.
-- For version ***1.20.1***, the mod works with [Fabric]() and **[Forge](https://files.minecraftforge.net/net/minecraftforge/forge/).**
+- For version ***1.20.1***, the mod works with [Fabric](https://fabricmc.net/) and **[Forge](https://files.minecraftforge.net/net/minecraftforge/forge/).**
 
-### Can I contribute to your mod, by making textures, giving ideas, etc.? → **Join my [Discord server](https://discord.gg/vfqEAn4YFy) to suggest ideas, report bugs, and further contribute to my community.**
+### ✨ Can I contribute to your mod, by making textures, giving ideas, etc.? → **Join my [Discord server](https://discord.gg/vfqEAn4YFy) to suggest ideas, report bugs, and further contribute to my community.**
 - If and when the position is open, you can also apply to become a **[Trialist](https://dyno.gg/form/b8e534)** in my [Discord server](https://discord.gg/vfqEAn4YFy), which means you will get access to versions of the mod *before they publicly release,* so that you will be able to find bugs, test new features, and suggest further ideas.
 - You can also create your own resource pack by using the template provided in the mod, which can be found **[here.](https://onedrive.live.com/?cid=dde4bd527f59679e&id=DDE4BD527F59679E!s0561c22707294321bdbb3677415bd0fd&resid=DDE4BD527F59679E!s0561c22707294321bdbb3677415bd0fd&ithint=folder&e=Q5gEW0&migratedtospo=true&redeem=aHR0cHM6Ly8xZHJ2Lm1zL2YvYy9kZGU0YmQ1MjdmNTk2NzllL0lnQW53bUVGS1FjaFE3MjdObmRCVzlEOUFiZVZDNEpsOEN1WFRYTVFfQ1dVb3J3P2U9UTVnRVcw)**
 
-### I don't like *such and such* feature. Can I disable it? → **This mod is fully configurable, with the most intuitive configuration that I could create.** ***Most features are toggleable and configurable.***
+### ❌ I don't like *such and such* feature. Can I disable it? → **This mod is fully configurable, with the most intuitive configuration that I could create.** ***Most features are toggleable and configurable.***
 - If you are having trouble configuring Quality of Queso, or don't know how to turn a certain setting off, join my [Discord server](https://discord.gg/vfqEAn4YFy) so I can help.
 - Also consider reading up on the mod's **[Wiki page](https://quality-of-queso.fandom.com/wiki/Quality_of_Queso_Wiki)**, which documents *just about everything* you would need.
 
 ---
-# Older Version Support
-Currently, [Quality of Queso](https://modrinth.com/mod/quality-of-queso) ***does*** support older versions of Minecraft, however, certain features are ***currently unsupported.***
-### MC 1.21.11 *(and below)* Unsupported Features
+# ⚠️ Older Version Support
+➜ Currently, [Quality of Queso](https://modrinth.com/mod/quality-of-queso) ***does*** support older versions of Minecraft, however, certain features are ***currently unsupported.***
+### ❌ MC 1.21.11 *(and below)* Unsupported Features
 - [Fluid FOV Effect](https://quality-of-queso.fandom.com/wiki/FOV_Modifiers)
-### MC 1.21.1 *(and below)* Unsupported Features
+### ❌ MC 1.21.1 *(and below)* Unsupported Features
 - [Craft All (aka. bulk crafting)](https://quality-of-queso.fandom.com/wiki/Craft_All)
 - [Red Armor Tint](https://quality-of-queso.fandom.com/wiki/Red_Armor_Tint)
 - [Transparent Search Bar](https://quality-of-queso.fandom.com/wiki/Search_Bar#Customizable_Search_Bar)
 - [Overworld Fog Intensity](https://quality-of-queso.fandom.com/wiki/Remove_Fog#Fog_Intensity)
+- [Enhanced Cursor](https://quality-of-queso.fandom.com/wiki/Enhanced_Cursor)
 - Darker Overlay setting
 - Fading Animations with the armor status
 - `Keybind Modifiers`
-### MC 1.20.1 *(and below)* Unsupported Features
+### ❌ MC 1.20.1 *(and below)* Unsupported Features
 - [Colored Highlighting](https://quality-of-queso.fandom.com/wiki/Colored_Highlighting)
 - [Warning Indicators](https://quality-of-queso.fandom.com/wiki/Warning_Indicators)
 - Slot Highlighting on Armor Status (outline when armor piece gets updated)

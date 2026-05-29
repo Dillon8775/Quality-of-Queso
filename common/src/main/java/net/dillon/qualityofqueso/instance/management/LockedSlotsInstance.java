@@ -80,7 +80,7 @@ public class LockedSlotsInstance extends ManagementInstance {
      */
     public void renderUnlockedSlot(GuiGraphicsExtractor graphics, boolean isSlotLocked, int mouseX, int mouseY) {
         int xy = 10;
-        graphics.blit(RenderPipelines.GUI_TEXTURED, ofQoQ("textures/gui/sprites/locked_slot/" + (isSlotLocked ? "key" : "unlock") + ".png"), mouseX - 6, mouseY + 2, 0.0F, 0.0F, xy, xy, xy, xy);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, ofQoQ("textures/gui/sprites/locked_slot/" + (isSlotLocked ? "key" : "unlock") + ".png"), mouseX - 8, mouseY + 1, 0.0F, 0.0F, xy, xy, xy, xy);
     }
 
     /**

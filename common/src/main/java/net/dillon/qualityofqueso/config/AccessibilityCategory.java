@@ -8,7 +8,7 @@ import dev.isxander.yacl3.api.controller.BooleanControllerBuilder;
 import dev.isxander.yacl3.api.controller.EnumControllerBuilder;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
 import net.blay09.mods.balm.Balm;
-import net.dillon.qualityofqueso.option.eum.accessibility.WidgetTheme;
+import net.dillon.qualityofqueso.option.eum.accessibility.Theme;
 import net.dillon.qualityofqueso.option.eum.misc.ViewLastKnownEnderChestButton;
 import net.minecraft.network.chat.Component;
 
@@ -88,7 +88,7 @@ public class AccessibilityCategory {
                                                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.darker_overlay.description")))
                                                 .binding(false, () -> clientOptionsInstance().getAccessibilityOptions().darkerOverlay, v -> clientOptionsInstance().getAccessibilityOptions().darkerOverlay = v)
                                                 .controller(BooleanControllerBuilder::create)
-                                                .available(clientOptionsInstance().getGeneralOptions().widgetTheme == WidgetTheme.VANILLA)
+                                                .available(clientOptionsInstance().getGeneralOptions().theme == Theme.VANILLA)
                                                 .build()
                                 )
                                 .option(

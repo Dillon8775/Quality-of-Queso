@@ -481,7 +481,8 @@ public class GuiMixin {
                         clientOptionsInstance().getHudOptions().coloredHighlighting
                                 ? count < 11 ? SLOT_CRITICAL
                                   : count < 21 ? SLOT_AVERAGE
-                                    : SLOT_GOOD
+                                    : count < 31 ? SLOT_DECENT
+                                      : SLOT_GOOD
                                 : HOTBAR_SELECTION_SPRITE,
                         getGuiWidth(graphics) + itemX - 4,
                         getGuiHeight(graphics) - 3 + itemAnimationYOffset,

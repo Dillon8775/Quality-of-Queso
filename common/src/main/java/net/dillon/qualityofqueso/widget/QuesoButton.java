@@ -114,7 +114,7 @@ public class QuesoButton extends Button {
         }
 
         Screen screen = getCurrentScreen();
-        if (clientOptionsInstance().getManagementOptions().scrollMoving && (isValidScreenForSingularMoving(screen, true))) {
+        if (canScrollMoveAndHasScrollModifierDown() && clientOptionsInstance().getManagementOptions().scrollMoving && (isValidScreenForSingularMoving(screen, true))) {
             if (this.isHovered() ||
                     (getCurrentScreen() instanceof AbstractContainerScreen<?> abstractContainerScreen
                             && getHoveredSlot(abstractContainerScreen) != null && getHoveredSlot(abstractContainerScreen).hasItem())) {
