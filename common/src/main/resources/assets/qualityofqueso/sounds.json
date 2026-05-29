@@ -11,10 +11,7 @@
   "qualityofqueso.management.reject": {
     "subtitle": "qualityofqueso.gui.management_reject",
     "sounds": [
-      {
-        "name": "minecraft:item.bundle.insert_fail",
-        "type": "event"
-      }
+      "qualityofqueso:management_rejects"
     ]
   },
   "qualityofqueso.management.drop": {
