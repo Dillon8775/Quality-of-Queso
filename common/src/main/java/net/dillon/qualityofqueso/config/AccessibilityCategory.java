@@ -8,7 +8,7 @@ import dev.isxander.yacl3.api.controller.BooleanControllerBuilder;
 import dev.isxander.yacl3.api.controller.EnumControllerBuilder;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
 import net.blay09.mods.balm.api.Balm;
-import net.dillon.qualityofqueso.option.eum.accessibility.Theme;
+import net.dillon.qualityofqueso.option.eum.general.Theme;
 import net.dillon.qualityofqueso.option.eum.misc.ViewLastKnownEnderChestButton;
 import net.minecraft.network.chat.Component;
 

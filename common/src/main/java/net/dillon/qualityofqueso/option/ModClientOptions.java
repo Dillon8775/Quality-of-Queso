@@ -1,7 +1,7 @@
 package net.dillon.qualityofqueso.option;
 
-import net.dillon.qualityofqueso.option.eum.accessibility.Theme;
-import net.dillon.qualityofqueso.option.eum.accessibility.Tooltips;
+import net.dillon.qualityofqueso.option.eum.general.Theme;
+import net.dillon.qualityofqueso.option.eum.general.Tooltips;
 import net.dillon.qualityofqueso.option.eum.fov_effects.Bows;
 import net.dillon.qualityofqueso.option.eum.fov_effects.PotionEffects;
 import net.dillon.qualityofqueso.option.eum.hud.ArmorStatus;

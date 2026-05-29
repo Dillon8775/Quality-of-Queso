@@ -7,9 +7,9 @@ import dev.isxander.yacl3.api.OptionGroup;
 import dev.isxander.yacl3.api.controller.BooleanControllerBuilder;
 import dev.isxander.yacl3.api.controller.EnumControllerBuilder;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
-import net.dillon.qualityofqueso.option.eum.accessibility.MenuButton;
-import net.dillon.qualityofqueso.option.eum.accessibility.Theme;
-import net.dillon.qualityofqueso.option.eum.accessibility.Tooltips;
+import net.dillon.qualityofqueso.option.eum.general.MenuButton;
+import net.dillon.qualityofqueso.option.eum.general.Theme;
+import net.dillon.qualityofqueso.option.eum.general.Tooltips;
 import net.minecraft.network.chat.Component;
 
 import static net.dillon.qualityofqueso.config.ConfigurationScreen.fixedSizeImage;
@@ -46,6 +46,7 @@ public class GeneralCategory {
                                                     return switch (value) {
                                                         case VANILLA -> builder.customImage(fixedSizeImage(ofQoQ("textures/gui/sprites/options/theme/vanilla.png"), 36, 36)).build();
                                                         case DARK -> builder.customImage(fixedSizeImage(ofQoQ("textures/gui/sprites/options/theme/dark.png"), 36, 36)).build();
+                                                        case TRUE_DARK -> builder.customImage(fixedSizeImage(ofQoQ("textures/gui/sprites/options/theme/true_dark.png"), 136, 36)).build();
                                                         case TRANSPARENT -> builder.customImage(fixedSizeImage(ofQoQ("textures/gui/sprites/options/theme/transparent.png"), 36, 36)).build();
                                                     };
                                                 })

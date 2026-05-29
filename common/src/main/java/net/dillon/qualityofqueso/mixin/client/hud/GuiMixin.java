@@ -6,6 +6,7 @@ import net.dillon.qualityofqueso.helper.ContainerHelper;
 import net.dillon.qualityofqueso.helper.DebugHudHelper;
 import net.dillon.qualityofqueso.helper.EnderChestHelper;
 import net.dillon.qualityofqueso.option.ContainerData;
+import net.dillon.qualityofqueso.option.eum.general.Theme;
 import net.dillon.qualityofqueso.option.eum.hud.ItemCounter;
 import net.dillon.qualityofqueso.util.ItemHudTracker;
 import net.minecraft.client.AttackIndicatorStatus;
@@ -315,7 +316,9 @@ public abstract class GuiMixin {
             graphics.pose().translate(0.0F, 0.0F, -90.0F);
 
             graphics.blit(
-                    ofQoQ("textures/gui/sprites/hud/armor_hotbar.png"),
+                    clientOptionsInstance().getGeneralOptions().theme == Theme.TRUE_DARK
+                            ? ofQoQ("textures/gui/sprites/hud/armor_hotbar_true_dark.png")
+                            : ofQoQ("textures/gui/sprites/hud/armor_hotbar.png"),
                     this.getArmorBarX(this.minecraft, graphics),
                     getGuiHeight(graphics) - 2 + syncArmorAnimationYOffset,
                     0.0F,
