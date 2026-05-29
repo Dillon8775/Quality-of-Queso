@@ -1,6 +1,6 @@
 package net.dillon.qualityofqueso.widget;
 
-import net.dillon.qualityofqueso.option.eum.accessibility.WidgetTheme;
+import net.dillon.qualityofqueso.option.eum.accessibility.Theme;
 import net.dillon.qualityofqueso.util.ModConstants;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
@@ -38,14 +38,14 @@ public class SearchBar extends EditBox {
             this.setValue(ModConstants.SAVED_TEXT);
         }
         this.setMaxLength(50);
-        if (clientOptionsInstance().getGeneralOptions().widgetTheme.searchBarTransparent() && !clientOptionsInstance().getSearchingOptions().searchBarColor.black()) {
+        if (clientOptionsInstance().getGeneralOptions().theme.searchBarTransparent() && !clientOptionsInstance().getSearchingOptions().searchBarColor.black()) {
             this.setTextShadow(false);
             int textColor = clientOptionsInstance().getSearchingOptions().searchBarTextColor;
             if (clientOptionsInstance().getSearchingOptions().searchBarTextColor == DEFAULT_TRANSPARENT_SEARCH_BAR_TEXT_COLOR
-                    && (clientOptionsInstance().getGeneralOptions().widgetTheme != WidgetTheme.VANILLA || clientOptionsInstance().getSearchingOptions().searchBarColor.transparent())) {
+                    && (clientOptionsInstance().getGeneralOptions().theme != Theme.VANILLA || clientOptionsInstance().getSearchingOptions().searchBarColor.transparent())) {
                 textColor = CommonColors.WHITE;
             }
-            if (clientOptionsInstance().getGeneralOptions().widgetTheme == WidgetTheme.VANILLA && clientOptionsInstance().getSearchingOptions().searchBarColor.transparent()) {
+            if (clientOptionsInstance().getGeneralOptions().theme == Theme.VANILLA && clientOptionsInstance().getSearchingOptions().searchBarColor.transparent()) {
                 textColor = clientOptionsInstance().getSearchingOptions().searchBarTextColor;
             }
             this.setTextColor(textColor);
@@ -126,7 +126,7 @@ public class SearchBar extends EditBox {
                 graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ofQoQ("widget/search/" + getWidgetPath(true) + "search_bar_overlay"),
                         this.getX() - 3, this.getY() - 3, OVERLAY_WIDTH, OVERLAY_HEIGHT);
             }
-            if (!this.isFocused() && this.getValue().isEmpty() && clientOptionsInstance().getGeneralOptions().widgetTheme.searchBarTransparent()) {
+            if (!this.isFocused() && this.getValue().isEmpty() && clientOptionsInstance().getGeneralOptions().theme.searchBarTransparent()) {
                 graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SEARCH_TEXTURE, this.getX() + (getCurrentScreen() instanceof InventoryScreen ? 78 : 80), this.getY(), 12, 12);
             }
         }

@@ -41,6 +41,35 @@ public class ExtractingInstance extends ManagementInstance {
     }
 
     /**
+     * Draws an enhanced cursor on the screen.
+     */
+    public void extractEnhancedCursor(GuiGraphics graphics) {
+        if (!clientOptionsInstance().getMiscOptions().enhancedCursor) {
+            return;
+        }
+
+        boolean hasHoveredSlot = instance().getScreensHoveredSlot() != null && instance().getScreensHoveredSlot().hasItem();
+        if (!getCursorStack().isEmpty() || hasHoveredSlot) {
+            graphics.requestCursor(CursorTypes.POINTING_HAND);
+        }
+
+        if (!hasHoveredSlot) {
+            return;
+        }
+
+        if (canScrollMoveAndHasScrollModifierDown()) {
+            graphics.requestCursor(
+                    hasDropOnlyOneItemKeyDown() || hasAllQuickDropModifiersDown()
+                            ? CursorTypes.CROSSHAIR
+                            : CursorTypes.RESIZE_NS);
+        }
+
+        if (isContainerScreen(instance().getScreen()) && hasAllQuickDropModifiersDown() && !shouldButtonBeActive(false, null)) {
+            graphics.requestCursor(CursorTypes.NOT_ALLOWED);
+        }
+    }
+
+    /**
      * Renders the blue "locked" overlay for locked slots (not the lock icon, the color itself)
      */
     public void extractLockedSlotColor(GuiGraphics graphics) {
@@ -66,11 +95,11 @@ public class ExtractingInstance extends ManagementInstance {
                 lockedSlotsInstance().renderUnlockedSlot(graphics, lockedSlotsInstance().isLockedSlot(instance().getScreensHoveredSlot().index), mouseX, mouseY);
             }
             // For drag sorting and/or locking slots, set the cursor to "pointing hand", like the user is grabbing onto slots to lock/select them
-            if ((clientOptionsInstance().getManagementOptions().dragSorting || clientOptionsInstance().getLockedSlotOptions().lockedSlots)
+            if (clientOptionsInstance().getMiscOptions().enhancedCursor && (clientOptionsInstance().getManagementOptions().dragSorting || clientOptionsInstance().getLockedSlotOptions().lockedSlots)
                     && instance().getScreensHoveredSlot() != null
                     && !Minecraft.getInstance().hasControlDown()
                     && Minecraft.getInstance().hasAltDown()) {
-                graphics.requestCursor(CursorTypes.POINTING_HAND);
+                graphics.requestCursor(CursorTypes.CROSSHAIR);
             }
         }
     }
@@ -346,14 +375,6 @@ public class ExtractingInstance extends ManagementInstance {
             AbstractList<AbstractWidget> finalLayout = clientOptionsInstance().getManagementOptions().layout.horizontal() ? horizontalLayout : verticalLayout;
             if (merchantScreen) {
                 finalLayout = NonNullList.of(null, instance().getManagementButtons().tradeAll());
-            } else if (dropperDispenserOrHopperScreen) {
-                finalLayout = NonNullList.of(null,
-                        instance().getManagementButtons().transferInventory(),
-                        instance().getManagementButtons().transferContainer(),
-                        instance().getManagementButtons().sort(),
-                        instance().getManagementButtons().filtering(),
-                        instance().getManagementButtons().alwaysQuickMove()
-                );
             }
 
             // Set and initialize the widget layout

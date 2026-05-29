@@ -256,6 +256,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
         ExtractingInstance extractingInstance = new ExtractingInstance(
                 (QuesoScreen) this.screen
         );
+        extractingInstance.extractEnhancedCursor(graphics);
         extractingInstance.clearWidgets();
         extractingInstance.extractSearchFields(graphics, mouseX, mouseY, a);
         extractingInstance.extractButtons(graphics, mouseX, mouseY, a);

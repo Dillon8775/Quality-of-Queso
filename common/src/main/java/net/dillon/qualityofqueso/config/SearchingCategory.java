@@ -3,7 +3,7 @@ package net.dillon.qualityofqueso.config;
 import dev.isxander.yacl3.api.*;
 import dev.isxander.yacl3.api.controller.*;
 import net.dillon.qualityofqueso.keybind.ModKeyMappings;
-import net.dillon.qualityofqueso.option.eum.accessibility.WidgetTheme;
+import net.dillon.qualityofqueso.option.eum.accessibility.Theme;
 import net.dillon.qualityofqueso.option.eum.searching.QuickSearch;
 import net.dillon.qualityofqueso.option.eum.searching.SearchBarColor;
 import net.dillon.qualityofqueso.option.eum.searching.SearchBarPosition;
@@ -144,7 +144,7 @@ public class SearchingCategory {
                                                         .formatValue(v -> Component.literal(v.getSerializedName())))
                                                 .addListener((opt, event) -> {
                                                     if (event == OptionEventListener.Event.STATE_CHANGE || event == OptionEventListener.Event.INITIAL) {
-                                                        boolean bl = !opt.pendingValue().black() && (opt.pendingValue().transparent() || clientOptionsInstance().getGeneralOptions().widgetTheme == WidgetTheme.TRANSPARENT);
+                                                        boolean bl = !opt.pendingValue().black() && (opt.pendingValue().transparent() || clientOptionsInstance().getGeneralOptions().theme == Theme.TRANSPARENT);
                                                         searchBarTextColorOption.setAvailable(bl);
                                                         underlineTextOption.setAvailable(bl);
                                                     }

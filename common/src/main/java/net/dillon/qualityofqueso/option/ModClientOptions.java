@@ -1,7 +1,7 @@
 package net.dillon.qualityofqueso.option;
 
+import net.dillon.qualityofqueso.option.eum.accessibility.Theme;
 import net.dillon.qualityofqueso.option.eum.accessibility.Tooltips;
-import net.dillon.qualityofqueso.option.eum.accessibility.WidgetTheme;
 import net.dillon.qualityofqueso.option.eum.fov_effects.Bows;
 import net.dillon.qualityofqueso.option.eum.fov_effects.PotionEffects;
 import net.dillon.qualityofqueso.option.eum.hud.ArmorStatus;
@@ -130,7 +130,7 @@ public class ModClientOptions {
     public static class GeneralOptions {
         public boolean enableMod = true;
         public Tooltips tooltips = Tooltips.DEFAULT;
-        public WidgetTheme widgetTheme = WidgetTheme.VANILLA;
+        public Theme theme = Theme.VANILLA;
     }
 
     public static class SearchingOptions {
@@ -314,6 +314,7 @@ public class ModClientOptions {
 
         public boolean redArmorTint = false;
         public boolean enchantmentHelper = true;
+        public boolean enhancedCursor = true;
         public boolean quickEquip = true;
         public boolean quickGuiExit = true;
         public boolean fortniteBattlePass = false;

@@ -53,7 +53,7 @@ public abstract class EditBoxMixin extends AbstractWidget {
         Identifier newId = SearchBar.getSprites().get(this.isActive(), this.isFocused());
         if (clientOptionsInstance().getSearchingOptions().searchBarColor.black()) {
             return original;
-        } else if (clientOptionsInstance().getGeneralOptions().widgetTheme.searchBarTransparent()) {
+        } else if (clientOptionsInstance().getGeneralOptions().theme.searchBarTransparent()) {
             return ofQoQ("widget/search/transparent/search_bar_transparent");
         } else {
             return newId;
@@ -66,7 +66,7 @@ public abstract class EditBoxMixin extends AbstractWidget {
     @Inject(method = "updateTextPosition", at = @At("TAIL"))
     private void rightAlignText(CallbackInfo ci) {
         if (!((EditBox) (Object) this instanceof SearchBar) || this.font == null
-                || clientOptionsInstance().getSearchingOptions().searchBarColor.black() || !clientOptionsInstance().getGeneralOptions().widgetTheme.searchBarTransparent()) {
+                || clientOptionsInstance().getSearchingOptions().searchBarColor.black() || !clientOptionsInstance().getGeneralOptions().theme.searchBarTransparent()) {
             return;
         }
 
