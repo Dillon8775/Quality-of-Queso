@@ -57,10 +57,6 @@ public class ExtractingInstance extends ManagementInstance {
             return;
         }
 
-        if (hasDropOnlyOneItemKeyDown()) {
-            graphics.requestCursor(CursorTypes.CROSSHAIR);
-        }
-
         if (canScrollMoveAndHasScrollModifierDown()) {
             graphics.requestCursor(
                     hasDropOnlyOneItemKeyDown() || hasAllQuickDropModifiersDown()
