@@ -13,11 +13,10 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.debug.DebugOptionsScreen;
 import net.minecraft.network.chat.Component;
 
-import static net.dillon.qualityofqueso.helper.ModHelper.commonOptionsInstance;
-import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
+import static net.dillon.qualityofqueso.helper.ModHelper.*;
 
 public class MainMenuScreen extends AbstractModScreen {
-    private AbstractWidget openItemFrameSearchGUIOptions, visualTime, debugHuds;
+    private AbstractWidget openItemFrameSearchGUIOptions, visualTime, hudPositions, debugHuds;
 
     public MainMenuScreen(Screen parent) {
         super(parent, Component.translatable("qualityofqueso.gui.options.title").withStyle(ChatFormatting.GOLD));
@@ -35,6 +34,12 @@ public class MainMenuScreen extends AbstractModScreen {
                 this.minecraft.setScreen(new VisualTimeScreen(this))
         ).tooltip(
                 Tooltip.create(Component.translatable("qualityofqueso.gui.visual_time.description"))
+        ).build();
+
+        this.hudPositions = Button.builder(Component.translatable("qualityofqueso.gui.hud_positions"), button -> {
+            this.minecraft.setScreen(new HudPositionsScreen(this));
+        }).tooltip(
+                Tooltip.create(Component.translatable("qualityofqueso.gui.hud_positions.tooltip"))
         ).build();
 
         this.debugHuds = Button.builder(Component.translatable("qualityofqueso.gui.debug_huds"), button -> {
@@ -70,13 +75,15 @@ public class MainMenuScreen extends AbstractModScreen {
 
                 this.visualTime,
 
+                this.debugHuds,
+
+                this.hudPositions,
+
                 Button.builder(Component.translatable("qualityofqueso.gui.resources"), button -> {
                     this.minecraft.setScreen(new ResourcesScreen(this));
                 }).tooltip(
                         Tooltip.create(Component.translatable("qualityofqueso.gui.resources.tooltip"))
                 ).build(),
-
-                this.debugHuds
         };
     }
 
@@ -85,6 +92,7 @@ public class MainMenuScreen extends AbstractModScreen {
         boolean modEnabled = modEnabled(this.minecraft);
         this.openItemFrameSearchGUIOptions.active = modEnabled && commonOptionsInstance().itemFrameSearching && this.minecraft.level != null;
         this.visualTime.active = modEnabled;
+        this.hudPositions.active = modEnabled && this.minecraft.level != null && (!clientOptionsInstance().getHudOptions().armorStatus.off() || clientOptionsInstance().getItemCounterOptions().itemCounter.enabled());
         this.debugHuds.active = modEnabled;
     }
 
