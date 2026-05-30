@@ -26,6 +26,29 @@ public class ModOptionUtil {
             : ModTexts.NO;
 
     /**
+     * @return a normal format.
+     */
+    protected static Component posFormatted(Component optionText, int value) {
+        String v = value == 0 ? Component.translatable("qualityofqueso.options.hud_element.default").getString() : String.valueOf(value);
+        if (value > 0) {
+            v = "+" + v;
+        }
+        return optionText.copy().append(" (" + v + ")");
+    }
+
+    /**
+     * @return an inverted format.
+     */
+    protected static Component invertedPosFormat(Component optionText, int value) {
+        String v = value == 0 ? Component.translatable("qualityofqueso.options.hud_element.default").getString() : String.valueOf(value);
+        String absV = String.valueOf(Math.abs(value));
+        if (value != 0) {
+            v = (value > 0 ? "-" : "+") + absV;
+        }
+        return optionText.copy().append(" (" + v + ")");
+    }
+
+    /**
      * @return the visual time speed to ticks.
      */
     public static int visualTimeStepToTicks(int step) {
