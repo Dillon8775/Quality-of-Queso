@@ -343,7 +343,7 @@
   "qualityofqueso.options.item_counter_y_position.tooltip": "Set the §ly-pos §r§ffor the item counter.\n§aRight-click to reset",
   "qualityofqueso.options.other_elements_y_position": "Other Elements §a§l↑↓",
   "qualityofqueso.options.other_elements_y_position.tooltip": "Set the §ly-pos §r§ffor other HUD elements, like locked slots and warning indicators.\n\n§cYou should only really change this if another mod changes the position of your hotbar.§r§f\n\n§aRight-click to reset",
-  "qualityofqueso.options.hud_element.default": "§2Default",
+  "qualityofqueso.options.hud_element.default": "§2Default§r§f",
 
   "qualityofqueso.gui.debug_huds": "§cDebug HUDs...",
   "qualityofqueso.gui.debug_huds.tooltip": "Toggle debug huds, such as world time, local time, and more...",
