@@ -120,8 +120,7 @@ public class ModTooltipInstance extends ManagementInstance {
             // Create the new tooltip variable
             List<Component> moveAmountTooltip = new ArrayList<>();
             // Determine the translation for the tooltip
-            // If the button is hovered, render "Move *count* of each". Otherwise, render "Move *count*"
-            String translation = "qualityofqueso.gui.move_amount_each";
+            String translation = "qualityofqueso.gui.move_amount.old";
 
             boolean canRender = true;
             // If the quick drop button is hovered, render the drop amount of each stack

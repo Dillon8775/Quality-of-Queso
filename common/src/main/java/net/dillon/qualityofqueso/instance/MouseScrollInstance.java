@@ -80,6 +80,7 @@ public class MouseScrollInstance extends ManagementInstance {
         try {
             if (canScrollMoveAndHasScrollModifierDown() && (instance().getManagementButtons().transferContainer().isMouseOver(mouseX, mouseY) || instance().getManagementButtons().transferInventory().isMouseOver(mouseX, mouseY))) {
                 changeMountAmount(hoveredSlot, scrollY);
+                return;
             }
         } catch (NullPointerException o) {
         }
