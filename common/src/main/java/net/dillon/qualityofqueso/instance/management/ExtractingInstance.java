@@ -101,7 +101,7 @@ public class ExtractingInstance extends ManagementInstance {
                     && instance().getScreensHoveredSlot() != null
                     && !Minecraft.getInstance().hasControlDown()
                     && Minecraft.getInstance().hasAltDown()) {
-                graphics.requestCursor(CursorTypes.CROSSHAIR);
+                graphics.requestCursor(CursorTypes.POINTING_HAND);
             }
         }
     }

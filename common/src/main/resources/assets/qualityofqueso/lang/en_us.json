@@ -28,7 +28,7 @@
   "qualityofqueso.item_frame_searcher.executed.with_timer.match_case": "Found %s item frame(s) with item name \"%s\" and set glowing for %s seconds.",
 
   "qualityofqueso.gui.visual_time": "§2Visual Time...",
-  "qualityofqueso.gui.visual_time.description": "Override the client-time as a visual effect.",
+  "qualityofqueso.gui.visual_time.description": "Override the client-time as a visual effect...",
   "qualityofqueso.gui.visual_time.description.line2": "This does not change the actual time in your world or server...",
   "qualityofqueso.gui.visual_time.description.line3": "It's only a §ovisual.",
   "qualityofqueso.options.override_client_time": "Override Client-Time",
@@ -44,7 +44,7 @@
   "qualityofqueso.gui.search.placeholder.small": "Search...",
 
   "qualityofqueso.gui.configure": "§6§nConfigure...",
-  "qualityofqueso.gui.configure.tooltip": "Configure Quality of Queso to your liking!",
+  "qualityofqueso.gui.configure.tooltip": "Configure Quality of Queso to your liking...",
 
   "qualityofqueso.options.title.general": "General",
   "qualityofqueso.options.general.tooltip": "General functions and options for Quality of Queso.",
@@ -330,7 +330,22 @@
   "qualityofqueso.gui.configure_keybinds": "Configure Keybinds...",
   "qualityofqueso.gui.keybinds.tooltip": "Configure Quality of Queso keybinds...",
 
-  "qualityofqueso.gui.debug_huds": "Debug HUDs...",
+  "qualityofqueso.gui.hud_positions": "§aHUD Positions...",
+  "qualityofqueso.gui.title.hud_positions": "Hud Positions",
+  "qualityofqueso.gui.hud_positions.tooltip": "Set positions for the armor status and item counter...",
+  "qualityofqueso.options.armor_status_x_position": "Armor Status §a§l←→",
+  "qualityofqueso.options.armor_status_x_position.tooltip": "Set the §lx-pos §r§ffor the armor status.\n§aRight-click to reset",
+  "qualityofqueso.options.armor_status_y_position": "Armor Status §a§l↑↓",
+  "qualityofqueso.options.armor_status_y_position.tooltip": "Set the §ly-pos §r§ffor the armor status.\n§aRight-click to reset",
+  "qualityofqueso.options.item_counter_x_position": "Item Counter §a§l←→",
+  "qualityofqueso.options.item_counter_x_position.tooltip": "Set the §lx-pos §r§ffor the item counter.\n§aRight-click to reset",
+  "qualityofqueso.options.item_counter_y_position": "Item Counter §a§l↑↓",
+  "qualityofqueso.options.item_counter_y_position.tooltip": "Set the §ly-pos §r§ffor the item counter.\n§aRight-click to reset",
+  "qualityofqueso.options.other_elements_y_position": "Other Elements §a§l↑↓",
+  "qualityofqueso.options.other_elements_y_position.tooltip": "Set the §ly-pos §r§ffor other HUD elements, like locked slots and warning indicators.\n\n§cYou should only really change this if another mod changes the position of your hotbar.§r§f\n\n§aRight-click to reset",
+  "qualityofqueso.options.hud_element.default": "§2Default",
+
+  "qualityofqueso.gui.debug_huds": "§cDebug HUDs...",
   "qualityofqueso.gui.debug_huds.tooltip": "Toggle debug huds, such as world time, local time, and more...",
 
   "qualityofqueso.gui.resources": "Resources...",
@@ -360,6 +375,8 @@
   "qualityofqueso.gui.off": "OFF",
   "qualityofqueso.gui.yes": "YES",
   "qualityofqueso.gui.no": "NO",
+  "qualityofqueso.gui.save_changes": "Save Changes",
+  "qualityofqueso.gui.reset": "Reset",
 
   "qualityofqueso.gui.no_tags_found": "No tags found.",
   "qualityofqueso.gui.applicable_on": "§e⭐ Suits",

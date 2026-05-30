@@ -49,6 +49,91 @@ public class ListOptions {
         );
     }
 
+    public static OptionInstance<Integer> armorStatusXPosition() {
+        return createIntegerOption(
+                "armor_status_x_position",
+                (optionText, value) -> {
+                    if (value == 0) {
+                        return Options.genericValueLabel(optionText, Component.translatable("qualityofqueso.options.hud_element.default"));
+                    } else {
+                        return optionText;
+                    }
+                },
+                -600,
+                300,
+                clientOptionsInstance().getHudOptions().armorStatusPosition[0],
+                (options, value) -> options.getHudOptions().armorStatusPosition[0] = value
+        );
+    }
+
+    public static OptionInstance<Integer> armorStatusYPosition() {
+        return createIntegerOption(
+                "armor_status_y_position",
+                (optionText, value) -> {
+                    if (value == 0) {
+                        return Options.genericValueLabel(optionText, Component.translatable("qualityofqueso.options.hud_element.default"));
+                    } else {
+                        return optionText;
+                    }
+                },
+                -525,
+                25,
+                clientOptionsInstance().getHudOptions().armorStatusPosition[1],
+                (options, value) -> options.getHudOptions().armorStatusPosition[1] = value
+        );
+    }
+
+    public static OptionInstance<Integer> itemCounterXPosition() {
+        return createIntegerOption(
+                "item_counter_x_position",
+                (optionText, value) -> {
+                    if (value == 0) {
+                        return Options.genericValueLabel(optionText, Component.translatable("qualityofqueso.options.hud_element.default"));
+                    } else {
+                        return optionText;
+                    }
+                },
+                -400,
+                600,
+                clientOptionsInstance().getItemCounterOptions().itemCounterPosition[0],
+                (options, value) -> options.getItemCounterOptions().itemCounterPosition[0] = value
+        );
+    }
+
+    public static OptionInstance<Integer> itemCounterYPosition() {
+        return createIntegerOption(
+                "item_counter_y_position",
+                (optionText, value) -> {
+                    if (value == 0) {
+                        return Options.genericValueLabel(optionText, Component.translatable("qualityofqueso.options.hud_element.default"));
+                    } else {
+                        return optionText;
+                    }
+                },
+                -525,
+                25,
+                clientOptionsInstance().getItemCounterOptions().itemCounterPosition[1],
+                (options, value) -> options.getItemCounterOptions().itemCounterPosition[1] = value
+        );
+    }
+
+    public static OptionInstance<Integer> otherElementsYPosition() {
+        return createIntegerOption(
+                "other_elements_y_position",
+                (optionText, value) -> {
+                    if (value == 0) {
+                        return Options.genericValueLabel(optionText, Component.translatable("qualityofqueso.options.hud_element.default"));
+                    } else {
+                        return optionText;
+                    }
+                },
+                -525,
+                25,
+                clientOptionsInstance().getHudOptions().otherElementsY,
+                (options, value) -> options.getHudOptions().otherElementsY = value
+        );
+    }
+
     public static OptionInstance<Integer> itemFrameSearchGlowDuration() {
         return createIntegerOption(
                 "item_frame_search_glow_duration",
