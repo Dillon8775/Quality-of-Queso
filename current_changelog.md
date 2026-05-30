@@ -10,7 +10,7 @@
 
 ## Enhanced Cursor
 - A new option (on by default) which enhances the cursor by relating it to things you are doing in a gui screen.
-  - This replaces some tooltips to make it cleaner.
+    - This replaces some tooltips to make it cleaner.
 
 ## True Dark Theme
 - A new theme called "True Dark", which makes the armor status mini-hotbar actually dark.
