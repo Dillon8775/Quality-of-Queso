@@ -52,13 +52,7 @@ public class ListOptions {
     public static OptionInstance<Integer> armorStatusXPosition() {
         return createIntegerOption(
                 "armor_status_x_position",
-                (optionText, value) -> {
-                    if (value == 0) {
-                        return Options.genericValueLabel(optionText, Component.translatable("qualityofqueso.options.hud_element.default"));
-                    } else {
-                        return optionText;
-                    }
-                },
+                ModOptionUtil::posFormatted,
                 -600,
                 300,
                 clientOptionsInstance().getHudOptions().armorStatusPosition[0],
@@ -69,13 +63,7 @@ public class ListOptions {
     public static OptionInstance<Integer> armorStatusYPosition() {
         return createIntegerOption(
                 "armor_status_y_position",
-                (optionText, value) -> {
-                    if (value == 0) {
-                        return Options.genericValueLabel(optionText, Component.translatable("qualityofqueso.options.hud_element.default"));
-                    } else {
-                        return optionText;
-                    }
-                },
+                ModOptionUtil::invertedPosFormat,
                 -525,
                 25,
                 clientOptionsInstance().getHudOptions().armorStatusPosition[1],
@@ -86,13 +74,7 @@ public class ListOptions {
     public static OptionInstance<Integer> itemCounterXPosition() {
         return createIntegerOption(
                 "item_counter_x_position",
-                (optionText, value) -> {
-                    if (value == 0) {
-                        return Options.genericValueLabel(optionText, Component.translatable("qualityofqueso.options.hud_element.default"));
-                    } else {
-                        return optionText;
-                    }
-                },
+                ModOptionUtil::posFormatted,
                 -400,
                 600,
                 clientOptionsInstance().getItemCounterOptions().itemCounterPosition[0],
@@ -103,13 +85,7 @@ public class ListOptions {
     public static OptionInstance<Integer> itemCounterYPosition() {
         return createIntegerOption(
                 "item_counter_y_position",
-                (optionText, value) -> {
-                    if (value == 0) {
-                        return Options.genericValueLabel(optionText, Component.translatable("qualityofqueso.options.hud_element.default"));
-                    } else {
-                        return optionText;
-                    }
-                },
+                ModOptionUtil::invertedPosFormat,
                 -525,
                 25,
                 clientOptionsInstance().getItemCounterOptions().itemCounterPosition[1],
@@ -120,13 +96,7 @@ public class ListOptions {
     public static OptionInstance<Integer> otherElementsYPosition() {
         return createIntegerOption(
                 "other_elements_y_position",
-                (optionText, value) -> {
-                    if (value == 0) {
-                        return Options.genericValueLabel(optionText, Component.translatable("qualityofqueso.options.hud_element.default"));
-                    } else {
-                        return optionText;
-                    }
-                },
+                ModOptionUtil::invertedPosFormat,
                 -525,
                 25,
                 clientOptionsInstance().getHudOptions().otherElementsY,
