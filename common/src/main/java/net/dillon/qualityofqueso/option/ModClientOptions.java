@@ -271,15 +271,15 @@ public class ModClientOptions {
         public boolean emptySlots = true;
         public boolean highlightArmor = true;
 
-        public int[] armorStatusPosition = new int[]{0, 0};
-        public int otherElementsY = 0;
-
         public boolean animations = true;
         public double animationTime = 1.5;
 
         public boolean coloredHighlighting = true;
         public boolean warningIndicators = true;
         public double displayTime = 4.0;
+
+        public int[] armorStatusPosition = new int[]{0, 0};
+        public int otherElementsY = 0;
     }
 
     public static class ItemCounterOptions {
@@ -287,8 +287,6 @@ public class ModClientOptions {
         public boolean countContainers = true;
         public boolean countEnderChest = false;
         public boolean onlyCountMatchingItems = false;
-
-        public int[] itemCounterPosition = new int[]{0, 0};
 
         public boolean arrowCounter = true;
         public boolean countAllArrows = true;
@@ -298,6 +296,9 @@ public class ModClientOptions {
         public boolean displayOnThrow = true;
         public boolean displayOnPickup = true;
         public boolean displayTotalWithStacks = false;
+
+        public int[] itemCounterPosition = new int[]{0, 0};
+        public boolean moveItemCounterOver = true;
     }
 
     public static class ElytraAlarmOptions {

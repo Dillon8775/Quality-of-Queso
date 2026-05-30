@@ -547,7 +547,7 @@ public class GuiMixin {
 
             int itemX = !isLeftHanded(this.minecraft) ? -117 : 101;
             int negIncrease;
-            if (!getOffHandStack(player).isEmpty()) {
+            if (clientOptionsInstance().getItemCounterOptions().moveItemCounterOver && !getOffHandStack(player).isEmpty()) {
                 negIncrease = -29;
                 itemX += increasedBasedOnHand(this.minecraft, negIncrease, false);
             }
