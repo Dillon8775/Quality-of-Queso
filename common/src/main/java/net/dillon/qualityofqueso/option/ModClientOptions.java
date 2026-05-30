@@ -1,9 +1,9 @@
 package net.dillon.qualityofqueso.option;
 
-import net.dillon.qualityofqueso.option.eum.general.Theme;
-import net.dillon.qualityofqueso.option.eum.general.Tooltips;
 import net.dillon.qualityofqueso.option.eum.fov_effects.Bows;
 import net.dillon.qualityofqueso.option.eum.fov_effects.PotionEffects;
+import net.dillon.qualityofqueso.option.eum.general.Theme;
+import net.dillon.qualityofqueso.option.eum.general.Tooltips;
 import net.dillon.qualityofqueso.option.eum.hud.ArmorStatus;
 import net.dillon.qualityofqueso.option.eum.hud.ItemCounter;
 import net.dillon.qualityofqueso.option.eum.management.*;
@@ -271,6 +271,9 @@ public class ModClientOptions {
         public boolean emptySlots = true;
         public boolean highlightArmor = true;
 
+        public int[] armorStatusPosition = new int[]{0, 0};
+        public int otherElementsY = 0;
+
         public boolean animations = true;
         public double animationTime = 1.5;
 
@@ -284,6 +287,8 @@ public class ModClientOptions {
         public boolean countContainers = true;
         public boolean countEnderChest = false;
         public boolean onlyCountMatchingItems = false;
+
+        public int[] itemCounterPosition = new int[]{0, 0};
 
         public boolean arrowCounter = true;
         public boolean countAllArrows = true;
