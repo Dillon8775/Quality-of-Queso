@@ -15,7 +15,7 @@ public class NeoForgedPlatformHelper implements PlatformHelper {
     public String getModVersion() {
         return net.neoforged.fml.ModList.get()
                 .getModContainerById(ModConstants.MOD_ID)
-                .map(c -> c.getModInfo().getVersion().toString().split("\\+", 2)[0])
+                .map(c -> c.getModInfo().getVersion().toString().split("[+-]", 2)[0])
                 .orElse("unknown");
     }
 
