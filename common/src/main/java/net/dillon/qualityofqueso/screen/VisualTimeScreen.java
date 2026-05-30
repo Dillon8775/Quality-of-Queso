@@ -7,6 +7,7 @@ import net.dillon.qualityofqueso.util.VisualTimeTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -22,7 +23,7 @@ import static net.dillon.qualityofqueso.helper.ModHelper.ofQoQ;
  */
 public class VisualTimeScreen extends Screen {
     private static final int SIZE = 24;
-    private AbstractWidget overrideClientTime, visualTime, visualTimeSpeed, matchWithIRLTime;
+    private AbstractWidget overrideClientTime, visualTime, visualTimeSpeed, syncLocalTime;
     private final Screen parent;
 
     public VisualTimeScreen(Screen parent) {
@@ -46,7 +47,11 @@ public class VisualTimeScreen extends Screen {
         this.overrideClientTime = this.addRenderableWidget(ListOptions.overrideClientTime().createButton(Minecraft.getInstance().options, this.width / 2 - 100, this.height / 2 - 48, 200));
         this.visualTime = this.addRenderableWidget(ListOptions.visualTime().createButton(Minecraft.getInstance().options, width, this.overrideClientTime.getY() + 32, 120));
         this.visualTimeSpeed = this.addRenderableWidget(ListOptions.visualTimeSpeed().createButton(Minecraft.getInstance().options, width, this.visualTime.getY() + 28, 120));
-        this.matchWithIRLTime = this.addRenderableWidget(ListOptions.syncLocalTime().createButton(Minecraft.getInstance().options, width, this.visualTimeSpeed.getY() + 28, 120));
+        this.syncLocalTime = this.addRenderableWidget(ListOptions.syncLocalTime().createButton(Minecraft.getInstance().options, width, this.visualTimeSpeed.getY() + 28, 120));
+
+        this.addRenderableWidget(Button.builder(Component.translatable("qualityofqueso.gui.save_changes"), button -> {
+            this.onClose();
+        }).bounds(this.syncLocalTime.getX() + 12, this.syncLocalTime.getY() + 32, 100, 20).build());
     }
 
     @Override
@@ -64,12 +69,12 @@ public class VisualTimeScreen extends Screen {
         graphics.blit(clockTexture, this.visualTime.getX() - 48, this.visualTime.getY() - 2, 0.0F, 0.0F, SIZE, SIZE, SIZE, SIZE);
 
         graphics.blit(ofQoQ("textures/gui/sprites/visual_time/speed.png"), this.visualTimeSpeed.getX() - 48, this.visualTimeSpeed.getY() + 1, 0.0F, 0.0F, 24, 18, 24, 18);
-        graphics.blit(new ResourceLocation("textures/block/daylight_detector" + (clientOptionsInstance().getVisualTimeOptions().syncLocalTime ? "_inverted" : "") + "_top.png"), this.matchWithIRLTime.getX() - 48, this.matchWithIRLTime.getY() - 2, 0.0F, 0.0F, SIZE, SIZE, SIZE, SIZE);
+        graphics.blit(new ResourceLocation("textures/block/daylight_detector" + (clientOptionsInstance().getVisualTimeOptions().syncLocalTime ? "_inverted" : "") + "_top.png"), this.syncLocalTime.getX() - 48, this.syncLocalTime.getY() - 2, 0.0F, 0.0F, SIZE, SIZE, SIZE, SIZE);
 
         boolean overrideClientTime = ModHelper.clientOptionsInstance().getVisualTimeOptions().overrideClientTime;
         boolean matchWithIRLTime = ModHelper.clientOptionsInstance().getVisualTimeOptions().syncLocalTime;
         this.visualTime.active = overrideClientTime && ModHelper.clientOptionsInstance().getVisualTimeOptions().visualTimeSpeed == 0 && !matchWithIRLTime;
         this.visualTimeSpeed.active = overrideClientTime && !matchWithIRLTime;
-        this.matchWithIRLTime.active = overrideClientTime;
+        this.syncLocalTime.active = overrideClientTime;
     }
 }

@@ -1,6 +1,8 @@
 package net.dillon.qualityofqueso.helper;
 
 import net.dillon.qualityofqueso.instance.QuesoScreen;
+import net.dillon.qualityofqueso.option.eum.general.Theme;
+import net.dillon.qualityofqueso.screen.HudPositionsScreen;
 import net.dillon.qualityofqueso.widget.WidgetLayout;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -325,6 +327,20 @@ public class GuiHelper {
     }
 
     /**
+     * @return if the user is positioning HUD elements.
+     */
+    public static boolean isPositioningElements(Minecraft minecraft) {
+        return minecraft.screen instanceof HudPositionsScreen;
+    }
+
+    /**
+     * @return the armor hotbar texture.
+     */
+    public static ResourceLocation getArmorHotbarTexture() {
+        return clientOptionsInstance().getGeneralOptions().theme == Theme.TRUE_DARK ? ofQoQ("textures/gui/sprites/hud/armor_hotbar_true_dark.png") : ofQoQ("textures/gui/sprites/hud/armor_hotbar.png");
+    }
+
+    /**
      * @return the correct sprite to use.
      */
     public static ResourceLocation getHighlightedSlotTexture(Minecraft minecraft, ItemStack stack, EquipmentSlot equipmentSlot) {
@@ -385,21 +401,21 @@ public class GuiHelper {
     /**
      * Draws an equipped stack item.
      */
-    public static void drawItem(Minecraft minecraft, GuiGraphics context, ItemStack stack, int x, boolean overlay) {
-        drawItem(minecraft, context, stack, x, overlay, 0);
+    public static void drawItem(Minecraft minecraft, GuiGraphics context, ItemStack stack, int x, int yModifier, boolean overlay) {
+        drawItem(minecraft, context, stack, x, yModifier, overlay, 0);
     }
 
     /**
      * Draws an equipped stack item with a vertical offset.
      */
-    public static void drawItem(Minecraft minecraft, GuiGraphics context, ItemStack stack, int x, boolean overlay, int yOffset) {
+    public static void drawItem(Minecraft minecraft, GuiGraphics context, ItemStack stack, int x, int yModifier, boolean overlay, int yOffset) {
         int i = getGuiWidth(context);
         int y = getGuiHeight(context) + 1 + yOffset;
         int fx = i + x;
         if (!stack.isEmpty()) {
-            context.renderFakeItem(stack, fx, y);
+            context.renderFakeItem(stack, fx, y + yModifier);
             if (overlay) {
-                context.renderItemDecorations(minecraft.font, stack, fx, y, null);
+                context.renderItemDecorations(minecraft.font, stack, fx, y + yModifier, null);
             }
         }
     }

@@ -14,7 +14,7 @@ public class FabricPlatformHelper implements PlatformHelper {
     public String getModVersion() {
         return FabricLoader.getInstance()
                 .getModContainer(ModConstants.MOD_ID)
-                .map(c -> c.getMetadata().getVersion().getFriendlyString().split("\\+", 2)[0])
+                .map(c -> c.getMetadata().getVersion().getFriendlyString().split("[+-]", 2)[0])
                 .orElse("unknown");
     }
 
