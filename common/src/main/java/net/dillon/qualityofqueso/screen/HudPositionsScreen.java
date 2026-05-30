@@ -1,5 +1,6 @@
 package net.dillon.qualityofqueso.screen;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.dillon.qualityofqueso.util.ListOptions;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -107,7 +108,13 @@ public class HudPositionsScreen extends Screen {
 
         graphics.drawCenteredString(this.font, this.title, this.width / 2, 13, CommonColors.WHITE);
 
+        RenderSystem.enableBlend();
+        graphics.pose().pushPose();
+        graphics.pose().translate(0.0F, 0.0F, -90.0F);
         graphics.blitSprite(getArmorHotbarTexture(), this.armorStatusXPosition.getX() + 60, this.armorStatusXPosition.getY() - 28, 82, 22);
+        graphics.pose().popPose();
+        RenderSystem.disableBlend();
+
         graphics.blitSprite(ofQoQ("hud/item_counter"), this.armorStatusXPosition.getX() + 74, this.itemCounterXPosition.getY() - 32, 58, 30);
     }
 }
