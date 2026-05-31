@@ -35,12 +35,13 @@
 ### MC 1.20.1 Exclusive Changes
 - Colored highlighting and warning indicators are now supported for Minecraft 1.20.1!
 - Colored text now renders appropriately with the arrow counter.
+- Brought the resources screen to this version!
 
 ## Bugs Fixed
 - Unbounding certain Quality of Queso keybinds causes screen bugs and key press bugs.
 - Enabling the Swapping management feature always displays the "move one" texture on transfer buttons.
 - Cannot change move amount if transfer button is hovered and only holding scroll modifier.
 - Tooltips are positioned incorrectly in accordance to the "No Recipe Book Shift" option.
-- 
 - Unable to play sound event "qualityofqueso.management.reject" in MC 1.21.1 and below.
 - Armor status and (other hud features) render without blending in MC 1.21.1 and below.
+- Containers always get marked as filtered when shifting even if holding a tool on MC 1.20.1.
