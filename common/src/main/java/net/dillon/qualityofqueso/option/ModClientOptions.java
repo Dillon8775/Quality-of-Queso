@@ -275,8 +275,8 @@ public class ModClientOptions {
         public boolean animations = true;
         public double animationTime = 1.5;
 
-        public boolean coloredHighlighting = false;
-        public boolean warningIndicators = false;
+        public boolean coloredHighlighting = true;
+        public boolean warningIndicators = true;
         public double displayTime = 4.0;
 
         public int[] armorStatusPosition = new int[]{0, 0};

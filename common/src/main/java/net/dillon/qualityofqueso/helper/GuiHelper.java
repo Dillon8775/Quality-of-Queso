@@ -22,14 +22,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.CommonColors;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.item.BowItem;
-import net.minecraft.world.item.CrossbowItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -290,11 +288,34 @@ public class GuiHelper {
     }
 
     /**
-     * @return if the player is holding an item via a component search.
+     * @return if the player is holding an item in either hand matching the provided item tag.
      */
     @Deprecated
-    public static boolean isHoldingItem(LocalPlayer player) {
+    public static boolean isHoldingItem(LocalPlayer player, TagKey<Item> tag) {
         return false;
+    }
+
+    /**
+     * @return if either hand holds a tool-like item in 1.20.1 terms.
+     */
+    public static boolean isHoldingTool(LocalPlayer player) {
+        return isTool(getMainHandStack(player)) || isTool(getOffHandStack(player));
+    }
+
+    /**
+     * @return if stack is a tool.
+     */
+    private static boolean isTool(ItemStack stack) {
+        Item item = stack.getItem();
+        return stack.is(ItemTags.PICKAXES)
+                || stack.is(ItemTags.AXES)
+                || stack.is(ItemTags.SHOVELS)
+                || stack.is(ItemTags.HOES)
+                || stack.is(ItemTags.SWORDS)
+                || item instanceof DiggerItem
+                || item instanceof SwordItem
+                || item instanceof TridentItem
+                || item instanceof ShearsItem;
     }
 
     /**

@@ -74,9 +74,7 @@ public abstract class AbstractModScreen extends OptionsSubScreen {
         super.init();
         if (this.addList()) {
             this.list = new OptionsList(this.minecraft, this.width, this.height, 32, this.height - 32, 25);
-            if (this.addOptionsByDefault()) {
-                this.list.addSmall(this.options());
-            }
+            this.list.addSmall(this.options());
             this.addWidget(this.list);
         }
 
@@ -248,13 +246,6 @@ public abstract class AbstractModScreen extends OptionsSubScreen {
      */
     protected Component getYouTubeVideoTooltip() {
         return Component.translatable("qualityofqueso.gui.showcase.main.tooltip");
-    }
-
-    /**
-     * @return if all options in the {@link AbstractModScreen#options()} method should be added by default when calling {@code super.init().}
-     */
-    protected boolean addOptionsByDefault() {
-        return true;
     }
 
     /**

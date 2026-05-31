@@ -29,6 +29,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import static net.dillon.qualityofqueso.helper.ContainerHelper.isValidBlockEntity;
+import static net.dillon.qualityofqueso.helper.GuiHelper.isHoldingTool;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.playButtonSound;
 import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
 import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
@@ -198,7 +199,7 @@ public class MultiPlayerGameModeMixin {
     @Unique
     private static boolean shouldCancelForContainerFilter(Minecraft minecraft, BlockPos pos) {
         if (!modEnabled(minecraft) || !clientOptionsInstance().getManagementOptions().containerFiltering || minecraft.player == null || minecraft.level == null
-                || !minecraft.player.isShiftKeyDown()) {
+                || !minecraft.player.isShiftKeyDown() || isHoldingTool(minecraft.player)) {
             return false;
         }
         return isValidBlockEntity(minecraft.level.getBlockEntity(pos));
