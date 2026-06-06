@@ -44,12 +44,6 @@ public class ResourcesScreen extends AbstractModScreen {
                 Tooltip.create(Component.translatable("qualityofqueso.gui.resource_pack_template.tooltip"))
         ).build();
 
-        AbstractWidget videoExplanations = Button.builder(Component.translatable("qualityofqueso.gui.video_explanations"),
-                ConfirmLinkScreen.confirmLink(ModConstants.VIDEO_EXPLANATIONS_LINK, this, false)
-        ).tooltip(
-                Tooltip.create(Component.translatable("qualityofqueso.gui.video_explanations.tooltip"))
-        ).build();
-
         AbstractWidget otherQoLMods = Button.builder(Component.translatable("qualityofqueso.gui.other_qol_mods"),
                 ConfirmLinkScreen.confirmLink(ModConstants.OTHER_QOL_MODS_LINK, this, false)
         ).tooltip(
@@ -64,7 +58,6 @@ public class ResourcesScreen extends AbstractModScreen {
         rowHelper.addChild(reportBugs);
         rowHelper.addChild(showcaseVideo);
         rowHelper.addChild(resourcePackTemplate);
-        rowHelper.addChild(videoExplanations);
         rowHelper.addChild(otherQoLMods);
 
         gridlayout.arrangeElements();
