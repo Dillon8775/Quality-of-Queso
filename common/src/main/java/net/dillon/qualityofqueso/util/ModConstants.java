@@ -25,7 +25,6 @@ public class ModConstants {
     public static final String WIKI_LINK = "https://quality-of-queso.fandom.com/wiki/Quality_of_Queso_Wiki";
     public static final String DISCORD_LINK = "https://discord.gg/vfqEAn4YFy";
     public static final String SHOWCASE_VIDEO_LINK = "https://youtu.be/02wfcgHkPmQ";
-    public static final String VIDEO_EXPLANATIONS_LINK = "https://www.youtube.com/playlist?list=PLwrfa61ofGnXhwobF8j2fBIUmpy6K9e43";
     public static final String RESOURCE_PACK_TEMPLATE = "https://1drv.ms/f/c/dde4bd527f59679e/IgAnwmEFKQchQ727NndBW9D9AbeVC4Jl8CuXTXMQ_CWUorw?e=Q5gEW0";
     public static final String OTHER_QOL_MODS_LINK = "https://modrinth.com/collection/PDFZoFqE";
     public static boolean SHOWN_BETA_TOAST = false;
