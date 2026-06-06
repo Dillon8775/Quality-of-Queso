@@ -1,4 +1,4 @@
-# Version 1.7.7 | 2026-??-??
+# Version 1.7.6.1 | 2026-06-16
 
 ## Changes
 - Update to 26.2.
