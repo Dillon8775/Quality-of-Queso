@@ -17,6 +17,7 @@ import java.util.*;
 
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
 import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
+import static net.dillon.qualityofqueso.helper.ModHelper.getCurrentScreen;
 
 /**
  * Handles sorting features.
@@ -108,7 +109,7 @@ public class SortingInstance extends ManagementInstance {
         if (instance().getMinecraft().player == null || instance().getMinecraft().getConnection() == null) {
             return;
         }
-        if (!(instance().getMinecraft().screen instanceof AbstractContainerScreen<?> || instance().getMinecraft().screen instanceof InventoryScreen)) {
+        if (!(getCurrentScreen() instanceof AbstractContainerScreen<?> || getCurrentScreen() instanceof InventoryScreen)) {
             return;
         }
 

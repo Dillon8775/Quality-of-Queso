@@ -1,7 +1,6 @@
 package net.dillon.qualityofqueso.helper;
 
 import net.dillon.qualityofqueso.option.ContainerData;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
@@ -22,6 +21,7 @@ import java.util.*;
 
 import static net.dillon.qualityofqueso.helper.ContainerHelper.worldKey;
 import static net.dillon.qualityofqueso.helper.ModHelper.containerDataInstance;
+import static net.dillon.qualityofqueso.helper.ModHelper.getCurrentScreen;
 
 /**
  * Handles persistent ender chest cache storage in container_data.json.
@@ -31,8 +31,8 @@ public class EnderChestHelper {
     /**
      * Saves current ender chest contents to {@link ContainerData} while the ender chest GUI is open.
      */
-    public static void persistEnderChestContentsIfOpen(Minecraft minecraft, LocalPlayer player) {
-        Screen screen = minecraft.screen;
+    public static void persistEnderChestContentsIfOpen(LocalPlayer player) {
+        Screen screen = getCurrentScreen();
         if (!(screen instanceof AbstractContainerScreen<?> containerScreen) || !isEnderChestScreen(containerScreen, player)) {
             return;
         }

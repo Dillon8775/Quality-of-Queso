@@ -13,8 +13,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 
 import static net.dillon.qualityofqueso.helper.ManagementHelper.isDropperDispenserOrHopperScreen;
-import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
-import static net.dillon.qualityofqueso.helper.ModHelper.getCurrentScreen;
+import static net.dillon.qualityofqueso.helper.ModHelper.*;
 
 /**
  * A button to only transfer what is present in the opposite container.
@@ -72,7 +71,7 @@ public class FilteringButton extends ToggleableButton {
         if (trackedFilteringEnabled) {
             if (event.button() == 1) {
                 ContainerHelper.OPENING_PLACEHOLDER_SCREEN = true;
-                this.minecraft.setScreen(new FilterItemsScreen(this.parent));
+                setScreen(new FilterItemsScreen(this.parent));
             } else {
                 ContainerHelper.cycleCurrentFilteringMode();
                 this.playDownSound(Minecraft.getInstance().getSoundManager());
@@ -105,7 +104,7 @@ public class FilteringButton extends ToggleableButton {
                     // filter mode param
                     Component.translatable(filterMode)
                             .copy()
-                            .withColor(ChatFormatting.GOLD.getColor()),
+                            .withStyle(ChatFormatting.GOLD),
 
                     // filter type param
                     Component.translatable(filterType)

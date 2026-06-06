@@ -18,6 +18,7 @@ import org.lwjgl.glfw.GLFW;
 
 import static net.dillon.qualityofqueso.helper.GuiHelper.drawTooltip;
 import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
+import static net.dillon.qualityofqueso.helper.ModHelper.setScreen;
 import static net.dillon.qualityofqueso.util.ModConstants.SAVED_ITEM_FRAME_TEXT;
 
 /**
@@ -58,7 +59,7 @@ public class ItemFrameSearchScreen extends Screen {
     private void close(boolean backToParent) {
         SAVED_ITEM_FRAME_TEXT = this.searchField.getValue();
         if (backToParent && this.parent != null) {
-            this.minecraft.setScreen(this.parent);
+            setScreen(this.parent);
         } else {
             super.onClose();
         }

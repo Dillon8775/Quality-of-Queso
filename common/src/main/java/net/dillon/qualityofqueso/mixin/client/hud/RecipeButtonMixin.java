@@ -18,8 +18,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import static net.dillon.qualityofqueso.helper.MethodHelper.getRecipeBookComponent;
-import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
-import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
+import static net.dillon.qualityofqueso.helper.ModHelper.*;
 
 @Mixin(RecipeButton.class)
 public abstract class RecipeButtonMixin extends AbstractWidget {
@@ -40,7 +39,7 @@ public abstract class RecipeButtonMixin extends AbstractWidget {
             return;
         }
 
-        if (!(minecraft.screen instanceof AbstractContainerScreen<?> recipeScreen)) {
+        if (!(getCurrentScreen() instanceof AbstractContainerScreen<?> recipeScreen)) {
             return;
         }
 

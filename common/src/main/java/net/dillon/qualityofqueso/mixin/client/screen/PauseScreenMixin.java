@@ -75,7 +75,7 @@ public class PauseScreenMixin extends Screen {
                 this.addRenderableWidget(ButtonHelper.createMenuButton(
                         getConfigButtonX(this.width, index),
                         getConfigButtonY(this.height, index),
-                        (button) -> this.minecraft.setScreen(new MainMenuScreen(this)))
+                        (button) -> setScreen(new MainMenuScreen(this)))
                 );
                 index++;
 
@@ -102,7 +102,7 @@ public class PauseScreenMixin extends Screen {
                             getConfigButtonX(this.width, index),
                             getConfigButtonY(this.height, index),
                             (button) -> {
-                                this.minecraft.setScreen(new EnderChestPreviewScreen());
+                                setScreen(new EnderChestPreviewScreen());
                             }
                     ));
                 }

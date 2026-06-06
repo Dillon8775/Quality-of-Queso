@@ -6,8 +6,7 @@ import net.dillon.qualityofqueso.screen.EnderChestPreviewScreen;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 
-import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
-import static net.dillon.qualityofqueso.helper.ModHelper.ofQoQ;
+import static net.dillon.qualityofqueso.helper.ModHelper.*;
 
 /**
  * Keybindings for the {@code Quality of Queso} mod.
@@ -78,7 +77,7 @@ public class ModKeyMappings {
             .handleWorldInput(event -> {
                 Minecraft minecraft =  Minecraft.getInstance();
                 if (modEnabled(minecraft) && minecraft.level != null && minecraft.player != null) {
-                    Minecraft.getInstance().setScreen(new EnderChestPreviewScreen());
+                    setScreen(new EnderChestPreviewScreen());
                     return true;
                 }
                 return false;

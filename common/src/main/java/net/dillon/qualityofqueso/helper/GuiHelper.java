@@ -331,7 +331,7 @@ public class GuiHelper {
      * @return if the user is positioning HUD elements.
      */
     public static boolean isPositioningElements(Minecraft minecraft) {
-        return minecraft.screen instanceof HudPositionsScreen;
+        return minecraft.gui.screen() instanceof HudPositionsScreen;
     }
 
     /**

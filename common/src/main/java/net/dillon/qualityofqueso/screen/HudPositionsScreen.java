@@ -36,7 +36,7 @@ public class HudPositionsScreen extends Screen {
     @Override
     public void onClose() {
         saveAndApplyConfigs(this.minecraft);
-        this.minecraft.setScreen(this.parent);
+        setScreen(this.parent);
     }
 
     @Override

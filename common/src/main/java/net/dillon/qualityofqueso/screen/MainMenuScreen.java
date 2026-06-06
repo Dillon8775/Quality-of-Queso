@@ -4,7 +4,6 @@ import net.dillon.qualityofqueso.config.ConfigurationScreen;
 import net.dillon.qualityofqueso.helper.MethodHelper;
 import net.dillon.qualityofqueso.platform.MultiLoader;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
@@ -26,25 +25,25 @@ public class MainMenuScreen extends AbstractModScreen {
     protected AbstractWidget[] options() {
         this.openItemFrameSearchGUIOptions = Button.builder(Component.translatable("qualityofqueso.gui.open_item_frame_search_gui"), button -> {
             if (commonOptionsInstance().itemFrameSearching && this.minecraft.level != null) {
-                this.minecraft.setScreen(new ItemFrameSearchScreen(this));
+                setScreen(new ItemFrameSearchScreen(this));
             }
         }).build();
 
         this.visualTime = Button.builder(Component.translatable("qualityofqueso.gui.visual_time"), button ->
-                this.minecraft.setScreen(new VisualTimeScreen(this))
+                setScreen(new VisualTimeScreen(this))
         ).tooltip(
                 Tooltip.create(Component.translatable("qualityofqueso.gui.visual_time.description"))
         ).build();
 
         this.hudPositions = Button.builder(Component.translatable("qualityofqueso.gui.hud_positions"), button -> {
-            this.minecraft.setScreen(new HudPositionsScreen(this));
+            setScreen(new HudPositionsScreen(this));
         }).tooltip(
                 Tooltip.create(Component.translatable("qualityofqueso.gui.hud_positions.tooltip"))
         ).build();
 
         this.debugHuds = Button.builder(Component.translatable("qualityofqueso.gui.debug_huds"), button -> {
-            this.minecraft.setScreen(new DebugOptionsScreen());
-            if (Minecraft.getInstance().screen instanceof DebugOptionsScreen debugOptionsScreen) {
+            setScreen(new DebugOptionsScreen());
+            if (getCurrentScreen() instanceof DebugOptionsScreen debugOptionsScreen) {
                 MethodHelper.getDebugScreenSearchBox(debugOptionsScreen).setValue("qualityofqueso");
             }
         }).tooltip(
@@ -54,14 +53,12 @@ public class MainMenuScreen extends AbstractModScreen {
         return new AbstractWidget[]{
                 Button.builder(Component.translatable("qualityofqueso.gui.configure"), button -> {
                     if (!MultiLoader.getPlatform().isYaclLoaded()) {
-                        this.minecraft.getToastManager().addToast(
-                                SystemToast.multiline(
-                                        this.minecraft,
-                                        SystemToast.SystemToastId.PERIODIC_NOTIFICATION,
-                                        Component.translatable("qualityofqueso.toast.title.yacl").withStyle(ChatFormatting.RED),
-                                        Component.translatable("qualityofqueso.toast.yacl")));
+                        this.minecraft.gui.toastManager().addToast(new SystemToast(
+                                SystemToast.SystemToastId.PERIODIC_NOTIFICATION,
+                                Component.translatable("qualityofqueso.toast.title.yacl").withStyle(ChatFormatting.RED),
+                                Component.translatable("qualityofqueso.toast.yacl")));
                     } else {
-                        this.minecraft.setScreen(ConfigurationScreen.configScreen().generateScreen(this));
+                        setScreen(ConfigurationScreen.configScreen().generateScreen(this));
                     }
                 }).tooltip(Tooltip.create(Component.translatable("qualityofqueso.gui.configure.tooltip"))).build(),
 
@@ -80,7 +77,7 @@ public class MainMenuScreen extends AbstractModScreen {
                 this.hudPositions,
 
                 Button.builder(Component.translatable("qualityofqueso.gui.resources"), button -> {
-                    this.minecraft.setScreen(new ResourcesScreen(this));
+                    setScreen(new ResourcesScreen(this));
                 }).tooltip(
                         Tooltip.create(Component.translatable("qualityofqueso.gui.resources.tooltip"))
                 ).build(),
@@ -98,6 +95,6 @@ public class MainMenuScreen extends AbstractModScreen {
 
     @Override
     public void onClose() {
-        this.minecraft.setScreen(this.lastScreen);
+        setScreen(this.lastScreen);
     }
 }

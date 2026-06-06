@@ -46,11 +46,11 @@ public abstract class MinecraftMixin {
 
         if (commonOptionsInstance().itemFrameSearching) {
             while (OPEN_SEARCH_ITEM_FRAMES_GUI.isActiveAndDown()) {
-                Minecraft.getInstance().setScreen(new ItemFrameSearchScreen(null));
+                setScreen(new ItemFrameSearchScreen(null));
             }
         }
         while (OPEN_VISUAL_TIME_GUI.isActiveAndDown()) {
-            Minecraft.getInstance().setScreen(new VisualTimeScreen(null));
+            setScreen(new VisualTimeScreen(null));
         }
     }
 

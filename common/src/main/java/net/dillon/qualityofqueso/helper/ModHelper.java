@@ -70,7 +70,14 @@ public class ModHelper {
      * @return the current Minecraft screen.
      */
     public static Screen getCurrentScreen() {
-        return Minecraft.getInstance().screen;
+        return Minecraft.getInstance().gui.screen();
+    }
+
+    /**
+     * Sets the current screen.
+     */
+    public static void setScreen(Screen screen) {
+        Minecraft.getInstance().gui.setScreen(screen);
     }
 
     /**
@@ -199,7 +206,7 @@ public class ModHelper {
      * @return if the player is on a server.
      */
     public static boolean isOnServer(Minecraft client) {
-        return !client.isSingleplayer() && !(client.getCurrentServer() == null);
+        return !client.getSingleplayerServer().isSingleplayer() && !(client.getCurrentServer() == null);
     }
 
     /**
@@ -263,7 +270,7 @@ public class ModHelper {
     public static void stop(boolean shouldStop, String configName) {
         if (shouldStop) {
             try {
-                Minecraft.getInstance().destroy();
+                Minecraft.getInstance().stop();
             } catch (NullPointerException e) {
                 throw new NullPointerException("Quality of Queso's \"" + configName + "\" configuration file is null. Not sure what happened! Please delete this config file (located in your \".minecraft/config\" directory), and then you can relaunch your game.");
             }

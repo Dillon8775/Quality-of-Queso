@@ -8,8 +8,8 @@ import net.dillon.qualityofqueso.util.ItemHudTracker;
 import net.minecraft.client.AttackIndicatorStatus;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.Hud;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.NonNullList;
@@ -42,8 +42,8 @@ import static net.dillon.qualityofqueso.helper.ModHelper.*;
 import static net.dillon.qualityofqueso.util.ItemHudTracker.ARROW_OUTLINE;
 import static net.dillon.qualityofqueso.util.ModConstants.*;
 
-@Mixin(Gui.class)
-public class GuiMixin {
+@Mixin(Hud.class)
+public class HudMixin {
     @Shadow
     @Final
     private Minecraft minecraft;
@@ -64,7 +64,7 @@ public class GuiMixin {
     @Unique
     private void tryRenderItem(GuiGraphicsExtractor graphics, ItemStack mainHandItem, ItemStack offHandItem) {
         // Get the persisted data from the player's last known ender chest
-        EnderChestHelper.persistEnderChestContentsIfOpen(this.minecraft, this.minecraft.player);
+        EnderChestHelper.persistEnderChestContentsIfOpen(this.minecraft.player);
         // Then get the current picked up/dropped item stack
         ItemStack pickedUpOrDroppedStack = ItemHudTracker.getStack();
 

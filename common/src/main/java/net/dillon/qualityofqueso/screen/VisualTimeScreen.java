@@ -16,8 +16,7 @@ import net.minecraft.util.CommonColors;
 
 import java.util.Locale;
 
-import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
-import static net.dillon.qualityofqueso.helper.ModHelper.ofQoQ;
+import static net.dillon.qualityofqueso.helper.ModHelper.*;
 
 /**
  * A utility screen to change the visual time client-side.
@@ -39,7 +38,7 @@ public class VisualTimeScreen extends Screen {
 
     @Override
     public void onClose() {
-        this.minecraft.setScreen(this.parent);
+        setScreen(this.parent);
     }
 
     @Override

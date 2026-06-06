@@ -136,7 +136,7 @@ public class QuesoButton extends Button {
             return;
         }
 
-        Screen screen = Minecraft.getInstance().screen;
+        Screen screen = getCurrentScreen();
         if (screen != null) {
             if (isBrewingStandScreen(screen)) {
                 drawTooltip(Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.brewing_stand"), graphics, this.font, mouseX, mouseY);
@@ -225,7 +225,7 @@ public class QuesoButton extends Button {
                                                          "_tag.png" : this.searchFieldText.startsWith(":") ?
                                                                       "_matching.png" : ".png";
         String appended = this.transferrableButton && this.canBeActive.get() ? transferableString : ".png";
-        Screen screen = Minecraft.getInstance().screen;
+        Screen screen = getCurrentScreen();
 
         if (screen == null) {
             return appended;
@@ -252,7 +252,7 @@ public class QuesoButton extends Button {
     protected final boolean movingOrDroppingOne() {
         return clientOptionsInstance().getManagementOptions().scrollMoving && (this.buttonName.equals(QUICK_DROP_BUTTON_NAME)
                 ? hasDropOnlyOneItemKeyDown()
-                : Minecraft.getInstance().screen instanceof AbstractContainerScreen<?> && canScrollMoveAndHasScrollModifierDown());
+                : getCurrentScreen() instanceof AbstractContainerScreen<?> && canScrollMoveAndHasScrollModifierDown());
     }
 
     /**

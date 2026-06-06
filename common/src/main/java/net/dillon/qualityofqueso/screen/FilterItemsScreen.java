@@ -23,6 +23,7 @@ import java.util.Optional;
 
 import static net.dillon.qualityofqueso.helper.ManagementHelper.playButtonSound;
 import static net.dillon.qualityofqueso.helper.MethodHelper.key;
+import static net.dillon.qualityofqueso.helper.ModHelper.setScreen;
 
 /**
  * Set filtered items in a container (fully 100% client-side).
@@ -178,7 +179,7 @@ public class FilterItemsScreen extends Screen {
     public void onClose() {
         ContainerHelper.setCurrentPlaceholderStacks(this.placeholders);
         ContainerHelper.RETURNING_FROM_PLACEHOLDER_SCREEN = true;
-        this.minecraft.setScreen(this.parentScreen);
+        setScreen(this.parentScreen);
         playButtonSound(this.minecraft);
     }
 

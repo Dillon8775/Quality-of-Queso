@@ -21,7 +21,7 @@
     "client.accessor.ShulkerBoxMenuAccessor",
     "client.hud.AbstractRecipeBookScreenMixin",
     "client.hud.EditBoxMixin",
-    "client.hud.GuiMixin",
+    "client.hud.HudMixin",
     "client.hud.RecipeBookComponentMixin",
     "client.hud.RecipeButtonMixin",
     "client.render.EquipmentLayerRendererMixin",

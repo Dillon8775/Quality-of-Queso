@@ -21,6 +21,7 @@ import static net.dillon.qualityofqueso.helper.ManagementHelper.isInventoryScree
 import static net.dillon.qualityofqueso.helper.MethodHelper.getRecipeBookComponent;
 import static net.dillon.qualityofqueso.helper.MethodHelper.performClickSlot;
 import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
+import static net.dillon.qualityofqueso.helper.ModHelper.getCurrentScreen;
 
 /**
  * Handles clicking slots.
@@ -153,7 +154,7 @@ public class ClickSlotInstance extends ManagementInstance {
             return;
         }
 
-        if (!(client.screen instanceof MerchantScreen merchantScreen)) {
+        if (!(getCurrentScreen() instanceof MerchantScreen merchantScreen)) {
             activeTradeAllTask = null;
             return;
         }
@@ -207,12 +208,12 @@ public class ClickSlotInstance extends ManagementInstance {
             return;
         }
 
-        if (!isCraftingScreen(client.screen) && !isInventoryScreen(client.screen)) {
+        if (!isCraftingScreen(getCurrentScreen()) && !isInventoryScreen(getCurrentScreen())) {
             activeBulkCraftTask = null;
             return;
         }
 
-        if (!(client.screen instanceof AbstractContainerScreen<?> screen)) {
+        if (!(getCurrentScreen() instanceof AbstractContainerScreen<?> screen)) {
             activeBulkCraftTask = null;
             return;
         }

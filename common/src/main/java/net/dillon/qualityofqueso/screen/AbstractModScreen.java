@@ -62,7 +62,7 @@ public abstract class AbstractModScreen extends OptionsSubScreen {
      */
     protected void openKeybinds() {
         KeybindScrollHelper.requestScroll();
-        this.minecraft.setScreen(new KeyBindsScreen(this, this.options));
+        setScreen(new KeyBindsScreen(this, this.options));
     }
 
     /**
@@ -138,7 +138,7 @@ public abstract class AbstractModScreen extends OptionsSubScreen {
                         0,
                         0,
                         (button) -> {
-                            this.minecraft.setScreen(new EnderChestPreviewScreen());
+                            setScreen(new EnderChestPreviewScreen());
                         }
                 ));
             }
