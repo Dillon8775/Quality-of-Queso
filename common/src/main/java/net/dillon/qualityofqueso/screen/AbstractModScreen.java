@@ -27,7 +27,6 @@ import java.nio.file.Path;
 import java.util.List;
 
 import static net.dillon.qualityofqueso.helper.ButtonHelper.*;
-import static net.dillon.qualityofqueso.helper.GuiHelper.drawTooltip;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.buttonActive;
 import static net.dillon.qualityofqueso.helper.ModHelper.*;
 import static net.dillon.qualityofqueso.util.ModConstants.*;
@@ -37,7 +36,7 @@ import static net.dillon.qualityofqueso.util.ModConstants.*;
  */
 public abstract class AbstractModScreen extends OptionsSubScreen {
     private Button doneButton;
-    private SpriteIconButton viewEnderChestButton, worldDirectoryButton, screenshotsButton, discordButton, wikiButton;
+    private SpriteIconButton viewLastKnownEnderChestButton, worldDirectoryButton, screenshotsButton, discordButton, wikiButton;
     protected SpriteIconButton youtubeButton;
 
     public AbstractModScreen(Screen parent, Component title) {
@@ -78,13 +77,6 @@ public abstract class AbstractModScreen extends OptionsSubScreen {
         return SHOWCASE_VIDEO_LINK;
     }
 
-    /**
-     * @return the relevant button tooltip.
-     */
-    private Component getYouTubeVideoTooltip() {
-        return Component.translatable("qualityofqueso.gui.showcase.main.tooltip");
-    }
-
     @Override
     public void onClose() {
         saveAndApplyConfigs(this.minecraft);
@@ -109,53 +101,48 @@ public abstract class AbstractModScreen extends OptionsSubScreen {
 
         this.screenshotsButton = this.addRenderableWidget(ButtonHelper.createSpriteIconButton(
                 ofQoQ(OPEN_SCREENSHOTS_DIRECTORY_TEXTURE),
-                0,
-                0,
                 (button) -> {
                     File screenshots = new File(Minecraft.getInstance().gameDirectory, "screenshots");
                     if (!screenshots.exists()) {
                         screenshots.mkdirs();
                     }
                     Util.getPlatform().openFile(screenshots);
-                }
+                },
+                Component.translatable("qualityofqueso.gui.open_screenshots_folder")
         ));
 
         if (this.minecraft.level != null) {
             if (this.minecraft.getSingleplayerServer() != null) {
                 this.worldDirectoryButton = this.addRenderableWidget(ButtonHelper.createSpriteIconButton(
                         ofQoQ(OPEN_WORLD_DIRECTORY_TEXTURE),
-                        0,
-                        0,
                         (button) -> {
                             Path worldPath = this.minecraft.getSingleplayerServer().getWorldPath(LevelResource.ROOT);
                             Util.getPlatform().openFile(worldPath.toFile());
-                        }
+                        },
+                        Component.translatable("qualityofqueso.gui.open_world_folder")
                 ));
             }
             if (ModHelper.clientOptionsInstance().getAccessibilityOptions().eChestButton.qoqMenu() && this.minecraft.player != null) {
-                this.viewEnderChestButton = this.addRenderableWidget(ButtonHelper.createSpriteIconButton(
+                this.viewLastKnownEnderChestButton = this.addRenderableWidget(ButtonHelper.createSpriteIconButton(
                         ofQoQ(ENDER_CHEST),
-                        0,
-                        0,
                         (button) -> {
                             setScreen(new EnderChestPreviewScreen());
-                        }
+                        },
+                        Component.translatable("qualityofqueso.gui.view_ender_chest.tooltip")
                 ));
             }
         }
 
         this.wikiButton = this.addRenderableWidget(ButtonHelper.createSpriteIconButton(
                 ofQoQ(WIKI_TEXTURE),
-                0,
-                0,
-                ConfirmLinkScreen.confirmLink(this, WIKI_LINK, false)
+                ConfirmLinkScreen.confirmLink(this, WIKI_LINK, false),
+                Component.translatable("qualityofqueso.gui.learn_more")
         ));
 
         this.discordButton = this.addRenderableWidget(ButtonHelper.createSpriteIconButton(
                 ofQoQ(DISCORD_TEXTURE),
-                0,
-                0,
-                ConfirmLinkScreen.confirmLink(this, DISCORD_LINK, false)
+                ConfirmLinkScreen.confirmLink(this, DISCORD_LINK, false),
+                Component.translatable("qualityofqueso.gui.discord")
         ));
 
         this.youtubeButton = this.addRenderableWidget(createYouTubeButton(this, this.youtubeLink()));
@@ -176,46 +163,32 @@ public abstract class AbstractModScreen extends OptionsSubScreen {
         int leftIndex = 0;
         if (buttonActive(this.screenshotsButton)) {
             this.screenshotsButton.setPosition(getLeftButtonPosition(this.width, leftIndex), this.doneButton.getY());
-            if (clientOptionsInstance().getGeneralOptions().tooltips.enabled() && this.screenshotsButton.isHovered()) {
-                drawTooltip(Component.translatable("qualityofqueso.gui.open_screenshots_folder"), graphics, this.font, mouseX, mouseY);
-            }
             leftIndex++;
         }
+
         if (buttonActive(this.worldDirectoryButton)) {
             this.worldDirectoryButton.setPosition(getLeftButtonPosition(this.width, leftIndex), this.doneButton.getY());
-            if (clientOptionsInstance().getGeneralOptions().tooltips.enabled() && this.worldDirectoryButton.isHovered()) {
-                drawTooltip(Component.translatable("qualityofqueso.gui.open_world_folder"), graphics, this.font, mouseX, mouseY);
-            }
             leftIndex++;
         }
-        if (this.viewEnderChestButton != null) {
-            this.viewEnderChestButton.active = modEnabled(this.minecraft);
-            this.viewEnderChestButton.setPosition(getLeftButtonPosition(this.width, leftIndex), this.doneButton.getY());
-            if (clientOptionsInstance().getGeneralOptions().tooltips.enabled() && this.viewEnderChestButton.isHovered()) {
-                drawTooltip(Component.translatable("qualityofqueso.gui.view_ender_chest.tooltip"), graphics, this.font, mouseX, mouseY);
-            }
+
+        if (this.viewLastKnownEnderChestButton != null) {
+            this.viewLastKnownEnderChestButton.active = modEnabled(this.minecraft);
+            this.viewLastKnownEnderChestButton.setPosition(getLeftButtonPosition(this.width, leftIndex), this.doneButton.getY());
         }
 
         int rightIndex = 0;
         if (buttonActive(this.wikiButton)) {
             this.wikiButton.setPosition(getRightButtonPosition(this.width, rightIndex), this.doneButton.getY());
-            if (this.wikiButton.isHovered()) {
-                drawTooltip(Component.translatable("qualityofqueso.gui.learn_more"), graphics, this.font, mouseX, mouseY);
-            }
             rightIndex++;
         }
+
         if (buttonActive(this.discordButton)) {
             this.discordButton.setPosition(getRightButtonPosition(this.width, rightIndex), this.doneButton.getY());
-            if (this.discordButton.isHovered()) {
-                drawTooltip(Component.translatable("qualityofqueso.gui.discord"), graphics, this.font, mouseX, mouseY);
-            }
             rightIndex++;
         }
+
         if (buttonActive(this.youtubeButton)) {
             this.youtubeButton.setPosition(getRightButtonPosition(this.width, rightIndex), this.doneButton.getY());
-            if (this.youtubeButton.isHovered()) {
-                drawTooltip(this.getYouTubeVideoTooltip(), graphics, this.font, mouseX, mouseY);
-            }
         }
 
         this.activateButtons();

@@ -6,36 +6,42 @@ import net.dillon.qualityofqueso.platform.ReleaseType;
 import net.dillon.qualityofqueso.screen.MainMenuScreen;
 import net.dillon.qualityofqueso.util.ModConstants;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.SpriteIconButton;
 import net.minecraft.client.gui.components.toasts.SystemToast;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import static net.dillon.qualityofqueso.helper.ModHelper.setScreen;
 import static net.dillon.qualityofqueso.helper.ModHelper.universalOptionsInstance;
 
 @Mixin(TitleScreen.class)
-public class TitleScreenMixin extends Screen {
+public abstract class TitleScreenMixin extends Screen {
+    @Shadow
+    protected abstract int getHorizontalPosition(int par1, int par2, int par3);
 
     public TitleScreenMixin(Component pTitle) {
         super(pTitle);
     }
 
     /**
-     * Adds the Quality of Queso configuration button to the title screen.
+     * Warns the user of a possible beta Quality of Queso version, and adds the main menu button configuration to the screen.
      */
-    @Inject(method = "init", at = @At("TAIL"))
-    private void init(CallbackInfo ci) {
+    @Inject(method = "init", at = @At("TAIL"), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
+    private void addButtonsAndWarning(CallbackInfo ci, int copyrightWidth, int copyrightX, int spacing, int topPos, int numberOfButtons, int currentButton, SpriteIconButton language, SpriteIconButton accessibility) {
         if (universalOptionsInstance().getUniversal().menuButton.enabled()) {
-            this.addRenderableWidget(ButtonHelper.createMenuButton(
-                    this.width / 2 + 128,
-                    this.height / 4 + 132 + (MultiLoader.getPlatform().isNeoForged() ? 8 : 0),
-                    (button) -> setScreen(new MainMenuScreen(this))
+            SpriteIconButton menuButton = this.addRenderableWidget(ButtonHelper.createMenuButton(
+                    (button) -> setScreen(new MainMenuScreen(this)), true
             ));
+            menuButton.setPosition(this.getHorizontalPosition(++currentButton, 4, 20), topPos - 24);
         }
 
         if (!ModConstants.SHOWN_BETA_TOAST && MultiLoader.getPlatform().getReleaseType() != ReleaseType.STABLE) {
@@ -45,5 +51,17 @@ public class TitleScreenMixin extends Screen {
                             Component.translatable("qualityofqueso.toast.beta_or_alpha")));
             ModConstants.SHOWN_BETA_TOAST = true;
         }
+    }
+
+    /**
+     * Increases the amount of buttons to {@code 4} so the menu button can display.
+     */
+    @ModifyConstant(method = "init", constant = @Constant(intValue = 3))
+    private int makeButtonsFour(int original) {
+        if (!universalOptionsInstance().getUniversal().menuButton.enabled()) {
+            return original;
+        }
+
+        return 4;
     }
 }

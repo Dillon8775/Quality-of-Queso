@@ -2,11 +2,14 @@ package net.dillon.qualityofqueso.mixin.client.screen;
 
 import net.dillon.qualityofqueso.helper.ButtonHelper;
 import net.dillon.qualityofqueso.screen.EnderChestPreviewScreen;
-import net.dillon.qualityofqueso.screen.MainMenuScreen;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.SpriteIconButton;
+import net.minecraft.client.gui.layouts.GridLayout;
+import net.minecraft.client.gui.layouts.LinearLayout;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.social.PlayerSocialManager;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Final;
@@ -16,9 +19,8 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-import static net.dillon.qualityofqueso.helper.ButtonHelper.getConfigButtonX;
-import static net.dillon.qualityofqueso.helper.ButtonHelper.getConfigButtonY;
 import static net.dillon.qualityofqueso.helper.GuiHelper.drawTooltip;
 import static net.dillon.qualityofqueso.helper.ModHelper.*;
 import static net.dillon.qualityofqueso.util.ModConstants.*;
@@ -62,51 +64,29 @@ public class PauseScreenMixin extends Screen {
     }
 
     /**
-     * Adds all {@code Quality of Queso} configuration buttons.
+     * Adds all Quality of Queso main menu buttons to the pause screen.
      */
-    @Inject(method = "init", at = @At("TAIL"))
-    private void init(CallbackInfo ci) {
-        if (this.showPauseMenu) {
-            if (this.disconnectButton != null && clientOptionsInstance().getMiscOptions().antiRageQuit) {
-                this.disconnectButton.active = false;
-            }
-            if (universalOptionsInstance().getUniversal().menuButton.everywhere()) {
-                int index = 0;
-                this.addRenderableWidget(ButtonHelper.createMenuButton(
-                        getConfigButtonX(this.width, index),
-                        getConfigButtonY(this.height, index),
-                        (button) -> setScreen(new MainMenuScreen(this)))
-                );
-                index++;
+    @Inject(method = "createPauseMenu", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/layouts/GridLayout$RowHelper;addChild(Lnet/minecraft/client/gui/layouts/LayoutElement;)Lnet/minecraft/client/gui/layouts/LayoutElement;", ordinal = 3), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
+    private void addQualityOfQuesoButtons(CallbackInfo ci, GridLayout gridLayout, GridLayout.RowHelper helper, LinearLayout iconButtonRow, SpriteIconButton reportBugsButton, SpriteIconButton feedbackButton, PlayerSocialManager playerSocialManager, SpriteIconButton playerReportingButton) {
+        if (!universalOptionsInstance().getUniversal().menuButton.everywhere()) {
+            return;
+        }
 
-                if (!(this.minecraft.getCurrentServer() == null)) {
-                    String address = this.getServerAddress();
+        iconButtonRow.addChild(ButtonHelper.createMainMenuButton(this));
 
-                    this.blacklistServerButton = this.addRenderableWidget(ButtonHelper.createMenuButton(
-                            getConfigButtonX(this.width, index),
-                            getConfigButtonY(this.height, index),
-                            (button) -> {
-                                if (universalOptionsInstance().getUniversal().blacklistedServers.contains(address)) {
-                                    universalOptionsInstance().getUniversal().blacklistedServers.remove(address);
-                                } else {
-                                    universalOptionsInstance().getUniversal().blacklistedServers.add(address);
-                                }
-                                saveAndApplyConfigs(this.minecraft);
-                            }));
-                    index++;
-                }
+        if (!(this.minecraft.getCurrentServer() == null)) {
+            String address = this.getServerAddress();
+            this.blacklistServerButton = iconButtonRow.addChild(ButtonHelper.createBlacklistServerButton(address));
+        }
 
-                if (clientOptionsInstance().getAccessibilityOptions().eChestButton.pauseScreen()) {
-                    this.viewEnderChestButton = this.addRenderableWidget(ButtonHelper.createSpriteIconButton(
-                            ofQoQ(ENDER_CHEST),
-                            getConfigButtonX(this.width, index),
-                            getConfigButtonY(this.height, index),
-                            (button) -> {
-                                setScreen(new EnderChestPreviewScreen());
-                            }
-                    ));
-                }
-            }
+        if (clientOptionsInstance().getAccessibilityOptions().eChestButton.pauseScreen()) {
+            this.viewEnderChestButton = iconButtonRow.addChild(ButtonHelper.createSpriteIconButton(
+                    ofQoQ(ENDER_CHEST),
+                    (button) -> {
+                        setScreen(new EnderChestPreviewScreen());
+                    },
+                    Component.translatable("qualityofqueso.gui.view_ender_chest.tooltip")
+            ));
         }
     }
 

@@ -525,7 +525,7 @@
   "qualityofqueso.gui.enable_multi_server_configs": "§2Pro-tip: to configure certain features on §adifferent servers, §r§2enable \"§aMulti-Server Configs§r§2\" under the \"§aAccessibility...§r§2\" tab in the §6Quality of Queso main menu.",
   "qualityofqueso.gui.mod_not_installed": "§6Please be aware that Quality of Queso is not installed on this server, meaning certain features, including §aitem frame searching§r§f§6, §clocking inventory§r§f§6 and §dlocked slots inside shulker boxes §r§f§6will not be available.",
 
-  "qualityofqueso.gui.view_ender_chest.tooltip": "View your last known ender chest...",
+  "qualityofqueso.gui.view_ender_chest.tooltip": "View Last Known Ender Chest",
   "qualityofqueso.gui.your_ender_chest": "Your Last Known Ender Chest",
 
   "key.category.qualityofqueso.quality_of_queso": "Quality of Queso",
