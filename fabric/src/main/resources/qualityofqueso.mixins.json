@@ -38,7 +38,8 @@
     "client.util.LocalPlayerMixin",
     "client.util.MinecraftMixin",
     "client.util.MultiPlayerGameModeMixin",
-    "fabric.FabricAbstractContainerScreenMixin"
+    "fabric.FabricAbstractContainerScreenMixin",
+    "fabric.FabricTitleScreenMixin"
   ],
   "mixins": [
     "main.AbstractContainerMenuAccessor",

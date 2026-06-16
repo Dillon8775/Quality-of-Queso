@@ -1,6 +1,7 @@
 package net.dillon.qualityofqueso.mixin.client.screen;
 
 import net.dillon.qualityofqueso.helper.ButtonHelper;
+import net.dillon.qualityofqueso.option.eum.general.MenuButton;
 import net.dillon.qualityofqueso.screen.EnderChestPreviewScreen;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
@@ -21,6 +22,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
+import static net.dillon.qualityofqueso.helper.ButtonHelper.getConfigButtonX;
+import static net.dillon.qualityofqueso.helper.ButtonHelper.getConfigButtonY;
 import static net.dillon.qualityofqueso.helper.GuiHelper.drawTooltip;
 import static net.dillon.qualityofqueso.helper.ModHelper.*;
 import static net.dillon.qualityofqueso.util.ModConstants.*;
@@ -33,7 +36,7 @@ public class PauseScreenMixin extends Screen {
     @Shadow
     private Button disconnectButton;
     @Unique
-    private Button blacklistServerButton, viewEnderChestButton;
+    private Button blacklistServerButton, viewLastKnownEnderChestButton;
 
     public PauseScreenMixin(Component pTitle) {
         super(pTitle);
@@ -72,21 +75,44 @@ public class PauseScreenMixin extends Screen {
             return;
         }
 
-        iconButtonRow.addChild(ButtonHelper.createMainMenuButton(this));
+        boolean everywhere = universalOptionsInstance().getUniversal().menuButton == MenuButton.EVERYWHERE;
+
+        int button = 0;
+        SpriteIconButton menuButton = ButtonHelper.createMainMenuButton(this);
+        if (everywhere) {
+            iconButtonRow.addChild(menuButton);
+        } else {
+            this.addRenderableWidget(menuButton);
+            menuButton.setPosition(getConfigButtonX(this.width, button), getConfigButtonY(this.height, button));
+            button++;
+        }
 
         if (!(this.minecraft.getCurrentServer() == null)) {
             String address = this.getServerAddress();
-            this.blacklistServerButton = iconButtonRow.addChild(ButtonHelper.createBlacklistServerButton(address));
+            SpriteIconButton blacklistServerButton = ButtonHelper.createBlacklistServerButton(address);
+            if (everywhere) {
+                this.blacklistServerButton = iconButtonRow.addChild(blacklistServerButton);
+            } else {
+                this.blacklistServerButton = this.addRenderableWidget(blacklistServerButton);
+                this.blacklistServerButton.setPosition(getConfigButtonX(this.width, button), getConfigButtonY(this.height, button));
+            }
+            button++;
         }
 
         if (clientOptionsInstance().getAccessibilityOptions().eChestButton.pauseScreen()) {
-            this.viewEnderChestButton = iconButtonRow.addChild(ButtonHelper.createSpriteIconButton(
+            SpriteIconButton viewLastKnownEnderChestButton = ButtonHelper.createSpriteIconButton(
                     ofQoQ(ENDER_CHEST),
-                    (button) -> {
+                    (b) -> {
                         setScreen(new EnderChestPreviewScreen());
                     },
                     Component.translatable("qualityofqueso.gui.view_ender_chest.tooltip")
-            ));
+            );
+            if (everywhere) {
+                this.viewLastKnownEnderChestButton = iconButtonRow.addChild(viewLastKnownEnderChestButton);
+            } else {
+                this.viewLastKnownEnderChestButton = this.addRenderableWidget(viewLastKnownEnderChestButton);
+                this.viewLastKnownEnderChestButton.setPosition(getConfigButtonX(this.width, button), getConfigButtonY(this.height, button));
+            }
         }
     }
 
@@ -127,9 +153,9 @@ public class PauseScreenMixin extends Screen {
             }
         }
 
-        if (this.viewEnderChestButton != null) {
-            this.viewEnderChestButton.active = modEnabled(this.minecraft);
-            if (clientOptionsInstance().getGeneralOptions().tooltips.enabled() && this.viewEnderChestButton.isHovered()) {
+        if (this.viewLastKnownEnderChestButton != null) {
+            this.viewLastKnownEnderChestButton.active = modEnabled(this.minecraft);
+            if (clientOptionsInstance().getGeneralOptions().tooltips.enabled() && this.viewLastKnownEnderChestButton.isHovered()) {
                 drawTooltip(Component.translatable("qualityofqueso.gui.view_ender_chest.tooltip"), graphics, this.font, mouseX, mouseY);
             }
         }

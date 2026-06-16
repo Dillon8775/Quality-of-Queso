@@ -14,9 +14,7 @@ import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
@@ -41,7 +39,7 @@ public abstract class TitleScreenMixin extends Screen {
             SpriteIconButton menuButton = this.addRenderableWidget(ButtonHelper.createMenuButton(
                     (button) -> setScreen(new MainMenuScreen(this)), true
             ));
-            menuButton.setPosition(this.getHorizontalPosition(++currentButton, 4, 20), topPos - 24);
+            menuButton.setPosition(this.getHorizontalPosition(++currentButton, MultiLoader.getPlatform().isNeoForged() ? 5 : 4, 20), topPos - 24);
         }
 
         if (!ModConstants.SHOWN_BETA_TOAST && MultiLoader.getPlatform().getReleaseType() != ReleaseType.STABLE) {
@@ -51,17 +49,5 @@ public abstract class TitleScreenMixin extends Screen {
                             Component.translatable("qualityofqueso.toast.beta_or_alpha")));
             ModConstants.SHOWN_BETA_TOAST = true;
         }
-    }
-
-    /**
-     * Increases the amount of buttons to {@code 4} so the menu button can display.
-     */
-    @ModifyConstant(method = "init", constant = @Constant(intValue = 3))
-    private int makeButtonsFour(int original) {
-        if (!universalOptionsInstance().getUniversal().menuButton.enabled()) {
-            return original;
-        }
-
-        return 4;
     }
 }
