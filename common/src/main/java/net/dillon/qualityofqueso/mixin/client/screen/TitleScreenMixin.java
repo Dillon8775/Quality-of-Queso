@@ -17,13 +17,13 @@ import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-import static net.dillon.qualityofqueso.helper.ModHelper.setScreen;
-import static net.dillon.qualityofqueso.helper.ModHelper.universalOptionsInstance;
+import static net.dillon.qualityofqueso.helper.ModHelper.*;
 
 @Mixin(TitleScreen.class)
 public abstract class TitleScreenMixin extends Screen {
@@ -58,7 +58,7 @@ public abstract class TitleScreenMixin extends Screen {
             menuButton.setPosition(this.getHorizontalPosition(++currentButton, numberOfButtons, 20), topPos - 24);
         }
 
-        if (!ModConstants.SHOWN_BETA_TOAST && MultiLoader.getPlatform().getReleaseType() != ReleaseType.STABLE) {
+        if (!ModConstants.SHOWN_BETA_TOAST && clientOptionsInstance().getAccessibilityOptions().betaWarning && MultiLoader.getPlatform().getReleaseType() != ReleaseType.STABLE) {
             Minecraft.getInstance().gui.toastManager().addToast(new SystemToast(
                             SystemToast.SystemToastId.PERIODIC_NOTIFICATION,
                             Component.translatable("qualityofqueso.toast.title.beta_or_alpha"),

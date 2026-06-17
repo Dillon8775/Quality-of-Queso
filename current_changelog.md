@@ -1,4 +1,4 @@
-# Version 1.7.7 | 2026-06-??
+# Version 1.7.7 | 2026-06-18
 
 ### Available Versions:
 - Fabric/NeoForge: 26.2, 1.21.11, 1.21.1
@@ -8,6 +8,7 @@
 - Arrow counter text color is now always green if the arrow counter is equal or above 32.
 - Arrow counter text colors is now always white if colored highlighting is disabled.
 - A new keybind to open the Quality of Queso main menu (Tab + Q).
+- A new option called "Beta Warning", which displays the beta warning upon game startup of the current Quality of Queso version is in a beta state.
 - Optimizations with Fov effects.
 - Mod is now compatible with mods like [Zoomify](https://modrinth.com/mod/zoomify), [Tweakeroo](https://modrinth.com/mod/tweakeroo), and [Ok Zoomer](https://modrinth.com/mod/ok-zoomer).
 - Renamed "FOV Effects" to "Fov Effects".
