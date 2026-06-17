@@ -5,6 +5,7 @@ import net.dillon.qualityofqueso.instance.management.ClickSlotInstance;
 import net.dillon.qualityofqueso.keybind.ModKeybinds;
 import net.dillon.qualityofqueso.screen.EnderChestPreviewScreen;
 import net.dillon.qualityofqueso.screen.ItemFrameSearchScreen;
+import net.dillon.qualityofqueso.screen.MainMenuScreen;
 import net.dillon.qualityofqueso.screen.VisualTimeScreen;
 import net.dillon.qualityofqueso.sound.ModSoundEvents;
 import net.dillon.qualityofqueso.util.MobHitDingTracker;
@@ -43,13 +44,18 @@ public abstract class MinecraftMixin {
                 minecraft.setScreen(new ItemFrameSearchScreen(null));
             }
         }
-        while (VIEW_LAST_KNOWN_ENDER_CHEST.consumeClick()) {
-            if (minecraft.level != null && minecraft.player != null) {
-                minecraft.setScreen(new EnderChestPreviewScreen());
+        while (OPEN_QUALITY_OF_QUESO_MAIN_MENU.consumeClick()) {
+            minecraft.setScreen(new MainMenuScreen(null));
+        }
+        if (universalOptionsInstance().getMixins().clockManagerMixin) {
+            while (OPEN_VISUAL_TIME_GUI.consumeClick()) {
+                minecraft.setScreen(new VisualTimeScreen(null));
             }
         }
-        while (OPEN_VISUAL_TIME_GUI.consumeClick()) {
-            minecraft.setScreen(new VisualTimeScreen(null));
+        if (minecraft.level != null && minecraft.player != null) {
+            while (VIEW_LAST_KNOWN_ENDER_CHEST.consumeClick()) {
+                minecraft.setScreen(new EnderChestPreviewScreen());
+            }
         }
     }
 

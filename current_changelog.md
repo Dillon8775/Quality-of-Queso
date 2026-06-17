@@ -1,47 +1,32 @@
-# Version 1.7.6 | 2026-05-31
+# Version 1.7.7 | 2026-06-18
 
-### Available versions:
-- Fabric/NeoForged: **26.1.x, 1.21.11, 1.21.1**
-- Fabric/Forge: **1.20.1**
-
-# Hud Positions
-- You can now manually configure the position for the armor status and item counter.
-- Simply navigate to the Quality of Queso main menu and press "HUD Positions..." to open up the GUI.
-
-## Enhanced Cursor
-- A new option (on by default) which enhances the cursor by relating it to things you are doing in a gui screen.
-    - This replaces some tooltips to make it cleaner.
-
-## True Dark Theme
-- A new theme called "True Dark", which makes the armor status mini-hotbar actually dark.
+### Available Versions:
+- Fabric/NeoForge: 26.2, 1.21.11, 1.21.1
+- Fabric/Forge: 1.20.1
 
 ## Changes
-- Slightly tweaked tooltips (as mentioned above).
-    - The "scroll to move 1" tooltip no longer renders. It has been replaced with the enhanced cursor to remove bulkiness.
-    - The throw out *amount* tooltip no longer renders if the amount is exactly 1.
-- Hoppers, droppers and dispeners now use the correct management layout.
-- New color for colored highlighting, for items with durability percentages of 61-70%.
-- New texture for selected bulk crafting recipes, to match the bulk craft button.
-- New mod description.
-- New changelog format (hi!).
-- Improved the Enchantment Helper visually.
-- Added a "Save Changes" button to the visual time screen.
-- Renamed "Widget Theme" option to "Theme".
-- New buttons under the "Resources" tab:
-    - A button that links the user to a [playlist containing all Quality of Queso features](https://www.youtube.com/playlist?list=PLwrfa61ofGnXhwobF8j2fBIUmpy6K9e43) (currently a W.I.P)!
-    - A button that links the user to a [Modrinth collection](https://modrinth.com/collection/PDFZoFqE) of other QoL mods.
-- The game no longer crashes when YetAnotherConfigLib isn't installed. Instead, if the user tries to press the "Configure" button in the main menu without the mod installed, the user will simply be warned and not be able to configurate the mod.
-
-### MC 1.20.1 Exclusive Changes
-- Colored highlighting and warning indicators are now supported for Minecraft 1.20.1!
-- Colored text now renders appropriately with the arrow counter.
-- Brought the resources screen to this version!
+- Arrow counter text color is now always green if the arrow counter is equal or above 32.
+- Arrow counter text colors is now always white if colored highlighting is disabled.
+- A new keybind to open the Quality of Queso main menu (Tab + Q).
+- Optimizations with Fov effects.
+- Mod is now compatible with mods like [Zoomify](https://modrinth.com/mod/zoomify), [Tweakeroo](https://modrinth.com/mod/tweakeroo), and [Ok Zoomer](https://modrinth.com/mod/ok-zoomer).
+- Renamed "FOV Effects" to "Fov Effects".
+- Renamed "Functions" options to "Mixins".
+- New mixin options:
+    - "titleScreenMixin"
+    - "pauseScreenMixin"
+    - "clockManagerMixin"
+- Renamed mixin options:
+    - "applyFog" -> "fogMixins"
+    - "applyFovEffects" -> "fovEffectsMixin"
+    - "applyRedArmorTint" -> "redArmorTintMixin"
 
 ## Bugs Fixed
-- Unbounding certain Quality of Queso keybinds causes screen bugs and key press bugs.
-- Enabling the Swapping management feature always displays the "move one" texture on transfer buttons.
-- Cannot change move amount if transfer button is hovered and only holding scroll modifier.
-- Tooltips are positioned incorrectly in accordance to the "No Recipe Book Shift" option.
-- Unable to play sound event "qualityofqueso.management.reject" in MC 1.21.1 and below.
-- Armor status and (other hud features) render without blending in MC 1.21.1 and below.
-- Containers always get marked as filtered when shifting even if holding a tool on MC 1.20.1.
+- Menu button (and other buttons) do not appear on the pause screen when on a multiplayer server (26.2).
+- Menu button on title screen can sometimes be incorrectly positioned.
+- "On Server" detection is always false (26.2).
+- Fov is not changed with other things, like walking on soul sand and other speed modifications.
+
+### Technical Changes
+- Mod now uses Mixin extras (>=0.5.4).
+- Bumped min version require to 0.8.

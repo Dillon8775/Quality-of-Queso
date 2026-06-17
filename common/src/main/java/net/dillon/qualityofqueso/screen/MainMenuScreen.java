@@ -32,6 +32,7 @@ public class MainMenuScreen extends AbstractModScreen {
         ).tooltip(
                 Tooltip.create(Component.translatable("qualityofqueso.gui.visual_time.description"))
         ).build();
+        this.visualTime.active = universalOptionsInstance().getMixins().clockManagerMixin;
 
         this.hudPositions = Button.builder(Component.translatable("qualityofqueso.gui.hud_positions"), button -> {
             this.minecraft.setScreen(new HudPositionsScreen(this));
