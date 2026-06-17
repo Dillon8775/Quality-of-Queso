@@ -1,13 +1,11 @@
 dependencies {
     compileOnly group: 'org.spongepowered', name: 'mixin', version: '0.8.5'
     // fabric and neoforge both bundle mixinextras, so it is safe to use it in common
-    compileOnly group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.3.5'
-    annotationProcessor group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.3.5'
-
-    implementation(libs.balmCommon) {
-        changing = libs.versions.balm.get().endsWith("SNAPSHOT")
+    compileOnly group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.5.4'
+    annotationProcessor group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.5.4'
+    implementation("net.blay09.mods:balm-common:${balm_version}") {
+        changing = balm_version.endsWith('SNAPSHOT')
     }
-
     compileOnly ("dev.isxander:yet-another-config-lib:${project.yacl_version}+${project.yalc_mc}-neoforge") {
         transitive = false
     }

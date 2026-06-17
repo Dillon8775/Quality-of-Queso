@@ -541,10 +541,10 @@ public class GuiMixin {
             }
             drawItem(this.minecraft, graphics, stackToRender, itemX, clientOptionsInstance().getItemCounterOptions().itemCounterPosition[1], false, itemAnimationYOffset);
 
-            int color = hasInfinity ? CommonColors.GREEN : CommonColors.WHITE;
+            int color = CommonColors.WHITE;
             boolean validArrow = isArrow || arrowAndZero || holdingArrowDisplayableProjectileWeapon;
-            if (shouldRenderArrowUi && validArrow && !hasInfinity) {
-                color = getCountColor(count);
+            if (validArrow) {
+                color = getArrowCounterTextColor(count, hasInfinity);
             }
             if (positioningElements) {
                 color = CommonColors.GREEN;

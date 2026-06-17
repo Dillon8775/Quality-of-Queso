@@ -3,6 +3,7 @@ package net.dillon.qualityofqueso.helper;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.dillon.qualityofqueso.instance.QuesoScreen;
 import net.dillon.qualityofqueso.option.eum.general.Theme;
+import net.dillon.qualityofqueso.option.eum.hud.ItemCounter;
 import net.dillon.qualityofqueso.screen.HudPositionsScreen;
 import net.dillon.qualityofqueso.widget.WidgetLayout;
 import net.minecraft.ChatFormatting;
@@ -431,7 +432,18 @@ public class GuiHelper {
     /**
      * @return the count color to display.
      */
-    public static int getCountColor(int count) {
+    public static int getArrowCounterTextColor(int count, boolean hasInfinity) {
+        if (!clientOptionsInstance().getHudOptions().coloredHighlighting || count > (clientOptionsInstance().getItemCounterOptions().itemCounter == ItemCounter.STACKS ? 64 : 99)) {
+            return CommonColors.WHITE;
+        }
+
+        int lightGreen = new Color(0x94FF97).getRGB();
+        int green = CommonColors.GREEN;
+
+        if (hasInfinity) {
+            return green;
+        }
+
         if (count < 6) {
             return CommonColors.RED;
         } else if (count < 11) {
@@ -439,9 +451,9 @@ public class GuiHelper {
         } else if (count < 21) {
             return CommonColors.YELLOW;
         } else if (count < 31) {
-            return new Color(0x94FF97).getRGB();
+            return lightGreen;
         } else {
-            return CommonColors.GREEN;
+            return green;
         }
     }
 

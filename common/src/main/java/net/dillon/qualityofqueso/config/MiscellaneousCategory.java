@@ -175,7 +175,7 @@ public class MiscellaneousCategory {
                                                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.red_armor_tint.description")))
                                                 .binding(false, () -> clientOptionsInstance().getMiscOptions().redArmorTint, v -> clientOptionsInstance().getMiscOptions().redArmorTint = v)
                                                 .controller(BooleanControllerBuilder::create)
-                                                .available(universalOptionsInstance().getFunctions().applyRedArmorTint)
+                                                .available(universalOptionsInstance().getMixins().redArmorTintMixin)
                                                 .build()
                                 )
                                 .option(

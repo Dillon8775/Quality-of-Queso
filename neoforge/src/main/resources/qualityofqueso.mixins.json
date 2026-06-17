@@ -1,8 +1,12 @@
 {
   "required": true,
+  "minVersion": "0.8",
+  "mixinextras": {
+    "minVersion": "0.5.4"
+  },
+  "compatibilityLevel": "JAVA_21",
   "package": "net.dillon.qualityofqueso.mixin",
   "plugin": "net.dillon.qualityofqueso.mixin.ConditionalMixinPlugin",
-  "compatibilityLevel": "JAVA_21",
   "client": [
     "FogRendererMixin",
     "client.accessor.AbstractContainerScreenAccessor",

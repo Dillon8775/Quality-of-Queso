@@ -12,14 +12,14 @@ import java.util.List;
 public class UniversalOptions {
     public static final ModOptionsHandler INSTANCE = new ModOptionsHandler();
     private final Universal universal = new Universal();
-    private final Functions functions = new Functions();
+    private final Mixins mixins = new Mixins();
 
     public Universal getUniversal() {
         return this.universal;
     }
 
-    public Functions getFunctions() {
-        return this.functions;
+    public Mixins getMixins() {
+        return this.mixins;
     }
 
     public static class Universal {
@@ -28,10 +28,13 @@ public class UniversalOptions {
         public List<String> blacklistedServers = new ArrayList<>();
     }
 
-    public static class Functions {
-        public boolean applyFog = true;
-        public boolean applyFovEffects = true;
-        public boolean applyRedArmorTint = true;
+    public static class Mixins {
+        public boolean titleScreenMixin = true;
+        public boolean pauseScreenMixin = true;
+        public boolean fogMixins = true;
+        public boolean fovEffectsMixin = true;
+        public boolean redArmorTintMixin = true;
+        public boolean clockManagerMixin = true;
     }
 
     public static class ModOptionsHandler extends BaseOptions<UniversalOptions> {

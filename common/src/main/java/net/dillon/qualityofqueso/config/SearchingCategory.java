@@ -162,12 +162,12 @@ public class SearchingCategory {
                         OptionGroup.createBuilder()
                                 .name(Component.translatable("qualityofqueso.options.item_frame_searching"))
                                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.item_frame_searching.description",
-                                        ModOptionUtil.kumaKeyMappingAsString(ModKeyMappings.OPEN_SEARCH_ITEM_FRAMES_GUI, false))))
+                                        ModOptionUtil.kumaKeyMappingAsString(ModKeyMappings.OPEN_ITEM_FRAME_SEARCH_GUI, false))))
                                 .option(
                                         Option.<Boolean>createBuilder()
                                                 .name(Component.translatable("qualityofqueso.options.item_frame_searching"))
                                                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.item_frame_searching.description",
-                                                        ModOptionUtil.kumaKeyMappingAsString(ModKeyMappings.OPEN_SEARCH_ITEM_FRAMES_GUI, false))))
+                                                        ModOptionUtil.kumaKeyMappingAsString(ModKeyMappings.OPEN_ITEM_FRAME_SEARCH_GUI, false))))
                                                 .binding(true, () -> commonOptionsInstance().itemFrameSearching, v -> commonOptionsInstance().itemFrameSearching = v)
                                                 .controller(BooleanControllerBuilder::create)
                                                 .addListener((opt, event) -> {

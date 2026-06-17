@@ -14,7 +14,7 @@ import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
 /**
  * Displays the date in-game.
  */
-public class DateHudEntry extends QoQScreenEntry {
+public class ModDebugEntryDate extends ModDebugEntry {
 
     @Override
     public void display(DebugScreenDisplayer lines, @Nullable Level serverOrClientLevel, @Nullable LevelChunk clientChunk, @Nullable LevelChunk serverChunk) {

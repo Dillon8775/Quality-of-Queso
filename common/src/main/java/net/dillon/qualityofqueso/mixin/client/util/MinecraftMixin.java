@@ -21,8 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.Random;
 
 import static net.dillon.qualityofqueso.helper.ModHelper.*;
-import static net.dillon.qualityofqueso.keybind.ModKeyMappings.OPEN_SEARCH_ITEM_FRAMES_GUI;
-import static net.dillon.qualityofqueso.keybind.ModKeyMappings.OPEN_VISUAL_TIME_GUI;
+import static net.dillon.qualityofqueso.keybind.ModKeyMappings.OPEN_ITEM_FRAME_SEARCH_GUI;
 
 @Mixin(Minecraft.class)
 public abstract class MinecraftMixin {
@@ -34,10 +33,10 @@ public abstract class MinecraftMixin {
     public abstract SoundManager getSoundManager();
 
     /**
-     * Makes the {@link ModKeyMappings#OPEN_SEARCH_ITEM_FRAMES_GUI} open {@link ItemFrameSearchScreen}.
+     * Makes the {@link ModKeyMappings#OPEN_ITEM_FRAME_SEARCH_GUI} open {@link ItemFrameSearchScreen}.
      */
     @Inject(method = "handleKeybinds", at = @At("TAIL"))
-    private void handleKeyPressing(CallbackInfo ci) {
+    private void handleSpecialKeyPressing(CallbackInfo ci) {
         Minecraft minecraft = Minecraft.getInstance();
 
         if (!modEnabled(minecraft)) {
@@ -45,12 +44,9 @@ public abstract class MinecraftMixin {
         }
 
         if (commonOptionsInstance().itemFrameSearching) {
-            while (OPEN_SEARCH_ITEM_FRAMES_GUI.isActiveAndDown()) {
+            while (OPEN_ITEM_FRAME_SEARCH_GUI.isActiveAndDown()) {
                 Minecraft.getInstance().setScreen(new ItemFrameSearchScreen(null));
             }
-        }
-        while (OPEN_VISUAL_TIME_GUI.isActiveAndDown()) {
-            Minecraft.getInstance().setScreen(new VisualTimeScreen(null));
         }
     }
 
