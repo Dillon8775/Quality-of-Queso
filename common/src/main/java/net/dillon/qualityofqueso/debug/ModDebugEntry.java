@@ -6,7 +6,7 @@ import net.minecraft.client.gui.components.debug.DebugScreenEntry;
 /**
  * An abstract Quality of Queso {@link DebugScreenEntry}.
  */
-public abstract class QoQScreenEntry implements DebugScreenEntry {
+public abstract class ModDebugEntry implements DebugScreenEntry {
 
     /**
      * @return Quality of Queso debug entries should always be allowed.
@@ -21,6 +21,6 @@ public abstract class QoQScreenEntry implements DebugScreenEntry {
      */
     @Override
     public DebugEntryCategory category() {
-        return ModHudEntries.QOQ;
+        return ModDebugScreenEntries.QOQ;
     }
 }

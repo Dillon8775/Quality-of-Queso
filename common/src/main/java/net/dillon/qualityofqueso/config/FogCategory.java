@@ -24,7 +24,7 @@ public class FogCategory {
                         .step(1)
                         .formatValue(v -> Component.literal(v + "%"))
                 )
-                .available(universalOptionsInstance().getFunctions().applyFog)
+                .available(universalOptionsInstance().getMixins().fogMixins)
                 .build();
 
         Option<Integer> netherFogIntensity = Option.<Integer>createBuilder()
@@ -36,7 +36,7 @@ public class FogCategory {
                         .step(1)
                         .formatValue(v -> Component.literal(v + "%"))
                 )
-                .available(universalOptionsInstance().getFunctions().applyFog)
+                .available(universalOptionsInstance().getMixins().fogMixins)
                 .build();
 
         Option<Boolean> overworldFog = Option.<Boolean>createBuilder()
@@ -49,7 +49,7 @@ public class FogCategory {
                         overworldFogIntensity.setAvailable(opt.pendingValue());
                     }
                 })
-                .available(universalOptionsInstance().getFunctions().applyFog)
+                .available(universalOptionsInstance().getMixins().fogMixins)
                 .build();
 
         Option<Boolean> netherFog = Option.<Boolean>createBuilder()
@@ -62,7 +62,7 @@ public class FogCategory {
                         netherFogIntensity.setAvailable(opt.pendingValue());
                     }
                 })
-                .available(universalOptionsInstance().getFunctions().applyFog)
+                .available(universalOptionsInstance().getMixins().fogMixins)
                 .build();
 
         return ConfigCategory.createBuilder()
@@ -78,7 +78,7 @@ public class FogCategory {
                                                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.all_fog.description")))
                                                 .binding(true, () -> clientOptionsInstance().getFogOptions().allFog, v -> clientOptionsInstance().getFogOptions().allFog = v)
                                                 .controller(BooleanControllerBuilder::create)
-                                                .available(universalOptionsInstance().getFunctions().applyFog)
+                                                .available(universalOptionsInstance().getMixins().fogMixins)
                                                 .addListener((opt, event) -> {
                                                     if (event == OptionEventListener.Event.STATE_CHANGE || event == OptionEventListener.Event.INITIAL) {
                                                         boolean bl = opt.pendingValue();
@@ -89,7 +89,7 @@ public class FogCategory {
                                                         netherFogIntensity.setAvailable(bl);
                                                     }
                                                 })
-                                                .available(universalOptionsInstance().getFunctions().applyFog)
+                                                .available(universalOptionsInstance().getMixins().fogMixins)
                                                 .build()
                                 )
                                 .option(

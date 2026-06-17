@@ -17,7 +17,7 @@ import static net.dillon.qualityofqueso.helper.ModHelper.round;
 /**
  * Displays the player'x {@code X-rotation,} which allows for perfection in flying the fastest with firework rockets and an elytra (40 = target).
  */
-public class FastestFlightHudEntry extends QoQScreenEntry {
+public class ModDebugEntryFastestFlight extends ModDebugEntry {
 
     @Override
     public void display(DebugScreenDisplayer displayer, @Nullable Level serverOrClientLevel, @Nullable LevelChunk clientChunk, @Nullable LevelChunk serverChunk) {

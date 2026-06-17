@@ -3,6 +3,8 @@ package net.dillon.qualityofqueso.keybind;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.blay09.mods.kuma.api.*;
 import net.dillon.qualityofqueso.screen.EnderChestPreviewScreen;
+import net.dillon.qualityofqueso.screen.MainMenuScreen;
+import net.dillon.qualityofqueso.screen.VisualTimeScreen;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 
@@ -40,16 +42,34 @@ public class ModKeyMappings {
             .withDefault(InputBinding.key(InputConstants.KEY_I, KeyModifiers.of(KeyModifier.CONTROL)))
             .build();
 
-    public static final ManagedKeyMapping OPEN_SEARCH_ITEM_FRAMES_GUI = Kuma.createKeyMapping(ofQoQ("open_item_frame_search_gui"))
+    public static final ManagedKeyMapping OPEN_ITEM_FRAME_SEARCH_GUI = Kuma.createKeyMapping(ofQoQ("open_item_frame_search_gui"))
             .overrideCategory(QOQ_KEY_CATEGORY)
             .withDefault(InputBinding.key(InputConstants.KEY_I))
             .handleWorldInput(event -> false)
             .build();
 
+    public static final ManagedKeyMapping OPEN_QUALITY_OF_QUESO_MAIN_MENU = Kuma.createKeyMapping(ofQoQ("open_quality_of_queso_main_menu"))
+            .overrideCategory(QOQ_KEY_CATEGORY)
+            .withDefault(new InputBinding(
+                    InputConstants.Type.KEYSYM.getOrCreate(InputConstants.KEY_Q),
+                    KeyModifiers.none().addCustomModifier(InputConstants.KEY_TAB)
+            ))
+            .handleWorldInput(event -> {
+                setScreen(new MainMenuScreen(null));
+                return true;
+            })
+            .build();
+
     public static final ManagedKeyMapping OPEN_VISUAL_TIME_GUI = Kuma.createKeyMapping(ofQoQ("open_visual_time_gui"))
             .overrideCategory(QOQ_KEY_CATEGORY)
             .withDefault(InputBinding.key(InputConstants.KEY_V, KeyModifiers.of(KeyModifier.CONTROL)))
-            .handleWorldInput(event -> false)
+            .handleWorldInput(event -> {
+                if (universalOptionsInstance().getMixins().clockManagerMixin) {
+                    setScreen(new VisualTimeScreen(null));
+                    return true;
+                }
+                return false;
+            })
             .build();
 
     public static final ManagedKeyMapping QUICK_DROP = Kuma.createKeyMapping(ofQoQ("quick_drop"))

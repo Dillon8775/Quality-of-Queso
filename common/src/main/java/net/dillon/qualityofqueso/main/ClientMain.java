@@ -7,7 +7,7 @@ import net.dillon.qualityofqueso.option.LockedPlayerSlots;
 import net.dillon.qualityofqueso.option.ModClientOptions;
 import net.dillon.qualityofqueso.util.ModConstants;
 
-import static net.dillon.qualityofqueso.debug.ModHudEntries.registerDebugEntries;
+import static net.dillon.qualityofqueso.debug.ModDebugScreenEntries.registerDebugEntries;
 import static net.dillon.qualityofqueso.helper.ModHelper.error;
 import static net.dillon.qualityofqueso.helper.ModHelper.stop;
 

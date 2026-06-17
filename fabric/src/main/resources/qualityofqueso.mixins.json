@@ -1,7 +1,11 @@
 {
   "required": true,
-  "package": "net.dillon.qualityofqueso.mixin",
+  "minVersion": "0.8",
+  "mixinextras": {
+    "minVersion": "0.5.4"
+  },
   "compatibilityLevel": "JAVA_25",
+  "package": "net.dillon.qualityofqueso.mixin",
   "plugin": "net.dillon.qualityofqueso.mixin.ConditionalMixinPlugin",
   "client": [
     "CameraMixin",
@@ -38,8 +42,7 @@
     "client.util.LocalPlayerMixin",
     "client.util.MinecraftMixin",
     "client.util.MultiPlayerGameModeMixin",
-    "fabric.FabricAbstractContainerScreenMixin",
-    "fabric.FabricTitleScreenMixin"
+    "fabric.FabricAbstractContainerScreenMixin"
   ],
   "mixins": [
     "main.AbstractContainerMenuAccessor",

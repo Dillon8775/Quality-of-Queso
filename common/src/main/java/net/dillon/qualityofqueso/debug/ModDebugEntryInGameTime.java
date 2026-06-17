@@ -12,7 +12,7 @@ import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
 /**
  * A debug hud to display Minecraft's in-game time.
  */
-public class InGameTimeHudEntry extends QoQScreenEntry {
+public class ModDebugEntryInGameTime extends ModDebugEntry {
     protected static boolean DISPLAYING_IN_GAME_TIME = false;
 
     @Override

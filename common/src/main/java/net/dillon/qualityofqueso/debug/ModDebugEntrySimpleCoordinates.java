@@ -13,7 +13,7 @@ import static net.dillon.qualityofqueso.helper.ModHelper.round;
 /**
  * A simple hud entry to display the player's coordinates. Just the coordinates alone.
  */
-public class SimpleCoordinatesHudEntry extends QoQScreenEntry {
+public class ModDebugEntrySimpleCoordinates extends ModDebugEntry {
 
     @Override
     public void display(@Nullable DebugScreenDisplayer lines, @Nullable Level level, @Nullable LevelChunk levelChunk, @Nullable LevelChunk levelChunk1) {

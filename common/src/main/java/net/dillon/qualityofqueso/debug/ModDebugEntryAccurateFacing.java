@@ -13,7 +13,7 @@ import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
 /**
  * Displays your facing direction, accurately (ex. northwest, northeast, southwest, etc.)
  */
-public class AccurateFacingHudEntry extends QoQScreenEntry {
+public class ModDebugEntryAccurateFacing extends ModDebugEntry {
 
     @Override
     public void display(DebugScreenDisplayer displayer, @Nullable Level serverOrClientLevel, @Nullable LevelChunk clientChunk, @Nullable LevelChunk serverChunk) {

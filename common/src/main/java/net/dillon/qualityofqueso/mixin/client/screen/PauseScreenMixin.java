@@ -1,17 +1,19 @@
 package net.dillon.qualityofqueso.mixin.client.screen;
 
+import com.llamalad7.mixinextras.expression.Definition;
+import com.llamalad7.mixinextras.expression.Expression;
+import com.llamalad7.mixinextras.sugar.Local;
 import net.dillon.qualityofqueso.helper.ButtonHelper;
 import net.dillon.qualityofqueso.option.eum.general.MenuButton;
 import net.dillon.qualityofqueso.screen.EnderChestPreviewScreen;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.SpriteIconButton;
-import net.minecraft.client.gui.layouts.GridLayout;
 import net.minecraft.client.gui.layouts.LinearLayout;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.social.PlayerSocialManager;
 import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.server.IntegratedServer;
 import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,7 +22,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import static net.dillon.qualityofqueso.helper.ButtonHelper.getConfigButtonX;
 import static net.dillon.qualityofqueso.helper.ButtonHelper.getConfigButtonY;
@@ -67,10 +68,12 @@ public class PauseScreenMixin extends Screen {
     }
 
     /**
-     * Adds all Quality of Queso main menu buttons to the pause screen.
+     * Adds menu buttons to the pause screen.
      */
-    @Inject(method = "createPauseMenu", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/layouts/GridLayout$RowHelper;addChild(Lnet/minecraft/client/gui/layouts/LayoutElement;)Lnet/minecraft/client/gui/layouts/LayoutElement;", ordinal = 3), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
-    private void addQualityOfQuesoButtons(CallbackInfo ci, GridLayout gridLayout, GridLayout.RowHelper helper, LinearLayout iconButtonRow, SpriteIconButton reportBugsButton, SpriteIconButton feedbackButton, PlayerSocialManager playerSocialManager, SpriteIconButton playerReportingButton) {
+    @Definition(id = "integratedServer", local = @Local(type = IntegratedServer.class, name = "integratedServer"))
+    @Expression("integratedServer = ?")
+    @Inject(method = "createPauseMenu", at = @At("MIXINEXTRAS:EXPRESSION"))
+    private void addQualityOfQuesoButtons(CallbackInfo ci, @Local(name = "iconButtonRow") LinearLayout iconButtonRow) {
         if (!universalOptionsInstance().getUniversal().menuButton.everywhere()) {
             return;
         }

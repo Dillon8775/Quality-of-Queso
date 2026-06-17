@@ -1,5 +1,9 @@
 package net.dillon.qualityofqueso.mixin.client.screen;
 
+import com.llamalad7.mixinextras.expression.Definition;
+import com.llamalad7.mixinextras.expression.Expression;
+import com.llamalad7.mixinextras.sugar.Local;
+import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
 import net.dillon.qualityofqueso.helper.ButtonHelper;
 import net.dillon.qualityofqueso.platform.MultiLoader;
 import net.dillon.qualityofqueso.platform.ReleaseType;
@@ -31,6 +35,18 @@ public abstract class TitleScreenMixin extends Screen {
     }
 
     /**
+     * Increases the maximum amount of buttons that should be displayed on the title screen.
+     */
+    @Definition(id = "numberOfButtons", local = @Local(type = int.class, name = "numberOfButtons"))
+    @Expression("numberOfButtons = ?")
+    @Inject(method = "init", at = @At(value = "MIXINEXTRAS:EXPRESSION", shift = At.Shift.AFTER))
+    private void adjustAmountOfIconButtons(CallbackInfo ci, @Local(name = "numberOfButtons") LocalIntRef numberOfButtons) {
+        if (universalOptionsInstance().getUniversal().menuButton.enabled()) {
+            numberOfButtons.set(numberOfButtons.get() + 1);
+        }
+    }
+
+    /**
      * Warns the user of a possible beta Quality of Queso version, and adds the main menu button configuration to the screen.
      */
     @Inject(method = "init", at = @At("TAIL"), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
@@ -39,7 +55,7 @@ public abstract class TitleScreenMixin extends Screen {
             SpriteIconButton menuButton = this.addRenderableWidget(ButtonHelper.createMenuButton(
                     (button) -> setScreen(new MainMenuScreen(this)), true
             ));
-            menuButton.setPosition(this.getHorizontalPosition(++currentButton, MultiLoader.getPlatform().isNeoForged() ? 5 : 4, 20), topPos - 24);
+            menuButton.setPosition(this.getHorizontalPosition(++currentButton, numberOfButtons, 20), topPos - 24);
         }
 
         if (!ModConstants.SHOWN_BETA_TOAST && MultiLoader.getPlatform().getReleaseType() != ReleaseType.STABLE) {

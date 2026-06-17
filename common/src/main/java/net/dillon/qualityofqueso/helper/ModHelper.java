@@ -206,7 +206,7 @@ public class ModHelper {
      * @return if the player is on a server.
      */
     public static boolean isOnServer(Minecraft client) {
-        return client.getSingleplayerServer() != null && !client.getSingleplayerServer().isSingleplayer() && !(client.getCurrentServer() == null);
+        return !(client.getCurrentServer() == null);
     }
 
     /**

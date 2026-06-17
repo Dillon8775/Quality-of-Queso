@@ -15,7 +15,7 @@ import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
 /**
  * A debug hud to display real-life time.
  */
-public class RealLifeTimeHudEntry extends QoQScreenEntry {
+public class ModDebugEntryRealLifeTime extends ModDebugEntry {
 
     @Override
     public void display(@NonNull DebugScreenDisplayer lines, @Nullable Level level, @Nullable LevelChunk clientChunk, @Nullable LevelChunk chunk) {
