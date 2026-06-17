@@ -1,9 +1,6 @@
 package net.dillon.qualityofqueso.config;
 
-import dev.isxander.yacl3.api.ConfigCategory;
-import dev.isxander.yacl3.api.Option;
-import dev.isxander.yacl3.api.OptionDescription;
-import dev.isxander.yacl3.api.OptionGroup;
+import dev.isxander.yacl3.api.*;
 import dev.isxander.yacl3.api.controller.BooleanControllerBuilder;
 import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
@@ -27,7 +24,7 @@ public class FogCategory {
                         .step(1)
                         .formatValue(v -> Component.literal(v + "%"))
                 )
-                .available(false)
+                .available(universalOptionsInstance().getMixins().fogMixins)
                 .build();
 
         Option<Integer> netherFogIntensity = Option.<Integer>createBuilder()
@@ -39,7 +36,7 @@ public class FogCategory {
                         .step(1)
                         .formatValue(v -> Component.literal(v + "%"))
                 )
-                .available(universalOptionsInstance().getFunctions().applyFog)
+                .available(universalOptionsInstance().getMixins().fogMixins)
                 .build();
 
         Option<Boolean> overworldFog = Option.<Boolean>createBuilder()
@@ -47,7 +44,7 @@ public class FogCategory {
                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.overworld_fog.description")))
                 .binding(true, () -> clientOptionsInstance().getFogOptions().overworldFog, v -> clientOptionsInstance().getFogOptions().overworldFog = v)
                 .controller(TickBoxControllerBuilder::create)
-                .available(universalOptionsInstance().getFunctions().applyFog)
+                .available(universalOptionsInstance().getMixins().fogMixins)
                 .build();
 
         Option<Boolean> netherFog = Option.<Boolean>createBuilder()
@@ -55,7 +52,7 @@ public class FogCategory {
                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.nether_fog.description")))
                 .binding(true, () -> clientOptionsInstance().getFogOptions().netherFog, v -> clientOptionsInstance().getFogOptions().netherFog = v)
                 .controller(TickBoxControllerBuilder::create)
-                .available(universalOptionsInstance().getFunctions().applyFog)
+                .available(universalOptionsInstance().getMixins().fogMixins)
                 .build();
 
         return ConfigCategory.createBuilder()
@@ -71,8 +68,7 @@ public class FogCategory {
                                                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.all_fog.description")))
                                                 .binding(true, () -> clientOptionsInstance().getFogOptions().allFog, v -> clientOptionsInstance().getFogOptions().allFog = v)
                                                 .controller(BooleanControllerBuilder::create)
-                                                .available(universalOptionsInstance().getFunctions().applyFog)
-                                                .available(universalOptionsInstance().getFunctions().applyFog)
+                                                .available(universalOptionsInstance().getMixins().fogMixins)
                                                 .build()
                                 )
                                 .option(

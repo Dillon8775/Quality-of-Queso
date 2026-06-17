@@ -644,8 +644,8 @@ public abstract class GuiMixin {
 
             int color = CommonColors.WHITE;
             boolean validArrow = isArrow || arrowAndZero || holdingArrowDisplayableProjectileWeapon;
-            if (shouldRenderArrowUi && validArrow && !hasInfinity) {
-                color = getCountColor(count);
+            if (validArrow) {
+                color = getArrowCounterTextColor(count, hasInfinity);
             }
             if (positioningElements) {
                 color = -16711936;

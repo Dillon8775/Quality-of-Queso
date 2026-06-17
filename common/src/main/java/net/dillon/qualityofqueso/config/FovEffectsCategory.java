@@ -34,7 +34,7 @@ public class FovEffectsCategory {
                                                         .step(1)
                                                         .formatValue(v -> v < 100 ? Component.literal("§7OFF") : Component.literal(v + "%"))
                                                 )
-                                                .available(universalOptionsInstance().getFunctions().applyFovEffects)
+                                                .available(universalOptionsInstance().getMixins().fovEffectsMixin)
                                                 .build()
                                 )
                                 .option(
@@ -43,7 +43,7 @@ public class FovEffectsCategory {
                                                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.fov_effects.flying.description")))
                                                 .binding(true, () -> clientOptionsInstance().getFovEffectOptions().flying, v -> clientOptionsInstance().getFovEffectOptions().flying = v)
                                                 .controller(TickBoxControllerBuilder::create)
-                                                .available(universalOptionsInstance().getFunctions().applyFovEffects)
+                                                .available(universalOptionsInstance().getMixins().fovEffectsMixin)
                                                 .build()
                                 )
                                 .option(
@@ -52,7 +52,7 @@ public class FovEffectsCategory {
                                                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.fov_effects.fluids.description")))
                                                 .binding(true, () -> clientOptionsInstance().getFovEffectOptions().fluids, v -> clientOptionsInstance().getFovEffectOptions().fluids = v)
                                                 .controller(TickBoxControllerBuilder::create)
-                                                .available(false)
+                                                .available(universalOptionsInstance().getMixins().fovEffectsMixin)
                                                 .build()
                                 )
                                 .option(
@@ -63,7 +63,7 @@ public class FovEffectsCategory {
                                                 .controller(o -> EnumControllerBuilder.create(o)
                                                         .enumClass(PotionEffects.class)
                                                         .formatValue(v -> Component.literal(v.getSerializedName())))
-                                                .available(universalOptionsInstance().getFunctions().applyFovEffects)
+                                                .available(universalOptionsInstance().getMixins().fovEffectsMixin)
                                                 .build()
                                 )
                                 .option(
@@ -74,7 +74,7 @@ public class FovEffectsCategory {
                                                 .controller(o -> EnumControllerBuilder.create(o)
                                                         .enumClass(Bows.class)
                                                         .formatValue(v -> Component.literal(v.getSerializedName())))
-                                                .available(universalOptionsInstance().getFunctions().applyFovEffects)
+                                                .available(universalOptionsInstance().getMixins().fovEffectsMixin)
                                                 .build()
                                 )
                                 .build()
@@ -87,7 +87,7 @@ public class FovEffectsCategory {
                                         Option.<Boolean>createBuilder()
                                                 .name(Component.translatable("qualityofqueso.options.fov_effects.disable_fov_effects"))
                                                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.fov_effects.disable_fov_effects.description")))
-                                                .binding(false, () -> !universalOptionsInstance().getFunctions().applyFovEffects, v -> universalOptionsInstance().getFunctions().applyFovEffects = !v)
+                                                .binding(false, () -> !universalOptionsInstance().getMixins().fovEffectsMixin, v -> universalOptionsInstance().getMixins().fovEffectsMixin = !v)
                                                 .controller(TickBoxControllerBuilder::create)
                                                 .flag(OptionFlag.GAME_RESTART)
                                                 .build()

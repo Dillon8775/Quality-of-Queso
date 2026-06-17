@@ -46,6 +46,13 @@ public final class ModKeybinds {
             QOQ_KEY_CATEGORY
     );
 
+    public static final KeyMapping OPEN_QUALITY_OF_QUESO_MAIN_MENU = new KeyMapping(
+            "key.qualityofqueso.open_quality_of_queso_main_menu",
+            InputConstants.Type.KEYSYM,
+            InputConstants.UNKNOWN.getValue(),
+            QOQ_KEY_CATEGORY
+    );
+
     public static final KeyMapping OPEN_VISUAL_TIME_GUI = new KeyMapping(
             "key.qualityofqueso.open_visual_time_gui",
             InputConstants.Type.KEYSYM,
