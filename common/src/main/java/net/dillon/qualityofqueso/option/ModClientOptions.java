@@ -368,6 +368,7 @@ public class ModClientOptions {
         public boolean perpendicularQuickMoving = false;
         public boolean preventEFromTyping = true;
         public boolean searchInventory = true;
+        public boolean betaWarning = true;
         public boolean ignoreFabricTags = false;
 
         public boolean darkerOverlay = false;
