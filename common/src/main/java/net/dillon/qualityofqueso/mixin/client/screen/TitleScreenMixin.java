@@ -15,6 +15,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
 import static net.dillon.qualityofqueso.helper.ModHelper.universalOptionsInstance;
 
 @Mixin(TitleScreen.class)
@@ -37,7 +38,7 @@ public class TitleScreenMixin extends Screen {
             ));
         }
 
-        if (!ModConstants.SHOWN_BETA_TOAST && MultiLoader.getPlatform().getReleaseType() != ReleaseType.STABLE) {
+        if (!ModConstants.SHOWN_BETA_TOAST && clientOptionsInstance().getAccessibilityOptions().betaWarning && MultiLoader.getPlatform().getReleaseType() != ReleaseType.STABLE) {
             Minecraft.getInstance().getToasts().addToast(
                     SystemToast.multiline(Minecraft.getInstance(),
                             SystemToast.SystemToastIds.PERIODIC_NOTIFICATION,

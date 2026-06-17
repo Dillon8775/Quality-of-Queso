@@ -302,6 +302,8 @@
   "qualityofqueso.options.prevent_e_from_typing.description": "Prevents the \"E\" key (or whatever your inventory key is) from auto-focusing into search bars.",
   "qualityofqueso.options.search_inventory": "Search Inventory",
   "qualityofqueso.options.search_inventory.description": "Searches the player's inventory in addition to searching for items in a container.",
+  "qualityofqueso.options.beta_warning": "Beta Warning",
+  "qualityofqueso.options.beta_warning.description": "Displays a beta warning on game startup of the current Quality of Queso version is in a beta state.",
   "qualityofqueso.options.ignore_fabric_tags": "Ignore Fabric Tags",
   "qualityofqueso.options.ignore_fabric_tags.description": "Ignores fabric tags when sorting by tag, as they can §osometimes §r§fof mess up the order and logic of sorting.\n§7This only applies for Fabric users.",
   "qualityofqueso.options.echest_button": "View Last Known Ender Chest Button",

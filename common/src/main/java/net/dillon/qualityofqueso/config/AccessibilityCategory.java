@@ -10,9 +10,12 @@ import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
 import net.blay09.mods.balm.api.Balm;
 import net.dillon.qualityofqueso.option.eum.general.Theme;
 import net.dillon.qualityofqueso.option.eum.misc.ViewLastKnownEnderChestButton;
+import net.dillon.qualityofqueso.platform.MultiLoader;
+import net.dillon.qualityofqueso.platform.ReleaseType;
 import net.minecraft.network.chat.Component;
 
 import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
+import static net.dillon.qualityofqueso.helper.ModHelper.universalOptionsInstance;
 
 /**
  * The accessibility options category for the {@link ConfigurationScreen}.
@@ -56,6 +59,15 @@ public class AccessibilityCategory {
                                                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.search_inventory.description")))
                                                 .binding(true, () -> clientOptionsInstance().getAccessibilityOptions().searchInventory, v -> clientOptionsInstance().getAccessibilityOptions().searchInventory = v)
                                                 .controller(TickBoxControllerBuilder::create)
+                                                .build()
+                                )
+                                .option(
+                                        Option.<Boolean>createBuilder()
+                                                .name(Component.translatable("qualityofqueso.options.beta_warning"))
+                                                .description(OptionDescription.of(Component.translatable("qualityofqueso.options.beta_warning.description")))
+                                                .binding(true, () -> clientOptionsInstance().getAccessibilityOptions().betaWarning, v -> clientOptionsInstance().getAccessibilityOptions().betaWarning = v)
+                                                .controller(BooleanControllerBuilder::create)
+                                                .available(universalOptionsInstance().getMixins().titleScreenMixin && MultiLoader.getPlatform().getReleaseType() != ReleaseType.STABLE)
                                                 .build()
                                 )
                                 .option(
