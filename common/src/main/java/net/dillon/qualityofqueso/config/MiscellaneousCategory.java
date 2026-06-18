@@ -10,7 +10,7 @@ import net.dillon.qualityofqueso.option.eum.misc.ElytraAlarm;
 import net.minecraft.network.chat.Component;
 
 import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
-import static net.dillon.qualityofqueso.helper.ModHelper.universalOptionsInstance;
+import static net.dillon.qualityofqueso.helper.ModHelper.mixinOptionsInstance;
 import static net.dillon.qualityofqueso.util.ModOptionUtil.fullKumaKeyMappingAsString;
 
 /**
@@ -175,7 +175,7 @@ public class MiscellaneousCategory {
                                                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.red_armor_tint.description")))
                                                 .binding(false, () -> clientOptionsInstance().getMiscOptions().redArmorTint, v -> clientOptionsInstance().getMiscOptions().redArmorTint = v)
                                                 .controller(BooleanControllerBuilder::create)
-                                                .available(universalOptionsInstance().getMixins().redArmorTintMixin)
+                                                .available(mixinOptionsInstance().redArmorTintMixin)
                                                 .build()
                                 )
                                 .option(

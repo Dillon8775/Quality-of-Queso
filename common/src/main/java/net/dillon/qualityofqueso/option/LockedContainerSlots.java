@@ -10,12 +10,12 @@ import java.util.Map;
  * Stores locked container slots for each container in a world.
  */
 public class LockedContainerSlots {
-    public static final ModOptionsHandler INSTANCE = new ModOptionsHandler();
+    public static final LockedContainerSlotsHandler INSTANCE = new LockedContainerSlotsHandler();
     public Map<String, List<Integer>> lockedContainerSlots = new HashMap<>();
 
-    public static class ModOptionsHandler extends BaseOptions<LockedContainerSlots> {
+    public static class LockedContainerSlotsHandler extends BaseOptions<LockedContainerSlots> {
 
-        protected ModOptionsHandler() {
+        protected LockedContainerSlotsHandler() {
             super(ModConstants.DEFAULT_LOCKED_CONTAINER_SLOTS_FILE_NAME);
             this.load();
         }

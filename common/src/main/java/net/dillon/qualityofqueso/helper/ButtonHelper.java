@@ -69,10 +69,10 @@ public class ButtonHelper {
      */
     public static SpriteIconButton createBlacklistServerButton(String address) {
         return createMenuButton(onPress -> {
-            if (universalOptionsInstance().getUniversal().blacklistedServers.contains(address)) {
-                universalOptionsInstance().getUniversal().blacklistedServers.remove(address);
+            if (universalOptionsInstance().blacklistedServers.contains(address)) {
+                universalOptionsInstance().blacklistedServers.remove(address);
             } else {
-                universalOptionsInstance().getUniversal().blacklistedServers.add(address);
+                universalOptionsInstance().blacklistedServers.add(address);
             }
             saveAndApplyConfigs(Minecraft.getInstance());
         }, false);
@@ -118,9 +118,9 @@ public class ButtonHelper {
      * @return the configuration button X position.
      */
     public static int getConfigButtonX(int width, int button) {
-        if (universalOptionsInstance().getUniversal().menuButton.left()) {
+        if (universalOptionsInstance().menuButton.left()) {
             return 8 + (button * 24);
-        } else if (universalOptionsInstance().getUniversal().menuButton.right()) {
+        } else if (universalOptionsInstance().menuButton.right()) {
             return width - 28 - (button * 24);
         } else {
             return width / 2 + 106;
@@ -131,7 +131,7 @@ public class ButtonHelper {
      * @return the configuration button Y position.
      */
     public static int getConfigButtonY(int height, int button) {
-        if (universalOptionsInstance().getUniversal().menuButton.left() || universalOptionsInstance().getUniversal().menuButton.right()) {
+        if (universalOptionsInstance().menuButton.left() || universalOptionsInstance().menuButton.right()) {
             return height - 29;
         } else {
             return height / 4 + 72 + (button * 24) - 16 + (MultiLoader.getPlatform().isNeoForged() ? -6 : 0);

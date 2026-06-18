@@ -15,12 +15,14 @@ import net.minecraft.client.gui.screens.ConfirmLinkScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.options.OptionsSubScreen;
 import net.minecraft.client.gui.screens.options.controls.KeyBindsScreen;
+import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.CommonColors;
 import net.minecraft.util.Util;
 import net.minecraft.world.level.storage.LevelResource;
+import org.lwjgl.glfw.GLFW;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -77,6 +79,13 @@ public abstract class AbstractModScreen extends OptionsSubScreen {
         return SHOWCASE_VIDEO_LINK;
     }
 
+    /**
+     * Opens the config directory.
+     */
+    private void openConfigDirectory() {
+        Util.getPlatform().openFile(MultiLoader.getPlatform().getConfigDir().resolve("qualityofqueso").toFile());
+    }
+
     @Override
     public void onClose() {
         saveAndApplyConfigs(this.minecraft);
@@ -131,6 +140,14 @@ public abstract class AbstractModScreen extends OptionsSubScreen {
                         Component.translatable("qualityofqueso.gui.view_ender_chest.tooltip")
                 ));
             }
+        } else {
+            this.worldDirectoryButton = this.addRenderableWidget(ButtonHelper.createSpriteIconButton(
+                    ofQoQ(OPEN_CONFIG_DIRECTORY_TEXTURE),
+                    (button) -> {
+                        this.openConfigDirectory();
+                    },
+                    Component.translatable("qualityofqueso.gui.open_config_directory")
+            ));
         }
 
         this.wikiButton = this.addRenderableWidget(ButtonHelper.createSpriteIconButton(
@@ -193,6 +210,15 @@ public abstract class AbstractModScreen extends OptionsSubScreen {
 
         this.activateButtons();
         super.extractRenderState(graphics, mouseX, mouseY, deltaTicks);
+    }
+
+    @Override
+    public boolean keyPressed(final KeyEvent event) {
+        if (event.key() == GLFW.GLFW_KEY_F4) {
+            this.openConfigDirectory();
+            return true;
+        }
+        return super.keyPressed(event);
     }
 
     /**

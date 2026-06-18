@@ -64,7 +64,7 @@ public class ModKeyMappings {
             .overrideCategory(QOQ_KEY_CATEGORY)
             .withDefault(InputBinding.key(InputConstants.KEY_V, KeyModifiers.of(KeyModifier.CONTROL)))
             .handleWorldInput(event -> {
-                if (universalOptionsInstance().getMixins().clockManagerMixin) {
+                if (mixinOptionsInstance().clockManagerMixin) {
                     setScreen(new VisualTimeScreen(null));
                     return true;
                 }

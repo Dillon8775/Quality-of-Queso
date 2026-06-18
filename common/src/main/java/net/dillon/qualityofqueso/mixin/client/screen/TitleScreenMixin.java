@@ -17,7 +17,6 @@ import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -41,7 +40,7 @@ public abstract class TitleScreenMixin extends Screen {
     @Expression("numberOfButtons = ?")
     @Inject(method = "init", at = @At(value = "MIXINEXTRAS:EXPRESSION", shift = At.Shift.AFTER))
     private void adjustAmountOfIconButtons(CallbackInfo ci, @Local(name = "numberOfButtons") LocalIntRef numberOfButtons) {
-        if (universalOptionsInstance().getUniversal().menuButton.enabled()) {
+        if (universalOptionsInstance().menuButton.enabled()) {
             numberOfButtons.set(numberOfButtons.get() + 1);
         }
     }
@@ -51,7 +50,7 @@ public abstract class TitleScreenMixin extends Screen {
      */
     @Inject(method = "init", at = @At("TAIL"), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
     private void addButtonsAndWarning(CallbackInfo ci, int copyrightWidth, int copyrightX, int spacing, int topPos, int numberOfButtons, int currentButton, SpriteIconButton language, SpriteIconButton accessibility) {
-        if (universalOptionsInstance().getUniversal().menuButton.enabled()) {
+        if (universalOptionsInstance().menuButton.enabled()) {
             SpriteIconButton menuButton = this.addRenderableWidget(ButtonHelper.createMenuButton(
                     (button) -> setScreen(new MainMenuScreen(this)), true
             ));

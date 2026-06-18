@@ -64,7 +64,7 @@ public class PauseScreenMixin extends Screen {
      */
     @Unique
     private boolean isServerBlacklisted(String serverAddress) {
-        return universalOptionsInstance().getUniversal().blacklistedServers.contains(serverAddress);
+        return universalOptionsInstance().blacklistedServers.contains(serverAddress);
     }
 
     /**
@@ -74,11 +74,11 @@ public class PauseScreenMixin extends Screen {
     @Expression("integratedServer = ?")
     @Inject(method = "createPauseMenu", at = @At("MIXINEXTRAS:EXPRESSION"))
     private void addQualityOfQuesoButtons(CallbackInfo ci, @Local(name = "iconButtonRow") LinearLayout iconButtonRow) {
-        if (!universalOptionsInstance().getUniversal().menuButton.everywhere()) {
+        if (!universalOptionsInstance().menuButton.everywhere()) {
             return;
         }
 
-        boolean everywhere = universalOptionsInstance().getUniversal().menuButton == MenuButton.EVERYWHERE;
+        boolean everywhere = universalOptionsInstance().menuButton == MenuButton.EVERYWHERE;
 
         int button = 0;
         SpriteIconButton menuButton = ButtonHelper.createMainMenuButton(this);
@@ -132,12 +132,12 @@ public class PauseScreenMixin extends Screen {
             drawTooltip(Component.translatable("qualityofqueso.gui.disconnect"), graphics, this.font, mouseX, mouseY);
         }
 
-        if (universalOptionsInstance().getUniversal().menuButton.everywhere() && !(this.minecraft.getCurrentServer() == null)) {
+        if (universalOptionsInstance().menuButton.everywhere() && !(this.minecraft.getCurrentServer() == null)) {
             if (this.blacklistServerButton != null) {
                 this.blacklistServerButton.active = isOnServer(this.minecraft);
                 String address = this.getServerAddress();
 
-                if (universalOptionsInstance().getUniversal().multiServerConfigs) {
+                if (universalOptionsInstance().multiServerConfigs) {
                     graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ofQoQ(MULTI_CONFIG_TEXTURE), this.blacklistServerButton.getX() - 2, this.blacklistServerButton.getY() - 1, 16, 16);
                 }
                 ButtonHelper.drawTexture(graphics, this.isServerBlacklisted(address) ? DISABLED_TEXTURE : ENABLED_TEXTURE, this.blacklistServerButton);
@@ -146,7 +146,7 @@ public class PauseScreenMixin extends Screen {
                         Component.translatable("qualityofqueso.gui.remove_blacklisted_server") :
                         Component.translatable("qualityofqueso.gui.add_blacklisted_server");
                 Component finalTooltip = tooltip;
-                if (universalOptionsInstance().getUniversal().multiServerConfigs) {
+                if (universalOptionsInstance().multiServerConfigs) {
                     finalTooltip = tooltip.copy().append(Component.translatable("qualityofqueso.gui.multi_server_configs_enabled"));
                 }
                 if (this.blacklistServerButton.isHovered()) {

@@ -217,6 +217,7 @@
 
   "qualityofqueso.options.title.fov_effects": "Fov Effects",
   "qualityofqueso.options.fov_effects.tooltip": "Configure what can change your Fov.",
+  "qualityofqueso.options.fov_effects.generic_fov_percent_change": "§aGeneric Fov Percent Change",
   "qualityofqueso.options.fov_effects.sprinting": "Sprinting",
   "qualityofqueso.options.fov_effects.sprinting.description": "Determines how much sprinting increases Fov.\n§7Slide the slider all the way to the left to disable sprinting increasing fov entirely.",
   "qualityofqueso.options.fov_effects.flying": "Flying",
@@ -227,10 +228,8 @@
   "qualityofqueso.options.fov_effects.fluids.description": "Toggle submerged in water/lava to alter Fov.\n\n§cFeature not available in Minecraft 1.21.11 and below.",
   "qualityofqueso.options.fov_effects.bows": "Bows",
   "qualityofqueso.options.fov_effects.bows.description": "Allows bows to alter Fov.\n\n§aEnabled → §r§f§7allows all bows to alter Fov like normal.§r§f\n\n§bQuick-Pull → §r§f§7quickly zooms in when pulling back a bow§r§f\n\nOFF → §r§f§7do not allow bows to alter Fov.",
-  "qualityofqueso.options.fov_effects.controls": "Controls",
-  "qualityofqueso.options.fov_effects.controls.description": "Decide whether Fov effects should be applied.",
-  "qualityofqueso.options.fov_effects.disable_fov_effects": "Disable Fov Effects",
-  "qualityofqueso.options.fov_effects.disable_fov_effects.description": "Disables the Fov effects feature entirely.\n\n§cYou should really only do this if you are experiencing mod compatibility issues, or something isn't working right with your Fov.",
+  "qualityofqueso.options.fov_effects.lock_fov": "Lock Fov",
+  "qualityofqueso.options.fov_effects.lock_fov.description": "Locks your Fov to your Minecraft setting, and does not get changed from anything.",
 
   "qualityofqueso.options.title.fog": "Fog",
   "qualityofqueso.options.fog.tooltip": "Configure how Minecraft's fog appears.",
@@ -369,8 +368,9 @@
   "qualityofqueso.gui.report_bugs": "Report a bug...",
   "qualityofqueso.gui.report_bugs.tooltip": "Report a bug on the GitHub repository...",
 
-  "qualityofqueso.gui.open_screenshots_folder": "Open Screenshots Folder...",
-  "qualityofqueso.gui.open_world_folder": "Open World Folder...",
+  "qualityofqueso.gui.open_screenshots_folder": "Open Screenshots Folder",
+  "qualityofqueso.gui.open_world_folder": "Open World Folder\nF4 to open Config Directory",
+  "qualityofqueso.gui.open_config_directory": "Open Config Directory",
 
   "qualityofqueso.gui.on": "ON",
   "qualityofqueso.gui.off": "OFF",
