@@ -30,7 +30,7 @@ public class TitleScreenMixin extends Screen {
      */
     @Inject(method = "init", at = @At("TAIL"))
     private void init(CallbackInfo ci) {
-        if (universalOptionsInstance().getUniversal().menuButton.enabled()) {
+        if (universalOptionsInstance().menuButton.enabled()) {
             this.addRenderableWidget(ButtonHelper.createMenuButton(
                     this.width / 2 + 128,
                     this.height / 4 + 132 + (MultiLoader.getPlatform().isNeoForged() ? 6 : 0),

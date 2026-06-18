@@ -91,6 +91,7 @@ public class ModConstants {
     public static final String DISABLED_TEXTURE = "sprites/widget/disabled";
     public static final String OPEN_SCREENSHOTS_DIRECTORY_TEXTURE = "textures/gui/sprites/widget/screenshots.png";
     public static final String OPEN_WORLD_DIRECTORY_TEXTURE = "textures/gui/sprites/widget/world_folder.png";
+    public static final String OPEN_CONFIG_DIRECTORY_TEXTURE = "textures/gui/sprites/widget/config_folder.png";
     public static final String ENDER_CHEST = "textures/gui/sprites/widget/ender_chest.png";
     public static final String DISCORD_TEXTURE = "textures/gui/sprites/widget/discord.png";
     public static final String YOUTUBE_TEXTURE = "textures/gui/sprites/widget/youtube.png";
@@ -118,6 +119,7 @@ public class ModConstants {
     public static final String DEFAULT_CLIENT_CONFIG_FILE_NAME = "client.json";
     public static final String DEFAULT_COMMON_CONFIG_FILE_NAME = "common.json";
     public static final String DEFAULT_UNIVERSAL_CONFIG_FILE_NAME = "universal.json";
+    public static final String DEFAULT_MIXIN_CONFIG_FILE_NAME = "mixins.json";
     public static final String DEFAULT_CONTAINER_DATA_FILE_NAME = "container_data.json";
     public static final String DEFAULT_LOCKED_CONTAINER_SLOTS_FILE_NAME = "locked_container_slots.json";
     public static final String DEFAULT_LOCKED_PLAYER_SLOTS_FILE_NAME = "locked_player_slots.json";

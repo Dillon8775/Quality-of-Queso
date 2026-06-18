@@ -357,6 +357,7 @@ public class ModClientOptions {
     }
 
     public static class FovEffectOptions {
+        public boolean lockFov = false;
         public int sprinting = 100;
         public boolean flying = true;
         public boolean fluids = true;

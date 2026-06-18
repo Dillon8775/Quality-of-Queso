@@ -20,7 +20,7 @@ public class ClientEvents {
     }
 
     public static void onPlayerJoin(Minecraft minecraft) {
-        if (universalOptionsInstance().getUniversal().multiServerConfigs) {
+        if (universalOptionsInstance().multiServerConfigs) {
             ModHelper.LOADED = true;
             loadServerConfig();
         }
@@ -35,7 +35,7 @@ public class ClientEvents {
                             Component.literal(minecraft.getCurrentServer().ip).withStyle(ChatFormatting.DARK_RED)), false);
                 }
             }
-            if (!universalOptionsInstance().getUniversal().multiServerConfigs) {
+            if (!universalOptionsInstance().multiServerConfigs) {
                 minecraft.player.displayClientMessage(Component.translatable("qualityofqueso.gui.enable_multi_server_configs"), false);
             }
         }
