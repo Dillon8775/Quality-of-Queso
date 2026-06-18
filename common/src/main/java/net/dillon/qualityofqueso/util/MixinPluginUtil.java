@@ -1,6 +1,6 @@
 package net.dillon.qualityofqueso.util;
 
-import net.dillon.qualityofqueso.option.UniversalOptions;
+import net.dillon.qualityofqueso.option.MixinOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,37 +16,37 @@ public class MixinPluginUtil {
      */
     private static boolean shouldApply(String mixinClassName) {
         if (mixinClassName.equals(ofQoQMixin("client.screen.TitleScreenMixin"))) {
-            if (!UniversalOptions.INSTANCE.getInstance().getMixins().titleScreenMixin) {
+            if (!MixinOptions.INSTANCE.getInstance().titleScreenMixin) {
                 return false;
             }
         }
 
         if (mixinClassName.equals(ofQoQMixin("client.screen.PauseScreenMixin"))) {
-            if (!UniversalOptions.INSTANCE.getInstance().getMixins().pauseScreenMixin) {
+            if (!MixinOptions.INSTANCE.getInstance().pauseScreenMixin) {
                 return false;
             }
         }
 
         if (mixinClassName.equals(ofQoQMixin("render.FogRendererMixin")) || mixinClassName.equals(ofQoQMixin("render.CameraMixin"))) {
-            if (!UniversalOptions.INSTANCE.getInstance().getMixins().fogMixins) {
+            if (!MixinOptions.INSTANCE.getInstance().fogMixins) {
                 return false;
             }
         }
 
         if (mixinClassName.equals(ofQoQMixin("client.util.AbstractClientPlayerMixin"))) {
-            if (!UniversalOptions.INSTANCE.getInstance().getMixins().fovEffectsMixin) {
+            if (!MixinOptions.INSTANCE.getInstance().fovEffectsMixin) {
                 return false;
             }
         }
 
         if (mixinClassName.equals(ofQoQMixin("client.render.EquipmentLayerRendererMixin"))) {
-            if (!UniversalOptions.INSTANCE.getInstance().getMixins().redArmorTintMixin) {
+            if (!MixinOptions.INSTANCE.getInstance().redArmorTintMixin) {
                 return false;
             }
         }
 
         if (mixinClassName.equals(ofQoQMixin("client.util.ClientClockManagerMixin"))) {
-            if (!UniversalOptions.INSTANCE.getInstance().getMixins().clockManagerMixin) {
+            if (!MixinOptions.INSTANCE.getInstance().clockManagerMixin) {
                 return false;
             }
         }

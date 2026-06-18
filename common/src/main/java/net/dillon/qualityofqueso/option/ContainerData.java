@@ -8,7 +8,7 @@ import java.util.*;
  * Stores tracked containers in a separate file.
  */
 public class ContainerData {
-    public static final ModOptionsHandler INSTANCE = new ModOptionsHandler();
+    public static final ContainerDataHandler INSTANCE = new ContainerDataHandler();
     public Set<String> itemFilteredContainers = new HashSet<>();
     public Set<String> tagFilteredContainers = new HashSet<>();
     public Map<String, String> containerFilteringModes = new HashMap<>();
@@ -23,9 +23,9 @@ public class ContainerData {
         public List<StoredEnderChestStack> containedItems = new ArrayList<>();
     }
 
-    public static class ModOptionsHandler extends BaseOptions<ContainerData> {
+    public static class ContainerDataHandler extends BaseOptions<ContainerData> {
 
-        protected ModOptionsHandler() {
+        protected ContainerDataHandler() {
             super(ModConstants.DEFAULT_CONTAINER_DATA_FILE_NAME);
             this.load();
         }

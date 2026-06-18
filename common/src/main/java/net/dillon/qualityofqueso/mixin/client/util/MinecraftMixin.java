@@ -4,7 +4,6 @@ import net.dillon.qualityofqueso.helper.ModHelper;
 import net.dillon.qualityofqueso.instance.management.ClickSlotInstance;
 import net.dillon.qualityofqueso.keybind.ModKeyMappings;
 import net.dillon.qualityofqueso.screen.ItemFrameSearchScreen;
-import net.dillon.qualityofqueso.screen.VisualTimeScreen;
 import net.dillon.qualityofqueso.sound.ModSoundEvents;
 import net.dillon.qualityofqueso.util.MobHitDingTracker;
 import net.minecraft.client.Minecraft;
@@ -45,7 +44,7 @@ public abstract class MinecraftMixin {
 
         if (commonOptionsInstance().itemFrameSearching) {
             while (OPEN_ITEM_FRAME_SEARCH_GUI.isActiveAndDown()) {
-                Minecraft.getInstance().setScreen(new ItemFrameSearchScreen(null));
+                minecraft.setScreen(new ItemFrameSearchScreen(null));
             }
         }
     }

@@ -13,7 +13,7 @@ import static net.dillon.qualityofqueso.helper.ModHelper.*;
 /**
  * Keybindings for the {@code Quality of Queso} mod.
  */
-public final class ModKeyMappings {
+public class ModKeyMappings {
     public static final KeyMapping.Category QOQ_KEY_CATEGORY = KeyMapping.Category.register(ofQoQ("quality_of_queso"));
 
     /**
@@ -27,7 +27,7 @@ public final class ModKeyMappings {
             .withDefault(InputBinding.mouse(InputConstants.MOUSE_BUTTON_MIDDLE, KeyModifiers.of(KeyModifier.ALT)))
             .build();
 
-    public static final ManagedKeyMapping SCROLL_MOVE = Kuma.createKeyMapping(ofQoQ("move_single"))
+    public static final ManagedKeyMapping SCROLL_MOVE = Kuma.createKeyMapping(ofQoQ("scroll_move"))
             .overrideCategory(QOQ_KEY_CATEGORY)
             .withDefault(InputBinding.key(InputConstants.KEY_LCONTROL))
             .build();
@@ -64,7 +64,7 @@ public final class ModKeyMappings {
             .overrideCategory(QOQ_KEY_CATEGORY)
             .withDefault(InputBinding.key(InputConstants.KEY_V, KeyModifiers.of(KeyModifier.CONTROL)))
             .handleWorldInput(event -> {
-                if (universalOptionsInstance().getMixins().clockManagerMixin) {
+                if (mixinOptionsInstance().clockManagerMixin) {
                     Minecraft.getInstance().setScreen(new VisualTimeScreen(null));
                     return true;
                 }

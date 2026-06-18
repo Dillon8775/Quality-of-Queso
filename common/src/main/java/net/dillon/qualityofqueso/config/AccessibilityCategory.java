@@ -15,7 +15,7 @@ import net.dillon.qualityofqueso.platform.ReleaseType;
 import net.minecraft.network.chat.Component;
 
 import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
-import static net.dillon.qualityofqueso.helper.ModHelper.universalOptionsInstance;
+import static net.dillon.qualityofqueso.helper.ModHelper.mixinOptionsInstance;
 
 /**
  * The accessibility options category for the {@link ConfigurationScreen}.
@@ -67,7 +67,7 @@ public class AccessibilityCategory {
                                                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.beta_warning.description")))
                                                 .binding(true, () -> clientOptionsInstance().getAccessibilityOptions().betaWarning, v -> clientOptionsInstance().getAccessibilityOptions().betaWarning = v)
                                                 .controller(BooleanControllerBuilder::create)
-                                                .available(universalOptionsInstance().getMixins().titleScreenMixin && MultiLoader.getPlatform().getReleaseType() != ReleaseType.STABLE)
+                                                .available(mixinOptionsInstance().titleScreenMixin && MultiLoader.getPlatform().getReleaseType() != ReleaseType.STABLE)
                                                 .build()
                                 )
                                 .option(

@@ -3,9 +3,9 @@ package net.dillon.qualityofqueso.mixin.client.screen;
 import net.dillon.qualityofqueso.helper.ButtonHelper;
 import net.dillon.qualityofqueso.platform.MultiLoader;
 import net.dillon.qualityofqueso.platform.ReleaseType;
-import net.dillon.qualityofqueso.screen.MainMenuScreen;
 import net.dillon.qualityofqueso.util.ModConstants;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.SpriteIconButton;
 import net.minecraft.client.gui.components.toasts.SystemToast;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
@@ -30,12 +30,10 @@ public class TitleScreenMixin extends Screen {
      */
     @Inject(method = "init", at = @At("TAIL"))
     private void init(CallbackInfo ci) {
-        if (universalOptionsInstance().getUniversal().menuButton.enabled()) {
-            this.addRenderableWidget(ButtonHelper.createMenuButton(
-                    this.width / 2 + 128,
-                    this.height / 4 + 132 + (MultiLoader.getPlatform().isNeoForged() ? 8 : 0),
-                    (button) -> this.minecraft.setScreen(new MainMenuScreen(this))
-            ));
+        if (universalOptionsInstance().menuButton.enabled()) {
+            SpriteIconButton menuButton = ButtonHelper.createMainMenuButton(this);
+            this.addRenderableWidget(menuButton);
+            menuButton.setPosition(this.width / 2 + 128, this.height / 4 + 132 + (MultiLoader.getPlatform().isNeoForged() ? 8 : 0));
         }
 
         if (!ModConstants.SHOWN_BETA_TOAST && clientOptionsInstance().getAccessibilityOptions().betaWarning && MultiLoader.getPlatform().getReleaseType() != ReleaseType.STABLE) {

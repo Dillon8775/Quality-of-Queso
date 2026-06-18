@@ -55,7 +55,7 @@ public class ModClientOptions {
             SEARCH_TRANSPORTABLES_BUTTON_SERIALIZED_NAME,
             CLEAR_EXCLUDED_SLOTS_BUTTON_SERIALIZED_NAME
     );
-    public static final ModOptionsHandler INSTANCE = new ModOptionsHandler();
+    public static final ClientOptionsHandler INSTANCE = new ClientOptionsHandler();
     private final GeneralOptions generalOptions = new GeneralOptions();
     private final SearchingOptions searchingOptions = new SearchingOptions();
     private final ManagementOptions managementOptions = new ManagementOptions();
@@ -346,6 +346,7 @@ public class ModClientOptions {
     }
 
     public static class FovEffectOptions {
+        public boolean lockFov = false;
         public int sprinting = 100;
         public boolean flying = true;
         @Deprecated
@@ -368,9 +369,9 @@ public class ModClientOptions {
         public ViewLastKnownEnderChestButton eChestButton = ViewLastKnownEnderChestButton.QOQ_MENU;
     }
 
-    public static class ModOptionsHandler extends BaseOptions<ModClientOptions> {
+    public static class ClientOptionsHandler extends BaseOptions<ModClientOptions> {
 
-        protected ModOptionsHandler() {
+        protected ClientOptionsHandler() {
             super(ModConstants.DEFAULT_CLIENT_CONFIG_FILE_NAME);
             this.load();
         }

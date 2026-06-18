@@ -10,12 +10,12 @@ import java.util.Map;
  * Stores locked player slots, respective to the client-side player.
  */
 public class LockedPlayerSlots {
-    public static final ModOptionsHandler INSTANCE = new ModOptionsHandler();
+    public static final LockedPlayerSlotsHandler INSTANCE = new LockedPlayerSlotsHandler();
     public Map<String, List<Integer>> lockedPlayerSlots = new HashMap<>();
 
-    public static class ModOptionsHandler extends BaseOptions<LockedPlayerSlots> {
+    public static class LockedPlayerSlotsHandler extends BaseOptions<LockedPlayerSlots> {
 
-        protected ModOptionsHandler() {
+        protected LockedPlayerSlotsHandler() {
             super(ModConstants.DEFAULT_LOCKED_PLAYER_SLOTS_FILE_NAME);
             this.load();
         }
