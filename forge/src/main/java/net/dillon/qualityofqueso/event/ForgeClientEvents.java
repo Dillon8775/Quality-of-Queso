@@ -23,6 +23,7 @@ public class ForgeClientEvents {
             event.register(ModKeybinds.MOVE_TO_CONTAINER);
             event.register(ModKeybinds.MOVE_TO_INVENTORY);
             event.register(ModKeybinds.OPEN_SEARCH_ITEM_FRAMES_GUI);
+            event.register(ModKeybinds.OPEN_QUALITY_OF_QUESO_MAIN_MENU);
             event.register(ModKeybinds.OPEN_VISUAL_TIME_GUI);
             event.register(ModKeybinds.QUICK_EQUIP);
             event.register(ModKeybinds.SORT);
