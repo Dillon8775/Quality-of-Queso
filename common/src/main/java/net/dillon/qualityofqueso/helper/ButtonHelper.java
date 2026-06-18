@@ -2,13 +2,17 @@ package net.dillon.qualityofqueso.helper;
 
 import net.dillon.qualityofqueso.platform.MultiLoader;
 import net.dillon.qualityofqueso.screen.AbstractModScreen;
+import net.dillon.qualityofqueso.screen.MainMenuScreen;
 import net.dillon.qualityofqueso.util.ModTexts;
 import net.dillon.qualityofqueso.widget.QuesoButton;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.SpriteIconButton;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.ConfirmLinkScreen;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -53,26 +57,50 @@ public class ButtonHelper {
     /**
      * Creates the Quality of Queso {@code menu button.}
      */
-    public static SpriteIconButton createMenuButton(int x, int y, Button.OnPress onPress) {
-        return createSpriteIconButton(ofQoQ(CHEESE_WHEEL_TEXTURE), x, y, onPress);
+    public static SpriteIconButton createMenuButton(Button.OnPress onPress, boolean withTooltip) {
+        return createSpriteIconButton(ofQoQ(CHEESE_WHEEL_TEXTURE), onPress, !withTooltip ? Component.empty() : Component.translatable("qualityofqueso.gui.options.title"));
+    }
+
+    /**
+     * Creates the main Quality of Queso menu button.
+     */
+    public static SpriteIconButton createMainMenuButton(Screen parent) {
+        return createMenuButton(onPress -> Minecraft.getInstance().setScreen(new MainMenuScreen(parent)), true);
+    }
+
+    /**
+     * Creates the blacklist server button.
+     */
+    public static SpriteIconButton createBlacklistServerButton(String address) {
+        return createMenuButton(onPress -> {
+            if (universalOptionsInstance().blacklistedServers.contains(address)) {
+                universalOptionsInstance().blacklistedServers.remove(address);
+            } else {
+                universalOptionsInstance().blacklistedServers.add(address);
+            }
+            saveAndApplyConfigs(Minecraft.getInstance());
+        }, false);
     }
 
     /**
      * Creates a {@code YouTube} button.
      */
     public static SpriteIconButton createYouTubeButton(Screen parent, String link) {
-        return createSpriteIconButton(ofQoQ(YOUTUBE_TEXTURE), 0, 0, ConfirmLinkScreen.confirmLink(parent, link, false));
+        return createSpriteIconButton(ofQoQ(YOUTUBE_TEXTURE), ConfirmLinkScreen.confirmLink(parent, link, false),
+                Component.translatable("qualityofqueso.gui.showcase.main.tooltip"));
     }
 
     /**
      * Creates a {@link SpriteIconButton}.
      */
-    public static SpriteIconButton createSpriteIconButton(ResourceLocation sprite, int x, int y, Button.OnPress onPress) {
+    public static SpriteIconButton createSpriteIconButton(ResourceLocation sprite, Button.OnPress onPress, Component tooltip) {
         SpriteIconButton button = SpriteIconButton.builder(ModTexts.BLANK, onPress, false)
                 .width(20)
                 .sprite(sprite, 16, 16)
                 .build();
-        button.setPosition(x, y);
+        if (!tooltip.equals(Component.empty())) {
+            button.setTooltip(Tooltip.create(tooltip));
+        }
         return button;
     }
 
