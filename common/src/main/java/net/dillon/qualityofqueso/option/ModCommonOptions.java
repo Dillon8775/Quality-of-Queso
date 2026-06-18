@@ -6,13 +6,13 @@ import net.dillon.qualityofqueso.util.ModConstants;
  * Common options, shared on server and client.
  */
 public class ModCommonOptions {
-    public static final ModServerOptionsHandler INSTANCE = new ModServerOptionsHandler();
+    public static final CommonOptionsHandler INSTANCE = new CommonOptionsHandler();
     public boolean itemFrameSearching = true;
     public boolean inventoryLocking = true;
 
-    public static class ModServerOptionsHandler extends BaseOptions<ModCommonOptions> {
+    public static class CommonOptionsHandler extends BaseOptions<ModCommonOptions> {
 
-        protected ModServerOptionsHandler() {
+        protected CommonOptionsHandler() {
             super(ModConstants.DEFAULT_COMMON_CONFIG_FILE_NAME);
             this.load();
         }

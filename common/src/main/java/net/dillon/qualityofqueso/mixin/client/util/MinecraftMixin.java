@@ -47,7 +47,7 @@ public abstract class MinecraftMixin {
         while (OPEN_QUALITY_OF_QUESO_MAIN_MENU.consumeClick()) {
             minecraft.setScreen(new MainMenuScreen(null));
         }
-        if (universalOptionsInstance().getMixins().clockManagerMixin) {
+        if (mixinOptionsInstance().clockManagerMixin) {
             while (OPEN_VISUAL_TIME_GUI.consumeClick()) {
                 minecraft.setScreen(new VisualTimeScreen(null));
             }

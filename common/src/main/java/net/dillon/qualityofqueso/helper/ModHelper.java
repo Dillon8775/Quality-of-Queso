@@ -165,6 +165,13 @@ public class ModHelper {
     }
 
     /**
+     * @return mixin options, unaffected by server configs.
+     */
+    public static MixinOptions mixinOptionsInstance() {
+        return MixinOptions.INSTANCE.getInstance();
+    }
+
+    /**
      * @return tracked containers options.
      */
     public static ContainerData containerDataInstance() {
@@ -213,7 +220,7 @@ public class ModHelper {
         }
 
         // Search through the blacklisted servers lists, and see if current IP address is in the list. Return true if present
-        return universalOptionsInstance().getUniversal().blacklistedServers.contains(instance.getCurrentServer().ip);
+        return universalOptionsInstance().blacklistedServers.contains(instance.getCurrentServer().ip);
     }
 
     /**
@@ -514,14 +521,14 @@ public class ModHelper {
     public static void saveAndApplyConfigs(Minecraft instance) {
         UniversalOptions.INSTANCE.save();
         // Continue if multi-server configs are enabled
-        if (universalOptionsInstance().getUniversal().multiServerConfigs) {
+        if (universalOptionsInstance().multiServerConfigs) {
             CONTINUE = true;
         }
         if (instance.getCurrentServer() != null && instance.getCurrentServer().ip != null) {
             // If the server is blacklisted, and multi-server configs are off, the config hasn't already been unloaded, unload it
-            if (isServerBlacklisted(instance) && !universalOptionsInstance().getUniversal().multiServerConfigs && !UNLOADED) {
+            if (isServerBlacklisted(instance) && !universalOptionsInstance().multiServerConfigs && !UNLOADED) {
                 unload(true);
-            } else if (!universalOptionsInstance().getUniversal().multiServerConfigs && !UNLOADED) { // Otherwise, if multi-server configs are off and it hasn't been unloaded, unload it
+            } else if (!universalOptionsInstance().multiServerConfigs && !UNLOADED) { // Otherwise, if multi-server configs are off and it hasn't been unloaded, unload it
                 unload(true);
             }
             // If we can continue...
@@ -551,7 +558,7 @@ public class ModHelper {
      */
     public static void loadServerConfig() {
         // Don't try to load a new config if multi-server configs are disabled
-        if (!universalOptionsInstance().getUniversal().multiServerConfigs) {
+        if (!universalOptionsInstance().multiServerConfigs) {
             return;
         }
 
@@ -686,7 +693,7 @@ public class ModHelper {
             instance.player.displayClientMessage(Component.translatable("qualityofqueso.unloaded_server_config").withStyle(ChatFormatting.GOLD), false);
         }
         // Log the message
-        if (universalOptionsInstance().getUniversal().multiServerConfigs) {
+        if (universalOptionsInstance().multiServerConfigs) {
             ModHelper.info("Reverting back to global Quality of Queso config.");
         }
     }

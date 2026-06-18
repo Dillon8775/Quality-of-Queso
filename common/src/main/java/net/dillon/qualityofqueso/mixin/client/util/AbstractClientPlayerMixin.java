@@ -45,8 +45,13 @@ public abstract class AbstractClientPlayerMixin extends Player {
             return;
         }
 
-        // Preserve changes from other mods by scaling the existing return value
-        cir.setReturnValue(original * (custom / vanilla));
+        // Return locked Fov, no matter what
+        if (clientOptionsInstance().getFovEffectOptions().lockFov) {
+            cir.setReturnValue(Mth.lerp(effectScale, 1.0F, 1.0F));
+        } else {
+            // Preserve changes from other mods by scaling the existing return value
+            cir.setReturnValue(original * (custom / vanilla));
+        }
     }
 
     /**
