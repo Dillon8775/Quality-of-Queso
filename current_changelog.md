@@ -5,7 +5,6 @@
 - Fabric/Forge: 1.20.1
 
 ## Changes
-- Arrow counter text color is now always green if the arrow counter is equal or above 32.
 - Arrow counter text colors is now always white if colored highlighting is disabled.
 - A new keybind to open the Quality of Queso main menu (Tab + Q).
 - A new option called "Beta Warning", which displays the beta warning upon game startup of the current Quality of Queso version is in a beta state.
