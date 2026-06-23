@@ -7,12 +7,15 @@ import net.dillon.qualityofqueso.server.DedicatedServerStorage;
 import net.dillon.qualityofqueso.widget.SwapButton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractFurnaceScreen;
+import net.minecraft.client.gui.screens.inventory.BrewingStandScreen;
+import net.minecraft.client.gui.screens.inventory.EnchantmentScreen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import org.lwjgl.glfw.GLFW;
@@ -236,6 +239,10 @@ public class TransferInstance extends ManagementInstance {
             return false;
         }
 
+        if (hoveredSlot.index == 0 && (isCraftingScreen(instance().getScreen()) || isInventoryScreen(instance().getScreen()))) {
+            return moveSingleCraftingResult(hoveredSlot);
+        }
+
         int totalSlots = getTotalSlots();
         int hoveredIndex = getMenuSlotId(hoveredSlot);
         if (hoveredIndex == -1) {
@@ -299,7 +306,7 @@ public class TransferInstance extends ManagementInstance {
         if (hoveredIndex >= fromStart
                 && hoveredIndex < fromEnd
                 && canUseScrollSourceSlot(hoveredSlot, targetItem, toContainer, totalSlots)) {
-            if (tryMoveIntoPreferredFurnaceFuelSlot(hoveredSlot, toContainer, targetItem, moveAmount)) {
+            if (tryMoveIntoPreferredSlot(hoveredSlot, toContainer, targetItem, moveAmount)) {
                 return true;
             }
 
@@ -322,7 +329,7 @@ public class TransferInstance extends ManagementInstance {
                 continue;
             }
 
-            if (tryMoveIntoPreferredFurnaceFuelSlot(sourceSlot, toContainer, targetItem, moveAmount)) {
+            if (tryMoveIntoPreferredSlot(sourceSlot, toContainer, targetItem, moveAmount)) {
                 return true;
             }
 
@@ -342,10 +349,10 @@ public class TransferInstance extends ManagementInstance {
     }
 
     /**
-     * Tries to move into the furnace fuel slot first when applicable.
+     * Tries to move into preferred GUI slots first, when applicable.
      */
-    private boolean tryMoveIntoPreferredFurnaceFuelSlot(Slot sourceSlot, boolean toContainer, ItemStack targetItem, int amount) {
-        if (!toContainer || !(instance().getScreen() instanceof AbstractFurnaceScreen<?> furnaceScreen)) {
+    private boolean tryMoveIntoPreferredSlot(Slot sourceSlot, boolean toContainer, ItemStack targetItem, int amount) {
+        if (!toContainer) {
             return false;
         }
 
@@ -354,22 +361,155 @@ public class TransferInstance extends ManagementInstance {
             return false;
         }
 
-        if (!AbstractFurnaceBlockEntity.isFuel(sourceSlot.getItem())) {
+        if (instance().getScreen() instanceof AbstractFurnaceScreen<?> && AbstractFurnaceBlockEntity.isFuel(targetItem)) {
+            // Furnace Slots: 0=input, 1=fuel, 2=result.
+            return moveSingleFromSourceSlot(
+                    sourceSlot,
+                    1,
+                    2,
+                    amount,
+                    false,
+                    targetItem,
+                    !getCursorStack().isEmpty(),
+                    true,
+                    true
+            );
+        }
+
+        if (instance().getScreen() instanceof BrewingStandScreen && targetItem.is(Items.BLAZE_POWDER)) {
+            // Brewing Slots: 0=input, 4=fuel, 5=last.
+            return moveSingleFromSourceSlot(
+                    sourceSlot,
+                    4,
+                    5,
+                    amount,
+                    false,
+                    targetItem,
+                    !getCursorStack().isEmpty(),
+                    true,
+                    true
+            );
+        }
+
+        if (instance().getScreen() instanceof EnchantmentScreen && targetItem.is(Items.LAPIS_LAZULI)) {
+            // Enchantment Slots: 0=input, 1=lapis.
+            return moveSingleFromSourceSlot(
+                    sourceSlot,
+                    1,
+                    2,
+                    amount,
+                    false,
+                    targetItem,
+                    !getCursorStack().isEmpty(),
+                    true,
+                    true
+            );
+        }
+
+        return false;
+    }
+
+    /**
+     * Single moves an item out of the crafting result slot.
+     */
+    private boolean moveSingleCraftingResult(Slot resultSlot) {
+        if (!resultSlot.hasItem() || !getCursorStack().isEmpty()) {
             return false;
         }
 
-        // Furnace slot layout: 0=input, 1=fuel, 2=result.
-        return moveSingleFromSourceSlot(
-                sourceSlot,
-                1,
-                2,
-                amount,
-                false,
-                targetItem,
-                !getCursorStack().isEmpty(),
-                true,
-                true
+        int totalSlots = getTotalSlots();
+        int playerStart;
+        int playerEnd;
+
+        if (isInventoryScreen(instance().getScreen())) {
+            playerStart = 9;
+            playerEnd = Math.min(totalSlots, 45);
+        } else {
+            playerStart = getContainerBoundaryForSingleMove();
+            playerEnd = totalSlots;
+        }
+
+        // Take exactly one crafted result (vanilla handles all crafting logic)
+        performClickSlot(
+                instance().getScreen(),
+                resultSlot,
+                resultSlot.index,
+                0,
+                ClickType.PICKUP
         );
+
+        // If crafting failed or nothing was picked up
+        ItemStack carried = getCursorStack();
+        if (carried.isEmpty()) {
+            return false;
+        }
+
+        // Try to place into existing stacks first
+        for (int i = playerStart; i < playerEnd; i++) {
+            Slot slot = instance().getScreenMenu().getSlot(i);
+
+            if (!slot.hasItem()) {
+                continue;
+            }
+            if (!slot.mayPlace(carried)) {
+                continue;
+            }
+            if (!ItemStack.isSameItemSameTags(slot.getItem(), carried)) {
+                continue;
+            }
+
+            int max = Math.min(slot.getMaxStackSize(), slot.getMaxStackSize(slot.getItem()));
+            if (slot.getItem().getCount() >= max) {
+                continue;
+            }
+
+            performClickSlot(
+                    instance().getScreen(),
+                    slot,
+                    slot.index,
+                    0,
+                    ClickType.PICKUP
+            );
+
+            break;
+        }
+
+        // If still carrying item(s), place into empty slot
+        if (!getCursorStack().isEmpty()) {
+            for (int i = playerStart; i < playerEnd; i++) {
+                Slot slot = instance().getScreenMenu().getSlot(i);
+
+                if (slot.hasItem()) {
+                    continue;
+                }
+                if (!slot.mayPlace(getCursorStack())) {
+                    continue;
+                }
+
+                performClickSlot(
+                        instance().getScreen(),
+                        slot,
+                        slot.index,
+                        0,
+                        ClickType.PICKUP
+                );
+
+                break;
+            }
+        }
+
+        // If still not placed, return to cursor safety net
+        if (!getCursorStack().isEmpty()) {
+            performClickSlot(
+                    instance().getScreen(),
+                    resultSlot,
+                    resultSlot.index,
+                    0,
+                    ClickType.PICKUP
+            );
+        }
+
+        return true;
     }
 
     /**
