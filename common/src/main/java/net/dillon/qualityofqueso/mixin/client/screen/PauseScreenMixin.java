@@ -128,8 +128,11 @@ public class PauseScreenMixin extends Screen {
             return;
         }
 
-        if (clientOptionsInstance().getMiscOptions().antiRageQuit && clientOptionsInstance().getGeneralOptions().tooltips.enabled() && this.disconnectButton != null && this.disconnectButton.isHovered()) {
-            drawTooltip(Component.translatable("qualityofqueso.gui.disconnect"), graphics, this.font, mouseX, mouseY);
+        if (clientOptionsInstance().getMiscOptions().antiRageQuit && this.disconnectButton != null) {
+            this.disconnectButton.active = false;
+            if (clientOptionsInstance().getGeneralOptions().tooltips.enabled() && this.disconnectButton.isHovered()) {
+                drawTooltip(Component.translatable("qualityofqueso.gui.disconnect"), graphics, this.font, mouseX, mouseY);
+            }
         }
 
         if (universalOptionsInstance().menuButton.everywhere() && !(this.minecraft.getCurrentServer() == null)) {
