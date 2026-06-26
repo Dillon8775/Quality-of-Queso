@@ -31,10 +31,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
@@ -359,21 +357,6 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
         clickSlotInstance.handleHardLockedSlots(slot, ci);
         clickSlotInstance.tradeAllForSelectedOffer(slotId, containerInput, ci);
         clickSlotInstance.bulkCraftForSelectedRecipe(slotId, containerInput, ci);
-    }
-
-    /**
-     * Handles mouse-releasing events with the help of the {@link MouseReleaseInstance} record.
-     */
-    @Inject(method = "mouseReleased", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;slotClicked(Lnet/minecraft/world/inventory/Slot;IILnet/minecraft/world/inventory/ClickType;)V", ordinal = 0), cancellable = true, locals = LocalCapture.CAPTURE_FAILEXCEPTION)
-    private void handleMouseReleased(double mouseX, double mouseY, int bl, CallbackInfoReturnable<Boolean> cir, Slot slot, int xo, int yo, boolean clickedOutside, int slotId, Iterator var7, Slot target) {
-        if (!modEnabled(this.minecraft)) {
-            return;
-        }
-
-        MouseReleaseInstance mouseReleasedInstance = new MouseReleaseInstance(
-                (QuesoScreen) this.screen
-        );
-        mouseReleasedInstance.disableHardLockedSlotsOnDoubleClick(slot, target, cir);
     }
 
     /**
