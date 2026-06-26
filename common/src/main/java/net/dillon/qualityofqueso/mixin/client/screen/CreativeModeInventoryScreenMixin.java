@@ -16,14 +16,11 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import java.util.Objects;
 
 import static net.dillon.qualityofqueso.helper.ManagementHelper.hoveredSlotHasItem;
 import static net.dillon.qualityofqueso.helper.MethodHelper.key;
@@ -67,6 +64,7 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
         }
 
         this.searchBox.setValue(ModConstants.SAVED_CREATIVE_MENU_TEXT);
+        this.refreshSearchResults();
     }
 
     /**
@@ -151,35 +149,27 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
     }
 
     /**
-     * Allow typing in creative menu regardless of what menu.
+     * Improves typing in the creative menu, for quick searching and moving of slots.
      */
-    @Overwrite
-    public boolean charTyped(CharacterEvent input) {
-        if (this.ignoreTextInput || (!(clientOptionsInstance().getSearchingOptions().quickSearch.creativeMenu()) && selectedTab.getType() != CreativeModeTab.Type.SEARCH)) {
-            return false;
-        } else {
-            if (modEnabled(this.minecraft) && clientOptionsInstance().getSearchingOptions().quickSearch.creativeMenu()) {
-                if (this.hoveredSlot != null && this.hoveredSlot.hasItem() && this.searchBox.isFocused()) {
-                    for (int i = 0; i < 9; i++) {
-                        if (Minecraft.getInstance().options.keyHotbarSlots[i].consumeClick()) {
-                            this.searchBox.setFocused(false);
-                            return true;
-                        }
-                    }
-                } else {
-                    this.selectTab(CreativeModeTabs.searchTab());
-                }
-            }
-            String s = this.searchBox.getValue();
-            if (this.searchBox.charTyped(input)) {
-                if (!Objects.equals(s, this.searchBox.getValue())) {
-                    this.refreshSearchResults();
-                }
+    @Inject(method = "charTyped", at = @At("HEAD"), cancellable = true)
+    private void improveCreativeMenuSearching(CharacterEvent event, CallbackInfoReturnable<Boolean> cir) {
+        if (!modEnabled(this.minecraft) || !clientOptionsInstance().getSearchingOptions().quickSearch.creativeMenu()) {
+            return;
+        }
 
-                return true;
-            } else {
-                return false;
+        if (this.ignoreTextInput || (!(clientOptionsInstance().getSearchingOptions().quickSearch.creativeMenu()) && selectedTab.getType() != CreativeModeTab.Type.SEARCH)) {
+            cir.setReturnValue(false);
+        }
+
+        if (this.hoveredSlot != null && this.hoveredSlot.hasItem() && this.searchBox.isFocused()) {
+            for (int i = 0; i < 9; i++) {
+                if (Minecraft.getInstance().options.keyHotbarSlots[i].consumeClick()) {
+                    this.searchBox.setFocused(false);
+                    cir.setReturnValue(true);
+                }
             }
+        } else {
+            this.selectTab(CreativeModeTabs.searchTab());
         }
     }
 }

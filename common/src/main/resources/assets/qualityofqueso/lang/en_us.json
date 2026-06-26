@@ -71,7 +71,7 @@
   "qualityofqueso.options.inventory_searching": "Inventory Searching",
   "qualityofqueso.options.inventory_searching.description": "Adds a search bar to your inventory, to search for items.",
   "qualityofqueso.options.quick_search": "Quick Search",
-  "qualityofqueso.options.quick_search.description": "Type anywhere to quickly focus into a search bar.\n\n§aEnabled → §r§f§7auto-focus into any search bar§r§f\n\n§bRecipe Book → §r§f§7only auto-focus into the recipe book's search bar§r§f\n\n§6Search Bar → §r§f§7only auto-focus into container search bars, or the creative menu search bar§r§f\n\nOFF → §7don't auto-focus into any search bar",
+  "qualityofqueso.options.quick_search.description": "Type anywhere to quickly focus into a search bar.\n\n§aEnabled → §r§f§7auto-focus into any search bar§r§f\n\n§bRecipe Book → §r§f§7only auto-focus into the recipe book's search bar§r§f\n\n§6Search Bar → §r§f§7only auto-focus into container search bars, or the creative menu search bar§r§f\n\n§2Creative Menu → §r§f§7only auto-focus into the creative menu search bar§r§f\n\nOFF → §7don't auto-focus into any search bar",
   "qualityofqueso.options.save_search_text": "Save Search Text",
   "qualityofqueso.options.save_search_text.description": "Saves the current text in the search bar when closing the GUI.",
   "qualityofqueso.options.search_bar_position": "Search Bar Position",
