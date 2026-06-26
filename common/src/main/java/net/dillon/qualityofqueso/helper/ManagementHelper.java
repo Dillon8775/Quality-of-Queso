@@ -13,6 +13,9 @@ import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.Container;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.AbstractMountInventoryMenu;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.Slot;
 
 import static net.dillon.qualityofqueso.helper.MethodHelper.getRecipeBookComponent;
@@ -148,6 +151,20 @@ public class ManagementHelper {
         )
                 && !isCreativeInventoryScreen(screen)
                 && !(screen instanceof CrafterScreen);
+    }
+
+    /**
+     * @return valid screens for quick equipping, which include {@link InventoryMenu}s, {@link CreativeModeInventoryScreen.ItemPickerMenu}s, and {@link AbstractMountInventoryMenu}s
+     */
+    public static boolean isValidMenuForQuickEquipping(AbstractContainerMenu menu) {
+        return menu instanceof InventoryMenu || menu instanceof CreativeModeInventoryScreen.ItemPickerMenu || isMountingMenu(menu);
+    }
+
+    /**
+     * @return if the menu is a {@link AbstractMountInventoryMenu}.
+     */
+    public static boolean isMountingMenu(AbstractContainerMenu menu) {
+        return menu instanceof AbstractMountInventoryMenu;
     }
 
     /**

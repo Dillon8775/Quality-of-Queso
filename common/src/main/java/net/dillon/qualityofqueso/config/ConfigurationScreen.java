@@ -4,9 +4,7 @@ import dev.isxander.yacl3.api.YetAnotherConfigLib;
 import dev.isxander.yacl3.gui.image.ImageRenderer;
 import dev.isxander.yacl3.gui.image.ImageRendererManager;
 import dev.isxander.yacl3.gui.image.impl.AnimatedDynamicTextureImage;
-import net.dillon.qualityofqueso.option.ModClientOptions;
-import net.dillon.qualityofqueso.option.ModCommonOptions;
-import net.dillon.qualityofqueso.option.UniversalOptions;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
@@ -14,6 +12,8 @@ import net.minecraft.resources.Identifier;
 
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+
+import static net.dillon.qualityofqueso.helper.ModHelper.saveAndApplyConfigs;
 
 /**
  * The main configuration screen for Quality of queso.
@@ -51,9 +51,7 @@ public class ConfigurationScreen {
                         AccessibilityCategory.create()
                 )
                 .save(() -> {
-                    ModClientOptions.INSTANCE.save();
-                    ModCommonOptions.INSTANCE.save();
-                    UniversalOptions.INSTANCE.save();
+                    saveAndApplyConfigs(Minecraft.getInstance());
                 })
                 .build();
     }

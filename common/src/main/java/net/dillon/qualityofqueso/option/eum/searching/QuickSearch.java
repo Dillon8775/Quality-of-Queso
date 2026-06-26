@@ -8,6 +8,7 @@ public enum QuickSearch implements StringRepresentable {
     ENABLED(ModConstants.ENABLED_SERIALiZED_NAME),
     RECIPE_BOOK("§bRecipe Book"),
     SEARCH_BAR("§6Search Bar"),
+    CREATIVE_MENU("§2Creative Menu"),
     OFF(ModConstants.OFF_SERIALIZED_NAME);
 
     public static final Codec<QuickSearch> CODEC = StringRepresentable.fromEnum(QuickSearch::values);
@@ -17,11 +18,11 @@ public enum QuickSearch implements StringRepresentable {
         this.name = name;
     }
 
-    public boolean enabled() {
-        return this != OFF;
+    public boolean enabledForAny() {
+        return this != OFF && this != CREATIVE_MENU;
     }
 
-    public boolean on() {
+    public boolean onForAny() {
         return this == ENABLED;
     }
 

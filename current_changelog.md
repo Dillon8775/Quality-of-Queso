@@ -1,14 +1,11 @@
-# Version 1.7.8 | 2026-06-23
-
-### Available Versions:
-- Fabric/NeoForge: 26.2, 1.21.11, 1.21.1
-- Fabric/Forge: 1.20.1
+# Version 1.7.9 | 2026-06-30
 
 ## Changes
-- Smart scrolling now works in the following screens:
-    - Crafting/inventory crafting grid, to easily move 1 item out of a crafting recipe.
-    - Brewing stands, to easily move blaze powder to the fuel slot, and any other ingredient to the ingredient slot.
-    - Enchantment screens, to easily move lapis to the correct slot.
+- Added more versatility for quick equipping, so it works with all equippable items, in any inventory menu.
+- Optimizations with searching in the creative search menu.
+- New quick search option, "Creative Menu", which only auto focuses into the creative search menu.
 
 ## Bugs Fixed
-- Anti-Rage quit does not work on 26.2.
+- Save search text in the creative menu search bar does not refresh the search results.
+- Multi-Server configs not applying when enabling/disabling the option in a server from the YACL options menu.
+- [Bug #30](https://github.com/Dillon8775/Quality-of-Queso/issues/30) - Shift + double-clicking on items to quick move crashes the game on 1.21.1 and below (Forge/NeoForge only).
