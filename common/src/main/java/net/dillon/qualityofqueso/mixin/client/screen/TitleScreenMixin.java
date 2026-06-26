@@ -3,7 +3,6 @@ package net.dillon.qualityofqueso.mixin.client.screen;
 import net.dillon.qualityofqueso.helper.ButtonHelper;
 import net.dillon.qualityofqueso.platform.MultiLoader;
 import net.dillon.qualityofqueso.platform.ReleaseType;
-import net.dillon.qualityofqueso.screen.MainMenuScreen;
 import net.dillon.qualityofqueso.util.ModConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.SpriteIconButton;

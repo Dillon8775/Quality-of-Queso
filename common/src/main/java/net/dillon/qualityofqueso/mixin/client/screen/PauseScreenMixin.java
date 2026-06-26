@@ -2,7 +2,6 @@ package net.dillon.qualityofqueso.mixin.client.screen;
 
 import net.dillon.qualityofqueso.helper.ButtonHelper;
 import net.dillon.qualityofqueso.screen.EnderChestPreviewScreen;
-import net.dillon.qualityofqueso.screen.MainMenuScreen;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.SpriteIconButton;

@@ -18,8 +18,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -43,7 +41,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 import static net.dillon.qualityofqueso.util.ModConstants.*;
@@ -272,18 +269,6 @@ public class ModHelper {
      */
     public static EquipmentSlot[] equipmentSlots() {
         return new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
-    }
-
-    /**
-     * @return a list of mappings for quickly equippable slots.
-     */
-    public static Map<TagKey<Item>, EquipmentSlot> quicklyEquippables() {
-        return Map.of(
-                ItemTags.HEAD_ARMOR, EquipmentSlot.HEAD,
-                ItemTags.CHEST_ARMOR, EquipmentSlot.CHEST,
-                ItemTags.LEG_ARMOR, EquipmentSlot.LEGS,
-                ItemTags.FOOT_ARMOR, EquipmentSlot.FEET
-        );
     }
 
     /**

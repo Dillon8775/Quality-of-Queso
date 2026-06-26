@@ -2,17 +2,16 @@ package net.dillon.qualityofqueso.instance.management;
 
 import net.dillon.qualityofqueso.instance.QuesoScreen;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
-import net.minecraft.client.gui.screens.inventory.InventoryScreen;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ClickType;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.AnimalArmorItem;
+import net.minecraft.world.item.Equipable;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 
+import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
 import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
-import static net.dillon.qualityofqueso.helper.ModHelper.quicklyEquippables;
 import static net.dillon.qualityofqueso.helper.ModKeybindHelper.hasSelectSlotsKeyDown;
 
 /**
@@ -28,53 +27,76 @@ public class QuickEquipInstance extends ManagementInstance {
      * @return {@code true} if the hovered item is a {@code quickly equippable item.}
      */
     public boolean isQuicklyEquippable(ItemStack stack) {
-        for (TagKey<Item> quicklyEquippable : quicklyEquippables().keySet()) {
-            if (stack.is(quicklyEquippable) || stack.is(Items.ELYTRA)) {
-                return true;
-            }
-        }
-        return false;
+        return stack.getItem() instanceof Equipable;
     }
 
     /**
-     * Quickly swaps two items in the player's fromInventory.
+     * Finds the equippable slot for a {@code player.}
      */
-    public void quickSwap(int sourceSlot, EquipmentSlot slot) {
-        // Slot index for armor - see PlayerScreenHandler for proof of these values
-        int slotIndex = slot == EquipmentSlot.HEAD ? 5 : slot == EquipmentSlot.CHEST ? 6 : slot == EquipmentSlot.LEGS ? 7 : slot == EquipmentSlot.FEET ? 8 : 6;
-        sendSwapSlotPacket(sourceSlot, slotIndex);
+    private int findEquipmentSlotForPlayer(EquipmentSlot slot) {
+        return switch (slot) {
+            case HEAD -> 5;
+            case CHEST -> 6;
+            case LEGS -> 7;
+            case FEET -> 8;
+            case OFFHAND -> 45;
+            default -> -1;
+        };
     }
 
     /**
-     * Quickly equips an item.
+     * Finds the equippable slot for a {@code mountable entity.}
      */
-    public void quickEquip() {
-        if (clientOptionsInstance().getManagementOptions().dragSorting && hasSelectSlotsKeyDown()) {
+    private int findEquipmentSlotForMountable(EquipmentSlot slot) {
+        return slot == EquipmentSlot.BODY ? 1 : -1;
+    }
+
+    /**
+     * @return if the equipment slot is a mountable equipment slot.
+     */
+    private boolean isMountableSlot(ItemStack stack, EquipmentSlot slot) {
+        return slot == EquipmentSlot.BODY || stack.getItem() instanceof AnimalArmorItem animalArmorItem && animalArmorItem.getBodyType().equals(AnimalArmorItem.BodyType.EQUESTRIAN);
+    }
+
+    /**
+     * @return the slot index of the item to equip.
+     */
+    private int findSlotToEquip(AbstractContainerMenu menu, EquipmentSlot slot) {
+        return isHorseMenu(menu) ? findEquipmentSlotForMountable(slot) : findEquipmentSlotForPlayer(slot);
+    }
+
+    /**
+     * Quickly equips the hovered item, based on the current menu.
+     */
+    public void quickEquipItem() {
+        AbstractContainerMenu menu = instance().getScreenMenu();
+        if (!clientOptionsInstance().getMiscOptions().quickEquip || instance().getScreensHoveredSlot() == null || !isValidMenuForQuickEquipping(menu) || (clientOptionsInstance().getManagementOptions().dragSorting && hasSelectSlotsKeyDown())) {
             return;
         }
 
-        if (clientOptionsInstance().getMiscOptions().quickEquip && instance().getScreensHoveredSlot() != null && (instance().getScreensHoveredSlot().index >= 5) && (instance().getScreen() instanceof InventoryScreen || instance().getScreen() instanceof CreativeModeInventoryScreen)) {
-            ItemStack stack = instance().getScreensHoveredSlot().getItem();
-            EquipmentSlot targetSlot = null;
+        // Get the screens hovered slot
+        Slot hoveredSlot = instance().getScreensHoveredSlot();
+        ItemStack stack = hoveredSlot.getItem();
 
-            for (TagKey<Item> quicklyEquippable : quicklyEquippables().keySet()) {
-                if (stack.is(quicklyEquippable)) {
-                    targetSlot = quicklyEquippables().get(quicklyEquippable);
-                }
-            }
+        if (!(stack.getItem() instanceof Equipable equipable)) {
+            return;
+        }
 
-            if (stack.is(Items.ELYTRA)) {
-                targetSlot = EquipmentSlot.CHEST;
-            }
+        // Get the target equipment slot for the hovered item
+        EquipmentSlot targetEquipmentSlot = equipable.getEquipmentSlot();
 
-            if (targetSlot != null) {
-                Minecraft client = Minecraft.getInstance();
-                ItemStack equippedStack = client.player.getItemBySlot(targetSlot);
-                if (equippedStack.isEmpty()) {
-                    sendClickSlotPacket(instance().getScreensHoveredSlot().index, ClickType.QUICK_MOVE);
-                } else {
-                    quickSwap(instance().getScreensHoveredSlot().index, targetSlot);
-                }
+        // Get the player's currently equipped stack, based on hovered item
+        ItemStack equippedStack = Minecraft.getInstance().player.getItemBySlot(targetEquipmentSlot);
+
+        if (equippedStack.isEmpty() && !isMountableSlot(stack, targetEquipmentSlot) && (isInventoryScreen(instance().getScreen()) || isCreativeInventoryScreen(instance().getScreen()))) {
+            // Default to quick move if slot is empty, only do this if valid equipment slot for player (excluding body and saddle)
+            sendClickSlotPacket(hoveredSlot.index, ClickType.QUICK_MOVE);
+        } else {
+            // Get target equipment slot for either player or mountable
+            int targetSlot = findSlotToEquip(menu, targetEquipmentSlot);
+            // Ensure we only quick equip if the slot is valid, and the hovered slot is not an equipment slot
+            if (targetSlot != -1 && targetSlot != hoveredSlot.index) {
+                sendSwapSlotPacket(hoveredSlot.index, targetSlot);
             }
         }
     }
