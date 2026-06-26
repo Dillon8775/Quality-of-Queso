@@ -3,7 +3,6 @@ package net.dillon.qualityofqueso.helper;
 import net.dillon.qualityofqueso.platform.MultiLoader;
 import net.dillon.qualityofqueso.screen.AbstractModScreen;
 import net.dillon.qualityofqueso.screen.MainMenuScreen;
-import net.dillon.qualityofqueso.util.ModTexts;
 import net.dillon.qualityofqueso.widget.QuesoButton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;

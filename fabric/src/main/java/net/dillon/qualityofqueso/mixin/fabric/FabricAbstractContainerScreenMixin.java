@@ -1,6 +1,5 @@
 package net.dillon.qualityofqueso.mixin.fabric;
 
-import com.mojang.blaze3d.platform.InputConstants;
 import net.dillon.qualityofqueso.instance.ModTooltipInstance;
 import net.dillon.qualityofqueso.instance.MouseReleaseInstance;
 import net.dillon.qualityofqueso.instance.QuesoScreen;

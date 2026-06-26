@@ -24,10 +24,8 @@ import org.lwjgl.glfw.GLFW;
 
 import java.io.File;
 import java.nio.file.Path;
-import java.util.List;
 
 import static net.dillon.qualityofqueso.helper.ButtonHelper.*;
-import static net.dillon.qualityofqueso.helper.GuiHelper.drawTooltip;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.buttonActive;
 import static net.dillon.qualityofqueso.helper.ModHelper.*;
 import static net.dillon.qualityofqueso.util.ModConstants.*;

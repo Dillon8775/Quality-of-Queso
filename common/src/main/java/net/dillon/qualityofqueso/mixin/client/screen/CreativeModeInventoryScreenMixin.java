@@ -1,5 +1,7 @@
 package net.dillon.qualityofqueso.mixin.client.screen;
 
+import net.dillon.qualityofqueso.util.ModConstants;
+import net.dillon.qualityofqueso.widget.SearchBar;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
@@ -12,14 +14,11 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import java.util.Objects;
 
 import static net.dillon.qualityofqueso.helper.ManagementHelper.hoveredSlotHasItem;
 import static net.dillon.qualityofqueso.helper.MethodHelper.key;
@@ -33,15 +32,57 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
     private static CreativeModeTab selectedTab;
     @Shadow
     private boolean ignoreTextInput;
-
     @Shadow
     protected abstract void refreshSearchResults();
-
     @Shadow
     protected abstract void selectTab(CreativeModeTab pTab);
 
     public CreativeModeInventoryScreenMixin(CreativeModeInventoryScreen.ItemPickerMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
+    }
+
+    /**
+     * Saves current text in the creative menu's search bar.
+     */
+    @Override
+    public void onClose() {
+        if (this.searchBox != null) {
+            ModConstants.SAVED_CREATIVE_MENU_TEXT = this.searchBox.getValue();
+        }
+        super.onClose();
+    }
+
+    /**
+     * Sets the last known text in the search bar.
+     */
+    @Inject(method = "init", at = @At("TAIL"))
+    private void setText(CallbackInfo ci) {
+        if (!modEnabled(this.minecraft) || !clientOptionsInstance().getSearchingOptions().saveSearchText || this.searchBox == null) {
+            return;
+        }
+
+        this.searchBox.setValue(ModConstants.SAVED_CREATIVE_MENU_TEXT);
+        this.refreshSearchResults();
+    }
+
+    /**
+     * Applies the same functionality that the {@link SearchBar} uses, to the creative menu's search bar.
+     */
+    @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
+    private void handleSearchBarClicking(double mouseX, double mouseY, int bl, CallbackInfoReturnable<Boolean> cir) {
+        if (!modEnabled(this.minecraft) || this.searchBox == null || !this.searchBox.isHovered()) {
+            return;
+        }
+
+        if (bl == 1) {
+            this.searchBox.setValue("");
+            this.setFocused(false);
+            cir.setReturnValue(true);
+        } else if (bl == 0) {
+            this.setFocused(true);
+            this.searchBox.onClick(mouseX, mouseY);
+            cir.setReturnValue(true);
+        }
     }
 
     /**
@@ -106,35 +147,27 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
     }
 
     /**
-     * Allow typing in creative menu regardless of what menu.
+     * Improves typing in the creative menu, for quick searching and moving of slots.
      */
-    @Overwrite
-    public boolean charTyped(char ch, int scancode) {
-        if (this.ignoreTextInput || (!(clientOptionsInstance().getSearchingOptions().quickSearch.enabled()) && selectedTab.getType() != CreativeModeTab.Type.SEARCH)) {
-            return false;
-        } else {
-            if (modEnabled(this.minecraft) && clientOptionsInstance().getSearchingOptions().quickSearch.creativeMenu()) {
-                if (this.hoveredSlot != null && this.hoveredSlot.hasItem() && this.searchBox.isFocused()) {
-                    for (int i = 0; i < 9; i++) {
-                        if (Minecraft.getInstance().options.keyHotbarSlots[i].consumeClick()) {
-                            this.searchBox.setFocused(false);
-                            return true;
-                        }
-                    }
-                } else {
-                    this.selectTab(CreativeModeTabs.searchTab());
-                }
-            }
-            String s = this.searchBox.getValue();
-            if (this.searchBox.charTyped(ch, scancode)) {
-                if (!Objects.equals(s, this.searchBox.getValue())) {
-                    this.refreshSearchResults();
-                }
+    @Inject(method = "charTyped", at = @At("HEAD"), cancellable = true)
+    private void improveCreativeMenuSearching(char chr, int bl, CallbackInfoReturnable<Boolean> cir) {
+        if (!modEnabled(this.minecraft) || !clientOptionsInstance().getSearchingOptions().quickSearch.creativeMenu()) {
+            return;
+        }
 
-                return true;
-            } else {
-                return false;
+        if (this.ignoreTextInput || (!(clientOptionsInstance().getSearchingOptions().quickSearch.creativeMenu()) && selectedTab.getType() != CreativeModeTab.Type.SEARCH)) {
+            cir.setReturnValue(false);
+        }
+
+        if (this.hoveredSlot != null && this.hoveredSlot.hasItem() && this.searchBox.isFocused()) {
+            for (int i = 0; i < 9; i++) {
+                if (Minecraft.getInstance().options.keyHotbarSlots[i].consumeClick()) {
+                    this.searchBox.setFocused(false);
+                    cir.setReturnValue(true);
+                }
             }
+        } else {
+            this.selectTab(CreativeModeTabs.searchTab());
         }
     }
 }

@@ -127,7 +127,7 @@ public class KeyPressInstance extends ManagementInstance {
 
         // Quick equip logic
         if (keycode == key(ModKeybinds.QUICK_EQUIP).getValue()) {
-            quickEquipInstance().quickEquip();
+            quickEquipInstance().quickEquipItem();
             if (hoveredSlotHasItem(instance().getScreensHoveredSlot())) {
                 if (instance().getSearchFields().inventory() != null && instance().getSearchFields().inventory().isFocused()) {
                     instance().getSearchFields().inventory().setFocused(false);
@@ -233,7 +233,7 @@ public class KeyPressInstance extends ManagementInstance {
             boolean swapKeyValid = swapKeyPressed && (hoveredSlotHasItem(instance().getScreensHoveredSlot())
                     || (isInventoryScreen(recipeScreen) && recipeScreen.getMenu().getSlot(45).hasItem()));
             if (!clientOptionsInstance().getAccessibilityOptions().preventEFromTyping || keycode != key(Minecraft.getInstance().options.keyInventory).getValue()) {
-                if (clientOptionsInstance().getSearchingOptions().quickSearch.enabled() && !ignoreTyping && !swapKeyValid && !dropKeyPressed && !getRecipeBookComponent(recipeScreen).isVisible() &&
+                if (clientOptionsInstance().getSearchingOptions().quickSearch.enabledForAny() && !ignoreTyping && !swapKeyValid && !dropKeyPressed && !getRecipeBookComponent(recipeScreen).isVisible() &&
                         (instance().getSearchFields().inventory() == null ||
                                 (!instance().getSearchFields().inventory().isFocused() && !clientOptionsInstance().getSearchingOptions().quickSearch.searchBar()))) {
                     getRecipeBookComponent(recipeScreen).toggleVisibility();
@@ -255,7 +255,7 @@ public class KeyPressInstance extends ManagementInstance {
                     }
                     if (!cannotType && instance().getSearchFields().inventory() == null) {
                         getSearchBoxInsideRecipeBook(recipeScreen).setFocused(true);
-                    } else if ((clientOptionsInstance().getSearchingOptions().quickSearch.on() || clientOptionsInstance().getSearchingOptions().quickSearch.recipeBook()) && !inventorySearchFocused) {
+                    } else if ((clientOptionsInstance().getSearchingOptions().quickSearch.onForAny() || clientOptionsInstance().getSearchingOptions().quickSearch.recipeBook()) && !inventorySearchFocused) {
                         getRecipeBookComponent(recipeScreen).setFocused(!cannotType);
                         if (!cannotType) {
                             instance().getScreen().setFocused(getRecipeBookComponent(recipeScreen));
@@ -275,7 +275,7 @@ public class KeyPressInstance extends ManagementInstance {
             if (!Screen.hasControlDown() && (isInventoryScreen(instance().getScreen()) || isCraftingScreen(instance().getScreen()))
                     && getRecipeBookComponent(instance().getScreen()).isVisible() && !instance().getSearchFields().inventory().isFocused()) {
                 getSearchBoxInsideRecipeBook(instance().getScreen()).setFocused(!cannotType);
-            } else if ((clientOptionsInstance().getSearchingOptions().quickSearch.enabled() || clientOptionsInstance().getSearchingOptions().quickSearch.searchBar()) && !secondaryIgnoreTyping && (!Screen.hasControlDown() || (Screen.hasControlDown() && keycode == GLFW.GLFW_KEY_A))) {
+            } else if ((clientOptionsInstance().getSearchingOptions().quickSearch.enabledForAny() || clientOptionsInstance().getSearchingOptions().quickSearch.searchBar()) && !secondaryIgnoreTyping && (!Screen.hasControlDown() || (Screen.hasControlDown() && keycode == GLFW.GLFW_KEY_A))) {
                 instance().getSearchFields().inventory().setFocused(true);
                 instance().getScreen().setFocused(instance().getSearchFields().inventory());
             } else if (instance().getSearchFields().inventory().isFocused() && cannotType) {
@@ -311,7 +311,7 @@ public class KeyPressInstance extends ManagementInstance {
 
         // Chest search field logic
         if (clientOptionsInstance().getSearchingOptions().containerSearching && isContainerScreen(instance().getScreen()) && instance().getSearchFields().container() != null) {
-            if ((clientOptionsInstance().getSearchingOptions().quickSearch.on() || clientOptionsInstance().getSearchingOptions().quickSearch.searchBar()) && !secondaryIgnoreTyping && (!Screen.hasControlDown() || (Screen.hasControlDown() && keycode == GLFW.GLFW_KEY_A))) {
+            if ((clientOptionsInstance().getSearchingOptions().quickSearch.onForAny() || clientOptionsInstance().getSearchingOptions().quickSearch.searchBar()) && !secondaryIgnoreTyping && (!Screen.hasControlDown() || (Screen.hasControlDown() && keycode == GLFW.GLFW_KEY_A))) {
                 instance().getSearchFields().container().setFocused(true);
             } else if (instance().getSearchFields().container().isFocused() && cannotType) {
                 instance().getSearchFields().container().setFocused(false);

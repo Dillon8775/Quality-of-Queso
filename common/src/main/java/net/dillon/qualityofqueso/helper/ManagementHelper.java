@@ -13,6 +13,9 @@ import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.Container;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.HorseInventoryMenu;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.Slot;
 
 import static net.dillon.qualityofqueso.helper.MethodHelper.getRecipeBookComponent;
@@ -147,6 +150,20 @@ public class ManagementHelper {
                         || screen instanceof StonecutterScreen
         )
                 && !isCreativeInventoryScreen(screen);
+    }
+
+    /**
+     * @return valid screens for quick equipping, which include {@link InventoryMenu}s, {@link CreativeModeInventoryScreen.ItemPickerMenu}, and {@link HorseInventoryMenu}s.
+     */
+    public static boolean isValidMenuForQuickEquipping(AbstractContainerMenu menu) {
+        return menu instanceof InventoryMenu || menu instanceof CreativeModeInventoryScreen.ItemPickerMenu || isHorseMenu(menu);
+    }
+
+    /**
+     * @return if the menu is a {@link HorseInventoryMenu}.
+     */
+    public static boolean isHorseMenu(AbstractContainerMenu menu) {
+        return menu instanceof HorseInventoryMenu;
     }
 
     /**

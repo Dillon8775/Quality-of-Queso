@@ -35,7 +35,7 @@ public class MouseClickInstance extends ManagementInstance {
      */
     public void quickEquipItem(int bl, CallbackInfoReturnable<Boolean> cir) {
         if (bl == GLFW.GLFW_MOUSE_BUTTON_RIGHT && instance().getScreensHoveredSlot() != null && quickEquipInstance().isQuicklyEquippable(instance().getScreensHoveredSlot().getItem())) {
-            quickEquipInstance().quickEquip();
+            quickEquipInstance().quickEquipItem();
             cir.setReturnValue(true);
         }
     }
