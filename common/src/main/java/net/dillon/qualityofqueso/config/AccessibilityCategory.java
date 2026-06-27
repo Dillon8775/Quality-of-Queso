@@ -14,8 +14,7 @@ import net.dillon.qualityofqueso.platform.MultiLoader;
 import net.dillon.qualityofqueso.platform.ReleaseType;
 import net.minecraft.network.chat.Component;
 
-import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
-import static net.dillon.qualityofqueso.helper.ModHelper.mixinOptionsInstance;
+import static net.dillon.qualityofqueso.helper.ModHelper.*;
 
 /**
  * The accessibility options category for the {@link ConfigurationScreen}.
@@ -59,6 +58,23 @@ public class AccessibilityCategory {
                                                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.search_inventory.description")))
                                                 .binding(true, () -> clientOptionsInstance().getAccessibilityOptions().searchInventory, v -> clientOptionsInstance().getAccessibilityOptions().searchInventory = v)
                                                 .controller(TickBoxControllerBuilder::create)
+                                                .build()
+                                )
+                                .option(
+                                        Option.<Boolean>createBuilder()
+                                                .name(Component.translatable("options.operatorItemsTab"))
+                                                .description(OptionDescription.of(Component.translatable("qualityofqueso.options.operator_items_tab.description")))
+                                                .binding(true, () -> clientOptionsInstance().getAccessibilityOptions().operatorItemsTab, v -> clientOptionsInstance().getAccessibilityOptions().operatorItemsTab = v)
+                                                .controller(BooleanControllerBuilder::create)
+                                                .build()
+                                )
+                                .option(
+                                        Option.<Boolean>createBuilder()
+                                                .name(Component.translatable("qualityofqueso.options.optimize_item_argument"))
+                                                .description(OptionDescription.of(Component.translatable("qualityofqueso.options.optimize_item_argument.description")))
+                                                .binding(true, () -> commonOptionsInstance().optimizeItemArgument, v -> commonOptionsInstance().optimizeItemArgument = v)
+                                                .controller(TickBoxControllerBuilder::create)
+                                                .available(mixinOptionsInstance().itemArgumentMixin)
                                                 .build()
                                 )
                                 .option(

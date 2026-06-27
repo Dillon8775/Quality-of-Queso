@@ -55,4 +55,9 @@ public interface PlatformHelper {
      * @return if a {@code Quality of Queso} packet can be sent.
      */
     boolean canSendPacket(LocalPlayer localPlayer);
+
+    /**
+     * Adds all mod ids to a list, for the ItemArgument.
+     */
+    void addModIds();
 }

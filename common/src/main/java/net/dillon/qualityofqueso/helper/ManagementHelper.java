@@ -280,6 +280,13 @@ public class ManagementHelper {
     }
 
     /**
+     * Plays the quick equip sound.
+     */
+    public static void playQuickEquipSound(Minecraft client) {
+        client.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.ARMOR_EQUIP_GENERIC.value(), 1.0F, 0.45F));
+    }
+
+    /**
      * @return the width and height for a {@code transfer button.}
      */
     public static int getTransferButtonXY(QuesoButton button) {

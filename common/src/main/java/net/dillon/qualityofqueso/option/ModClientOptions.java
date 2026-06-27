@@ -161,6 +161,7 @@ public class ModClientOptions {
         public QuickDrop quickDrop = QuickDrop.KEY_ONLY;
         public boolean containerFiltering = true;
         public LockInventory lockInventory = LockInventory.UNLOCKED;
+        public boolean quickEquip = true;
 
         public boolean scrollMoving = true;
         public boolean dragMoving = true;
@@ -330,7 +331,6 @@ public class ModClientOptions {
         public boolean enchantmentHelper = true;
         @Deprecated
         public boolean enhancedCursor = false;
-        public boolean quickEquip = true;
         public boolean quickGuiExit = true;
         public boolean fortniteBattlePass = false;
 
@@ -369,6 +369,7 @@ public class ModClientOptions {
         public boolean perpendicularQuickMoving = false;
         public boolean preventEFromTyping = true;
         public boolean searchInventory = true;
+        public boolean operatorItemsTab = true;
         public boolean betaWarning = true;
         public boolean ignoreFabricTags = false;
 
