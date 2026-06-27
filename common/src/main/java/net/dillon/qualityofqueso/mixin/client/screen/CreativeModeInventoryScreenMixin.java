@@ -161,10 +161,12 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
             cir.setReturnValue(false);
         }
 
-        if (this.hoveredSlot != null && this.hoveredSlot.hasItem() && this.searchBox.isFocused()) {
+        if (this.hoveredSlot != null && this.hoveredSlot.hasItem()) {
             for (int i = 0; i < 9; i++) {
                 if (Minecraft.getInstance().options.keyHotbarSlots[i].consumeClick()) {
-                    this.searchBox.setFocused(false);
+                    if (this.searchBox != null && this.searchBox.isFocused()) {
+                        this.searchBox.setFocused(false);
+                    }
                     cir.setReturnValue(true);
                 }
             }
