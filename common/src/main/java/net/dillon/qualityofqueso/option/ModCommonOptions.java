@@ -9,6 +9,7 @@ public class ModCommonOptions {
     public static final CommonOptionsHandler INSTANCE = new CommonOptionsHandler();
     public boolean itemFrameSearching = true;
     public boolean inventoryLocking = true;
+    public boolean optimizeItemArgument = true;
 
     public static class CommonOptionsHandler extends BaseOptions<ModCommonOptions> {
 

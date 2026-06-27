@@ -7,6 +7,9 @@ import net.dillon.qualityofqueso.platform.MultiLoader;
 import net.dillon.qualityofqueso.platform.ReleaseType;
 import net.dillon.qualityofqueso.util.ModConstants;
 
+import java.util.Set;
+import java.util.TreeSet;
+
 import static net.dillon.qualityofqueso.helper.ModHelper.*;
 import static net.dillon.qualityofqueso.main.CommonEvents.registerCommonPackets;
 
@@ -14,6 +17,7 @@ import static net.dillon.qualityofqueso.main.CommonEvents.registerCommonPackets;
  * The main entrypoint for Quality of Queso.
  */
 public class CommonMain {
+    public static Set<String> MOD_IDS = new TreeSet<>();
 
     /**
      * Initializes common (or server)-side features.
@@ -23,6 +27,9 @@ public class CommonMain {
 
         checkCommonConfigs();
         loadCommonConfigs();
+
+        MultiLoader.getPlatform().addModIds();
+
         info("Quality of Queso version " + MultiLoader.getPlatform().getModVersion() + " (for " + Balm.getPlatform() + ") loaded successfully!");
 
         if (MultiLoader.getPlatform().getReleaseType() == ReleaseType.BETA) {
