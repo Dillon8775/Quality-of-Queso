@@ -51,6 +51,12 @@ public class MixinPluginUtil {
             }
         }
 
+        if (mixinClassName.equals(ofQoQMixin("main.ItemArgumentMixin"))) {
+            if (!MixinOptions.INSTANCE.getInstance().itemArgumentMixin) {
+                return false;
+            }
+        }
+
         // Always apply other mixins
         return true;
     }

@@ -1,12 +1,15 @@
 package net.dillon.qualityofqueso.platform;
 
+import net.dillon.qualityofqueso.main.CommonMain;
 import net.dillon.qualityofqueso.packet.GlowSearchC2SPacket;
 import net.dillon.qualityofqueso.util.ModConstants;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.client.player.LocalPlayer;
 
 import java.nio.file.Path;
+import java.util.List;
 
 public class FabricPlatformHelper implements PlatformHelper {
 
@@ -31,5 +34,29 @@ public class FabricPlatformHelper implements PlatformHelper {
     @Override
     public boolean canSendPacket(LocalPlayer localPlayer) {
         return ClientPlayNetworking.canSend(GlowSearchC2SPacket.PACKET_TYPE);
+    }
+
+    @Override
+    public void addModIds() {
+        for (ModContainer mod : FabricLoader.getInstance().getAllMods()) {
+            String modId = mod.getMetadata().getId();
+            boolean exclude = false;
+            List<String> excludedMods = List.of(
+                    "fabric-",
+                    "fabricloader",
+                    "java",
+                    "mixinextras"
+            );
+            for (String excludedMod : excludedMods) {
+                if (modId.startsWith(excludedMod)) {
+                    exclude = true;
+                    break;
+                }
+            }
+
+            if (!exclude) {
+                CommonMain.MOD_IDS.add(modId);
+            }
+        }
     }
 }

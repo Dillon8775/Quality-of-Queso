@@ -15,10 +15,13 @@ import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -38,6 +41,8 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
     protected abstract void refreshSearchResults();
     @Shadow
     protected abstract void selectTab(CreativeModeTab pTab);
+    @Shadow @Final @Mutable
+    private boolean displayOperatorCreativeTab;
 
     public CreativeModeInventoryScreenMixin(CreativeModeInventoryScreen.ItemPickerMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
@@ -52,6 +57,14 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
             ModConstants.SAVED_CREATIVE_MENU_TEXT = this.searchBox.getValue();
         }
         super.onClose();
+    }
+
+    /**
+     * Enables the display operator creative tab by default.
+     */
+    @Redirect(method = "<init>", at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/screens/inventory/CreativeModeInventoryScreen;displayOperatorCreativeTab:Z"))
+    private void enableOperatorTabByDefault(CreativeModeInventoryScreen instance, boolean value) {
+        this.displayOperatorCreativeTab = clientOptionsInstance().getAccessibilityOptions().operatorItemsTab || Minecraft.getInstance().options.operatorItemsTab().get();
     }
 
     /**

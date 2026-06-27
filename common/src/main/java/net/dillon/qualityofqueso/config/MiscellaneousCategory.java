@@ -5,13 +5,11 @@ import dev.isxander.yacl3.api.controller.BooleanControllerBuilder;
 import dev.isxander.yacl3.api.controller.EnumControllerBuilder;
 import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
-import net.dillon.qualityofqueso.keybind.ModKeyMappings;
 import net.dillon.qualityofqueso.option.eum.misc.ElytraAlarm;
 import net.minecraft.network.chat.Component;
 
 import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
 import static net.dillon.qualityofqueso.helper.ModHelper.mixinOptionsInstance;
-import static net.dillon.qualityofqueso.util.ModOptionUtil.fullKumaKeyMappingAsString;
 
 /**
  * The miscellaneous options category for the {@link ConfigurationScreen}.
@@ -191,15 +189,6 @@ public class MiscellaneousCategory {
                                                 .name(Component.translatable("qualityofqueso.options.enhanced_cursor"))
                                                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.enhanced_cursor.description")))
                                                 .binding(true, () -> clientOptionsInstance().getMiscOptions().enhancedCursor, v -> clientOptionsInstance().getMiscOptions().enhancedCursor = v)
-                                                .controller(BooleanControllerBuilder::create)
-                                                .build()
-                                )
-                                .option(
-                                        Option.<Boolean>createBuilder()
-                                                .name(Component.translatable("qualityofqueso.options.quick_equip"))
-                                                .description(OptionDescription.of(Component.translatable("qualityofqueso.options.quick_equip.description",
-                                                        fullKumaKeyMappingAsString(ModKeyMappings.QUICK_EQUIP))))
-                                                .binding(true, () -> clientOptionsInstance().getMiscOptions().quickEquip, v -> clientOptionsInstance().getMiscOptions().quickEquip = v)
                                                 .controller(BooleanControllerBuilder::create)
                                                 .build()
                                 )

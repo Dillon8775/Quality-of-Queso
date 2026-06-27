@@ -245,6 +245,15 @@ public class ManagementCategory {
                                                 .controller(TickBoxControllerBuilder::create)
                                                 .build()
                                 )
+                                .option(
+                                        Option.<Boolean>createBuilder()
+                                                .name(Component.translatable("qualityofqueso.options.quick_equip"))
+                                                .description(OptionDescription.of(Component.translatable("qualityofqueso.options.quick_equip.description",
+                                                        fullKumaKeyMappingAsString(ModKeyMappings.QUICK_EQUIP))))
+                                                .binding(true, () -> clientOptionsInstance().getManagementOptions().quickEquip, v -> clientOptionsInstance().getManagementOptions().quickEquip = v)
+                                                .controller(BooleanControllerBuilder::create)
+                                                .build()
+                                )
                                 .build()
                 )
                 .group(

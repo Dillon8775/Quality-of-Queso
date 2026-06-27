@@ -9,8 +9,7 @@ import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
-import static net.dillon.qualityofqueso.helper.ManagementHelper.isMountingMenu;
-import static net.dillon.qualityofqueso.helper.ManagementHelper.isValidMenuForQuickEquipping;
+import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
 import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
 import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.hasSelectSlotsKeyDown;
 
@@ -27,7 +26,14 @@ public class QuickEquipInstance extends ManagementInstance {
      * @return {@code true} if the hovered item is a {@code quickly equippable item.}
      */
     public boolean isQuicklyEquippable(ItemStack stack) {
-        return stack.has(DataComponents.EQUIPPABLE);
+        return stack.has(DataComponents.EQUIPPABLE) || isNotEquippable(stack);
+    }
+
+    /**
+     * @return if {@code stack} is not equippable, but preferred in the offhand.
+     */
+    public boolean isNotEquippable(ItemStack stack) {
+        return stack.has(DataComponents.DEATH_PROTECTION) || stack.has(DataComponents.MAP_DECORATIONS);
     }
 
     /**
@@ -73,8 +79,9 @@ public class QuickEquipInstance extends ManagementInstance {
      * Quickly equips the hovered item, based on the current menu.
      */
     public void quickEquipItem() {
+        Minecraft minecraft = Minecraft.getInstance();
         AbstractContainerMenu menu = instance().getScreenMenu();
-        if (!clientOptionsInstance().getMiscOptions().quickEquip || instance().getScreensHoveredSlot() == null || !isValidMenuForQuickEquipping(menu) || (clientOptionsInstance().getManagementOptions().dragSorting && hasSelectSlotsKeyDown())) {
+        if (!clientOptionsInstance().getManagementOptions().quickEquip || instance().getScreensHoveredSlot() == null || !isValidMenuForQuickEquipping(menu) || (clientOptionsInstance().getManagementOptions().dragSorting && hasSelectSlotsKeyDown())) {
             return;
         }
 
@@ -82,14 +89,17 @@ public class QuickEquipInstance extends ManagementInstance {
         Slot hoveredSlot = instance().getScreensHoveredSlot();
         ItemStack stack = hoveredSlot.getItem();
 
+        // Check if item isn't equippable
+        boolean notEquippable = isNotEquippable(stack);
+
         // Get the target equipment slot for the hovered item
-        EquipmentSlot targetEquipmentSlot = stack.get(DataComponents.EQUIPPABLE).slot();
+        EquipmentSlot targetEquipmentSlot = notEquippable ? EquipmentSlot.OFFHAND : stack.get(DataComponents.EQUIPPABLE).slot();
 
         // Get the player's currently equipped stack, based on hovered item
-        ItemStack equippedStack = Minecraft.getInstance().player.getItemBySlot(targetEquipmentSlot);
+        ItemStack equippedStack = minecraft.player.getItemBySlot(targetEquipmentSlot);
 
-        if (equippedStack.isEmpty() && !isMountableSlot(targetEquipmentSlot) && !isMountingMenu(menu)) {
-            // Default to quick move if slot is empty, only do this if valid equipment slot for player (excluding body and saddle)
+        if (equippedStack.isEmpty() && !notEquippable && !isMountableSlot(targetEquipmentSlot) && !isMountingMenu(menu)) {
+            // Default to quick move if slot is empty, only do this if valid equipment slot for player (excluding body and saddle), and excluding death protection items
             sendClickSlotPacket(hoveredSlot.index, ClickType.QUICK_MOVE);
         } else {
             // Get target equipment slot for either player or mountable
@@ -98,6 +108,11 @@ public class QuickEquipInstance extends ManagementInstance {
             if (targetSlot != -1 && targetSlot != hoveredSlot.index) {
                 sendSwapSlotPacket(hoveredSlot.index, targetSlot);
             }
+        }
+
+        // Play sound if not equippable
+        if (notEquippable) {
+            playQuickEquipSound(minecraft);
         }
     }
 }
