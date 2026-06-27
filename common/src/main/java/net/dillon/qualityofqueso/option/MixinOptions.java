@@ -13,6 +13,7 @@ public class MixinOptions {
     public boolean fovEffectsMixin = true;
     public boolean redArmorTintMixin = true;
     public boolean clockManagerMixin = true;
+    public boolean itemArgumentMixin = true;
 
     public static class MixinHandler extends BaseOptions<MixinOptions> {
 
