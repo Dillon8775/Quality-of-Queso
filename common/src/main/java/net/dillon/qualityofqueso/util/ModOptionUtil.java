@@ -8,6 +8,7 @@ import net.dillon.qualityofqueso.option.BaseOptions;
 import net.dillon.qualityofqueso.option.ModClientOptions;
 import net.dillon.qualityofqueso.option.ModCommonOptions;
 import net.dillon.qualityofqueso.option.UniversalOptions;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.Options;
@@ -30,6 +31,14 @@ public class ModOptionUtil {
     protected static final OptionInstance.CaptionBasedToString<Boolean> YES_NO_TEXT = (component, bl) -> bl
             ? ModTexts.YES
             : ModTexts.NO;
+
+    /**
+     * @return a server-side option.
+     */
+    public static Component serverSideOption(Component translation) {
+        Component serverSideTranslation = Component.translatable("qualityofqueso.option.server_side").withStyle(ChatFormatting.RED);
+        return translation.copy().append("\n\n").copy().append(serverSideTranslation);
+    }
 
     /**
      * @return a normal format.

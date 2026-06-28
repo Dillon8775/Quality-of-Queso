@@ -10,6 +10,7 @@ import net.dillon.qualityofqueso.option.eum.management.sorting.DefaultSortingMod
 import net.dillon.qualityofqueso.option.eum.management.sorting.GlobalSortingMode;
 import net.dillon.qualityofqueso.option.eum.management.sorting.Sorting;
 import net.dillon.qualityofqueso.util.ModConstants;
+import net.dillon.qualityofqueso.util.ModOptionUtil;
 import net.minecraft.network.chat.Component;
 
 import java.awt.*;
@@ -240,7 +241,11 @@ public class ManagementCategory {
                                 .option(
                                         Option.<Boolean>createBuilder()
                                                 .name(Component.translatable("qualityofqueso.options.inventory_locking"))
-                                                .description(OptionDescription.of(Component.translatable("qualityofqueso.options.inventory_locking.description")))
+                                                .description(OptionDescription.of(
+                                                        ModOptionUtil.serverSideOption(
+                                                                Component.translatable("qualityofqueso.options.inventory_locking.description")
+                                                        )
+                                                ))
                                                 .binding(true, () -> commonOptionsInstance().inventoryLocking, v -> commonOptionsInstance().inventoryLocking = v)
                                                 .controller(TickBoxControllerBuilder::create)
                                                 .build()
