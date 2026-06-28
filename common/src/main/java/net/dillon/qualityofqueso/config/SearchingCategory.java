@@ -161,8 +161,12 @@ public class SearchingCategory {
                 .group(
                         OptionGroup.createBuilder()
                                 .name(Component.translatable("qualityofqueso.options.item_frame_searching"))
-                                .description(OptionDescription.of(Component.translatable("qualityofqueso.options.item_frame_searching.description",
-                                        ModOptionUtil.kumaKeyMappingAsString(ModKeyMappings.OPEN_ITEM_FRAME_SEARCH_GUI, false))))
+                                .description(OptionDescription.of(
+                                        ModOptionUtil.serverSideOption(
+                                                Component.translatable("qualityofqueso.options.item_frame_searching.description",
+                                                        ModOptionUtil.kumaKeyMappingAsString(ModKeyMappings.OPEN_ITEM_FRAME_SEARCH_GUI, false))
+                                        )
+                                ))
                                 .option(
                                         Option.<Boolean>createBuilder()
                                                 .name(Component.translatable("qualityofqueso.options.item_frame_searching"))
