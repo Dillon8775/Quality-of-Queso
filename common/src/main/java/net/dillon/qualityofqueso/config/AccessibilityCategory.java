@@ -12,6 +12,7 @@ import net.dillon.qualityofqueso.option.eum.general.Theme;
 import net.dillon.qualityofqueso.option.eum.misc.ViewLastKnownEnderChestButton;
 import net.dillon.qualityofqueso.platform.MultiLoader;
 import net.dillon.qualityofqueso.platform.ReleaseType;
+import net.dillon.qualityofqueso.util.ModOptionUtil;
 import net.minecraft.network.chat.Component;
 
 import static net.dillon.qualityofqueso.helper.ModHelper.*;
@@ -39,7 +40,11 @@ public class AccessibilityCategory {
                                 .option(
                                         Option.<Boolean>createBuilder()
                                                 .name(Component.translatable("qualityofqueso.options.perpendicular_quick_moving"))
-                                                .description(OptionDescription.of(Component.translatable("qualityofqueso.options.perpendicular_quick_moving.description")))
+                                                .description(OptionDescription.of(
+                                                        ModOptionUtil.serverSideOption(
+                                                                Component.translatable("qualityofqueso.options.perpendicular_quick_moving.description")
+                                                        )
+                                                ))
                                                 .binding(false, () -> clientOptionsInstance().getAccessibilityOptions().perpendicularQuickMoving, v -> clientOptionsInstance().getAccessibilityOptions().perpendicularQuickMoving = v)
                                                 .controller(BooleanControllerBuilder::create)
                                                 .build()
@@ -71,7 +76,11 @@ public class AccessibilityCategory {
                                 .option(
                                         Option.<Boolean>createBuilder()
                                                 .name(Component.translatable("qualityofqueso.options.optimize_item_argument"))
-                                                .description(OptionDescription.of(Component.translatable("qualityofqueso.options.optimize_item_argument.description")))
+                                                .description(OptionDescription.of(
+                                                        ModOptionUtil.serverSideOption(
+                                                                Component.translatable("qualityofqueso.options.optimize_item_argument.description")
+                                                        )
+                                                ))
                                                 .binding(true, () -> commonOptionsInstance().optimizeItemArgument, v -> commonOptionsInstance().optimizeItemArgument = v)
                                                 .controller(TickBoxControllerBuilder::create)
                                                 .available(mixinOptionsInstance().itemArgumentMixin)

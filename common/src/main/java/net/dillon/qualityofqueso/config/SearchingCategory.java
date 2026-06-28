@@ -156,13 +156,21 @@ public class SearchingCategory {
                 .group(
                         OptionGroup.createBuilder()
                                 .name(Component.translatable("qualityofqueso.options.item_frame_searching"))
-                                .description(OptionDescription.of(Component.translatable("qualityofqueso.options.item_frame_searching.description",
-                                        ModOptionUtil.keyMappingAsString(ModKeybinds.OPEN_SEARCH_ITEM_FRAMES_GUI, false))))
+                                .description(OptionDescription.of(
+                                        ModOptionUtil.serverSideOption(
+                                                Component.translatable("qualityofqueso.options.item_frame_searching.description",
+                                                        ModOptionUtil.keyMappingAsString(ModKeybinds.OPEN_SEARCH_ITEM_FRAMES_GUI, false))
+                                        )
+                                ))
                                 .option(
                                         Option.<Boolean>createBuilder()
                                                 .name(Component.translatable("qualityofqueso.options.item_frame_searching"))
-                                                .description(OptionDescription.of(Component.translatable("qualityofqueso.options.item_frame_searching.description",
-                                                        ModOptionUtil.keyMappingAsString(ModKeybinds.OPEN_SEARCH_ITEM_FRAMES_GUI, false))))
+                                                .description(OptionDescription.of(
+                                                        ModOptionUtil.serverSideOption(
+                                                                Component.translatable("qualityofqueso.options.item_frame_searching.description",
+                                                                        ModOptionUtil.keyMappingAsString(ModKeybinds.OPEN_SEARCH_ITEM_FRAMES_GUI, false))
+                                                        )
+                                                ))
                                                 .binding(true, () -> commonOptionsInstance().itemFrameSearching, v -> commonOptionsInstance().itemFrameSearching = v)
                                                 .controller(BooleanControllerBuilder::create)
                                                 .build()
