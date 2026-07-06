@@ -3,7 +3,6 @@ package net.dillon.qualityofqueso.screen;
 import net.dillon.qualityofqueso.helper.ButtonHelper;
 import net.dillon.qualityofqueso.helper.ModHelper;
 import net.dillon.qualityofqueso.platform.MultiLoader;
-import net.dillon.qualityofqueso.platform.VersionType;
 import net.dillon.qualityofqueso.util.KeybindScrollHelper;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
@@ -161,7 +160,7 @@ public abstract class AbstractModScreen extends OptionsSubScreen {
 
         int textWidth = this.width - 20;
         int textHeight = this.height - 21;
-        int imageWidth = this.width - (MultiLoader.getPlatform().getVersionType() == VersionType.RELEASE ? 50 : 53);
+        int imageWidth = this.width - MultiLoader.getPlatform().getVersionType().getWidthModifier();
         int imageHeight = this.height - 26;
         graphics.drawCenteredString(this.font, this.title, this.width / 2, 13, 16777215);
         graphics.drawCenteredString(this.font, VERSION, textWidth, textHeight, CommonColors.WHITE);

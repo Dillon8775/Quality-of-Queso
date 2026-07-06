@@ -39,9 +39,9 @@ public class CloseScreenInstance extends ManagementInstance {
     public void saveSearchText() {
         if (clientOptionsInstance().getSearchingOptions().saveSearchText) {
             if (isInventoryScreen(instance().getScreen()) && instance().getSearchFields().inventory() != null) {
-                SAVED_TEXT = instance().getSearchFields().inventory().getValue();
+                ModClientOptions.INSTANCE.update(options -> options.getSearchingOptions().savedSearchText = instance().getSearchFields().inventory().getValue());
             } else if (isContainerScreen(instance().getScreen()) && instance().getSearchFields().container() != null) {
-                SAVED_TEXT = instance().getSearchFields().container().getValue();
+                ModClientOptions.INSTANCE.update(options -> options.getSearchingOptions().savedSearchText = instance().getSearchFields().container().getValue());
             }
         }
     }
