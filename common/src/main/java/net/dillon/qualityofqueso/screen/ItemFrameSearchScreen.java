@@ -1,6 +1,7 @@
 package net.dillon.qualityofqueso.screen;
 
 import net.blay09.mods.balm.Balm;
+import net.dillon.qualityofqueso.option.ModClientOptions;
 import net.dillon.qualityofqueso.packet.GlowSearchC2SPacket;
 import net.dillon.qualityofqueso.util.ListOptions;
 import net.dillon.qualityofqueso.util.ModTexts;
@@ -19,7 +20,6 @@ import org.lwjgl.glfw.GLFW;
 import static net.dillon.qualityofqueso.helper.GuiHelper.drawTooltip;
 import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
 import static net.dillon.qualityofqueso.helper.ModHelper.setScreen;
-import static net.dillon.qualityofqueso.util.ModConstants.SAVED_ITEM_FRAME_TEXT;
 
 /**
  * A utility screen to search for all nearby item frames. If an item frame is found, it glows.
@@ -57,7 +57,7 @@ public class ItemFrameSearchScreen extends Screen {
     }
 
     private void close(boolean backToParent) {
-        SAVED_ITEM_FRAME_TEXT = this.searchField.getValue();
+        ModClientOptions.INSTANCE.update(options -> options.getSearchingOptions().savedItemFrameSearchText = this.searchField.getValue());
         if (backToParent && this.parent != null) {
             setScreen(this.parent);
         } else {
@@ -89,7 +89,7 @@ public class ItemFrameSearchScreen extends Screen {
     protected void init() {
         this.searchField = new EditBox(this.font, this.width / 2 - 100, this.height / 2 - 24, 200, 20, Component.empty());
         if (clientOptionsInstance().getSearchingOptions().saveSearchText) {
-            this.searchField.setValue(SAVED_ITEM_FRAME_TEXT);
+            this.searchField.setValue(clientOptionsInstance().getSearchingOptions().savedItemFrameSearchText);
         }
         this.searchField.setMaxLength(50);
 

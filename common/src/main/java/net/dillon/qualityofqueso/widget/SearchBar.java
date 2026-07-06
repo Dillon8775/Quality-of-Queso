@@ -1,7 +1,7 @@
 package net.dillon.qualityofqueso.widget;
 
+import net.dillon.qualityofqueso.option.ModClientOptions;
 import net.dillon.qualityofqueso.option.eum.general.Theme;
-import net.dillon.qualityofqueso.util.ModConstants;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -35,7 +35,7 @@ public class SearchBar extends EditBox {
         super(font, x, y, 90, 12, Component.empty());
         this.font = font;
         if (clientOptionsInstance().getSearchingOptions().saveSearchText) {
-            this.setValue(ModConstants.SAVED_TEXT);
+            this.setValue(clientOptionsInstance().getSearchingOptions().savedSearchText);
         }
         this.setMaxLength(50);
         if (clientOptionsInstance().getGeneralOptions().theme.searchBarTransparent() && !clientOptionsInstance().getSearchingOptions().searchBarColor.black()) {
@@ -84,7 +84,7 @@ public class SearchBar extends EditBox {
     @Override
     public void insertText(String input) {
         super.insertText(input);
-        ModConstants.SAVED_TEXT = this.getValue();
+        ModClientOptions.INSTANCE.update(options -> options.getSearchingOptions().savedSearchText = this.getValue());
     }
 
     @Override

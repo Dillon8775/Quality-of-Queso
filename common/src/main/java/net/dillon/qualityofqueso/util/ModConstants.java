@@ -131,11 +131,6 @@ public class ModConstants {
     public static final String LOCKED_SLOTS = "locked_slots";
     public static final String SORTING_MODE = "sorting_mode";
 
-    // Search bar constants
-    public static String SAVED_TEXT = "";
-    public static String SAVED_ITEM_FRAME_TEXT = "";
-    public static String SAVED_CREATIVE_MENU_TEXT = "";
-
     // Default colors
     public static final int DEFAULT_TRANSPARENT_SEARCH_BAR_TEXT_COLOR = -12566464;
     public static final int DEFAULT_LOCKED_SLOT_COLOR = 1721803007;

@@ -1,6 +1,6 @@
 package net.dillon.qualityofqueso.mixin.client.screen;
 
-import net.dillon.qualityofqueso.util.ModConstants;
+import net.dillon.qualityofqueso.option.ModClientOptions;
 import net.dillon.qualityofqueso.widget.SearchBar;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.EditBox;
@@ -54,7 +54,7 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
     @Override
     public void onClose() {
         if (this.searchBox != null) {
-            ModConstants.SAVED_CREATIVE_MENU_TEXT = this.searchBox.getValue();
+            ModClientOptions.INSTANCE.update(options -> options.getSearchingOptions().savedCreativeMenuText = this.searchBox.getValue());
         }
         super.onClose();
     }
@@ -76,7 +76,7 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
             return;
         }
 
-        this.searchBox.setValue(ModConstants.SAVED_CREATIVE_MENU_TEXT);
+        this.searchBox.setValue(clientOptionsInstance().getSearchingOptions().savedCreativeMenuText);
         this.refreshSearchResults();
     }
 
@@ -123,12 +123,14 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
             return;
         }
 
-        if (!Minecraft.getInstance().hasShiftDown() && selectedTab.getType() == CreativeModeTab.Type.SEARCH && hoveredSlotHasItem(this.hoveredSlot) && this.searchBox != null && this.searchBox.isFocused()) {
+        if (!Minecraft.getInstance().hasShiftDown() && selectedTab.getType() == CreativeModeTab.Type.SEARCH && hoveredSlotHasItem(this.hoveredSlot) && this.searchBox != null) {
             for (int i = 0; i < 9; i++) {
                 if (Minecraft.getInstance().options.keyHotbarSlots[i].matches(event)) {
                     this.ignoreTextInput = true;
-                    this.searchBox.setFocused(true);
-                    cir.setReturnValue(super.keyPressed(event));
+                    boolean handled = super.keyPressed(event);
+                    this.searchBox.setFocused(false);
+                    cir.setReturnValue(handled);
+                    return;
                 }
             }
         }
@@ -137,18 +139,21 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
             if (hoveredSlotHasItem(this.hoveredSlot) && !this.searchBox.isFocused()) {
                 this.ignoreTextInput = true;
                 cir.setReturnValue(super.keyPressed(event));
+                return;
             }
 
             if (clientOptionsInstance().getAccessibilityOptions().preventEFromTyping && event.key() == key(Minecraft.getInstance().options.keyInventory).getValue() && !this.searchBox.isFocused()) {
                 this.ignoreTextInput = true;
                 this.onClose();
                 cir.setReturnValue(true);
+                return;
             }
 
             for (int key : popularKeys()) {
                 if (event.key() == key) {
                     this.ignoreTextInput = false;
                     cir.setReturnValue(true);
+                    return;
                 }
             }
 
@@ -156,6 +161,7 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
                 if (!Minecraft.getInstance().hasShiftDown() && event.key() == allDisallowedKeys().get(i)) {
                     this.ignoreTextInput = true;
                     cir.setReturnValue(super.keyPressed(event));
+                    return;
                 }
             }
         }
@@ -172,15 +178,17 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
 
         if (this.ignoreTextInput || (!(clientOptionsInstance().getSearchingOptions().quickSearch.creativeMenu()) && selectedTab.getType() != CreativeModeTab.Type.SEARCH)) {
             cir.setReturnValue(false);
+            return;
         }
 
-        if (this.hoveredSlot != null && this.hoveredSlot.hasItem()) {
+        if (hoveredSlotHasItem(this.hoveredSlot)) {
             for (int i = 0; i < 9; i++) {
                 if (Minecraft.getInstance().options.keyHotbarSlots[i].consumeClick()) {
                     if (this.searchBox != null && this.searchBox.isFocused()) {
                         this.searchBox.setFocused(false);
                     }
                     cir.setReturnValue(true);
+                    return;
                 }
             }
         } else {
