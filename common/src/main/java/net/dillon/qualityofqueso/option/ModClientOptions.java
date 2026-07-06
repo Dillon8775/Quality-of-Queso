@@ -144,6 +144,9 @@ public class ModClientOptions {
 
         public QuickSearch quickSearch = QuickSearch.ENABLED;
         public boolean saveSearchText = false;
+        public String savedSearchText = "";
+        public String savedItemFrameSearchText = "";
+        public String savedCreativeMenuText = "";
     }
 
     public static class ManagementOptions {
