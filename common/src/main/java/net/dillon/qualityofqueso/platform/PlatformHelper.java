@@ -17,7 +17,7 @@ public interface PlatformHelper {
      * @return the version type.
      */
     default VersionType getVersionType() {
-        return VersionType.PATCH;
+        return VersionType.PATCH_2;
     }
 
     /**
