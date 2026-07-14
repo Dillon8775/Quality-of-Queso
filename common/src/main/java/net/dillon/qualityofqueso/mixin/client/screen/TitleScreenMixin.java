@@ -34,7 +34,7 @@ public class TitleScreenMixin extends Screen {
         if (universalOptionsInstance().menuButton.enabled()) {
             SpriteIconButton menuButton = ButtonHelper.createMainMenuButton(this);
             this.addRenderableWidget(menuButton);
-            menuButton.setPosition(this.width / 2 + 128, this.height / 4 + 132 + (MultiLoader.getPlatform().getPlatformName().equals(PlatformName.NEOFORGE) ? 8 : 0));
+            menuButton.setPosition(this.width / 2 + 128, this.height / 4 + 132 + (MultiLoader.getPlatform().getPlatformName().equals(PlatformName.NEOFORGE) ? 6 : 0));
         }
 
         if (!ModConstants.SHOWN_BETA_TOAST && clientOptionsInstance().getAccessibilityOptions().betaWarning && MultiLoader.getPlatform().getReleaseType() != PlatformRelease.STABLE) {

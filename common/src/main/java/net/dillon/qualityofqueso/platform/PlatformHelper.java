@@ -18,7 +18,7 @@ public interface PlatformHelper {
      * @return the release type.
      */
     default PlatformRelease getReleaseType() {
-        return PlatformRelease.STABLE;
+        return PlatformRelease.BETA;
     }
 
     /**
