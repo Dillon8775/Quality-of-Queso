@@ -6,7 +6,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
 import net.dillon.qualityofqueso.helper.ButtonHelper;
 import net.dillon.qualityofqueso.platform.MultiLoader;
-import net.dillon.qualityofqueso.platform.ReleaseType;
+import net.dillon.qualityofqueso.platform.PlatformRelease;
 import net.dillon.qualityofqueso.screen.MainMenuScreen;
 import net.dillon.qualityofqueso.util.ModConstants;
 import net.minecraft.client.Minecraft;
@@ -57,7 +57,7 @@ public abstract class TitleScreenMixin extends Screen {
             menuButton.setPosition(this.getHorizontalPosition(++currentButton, numberOfButtons, 20), topPos - 24);
         }
 
-        if (!ModConstants.SHOWN_BETA_TOAST && clientOptionsInstance().getAccessibilityOptions().betaWarning && MultiLoader.getPlatform().getReleaseType() != ReleaseType.STABLE) {
+        if (!ModConstants.SHOWN_BETA_TOAST && clientOptionsInstance().getAccessibilityOptions().betaWarning && MultiLoader.getPlatform().getReleaseType() != PlatformRelease.STABLE) {
             Minecraft.getInstance().gui.toastManager().addToast(new SystemToast(
                             SystemToast.SystemToastId.PERIODIC_NOTIFICATION,
                             Component.translatable("qualityofqueso.toast.title.beta_or_alpha"),

@@ -1,17 +1,11 @@
 package net.dillon.qualityofqueso.platform;
 
-import net.blay09.mods.balm.Balm;
 import net.dillon.qualityofqueso.util.MixinPluginUtil;
 import net.minecraft.client.player.LocalPlayer;
 
 import java.nio.file.Path;
 
 public interface PlatformHelper {
-
-    /**
-     * @return the mod version.
-     */
-    String getModVersion();
 
     /**
      * @return the version type.
@@ -23,23 +17,19 @@ public interface PlatformHelper {
     /**
      * @return the release type.
      */
-    default ReleaseType getReleaseType() {
-        return ReleaseType.STABLE;
+    default PlatformRelease getReleaseType() {
+        return PlatformRelease.STABLE;
     }
 
     /**
-     * @return if the platform is on NeoForged.
+     * @return the mod version.
      */
-    default boolean isNeoForged() {
-        return Balm.platform().name().equals("neoforge");
-    }
+    String getModVersion();
 
     /**
-     * @return if {@code YACL} is loaded.
+     * @return the platform name.
      */
-    default boolean isYaclLoaded() {
-        return isModLoaded("yet_another_config_lib_v3");
-    }
+    PlatformName getPlatformName();
 
     /**
      * Gets the config directory for the supported platform.
@@ -49,7 +39,7 @@ public interface PlatformHelper {
     /**
      * @return if a mod is loaded on a specific platform. Used only in {@link MixinPluginUtil}.
      */
-    boolean isModLoaded(String modId);
+    boolean isModLoaded(PlatformMod mod);
 
     /**
      * @return if a {@code Quality of Queso} packet can be sent.
