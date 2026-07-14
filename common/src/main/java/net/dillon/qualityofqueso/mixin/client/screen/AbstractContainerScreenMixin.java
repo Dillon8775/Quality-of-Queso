@@ -5,7 +5,6 @@ import net.dillon.qualityofqueso.instance.context.ManagementButtons;
 import net.dillon.qualityofqueso.instance.context.SearchFields;
 import net.dillon.qualityofqueso.instance.management.ClickSlotInstance;
 import net.dillon.qualityofqueso.instance.management.ExtractingInstance;
-import net.dillon.qualityofqueso.instance.management.ManagementInstance;
 import net.dillon.qualityofqueso.widget.WidgetLayout;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -28,7 +27,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
@@ -123,11 +121,6 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
     @Override
     public ManagementButtons getManagementButtons() {
         return this.managementButtons;
-    }
-
-    @Unique
-    private ManagementInstance managementInstance() {
-        return new ManagementInstance((QuesoScreen) this.screen);
     }
 
     @Override
@@ -414,14 +407,6 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                 (QuesoScreen) this.screen
         );
         mouseDragInstance.handleSingularMovingAndLockingOrSelectingSlots(event, cir);
-    }
-
-    /**
-     * Always quickly moves items if the option is enabled.
-     */
-    @Redirect(method = {"mouseClicked", "mouseReleased"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/input/MouseButtonEvent;hasShiftDown()Z"))
-    private boolean alwaysQuickMove(MouseButtonEvent event) {
-        return this.managementInstance().canQuickMove(event);
     }
 
     /**

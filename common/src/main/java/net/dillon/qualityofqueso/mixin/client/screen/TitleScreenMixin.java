@@ -2,7 +2,8 @@ package net.dillon.qualityofqueso.mixin.client.screen;
 
 import net.dillon.qualityofqueso.helper.ButtonHelper;
 import net.dillon.qualityofqueso.platform.MultiLoader;
-import net.dillon.qualityofqueso.platform.ReleaseType;
+import net.dillon.qualityofqueso.platform.PlatformName;
+import net.dillon.qualityofqueso.platform.PlatformRelease;
 import net.dillon.qualityofqueso.util.ModConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.SpriteIconButton;
@@ -33,10 +34,10 @@ public class TitleScreenMixin extends Screen {
         if (universalOptionsInstance().menuButton.enabled()) {
             SpriteIconButton menuButton = ButtonHelper.createMainMenuButton(this);
             this.addRenderableWidget(menuButton);
-            menuButton.setPosition(this.width / 2 + 128, this.height / 4 + 132 + (MultiLoader.getPlatform().isNeoForged() ? 8 : 0));
+            menuButton.setPosition(this.width / 2 + 128, this.height / 4 + 132 + (MultiLoader.getPlatform().getPlatformName().equals(PlatformName.NEOFORGE) ? 8 : 0));
         }
 
-        if (!ModConstants.SHOWN_BETA_TOAST && clientOptionsInstance().getAccessibilityOptions().betaWarning && MultiLoader.getPlatform().getReleaseType() != ReleaseType.STABLE) {
+        if (!ModConstants.SHOWN_BETA_TOAST && clientOptionsInstance().getAccessibilityOptions().betaWarning && MultiLoader.getPlatform().getReleaseType() != PlatformRelease.STABLE) {
             Minecraft.getInstance().getToastManager().addToast(
                     SystemToast.multiline(Minecraft.getInstance(),
                             SystemToast.SystemToastId.PERIODIC_NOTIFICATION,

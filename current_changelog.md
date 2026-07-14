@@ -1,7 +1,8 @@
-# Version 1.7.10 | 2026-07-07
+# Version 1.7.11 | 2026-07-14
 
 ## Changes
-- Saved search text are now stored via the config file, rather than per session.
+- Tag tooltips on items are now displayed in dark purple (instead of light purple), to match the color of the creative menu screen.
+- General backend optimizations.
 
 ## Bugs Fixed
-- Using hotbar keys whilst in the creative menu always auto focuses into the search bar.
+- Mod crash w/ ViaFabricPlus mod.
