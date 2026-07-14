@@ -1,7 +1,6 @@
 package net.dillon.qualityofqueso.widget;
 
 import net.dillon.qualityofqueso.option.ModClientOptions;
-import net.dillon.qualityofqueso.util.ModConstants;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;

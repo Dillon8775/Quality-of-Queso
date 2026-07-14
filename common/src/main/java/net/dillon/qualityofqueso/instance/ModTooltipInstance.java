@@ -67,7 +67,7 @@ public class ModTooltipInstance extends ManagementInstance {
                 // Add each tag to the query hovered
                 String location = tag.location().getNamespace().equals("c") ? "fabric:" + tag.location().getPath() : tag.location().toString();
                 String tagString = "#" + location;
-                originalTooltip.add(1, Component.literal(tagString).withStyle(ChatFormatting.LIGHT_PURPLE));
+                originalTooltip.add(1, Component.literal(tagString).withStyle(ChatFormatting.DARK_PURPLE));
             }
 
             // If tags were found in the query add it to the tooltip and render

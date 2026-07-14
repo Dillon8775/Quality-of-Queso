@@ -1,6 +1,7 @@
 package net.dillon.qualityofqueso.helper;
 
 import net.dillon.qualityofqueso.platform.MultiLoader;
+import net.dillon.qualityofqueso.platform.PlatformName;
 import net.dillon.qualityofqueso.screen.AbstractModScreen;
 import net.dillon.qualityofqueso.screen.MainMenuScreen;
 import net.dillon.qualityofqueso.widget.QuesoButton;
@@ -134,7 +135,7 @@ public class ButtonHelper {
         if (universalOptionsInstance().menuButton.left() || universalOptionsInstance().menuButton.right()) {
             return height - 29;
         } else {
-            return height / 4 + 72 + (button * 24) - 16 + (MultiLoader.getPlatform().isNeoForged() ? -6 : 0);
+            return height / 4 + 72 + (button * 24) - 16 + (MultiLoader.getPlatform().getPlatformName().equals(PlatformName.FORGE) ? -6 : 0);
         }
     }
 

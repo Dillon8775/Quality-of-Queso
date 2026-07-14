@@ -28,7 +28,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -434,14 +433,6 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                 (QuesoScreen) this.screen
         );
         mouseDragInstance.handleSingularMovingAndLockingOrSelectingSlots(bl, cir);
-    }
-
-    /**
-     * Always quickly moves items if the option is enabled.
-     */
-    @Redirect(method = {"mouseClicked", "mouseReleased"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;hasShiftDown()Z"))
-    private boolean alwaysQuickMove(double mouseX, double mouseY, int bl) {
-        return this.managementInstance().canQuickMove(bl);
     }
 
     /**

@@ -2,6 +2,7 @@ package net.dillon.qualityofqueso.screen;
 
 import net.dillon.qualityofqueso.config.ConfigurationScreen;
 import net.dillon.qualityofqueso.platform.MultiLoader;
+import net.dillon.qualityofqueso.platform.PlatformMod;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -26,7 +27,7 @@ public class MainMenuScreen extends AbstractModScreen {
     protected void init() {
         super.init();
         AbstractWidget configure = Button.builder(Component.translatable("qualityofqueso.gui.configure"), button -> {
-            if (!MultiLoader.getPlatform().isYaclLoaded()) {
+            if (!MultiLoader.getPlatform().isModLoaded(PlatformMod.YACL)) {
                 this.minecraft.getToasts().addToast(
                         SystemToast.multiline(
                                 this.minecraft,

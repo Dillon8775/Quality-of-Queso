@@ -22,13 +22,18 @@ public class FabricPlatformHelper implements PlatformHelper {
     }
 
     @Override
+    public PlatformName getPlatformName() {
+        return PlatformName.FABRIC;
+    }
+
+    @Override
     public Path getConfigDir() {
         return FabricLoader.getInstance().getConfigDir();
     }
 
     @Override
-    public boolean isModLoaded(String modId) {
-        return FabricLoader.getInstance().isModLoaded(modId);
+    public boolean isModLoaded(PlatformMod mod) {
+        return FabricLoader.getInstance().isModLoaded(mod.getId());
     }
 
     @Override

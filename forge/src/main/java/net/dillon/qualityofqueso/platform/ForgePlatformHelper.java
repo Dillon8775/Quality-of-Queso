@@ -22,13 +22,18 @@ public class ForgePlatformHelper implements PlatformHelper {
     }
 
     @Override
+    public PlatformName getPlatformName() {
+        return PlatformName.FORGE;
+    }
+
+    @Override
     public Path getConfigDir() {
         return FMLPaths.CONFIGDIR.get();
     }
 
     @Override
-    public boolean isModLoaded(String modId) {
-        return FMLLoader.getLoadingModList().getModFileById(modId) != null;
+    public boolean isModLoaded(PlatformMod mod) {
+        return FMLLoader.getLoadingModList().getModFileById(mod.getId()) != null;
     }
 
     @Override
