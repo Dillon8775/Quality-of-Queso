@@ -427,14 +427,6 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
     }
 
     /**
-     * Always quickly moves items if the option is enabled.
-     */
-    @Redirect(method = {"mouseClicked", "mouseReleased"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;hasShiftDown()Z"))
-    private boolean alwaysQuickMove(double mouseX, double mouseY, int bl) {
-        return this.managementInstance().canQuickMove(bl);
-    }
-
-    /**
      * Handles all key pressing events.
      */
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
