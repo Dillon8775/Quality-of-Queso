@@ -28,7 +28,7 @@ public class ContainerMenusMixin {
     @Inject(method = "quickMoveStack", at = @At("HEAD"), cancellable = true)
     private void modifyQuickMoving(Player player, int slotIndex, CallbackInfoReturnable<ItemStack> cir) {
         UUID uuid = player.getUUID();
-        if (DedicatedServerStorage.shouldUsePerpendicularQuickMoving(uuid)) {
+        if (DedicatedServerStorage.PERPENDICULAR_QUICK_MOVING.get(uuid)) {
             AbstractContainerMenu menu = (AbstractContainerMenu) (Object) this;
 
             Slot slot = menu.slots.get(slotIndex);
@@ -40,7 +40,7 @@ public class ContainerMenusMixin {
             ItemStack original = stack.copy();
 
             int containerSize = menu.slots.size() - 36;
-            boolean allowHotbar = DedicatedServerStorage.shouldIncludeHotbar(uuid);
+            boolean allowHotbar = DedicatedServerStorage.INCLUDE_HOTBAR.get(uuid);
             int playerInvEnd = containerSize + (allowHotbar ? 36 : 27); // inventory only, no hotbar
 
             // From container -> player inventory (no hotbar)

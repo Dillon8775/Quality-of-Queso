@@ -5,6 +5,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 
+import static net.dillon.dillonlib.task.ClientTasks.executeIfClientPlayer;
 import static net.dillon.qualityofqueso.helper.ModHelper.*;
 
 /**
@@ -28,16 +29,18 @@ public class ClientEvents {
             clientOptionsInstance().getMiscOptions().antiRageQuit = true;
             saveAndApplyConfigs(minecraft);
         }
-        if (isOnServer(minecraft) && minecraft.player != null) {
-            for (String server : bannedServers) {
-                if (minecraft.getCurrentServer().ip.contains(server)) {
-                    minecraft.player.sendSystemMessage(Component.translatable("qualityofqueso.gui.banned_server",
-                            Component.literal(minecraft.getCurrentServer().ip).withStyle(ChatFormatting.DARK_RED)));
+        if (isOnServer(minecraft)) {
+            executeIfClientPlayer(localPlayer -> {
+                for (String server : bannedServers) {
+                    if (minecraft.getCurrentServer().ip.contains(server)) {
+                        localPlayer.sendSystemMessage(Component.translatable("qualityofqueso.gui.banned_server",
+                                Component.literal(minecraft.getCurrentServer().ip).withStyle(ChatFormatting.DARK_RED)));
+                    }
                 }
-            }
-            if (!universalOptionsInstance().multiServerConfigs) {
-                minecraft.player.sendSystemMessage(Component.translatable("qualityofqueso.gui.enable_multi_server_configs"));
-            }
+                if (!universalOptionsInstance().multiServerConfigs) {
+                    localPlayer.sendSystemMessage(Component.translatable("qualityofqueso.gui.enable_multi_server_configs"));
+                }
+            });
         }
         sendClientPreferencesToServer();
     }

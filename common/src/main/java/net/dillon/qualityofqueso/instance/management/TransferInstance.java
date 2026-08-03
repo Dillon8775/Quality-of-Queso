@@ -593,7 +593,7 @@ public class TransferInstance extends ManagementInstance {
             Deque<Slot> emptySlots = new ArrayDeque<>();
             List<Slot> nonEmptySlots = new ArrayList<>();
             LocalPlayer player = instance().getMinecraft().player;
-            boolean iterateBackwards = (!DedicatedServerStorage.shouldUsePerpendicularQuickMoving(player.getUUID())) && toInventory;
+            boolean iterateBackwards = (!DedicatedServerStorage.PERPENDICULAR_QUICK_MOVING.get(player.getUUID())) && toInventory;
             int step = iterateBackwards ? -1 : 1;
             int start = iterateBackwards ? toEnd - 1 : toStart;
             int endExclusive = iterateBackwards ? toStart - 1 : toEnd;

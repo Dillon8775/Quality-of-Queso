@@ -27,8 +27,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
 
-import static net.dillon.dillonlib.task.ClientTasks.openLink;
-import static net.dillon.dillonlib.task.ClientTasks.openScreen;
+import static net.dillon.dillonlib.task.ClientTasks.*;
 import static net.dillon.qualityofqueso.helper.ButtonHelper.*;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.buttonActive;
 import static net.dillon.qualityofqueso.helper.ModHelper.*;
@@ -132,14 +131,16 @@ public abstract class AbstractModScreen extends OptionsSubScreen {
                         Component.translatable("qualityofqueso.gui.open_world_folder")
                 ));
             }
-            if (ModHelper.clientOptionsInstance().getAccessibilityOptions().eChestButton.qoqMenu() && this.minecraft.player != null) {
-                this.viewLastKnownEnderChestButton = this.addRenderableWidget(ButtonHelper.createSpriteIconButton(
-                        ofQoQ(ENDER_CHEST),
-                        (button) -> {
-                            openScreen(new EnderChestPreviewScreen());
-                        },
-                        Component.translatable("qualityofqueso.gui.view_ender_chest.tooltip")
-                ));
+            if (ModHelper.clientOptionsInstance().getAccessibilityOptions().eChestButton.qoqMenu()) {
+                executeIfClientPlayer(localPlayer -> {
+                    this.viewLastKnownEnderChestButton = this.addRenderableWidget(ButtonHelper.createSpriteIconButton(
+                            ofQoQ(ENDER_CHEST),
+                            (button) -> {
+                                openScreen(new EnderChestPreviewScreen());
+                            },
+                            Component.translatable("qualityofqueso.gui.view_ender_chest.tooltip")
+                    ));
+                });
             }
         } else {
             this.worldDirectoryButton = this.addRenderableWidget(ButtonHelper.createSpriteIconButton(

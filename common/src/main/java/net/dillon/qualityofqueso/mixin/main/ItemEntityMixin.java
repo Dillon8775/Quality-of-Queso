@@ -3,6 +3,7 @@ package net.dillon.qualityofqueso.mixin.main;
 import net.dillon.dillonlib.annotation.Dill;
 import net.dillon.dillonlib.annotation.DillType;
 import net.dillon.qualityofqueso.server.DedicatedServerStorage;
+import net.dillon.qualityofqueso.server.LockedInventoryStorage;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
@@ -21,13 +22,13 @@ public class ItemEntityMixin {
      */
     @Inject(method = "playerTouch", at = @At("HEAD"), cancellable = true)
     private void blockAutomaticPickupWhenLocked(Player player, CallbackInfo ci) {
-        if (!commonOptionsInstance().inventoryLocking || !DedicatedServerStorage.isLockedInventory(player.getUUID())) {
+        if (!commonOptionsInstance().inventoryLocking || !LockedInventoryStorage.isLockedInventory(player.getUUID())) {
             return;
         }
 
         ItemEntity self = (ItemEntity) (Object) this;
 
-        if (DedicatedServerStorage.isSoftLockedInventory(player.getUUID()) && player.getInventory().contains(self.getItem())) {
+        if (LockedInventoryStorage.isSoftLockedInventory(player.getUUID()) && player.getInventory().contains(self.getItem())) {
             return;
         }
 

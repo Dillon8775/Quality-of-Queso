@@ -5,6 +5,8 @@ import net.dillon.dillonlib.annotation.Dill;
 import net.dillon.dillonlib.annotation.DillType;
 import net.dillon.qualityofqueso.option.ModCommonOptions;
 import net.dillon.qualityofqueso.server.DedicatedServerStorage;
+import net.dillon.qualityofqueso.server.LockedInventoryStorage;
+import net.dillon.qualityofqueso.server.PendingManualPickup;
 import net.dillon.qualityofqueso.util.GlowCountdown;
 import net.dillon.qualityofqueso.util.ShulkerStateHolder;
 import net.minecraft.network.chat.Component;
@@ -52,21 +54,21 @@ public class ServerPacketHandlers {
      * Stores the sender's client preference values in dedicated server state.
      */
     public static void handleClientToServerOptions(ServerPlayer player, ClientPreferencesC2SPacket packet) {
-        DedicatedServerStorage.setIncludeHotbar(player.getUUID(), packet.includeHotbar());
-        DedicatedServerStorage.setPerpendicularQuickMoving(player.getUUID(), packet.perpendicularQuickMoving());
-        DedicatedServerStorage.setLockedInventory(player.getUUID(), packet.lockInventory());
+        DedicatedServerStorage.INCLUDE_HOTBAR.set(player.getUUID(), packet.includeHotbar());
+        DedicatedServerStorage.PERPENDICULAR_QUICK_MOVING.set(player.getUUID(), packet.perpendicularQuickMoving());
+        DedicatedServerStorage.LOCKED_INVENTORY.set(player.getUUID(), packet.lockInventory());
     }
 
     /**
      * Performs manual pickup by allowing one-shot touch on the targeted item entity.
      */
     public static void handleManualItemPickupIntent(ServerPlayer player, ManualItemPickupC2SPacket packet) {
-        if (!DedicatedServerStorage.isLockedInventory(player.getUUID()) || !player.isShiftKeyDown()) {
+        if (!LockedInventoryStorage.isLockedInventory(player.getUUID()) || !player.isShiftKeyDown()) {
             return;
         }
 
         if (player.level().getEntity(packet.entityId()) instanceof ItemEntity itemEntity) {
-            DedicatedServerStorage.allowManualPickup(player.getUUID(), itemEntity.getId(), player.level().getGameTime() + 2L);
+            DedicatedServerStorage.PENDING_MANUAL_PICKUP.set(player.getUUID(), new PendingManualPickup(itemEntity.getId(), player.level().getGameTime() + 2L));
             itemEntity.playerTouch(player);
         }
     }

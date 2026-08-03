@@ -12,8 +12,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.debug.DebugOptionsScreen;
 import net.minecraft.network.chat.Component;
 
-import static net.dillon.dillonlib.task.ClientTasks.getScreen;
-import static net.dillon.dillonlib.task.ClientTasks.openScreen;
+import static net.dillon.dillonlib.task.ClientTasks.*;
 import static net.dillon.qualityofqueso.helper.ModHelper.*;
 
 public class MainMenuScreen extends AbstractModScreen {
@@ -26,8 +25,10 @@ public class MainMenuScreen extends AbstractModScreen {
     @Override
     protected AbstractWidget[] options() {
         this.openItemFrameSearchGUIOptions = Button.builder(Component.translatable("qualityofqueso.gui.open_item_frame_search_gui"), button -> {
-            if (commonOptionsInstance().itemFrameSearching && this.minecraft.level != null) {
-                openScreen(new ItemFrameSearchScreen(this));
+            if (commonOptionsInstance().itemFrameSearching) {
+                executeIfClientLevel(clientLevel -> {
+                    openScreen(new ItemFrameSearchScreen(this));
+                });
             }
         }).build();
 
