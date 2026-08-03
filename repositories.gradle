@@ -12,4 +12,15 @@ repositories {
         url = "https://maven.isxander.dev/releases"
         name = "Xander Maven"
     }
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = "Modrinth"
+                url = "https://api.modrinth.com/maven"
+            }
+        }
+        filter {
+            includeGroup "maven.modrinth"
+        }
+    }
 }

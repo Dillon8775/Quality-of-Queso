@@ -1,9 +1,8 @@
 package net.dillon.qualityofqueso.screen;
 
-import net.dillon.qualityofqueso.helper.ButtonHelper;
+import net.dillon.dillonlib.util.Texts;
 import net.dillon.qualityofqueso.option.ModClientOptions;
 import net.dillon.qualityofqueso.util.ListOptions;
-import net.dillon.qualityofqueso.util.ModTexts;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -15,6 +14,8 @@ import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.CommonColors;
 
+import static net.dillon.dillonlib.task.ClientTasks.drawSmallSprite;
+import static net.dillon.dillonlib.task.ClientTasks.openScreen;
 import static net.dillon.qualityofqueso.helper.GuiHelper.getArmorHotbarTexture;
 import static net.dillon.qualityofqueso.helper.ModHelper.*;
 import static net.dillon.qualityofqueso.util.ModConstants.DISABLED_TEXTURE;
@@ -36,7 +37,7 @@ public class HudPositionsScreen extends Screen {
     @Override
     public void onClose() {
         saveAndApplyConfigs(this.minecraft);
-        setScreen(this.parent);
+        openScreen(this.parent);
     }
 
     @Override
@@ -77,7 +78,7 @@ public class HudPositionsScreen extends Screen {
 
         this.itemCounterXPosition = this.addRenderableWidget(ListOptions.itemCounterXPosition().createButton(Minecraft.getInstance().options, this.armorStatusXPosition.getX(), this.armorStatusYPosition.getY() + 64, 200));
         this.itemCounterYPosition = this.addRenderableWidget(ListOptions.itemCounterYPosition().createButton(Minecraft.getInstance().options, this.armorStatusXPosition.getX(), this.itemCounterXPosition.getY() + 24, 200));
-        this.moveItemCounterOver = this.addRenderableWidget(Button.builder(ModTexts.BLANK, button -> {
+        this.moveItemCounterOver = this.addRenderableWidget(Button.builder(Texts.BLANK, button -> {
             ModClientOptions.INSTANCE.update(options -> {
                 options.getItemCounterOptions().moveItemCounterOver = !options.getItemCounterOptions().moveItemCounterOver;
             });
@@ -126,8 +127,7 @@ public class HudPositionsScreen extends Screen {
         super.extractRenderState(graphics, mouseX, mouseY, deltaTicks);
 
         graphics.centeredText(this.font, this.title, this.width / 2, 13, CommonColors.WHITE);
-
-        ButtonHelper.drawTexture(graphics, clientOptionsInstance().getItemCounterOptions().moveItemCounterOver ? ENABLED_TEXTURE : DISABLED_TEXTURE, this.moveItemCounterOver);
+        drawSmallSprite(graphics, clientOptionsInstance().getItemCounterOptions().moveItemCounterOver ? ofQoQ(ENABLED_TEXTURE) : ofQoQ(DISABLED_TEXTURE), this.moveItemCounterOver);
 
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, getArmorHotbarTexture(), this.armorStatusXPosition.getX() + 60, this.armorStatusXPosition.getY() - 28, 82, 22);
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ofQoQ("hud/item_counter"), this.armorStatusXPosition.getX() + 74, this.itemCounterXPosition.getY() - 32, 58, 30);

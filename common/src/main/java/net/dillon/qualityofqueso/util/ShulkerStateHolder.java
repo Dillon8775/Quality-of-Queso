@@ -1,10 +1,14 @@
 package net.dillon.qualityofqueso.util;
 
+import net.dillon.dillonlib.annotation.Dill;
+import net.dillon.dillonlib.annotation.DillType;
+
 import java.util.List;
 
 /**
  * Stores per-shulker QoQ state on the shulker block entity itself.
  */
+@Dill(DillType.COMMON)
 public interface ShulkerStateHolder {
     /**
      * @return whether this shulker has QoQ filtering enabled.

@@ -2,7 +2,6 @@ package net.dillon.qualityofqueso.main;
 
 import com.mojang.brigadier.CommandDispatcher;
 import net.blay09.mods.balm.Balm;
-import net.dillon.qualityofqueso.command.ItemFrameSearcherCommand;
 import net.dillon.qualityofqueso.option.ModCommonOptions;
 import net.dillon.qualityofqueso.packet.*;
 import net.dillon.qualityofqueso.util.ModConstants;
@@ -16,7 +15,7 @@ public class CommonEvents {
 
     public static void registerCommonCommands(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext commandRegistryAccess) {
         if (ModCommonOptions.INSTANCE.getInstance().itemFrameSearching) {
-            dispatcher.register(ItemFrameSearcherCommand.itemFrameSearcherCommand(commandRegistryAccess));
+
         }
     }
 

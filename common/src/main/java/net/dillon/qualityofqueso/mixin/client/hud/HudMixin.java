@@ -37,6 +37,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import static net.dillon.dillonlib.task.ClientTasks.getGuiHeight;
+import static net.dillon.dillonlib.task.ClientTasks.getGuiWidth;
 import static net.dillon.qualityofqueso.helper.GuiHelper.*;
 import static net.dillon.qualityofqueso.helper.ModHelper.*;
 import static net.dillon.qualityofqueso.util.ItemHudTracker.ARROW_OUTLINE;

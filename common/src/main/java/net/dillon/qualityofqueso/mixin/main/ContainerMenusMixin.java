@@ -1,5 +1,7 @@
 package net.dillon.qualityofqueso.mixin.main;
 
+import net.dillon.dillonlib.annotation.Dill;
+import net.dillon.dillonlib.annotation.DillType;
 import net.dillon.qualityofqueso.server.DedicatedServerStorage;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -16,6 +18,7 @@ import java.util.UUID;
 
 import static net.dillon.qualityofqueso.helper.MethodHelper.moveItemStack;
 
+@Dill(DillType.COMMON)
 @Mixin(value = {ChestMenu.class, ShulkerBoxMenu.class})
 public class ContainerMenusMixin {
 

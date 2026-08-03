@@ -14,7 +14,7 @@ import static net.dillon.qualityofqueso.util.ModOptionUtil.*;
 public class ListOptions {
 
     public static OptionInstance<Boolean> overrideClientTime() {
-        return createClientBooleanOption("override_client_time", true, clientOptionsInstance().getVisualTimeOptions().overrideClientTime,
+        return createClientBooleanOption("qualityofqueso.options.override_client_time", true, clientOptionsInstance().getVisualTimeOptions().overrideClientTime,
                 (options, value) -> options.getVisualTimeOptions().overrideClientTime = value
         );
     }
@@ -28,7 +28,7 @@ public class ListOptions {
 
     public static OptionInstance<Integer> visualTimeSpeed() {
         return createIntegerOption(
-                "visual_time_speed",
+                "qualityofqueso.options.visual_time_speed",
                 (optionText, value) -> {
                     if (value == 0) {
                         return Options.genericValueLabel(optionText, Component.literal("Freeze"));
@@ -44,14 +44,14 @@ public class ListOptions {
     }
 
     public static OptionInstance<Boolean> syncLocalTime() {
-        return createClientBooleanOption("sync_local_time", true, clientOptionsInstance().getVisualTimeOptions().syncLocalTime,
+        return createClientBooleanOption("qualityofqueso.options.sync_local_time", true, clientOptionsInstance().getVisualTimeOptions().syncLocalTime,
                 (options, value) -> options.getVisualTimeOptions().syncLocalTime = value
         );
     }
 
     public static OptionInstance<Integer> armorStatusXPosition() {
         return createIntegerOption(
-                "armor_status_x_position",
+                "qualityofqueso.options.armor_status_x_position",
                 ModOptionUtil::posFormatted,
                 -600,
                 300,
@@ -62,7 +62,7 @@ public class ListOptions {
 
     public static OptionInstance<Integer> armorStatusYPosition() {
         return createIntegerOption(
-                "armor_status_y_position",
+                "qualityofqueso.options.armor_status_y_position",
                 ModOptionUtil::invertedPosFormat,
                 -525,
                 25,
@@ -73,7 +73,7 @@ public class ListOptions {
 
     public static OptionInstance<Integer> itemCounterXPosition() {
         return createIntegerOption(
-                "item_counter_x_position",
+                "qualityofqueso.options.item_counter_x_position",
                 ModOptionUtil::posFormatted,
                 -400,
                 600,
@@ -84,7 +84,7 @@ public class ListOptions {
 
     public static OptionInstance<Integer> itemCounterYPosition() {
         return createIntegerOption(
-                "item_counter_y_position",
+                "qualityofqueso.options.item_counter_y_position",
                 ModOptionUtil::invertedPosFormat,
                 -525,
                 25,
@@ -95,7 +95,7 @@ public class ListOptions {
 
     public static OptionInstance<Integer> otherElementsYPosition() {
         return createIntegerOption(
-                "other_elements_y_position",
+                "qualityofqueso.options.other_elements_y_position",
                 ModOptionUtil::invertedPosFormat,
                 -525,
                 25,
@@ -106,7 +106,7 @@ public class ListOptions {
 
     public static OptionInstance<Integer> itemFrameSearchGlowDuration() {
         return createIntegerOption(
-                "item_frame_search_glow_duration",
+                "qualityofqueso.options.item_frame_search_glow_duration",
                 (optionText, value) -> {
                     if (value == 0) {
                         return Options.genericValueLabel(optionText, Component.literal("Indefinite").withStyle(ChatFormatting.RED));

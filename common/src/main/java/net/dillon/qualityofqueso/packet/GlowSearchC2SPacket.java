@@ -1,5 +1,7 @@
 package net.dillon.qualityofqueso.packet;
 
+import net.dillon.dillonlib.annotation.Dill;
+import net.dillon.dillonlib.annotation.DillType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -9,6 +11,7 @@ import net.minecraft.resources.Identifier;
 /**
  * The payload (or packet) for taking in the data required to make item frames glow.
  */
+@Dill(DillType.COMMON)
 public record GlowSearchC2SPacket(String query, boolean matchCase, boolean clear, int timer,
                                   int radius) implements CustomPacketPayload {
     public static final Identifier ID = Identifier.fromNamespaceAndPath("qualityofqueso", "glow_search");

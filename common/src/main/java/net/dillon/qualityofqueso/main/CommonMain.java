@@ -2,10 +2,12 @@ package net.dillon.qualityofqueso.main;
 
 import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.core.BalmRegistrars;
+import net.dillon.dillonlib.annotation.Dill;
+import net.dillon.dillonlib.annotation.DillType;
+import net.dillon.dillonlib.platform.info.PlatformRelease;
 import net.dillon.qualityofqueso.option.ModCommonOptions;
 import net.dillon.qualityofqueso.option.UniversalOptions;
-import net.dillon.qualityofqueso.platform.MultiLoader;
-import net.dillon.qualityofqueso.platform.PlatformRelease;
+import net.dillon.qualityofqueso.platform.QualityOfQuesoPlatforms;
 import net.dillon.qualityofqueso.util.ModConstants;
 
 import java.util.Set;
@@ -17,6 +19,7 @@ import static net.dillon.qualityofqueso.main.CommonEvents.registerCommonPackets;
 /**
  * The main entrypoint for Quality of Queso.
  */
+@Dill(DillType.COMMON)
 public class CommonMain {
     public static Set<String> MOD_IDS = new TreeSet<>();
 
@@ -29,13 +32,13 @@ public class CommonMain {
         checkCommonConfigs();
         loadCommonConfigs();
 
-        MultiLoader.getPlatform().addModIds();
+        QualityOfQuesoPlatforms.getPlatform().addModIds();
 
-        info("Quality of Queso version " + MultiLoader.getPlatform().getModVersion() + " (for " + Balm.platform().name() + ") loaded successfully!");
+        info("Quality of Queso version " + QualityOfQuesoPlatforms.getPlatform().modVersion() + " (for " + Balm.platform().name() + ") loaded successfully!");
 
-        if (MultiLoader.getPlatform().getReleaseType() == PlatformRelease.BETA) {
+        if (QualityOfQuesoPlatforms.getPlatform().platformRelease() == PlatformRelease.BETA) {
             warn("Please be aware that this version of Quality of Queso is marked as beta, use at your own risk!");
-        } else if (MultiLoader.getPlatform().getReleaseType() == PlatformRelease.ALPHA) {
+        } else if (QualityOfQuesoPlatforms.getPlatform().platformRelease() == PlatformRelease.ALPHA) {
             error("Please note that this version of Quality of Queso is in the alpha state, so there will be unknown bugs. Use at your own risk!");
         }
     }

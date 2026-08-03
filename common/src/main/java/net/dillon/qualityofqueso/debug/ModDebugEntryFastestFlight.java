@@ -11,8 +11,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.LevelChunk;
 import org.jspecify.annotations.Nullable;
 
+import static net.dillon.dillonlib.util.Arithmetics.round;
 import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
-import static net.dillon.qualityofqueso.helper.ModHelper.round;
 
 /**
  * Displays the player'x {@code X-rotation,} which allows for perfection in flying the fastest with firework rockets and an elytra (40 = target).

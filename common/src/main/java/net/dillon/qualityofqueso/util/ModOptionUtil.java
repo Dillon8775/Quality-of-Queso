@@ -4,33 +4,23 @@ import com.mojang.blaze3d.platform.InputConstants;
 import net.blay09.mods.kuma.api.KeyModifier;
 import net.blay09.mods.kuma.api.Kuma;
 import net.blay09.mods.kuma.api.ManagedKeyMapping;
-import net.dillon.qualityofqueso.option.BaseOptions;
 import net.dillon.qualityofqueso.option.ModClientOptions;
-import net.dillon.qualityofqueso.option.ModCommonOptions;
-import net.dillon.qualityofqueso.option.UniversalOptions;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.KeyMapping;
 import net.minecraft.client.OptionInstance;
-import net.minecraft.client.Options;
 import net.minecraft.network.chat.Component;
 
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 
-import static net.dillon.qualityofqueso.helper.MethodHelper.key;
+import static net.dillon.dillonlib.client.ModernWidgetOptions.createSimpleBooleanOption;
+import static net.dillon.dillonlib.client.ModernWidgetOptions.createSimpleIntegerOption;
 import static net.dillon.qualityofqueso.helper.MethodHelper.kumaKey;
 
 /**
  * Utility class for option lists.
  */
 public class ModOptionUtil {
-    protected static final OptionInstance.CaptionBasedToString<Boolean> ON_OFF_TEXT = (component, bl) -> bl
-            ? ModTexts.ON
-            : ModTexts.OFF;
-    protected static final OptionInstance.CaptionBasedToString<Boolean> YES_NO_TEXT = (component, bl) -> bl
-            ? ModTexts.YES
-            : ModTexts.NO;
 
     /**
      * @return a server-side option.
@@ -104,27 +94,6 @@ public class ModOptionUtil {
     }
 
     /**
-     * @return a simple boolean {@link OptionInstance}.
-     */
-    private static <T> OptionInstance<Boolean> createSimpleBooleanOption(
-            String translation,
-            boolean toggleText,
-            boolean currentValue,
-            BaseOptions<T> instance,
-            BiConsumer<T, Boolean> consumer,
-            Object... obj) {
-        return OptionInstance.createBoolean(
-                "qualityofqueso.options." + translation,
-                OptionInstance.cachedConstantTooltip(
-                        Component.translatable("qualityofqueso.options." + translation + ".tooltip", obj)
-                ),
-                toggleText ? ON_OFF_TEXT : YES_NO_TEXT,
-                currentValue,
-                value -> instance.update(options -> consumer.accept(options, value))
-        );
-    }
-
-    /**
      * @return a client-instance integer {@link OptionInstance}.
      */
     protected static OptionInstance<Integer> createIntegerOption(
@@ -142,27 +111,6 @@ public class ModOptionUtil {
                 currentValue,
                 ModClientOptions.INSTANCE,
                 consumer
-        );
-    }
-
-    /**
-     * @return an integer option {@link OptionInstance}.
-     */
-    private static <T> OptionInstance<Integer> createSimpleIntegerOption(
-            String translation,
-            BiFunction<Component, Integer, Component> display,
-            OptionInstance.IntRange factory,
-            int currentValue,
-            BaseOptions<T> instance,
-            BiConsumer<T, Integer> consumer
-    ) {
-        return new OptionInstance<>(
-                "qualityofqueso.options." + translation,
-                OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options." + translation + ".tooltip")),
-                display::apply,
-                factory,
-                currentValue,
-                value -> instance.update(options -> consumer.accept(options, value))
         );
     }
 
@@ -215,71 +163,5 @@ public class ModOptionUtil {
      */
     protected static String parseKeyAsString(String translationKey, boolean mouseKey) {
         return translationKey.substring(mouseKey ? 4 : 13).toUpperCase();
-    }
-
-    /**
-     * @return the bound key as a string, with the mouse key boolean.
-     */
-    @Deprecated
-    private static String keyMappingAsString(KeyMapping keyMapping, boolean mouseKey) {
-        return parseKeyAsString(key(keyMapping).toString().toUpperCase(), mouseKey);
-    }
-
-    /**
-     * @return a simple common instance boolean {@link OptionInstance}..
-     */
-    @Deprecated
-    private static OptionInstance<Boolean> createCommonBooleanOption(String translation, boolean toggleText, boolean currentValue, BiConsumer<ModCommonOptions, Boolean> consumer, Object... obj) {
-        return createSimpleBooleanOption(
-                translation,
-                toggleText,
-                currentValue,
-                ModCommonOptions.INSTANCE,
-                consumer,
-                obj
-        );
-    }
-
-    /**
-     * @return a simple universal-instance boolean {@link OptionInstance}.
-     */
-    @Deprecated
-    private static OptionInstance<Boolean> createUniversalBooleanOption(String translation, boolean toggleText, boolean currentValue, BiConsumer<UniversalOptions, Boolean> consumer, Object... obj) {
-        return createSimpleBooleanOption(
-                translation,
-                toggleText,
-                currentValue,
-                UniversalOptions.INSTANCE,
-                consumer,
-                obj
-        );
-    }
-
-    /**
-     * @return a special double {@link OptionInstance}.
-     */
-    @Deprecated
-    private static <T> OptionInstance<Double> createDoubleOption(
-            String translation,
-            String displayText,
-            double min,
-            double max,
-            double step,
-            double currentValue,
-            BaseOptions<T> instance,
-            BiConsumer<T, Double> consumer
-    ) {
-        return new OptionInstance<>("qualityofqueso.options." + translation,
-                OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options." + translation + ".tooltip")),
-                (optionText, value) -> Options.genericValueLabel(optionText, Component.literal(value + displayText)),
-                OptionInstance.UnitDouble.INSTANCE.xmap(
-                        slider -> {
-                            double value = min + slider * (max - min);
-                            return Math.round(value * step) / step;
-                        },
-                        value -> (value - min) / (max - min)
-                ),
-                currentValue,
-                value -> instance.update(options -> consumer.accept(options, value)));
     }
 }

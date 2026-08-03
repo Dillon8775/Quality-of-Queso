@@ -150,7 +150,7 @@ public class LocalPlayerMixin extends AbstractClientPlayer {
 
             // Play one shared ding queue for armor warnings
             if (this.armorTimesToPlay > 0 && this.armorDingCooldown == 0) {
-                playDingSound(this.minecraft);
+                playDingSound();
                 this.armorTimesToPlay--;
                 this.armorDingCooldown = 3;
             }
@@ -194,7 +194,7 @@ public class LocalPlayerMixin extends AbstractClientPlayer {
         }
 
         if (this.elytraWarningCooldown <= 0) {
-            playDingSound(this.minecraft);
+            playDingSound();
             this.elytraWarningCooldown = clientOptionsInstance().getElytraAlarmOptions().elytraAlarmSoundDelayTicks;
             return;
         }

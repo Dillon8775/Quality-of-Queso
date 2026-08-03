@@ -1,6 +1,7 @@
 package net.dillon.qualityofqueso.mixin.client.util;
 
 import com.mojang.authlib.GameProfile;
+import net.dillon.dillonlib.mixinplugin.PredicateSigned;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -17,6 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import static net.dillon.qualityofqueso.helper.ModHelper.canApplyEffect;
 import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
 
+@PredicateSigned
 @Mixin(AbstractClientPlayer.class)
 public abstract class AbstractClientPlayerMixin extends Player {
 

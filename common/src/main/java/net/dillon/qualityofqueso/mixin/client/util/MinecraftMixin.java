@@ -8,7 +8,6 @@ import net.dillon.qualityofqueso.sound.ModSoundEvents;
 import net.dillon.qualityofqueso.util.MobHitDingTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
-import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,6 +18,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Random;
 
+import static net.dillon.dillonlib.task.ClientTasks.openScreen;
+import static net.dillon.dillonlib.task.ClientTasks.playLocalSound;
 import static net.dillon.qualityofqueso.helper.ModHelper.*;
 import static net.dillon.qualityofqueso.keybind.ModKeyMappings.OPEN_ITEM_FRAME_SEARCH_GUI;
 
@@ -27,7 +28,6 @@ public abstract class MinecraftMixin {
     @Shadow
     @Final
     public Options options;
-
     @Shadow
     public abstract SoundManager getSoundManager();
 
@@ -44,7 +44,7 @@ public abstract class MinecraftMixin {
 
         if (commonOptionsInstance().itemFrameSearching) {
             while (OPEN_ITEM_FRAME_SEARCH_GUI.isActiveAndDown()) {
-                setScreen(new ItemFrameSearchScreen(null));
+                openScreen(new ItemFrameSearchScreen(null));
             }
         }
     }
@@ -73,7 +73,7 @@ public abstract class MinecraftMixin {
 
         Random random = new Random();
         if (this.getSoundManager() != null && random.nextFloat() < 0.01F) {
-            this.getSoundManager().play(SimpleSoundInstance.forUI(ModSoundEvents.FORTNITE_BATTLE_PASS, 1.0F, 5.0F));
+            playLocalSound(ModSoundEvents.FORTNITE_BATTLE_PASS, 1.0F, 5.0F);
         }
     }
 }

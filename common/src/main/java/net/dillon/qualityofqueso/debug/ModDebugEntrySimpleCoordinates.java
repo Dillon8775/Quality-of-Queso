@@ -7,8 +7,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.LevelChunk;
 import org.jspecify.annotations.Nullable;
 
+import static net.dillon.dillonlib.util.Arithmetics.round;
 import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
-import static net.dillon.qualityofqueso.helper.ModHelper.round;
 
 /**
  * A simple hud entry to display the player's coordinates. Just the coordinates alone.

@@ -1,15 +1,14 @@
 package net.dillon.qualityofqueso.helper;
 
 import net.blay09.mods.balm.Balm;
+import net.dillon.dillonlib.platform.Platforms;
 import net.dillon.qualityofqueso.option.*;
 import net.dillon.qualityofqueso.packet.ClientPreferencesC2SPacket;
 import net.dillon.qualityofqueso.packet.ManualItemPickupC2SPacket;
-import net.dillon.qualityofqueso.platform.MultiLoader;
 import net.dillon.qualityofqueso.util.GlowCountdown;
 import net.dillon.qualityofqueso.widget.SwapButton;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.fog.FogData;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -47,7 +46,7 @@ import static net.dillon.qualityofqueso.util.ModConstants.*;
  * Utility class for the Quality of Queso mod.
  */
 public class ModHelper {
-    private static final Logger LOGGER = LoggerFactory.getLogger("Quality of Queso");
+    public static final Logger LOGGER = LoggerFactory.getLogger("Quality of Queso");
 
     public static boolean LOADED = false;
     private static boolean UNLOADED = false;
@@ -60,20 +59,6 @@ public class ModHelper {
      */
     public static Identifier ofQoQ(String name) {
         return Identifier.fromNamespaceAndPath("qualityofqueso", name);
-    }
-
-    /**
-     * @return the current Minecraft screen.
-     */
-    public static Screen getCurrentScreen() {
-        return Minecraft.getInstance().gui.screen();
-    }
-
-    /**
-     * Sets the current screen.
-     */
-    public static void setScreen(Screen screen) {
-        Minecraft.getInstance().gui.setScreen(screen);
     }
 
     /**
@@ -102,20 +87,6 @@ public class ModHelper {
      */
     public static void debug(String message) {
         LOGGER.debug(message);
-    }
-
-    /**
-     * Rounds the value to the nearest tenths place.
-     */
-    public static double round(double d) {
-        return Math.round(d * 10.0) / 10.0;
-    }
-
-    /**
-     * Rounds a value to the nearest hundredths place.
-     */
-    public static double roundBig(double d) {
-        return Math.round(d * 100.0) / 100.0;
     }
 
     /**
@@ -550,7 +521,7 @@ public class ModHelper {
         String safeAndUnderscore = safe + "_";
 
         // Resolve the multi-server config directory, located in .minecraft/config/qualityofqueso/server-configs/*server-name*
-        File serverDir = MultiLoader.getPlatform().getConfigDir()
+        File serverDir = Platforms.getCommonPlatform().configDir()
                 .resolve(DEFAULT_SERVER_CONFIG_DIR + safe)
                 .toFile();
 

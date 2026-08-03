@@ -13,7 +13,7 @@ public class LockedContainerSlots {
     public static final LockedContainerSlotsHandler INSTANCE = new LockedContainerSlotsHandler();
     public Map<String, List<Integer>> lockedContainerSlots = new HashMap<>();
 
-    public static class LockedContainerSlotsHandler extends BaseOptions<LockedContainerSlots> {
+    public static class LockedContainerSlotsHandler extends ModBaseOptions<LockedContainerSlots> {
 
         protected LockedContainerSlotsHandler() {
             super(ModConstants.DEFAULT_LOCKED_CONTAINER_SLOTS_FILE_NAME);

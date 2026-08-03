@@ -1,5 +1,7 @@
 package net.dillon.qualityofqueso.packet;
 
+import net.dillon.dillonlib.annotation.Dill;
+import net.dillon.dillonlib.annotation.DillType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -11,6 +13,7 @@ import net.minecraft.resources.Identifier;
  *
  * @param pos the shulker block position.
  */
+@Dill(DillType.COMMON)
 public record RequestShulkerStateC2SPacket(BlockPos pos) implements CustomPacketPayload {
     private static final Identifier ID = Identifier.fromNamespaceAndPath("qualityofqueso", "request_shulker_state");
     public static final Type<RequestShulkerStateC2SPacket> PACKET_TYPE = new Type<>(ID);

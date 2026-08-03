@@ -10,9 +10,11 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 
 import java.util.function.Supplier;
 
+import static net.dillon.dillonlib.task.ClientTasks.getScreen;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.isInventoryScreen;
 import static net.dillon.qualityofqueso.helper.MethodHelper.getHoveredSlot;
-import static net.dillon.qualityofqueso.helper.ModHelper.*;
+import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
+import static net.dillon.qualityofqueso.helper.ModHelper.ofQoQ;
 import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.hasAllQuickDropModifiersDown;
 import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.hasDropOnlyOneItemKeyDown;
 import static net.dillon.qualityofqueso.util.ModConstants.MOVE_ONE_PATH;
@@ -28,7 +30,7 @@ public class QuickDropButton extends QuesoButton {
 
     @Override
     protected String getAppendedTooltip() {
-        return isInventoryScreen(getCurrentScreen()) ? ".inventory" : super.getAppendedTooltip();
+        return isInventoryScreen(getScreen()) ? ".inventory" : super.getAppendedTooltip();
     }
 
     /**
@@ -49,13 +51,13 @@ public class QuickDropButton extends QuesoButton {
         boolean shortcutKeyPressed = hasAllQuickDropModifiersDown();
         if (shortcutKeyPressed) {
             String outline = "quick_drop_all";
-            if (getCurrentScreen() instanceof AbstractContainerScreen<?> screen && getHoveredSlot(screen) != null && getHoveredSlot(screen).hasItem()) {
+            if (getScreen() instanceof AbstractContainerScreen<?> screen && getHoveredSlot(screen) != null && getHoveredSlot(screen).hasItem()) {
                 outline = "quick_drop_hovered";
             }
             ButtonHelper.drawButtonTexture(graphics, "quick_drop/" + outline, this);
         }
         if (hasDropOnlyOneItemKeyDown()
-                && ((clientOptionsInstance().getManagementOptions().scrollMoving && ((this.isHovered()) || getCurrentScreen() instanceof AbstractContainerScreen<?> screen && getHoveredSlot(screen) != null && getHoveredSlot(screen).hasItem())) || shortcutKeyPressed)) {
+                && ((clientOptionsInstance().getManagementOptions().scrollMoving && ((this.isHovered()) || getScreen() instanceof AbstractContainerScreen<?> screen && getHoveredSlot(screen) != null && getHoveredSlot(screen).hasItem())) || shortcutKeyPressed)) {
             ButtonHelper.drawButtonTexture(graphics, MOVE_ONE_PATH, this);
         }
     }

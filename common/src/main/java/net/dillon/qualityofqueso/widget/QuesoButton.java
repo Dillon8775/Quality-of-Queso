@@ -1,6 +1,6 @@
 package net.dillon.qualityofqueso.widget;
 
-import net.dillon.qualityofqueso.util.ModTexts;
+import net.dillon.dillonlib.util.Texts;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -18,12 +18,14 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.function.Supplier;
 
+import static net.dillon.dillonlib.task.ClientTasks.getScreen;
 import static net.dillon.qualityofqueso.helper.ButtonHelper.drawButtonTexture;
 import static net.dillon.qualityofqueso.helper.ButtonHelper.getWidgetPath;
 import static net.dillon.qualityofqueso.helper.GuiHelper.drawTooltip;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
 import static net.dillon.qualityofqueso.helper.MethodHelper.getHoveredSlot;
-import static net.dillon.qualityofqueso.helper.ModHelper.*;
+import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
+import static net.dillon.qualityofqueso.helper.ModHelper.ofQoQ;
 import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.*;
 import static net.dillon.qualityofqueso.util.ModConstants.*;
 
@@ -43,7 +45,7 @@ public class QuesoButton extends Button {
      * Constructs a default transfer button.
      */
     public QuesoButton(AbstractContainerMenu menu, Font font, String searchFieldText, String resourceLocation, String buttonName, boolean transferrableButton, OnPress onPress) {
-        super(0, 0, 10, 10, ModTexts.BLANK, onPress, DEFAULT_NARRATION);
+        super(0, 0, 10, 10, Texts.BLANK, onPress, DEFAULT_NARRATION);
         this.menu = menu;
         this.font = font;
         this.searchFieldText = searchFieldText;
@@ -57,7 +59,7 @@ public class QuesoButton extends Button {
      * Constructs a default transfer button with a boolean supplier, determining if the button can be active or not.
      */
     public QuesoButton(AbstractContainerMenu menu, Font font, String searchFieldText, String resourceLocation, String buttonName, boolean transferrableButton, OnPress onPress, Supplier<Boolean> canBeActive) {
-        super(0, 0, 10, 10, ModTexts.BLANK, onPress, DEFAULT_NARRATION);
+        super(0, 0, 10, 10, Texts.BLANK, onPress, DEFAULT_NARRATION);
         this.menu = menu;
         this.font = font;
         this.searchFieldText = searchFieldText;
@@ -113,10 +115,10 @@ public class QuesoButton extends Button {
             return;
         }
 
-        Screen screen = getCurrentScreen();
+        Screen screen = getScreen();
         if (canScrollMoveAndHasScrollModifierDown() && clientOptionsInstance().getManagementOptions().scrollMoving && (isValidScreenForSingularMoving(screen, true))) {
             if (this.isHovered() ||
-                    (getCurrentScreen() instanceof AbstractContainerScreen<?> abstractContainerScreen
+                    (getScreen() instanceof AbstractContainerScreen<?> abstractContainerScreen
                             && getHoveredSlot(abstractContainerScreen) != null && getHoveredSlot(abstractContainerScreen).hasItem())) {
                 drawButtonTexture(graphics, MOVE_ONE_PATH, this);
             }
@@ -136,7 +138,7 @@ public class QuesoButton extends Button {
             return;
         }
 
-        Screen screen = getCurrentScreen();
+        Screen screen = getScreen();
         if (screen != null) {
             if (isBrewingStandScreen(screen)) {
                 drawTooltip(Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.brewing_stand"), graphics, this.font, mouseX, mouseY);
@@ -225,7 +227,7 @@ public class QuesoButton extends Button {
                                                          "_tag.png" : this.searchFieldText.startsWith(":") ?
                                                                       "_matching.png" : ".png";
         String appended = this.transferrableButton && this.canBeActive.get() ? transferableString : ".png";
-        Screen screen = getCurrentScreen();
+        Screen screen = getScreen();
 
         if (screen == null) {
             return appended;
@@ -252,7 +254,7 @@ public class QuesoButton extends Button {
     protected final boolean movingOrDroppingOne() {
         return clientOptionsInstance().getManagementOptions().scrollMoving && (this.buttonName.equals(QUICK_DROP_BUTTON_NAME)
                 ? hasDropOnlyOneItemKeyDown()
-                : getCurrentScreen() instanceof AbstractContainerScreen<?> && canScrollMoveAndHasScrollModifierDown());
+                : getScreen() instanceof AbstractContainerScreen<?> && canScrollMoveAndHasScrollModifierDown());
     }
 
     /**

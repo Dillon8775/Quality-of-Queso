@@ -16,12 +16,12 @@ import net.minecraft.world.item.crafting.display.RecipeDisplayId;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import static net.dillon.dillonlib.task.ClientTasks.getScreen;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.isCraftingScreen;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.isInventoryScreen;
 import static net.dillon.qualityofqueso.helper.MethodHelper.getRecipeBookComponent;
 import static net.dillon.qualityofqueso.helper.MethodHelper.performClickSlot;
 import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
-import static net.dillon.qualityofqueso.helper.ModHelper.getCurrentScreen;
 
 /**
  * Handles clicking slots.
@@ -154,7 +154,7 @@ public class ClickSlotInstance extends ManagementInstance {
             return;
         }
 
-        if (!(getCurrentScreen() instanceof MerchantScreen merchantScreen)) {
+        if (!(getScreen() instanceof MerchantScreen merchantScreen)) {
             activeTradeAllTask = null;
             return;
         }
@@ -208,12 +208,12 @@ public class ClickSlotInstance extends ManagementInstance {
             return;
         }
 
-        if (!isCraftingScreen(getCurrentScreen()) && !isInventoryScreen(getCurrentScreen())) {
+        if (!isCraftingScreen(getScreen()) && !isInventoryScreen(getScreen())) {
             activeBulkCraftTask = null;
             return;
         }
 
-        if (!(getCurrentScreen() instanceof AbstractContainerScreen<?> screen)) {
+        if (!(getScreen() instanceof AbstractContainerScreen<?> screen)) {
             activeBulkCraftTask = null;
             return;
         }

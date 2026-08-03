@@ -21,9 +21,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static net.dillon.dillonlib.task.ClientTasks.openScreen;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.playButtonSound;
 import static net.dillon.qualityofqueso.helper.MethodHelper.key;
-import static net.dillon.qualityofqueso.helper.ModHelper.setScreen;
 
 /**
  * Set filtered items in a container (fully 100% client-side).
@@ -179,7 +179,7 @@ public class FilterItemsScreen extends Screen {
     public void onClose() {
         ContainerHelper.setCurrentPlaceholderStacks(this.placeholders);
         ContainerHelper.RETURNING_FROM_PLACEHOLDER_SCREEN = true;
-        setScreen(this.parentScreen);
+        openScreen(this.parentScreen);
         playButtonSound(this.minecraft);
     }
 

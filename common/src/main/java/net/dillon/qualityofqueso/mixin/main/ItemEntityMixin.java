@@ -1,5 +1,7 @@
 package net.dillon.qualityofqueso.mixin.main;
 
+import net.dillon.dillonlib.annotation.Dill;
+import net.dillon.dillonlib.annotation.DillType;
 import net.dillon.qualityofqueso.server.DedicatedServerStorage;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -10,6 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import static net.dillon.qualityofqueso.helper.ModHelper.commonOptionsInstance;
 
+@Dill(DillType.COMMON)
 @Mixin(ItemEntity.class)
 public class ItemEntityMixin {
 

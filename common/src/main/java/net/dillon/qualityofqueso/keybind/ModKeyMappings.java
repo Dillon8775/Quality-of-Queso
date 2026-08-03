@@ -8,6 +8,7 @@ import net.dillon.qualityofqueso.screen.VisualTimeScreen;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 
+import static net.dillon.dillonlib.task.ClientTasks.openScreen;
 import static net.dillon.qualityofqueso.helper.ModHelper.*;
 
 /**
@@ -55,7 +56,7 @@ public class ModKeyMappings {
                     KeyModifiers.none().addCustomModifier(InputConstants.KEY_TAB)
             ))
             .handleWorldInput(event -> {
-                setScreen(new MainMenuScreen(null));
+                openScreen(new MainMenuScreen(null));
                 return true;
             })
             .build();
@@ -65,7 +66,7 @@ public class ModKeyMappings {
             .withDefault(InputBinding.key(InputConstants.KEY_V, KeyModifiers.of(KeyModifier.CONTROL)))
             .handleWorldInput(event -> {
                 if (mixinOptionsInstance().clockManagerMixin) {
-                    setScreen(new VisualTimeScreen(null));
+                    openScreen(new VisualTimeScreen(null));
                     return true;
                 }
                 return false;
@@ -97,7 +98,7 @@ public class ModKeyMappings {
             .handleWorldInput(event -> {
                 Minecraft minecraft =  Minecraft.getInstance();
                 if (modEnabled(minecraft) && minecraft.level != null && minecraft.player != null) {
-                    setScreen(new EnderChestPreviewScreen());
+                    openScreen(new EnderChestPreviewScreen());
                     return true;
                 }
                 return false;

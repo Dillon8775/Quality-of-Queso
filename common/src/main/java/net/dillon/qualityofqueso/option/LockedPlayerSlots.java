@@ -13,7 +13,7 @@ public class LockedPlayerSlots {
     public static final LockedPlayerSlotsHandler INSTANCE = new LockedPlayerSlotsHandler();
     public Map<String, List<Integer>> lockedPlayerSlots = new HashMap<>();
 
-    public static class LockedPlayerSlotsHandler extends BaseOptions<LockedPlayerSlots> {
+    public static class LockedPlayerSlotsHandler extends ModBaseOptions<LockedPlayerSlots> {
 
         protected LockedPlayerSlotsHandler() {
             super(ModConstants.DEFAULT_LOCKED_PLAYER_SLOTS_FILE_NAME);

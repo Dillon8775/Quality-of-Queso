@@ -9,9 +9,12 @@ import net.dillon.qualityofqueso.option.eum.hud.ArmorStatus;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 
+import static net.dillon.dillonlib.util.Arithmetics.round;
+import static net.dillon.dillonlib.util.Arithmetics.roundBig;
 import static net.dillon.qualityofqueso.config.ConfigurationScreen.fixedSizeImage;
 import static net.dillon.qualityofqueso.config.ConfigurationScreen.fixedSizeWebpImage;
-import static net.dillon.qualityofqueso.helper.ModHelper.*;
+import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
+import static net.dillon.qualityofqueso.helper.ModHelper.ofQoQ;
 
 /**
  * The Hud options category for the {@link ConfigurationScreen}.

@@ -1,5 +1,7 @@
 package net.dillon.qualityofqueso.packet;
 
+import net.dillon.dillonlib.annotation.Dill;
+import net.dillon.dillonlib.annotation.DillType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -9,6 +11,7 @@ import net.minecraft.resources.Identifier;
 /**
  * Sends the player's client-side options to the server.
  */
+@Dill(DillType.COMMON)
 public record ClientPreferencesC2SPacket(boolean includeHotbar,
                                          boolean perpendicularQuickMoving,
                                          String lockInventory) implements CustomPacketPayload {

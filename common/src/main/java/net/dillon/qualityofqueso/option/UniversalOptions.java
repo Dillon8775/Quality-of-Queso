@@ -15,7 +15,7 @@ public class UniversalOptions {
     public boolean multiServerConfigs = false;
     public List<String> blacklistedServers = new ArrayList<>();
 
-    public static class UniversalOptionsHandler extends BaseOptions<UniversalOptions> {
+    public static class UniversalOptionsHandler extends ModBaseOptions<UniversalOptions> {
 
         protected UniversalOptionsHandler() {
             super(ModConstants.DEFAULT_UNIVERSAL_CONFIG_FILE_NAME);

@@ -1,6 +1,6 @@
 package net.dillon.qualityofqueso.mixin;
 
-import net.dillon.qualityofqueso.util.MixinPluginUtil;
+import net.dillon.qualityofqueso.util.QualityOfQuesoMixinPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 
@@ -11,7 +11,8 @@ public class ConditionalMixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-        return !MixinPluginUtil.shouldNotApply(targetClassName, mixinClassName);
+        QualityOfQuesoMixinPlugin qoQMixinPlugin = new QualityOfQuesoMixinPlugin();
+        return !qoQMixinPlugin.shouldNotApply(targetClassName, mixinClassName);
     }
 
     @Override

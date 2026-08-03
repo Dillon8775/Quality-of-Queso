@@ -17,9 +17,11 @@ import net.minecraft.util.FormattedCharSequence;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.CancellationException;
 
+import static net.dillon.dillonlib.task.ClientTasks.getScreen;
 import static net.dillon.qualityofqueso.helper.ButtonHelper.getWidgetPath;
 import static net.dillon.qualityofqueso.helper.GuiHelper.drawTooltip;
-import static net.dillon.qualityofqueso.helper.ModHelper.*;
+import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
+import static net.dillon.qualityofqueso.helper.ModHelper.ofQoQ;
 import static net.dillon.qualityofqueso.util.ModConstants.DEFAULT_TRANSPARENT_SEARCH_BAR_TEXT_COLOR;
 import static net.dillon.qualityofqueso.util.ModConstants.SEARCH_TEXTURE;
 
@@ -127,7 +129,7 @@ public class SearchBar extends EditBox {
                         this.getX() - 3, this.getY() - 3, OVERLAY_WIDTH, OVERLAY_HEIGHT);
             }
             if (!this.isFocused() && this.getValue().isEmpty() && clientOptionsInstance().getGeneralOptions().theme.searchBarTransparent()) {
-                graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SEARCH_TEXTURE, this.getX() + (getCurrentScreen() instanceof InventoryScreen ? 78 : 80), this.getY(), 12, 12);
+                graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SEARCH_TEXTURE, this.getX() + (getScreen() instanceof InventoryScreen ? 78 : 80), this.getY(), 12, 12);
             }
         }
         super.extractWidgetRenderState(graphics, mouseX, mouseY, deltaTicks);

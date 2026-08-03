@@ -34,6 +34,13 @@ ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.${ mod_id }]]
+modId = "dillonlib"
+mandatory = true
+versionRange = "[${dillonlib_version},)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.${ mod_id }]]
 modId="controlify"
 type="incompatible"
 versionRange="[0,)"

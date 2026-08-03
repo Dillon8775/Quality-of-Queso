@@ -1,5 +1,7 @@
 package net.dillon.qualityofqueso.mixin.main;
 
+import net.dillon.dillonlib.annotation.Dill;
+import net.dillon.dillonlib.annotation.DillType;
 import net.dillon.qualityofqueso.util.GlowCountdown;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.decoration.HangingEntity;
@@ -17,6 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  * Tracks glow countdown and removes the glow effect when the countdown reaches 0.
  * <p>We do it like this so the timer resumes even when the chunk becomes unloaded or the player leaves and rejoins the world.</p>
  */
+@Dill(DillType.COMMON)
 @Mixin(ItemFrame.class)
 public abstract class ItemFrameMixin extends HangingEntity implements GlowCountdown {
     @Unique

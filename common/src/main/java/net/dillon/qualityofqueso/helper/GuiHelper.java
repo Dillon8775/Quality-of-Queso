@@ -18,7 +18,6 @@ import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
@@ -41,6 +40,7 @@ import java.awt.*;
 import java.util.List;
 import java.util.Set;
 
+import static net.dillon.dillonlib.task.ClientTasks.*;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
 import static net.dillon.qualityofqueso.helper.MethodHelper.*;
 import static net.dillon.qualityofqueso.helper.ModHelper.*;
@@ -50,20 +50,6 @@ import static net.dillon.qualityofqueso.util.ModConstants.*;
  * Utility class for GUI-related things.
  */
 public class GuiHelper {
-
-    /**
-     * @return the GUI width.
-     */
-    public static int getGuiWidth(GuiGraphicsExtractor context) {
-        return context.guiWidth() / 2;
-    }
-
-    /**
-     * @return the GUI height.
-     */
-    public static int getGuiHeight(GuiGraphicsExtractor context) {
-        return context.guiHeight() - 20;
-    }
 
     /**
      * Draws a tooltip on a screen for anything other than a search bar.
@@ -76,7 +62,7 @@ public class GuiHelper {
      * Draws a tooltip in a screen.
      */
     public static void drawTooltip(Component tooltip, GuiGraphicsExtractor graphics, Font font, int mouseX, int mouseY, boolean searchBar) {
-        Screen screen = getCurrentScreen();
+        Screen screen = getScreen();
         boolean validScreen = isValidScreen(screen) || isOtherValidScreen(screen);
         int x = validScreen ? getTooltipX(graphics, screen, mouseX) : mouseX;
         int y = validScreen ? getTooltipY(CURRENT_CONTAINER, screen, mouseY, searchBar) : mouseY;
@@ -266,8 +252,8 @@ public class GuiHelper {
     /**
      * Plays a generic ding sound.
      */
-    public static void playDingSound(Minecraft minecraft) {
-        minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.ARROW_HIT_PLAYER, 0.2F, 0.72F));
+    public static void playDingSound() {
+        playLocalSound(SoundEvents.ARROW_HIT_PLAYER, 0.2F, 0.72F);
     }
 
     /**

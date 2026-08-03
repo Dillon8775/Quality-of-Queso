@@ -1,8 +1,9 @@
 package net.dillon.qualityofqueso.screen;
 
+import net.dillon.dillonlib.platform.Platforms;
 import net.dillon.qualityofqueso.helper.ButtonHelper;
 import net.dillon.qualityofqueso.helper.ModHelper;
-import net.dillon.qualityofqueso.platform.MultiLoader;
+import net.dillon.qualityofqueso.platform.QualityOfQuesoPlatforms;
 import net.dillon.qualityofqueso.util.KeybindScrollHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.OptionInstance;
@@ -10,7 +11,6 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.SpriteIconButton;
-import net.minecraft.client.gui.screens.ConfirmLinkScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.options.OptionsSubScreen;
 import net.minecraft.client.gui.screens.options.controls.KeyBindsScreen;
@@ -27,6 +27,8 @@ import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
 
+import static net.dillon.dillonlib.task.ClientTasks.openLink;
+import static net.dillon.dillonlib.task.ClientTasks.openScreen;
 import static net.dillon.qualityofqueso.helper.ButtonHelper.*;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.buttonActive;
 import static net.dillon.qualityofqueso.helper.ModHelper.*;
@@ -62,7 +64,7 @@ public abstract class AbstractModScreen extends OptionsSubScreen {
      */
     protected void openKeybinds() {
         KeybindScrollHelper.requestScroll();
-        setScreen(new KeyBindsScreen(this, this.options));
+        openScreen(new KeyBindsScreen(this, this.options));
     }
 
     /**
@@ -82,7 +84,7 @@ public abstract class AbstractModScreen extends OptionsSubScreen {
      * Opens the config directory.
      */
     private void openConfigDirectory() {
-        Util.getPlatform().openFile(MultiLoader.getPlatform().getConfigDir().resolve("qualityofqueso").toFile());
+        Util.getPlatform().openFile(Platforms.getCommonPlatform().configDir().resolve("qualityofqueso").toFile());
     }
 
     @Override
@@ -134,7 +136,7 @@ public abstract class AbstractModScreen extends OptionsSubScreen {
                 this.viewLastKnownEnderChestButton = this.addRenderableWidget(ButtonHelper.createSpriteIconButton(
                         ofQoQ(ENDER_CHEST),
                         (button) -> {
-                            setScreen(new EnderChestPreviewScreen());
+                            openScreen(new EnderChestPreviewScreen());
                         },
                         Component.translatable("qualityofqueso.gui.view_ender_chest.tooltip")
                 ));
@@ -151,13 +153,13 @@ public abstract class AbstractModScreen extends OptionsSubScreen {
 
         this.wikiButton = this.addRenderableWidget(ButtonHelper.createSpriteIconButton(
                 ofQoQ(WIKI_TEXTURE),
-                ConfirmLinkScreen.confirmLink(this, WIKI_LINK, false),
+                (button) -> openLink(this, WIKI_LINK, false),
                 Component.translatable("qualityofqueso.gui.learn_more")
         ));
 
         this.discordButton = this.addRenderableWidget(ButtonHelper.createSpriteIconButton(
                 ofQoQ(DISCORD_TEXTURE),
-                ConfirmLinkScreen.confirmLink(this, DISCORD_LINK, false),
+                (button) -> openLink(this, DISCORD_LINK, false),
                 Component.translatable("qualityofqueso.gui.discord")
         ));
 
@@ -171,7 +173,7 @@ public abstract class AbstractModScreen extends OptionsSubScreen {
     public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks) {
         int textWidth = this.width - 20;
         int textHeight = this.height - 21;
-        int imageWidth = this.width - MultiLoader.getPlatform().getVersionType().getWidthModifier();
+        int imageWidth = this.width - QualityOfQuesoPlatforms.getPlatform().logoWidth().getWidthModifier();
         int imageHeight = this.height - 26;
         graphics.centeredText(this.font, VERSION, textWidth, textHeight, CommonColors.WHITE);
         graphics.blit(RenderPipelines.GUI_TEXTURED, ofQoQ("textures/gui/sprites/" + CHEESE_WHEEL_TEXTURE + ".png"), imageWidth, imageHeight, 0.0F, 0.0F, 18, 18, 18, 18);

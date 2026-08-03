@@ -3,6 +3,7 @@ package net.dillon.qualityofqueso.mixin.client.screen;
 import com.llamalad7.mixinextras.expression.Definition;
 import com.llamalad7.mixinextras.expression.Expression;
 import com.llamalad7.mixinextras.sugar.Local;
+import net.dillon.dillonlib.mixinplugin.PredicateSigned;
 import net.dillon.qualityofqueso.helper.ButtonHelper;
 import net.dillon.qualityofqueso.option.eum.general.MenuButton;
 import net.dillon.qualityofqueso.screen.EnderChestPreviewScreen;
@@ -23,12 +24,15 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import static net.dillon.dillonlib.task.ClientTasks.drawSmallSprite;
+import static net.dillon.dillonlib.task.ClientTasks.openScreen;
 import static net.dillon.qualityofqueso.helper.ButtonHelper.getConfigButtonX;
 import static net.dillon.qualityofqueso.helper.ButtonHelper.getConfigButtonY;
 import static net.dillon.qualityofqueso.helper.GuiHelper.drawTooltip;
 import static net.dillon.qualityofqueso.helper.ModHelper.*;
 import static net.dillon.qualityofqueso.util.ModConstants.*;
 
+@PredicateSigned
 @Mixin(PauseScreen.class)
 public class PauseScreenMixin extends Screen {
     @Shadow
@@ -106,7 +110,7 @@ public class PauseScreenMixin extends Screen {
             SpriteIconButton viewLastKnownEnderChestButton = ButtonHelper.createSpriteIconButton(
                     ofQoQ(ENDER_CHEST),
                     (b) -> {
-                        setScreen(new EnderChestPreviewScreen());
+                        openScreen(new EnderChestPreviewScreen());
                     },
                     Component.translatable("qualityofqueso.gui.view_ender_chest.tooltip")
             );
@@ -143,7 +147,7 @@ public class PauseScreenMixin extends Screen {
                 if (universalOptionsInstance().multiServerConfigs) {
                     graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ofQoQ(MULTI_CONFIG_TEXTURE), this.blacklistServerButton.getX() - 2, this.blacklistServerButton.getY() - 1, 16, 16);
                 }
-                ButtonHelper.drawTexture(graphics, this.isServerBlacklisted(address) ? DISABLED_TEXTURE : ENABLED_TEXTURE, this.blacklistServerButton);
+                drawSmallSprite(graphics, this.isServerBlacklisted(address) ? ofQoQ(DISABLED_TEXTURE) : ofQoQ(ENABLED_TEXTURE), this.blacklistServerButton);
 
                 Component tooltip = this.isServerBlacklisted(address) ?
                         Component.translatable("qualityofqueso.gui.remove_blacklisted_server") :

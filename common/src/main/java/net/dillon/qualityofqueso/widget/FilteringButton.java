@@ -12,8 +12,10 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 
+import static net.dillon.dillonlib.task.ClientTasks.getScreen;
+import static net.dillon.dillonlib.task.ClientTasks.openScreen;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.isDropperDispenserOrHopperScreen;
-import static net.dillon.qualityofqueso.helper.ModHelper.*;
+import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
 
 /**
  * A button to only transfer what is present in the opposite container.
@@ -71,7 +73,7 @@ public class FilteringButton extends ToggleableButton {
         if (trackedFilteringEnabled) {
             if (event.button() == 1) {
                 ContainerHelper.OPENING_PLACEHOLDER_SCREEN = true;
-                setScreen(new FilterItemsScreen(this.parent));
+                openScreen(new FilterItemsScreen(this.parent));
             } else {
                 ContainerHelper.cycleCurrentFilteringMode();
                 this.playDownSound(Minecraft.getInstance().getSoundManager());
@@ -90,7 +92,7 @@ public class FilteringButton extends ToggleableButton {
             default -> original = Component.translatable("qualityofqueso.gui.move_anything");
         }
         boolean trackedFilteringEnabled = ContainerHelper.isTrackedFilteringActive();
-        if (isDropperDispenserOrHopperScreen(getCurrentScreen())) {
+        if (isDropperDispenserOrHopperScreen(getScreen())) {
             return original;
         } else if (trackedFilteringEnabled) { // For filtered containers
             String filterType = ContainerHelper.CURRENT_FILTER_TYPE.tag()

@@ -8,10 +8,10 @@ import dev.isxander.yacl3.api.controller.BooleanControllerBuilder;
 import dev.isxander.yacl3.api.controller.EnumControllerBuilder;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
 import net.blay09.mods.balm.Balm;
+import net.dillon.dillonlib.platform.info.PlatformRelease;
 import net.dillon.qualityofqueso.option.eum.general.Theme;
 import net.dillon.qualityofqueso.option.eum.misc.ViewLastKnownEnderChestButton;
-import net.dillon.qualityofqueso.platform.MultiLoader;
-import net.dillon.qualityofqueso.platform.PlatformRelease;
+import net.dillon.qualityofqueso.platform.QualityOfQuesoPlatforms;
 import net.dillon.qualityofqueso.util.ModOptionUtil;
 import net.minecraft.network.chat.Component;
 
@@ -92,7 +92,7 @@ public class AccessibilityCategory {
                                                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.beta_warning.description")))
                                                 .binding(true, () -> clientOptionsInstance().getAccessibilityOptions().betaWarning, v -> clientOptionsInstance().getAccessibilityOptions().betaWarning = v)
                                                 .controller(BooleanControllerBuilder::create)
-                                                .available(mixinOptionsInstance().titleScreenMixin && MultiLoader.getPlatform().getReleaseType() != PlatformRelease.STABLE)
+                                                .available(mixinOptionsInstance().titleScreenMixin && QualityOfQuesoPlatforms.getPlatform().platformRelease() != PlatformRelease.STABLE)
                                                 .build()
                                 )
                                 .option(

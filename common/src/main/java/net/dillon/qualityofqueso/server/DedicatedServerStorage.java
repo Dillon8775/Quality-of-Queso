@@ -1,5 +1,8 @@
 package net.dillon.qualityofqueso.server;
 
+import net.dillon.dillonlib.annotation.Dill;
+import net.dillon.dillonlib.annotation.DillType;
+
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -7,6 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Stores server-synced client options and cached values.
  */
+@Dill(DillType.COMMON)
 public class DedicatedServerStorage {
     private static final Map<UUID, Boolean> INCLUDE_HOTBAR = new ConcurrentHashMap<>();
     private static final Map<UUID, Boolean> PERPENDICULAR_QUICK_MOVING = new ConcurrentHashMap<>();

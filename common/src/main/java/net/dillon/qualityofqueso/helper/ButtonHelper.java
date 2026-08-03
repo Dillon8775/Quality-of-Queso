@@ -1,24 +1,22 @@
 package net.dillon.qualityofqueso.helper;
 
-import net.dillon.qualityofqueso.platform.MultiLoader;
-import net.dillon.qualityofqueso.platform.PlatformName;
+import net.dillon.dillonlib.util.Texts;
+import net.dillon.qualityofqueso.platform.QualityOfQuesoPlatforms;
 import net.dillon.qualityofqueso.screen.AbstractModScreen;
 import net.dillon.qualityofqueso.screen.MainMenuScreen;
-import net.dillon.qualityofqueso.util.ModTexts;
 import net.dillon.qualityofqueso.widget.QuesoButton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.SpriteIconButton;
 import net.minecraft.client.gui.components.Tooltip;
-import net.minecraft.client.gui.screens.ConfirmLinkScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import net.minecraft.util.ARGB;
-import net.minecraft.util.CommonColors;
 
+import static net.dillon.dillonlib.task.ClientTasks.openLink;
+import static net.dillon.dillonlib.task.ClientTasks.openScreen;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.getTransferButtonXY;
 import static net.dillon.qualityofqueso.helper.ModHelper.*;
 import static net.dillon.qualityofqueso.util.ModConstants.CHEESE_WHEEL_TEXTURE;
@@ -30,25 +28,11 @@ import static net.dillon.qualityofqueso.util.ModConstants.YOUTUBE_TEXTURE;
 public class ButtonHelper {
 
     /**
-     * Draws a texture over a button without a custom fade.
-     */
-    public static void drawTexture(GuiGraphicsExtractor graphics, String name, Button button) {
-        drawTexture(graphics, name, button, 1.0F);
-    }
-
-    /**
      * Draws the texture for a {@code inventory management button.}
      */
     public static void drawButtonTexture(GuiGraphicsExtractor graphics, String name, QuesoButton button) {
         int xy = getTransferButtonXY(button);
         graphics.blit(RenderPipelines.GUI_TEXTURED, ofQoQ("textures/gui/sprites/button/" + name + ".png"), button.getX() - 1, button.getY() - 1, 0.0F, 0.0F, xy, xy, xy, xy);
-    }
-
-    /**
-     * Draws a texture over a button.
-     */
-    public static void drawTexture(GuiGraphicsExtractor graphics, String name, Button button, float f) {
-        graphics.blit(RenderPipelines.GUI_TEXTURED, ofQoQ("textures/gui/" + name + ".png"), button.getX() + 2, button.getY() + 2, 0.0F, 0.0F, 16, 16, 16, 16, ARGB.color(f, CommonColors.WHITE));
     }
 
     /**
@@ -62,7 +46,7 @@ public class ButtonHelper {
      * Creates the main Quality of Queso menu button.
      */
     public static SpriteIconButton createMainMenuButton(Screen parent) {
-        return createMenuButton(onPress -> setScreen(new MainMenuScreen(parent)), true);
+        return createMenuButton(onPress -> openScreen(new MainMenuScreen(parent)), true);
     }
 
     /**
@@ -83,7 +67,7 @@ public class ButtonHelper {
      * Creates a {@code YouTube} button.
      */
     public static SpriteIconButton createYouTubeButton(Screen parent, String link) {
-        return createSpriteIconButton(ofQoQ(YOUTUBE_TEXTURE), ConfirmLinkScreen.confirmLink(parent, link, false),
+        return createSpriteIconButton(ofQoQ(YOUTUBE_TEXTURE), (button) -> openLink(parent, link, false),
                 Component.translatable("qualityofqueso.gui.showcase.main.tooltip"));
     }
 
@@ -91,7 +75,7 @@ public class ButtonHelper {
      * Creates a {@link SpriteIconButton}.
      */
     public static SpriteIconButton createSpriteIconButton(Identifier sprite, Button.OnPress onPress, Component tooltip) {
-        SpriteIconButton button = SpriteIconButton.builder(ModTexts.BLANK, onPress, false)
+        SpriteIconButton button = SpriteIconButton.builder(Texts.BLANK, onPress, false)
                 .width(20)
                 .sprite(sprite, 16, 16)
                 .build();
@@ -135,7 +119,7 @@ public class ButtonHelper {
         if (universalOptionsInstance().menuButton.left() || universalOptionsInstance().menuButton.right()) {
             return height - 29;
         } else {
-            return height / 4 + 72 + (button * 24) - 16 + (MultiLoader.getPlatform().getPlatformName().equals(PlatformName.NEOFORGE) ? -6 : 0);
+            return height / 4 + 72 + (button * 24) - 16 + (QualityOfQuesoPlatforms.getPlatform().platformName().neoforge() ? -6 : 0);
         }
     }
 

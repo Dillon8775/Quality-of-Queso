@@ -1,5 +1,7 @@
 package net.dillon.qualityofqueso.packet;
 
+import net.dillon.dillonlib.annotation.Dill;
+import net.dillon.dillonlib.annotation.DillType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -17,6 +19,7 @@ import net.minecraft.resources.Identifier;
  * @param lockedSlotsCsv comma-separated locked slot indices.
  * @param sortingMode    current sorting mode enum name.
  */
+@Dill(DillType.COMMON)
 public record SyncShulkerStateS2CPacket(BlockPos pos, boolean filtered, boolean tagMode, String filterItemsCsv, String lockedSlotsCsv, String sortingMode) implements CustomPacketPayload {
     private static final Identifier ID = Identifier.fromNamespaceAndPath("qualityofqueso", "sync_shulker_state");
     public static final Type<SyncShulkerStateS2CPacket> PACKET_TYPE = new Type<>(ID);

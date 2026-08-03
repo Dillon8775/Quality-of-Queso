@@ -15,7 +15,7 @@ public class MixinOptions {
     public boolean clockManagerMixin = true;
     public boolean itemArgumentMixin = true;
 
-    public static class MixinHandler extends BaseOptions<MixinOptions> {
+    public static class MixinHandler extends ModBaseOptions<MixinOptions> {
 
         protected MixinHandler() {
             super(ModConstants.DEFAULT_MIXIN_CONFIG_FILE_NAME);

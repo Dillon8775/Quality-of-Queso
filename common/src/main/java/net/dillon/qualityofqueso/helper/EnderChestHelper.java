@@ -19,9 +19,9 @@ import net.minecraft.world.item.component.ItemContainerContents;
 
 import java.util.*;
 
+import static net.dillon.dillonlib.task.ClientTasks.getScreen;
 import static net.dillon.qualityofqueso.helper.ContainerHelper.worldKey;
 import static net.dillon.qualityofqueso.helper.ModHelper.containerDataInstance;
-import static net.dillon.qualityofqueso.helper.ModHelper.getCurrentScreen;
 
 /**
  * Handles persistent ender chest cache storage in container_data.json.
@@ -32,7 +32,7 @@ public class EnderChestHelper {
      * Saves current ender chest contents to {@link ContainerData} while the ender chest GUI is open.
      */
     public static void persistEnderChestContentsIfOpen(LocalPlayer player) {
-        Screen screen = getCurrentScreen();
+        Screen screen = getScreen();
         if (!(screen instanceof AbstractContainerScreen<?> containerScreen) || !isEnderChestScreen(containerScreen, player)) {
             return;
         }

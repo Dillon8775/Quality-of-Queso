@@ -1,7 +1,7 @@
 package net.dillon.qualityofqueso.widget;
 
 import net.dillon.qualityofqueso.option.eum.management.LockInventory;
-import net.dillon.qualityofqueso.platform.MultiLoader;
+import net.dillon.qualityofqueso.platform.QualityOfQuesoPlatforms;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
@@ -45,6 +45,6 @@ public class LockInventoryButton extends ToggleableButton {
     }
 
     protected void activateButton() {
-        this.active = MultiLoader.getPlatform().canSendPacket(Minecraft.getInstance().player);
+        this.active = QualityOfQuesoPlatforms.getClientPlatform().canSendPacket(Minecraft.getInstance().player);
     }
 }

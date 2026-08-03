@@ -2,7 +2,7 @@ package net.dillon.qualityofqueso.event;
 
 import net.dillon.qualityofqueso.keybind.ModKeyMappings;
 import net.dillon.qualityofqueso.main.ClientEvents;
-import net.dillon.qualityofqueso.platform.MultiLoader;
+import net.dillon.qualityofqueso.platform.QualityOfQuesoPlatforms;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLevelEvents;
@@ -25,7 +25,7 @@ public class FabricClientEvents {
         ClientPlayConnectionEvents.JOIN.register((handler, packet, minecraft) -> {
             ClientEvents.onPlayerJoin(minecraft);
 
-            if (!MultiLoader.getPlatform().canSendPacket(null)) {
+            if (!QualityOfQuesoPlatforms.getClientPlatform().canSendPacket(minecraft.player)) {
                 ClientEvents.warnModNotPresent(minecraft);
             }
         });

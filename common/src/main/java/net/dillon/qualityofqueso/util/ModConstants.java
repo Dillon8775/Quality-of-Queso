@@ -1,7 +1,7 @@
 package net.dillon.qualityofqueso.util;
 
 import net.dillon.qualityofqueso.option.eum.management.sorting.CurrentSortingMode;
-import net.dillon.qualityofqueso.platform.MultiLoader;
+import net.dillon.qualityofqueso.platform.QualityOfQuesoPlatforms;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -21,7 +21,7 @@ import static net.dillon.qualityofqueso.helper.ModHelper.ofQoQ;
 public class ModConstants {
     // Common constants
     public static final String MOD_ID = "qualityofqueso";
-    public static final Component VERSION = Component.literal(MultiLoader.getPlatform().getModVersion()).withStyle(ChatFormatting.GOLD);
+    public static final Component VERSION = Component.literal(QualityOfQuesoPlatforms.getPlatform().modVersion()).withStyle(ChatFormatting.GOLD);
     public static final String WIKI_LINK = "https://quality-of-queso.fandom.com/wiki/Quality_of_Queso_Wiki";
     public static final String DISCORD_LINK = "https://discord.gg/vfqEAn4YFy";
     public static final String SHOWCASE_VIDEO_LINK = "https://youtu.be/02wfcgHkPmQ";

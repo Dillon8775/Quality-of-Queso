@@ -17,8 +17,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import static net.dillon.dillonlib.task.ClientTasks.getScreen;
 import static net.dillon.qualityofqueso.helper.MethodHelper.getRecipeBookComponent;
-import static net.dillon.qualityofqueso.helper.ModHelper.*;
+import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
+import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
 
 @Mixin(RecipeButton.class)
 public abstract class RecipeButtonMixin extends AbstractWidget {
@@ -39,7 +41,7 @@ public abstract class RecipeButtonMixin extends AbstractWidget {
             return;
         }
 
-        if (!(getCurrentScreen() instanceof AbstractContainerScreen<?> recipeScreen)) {
+        if (!(getScreen() instanceof AbstractContainerScreen<?> recipeScreen)) {
             return;
         }
 

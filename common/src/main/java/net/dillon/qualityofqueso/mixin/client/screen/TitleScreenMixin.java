@@ -4,9 +4,11 @@ import com.llamalad7.mixinextras.expression.Definition;
 import com.llamalad7.mixinextras.expression.Expression;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
+import net.dillon.dillonlib.mixinplugin.PredicateSigned;
+import net.dillon.dillonlib.platform.info.PlatformRelease;
 import net.dillon.qualityofqueso.helper.ButtonHelper;
-import net.dillon.qualityofqueso.platform.MultiLoader;
-import net.dillon.qualityofqueso.platform.PlatformRelease;
+import net.dillon.qualityofqueso.platform.ModReferences;
+import net.dillon.qualityofqueso.platform.QualityOfQuesoPlatforms;
 import net.dillon.qualityofqueso.screen.MainMenuScreen;
 import net.dillon.qualityofqueso.util.ModConstants;
 import net.minecraft.client.Minecraft;
@@ -22,8 +24,11 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-import static net.dillon.qualityofqueso.helper.ModHelper.*;
+import static net.dillon.dillonlib.task.ClientTasks.openScreen;
+import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
+import static net.dillon.qualityofqueso.helper.ModHelper.universalOptionsInstance;
 
+@PredicateSigned
 @Mixin(TitleScreen.class)
 public abstract class TitleScreenMixin extends Screen {
     @Shadow
@@ -40,7 +45,7 @@ public abstract class TitleScreenMixin extends Screen {
     @Expression("numberOfButtons = ?")
     @Inject(method = "init", at = @At(value = "MIXINEXTRAS:EXPRESSION", shift = At.Shift.AFTER))
     private void adjustAmountOfIconButtons(CallbackInfo ci, @Local(name = "numberOfButtons") LocalIntRef numberOfButtons) {
-        if (universalOptionsInstance().menuButton.enabled()) {
+        if (universalOptionsInstance().menuButton.enabled() && (numberOfButtons.get() > 3 || ModReferences.isModLoaded(ModReferences.MOD_MENU))) {
             numberOfButtons.set(numberOfButtons.get() + 1);
         }
     }
@@ -52,12 +57,12 @@ public abstract class TitleScreenMixin extends Screen {
     private void addButtonsAndWarning(CallbackInfo ci, int copyrightWidth, int copyrightX, int spacing, int topPos, int numberOfButtons, int currentButton, SpriteIconButton language, SpriteIconButton accessibility) {
         if (universalOptionsInstance().menuButton.enabled()) {
             SpriteIconButton menuButton = this.addRenderableWidget(ButtonHelper.createMenuButton(
-                    (button) -> setScreen(new MainMenuScreen(this)), true
+                    (button) -> openScreen(new MainMenuScreen(this)), true
             ));
             menuButton.setPosition(this.getHorizontalPosition(++currentButton, numberOfButtons, 20), topPos - 24);
         }
 
-        if (!ModConstants.SHOWN_BETA_TOAST && clientOptionsInstance().getAccessibilityOptions().betaWarning && MultiLoader.getPlatform().getReleaseType() != PlatformRelease.STABLE) {
+        if (!ModConstants.SHOWN_BETA_TOAST && clientOptionsInstance().getAccessibilityOptions().betaWarning && QualityOfQuesoPlatforms.getPlatform().platformRelease() != PlatformRelease.STABLE) {
             Minecraft.getInstance().gui.toastManager().addToast(new SystemToast(
                             SystemToast.SystemToastId.PERIODIC_NOTIFICATION,
                             Component.translatable("qualityofqueso.toast.title.beta_or_alpha"),

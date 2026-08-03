@@ -1,6 +1,8 @@
 package net.dillon.qualityofqueso.packet;
 
 import net.blay09.mods.balm.Balm;
+import net.dillon.dillonlib.annotation.Dill;
+import net.dillon.dillonlib.annotation.DillType;
 import net.dillon.qualityofqueso.option.ModCommonOptions;
 import net.dillon.qualityofqueso.server.DedicatedServerStorage;
 import net.dillon.qualityofqueso.util.GlowCountdown;
@@ -29,6 +31,7 @@ import java.util.stream.Collectors;
  * Server-safe packet handlers used during common packet registration.
  * This class must remain free of client-only Minecraft imports.
  */
+@Dill(DillType.COMMON)
 public class ServerPacketHandlers {
 
     /**

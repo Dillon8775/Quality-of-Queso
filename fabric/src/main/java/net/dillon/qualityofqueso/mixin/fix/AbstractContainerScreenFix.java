@@ -1,5 +1,6 @@
 package net.dillon.qualityofqueso.mixin.fix;
 
+import net.dillon.dillonlib.mixinplugin.PredicateSigned;
 import net.dillon.qualityofqueso.instance.QuesoScreen;
 import net.dillon.qualityofqueso.instance.management.ManagementInstance;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -9,6 +10,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
+@PredicateSigned
 @Mixin(AbstractContainerScreen.class)
 public class AbstractContainerScreenFix {
 

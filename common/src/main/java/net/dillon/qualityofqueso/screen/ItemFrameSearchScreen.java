@@ -1,10 +1,10 @@
 package net.dillon.qualityofqueso.screen;
 
 import net.blay09.mods.balm.Balm;
+import net.dillon.dillonlib.util.Texts;
 import net.dillon.qualityofqueso.option.ModClientOptions;
 import net.dillon.qualityofqueso.packet.GlowSearchC2SPacket;
 import net.dillon.qualityofqueso.util.ListOptions;
-import net.dillon.qualityofqueso.util.ModTexts;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -17,9 +17,9 @@ import net.minecraft.util.CommonColors;
 import org.jspecify.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
+import static net.dillon.dillonlib.task.ClientTasks.openScreen;
 import static net.dillon.qualityofqueso.helper.GuiHelper.drawTooltip;
 import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
-import static net.dillon.qualityofqueso.helper.ModHelper.setScreen;
 
 /**
  * A utility screen to search for all nearby item frames. If an item frame is found, it glows.
@@ -30,7 +30,7 @@ public class ItemFrameSearchScreen extends Screen {
     private final Screen parent;
 
     public ItemFrameSearchScreen(@Nullable Screen parent) {
-        super(ModTexts.BLANK);
+        super(Texts.BLANK);
         this.parent = parent;
     }
 
@@ -59,7 +59,7 @@ public class ItemFrameSearchScreen extends Screen {
     private void close(boolean backToParent) {
         ModClientOptions.INSTANCE.update(options -> options.getSearchingOptions().savedItemFrameSearchText = this.searchField.getValue());
         if (backToParent && this.parent != null) {
-            setScreen(this.parent);
+            openScreen(this.parent);
         } else {
             super.onClose();
         }

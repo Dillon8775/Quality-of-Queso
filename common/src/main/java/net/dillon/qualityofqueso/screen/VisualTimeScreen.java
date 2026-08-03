@@ -1,8 +1,8 @@
 package net.dillon.qualityofqueso.screen;
 
+import net.dillon.dillonlib.util.Texts;
 import net.dillon.qualityofqueso.helper.ModHelper;
 import net.dillon.qualityofqueso.util.ListOptions;
-import net.dillon.qualityofqueso.util.ModTexts;
 import net.dillon.qualityofqueso.util.VisualTimeTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -16,7 +16,9 @@ import net.minecraft.util.CommonColors;
 
 import java.util.Locale;
 
-import static net.dillon.qualityofqueso.helper.ModHelper.*;
+import static net.dillon.dillonlib.task.ClientTasks.openScreen;
+import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
+import static net.dillon.qualityofqueso.helper.ModHelper.ofQoQ;
 
 /**
  * A utility screen to change the visual time client-side.
@@ -27,7 +29,7 @@ public class VisualTimeScreen extends Screen {
     private final Screen parent;
 
     public VisualTimeScreen(Screen parent) {
-        super(ModTexts.BLANK);
+        super(Texts.BLANK);
         this.parent = parent;
     }
 
@@ -38,7 +40,7 @@ public class VisualTimeScreen extends Screen {
 
     @Override
     public void onClose() {
-        setScreen(this.parent);
+        openScreen(this.parent);
     }
 
     @Override
