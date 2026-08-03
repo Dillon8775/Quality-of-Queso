@@ -71,6 +71,7 @@ tasks.register('curseforge', TaskPublishCurseForge) {
         mainFile.addRequirement("fabric-api")
         mainFile.addRequirement("balm")
         mainFile.addRequirement("yacl")
+        mainFile.addRequirement("dillonlib")
         def supportedVersions = supported_mc_versions
                 .split(",")
                 .collect { it.trim() }
@@ -103,5 +104,6 @@ modrinth {
         required.project "fabric-api"
         required.project "balm"
         required.project "yacl"
+        required.project "dillonlib"
     }
 }

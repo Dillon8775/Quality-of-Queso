@@ -4,6 +4,8 @@ import dev.isxander.yacl3.api.YetAnotherConfigLib;
 import dev.isxander.yacl3.gui.image.ImageRenderer;
 import dev.isxander.yacl3.gui.image.ImageRendererManager;
 import dev.isxander.yacl3.gui.image.impl.AnimatedDynamicTextureImage;
+import net.dillon.dillonlib.annotation.Dill;
+import net.dillon.dillonlib.annotation.DillType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -18,6 +20,7 @@ import static net.dillon.qualityofqueso.helper.ModHelper.saveAndApplyConfigs;
 /**
  * The main configuration screen for Quality of queso.
  */
+@Dill(DillType.CLIENT)
 public class ConfigurationScreen {
 
     public static YetAnotherConfigLib configScreen() {
