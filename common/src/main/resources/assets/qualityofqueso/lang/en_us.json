@@ -306,7 +306,7 @@
   "qualityofqueso.options.beta_warning": "Beta Warning",
   "qualityofqueso.options.beta_warning.description": "Displays a beta warning on game startup of the current Quality of Queso version is in a beta state.\n§7If this option is grayed out, your current Quality of Queso version is stable.",
   "qualityofqueso.options.optimize_item_argument": "Optimize Item Argument",
-  "qualityofqueso.options.optimize_item_argument.description": "Optimizes the item argument syntax when executing commands, and allows you to simply type §o*itemName*§r§f for any item (including modded items) registered in the game.\n§7For example, you no longer need to type §o*modId:itemName*§r§7 to give yourself a modded item. You can simply type §o*itemName*§r§7.",
+  "qualityofqueso.options.optimize_item_argument.description": "Optimizes the item argument syntax when executing commands, and allows you to simply type §o*itemName*§r§f for any item (including modded items) registered in the game.\n§7For example, you no longer need to type §o*modId:itemName*§r§7 to give yourself a modded item. You can simply type §o*itemName*§r§7.\nBe aware that using special nodes like components or custom data in your command may not work with this enabled.",
   "qualityofqueso.options.operator_items_tab.description": "Displays the creative mode operator items tab.",
   "qualityofqueso.options.ignore_fabric_tags": "Ignore Fabric Tags",
   "qualityofqueso.options.ignore_fabric_tags.description": "Ignores fabric tags when sorting by tag, as they can §osometimes §r§fof mess up the order and logic of sorting.\n§7This only applies for Fabric users.",

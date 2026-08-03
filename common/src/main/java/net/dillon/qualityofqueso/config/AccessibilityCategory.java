@@ -81,7 +81,7 @@ public class AccessibilityCategory {
                                                                 Component.translatable("qualityofqueso.options.optimize_item_argument.description")
                                                         )
                                                 ))
-                                                .binding(true, () -> commonOptionsInstance().optimizeItemArgument, v -> commonOptionsInstance().optimizeItemArgument = v)
+                                                .binding(false, () -> commonOptionsInstance().optimizeItemArgument, v -> commonOptionsInstance().optimizeItemArgument = v)
                                                 .controller(TickBoxControllerBuilder::create)
                                                 .available(mixinOptionsInstance().itemArgumentMixin)
                                                 .build()
