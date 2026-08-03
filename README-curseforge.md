@@ -298,7 +298,7 @@ Toggle sprinting, potion effects, flying, bow pulling, and submerged in fluid to
 
 ---
 
-# Requires [Balm](https://modrinth.com/mod/balm/versions) and [YetAnotherConfigLib](https://modrinth.com/mod/yacl/versions)!
+# Requires [DillonLib](https://modrinth.com/mod/dillon-lib/versions), [Balm](https://modrinth.com/mod/balm/versions) and [YetAnotherConfigLib](https://modrinth.com/mod/yacl/versions)!
 
 ---
 
