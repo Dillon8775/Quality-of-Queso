@@ -305,6 +305,8 @@
   "qualityofqueso.options.search_inventory.description": "Searches the player's inventory in addition to searching for items in a container.",
   "qualityofqueso.options.beta_warning": "Beta Warning",
   "qualityofqueso.options.beta_warning.description": "Displays a beta warning on game startup of the current Quality of Queso version is in a beta state.\n§7If this option is grayed out, your current Quality of Queso version is stable.",
+  "qualityofqueso.options.server_warnings": "Server Warnings",
+  "qualityofqueso.options.server_warnings.description": "Sends warning messages to the player upon joining a server that does not have Quality of Queso installed, or joining a server that bans certain Quality of Queso features.",
   "qualityofqueso.options.optimize_item_argument": "Optimize Item Argument",
   "qualityofqueso.options.optimize_item_argument.description": "Optimizes the item argument syntax when executing commands, and allows you to simply type §o*itemName*§r§f for any item (including modded items) registered in the game.\n§7For example, you no longer need to type §o*modId:itemName*§r§7 to give yourself a modded item. You can simply type §o*itemName*§r§7.\nBe aware that using special nodes like components or custom data in your command may not work with this enabled.",
   "qualityofqueso.options.operator_items_tab.description": "Displays the creative mode operator items tab.",

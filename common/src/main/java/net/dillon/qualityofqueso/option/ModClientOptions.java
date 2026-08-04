@@ -364,6 +364,7 @@ public class ModClientOptions {
         public boolean searchInventory = true;
         public boolean operatorItemsTab = true;
         public boolean betaWarning = true;
+        public boolean serverWarnings = true;
         public boolean ignoreFabricTags = false;
 
         public boolean darkerOverlay = false;

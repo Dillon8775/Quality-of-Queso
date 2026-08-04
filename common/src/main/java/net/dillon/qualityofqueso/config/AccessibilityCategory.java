@@ -97,6 +97,14 @@ public class AccessibilityCategory {
                                 )
                                 .option(
                                         Option.<Boolean>createBuilder()
+                                                .name(Component.translatable("qualityofqueso.options.server_warnings"))
+                                                .description(OptionDescription.of(Component.translatable("qualityofqueso.options.server_warnings.description")))
+                                                .binding(true, () -> clientOptionsInstance().getAccessibilityOptions().serverWarnings, v -> clientOptionsInstance().getAccessibilityOptions().serverWarnings = v)
+                                                .controller(BooleanControllerBuilder::create)
+                                                .build()
+                                )
+                                .option(
+                                        Option.<Boolean>createBuilder()
                                                 .name(Component.translatable("qualityofqueso.options.ignore_fabric_tags"))
                                                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.ignore_fabric_tags.description")))
                                                 .binding(false, () -> clientOptionsInstance().getAccessibilityOptions().ignoreFabricTags, v -> clientOptionsInstance().getAccessibilityOptions().ignoreFabricTags = v)
