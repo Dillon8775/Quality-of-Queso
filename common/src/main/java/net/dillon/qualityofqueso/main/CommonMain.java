@@ -41,6 +41,10 @@ public class CommonMain {
         } else if (QualityOfQuesoPlatforms.getPlatform().platformRelease() == PlatformRelease.ALPHA) {
             error("Please note that this version of Quality of Queso is in the alpha state, so there will be unknown bugs. Use at your own risk!");
         }
+
+        if (ModConstants.HAS_UPDATE) {
+            warn("A newer version of Quality of Queso is available. Download it here: https://modrinth.com/mod/quality-of-queso/versions");
+        }
     }
 
     /**

@@ -1,5 +1,6 @@
 package net.dillon.qualityofqueso.util;
 
+import net.dillon.dillonlib.util.UpdateChecker;
 import net.dillon.qualityofqueso.option.eum.management.sorting.CurrentSortingMode;
 import net.dillon.qualityofqueso.platform.QualityOfQuesoPlatforms;
 import net.minecraft.ChatFormatting;
@@ -22,6 +23,10 @@ public class ModConstants {
     // Common constants
     public static final String MOD_ID = "qualityofqueso";
     public static final Component VERSION = Component.literal(QualityOfQuesoPlatforms.getPlatform().modVersion()).withStyle(ChatFormatting.GOLD);
+    public static boolean HAS_UPDATE = UpdateChecker.hasUpdate(UpdateChecker.checkForUpdate(
+            "quality-of-queso",
+            VERSION.getString())
+    );
     public static final String WIKI_LINK = "https://quality-of-queso.fandom.com/wiki/Quality_of_Queso_Wiki";
     public static final String DISCORD_LINK = "https://discord.gg/vfqEAn4YFy";
     public static final String SHOWCASE_VIDEO_LINK = "https://youtu.be/02wfcgHkPmQ";

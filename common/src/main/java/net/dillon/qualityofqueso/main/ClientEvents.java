@@ -1,9 +1,12 @@
 package net.dillon.qualityofqueso.main;
 
+import net.dillon.dillonlib.task.CommonTasks;
 import net.dillon.qualityofqueso.helper.ModHelper;
+import net.dillon.qualityofqueso.util.ModConstants;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextColor;
 
 import static net.dillon.dillonlib.task.ClientTasks.executeIfClientPlayer;
 import static net.dillon.qualityofqueso.helper.ModHelper.*;
@@ -29,8 +32,8 @@ public class ClientEvents {
             clientOptionsInstance().getMiscOptions().antiRageQuit = true;
             saveAndApplyConfigs(minecraft);
         }
-        if (clientOptionsInstance().getAccessibilityOptions().serverWarnings && isOnServer(minecraft)) {
-            executeIfClientPlayer(localPlayer -> {
+        executeIfClientPlayer(localPlayer -> {
+            if (clientOptionsInstance().getAccessibilityOptions().serverWarnings && isOnServer(minecraft)) {
                 for (String server : bannedServers) {
                     if (minecraft.getCurrentServer().ip.contains(server)) {
                         localPlayer.sendSystemMessage(Component.translatable("qualityofqueso.gui.banned_server",
@@ -40,8 +43,14 @@ public class ClientEvents {
                 if (!universalOptionsInstance().multiServerConfigs) {
                     localPlayer.sendSystemMessage(Component.translatable("qualityofqueso.gui.enable_multi_server_configs"));
                 }
-            });
-        }
+            }
+            if (ModConstants.HAS_UPDATE) {
+                CommonTasks.sendUpdateMessage(localPlayer,
+                        Component.translatable("qualityofqueso.title").withStyle(ChatFormatting.GOLD),
+                        "https://modrinth.com/mod/quality-of-queso/versions",
+                        TextColor.GOLD.getValue());
+            }
+        });
         sendClientPreferencesToServer();
     }
 

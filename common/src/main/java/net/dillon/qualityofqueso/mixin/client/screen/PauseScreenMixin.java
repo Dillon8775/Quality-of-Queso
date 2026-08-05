@@ -4,6 +4,7 @@ import com.llamalad7.mixinextras.expression.Definition;
 import com.llamalad7.mixinextras.expression.Expression;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.dillon.dillonlib.mixinplugin.PredicateSigned;
+import net.dillon.dillonlib.task.ClientTasks;
 import net.dillon.qualityofqueso.helper.ButtonHelper;
 import net.dillon.qualityofqueso.option.eum.general.MenuButton;
 import net.dillon.qualityofqueso.screen.EnderChestPreviewScreen;
@@ -40,6 +41,8 @@ public class PauseScreenMixin extends Screen {
     private boolean showPauseMenu;
     @Shadow
     private Button disconnectButton;
+    @Unique
+    private SpriteIconButton menuButton;
     @Unique
     private Button blacklistServerButton, viewLastKnownEnderChestButton;
 
@@ -85,12 +88,12 @@ public class PauseScreenMixin extends Screen {
         boolean everywhere = universalOptionsInstance().menuButton == MenuButton.EVERYWHERE;
 
         int button = 0;
-        SpriteIconButton menuButton = ButtonHelper.createMainMenuButton(this);
+        this.menuButton = ButtonHelper.createMainMenuButton(this);
         if (everywhere) {
-            iconButtonRow.addChild(menuButton);
+            iconButtonRow.addChild(this.menuButton);
         } else {
-            this.addRenderableWidget(menuButton);
-            menuButton.setPosition(getConfigButtonX(this.width, button), getConfigButtonY(this.height, button));
+            this.addRenderableWidget(this.menuButton);
+            this.menuButton.setPosition(getConfigButtonX(this.width, button), getConfigButtonY(this.height, button));
             button++;
         }
 
@@ -107,7 +110,7 @@ public class PauseScreenMixin extends Screen {
         }
 
         if (clientOptionsInstance().getAccessibilityOptions().eChestButton.pauseScreen()) {
-            SpriteIconButton viewLastKnownEnderChestButton = ButtonHelper.createSpriteIconButton(
+            SpriteIconButton viewLastKnownEnderChestButton = ClientTasks.createSpriteIconButton(
                     ofQoQ(ENDER_CHEST),
                     (b) -> {
                         openScreen(new EnderChestPreviewScreen());
@@ -169,5 +172,7 @@ public class PauseScreenMixin extends Screen {
                 drawTooltip(Component.translatable("qualityofqueso.gui.view_ender_chest.tooltip"), graphics, this.font, mouseX, mouseY);
             }
         }
+
+        ClientTasks.renderUpdateIconOnButton(graphics, this.menuButton, HAS_UPDATE);
     }
 }

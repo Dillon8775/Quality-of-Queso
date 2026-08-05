@@ -6,12 +6,14 @@ import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
 import net.dillon.dillonlib.mixinplugin.PredicateSigned;
 import net.dillon.dillonlib.platform.info.PlatformRelease;
+import net.dillon.dillonlib.task.ClientTasks;
 import net.dillon.qualityofqueso.helper.ButtonHelper;
 import net.dillon.qualityofqueso.platform.ModReferences;
 import net.dillon.qualityofqueso.platform.QualityOfQuesoPlatforms;
 import net.dillon.qualityofqueso.screen.MainMenuScreen;
 import net.dillon.qualityofqueso.util.ModConstants;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.SpriteIconButton;
 import net.minecraft.client.gui.components.toasts.SystemToast;
 import net.minecraft.client.gui.screens.Screen;
@@ -19,6 +21,7 @@ import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -33,6 +36,8 @@ import static net.dillon.qualityofqueso.helper.ModHelper.universalOptionsInstanc
 public abstract class TitleScreenMixin extends Screen {
     @Shadow
     protected abstract int getHorizontalPosition(int par1, int par2, int par3);
+    @Unique
+    private SpriteIconButton menuButton;
 
     public TitleScreenMixin(Component pTitle) {
         super(pTitle);
@@ -56,10 +61,10 @@ public abstract class TitleScreenMixin extends Screen {
     @Inject(method = "init", at = @At("TAIL"), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
     private void addButtonsAndWarning(CallbackInfo ci, int copyrightWidth, int copyrightX, int spacing, int topPos, int numberOfButtons, int currentButton, SpriteIconButton language, SpriteIconButton accessibility) {
         if (universalOptionsInstance().menuButton.enabled()) {
-            SpriteIconButton menuButton = this.addRenderableWidget(ButtonHelper.createMenuButton(
+            this.menuButton = this.addRenderableWidget(ButtonHelper.createMenuButton(
                     (button) -> openScreen(new MainMenuScreen(this)), true
             ));
-            menuButton.setPosition(this.getHorizontalPosition(++currentButton, numberOfButtons, 20), topPos - 24);
+            this.menuButton.setPosition(this.getHorizontalPosition(++currentButton, numberOfButtons, 20), topPos - 24);
         }
 
         if (!ModConstants.SHOWN_BETA_TOAST && clientOptionsInstance().getAccessibilityOptions().betaWarning && QualityOfQuesoPlatforms.getPlatform().platformRelease() != PlatformRelease.STABLE) {
@@ -69,5 +74,13 @@ public abstract class TitleScreenMixin extends Screen {
                             Component.translatable("qualityofqueso.toast.beta_or_alpha")));
             ModConstants.SHOWN_BETA_TOAST = true;
         }
+    }
+
+    /**
+     * Renders the update icon on top of the menu button.
+     */
+    @Inject(method = "extractRenderState", at = @At("TAIL"))
+    private void renderUpdateIcon(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a, CallbackInfo ci) {
+        ClientTasks.renderUpdateIconOnButton(graphics, this.menuButton, ModConstants.HAS_UPDATE);
     }
 }

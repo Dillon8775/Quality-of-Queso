@@ -1,9 +1,11 @@
 package net.dillon.qualityofqueso.helper;
 
+import net.dillon.dillonlib.task.ClientTasks;
 import net.dillon.dillonlib.util.Texts;
 import net.dillon.qualityofqueso.platform.QualityOfQuesoPlatforms;
 import net.dillon.qualityofqueso.screen.AbstractModScreen;
 import net.dillon.qualityofqueso.screen.MainMenuScreen;
+import net.dillon.qualityofqueso.util.ModConstants;
 import net.dillon.qualityofqueso.widget.QuesoButton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -14,6 +16,8 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+
+import java.util.Map;
 
 import static net.dillon.dillonlib.task.ClientTasks.openLink;
 import static net.dillon.dillonlib.task.ClientTasks.openScreen;
@@ -36,10 +40,13 @@ public class ButtonHelper {
     }
 
     /**
-     * Creates the Quality of Queso {@code menu button.}
+     * Creates the main Quality of Queso menu button.
      */
-    public static SpriteIconButton createMenuButton(Button.OnPress onPress, boolean withTooltip) {
-        return createSpriteIconButton(ofQoQ(CHEESE_WHEEL_TEXTURE), onPress, !withTooltip ? Component.empty() : Component.translatable("qualityofqueso.gui.options.title"));
+    public static SpriteIconButton createMenuButton(Button.OnPress onPress, boolean tooltip) {
+        return ClientTasks.createMenuButton(ofQoQ(CHEESE_WHEEL_TEXTURE), onPress,
+                Map.of(ModConstants.HAS_UPDATE, Component.translatable("qualityofqueso.gui.update_available")),
+                Component.translatable("qualityofqueso.gui.options.title"),
+                tooltip);
     }
 
     /**
@@ -67,22 +74,8 @@ public class ButtonHelper {
      * Creates a {@code YouTube} button.
      */
     public static SpriteIconButton createYouTubeButton(Screen parent, String link) {
-        return createSpriteIconButton(ofQoQ(YOUTUBE_TEXTURE), (button) -> openLink(parent, link, false),
+        return ClientTasks.createSpriteIconButton(ofQoQ(YOUTUBE_TEXTURE), (button) -> openLink(parent, link, false),
                 Component.translatable("qualityofqueso.gui.showcase.main.tooltip"));
-    }
-
-    /**
-     * Creates a {@link SpriteIconButton}.
-     */
-    public static SpriteIconButton createSpriteIconButton(Identifier sprite, Button.OnPress onPress, Component tooltip) {
-        SpriteIconButton button = SpriteIconButton.builder(Texts.BLANK, onPress, false)
-                .width(20)
-                .sprite(sprite, 16, 16)
-                .build();
-        if (tooltip != Component.empty()) {
-            button.setTooltip(Tooltip.create(tooltip));
-        }
-        return button;
     }
 
     /**

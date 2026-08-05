@@ -1,7 +1,7 @@
 package net.dillon.qualityofqueso.screen;
 
 import net.dillon.dillonlib.platform.Platforms;
-import net.dillon.qualityofqueso.helper.ButtonHelper;
+import net.dillon.dillonlib.task.ClientTasks;
 import net.dillon.qualityofqueso.helper.ModHelper;
 import net.dillon.qualityofqueso.platform.QualityOfQuesoPlatforms;
 import net.dillon.qualityofqueso.util.KeybindScrollHelper;
@@ -108,7 +108,7 @@ public abstract class AbstractModScreen extends OptionsSubScreen {
             this.onClose();
         }).width(175).build());
 
-        this.screenshotsButton = this.addRenderableWidget(ButtonHelper.createSpriteIconButton(
+        this.screenshotsButton = this.addRenderableWidget(ClientTasks.createSpriteIconButton(
                 ofQoQ(OPEN_SCREENSHOTS_DIRECTORY_TEXTURE),
                 (button) -> {
                     File screenshots = new File(Minecraft.getInstance().gameDirectory, "screenshots");
@@ -122,7 +122,7 @@ public abstract class AbstractModScreen extends OptionsSubScreen {
 
         if (this.minecraft.level != null) {
             if (this.minecraft.getSingleplayerServer() != null) {
-                this.worldDirectoryButton = this.addRenderableWidget(ButtonHelper.createSpriteIconButton(
+                this.worldDirectoryButton = this.addRenderableWidget(ClientTasks.createSpriteIconButton(
                         ofQoQ(OPEN_WORLD_DIRECTORY_TEXTURE),
                         (button) -> {
                             Path worldPath = this.minecraft.getSingleplayerServer().getWorldPath(LevelResource.ROOT);
@@ -133,7 +133,7 @@ public abstract class AbstractModScreen extends OptionsSubScreen {
             }
             if (ModHelper.clientOptionsInstance().getAccessibilityOptions().eChestButton.qoqMenu()) {
                 executeIfClientPlayer(localPlayer -> {
-                    this.viewLastKnownEnderChestButton = this.addRenderableWidget(ButtonHelper.createSpriteIconButton(
+                    this.viewLastKnownEnderChestButton = this.addRenderableWidget(ClientTasks.createSpriteIconButton(
                             ofQoQ(ENDER_CHEST),
                             (button) -> {
                                 openScreen(new EnderChestPreviewScreen());
@@ -143,7 +143,7 @@ public abstract class AbstractModScreen extends OptionsSubScreen {
                 });
             }
         } else {
-            this.worldDirectoryButton = this.addRenderableWidget(ButtonHelper.createSpriteIconButton(
+            this.worldDirectoryButton = this.addRenderableWidget(ClientTasks.createSpriteIconButton(
                     ofQoQ(OPEN_CONFIG_DIRECTORY_TEXTURE),
                     (button) -> {
                         this.openConfigDirectory();
@@ -152,13 +152,13 @@ public abstract class AbstractModScreen extends OptionsSubScreen {
             ));
         }
 
-        this.wikiButton = this.addRenderableWidget(ButtonHelper.createSpriteIconButton(
+        this.wikiButton = this.addRenderableWidget(ClientTasks.createSpriteIconButton(
                 ofQoQ(WIKI_TEXTURE),
                 (button) -> openLink(this, WIKI_LINK, false),
                 Component.translatable("qualityofqueso.gui.learn_more")
         ));
 
-        this.discordButton = this.addRenderableWidget(ButtonHelper.createSpriteIconButton(
+        this.discordButton = this.addRenderableWidget(ClientTasks.createSpriteIconButton(
                 ofQoQ(DISCORD_TEXTURE),
                 (button) -> openLink(this, DISCORD_LINK, false),
                 Component.translatable("qualityofqueso.gui.discord")
@@ -178,6 +178,9 @@ public abstract class AbstractModScreen extends OptionsSubScreen {
         int imageHeight = this.height - 26;
         graphics.centeredText(this.font, VERSION, textWidth, textHeight, CommonColors.WHITE);
         graphics.blit(RenderPipelines.GUI_TEXTURED, ofQoQ("textures/gui/sprites/" + CHEESE_WHEEL_TEXTURE + ".png"), imageWidth, imageHeight, 0.0F, 0.0F, 18, 18, 18, 18);
+        if (HAS_UPDATE) {
+            ClientTasks.drawUpdateSprite(graphics, imageWidth - 2, imageHeight - 2);
+        }
 
         int leftIndex = 0;
         if (buttonActive(this.screenshotsButton)) {
