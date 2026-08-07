@@ -64,6 +64,8 @@ tasks.register('curseforge', TaskPublishCurseForge) {
         mainFile.releaseType = "release"
         project.findProperty("curseforge_environments")?.split(",")?.toList()?.each { mainFile.addEnvironment(it) }
         mainFile.addModLoader("NeoForge")
+        mainFile.addEnvironment("Client")
+        mainFile.addEnvironment("Server")
     }
 }
 
