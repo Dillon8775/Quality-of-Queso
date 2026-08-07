@@ -72,6 +72,8 @@ tasks.register('curseforge', TaskPublishCurseForge) {
         mainFile.addGameVersion(libs.minecraft.get().version)
         mainFile.releaseType = "beta"
         project.findProperty("curseforge_environments")?.split(",")?.toList()?.each { mainFile.addEnvironment(it) }
+        mainFile.addEnvironment("Client")
+        mainFile.addEnvironment("Server")
     }
 }
 
