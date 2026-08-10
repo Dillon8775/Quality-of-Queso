@@ -2,6 +2,8 @@ package net.dillon.qualityofqueso.mixin.client.screen;
 
 import com.llamalad7.mixinextras.expression.Definition;
 import com.llamalad7.mixinextras.expression.Expression;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
 import net.dillon.dillonlib.mixinplugin.PredicateSigned;
@@ -50,9 +52,17 @@ public abstract class TitleScreenMixin extends Screen {
     @Expression("numberOfButtons = ?")
     @Inject(method = "init", at = @At(value = "MIXINEXTRAS:EXPRESSION", shift = At.Shift.AFTER))
     private void adjustAmountOfIconButtons(CallbackInfo ci, @Local(name = "numberOfButtons") LocalIntRef numberOfButtons) {
-        if (universalOptionsInstance().menuButton.enabled() && (numberOfButtons.get() > 3 || ModReferences.isModLoaded(ModReferences.MOD_MENU))) {
+        if (universalOptionsInstance().menuButton.enabled()) {
             numberOfButtons.set(numberOfButtons.get() + 1);
         }
+    }
+
+    /**
+     * Calls the horizontal position again so the main menu button is able to be placed correctly.
+     */
+    @WrapOperation(method = "init", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/TitleScreen;getHorizontalPosition(III)I"))
+    private int replaceInlinedConstant(TitleScreen instance, int currentButton, int numberOfButtons, int buttonWidth, Operation<Integer> original, @Local(name = "numberOfButtons") int actualNumberOfButtons) {
+        return original.call(instance, currentButton, universalOptionsInstance().menuButton.enabled() ? actualNumberOfButtons : numberOfButtons, buttonWidth);
     }
 
     /**
