@@ -73,7 +73,7 @@ public abstract class MinecraftMixin {
 
         Random random = new Random();
         if (this.getSoundManager() != null && random.nextFloat() < 0.01F) {
-            playLocalSound(ModSoundEvents.FORTNITE_BATTLE_PASS, 1.0F, 5.0F);
+            playLocalSound(ModSoundEvents.FORTNITE_BATTLE_PASS, 5.0F, 1.0F);
         }
     }
 }

@@ -253,7 +253,7 @@ public class GuiHelper {
      * Plays a generic ding sound.
      */
     public static void playDingSound() {
-        playLocalSound(SoundEvents.ARROW_HIT_PLAYER, 0.2F, 0.72F);
+        playLocalSound(SoundEvents.ARROW_HIT_PLAYER, 0.72F, 0.2F);
     }
 
     /**
