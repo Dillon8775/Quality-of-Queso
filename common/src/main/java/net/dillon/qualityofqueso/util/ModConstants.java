@@ -91,8 +91,8 @@ public class ModConstants {
 
     // Texture constants
     public static final String CHEESE_WHEEL_TEXTURE = "widget/logo";
-    public static final String ENABLED_TEXTURE = "sprites/widget/enabled";
-    public static final String DISABLED_TEXTURE = "sprites/widget/disabled";
+    public static final String ENABLED_TEXTURE = "textures/gui/sprites/widget/enabled.png";
+    public static final String DISABLED_TEXTURE = "textures/gui/sprites/widget/disabled.png";
     public static final String OPEN_SCREENSHOTS_DIRECTORY_TEXTURE = "widget/screenshots";
     public static final String OPEN_WORLD_DIRECTORY_TEXTURE = "widget/world_folder";
     public static final String OPEN_CONFIG_DIRECTORY_TEXTURE = "widget/config_folder";
