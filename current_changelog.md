@@ -4,4 +4,4 @@
 - More backend optimizations.
 
 ## Bugs Fixed
-- (26.2 and above only) Missing texture Hud positions screen.
+- (26.2 and above only) Missing texture in Hud positions screen.
