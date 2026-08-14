@@ -1,8 +1,9 @@
 # Version 1.7.14
 
-## Changes
-- (26.3 only) Now requires [DillonLib](https://modrinth.com/mod/dillon-lib) version 1.1 or greater.
+## Update to MC 26.3
+- Now requires [DillonLib](https://modrinth.com/mod/dillon-lib) version 1.1 or higher.
 - More backend optimizations.
 
 ## Bugs Fixed
-- (26.2 and above only) Missing textures appearing following DillonLib dependency.
+- Missing textures appearing following DillonLib dependency.
+- Ordering of buttons mod are randomized on each startup on Minecraft (26.3 only).
