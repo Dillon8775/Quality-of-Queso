@@ -34,7 +34,7 @@ import static net.dillon.qualityofqueso.helper.ModHelper.*;
 import static net.dillon.qualityofqueso.util.ModConstants.*;
 
 @PredicateSigned
-@Mixin(PauseScreen.class)
+@Mixin(value = PauseScreen.class, priority = 1010)
 public class PauseScreenMixin extends Screen {
     @Shadow
     @Final

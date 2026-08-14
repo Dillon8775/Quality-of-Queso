@@ -34,7 +34,7 @@ import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
 import static net.dillon.qualityofqueso.helper.ModHelper.universalOptionsInstance;
 
 @PredicateSigned
-@Mixin(TitleScreen.class)
+@Mixin(value = TitleScreen.class, priority = 1010)
 public abstract class TitleScreenMixin extends Screen {
     @Shadow
     protected abstract int getHorizontalPosition(int par1, int par2, int par3);
