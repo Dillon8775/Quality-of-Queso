@@ -6,4 +6,4 @@
 
 ## Bugs Fixed
 - Missing textures appearing following DillonLib dependency.
-- Ordering of buttons mod are randomized on each startup on Minecraft (26.3 only).
+- Ordering of buttons mod are randomized on each startup on Minecraft.
