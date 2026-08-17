@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 /**
@@ -106,13 +107,13 @@ public class ModConstants {
     public static final String WIKI_TEXTURE = "widget/wiki";
     public static final String MULTI_CONFIG_TEXTURE = "widget/multi_config";
     public static final Identifier SEARCH_TEXTURE = Identifier.withDefaultNamespace("icon/search");
-    public static final Identifier SLOT_CRITICAL = ModHelper.qoqIdentifier("hud/colored_slot/slot_critical");
-    public static final Identifier SLOT_LOW = ModHelper.qoqIdentifier("hud/colored_slot/slot_low");
-    public static final Identifier SLOT_AVERAGE = ModHelper.qoqIdentifier("hud/colored_slot/slot_average");
-    public static final Identifier SLOT_DECENT = ModHelper.qoqIdentifier("hud/colored_slot/slot_decent");
-    public static final Identifier SLOT_GOOD = ModHelper.qoqIdentifier("hud/colored_slot/slot_good");
-    public static final Identifier SLOT_LOCKED = ModHelper.qoqIdentifier("hud/colored_slot/slot_locked");
-    public static final Identifier SELECTED_RECIPE = ModHelper.qoqIdentifier("slot/selected_recipe");
+    public static final Identifier SLOT_CRITICAL = qoqIdentifier("hud/colored_slot/slot_critical");
+    public static final Identifier SLOT_LOW = qoqIdentifier("hud/colored_slot/slot_low");
+    public static final Identifier SLOT_AVERAGE = qoqIdentifier("hud/colored_slot/slot_average");
+    public static final Identifier SLOT_DECENT = qoqIdentifier("hud/colored_slot/slot_decent");
+    public static final Identifier SLOT_GOOD = qoqIdentifier("hud/colored_slot/slot_good");
+    public static final Identifier SLOT_LOCKED = qoqIdentifier("hud/colored_slot/slot_locked");
+    public static final Identifier SELECTED_RECIPE = qoqIdentifier("slot/selected_recipe");
 
     // Config constants
     public static final String DEFAULT_CONFIG_DIR = "qualityofqueso/global";
