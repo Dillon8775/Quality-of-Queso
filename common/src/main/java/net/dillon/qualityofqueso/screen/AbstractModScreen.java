@@ -181,7 +181,7 @@ public abstract class AbstractModScreen extends OptionsSubScreen {
                 this,
                 VERSION,
                 QualityOfQuesoPlatforms.getPlatform().logoWidth().getWidthModifier(),
-                qoqIdentifier("textures/gui/sprites/" + CHEESE_WHEEL_TEXTURE + ".png"),
+                qoqIdentifier(CHEESE_WHEEL_TEXTURE),
                 HAS_UPDATE
         );
 

@@ -10,7 +10,6 @@ import net.dillon.qualityofqueso.mixin.main.AbstractContainerMenuAccessor;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Renderable;
-import net.minecraft.client.gui.components.debug.DebugScreenEntry;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.Screen;
@@ -19,7 +18,6 @@ import net.minecraft.client.gui.screens.inventory.*;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
-import net.minecraft.resources.Identifier;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerInput;
@@ -203,12 +201,5 @@ public class MethodHelper {
      */
     public static EditBox getDebugScreenSearchBox(DebugOptionsScreen debugOptionsScreen) {
         return ((DebugOptionsScreenAccessor)debugOptionsScreen).getSearchBox();
-    }
-
-    /**
-     * Registers a Quality of Queso debug entry.
-     */
-    public static void registerDebugEntry(Identifier identifier, DebugScreenEntry entry) {
-        DebugScreenEntriesAccessor.invokeRegister(identifier, entry);
     }
 }
