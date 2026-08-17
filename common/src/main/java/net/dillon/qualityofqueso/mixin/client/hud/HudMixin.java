@@ -40,9 +40,10 @@ import java.util.Set;
 import static net.dillon.dillonlib.task.ClientTasks.getGuiHeight;
 import static net.dillon.dillonlib.task.ClientTasks.getGuiWidth;
 import static net.dillon.qualityofqueso.helper.GuiHelper.*;
+import static net.dillon.qualityofqueso.helper.ModConstants.*;
 import static net.dillon.qualityofqueso.helper.ModHelper.*;
+import static net.dillon.qualityofqueso.option.OptionInstances.client;
 import static net.dillon.qualityofqueso.util.ItemHudTracker.ARROW_OUTLINE;
-import static net.dillon.qualityofqueso.util.ModConstants.*;
 
 @Mixin(Hud.class)
 public class HudMixin {
@@ -77,7 +78,7 @@ public class HudMixin {
         }
 
         // Render only the arrow count, if onlyShowArrowCounter is on
-        if (clientOptionsInstance().getItemCounterOptions().onlyShowArrowCounter) {
+        if (client().itemCounter().onlyShowArrowCounter) {
             this.renderingItem = this.renderItem(graphics, mainHandItem, false)
                     || this.renderItem(graphics, offHandItem, false)
                     || (!pickedUpOrDroppedStack.isEmpty() && this.renderItem(graphics, pickedUpOrDroppedStack, true));
@@ -103,7 +104,7 @@ public class HudMixin {
         }
 
         if (slot != EquipmentSlot.OFFHAND) {
-            base += clientOptionsInstance().getHudOptions().armorStatusPosition[0];
+            base += client().hud().armorStatusPosition[0];
         }
 
         return switch (slot) {
@@ -137,11 +138,11 @@ public class HudMixin {
      */
     @Unique
     private void renderHighlightedArmorSlot(Minecraft minecraft, Identifier defaultSprite, GuiGraphicsExtractor graphics, EquipmentSlot slot, boolean warning, int yOffset, float alpha) {
-        if (alpha <= 0.0F || !(clientOptionsInstance().getHudOptions().highlightArmor)) {
+        if (alpha <= 0.0F || !(client().hud().highlightArmor)) {
             return;
         }
 
-        int yModifier = slot != EquipmentSlot.OFFHAND ? clientOptionsInstance().getHudOptions().armorStatusPosition[1] : clientOptionsInstance().getHudOptions().otherElementsY;
+        int yModifier = slot != EquipmentSlot.OFFHAND ? client().hud().armorStatusPosition[1] : client().hud().otherElementsY;
         graphics.blitSprite(
                 RenderPipelines.GUI_TEXTURED,
                 warning ? SLOT_CRITICAL : getHighlightedSlotTexture(minecraft, defaultSprite, getItemBySlot(minecraft, slot), slot),
@@ -158,7 +159,7 @@ public class HudMixin {
      */
     @Unique
     private void renderWarningIndicator(Minecraft minecraft, GuiGraphicsExtractor graphics, int slot, int itemX, EquipmentSlot equipmentSlot, int yOffset) {
-        if (!clientOptionsInstance().getHudOptions().warningIndicators) {
+        if (!client().hud().warningIndicators) {
             return;
         }
 
@@ -177,7 +178,7 @@ public class HudMixin {
      */
     @Unique
     private void renderLockedHotbarSlots(GuiGraphicsExtractor graphics) {
-        if (!isPositioningElements(this.minecraft) && (!clientOptionsInstance().getLockedSlotOptions().lockedSlots || !clientOptionsInstance().getLockedSlotOptions().showLock.inHud() || this.minecraft.player == null)) {
+        if (!isPositioningElements(this.minecraft) && (!client().lockedSlots().lockedSlots || !client().lockedSlots().showLock.inHud() || this.minecraft.player == null)) {
             return;
         }
 
@@ -190,7 +191,7 @@ public class HudMixin {
         for (int slot = 0; slot < 9; slot++) {
             if (!lockedPlayerSlots.contains(slot)) {
                 if (positioningElements) {
-                    this.renderWarningIndicator(this.minecraft, graphics, slot, 0, null, clientOptionsInstance().getHudOptions().otherElementsY);
+                    this.renderWarningIndicator(this.minecraft, graphics, slot, 0, null, client().hud().otherElementsY);
                 }
                 continue;
             }
@@ -201,9 +202,9 @@ public class HudMixin {
 
             graphics.blitSprite(
                     RenderPipelines.GUI_TEXTURED,
-                    ofQoQ(LOCKED_TEXTURE),
+                    qoqIdentifier(LOCKED_TEXTURE),
                     getGuiWidth(graphics) - 91 + (slot * 20),
-                    (getGuiHeight(graphics) + 11) + clientOptionsInstance().getHudOptions().otherElementsY,
+                    (getGuiHeight(graphics) + 11) + client().hud().otherElementsY,
                     10,
                     10
             );
@@ -213,7 +214,7 @@ public class HudMixin {
     /**
      * Renders the modified selection slot.
      */
-    @ModifyArg(method = "extractItemHotbar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIII)V", ordinal = 1), index = 1)
+    @ModifyArg(method = "extractItemHotbar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;blitSprite(Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIII)V", ordinal = 1), index = 1)
     private Identifier modifyHighlightedSlot(Identifier original) {
         if (!modEnabled(this.minecraft) || this.minecraft.player == null) {
             return original;
@@ -233,17 +234,17 @@ public class HudMixin {
         for (int i = 0; i < this.minecraft.player.getInventory().getContainerSize() - 34; i++) {
             ItemStack item = this.minecraft.player.getInventory().getItem(i);
             if (getItemHealthPercentage(item) < 0.11F) {
-                this.renderWarningIndicator(this.minecraft, graphics, i, 0, null, clientOptionsInstance().getHudOptions().otherElementsY);
+                this.renderWarningIndicator(this.minecraft, graphics, i, 0, null, client().hud().otherElementsY);
             }
         }
 
         ItemStack offHandItem = this.minecraft.player.getOffhandItem();
         if (!offHandItem.isEmpty()) {
-            if (clientOptionsInstance().getHudOptions().coloredHighlighting && getItemHealthPercentage(offHandItem) < 0.41F) {
+            if (client().hud().coloredHighlighting && getItemHealthPercentage(offHandItem) < 0.41F) {
                 this.renderHighlightedArmorSlot(this.minecraft, HOTBAR_SELECTION_SPRITE, graphics, EquipmentSlot.OFFHAND, false, 0, 1.0F);
             }
-            if (clientOptionsInstance().getHudOptions().warningIndicators && getItemHealthPercentage(offHandItem) < 0.11F) {
-                this.renderWarningIndicator(this.minecraft, graphics, 0, 0, EquipmentSlot.OFFHAND, clientOptionsInstance().getHudOptions().otherElementsY);
+            if (client().hud().warningIndicators && getItemHealthPercentage(offHandItem) < 0.11F) {
+                this.renderWarningIndicator(this.minecraft, graphics, 0, 0, EquipmentSlot.OFFHAND, client().hud().otherElementsY);
             }
         }
 
@@ -283,8 +284,8 @@ public class HudMixin {
             i++;
         }
 
-        boolean armorStatusOnUpdate = clientOptionsInstance().getHudOptions().armorStatus.onUpdate();
-        boolean armorStatusAlways = !armorStatusOnUpdate && !clientOptionsInstance().getHudOptions().armorStatus.off();
+        boolean armorStatusOnUpdate = client().hud().armorStatus.onUpdate();
+        boolean armorStatusAlways = !armorStatusOnUpdate && !client().hud().armorStatus.off();
         boolean anyArmorTimerActive = false;
         int latestArmorTimer = 0;
         for (int armorTimer : ARMOR_TIMERS) {
@@ -296,7 +297,7 @@ public class HudMixin {
             }
         }
 
-        boolean syncArmorAnimating = clientOptionsInstance().getHudOptions().armorHotbar
+        boolean syncArmorAnimating = client().hud().armorHotbar
                 && armorStatusOnUpdate
                 && !anyArmorTimerActive
                 && latestArmorTimer > 0
@@ -307,15 +308,15 @@ public class HudMixin {
 
         CAN_ACTUALLY_RENDER_ARMOR_HOTBAR = anyArmorTimerActive;
 
-        boolean elytraWarning = clientOptionsInstance().getElytraAlarmOptions().elytraAlarm.enabled() && SHOULD_WARN_OF_ELYTRA;
-        boolean canRenderArmorHotbar = clientOptionsInstance().getHudOptions().armorHotbar && (!clientOptionsInstance().getHudOptions().armorStatus.off() || elytraWarning);
+        boolean elytraWarning = client().elytraAlarm().elytraAlarm.enabled() && SHOULD_WARN_OF_ELYTRA;
+        boolean canRenderArmorHotbar = client().hud().armorHotbar && (!client().hud().armorStatus.off() || elytraWarning);
         boolean renderingTheHotbar = armorStatusAlways || anyArmorTimerActive || syncArmorAnimating;
         if (isPositioningElements(this.minecraft) || (canRenderArmorHotbar && renderingTheHotbar)) {
             graphics.blitSprite(
                     RenderPipelines.GUI_TEXTURED,
                     getArmorHotbarTexture(),
                     this.getArmorBarX(this.minecraft, graphics),
-                    (getGuiHeight(graphics) - 2 + syncArmorAnimationYOffset) + clientOptionsInstance().getHudOptions().armorStatusPosition[1],
+                    (getGuiHeight(graphics) - 2 + syncArmorAnimationYOffset) + client().hud().armorStatusPosition[1],
                     82,
                     22
             );
@@ -323,7 +324,7 @@ public class HudMixin {
 
         i = 0;
         for (EquipmentSlot slot : equipmentSlots()) {
-            if (!clientOptionsInstance().getHudOptions().armorStatus.off()) {
+            if (!client().hud().armorStatus.off()) {
                 if (slot != EquipmentSlot.CHEST || !SHOULD_WARN_OF_ELYTRA) {
                     boolean timerActive = isBeforeTick(tick, ARMOR_TIMERS[i]);
                     boolean shouldRenderSlot = armorStatusAlways;
@@ -331,7 +332,7 @@ public class HudMixin {
 
                     boolean slotAnimating = ARMOR_TIMERS[i] > 0 && isWithinTickWindow(tick, ARMOR_TIMERS[i], animationTimeTicks);
                     if (armorStatusOnUpdate) {
-                        if (clientOptionsInstance().getHudOptions().armorHotbar) {
+                        if (client().hud().armorHotbar) {
                             shouldRenderSlot = anyArmorTimerActive || syncArmorAnimating;
                             if (syncArmorAnimating) {
                                 armorYOffset = syncArmorAnimationYOffset;
@@ -345,7 +346,7 @@ public class HudMixin {
                     }
 
                     if (isPositioningElements(this.minecraft) || shouldRenderSlot) {
-                        if (clientOptionsInstance().getHudOptions().emptySlots && getItemBySlot(this.minecraft, slot).isEmpty()) {
+                        if (client().hud().emptySlots && getItemBySlot(this.minecraft, slot).isEmpty()) {
                             String name = switch (slot) {
                                 case CHEST -> "chestplate";
                                 case LEGS -> "leggings";
@@ -356,33 +357,33 @@ public class HudMixin {
                                     RenderPipelines.GUI_TEXTURED,
                                     Identifier.withDefaultNamespace("container/slot/" + name),
                                     this.getHighlightedSlotX(minecraft, graphics, slot) + 4,
-                                    (getGuiHeight(graphics) + armorYOffset + 1) + clientOptionsInstance().getHudOptions().armorStatusPosition[1],
+                                    (getGuiHeight(graphics) + armorYOffset + 1) + client().hud().armorStatusPosition[1],
                                     16,
                                     16
                             );
                         }
-                        drawItem(this.minecraft, graphics, getItemBySlot(this.minecraft, slot), this.getEquipmentSlotX(this.minecraft, slot), clientOptionsInstance().getHudOptions().armorStatusPosition[1], true, armorYOffset);
+                        drawItem(this.minecraft, graphics, getItemBySlot(this.minecraft, slot), this.getEquipmentSlotX(this.minecraft, slot), client().hud().armorStatusPosition[1], true, armorYOffset);
                     }
-                    boolean animating = !clientOptionsInstance().getHudOptions().armorStatus.always() && slotAnimating;
+                    boolean animating = !client().hud().armorStatus.always() && slotAnimating;
                     boolean fadeAnimating = !timerActive && slotAnimating;
                     float slotHighlightAlpha = 1.0F;
-                    if (fadeAnimating && animationTimeTicks > 0 && (clientOptionsInstance().getHudOptions().armorStatus.always() || clientOptionsInstance().getHudOptions().armorHotbar)) {
+                    if (fadeAnimating && animationTimeTicks > 0 && (client().hud().armorStatus.always() || client().hud().armorHotbar)) {
                         int elapsedTicks = tick - ARMOR_TIMERS[i];
                         slotHighlightAlpha = Mth.clamp(1.0F - ((float) elapsedTicks / animationTimeTicks), 0.0F, 1.0F);
                     }
-                    if ((isPositioningElements(this.minecraft) && clientOptionsInstance().getHudOptions().highlightArmor) || timerActive || animating || fadeAnimating) {
+                    if ((isPositioningElements(this.minecraft) && client().hud().highlightArmor) || timerActive || animating || fadeAnimating) {
                         this.renderHighlightedArmorSlot(this.minecraft, HOTBAR_SELECTION_SPRITE, graphics, equipmentSlots()[i], false, armorYOffset, slotHighlightAlpha);
                     }
                     if (shouldRenderSlot && getItemHealthPercentage(getItemBySlot(this.minecraft, slot)) < 0.11F) {
-                        this.renderWarningIndicator(this.minecraft, graphics, 0, 0, slot, armorYOffset + clientOptionsInstance().getHudOptions().armorStatusPosition[1]);
+                        this.renderWarningIndicator(this.minecraft, graphics, 0, 0, slot, armorYOffset + client().hud().armorStatusPosition[1]);
                     }
                 }
             }
 
             if (slot == EquipmentSlot.CHEST && elytraWarning) {
-                drawItem(this.minecraft, graphics, new ItemStack(Items.ELYTRA), this.getEquipmentSlotX(this.minecraft, EquipmentSlot.CHEST), clientOptionsInstance().getHudOptions().armorStatusPosition[1], true);
+                drawItem(this.minecraft, graphics, new ItemStack(Items.ELYTRA), this.getEquipmentSlotX(this.minecraft, EquipmentSlot.CHEST), client().hud().armorStatusPosition[1], true);
                 this.renderHighlightedArmorSlot(this.minecraft, HOTBAR_SELECTION_SPRITE, graphics, slot, true, 0, 1.0F);
-                this.renderWarningIndicator(this.minecraft, graphics, 0, 0, slot, clientOptionsInstance().getHudOptions().armorStatusPosition[1]);
+                this.renderWarningIndicator(this.minecraft, graphics, 0, 0, slot, client().hud().armorStatusPosition[1]);
             }
             i++;
         }
@@ -399,13 +400,13 @@ public class HudMixin {
     @Unique
     private boolean renderItem(GuiGraphicsExtractor graphics, ItemStack heldStack, boolean trackedItem) {
         boolean holdingArrowDisplayableProjectileWeapon = holdingArrowDisplayableProjectileWeapon(this.minecraft, heldStack);
-        if (!clientOptionsInstance().getItemCounterOptions().itemCounter.enabled() || (!heldStack.isStackable() && !holdingArrowDisplayableProjectileWeapon)) {
+        if (!client().itemCounter().itemCounter.enabled() || (!heldStack.isStackable() && !holdingArrowDisplayableProjectileWeapon)) {
             if (!heldStack.is(ItemTags.SHULKER_BOXES) && !heldStack.is(ItemTags.BUNDLES)) {
                 return false;
             }
         }
 
-        if (clientOptionsInstance().getItemCounterOptions().onlyShowArrowCounter && !isStackArrow(heldStack) && !holdingArrowDisplayableProjectileWeapon) {
+        if (client().itemCounter().onlyShowArrowCounter && !isStackArrow(heldStack) && !holdingArrowDisplayableProjectileWeapon) {
             return false;
         }
 
@@ -421,11 +422,11 @@ public class HudMixin {
             }
         }
         count += this.iterateThroughInventoryAndAddCount(playerItems, heldStack, holdingArrowDisplayableProjectileWeapon, items);
-        if (clientOptionsInstance().getItemCounterOptions().countEnderChest) {
+        if (client().itemCounter().countEnderChest) {
             count += this.iterateThroughPersistedEnderChestAndAddCount(heldStack, items);
         }
 
-        boolean trackedArrow = clientOptionsInstance().getItemCounterOptions().arrowCounter && (holdingArrowDisplayableProjectileWeapon || (isStackArrow(ItemHudTracker.getStack()) && ARROW_OUTLINE));
+        boolean trackedArrow = client().itemCounter().arrowCounter && (holdingArrowDisplayableProjectileWeapon || (isStackArrow(ItemHudTracker.getStack()) && ARROW_OUTLINE));
         boolean alwaysShowArrowFallback = isAlwaysShowArrowCounterEnabled(this.minecraft) && isStackArrow(heldStack);
         int maxCount = trackedArrow ? 64 : heldStack.getMaxStackSize();
 
@@ -451,9 +452,9 @@ public class HudMixin {
             String maxItemCount = String.valueOf(maxCount);
             boolean evenStack = count != 0 && count != 64 && count % maxCount == 0;
             if (!hasInfinity && count > maxCount) {
-                if (clientOptionsInstance().getItemCounterOptions().itemCounter != ItemCounter.TOTAL && evenStack) {
+                if (client().itemCounter().itemCounter != ItemCounter.TOTAL && evenStack) {
                     text = count / maxCount + "x " + maxItemCount;
-                } else if (clientOptionsInstance().getItemCounterOptions().itemCounter == ItemCounter.STACKS) {
+                } else if (client().itemCounter().itemCounter == ItemCounter.STACKS) {
                     int totalCount = 0;
                     for (int i : items) {
                         totalCount += i;
@@ -472,12 +473,12 @@ public class HudMixin {
             newStack.applyComponents(components);
 
             boolean isArrow = (isStackArrow(newStack) && ARROW_OUTLINE) || alwaysShowArrowFallback;
-            boolean arrowDisplayValid = (isArrow || holdingArrowDisplayableProjectileWeapon) && clientOptionsInstance().getItemCounterOptions().itemCounter == ItemCounter.STACKS ? count < 65 : count < 100;
-            boolean shouldRenderArrowUi = clientOptionsInstance().getItemCounterOptions().arrowCounter && !hasInfinity && arrowDisplayValid && (holdingArrowDisplayableProjectileWeapon || alwaysShowArrowFallback || !this.renderingItem);
+            boolean arrowDisplayValid = (isArrow || holdingArrowDisplayableProjectileWeapon) && client().itemCounter().itemCounter == ItemCounter.STACKS ? count < 65 : count < 100;
+            boolean shouldRenderArrowUi = client().itemCounter().arrowCounter && !hasInfinity && arrowDisplayValid && (holdingArrowDisplayableProjectileWeapon || alwaysShowArrowFallback || !this.renderingItem);
 
             int itemX = !isLeftHanded(this.minecraft) ? -117 : 101;
             int negIncrease;
-            if (clientOptionsInstance().getItemCounterOptions().moveItemCounterOver && !getOffHandStack(player).isEmpty()) {
+            if (client().itemCounter().moveItemCounterOver && !getOffHandStack(player).isEmpty()) {
                 negIncrease = -29;
                 itemX += increasedBasedOnHand(this.minecraft, negIncrease, false);
             }
@@ -488,7 +489,7 @@ public class HudMixin {
                 itemX += increasedBasedOnHand(this.minecraft, negIncrease, false);
             }
 
-            itemX += clientOptionsInstance().getItemCounterOptions().itemCounterPosition[0];
+            itemX += client().itemCounter().itemCounterPosition[0];
 
             int itemAnimationYOffset = 0;
             if (trackedItem && !ItemHudTracker.isWithinDisplayWindow()) {
@@ -498,19 +499,19 @@ public class HudMixin {
             if (positioningElements || (shouldRenderArrowUi && (isArrow || holdingArrowDisplayableProjectileWeapon))) {
                 graphics.blitSprite(RenderPipelines.GUI_TEXTURED, HOTBAR_OFFHAND_RIGHT_SPRITE,
                         getGuiWidth(graphics) + itemX - 10,
-                        (getGuiHeight(graphics) - 3 + itemAnimationYOffset) + clientOptionsInstance().getItemCounterOptions().itemCounterPosition[1],
+                        (getGuiHeight(graphics) - 3 + itemAnimationYOffset) + client().itemCounter().itemCounterPosition[1],
                         29,
                         24
                 );
                 graphics.blitSprite(RenderPipelines.GUI_TEXTURED,
-                        clientOptionsInstance().getHudOptions().coloredHighlighting
+                        client().hud().coloredHighlighting
                                 ? count < 11 ? SLOT_CRITICAL
                                   : count < 21 ? SLOT_AVERAGE
                                     : count < 31 ? SLOT_DECENT
                                       : SLOT_GOOD
                                 : HOTBAR_SELECTION_SPRITE,
                         getGuiWidth(graphics) + itemX - 4,
-                        getGuiHeight(graphics) - 3 + itemAnimationYOffset + clientOptionsInstance().getItemCounterOptions().itemCounterPosition[1],
+                        getGuiHeight(graphics) - 3 + itemAnimationYOffset + client().itemCounter().itemCounterPosition[1],
                         24,
                         23
                 );
@@ -541,7 +542,7 @@ public class HudMixin {
                     }
                 }
             }
-            drawItem(this.minecraft, graphics, stackToRender, itemX, clientOptionsInstance().getItemCounterOptions().itemCounterPosition[1], false, itemAnimationYOffset);
+            drawItem(this.minecraft, graphics, stackToRender, itemX, client().itemCounter().itemCounterPosition[1], false, itemAnimationYOffset);
 
             int color = CommonColors.WHITE;
             boolean validArrow = isArrow || arrowAndZero || holdingArrowDisplayableProjectileWeapon;
@@ -552,16 +553,16 @@ public class HudMixin {
                 color = CommonColors.GREEN;
             }
 
-            if (positioningElements || (!hasInfinity && shouldRenderArrowUi && clientOptionsInstance().getHudOptions().warningIndicators && validArrow && count < 6)) {
-                this.renderWarningIndicator(this.minecraft, graphics, 0, itemX, null, itemAnimationYOffset + clientOptionsInstance().getItemCounterOptions().itemCounterPosition[1]);
+            if (positioningElements || (!hasInfinity && shouldRenderArrowUi && client().hud().warningIndicators && validArrow && count < 6)) {
+                this.renderWarningIndicator(this.minecraft, graphics, 0, itemX, null, itemAnimationYOffset + client().itemCounter().itemCounterPosition[1]);
             }
 
             int textX = itemX - (textWidth / 2) + 11;
             if (textLength == 1) {
                 textX += 3;
             }
-            graphics.text(this.minecraft.font, text, ((graphics.guiWidth() / 2) + textX), (graphics.guiHeight() - (hasInfinity ? 9 : 10) + itemAnimationYOffset) + clientOptionsInstance().getItemCounterOptions().itemCounterPosition[1], color, true);
-            if (clientOptionsInstance().getItemCounterOptions().displayTotalWithStacks && count > 64 && (evenStack || clientOptionsInstance().getItemCounterOptions().itemCounter == ItemCounter.STACKS)) {
+            graphics.text(this.minecraft.font, text, ((graphics.guiWidth() / 2) + textX), (graphics.guiHeight() - (hasInfinity ? 9 : 10) + itemAnimationYOffset) + client().itemCounter().itemCounterPosition[1], color, true);
+            if (client().itemCounter().displayTotalWithStacks && count > 64 && (evenStack || client().itemCounter().itemCounter == ItemCounter.STACKS)) {
                 graphics.text(this.minecraft.font, "(" + String.format("%,d", count) + ")", ((graphics.guiWidth() / 2) + textX), graphics.guiHeight() - 22 + itemAnimationYOffset, color, true);
             }
 
@@ -605,7 +606,7 @@ public class HudMixin {
                 continue;
             }
 
-            if (clientOptionsInstance().getItemCounterOptions().countContainers && (invStack.is(ItemTags.SHULKER_BOXES) || invStack.is(ItemTags.BUNDLES))) {
+            if (client().itemCounter().countContainers && (invStack.is(ItemTags.SHULKER_BOXES) || invStack.is(ItemTags.BUNDLES))) {
                 count += this.iterateThroughPersistedEntriesAndAddCount(stored.containedItems, heldStack, items);
                 continue;
             }
@@ -615,7 +616,7 @@ public class HudMixin {
             }
 
             boolean sameComponents = heldStack.getComponents().toString().equals(stored.components == null ? "" : stored.components);
-            boolean matches = clientOptionsInstance().getItemCounterOptions().onlyCountMatchingItems
+            boolean matches = client().itemCounter().onlyCountMatchingItems
                     ? invStack.is(heldStack.getItem()) && sameComponents
                     : itemMatchesInventoryItem(heldStack, invStack);
 
@@ -635,12 +636,12 @@ public class HudMixin {
         int count = 0;
 
         for (ItemStack invStack : inventory) {
-            if (clientOptionsInstance().getItemCounterOptions().countContainers && (invStack.is(ItemTags.SHULKER_BOXES) || invStack.is(ItemTags.BUNDLES))) {
+            if (client().itemCounter().countContainers && (invStack.is(ItemTags.SHULKER_BOXES) || invStack.is(ItemTags.BUNDLES))) {
                 count += iterateTransportablesAndAddCount(invStack, heldStack, items);
             } else if (
-                    (clientOptionsInstance().getItemCounterOptions().countAllArrows && clientOptionsInstance().getItemCounterOptions().arrowCounter && (isStackArrow(invStack) && isStackArrow(ItemHudTracker.getStack()) && !this.renderingItem))
-                            || (holdingArrowDisplayableProjectileWeapon ? !clientOptionsInstance().getItemCounterOptions().countAllArrows ? invStack.is(getProjectileFromActiveHand(this.minecraft).getItem()) && isStackArrow(invStack) : isStackArrow(invStack) : invStack.is(heldStack.getItem()))) {
-                if (itemMatchesInventoryItem(heldStack, invStack) || holdingArrowDisplayableProjectileWeapon || (clientOptionsInstance().getItemCounterOptions().countAllArrows && isStackArrow(ItemHudTracker.getStack()))) {
+                    (client().itemCounter().countAllArrows && client().itemCounter().arrowCounter && (isStackArrow(invStack) && isStackArrow(ItemHudTracker.getStack()) && !this.renderingItem))
+                            || (holdingArrowDisplayableProjectileWeapon ? !client().itemCounter().countAllArrows ? invStack.is(getProjectileFromActiveHand(this.minecraft).getItem()) && isStackArrow(invStack) : isStackArrow(invStack) : invStack.is(heldStack.getItem()))) {
+                if (itemMatchesInventoryItem(heldStack, invStack) || holdingArrowDisplayableProjectileWeapon || (client().itemCounter().countAllArrows && isStackArrow(ItemHudTracker.getStack()))) {
                     count += invStack.getCount();
                     items.add(invStack.getCount());
                 }

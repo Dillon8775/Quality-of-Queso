@@ -21,14 +21,15 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import static net.dillon.qualityofqueso.helper.GuiHelper.*;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.playButtonInactiveSound;
-import static net.dillon.qualityofqueso.helper.ModHelper.*;
-import static net.dillon.qualityofqueso.util.ModConstants.PLAYER_FALL_DISTANCE;
-import static net.dillon.qualityofqueso.util.ModConstants.SHOULD_WARN_OF_ELYTRA;
+import static net.dillon.qualityofqueso.helper.ModConstants.PLAYER_FALL_DISTANCE;
+import static net.dillon.qualityofqueso.helper.ModConstants.SHOULD_WARN_OF_ELYTRA;
+import static net.dillon.qualityofqueso.helper.ModHelper.equipmentSlots;
+import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
+import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 @Mixin(LocalPlayer.class)
 public class LocalPlayerMixin extends AbstractClientPlayer {
@@ -64,14 +65,14 @@ public class LocalPlayerMixin extends AbstractClientPlayer {
      * Prevents dropping locked hotbar slots while in-game.
      */
     @Inject(method = "drop", at = @At("HEAD"), cancellable = true)
-    private void preventDropFromLockedSlot(boolean entireStack, CallbackInfoReturnable<Boolean> cir) {
-        if (!modEnabled(this.minecraft) || !clientOptionsInstance().getLockedSlotOptions().lockedSlots || !clientOptionsInstance().getLockedSlotOptions().preventDropping) {
+    private void preventDropFromLockedSlot(boolean entireStack, CallbackInfo ci) {
+        if (!modEnabled(this.minecraft) || !client().lockedSlots().lockedSlots || !client().lockedSlots().preventDropping) {
             return;
         }
 
         if (isLockedHotbarSlot(this.minecraft, true)) {
             playButtonInactiveSound(this.minecraft);
-            cir.setReturnValue(false);
+            ci.cancel();
         }
     }
 
@@ -79,8 +80,8 @@ public class LocalPlayerMixin extends AbstractClientPlayer {
      * Tracks items to display total count near hotbar (when thrown {@code in-game}).
      */
     @Inject(method = "drop", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientPacketListener;send(Lnet/minecraft/network/protocol/Packet;)V"), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void onThrowFromInGame(boolean entireStack, CallbackInfoReturnable<Boolean> cir, ServerboundPlayerActionPacket.Action action, ItemStack itemStack) {
-        if (!modEnabled(Minecraft.getInstance()) || !clientOptionsInstance().getItemCounterOptions().displayOnThrow || !itemStack.isStackable()) {
+    private void onThrowFromInGame(boolean entireStack, CallbackInfo ci, ServerboundPlayerActionPacket.Action action, ItemStack itemStack) {
+        if (!modEnabled(Minecraft.getInstance()) || !client().itemCounter().displayOnThrow || !itemStack.isStackable()) {
             return;
         }
 
@@ -93,7 +94,7 @@ public class LocalPlayerMixin extends AbstractClientPlayer {
     @Inject(method = "stopUsingItem", at = @At("HEAD"))
     private void onBowUse(CallbackInfo ci) {
         LocalPlayer player = (LocalPlayer) (Object) this;
-        if (!modEnabled(Minecraft.getInstance()) || player.isCreative() || !player.level().isClientSide() || !clientOptionsInstance().getItemCounterOptions().arrowCounter) {
+        if (!modEnabled(Minecraft.getInstance()) || player.isCreative() || !player.level().isClientSide() || !client().itemCounter().arrowCounter) {
             return;
         }
 
@@ -120,7 +121,7 @@ public class LocalPlayerMixin extends AbstractClientPlayer {
 
         LocalPlayer player = (LocalPlayer) (Object) this;
 
-        if (clientOptionsInstance().getMiscOptions().armorDing) {
+        if (client().misc().armorDing) {
             boolean triggeredNewLowArmor = false;
             for (int i = 0; i < this.playedDing.length; i++) {
                 EquipmentSlot slot = equipmentSlots()[i];
@@ -156,7 +157,7 @@ public class LocalPlayerMixin extends AbstractClientPlayer {
             }
         }
 
-        if (!clientOptionsInstance().getElytraAlarmOptions().elytraAlarm.enabled()) {
+        if (!client().elytraAlarm().elytraAlarm.enabled()) {
             this.elytraWarningCooldown = 0;
             return;
         }
@@ -179,23 +180,23 @@ public class LocalPlayerMixin extends AbstractClientPlayer {
                 && !player.getAbilities().mayfly
                 && !player.getAbilities().flying
                 && (player.gameMode() == GameType.SURVIVAL || player.gameMode() == GameType.ADVENTURE)
-                && PLAYER_FALL_DISTANCE >= clientOptionsInstance().getElytraAlarmOptions().minElytraAlarmFallDistance;
+                && PLAYER_FALL_DISTANCE >= client().elytraAlarm().minElytraAlarmFallDistance;
 
-        for (String itemName : clientOptionsInstance().getElytraAlarmOptions().elytraAlarmBlacklistedItems) {
+        for (String itemName : client().elytraAlarm().elytraAlarmBlacklistedItems) {
             if (isHoldingItem(player, itemName)) {
                 SHOULD_WARN_OF_ELYTRA = false;
                 break;
             }
         }
 
-        if (!SHOULD_WARN_OF_ELYTRA || clientOptionsInstance().getElytraAlarmOptions().elytraAlarm.indicatorOnly()) {
+        if (!SHOULD_WARN_OF_ELYTRA || client().elytraAlarm().elytraAlarm.indicatorOnly()) {
             this.elytraWarningCooldown = 0;
             return;
         }
 
         if (this.elytraWarningCooldown <= 0) {
             playDingSound();
-            this.elytraWarningCooldown = clientOptionsInstance().getElytraAlarmOptions().elytraAlarmSoundDelayTicks;
+            this.elytraWarningCooldown = client().elytraAlarm().elytraAlarmSoundDelayTicks;
             return;
         }
 

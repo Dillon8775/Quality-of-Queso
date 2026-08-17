@@ -10,8 +10,8 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
-import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
-import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.hasSelectSlotsKeyDown;
+import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.hasSelectSlotsModifierDown;
+import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 /**
  * Handles quick equip feature and methods.
@@ -81,7 +81,7 @@ public class QuickEquipInstance extends ManagementInstance {
     public void quickEquipItem() {
         Minecraft minecraft = Minecraft.getInstance();
         AbstractContainerMenu menu = instance().getScreenMenu();
-        if (!clientOptionsInstance().getManagementOptions().quickEquip || instance().getScreensHoveredSlot() == null || !isValidMenuForQuickEquipping(menu) || (clientOptionsInstance().getManagementOptions().dragSorting && hasSelectSlotsKeyDown())) {
+        if (!client().management().quickEquip || instance().getScreensHoveredSlot() == null || !isValidMenuForQuickEquipping(menu) || (client().management().dragSorting && hasSelectSlotsModifierDown())) {
             return;
         }
 

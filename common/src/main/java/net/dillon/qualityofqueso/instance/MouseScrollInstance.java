@@ -10,10 +10,10 @@ import net.minecraft.world.inventory.Slot;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
-import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
+import static net.dillon.qualityofqueso.helper.ModConstants.*;
 import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.canScrollMoveAndHasScrollModifierDown;
-import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.hasDropOnlyOneItemKeyDown;
-import static net.dillon.qualityofqueso.util.ModConstants.*;
+import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.hasDropOnlyOneItemModifierDown;
+import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 /**
  * Handles mouse scrolling events.
@@ -29,19 +29,19 @@ public class MouseScrollInstance extends ManagementInstance {
      */
     public void changeSortMode(double scrollY) {
         if (buttonHoveredAndActive(instance().getManagementButtons().sort())) {
-            CurrentSortingMode nextMode = clientOptionsInstance().getSortingOptions().currentSortingMode.next(scrollY > 0);
+            CurrentSortingMode nextMode = client().sorting().currentSortingMode.next(scrollY > 0);
             ModClientOptions.INSTANCE.update(options -> {
-                options.getSortingOptions().currentSortingMode = nextMode;
-                if (clientOptionsInstance().getSortingOptions().currentSortingMode == CurrentSortingMode.ALPHABETICAL) {
-                    options.getSortingOptions().globalSortingMode = GlobalSortingMode.ALPHABETICALLY;
-                } else if (options.getSortingOptions().currentSortingMode == CurrentSortingMode.TAG) {
-                    options.getSortingOptions().globalSortingMode = GlobalSortingMode.BY_TAG;
-                } else if (options.getSortingOptions().currentSortingMode == CurrentSortingMode.COUNT_DESCENDING) {
-                    options.getSortingOptions().globalSortingMode = GlobalSortingMode.DESCENDING;
-                } else if (options.getSortingOptions().currentSortingMode == CurrentSortingMode.COUNT_ASCENDING) {
-                    options.getSortingOptions().globalSortingMode = GlobalSortingMode.ASCENDING;
-                } else if (options.getSortingOptions().currentSortingMode == CurrentSortingMode.CREATIVE_MENU) {
-                    options.getSortingOptions().globalSortingMode = GlobalSortingMode.CREATIVE_MENU;
+                options.sorting().currentSortingMode = nextMode;
+                if (client().sorting().currentSortingMode == CurrentSortingMode.ALPHABETICAL) {
+                    options.sorting().globalSortingMode = GlobalSortingMode.ALPHABETICALLY;
+                } else if (options.sorting().currentSortingMode == CurrentSortingMode.TAG) {
+                    options.sorting().globalSortingMode = GlobalSortingMode.BY_TAG;
+                } else if (options.sorting().currentSortingMode == CurrentSortingMode.COUNT_DESCENDING) {
+                    options.sorting().globalSortingMode = GlobalSortingMode.DESCENDING;
+                } else if (options.sorting().currentSortingMode == CurrentSortingMode.COUNT_ASCENDING) {
+                    options.sorting().globalSortingMode = GlobalSortingMode.ASCENDING;
+                } else if (options.sorting().currentSortingMode == CurrentSortingMode.CREATIVE_MENU) {
+                    options.sorting().globalSortingMode = GlobalSortingMode.CREATIVE_MENU;
                 }
             });
             ContainerHelper.storeActiveSortMode(nextMode);
@@ -74,7 +74,7 @@ public class MouseScrollInstance extends ManagementInstance {
      * Sets the move amount when scrolling.
      */
     public void setMoveAmount(Slot hoveredSlot, double scrollY) {
-        if (!clientOptionsInstance().getManagementOptions().scrollMoving) {
+        if (!client().management().scrollMoving) {
             return;
         }
 
@@ -90,8 +90,8 @@ public class MouseScrollInstance extends ManagementInstance {
         }
 
         boolean validHoveredSlot = hoveredSlotHasItem(hoveredSlot) && hoveredSlot.getItem().count() > 1;
-        if (!isCreativeInventoryScreen(instance().getScreen()) && instance().getCanMoveOne() && (validHoveredSlot && hasDropOnlyOneItemKeyDown())
-                || buttonHoveredAndActive(instance().getManagementButtons().quickDrop()) ? hasDropOnlyOneItemKeyDown()
+        if (!isCreativeInventoryScreen(instance().getScreen()) && instance().getCanMoveOne() && (validHoveredSlot && hasDropOnlyOneItemModifierDown())
+                || buttonHoveredAndActive(instance().getManagementButtons().quickDrop()) ? hasDropOnlyOneItemModifierDown()
                 : ((validHoveredSlot || buttonHoveredAndActive(instance().getManagementButtons().transferContainer()) || buttonHoveredAndActive(instance().getManagementButtons().transferInventory())) && canScrollMoveAndHasScrollModifierDown())) {
             changeMountAmount(hoveredSlot, scrollY);
         }
@@ -116,9 +116,9 @@ public class MouseScrollInstance extends ManagementInstance {
      */
     public void moveHoveredItem(double scrollY, CallbackInfoReturnable<Boolean> cir) {
         if (!isCreativeInventoryScreen(instance().getScreen())
-                && clientOptionsInstance().getManagementOptions().scrollMoving
+                && client().management().scrollMoving
                 && canScrollMoveAndHasScrollModifierDown()
-                && !hasDropOnlyOneItemKeyDown()
+                && !hasDropOnlyOneItemModifierDown()
                 && new TransferInstance(instance()).tryMoveSingleFromScroll(instance().getScreensHoveredSlot(), scrollY)) {
             cir.setReturnValue(true);
         } else {

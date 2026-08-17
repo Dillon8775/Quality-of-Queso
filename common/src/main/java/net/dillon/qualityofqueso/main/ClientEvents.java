@@ -1,8 +1,8 @@
 package net.dillon.qualityofqueso.main;
 
 import net.dillon.dillonlib.task.CommonTasks;
+import net.dillon.qualityofqueso.helper.ModConstants;
 import net.dillon.qualityofqueso.helper.ModHelper;
-import net.dillon.qualityofqueso.util.ModConstants;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
@@ -10,6 +10,8 @@ import net.minecraft.network.chat.TextColor;
 
 import static net.dillon.dillonlib.task.ClientTasks.executeIfClientPlayer;
 import static net.dillon.qualityofqueso.helper.ModHelper.*;
+import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.OptionInstances.universal;
 
 /**
  * Client events for Quality of Queso.
@@ -24,23 +26,23 @@ public class ClientEvents {
     }
 
     public static void onPlayerJoin(Minecraft minecraft) {
-        if (universalOptionsInstance().multiServerConfigs) {
+        if (universal().multiServerConfigs) {
             ModHelper.LOADED = true;
             loadServerConfig();
         }
-        if (isOnServer(minecraft) && clientOptionsInstance().getMiscOptions().forceAntiRageQuit) {
-            clientOptionsInstance().getMiscOptions().antiRageQuit = true;
+        if (isOnServer(minecraft) && client().misc().forceAntiRageQuit) {
+            client().misc().antiRageQuit = true;
             saveAndApplyConfigs(minecraft);
         }
         executeIfClientPlayer(localPlayer -> {
-            if (clientOptionsInstance().getAccessibilityOptions().serverWarnings && isOnServer(minecraft)) {
+            if (client().accessibility().serverWarnings && isOnServer(minecraft)) {
                 for (String server : bannedServers) {
                     if (minecraft.getCurrentServer().ip.contains(server)) {
                         localPlayer.sendSystemMessage(Component.translatable("qualityofqueso.gui.banned_server",
                                 Component.literal(minecraft.getCurrentServer().ip).withStyle(ChatFormatting.DARK_RED)));
                     }
                 }
-                if (!universalOptionsInstance().multiServerConfigs) {
+                if (!universal().multiServerConfigs) {
                     localPlayer.sendSystemMessage(Component.translatable("qualityofqueso.gui.enable_multi_server_configs"));
                 }
             }
@@ -70,7 +72,7 @@ public class ClientEvents {
             return;
         }
 
-        if (clientOptionsInstance().getAccessibilityOptions().serverWarnings && minecraft.player != null) {
+        if (client().accessibility().serverWarnings && minecraft.player != null) {
             minecraft.player.sendSystemMessage(Component.translatable("qualityofqueso.gui.mod_not_installed"));
         }
     }

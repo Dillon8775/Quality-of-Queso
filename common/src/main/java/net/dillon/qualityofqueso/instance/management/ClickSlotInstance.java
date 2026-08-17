@@ -21,7 +21,7 @@ import static net.dillon.qualityofqueso.helper.ManagementHelper.isCraftingScreen
 import static net.dillon.qualityofqueso.helper.ManagementHelper.isInventoryScreen;
 import static net.dillon.qualityofqueso.helper.MethodHelper.getRecipeBookComponent;
 import static net.dillon.qualityofqueso.helper.MethodHelper.performClickSlot;
-import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
+import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 /**
  * Handles clicking slots.
@@ -43,7 +43,7 @@ public class ClickSlotInstance extends ManagementInstance {
      * Quickly closes the GUI screen by clicking anywhere outside the screen.
      */
     public void quickGuiClose(Slot slot, int buttonNum) {
-        if (clientOptionsInstance().getMiscOptions().quickGuiExit && getCursorStack().isEmpty() && buttonNum == 0 && slot == null) {
+        if (client().misc().quickGuiExit && getCursorStack().isEmpty() && buttonNum == 0 && slot == null) {
             instance().getScreen().onClose();
         }
     }
@@ -53,7 +53,7 @@ public class ClickSlotInstance extends ManagementInstance {
      */
     public void handleHardLockedSlots(Slot slot, CallbackInfo ci) {
         // Skip further injection if hard lock slots are disabled, but continue if always quick move is enabled (they are by default)
-        if (slot == null || !clientOptionsInstance().getLockedSlotOptions().lockedSlots || (!clientOptionsInstance().getLockedSlotOptions().hardLockSlots && !clientOptionsInstance().isAlwaysQuickMove())) {
+        if (slot == null || !client().lockedSlots().lockedSlots || (!client().lockedSlots().hardLockSlots && !client().isAlwaysQuickMove())) {
             return;
         }
 
@@ -71,7 +71,7 @@ public class ClickSlotInstance extends ManagementInstance {
             return;
         }
 
-        if ((!clientOptionsInstance().getManagementOptions().bulkTrade || !clientOptionsInstance().getButtonDisplayOptions().displayBulkTrade) || !clientOptionsInstance().getButtonDisplayOptions().displayBulkTrade || !(instance().getScreen() instanceof MerchantScreen merchantScreen)) {
+        if ((!client().management().bulkTrade || !client().buttonDisplayOptions().displayBulkTrade) || !client().buttonDisplayOptions().displayBulkTrade || !(instance().getScreen() instanceof MerchantScreen merchantScreen)) {
             return;
         }
 
@@ -110,7 +110,7 @@ public class ClickSlotInstance extends ManagementInstance {
             return;
         }
 
-        if ((!clientOptionsInstance().getManagementOptions().bulkCraft || !clientOptionsInstance().getButtonDisplayOptions().displayBulkCraft) || !(isCraftingScreen(instance().getScreen()) || isInventoryScreen(instance().getScreen()))) {
+        if ((!client().management().bulkCraft || !client().buttonDisplayOptions().displayBulkCraft) || !(isCraftingScreen(instance().getScreen()) || isInventoryScreen(instance().getScreen()))) {
             return;
         }
 

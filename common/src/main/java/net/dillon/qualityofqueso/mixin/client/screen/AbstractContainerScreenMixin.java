@@ -313,7 +313,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
     /**
      * Handles slot clicking with the help of the {@link ClickSlotInstance} record.
      */
-    @Inject(method = "slotClicked", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "slotClicked(Lnet/minecraft/world/inventory/Slot;IILnet/minecraft/world/inventory/ContainerInput;)V", at = @At("HEAD"), cancellable = true)
     private void handleSlotClicked(Slot slot, int slotId, int buttonNum, ContainerInput containerInput, CallbackInfo ci) {
         if (!modEnabled(this.minecraft)) {
             return;
@@ -331,7 +331,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
     /**
      * Handles mouse-releasing events with the help of the {@link MouseReleaseInstance} record.
      */
-    @Inject(method = "mouseReleased", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;slotClicked(Lnet/minecraft/world/inventory/Slot;IILnet/minecraft/world/inventory/ContainerInput;)V", ordinal = 0), cancellable = true, locals = LocalCapture.CAPTURE_FAILEXCEPTION)
+    @Inject(method = "mouseReleased", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;slotClicked(Lnet/minecraft/world/inventory/Slot;ILnet/minecraft/client/input/MouseButtonEvent;Lnet/minecraft/world/inventory/ContainerInput;)V", ordinal = 0), cancellable = true, locals = LocalCapture.CAPTURE_FAILEXCEPTION)
     private void handleMouseReleased(MouseButtonEvent event, CallbackInfoReturnable<Boolean> cir, Slot slot, int xo, int yo, boolean clickedOutside, int slotId, Iterator var7, Slot target) {
         if (!modEnabled(this.minecraft)) {
             return;

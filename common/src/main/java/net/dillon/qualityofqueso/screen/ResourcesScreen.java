@@ -1,6 +1,6 @@
 package net.dillon.qualityofqueso.screen;
 
-import net.dillon.qualityofqueso.util.ModConstants;
+import net.dillon.qualityofqueso.helper.ModConstants;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;

@@ -1,7 +1,7 @@
 package net.dillon.qualityofqueso.option;
 
 import net.dillon.dillonlib.util.BaseOptions;
-import net.dillon.qualityofqueso.util.ModConstants;
+import net.dillon.qualityofqueso.helper.ModConstants;
 
 public abstract class ModBaseOptions<T> extends BaseOptions<T> {
 

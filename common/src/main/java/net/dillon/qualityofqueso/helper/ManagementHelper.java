@@ -19,8 +19,8 @@ import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.Slot;
 
 import static net.dillon.qualityofqueso.helper.MethodHelper.getRecipeBookComponent;
-import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
-import static net.dillon.qualityofqueso.util.ModConstants.*;
+import static net.dillon.qualityofqueso.helper.ModConstants.*;
+import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 /**
  * Utility and handler class for management features.
@@ -220,7 +220,7 @@ public class ManagementHelper {
      * Plays the default button press sound.
      */
     public static void playDefaultSound(SoundManager manager) {
-        if (!clientOptionsInstance().getManagementOptions().playSounds) {
+        if (!client().management().playSounds) {
             return;
         }
 
@@ -238,7 +238,7 @@ public class ManagementHelper {
      * Plays the bundle sounds when using buttons.
      */
     public static void playButtonSound(Minecraft client, boolean drop) {
-        if (!clientOptionsInstance().getManagementOptions().playSounds) {
+        if (!client().management().playSounds) {
             return;
         }
 
@@ -249,7 +249,7 @@ public class ManagementHelper {
      * Plays the bundle sounds when sorting
      */
     public static void playSortSound(Minecraft client) {
-        if (!clientOptionsInstance().getManagementOptions().playSounds) {
+        if (!client().management().playSounds) {
             return;
         }
 
@@ -260,7 +260,7 @@ public class ManagementHelper {
      * Plays the inactive bundle sound.
      */
     public static void playButtonInactiveSound(Minecraft client) {
-        if (!clientOptionsInstance().getManagementOptions().playSounds) {
+        if (!client().management().playSounds) {
             return;
         }
 
@@ -271,7 +271,7 @@ public class ManagementHelper {
      * Plays the lock slot sound.
      */
     public static void playLockSlotSound(Minecraft client, boolean lock) {
-        if (!clientOptionsInstance().getLockedSlotOptions().lockedSlots || !clientOptionsInstance().getLockedSlotOptions().lockSound || LOCKED_SLOT_SOUND_COOLDOWN > 0) {
+        if (!client().lockedSlots().lockedSlots || !client().lockedSlots().lockSound || LOCKED_SLOT_SOUND_COOLDOWN > 0) {
             return;
         }
 
@@ -304,7 +304,7 @@ public class ManagementHelper {
      * @return the modifier to use for recipe books.
      */
     public static int getRecipeBookModifier(Screen screen) {
-        return !clientOptionsInstance().getMiscOptions().noRecipeBookShift
+        return !client().misc().noRecipeBookShift
                 && screen instanceof AbstractRecipeBookScreen<?> recipeBookScreen && getRecipeBookComponent(recipeBookScreen).isVisible() ? 77 : 0;
     }
 

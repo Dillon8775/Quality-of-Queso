@@ -9,8 +9,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
 import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
+import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 @Mixin(InventoryScreen.class)
 public class InventoryScreenMixin {
@@ -24,7 +24,7 @@ public class InventoryScreenMixin {
             return;
         }
 
-        if (!clientOptionsInstance().getSearchingOptions().searchBarPosition.top() && clientOptionsInstance().getSearchingOptions().inventorySearching && (
+        if (!client().searching().searchBarPosition.top() && client().searching().inventorySearching && (
                 ((QuesoScreen)this).getSearchFields().inventory() != null && (((QuesoScreen)this).getSearchFields().inventory().isFocused() || !(((QuesoScreen)this).getSearchFields().searchText().isEmpty()))
         )) {
             ci.cancel();

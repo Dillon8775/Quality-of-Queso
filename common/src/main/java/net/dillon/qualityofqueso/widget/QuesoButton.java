@@ -24,10 +24,10 @@ import static net.dillon.qualityofqueso.helper.ButtonHelper.getWidgetPath;
 import static net.dillon.qualityofqueso.helper.GuiHelper.drawTooltip;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
 import static net.dillon.qualityofqueso.helper.MethodHelper.getHoveredSlot;
-import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
-import static net.dillon.qualityofqueso.helper.ModHelper.ofQoQ;
+import static net.dillon.qualityofqueso.helper.ModConstants.*;
+import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
 import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.*;
-import static net.dillon.qualityofqueso.util.ModConstants.*;
+import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 /**
  * A representation of a {@code Quality of Queso} button.
@@ -116,7 +116,7 @@ public class QuesoButton extends Button {
         }
 
         Screen screen = getScreen();
-        if (canScrollMoveAndHasScrollModifierDown() && clientOptionsInstance().getManagementOptions().scrollMoving && (isValidScreenForSingularMoving(screen, true))) {
+        if (canScrollMoveAndHasScrollModifierDown() && client().management().scrollMoving && (isValidScreenForSingularMoving(screen, true))) {
             if (this.isHovered() ||
                     (getScreen() instanceof AbstractContainerScreen<?> abstractContainerScreen
                             && getHoveredSlot(abstractContainerScreen) != null && getHoveredSlot(abstractContainerScreen).hasItem())) {
@@ -134,7 +134,7 @@ public class QuesoButton extends Button {
 
         this.renderBaseButtonTexture(this.resourceLocation + this.buttonName + (!this.canBeActive.get() ? "_inactive" : ""), this, graphics);
 
-        if (!this.isHovered() || !this.active || !clientOptionsInstance().getGeneralOptions().tooltips.enabled()) {
+        if (!this.isHovered() || !this.active || !client().general().tooltips.enabled()) {
             return;
         }
 
@@ -194,7 +194,7 @@ public class QuesoButton extends Button {
         }
 
         int xy = getTransferButtonXY(this);
-        graphics.blit(RenderPipelines.GUI_TEXTURED, ofQoQ("textures/gui/sprites/button/" + BASE_BUTTON_HOVERED_PATH + ".png"), this.getX() - 1, this.getY() - 1, 0.0F, 0.0F, xy, xy, xy, xy);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, qoqIdentifier("textures/gui/sprites/button/" + BASE_BUTTON_HOVERED_PATH + ".png"), this.getX() - 1, this.getY() - 1, 0.0F, 0.0F, xy, xy, xy, xy);
     }
 
     /**
@@ -203,7 +203,7 @@ public class QuesoButton extends Button {
     protected final void renderButtonTexture(String id, AbstractWidget buttonReference, GuiGraphicsExtractor graphics) {
         int xy = getTransferButtonXY(this);
         this.renderBaseTexture(graphics);
-        graphics.blit(RenderPipelines.GUI_TEXTURED, ofQoQ("textures/gui/sprites/button/" + id + this.getAppendedTexture()), buttonReference.getX() - 1, buttonReference.getY() - 1, 0.0F, 0.0F, xy, xy, xy, xy);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, qoqIdentifier("textures/gui/sprites/button/" + id + this.getAppendedTexture()), buttonReference.getX() - 1, buttonReference.getY() - 1, 0.0F, 0.0F, xy, xy, xy, xy);
         this.renderHoveredTexture(graphics);
     }
 
@@ -252,8 +252,8 @@ public class QuesoButton extends Button {
      * @return if the user is dropping or moving one of an item.
      */
     protected final boolean movingOrDroppingOne() {
-        return clientOptionsInstance().getManagementOptions().scrollMoving && (this.buttonName.equals(QUICK_DROP_BUTTON_NAME)
-                ? hasDropOnlyOneItemKeyDown()
+        return client().management().scrollMoving && (this.buttonName.equals(QUICK_DROP_BUTTON_NAME)
+                ? hasDropOnlyOneItemModifierDown()
                 : getScreen() instanceof AbstractContainerScreen<?> && canScrollMoveAndHasScrollModifierDown());
     }
 
@@ -265,7 +265,7 @@ public class QuesoButton extends Button {
                         ? "qualityofqueso.gui.quick_drop_button.move_amount"
                         : "qualityofqueso.gui.move_amount_each",
                 getActualMoveAmount());
-        if (clientOptionsInstance().getGeneralOptions().tooltips.enabled()) {
+        if (client().general().tooltips.enabled()) {
             tooltip = appendedSingleTooltip(tooltip);
         }
         drawTooltip(

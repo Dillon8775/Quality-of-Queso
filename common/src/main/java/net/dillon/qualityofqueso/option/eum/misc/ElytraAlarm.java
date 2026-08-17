@@ -1,7 +1,7 @@
 package net.dillon.qualityofqueso.option.eum.misc;
 
 import com.mojang.serialization.Codec;
-import net.dillon.qualityofqueso.util.ModConstants;
+import net.dillon.qualityofqueso.helper.ModConstants;
 import net.minecraft.util.StringRepresentable;
 
 public enum ElytraAlarm implements StringRepresentable {

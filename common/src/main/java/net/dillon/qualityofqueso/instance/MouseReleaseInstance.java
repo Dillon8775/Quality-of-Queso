@@ -7,8 +7,8 @@ import net.minecraft.world.inventory.Slot;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import static net.dillon.qualityofqueso.helper.MethodHelper.kumaMousePressed;
-import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
 import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.hasAttemptedToLockSelectOrDeselect;
+import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 /**
  * Handles mouse-releasing functions.
@@ -40,7 +40,7 @@ public class MouseReleaseInstance extends ManagementInstance {
             lockedSlotsInstance().selectOrLockSlot(event, cir);
         }
 
-        if (clientOptionsInstance().getLockedSlotOptions().lockedSlots && kumaMousePressed(ModKeyMappings.LOCK_SLOT, event)) {
+        if (client().lockedSlots().lockedSlots && kumaMousePressed(ModKeyMappings.LOCK_SLOT, event)) {
             instance().setLastLockedSlotIndex(-1);
             instance().setLockDragAction(0);
         }

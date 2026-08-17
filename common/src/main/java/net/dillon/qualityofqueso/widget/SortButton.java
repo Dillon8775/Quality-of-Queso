@@ -9,7 +9,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 
 import java.util.function.Supplier;
 
-import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
+import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 /**
  * Sorts items in a container, by tag -> alphabetically, or just alphabetically.
@@ -22,13 +22,13 @@ public class SortButton extends QuesoButton {
 
     @Override
     protected Component getTooltipToRender() {
-        return Component.translatable("qualityofqueso.gui." + this.buttonName + "_button", clientOptionsInstance().getSortingOptions().currentSortingMode.getTooltip());
+        return Component.translatable("qualityofqueso.gui." + this.buttonName + "_button", client().sorting().currentSortingMode.getTooltip());
     }
 
     @Override
     protected void renderBaseButtonTexture(String id, AbstractWidget buttonReference, GuiGraphicsExtractor graphics) {
         this.renderBaseTexture(graphics);
-        ButtonHelper.drawButtonTexture(graphics, id + (!this.canBeActive.get() ? "" : clientOptionsInstance().getSortingOptions().currentSortingMode.getAppended()), this);
+        ButtonHelper.drawButtonTexture(graphics, id + (!this.canBeActive.get() ? "" : client().sorting().currentSortingMode.getAppended()), this);
         this.renderHoveredTexture(graphics);
     }
 }

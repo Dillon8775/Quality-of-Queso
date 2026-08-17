@@ -1,5 +1,6 @@
 package net.dillon.qualityofqueso.screen;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.dillon.dillonlib.util.Texts;
 import net.dillon.qualityofqueso.option.ModClientOptions;
 import net.dillon.qualityofqueso.util.ListOptions;
@@ -17,9 +18,11 @@ import net.minecraft.util.CommonColors;
 import static net.dillon.dillonlib.task.ClientTasks.drawSmallSprite;
 import static net.dillon.dillonlib.task.ClientTasks.openScreen;
 import static net.dillon.qualityofqueso.helper.GuiHelper.getArmorHotbarTexture;
-import static net.dillon.qualityofqueso.helper.ModHelper.*;
-import static net.dillon.qualityofqueso.util.ModConstants.DISABLED_TEXTURE;
-import static net.dillon.qualityofqueso.util.ModConstants.ENABLED_TEXTURE;
+import static net.dillon.qualityofqueso.helper.ModConstants.DISABLED_TEXTURE;
+import static net.dillon.qualityofqueso.helper.ModConstants.ENABLED_TEXTURE;
+import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
+import static net.dillon.qualityofqueso.helper.ModHelper.saveAndApplyConfigs;
+import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 /**
  * A screen used to configure the position of elements.
@@ -42,22 +45,22 @@ public class HudPositionsScreen extends Screen {
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
-        if (event.button() == 1) {
+        if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT) {
             boolean doInit = false;
             if (this.armorStatusXPosition.isHovered()) {
-                clientOptionsInstance().getHudOptions().armorStatusPosition[0] = 0;
+                client().hud().armorStatusPosition[0] = 0;
                 doInit = true;
             } else if (this.armorStatusYPosition.isHovered()) {
-                clientOptionsInstance().getHudOptions().armorStatusPosition[1] = 0;
+                client().hud().armorStatusPosition[1] = 0;
                 doInit = true;
             } else if (this.itemCounterXPosition.isHovered()) {
-                clientOptionsInstance().getItemCounterOptions().itemCounterPosition[0] = 0;
+                client().itemCounter().itemCounterPosition[0] = 0;
                 doInit = true;
             } else if (this.itemCounterYPosition.isHovered()) {
-                clientOptionsInstance().getItemCounterOptions().itemCounterPosition[1] = 0;
+                client().itemCounter().itemCounterPosition[1] = 0;
                 doInit = true;
             } else if (this.otherElementsY.isHovered()) {
-                clientOptionsInstance().getHudOptions().otherElementsY = 0;
+                client().hud().otherElementsY = 0;
                 doInit = true;
             }
 
@@ -80,7 +83,7 @@ public class HudPositionsScreen extends Screen {
         this.itemCounterYPosition = this.addRenderableWidget(ListOptions.itemCounterYPosition().createButton(Minecraft.getInstance().options, this.armorStatusXPosition.getX(), this.itemCounterXPosition.getY() + 24, 200));
         this.moveItemCounterOver = this.addRenderableWidget(Button.builder(Texts.BLANK, button -> {
             ModClientOptions.INSTANCE.update(options -> {
-                options.getItemCounterOptions().moveItemCounterOver = !options.getItemCounterOptions().moveItemCounterOver;
+                options.itemCounter().moveItemCounterOver = !options.itemCounter().moveItemCounterOver;
             });
         }).tooltip(
                 Tooltip.create(Component.translatable("qualityofqueso.options.move_item_counter_over.tooltip"))
@@ -88,12 +91,12 @@ public class HudPositionsScreen extends Screen {
 
         AbstractWidget reset = this.addRenderableWidget(Button.builder(Component.translatable("qualityofqueso.gui.reset"), button -> {
             ModClientOptions.INSTANCE.update(options -> {
-                options.getHudOptions().armorStatusPosition[0] = 0;
-                options.getHudOptions().armorStatusPosition[1] = 0;
-                options.getItemCounterOptions().itemCounterPosition[0] = 0;
-                options.getItemCounterOptions().itemCounterPosition[1] = 0;
-                options.getItemCounterOptions().moveItemCounterOver = true;
-                options.getHudOptions().otherElementsY = 0;
+                options.hud().armorStatusPosition[0] = 0;
+                options.hud().armorStatusPosition[1] = 0;
+                options.itemCounter().itemCounterPosition[0] = 0;
+                options.itemCounter().itemCounterPosition[1] = 0;
+                options.itemCounter().moveItemCounterOver = true;
+                options.hud().otherElementsY = 0;
             });
             this.init();
         }).bounds(this.itemCounterXPosition.getX() + 50, this.itemCounterYPosition.getY() + 28, 100, 20).build());
@@ -104,11 +107,11 @@ public class HudPositionsScreen extends Screen {
             this.onClose();
         }).bounds(reset.getX(), reset.getY() + 24, 100, 20).build());
 
-        boolean armorStatusEnabled = !clientOptionsInstance().getHudOptions().armorStatus.off();
+        boolean armorStatusEnabled = !client().hud().armorStatus.off();
         this.armorStatusXPosition.active = armorStatusEnabled;
         this.armorStatusYPosition.active = armorStatusEnabled;
 
-        boolean itemCounterEnabled = clientOptionsInstance().getItemCounterOptions().itemCounter.enabled();
+        boolean itemCounterEnabled = client().itemCounter().itemCounter.enabled();
         this.itemCounterXPosition.active = itemCounterEnabled;
         this.itemCounterYPosition.active = itemCounterEnabled;
         this.moveItemCounterOver.active = itemCounterEnabled;
@@ -127,9 +130,9 @@ public class HudPositionsScreen extends Screen {
         super.extractRenderState(graphics, mouseX, mouseY, deltaTicks);
 
         graphics.centeredText(this.font, this.title, this.width / 2, 13, CommonColors.WHITE);
-        drawSmallSprite(graphics, clientOptionsInstance().getItemCounterOptions().moveItemCounterOver ? ofQoQ(ENABLED_TEXTURE) : ofQoQ(DISABLED_TEXTURE), this.moveItemCounterOver);
+        drawSmallSprite(graphics, client().itemCounter().moveItemCounterOver ? qoqIdentifier(ENABLED_TEXTURE) : qoqIdentifier(DISABLED_TEXTURE), this.moveItemCounterOver);
 
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, getArmorHotbarTexture(), this.armorStatusXPosition.getX() + 60, this.armorStatusXPosition.getY() - 28, 82, 22);
-        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ofQoQ("hud/item_counter"), this.armorStatusXPosition.getX() + 74, this.itemCounterXPosition.getY() - 32, 58, 30);
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, qoqIdentifier("hud/item_counter"), this.armorStatusXPosition.getX() + 74, this.itemCounterXPosition.getY() - 32, 58, 30);
     }
 }

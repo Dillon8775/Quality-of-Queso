@@ -1,4 +1,4 @@
-package net.dillon.qualityofqueso.util;
+package net.dillon.qualityofqueso.helper;
 
 import net.dillon.dillonlib.util.UpdateChecker;
 import net.dillon.qualityofqueso.option.eum.management.sorting.CurrentSortingMode;
@@ -8,16 +8,17 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
-import static net.dillon.qualityofqueso.helper.ModHelper.ofQoQ;
+import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 /**
- * Constant variables and cooldowns for Quality of Queso.
+ * Constant values for Quality of Queso.
  */
 public class ModConstants {
     // Common constants
@@ -27,6 +28,8 @@ public class ModConstants {
             "quality-of-queso",
             VERSION.getString())
     );
+    public static final Logger LOGGER = LoggerFactory.getLogger("Quality of Queso");
+
     public static final String WIKI_LINK = "https://quality-of-queso.fandom.com/wiki/Quality_of_Queso_Wiki";
     public static final String DISCORD_LINK = "https://discord.gg/vfqEAn4YFy";
     public static final String SHOWCASE_VIDEO_LINK = "https://youtu.be/02wfcgHkPmQ";
@@ -87,12 +90,12 @@ public class ModConstants {
 
     // Other global variables
     public static Map<Integer, Set<Integer>> SAVED_EXCLUDED_SLOTS = new HashMap<>();
-    public static CurrentSortingMode GLOBAL_SORTING_MODE = clientOptionsInstance().getSortingOptions().currentSortingMode;
+    public static CurrentSortingMode GLOBAL_SORTING_MODE = client().sorting().currentSortingMode;
 
     // Texture constants
     public static final String CHEESE_WHEEL_TEXTURE = "widget/logo";
-    public static final String ENABLED_TEXTURE = "sprites/widget/enabled";
-    public static final String DISABLED_TEXTURE = "sprites/widget/disabled";
+    public static final String ENABLED_TEXTURE = "textures/gui/sprites/widget/enabled.png";
+    public static final String DISABLED_TEXTURE = "textures/gui/sprites/widget/disabled.png";
     public static final String OPEN_SCREENSHOTS_DIRECTORY_TEXTURE = "widget/screenshots";
     public static final String OPEN_WORLD_DIRECTORY_TEXTURE = "widget/world_folder";
     public static final String OPEN_CONFIG_DIRECTORY_TEXTURE = "widget/config_folder";
@@ -103,13 +106,13 @@ public class ModConstants {
     public static final String WIKI_TEXTURE = "widget/wiki";
     public static final String MULTI_CONFIG_TEXTURE = "widget/multi_config";
     public static final Identifier SEARCH_TEXTURE = Identifier.withDefaultNamespace("icon/search");
-    public static final Identifier SLOT_CRITICAL = ofQoQ("hud/colored_slot/slot_critical");
-    public static final Identifier SLOT_LOW = ofQoQ("hud/colored_slot/slot_low");
-    public static final Identifier SLOT_AVERAGE = ofQoQ("hud/colored_slot/slot_average");
-    public static final Identifier SLOT_DECENT = ofQoQ("hud/colored_slot/slot_decent");
-    public static final Identifier SLOT_GOOD = ofQoQ("hud/colored_slot/slot_good");
-    public static final Identifier SLOT_LOCKED = ofQoQ("hud/colored_slot/slot_locked");
-    public static final Identifier SELECTED_RECIPE = ofQoQ("slot/selected_recipe");
+    public static final Identifier SLOT_CRITICAL = ModHelper.qoqIdentifier("hud/colored_slot/slot_critical");
+    public static final Identifier SLOT_LOW = ModHelper.qoqIdentifier("hud/colored_slot/slot_low");
+    public static final Identifier SLOT_AVERAGE = ModHelper.qoqIdentifier("hud/colored_slot/slot_average");
+    public static final Identifier SLOT_DECENT = ModHelper.qoqIdentifier("hud/colored_slot/slot_decent");
+    public static final Identifier SLOT_GOOD = ModHelper.qoqIdentifier("hud/colored_slot/slot_good");
+    public static final Identifier SLOT_LOCKED = ModHelper.qoqIdentifier("hud/colored_slot/slot_locked");
+    public static final Identifier SELECTED_RECIPE = ModHelper.qoqIdentifier("slot/selected_recipe");
 
     // Config constants
     public static final String DEFAULT_CONFIG_DIR = "qualityofqueso/global";

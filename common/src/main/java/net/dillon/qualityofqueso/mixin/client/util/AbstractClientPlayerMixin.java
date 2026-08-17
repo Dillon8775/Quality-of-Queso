@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import static net.dillon.qualityofqueso.helper.ModHelper.canApplyEffect;
-import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
+import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 @PredicateSigned
 @Mixin(AbstractClientPlayer.class)
@@ -44,7 +44,7 @@ public abstract class AbstractClientPlayerMixin extends Player {
         }
 
         // Return locked Fov, no matter what
-        if (clientOptionsInstance().getFovEffectOptions().lockFov) {
+        if (client().fovEffects().lockFov) {
             cir.setReturnValue(Mth.lerp(effectScale, 1.0F, 1.0F));
         } else {
             // Preserve changes from other mods by scaling the existing return value
@@ -59,7 +59,7 @@ public abstract class AbstractClientPlayerMixin extends Player {
     private float computeModifier(boolean firstPerson, boolean useOptions) {
         float modifier = 1.0F;
 
-        if (this.getAbilities().flying && (!useOptions || clientOptionsInstance().getFovEffectOptions().flying)) {
+        if (this.getAbilities().flying && (!useOptions || client().fovEffects().flying)) {
             modifier *= 1.1F;
         }
 
@@ -69,15 +69,15 @@ public abstract class AbstractClientPlayerMixin extends Player {
 
             if (this.isSprinting()) {
                 if (useOptions) {
-                    if (clientOptionsInstance().getFovEffectOptions().sprinting > 99) {
-                        effectiveSpeed *= (1.3F * ((float) clientOptionsInstance().getFovEffectOptions().sprinting / 100));
+                    if (client().fovEffects().sprinting > 99) {
+                        effectiveSpeed *= (1.3F * ((float) client().fovEffects().sprinting / 100));
                     }
                 } else {
                     effectiveSpeed *= 1.3F;
                 }
             }
 
-            if (!useOptions || clientOptionsInstance().getFovEffectOptions().potions.enabled()) {
+            if (!useOptions || client().fovEffects().potions.enabled()) {
                 if (this.hasEffect(MobEffects.SPEED)) {
                     MobEffectInstance effect = this.getEffect(MobEffects.SPEED);
                     if (effect != null && (!useOptions || canApplyEffect(effect))) {
@@ -99,8 +99,8 @@ public abstract class AbstractClientPlayerMixin extends Player {
 
         if (this.isUsingItem()) {
             if (this.getUseItem().getItem() instanceof BowItem) {
-                if (!useOptions || clientOptionsInstance().getFovEffectOptions().bows.enabled()) {
-                    float scale = useOptions && clientOptionsInstance().getFovEffectOptions().bows.quickPull()
+                if (!useOptions || client().fovEffects().bows.enabled()) {
+                    float scale = useOptions && client().fovEffects().bows.quickPull()
                             ? 1.0F
                             : Math.min(this.getTicksUsingItem() / 20.0F, 1.0F);
                     modifier *= 1.0F - Mth.square(scale) * 0.15F;

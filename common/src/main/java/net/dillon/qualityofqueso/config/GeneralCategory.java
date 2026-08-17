@@ -13,7 +13,9 @@ import net.dillon.qualityofqueso.option.eum.general.Tooltips;
 import net.minecraft.network.chat.Component;
 
 import static net.dillon.qualityofqueso.config.ConfigurationScreen.fixedSizeImage;
-import static net.dillon.qualityofqueso.helper.ModHelper.*;
+import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
+import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.OptionInstances.universal;
 
 /**
  * The general options category for the {@link ConfigurationScreen}.
@@ -32,7 +34,7 @@ public class GeneralCategory {
                                         Option.<Boolean>createBuilder()
                                                 .name(Component.translatable("qualityofqueso.options.enable_mod"))
                                                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.enable_mod.description")))
-                                                .binding(true, () -> clientOptionsInstance().getGeneralOptions().enableMod, v -> clientOptionsInstance().getGeneralOptions().enableMod = v)
+                                                .binding(true, () -> client().general().enableMod, v -> client().general().enableMod = v)
                                                 .controller(TickBoxControllerBuilder::create)
                                                 .build()
                                 )
@@ -44,13 +46,13 @@ public class GeneralCategory {
                                                             .text(Component.translatable("qualityofqueso.options.theme.description"));
 
                                                     return switch (value) {
-                                                        case VANILLA -> builder.customImage(fixedSizeImage(ofQoQ("options/theme/vanilla"), 36, 36)).build();
-                                                        case DARK -> builder.customImage(fixedSizeImage(ofQoQ("options/theme/dark"), 36, 36)).build();
-                                                        case TRUE_DARK -> builder.customImage(fixedSizeImage(ofQoQ("options/theme/true_dark"), 136, 36)).build();
-                                                        case TRANSPARENT -> builder.customImage(fixedSizeImage(ofQoQ("options/theme/transparent"), 36, 36)).build();
+                                                        case VANILLA -> builder.customImage(fixedSizeImage(qoqIdentifier("options/theme/vanilla"), 36, 36)).build();
+                                                        case DARK -> builder.customImage(fixedSizeImage(qoqIdentifier("options/theme/dark"), 36, 36)).build();
+                                                        case TRUE_DARK -> builder.customImage(fixedSizeImage(qoqIdentifier("options/theme/true_dark"), 136, 36)).build();
+                                                        case TRANSPARENT -> builder.customImage(fixedSizeImage(qoqIdentifier("options/theme/transparent"), 36, 36)).build();
                                                     };
                                                 })
-                                                .binding(Theme.VANILLA, () -> clientOptionsInstance().getGeneralOptions().theme, v -> clientOptionsInstance().getGeneralOptions().theme = v)
+                                                .binding(Theme.VANILLA, () -> client().general().theme, v -> client().general().theme = v)
                                                 .controller(o -> EnumControllerBuilder.create(o)
                                                         .enumClass(Theme.class)
                                                         .formatValue(v -> Component.literal(v.getSerializedName())))
@@ -60,7 +62,7 @@ public class GeneralCategory {
                                         Option.<MenuButton>createBuilder()
                                                 .name(Component.translatable("qualityofqueso.options.menu_button"))
                                                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.menu_button.description")))
-                                                .binding(MenuButton.EVERYWHERE, () -> universalOptionsInstance().menuButton, v -> universalOptionsInstance().menuButton = v)
+                                                .binding(MenuButton.EVERYWHERE, () -> universal().menuButton, v -> universal().menuButton = v)
                                                 .controller(o -> EnumControllerBuilder.create(o)
                                                         .enumClass(MenuButton.class)
                                                         .formatValue(v -> Component.literal(v.getSerializedName())))
@@ -70,7 +72,7 @@ public class GeneralCategory {
                                         Option.<Tooltips>createBuilder()
                                                 .name(Component.translatable("qualityofqueso.options.tooltips"))
                                                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.tooltips.description")))
-                                                .binding(Tooltips.DEFAULT, () -> clientOptionsInstance().getGeneralOptions().tooltips, v -> clientOptionsInstance().getGeneralOptions().tooltips = v)
+                                                .binding(Tooltips.DEFAULT, () -> client().general().tooltips, v -> client().general().tooltips = v)
                                                 .controller(o -> EnumControllerBuilder.create(o)
                                                         .enumClass(Tooltips.class)
                                                         .formatValue(v -> Component.literal(v.getSerializedName())))
@@ -80,7 +82,7 @@ public class GeneralCategory {
                                         Option.<Boolean>createBuilder()
                                                 .name(Component.translatable("qualityofqueso.options.multi_server_configs"))
                                                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.multi_server_configs.description")))
-                                                .binding(false, () -> universalOptionsInstance().multiServerConfigs, v -> universalOptionsInstance().multiServerConfigs = v)
+                                                .binding(false, () -> universal().multiServerConfigs, v -> universal().multiServerConfigs = v)
                                                 .controller(BooleanControllerBuilder::create)
                                                 .build()
                                 )

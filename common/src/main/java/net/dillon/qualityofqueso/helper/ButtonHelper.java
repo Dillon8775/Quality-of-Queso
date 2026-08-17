@@ -1,30 +1,30 @@
 package net.dillon.qualityofqueso.helper;
 
+import net.dillon.dillonlib.platform.info.UpdatableSpriteButton;
 import net.dillon.dillonlib.task.ClientTasks;
-import net.dillon.dillonlib.util.Texts;
 import net.dillon.qualityofqueso.platform.QualityOfQuesoPlatforms;
 import net.dillon.qualityofqueso.screen.AbstractModScreen;
 import net.dillon.qualityofqueso.screen.MainMenuScreen;
-import net.dillon.qualityofqueso.util.ModConstants;
 import net.dillon.qualityofqueso.widget.QuesoButton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.SpriteIconButton;
-import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
 
 import java.util.Map;
 
 import static net.dillon.dillonlib.task.ClientTasks.openLink;
 import static net.dillon.dillonlib.task.ClientTasks.openScreen;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.getTransferButtonXY;
-import static net.dillon.qualityofqueso.helper.ModHelper.*;
-import static net.dillon.qualityofqueso.util.ModConstants.CHEESE_WHEEL_TEXTURE;
-import static net.dillon.qualityofqueso.util.ModConstants.YOUTUBE_TEXTURE;
+import static net.dillon.qualityofqueso.helper.ModConstants.CHEESE_WHEEL_TEXTURE;
+import static net.dillon.qualityofqueso.helper.ModConstants.YOUTUBE_TEXTURE;
+import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
+import static net.dillon.qualityofqueso.helper.ModHelper.saveAndApplyConfigs;
+import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.OptionInstances.universal;
 
 /**
  * Utility and helper class for buttons.
@@ -36,23 +36,30 @@ public class ButtonHelper {
      */
     public static void drawButtonTexture(GuiGraphicsExtractor graphics, String name, QuesoButton button) {
         int xy = getTransferButtonXY(button);
-        graphics.blit(RenderPipelines.GUI_TEXTURED, ofQoQ("textures/gui/sprites/button/" + name + ".png"), button.getX() - 1, button.getY() - 1, 0.0F, 0.0F, xy, xy, xy, xy);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, qoqIdentifier("textures/gui/sprites/button/" + name + ".png"), button.getX() - 1, button.getY() - 1, 0.0F, 0.0F, xy, xy, xy, xy);
     }
 
     /**
      * Creates the main Quality of Queso menu button.
      */
-    public static SpriteIconButton createMenuButton(Button.OnPress onPress, boolean tooltip) {
-        return ClientTasks.createMenuButton(ofQoQ(CHEESE_WHEEL_TEXTURE), onPress,
-                Map.of(ModConstants.HAS_UPDATE, Component.translatable("qualityofqueso.gui.update_available")),
+    public static UpdatableSpriteButton createMenuButton(Button.OnPress onPress, boolean tooltip) {
+        return ClientTasks.createMenuButton(
+                "Quality of Queso Main Menu",
+                qoqIdentifier(CHEESE_WHEEL_TEXTURE),
+                onPress,
+                Map.of(
+                        ModConstants.HAS_UPDATE,
+                        Component.translatable("qualityofqueso.gui.update_available")
+                ),
                 Component.translatable("qualityofqueso.gui.options.title"),
-                tooltip);
+                tooltip
+        );
     }
 
     /**
      * Creates the main Quality of Queso menu button.
      */
-    public static SpriteIconButton createMainMenuButton(Screen parent) {
+    public static UpdatableSpriteButton createMainMenuButton(Screen parent) {
         return createMenuButton(onPress -> openScreen(new MainMenuScreen(parent)), true);
     }
 
@@ -61,10 +68,10 @@ public class ButtonHelper {
      */
     public static SpriteIconButton createBlacklistServerButton(String address) {
         return createMenuButton(onPress -> {
-            if (universalOptionsInstance().blacklistedServers.contains(address)) {
-                universalOptionsInstance().blacklistedServers.remove(address);
+            if (universal().blacklistedServers.contains(address)) {
+                universal().blacklistedServers.remove(address);
             } else {
-                universalOptionsInstance().blacklistedServers.add(address);
+                universal().blacklistedServers.add(address);
             }
             saveAndApplyConfigs(Minecraft.getInstance());
         }, false);
@@ -74,8 +81,8 @@ public class ButtonHelper {
      * Creates a {@code YouTube} button.
      */
     public static SpriteIconButton createYouTubeButton(Screen parent, String link) {
-        return ClientTasks.createSpriteIconButton(ofQoQ(YOUTUBE_TEXTURE), (button) -> openLink(parent, link, false),
-                Component.translatable("qualityofqueso.gui.showcase.main.tooltip"));
+        return ClientTasks.createSpriteIconButton("YouTube Button", qoqIdentifier(YOUTUBE_TEXTURE), (button) -> openLink(parent, link, false),
+                Component.translatable("qualityofqueso.gui.showcase.main.tooltip"), false);
     }
 
     /**
@@ -96,9 +103,9 @@ public class ButtonHelper {
      * @return the configuration button X position.
      */
     public static int getConfigButtonX(int width, int button) {
-        if (universalOptionsInstance().menuButton.left()) {
+        if (universal().menuButton.left()) {
             return 8 + (button * 24);
-        } else if (universalOptionsInstance().menuButton.right()) {
+        } else if (universal().menuButton.right()) {
             return width - 28 - (button * 24);
         } else {
             return width / 2 + 106;
@@ -109,7 +116,7 @@ public class ButtonHelper {
      * @return the configuration button Y position.
      */
     public static int getConfigButtonY(int height, int button) {
-        if (universalOptionsInstance().menuButton.left() || universalOptionsInstance().menuButton.right()) {
+        if (universal().menuButton.left() || universal().menuButton.right()) {
             return height - 29;
         } else {
             return height / 4 + 72 + (button * 24) - 16 + (QualityOfQuesoPlatforms.getPlatform().platformName().neoforge() ? -6 : 0);
@@ -120,8 +127,8 @@ public class ButtonHelper {
      * @return the path for a widget.
      */
     public static String getWidgetPath(boolean forSearchBar) {
-        String appended = !forSearchBar && clientOptionsInstance().getAccessibilityOptions().useLegacyTextures ? "legacy/" : "";
-        return switch (clientOptionsInstance().getGeneralOptions().theme) {
+        String appended = !forSearchBar && client().accessibility().useLegacyTextures ? "legacy/" : "";
+        return switch (client().general().theme) {
             case DARK, TRUE_DARK -> "dark/" + appended;
             case TRANSPARENT -> "transparent/";
             default -> "vanilla/" + appended;

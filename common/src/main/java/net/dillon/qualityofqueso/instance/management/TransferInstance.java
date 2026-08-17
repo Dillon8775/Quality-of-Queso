@@ -11,6 +11,7 @@ import net.minecraft.client.gui.screens.inventory.BrewingStandScreen;
 import net.minecraft.client.gui.screens.inventory.EnchantmentScreen;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerInput;
@@ -24,9 +25,9 @@ import java.util.*;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
 import static net.dillon.qualityofqueso.helper.MethodHelper.key;
 import static net.dillon.qualityofqueso.helper.MethodHelper.performClickSlot;
-import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
+import static net.dillon.qualityofqueso.helper.ModConstants.MOVE_AMOUNT;
 import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.*;
-import static net.dillon.qualityofqueso.util.ModConstants.MOVE_AMOUNT;
+import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 /**
  * Handles transferring/basic management related things.
@@ -56,16 +57,16 @@ public class TransferInstance extends ManagementInstance {
      * @return if the user can single move an item.
      */
     public boolean canSingularMove() {
-        return clientOptionsInstance().getManagementOptions().scrollMoving && canScrollMoveAndHasScrollModifierDown();
+        return client().management().scrollMoving && canScrollMoveAndHasScrollModifierDown();
     }
 
     /**
      * @return if the user can singular quick drop an item.
      */
     public boolean canSingularQuickDrop(KeyEvent event) {
-        return clientOptionsInstance().getManagementOptions().scrollMoving
-                && event.key() == key(getUsersDropKey()).getValue()
-                && hasDropOnlyOneItemKeyDown()
+        return client().management().scrollMoving
+                && event.key() == key(getDropKey()).getValue()
+                && hasDropOnlyOneItemModifierDown()
                 && hoveredSlotHasItem(instance().getScreensHoveredSlot());
     }
 
@@ -76,6 +77,13 @@ public class TransferInstance extends ManagementInstance {
         for (int i = 0; i < MOVE_AMOUNT; i++) {
             sendClickSlotPacket(instance().getScreensHoveredSlot().index, ContainerInput.THROW);
         }
+    }
+
+    /**
+     * @return if the stack has a fuel component.
+     */
+    private boolean isFuel(ItemStack stack) {
+        return stack.has(DataComponents.COOKING_FUEL) || stack.has(DataComponents.BREWING_FUEL);
     }
 
     /**
@@ -129,7 +137,7 @@ public class TransferInstance extends ManagementInstance {
 
             if (searchInstance().isFilteredBySearch(fromSlot, false)) {
                 continue; // Then skip container slot if query not found via search
-            } else if (!clientOptionsInstance().getManagementOptions().includingHotbar) {
+            } else if (!client().management().includingHotbar) {
                 if (drop) {
                     if (isExcludedInventorySlot(fromSlot.index) || isInventoryHotbarSlot(isInventoryScreen(instance().getScreen()), fromSlot.index)) {
                         continue; // If dropping from InventoryScreen, and it's an excluded slot AND fromInventory hotbar slot, skip slot and continue
@@ -139,7 +147,7 @@ public class TransferInstance extends ManagementInstance {
                 }
             }
 
-            if (clientOptionsInstance().getLockedSlotOptions().lockedSlots && lockedSlotsInstance().isLockedSlot(fromSlot.index)) { // Skip locked slots (always)
+            if (client().lockedSlots().lockedSlots && lockedSlotsInstance().isLockedSlot(fromSlot.index)) { // Skip locked slots (always)
                 continue;
             } else if (!drop && shouldApplyMatchingFilter() && !isPresent(toInventory, fromStack)) { // Skip items that aren't already present/filtered
                 continue;
@@ -222,7 +230,7 @@ public class TransferInstance extends ManagementInstance {
      * @return {@code true} if the scroll was handled.
      */
     public boolean tryMoveSingleFromScroll(Slot hoveredSlot, double scrollY) {
-        if (!clientOptionsInstance().getManagementOptions().scrollMoving
+        if (!client().management().scrollMoving
                 || hoveredSlot == null
                 || !hoveredSlot.hasItem()
                 || scrollY == 0) {
@@ -334,7 +342,7 @@ public class TransferInstance extends ManagementInstance {
             return false;
         }
 
-        if (instance().getScreen() instanceof AbstractFurnaceScreen<?> && level.fuelValues().isFuel(sourceSlot.getItem())) {
+        if (instance().getScreen() instanceof AbstractFurnaceScreen<?> && isFuel(sourceSlot.getItem())) {
             // Furnace Slots: 0=input, 1=fuel, 2=result.
             return moveSingleFromSourceSlot(
                     sourceSlot,
@@ -540,10 +548,10 @@ public class TransferInstance extends ManagementInstance {
         if (isExcludedSlot(sourceSlot.index)) {
             return false;
         }
-        if (clientOptionsInstance().getLockedSlotOptions().lockedSlots && clientOptionsInstance().getLockedSlotOptions().hardLockSlots && lockedSlotsInstance().isLockedSlot(sourceSlot.index)) {
+        if (client().lockedSlots().lockedSlots && client().lockedSlots().hardLockSlots && lockedSlotsInstance().isLockedSlot(sourceSlot.index)) {
             return false;
         }
-        if (toContainer && !clientOptionsInstance().getManagementOptions().includingHotbar && isHotbarSlot(totalSlots, sourceSlot.index)) {
+        if (toContainer && !client().management().includingHotbar && isHotbarSlot(totalSlots, sourceSlot.index)) {
             return false;
         }
         return !searchInstance().isFilteredBySearch(sourceSlot, false);
@@ -702,7 +710,7 @@ public class TransferInstance extends ManagementInstance {
 
             if (!ignoreContainerFiltering
                     && ContainerHelper.IS_TRACKED_CONTAINER
-                    && clientOptionsInstance().getManagementOptions().containerFiltering
+                    && client().management().containerFiltering
                     && ContainerHelper.CURRENT_FILTER_MODE == FilteringMode.CURRENT_STACKS
                     && !itemMatchesPlaceholder(target.getItem())) {
                 continue;
@@ -843,7 +851,7 @@ public class TransferInstance extends ManagementInstance {
                 continue;
             }
 
-            if (!clientOptionsInstance().getManagementOptions().includingHotbar && isHotbarSlot(menu.slots.size(), playerSlot.index)) {
+            if (!client().management().includingHotbar && isHotbarSlot(menu.slots.size(), playerSlot.index)) {
                 continue;
             }
 

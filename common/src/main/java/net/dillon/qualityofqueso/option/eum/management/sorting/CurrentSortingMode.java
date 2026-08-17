@@ -1,6 +1,6 @@
 package net.dillon.qualityofqueso.option.eum.management.sorting;
 
-import net.dillon.qualityofqueso.util.ModConstants;
+import net.dillon.qualityofqueso.helper.ModConstants;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.CommonColors;
 

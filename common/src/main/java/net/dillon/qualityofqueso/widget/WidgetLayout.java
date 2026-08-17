@@ -18,9 +18,9 @@ import java.util.List;
 import static net.dillon.qualityofqueso.helper.ButtonHelper.getWidgetPath;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
 import static net.dillon.qualityofqueso.helper.MethodHelper.getImageWidth;
-import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
-import static net.dillon.qualityofqueso.helper.ModHelper.ofQoQ;
-import static net.dillon.qualityofqueso.util.ModConstants.RENDERED_BUTTONS;
+import static net.dillon.qualityofqueso.helper.ModConstants.RENDERED_BUTTONS;
+import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
+import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 /**
  * A layout, either horizontally or vertically, for all buttons to be rendered in.
@@ -165,7 +165,7 @@ public class WidgetLayout extends AbstractWidget {
      */
     @Override
     public boolean isMouseOver(double mouseX, double mouseY) {
-        if (!this.visible || clientOptionsInstance().getManagementOptions().layout.horizontal() || RENDERED_BUTTONS <= 0) {
+        if (!this.visible || client().management().layout.horizontal() || RENDERED_BUTTONS <= 0) {
             return false;
         }
 
@@ -190,7 +190,7 @@ public class WidgetLayout extends AbstractWidget {
         boolean hopperDropperOrDispenser = isDropperDispenserOrHopperScreen(this.screen);
         boolean dropperOrDispenser = isDropperOrDispenserScreen(this.screen);
 
-        if (RENDERED_BUTTONS > 0 && !clientOptionsInstance().getManagementOptions().layout.horizontal()) {
+        if (RENDERED_BUTTONS > 0 && !client().management().layout.horizontal()) {
             this.extractPanel(graphics, player);
         }
 
@@ -221,8 +221,8 @@ public class WidgetLayout extends AbstractWidget {
                 continue;
             }
 
-            boolean bulkCraft = clientOptionsInstance().getManagementOptions().layout.horizontal() && widget instanceof BulkCraftButton;
-            if (clientOptionsInstance().getManagementOptions().layout.horizontal()) {
+            boolean bulkCraft = client().management().layout.horizontal() && widget instanceof BulkCraftButton;
+            if (client().management().layout.horizontal()) {
                 widget.setX(getManagementButtonX(this.screen, getImageWidth(this.screen), this.screen.width, buttons));
                 widget.setY(getManagementButtonY(this.screen, this.container, this.topPos, this.titleLabelY));
                 if (inventoryScreen) {
@@ -286,7 +286,7 @@ public class WidgetLayout extends AbstractWidget {
         int panelY = this.getPanelY(player);
         float xScale = this.getPanelWidth() / (float) LAYOUT_BASE_WIDTH;
         int panelHeight = this.getPanelHeight();
-        var layoutTexture = ofQoQ("textures/gui/sprites/button/base/" + getWidgetPath(true) + "layout.png");
+        var layoutTexture = qoqIdentifier("textures/gui/sprites/button/base/" + getWidgetPath(true) + "layout.png");
 
         if (this.getLayoutNumber() == 1) {
             int panelWidth = this.getPanelWidth();

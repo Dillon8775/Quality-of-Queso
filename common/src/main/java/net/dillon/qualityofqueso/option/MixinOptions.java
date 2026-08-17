@@ -1,6 +1,6 @@
 package net.dillon.qualityofqueso.option;
 
-import net.dillon.qualityofqueso.util.ModConstants;
+import net.dillon.qualityofqueso.helper.ModConstants;
 
 /**
  * An option instance that stores mixin configurations.

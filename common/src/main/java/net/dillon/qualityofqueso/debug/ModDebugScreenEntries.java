@@ -4,7 +4,7 @@ import net.dillon.qualityofqueso.helper.MethodHelper;
 import net.minecraft.client.gui.components.debug.DebugEntryCategory;
 import net.minecraft.network.chat.Component;
 
-import static net.dillon.qualityofqueso.helper.ModHelper.ofQoQ;
+import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
 
 /**
  * All debug hud entries.
@@ -16,11 +16,11 @@ public class ModDebugScreenEntries {
      * Registers all Quality of Queso debug entries.
      */
     public static void registerDebugEntries() {
-        MethodHelper.registerDebugEntry(ofQoQ("real_life_time"), new ModDebugEntryRealLifeTime());
-        MethodHelper.registerDebugEntry(ofQoQ("in_game_time"), new ModDebugEntryInGameTime());
-        MethodHelper.registerDebugEntry(ofQoQ("date"), new ModDebugEntryDate());
-        MethodHelper.registerDebugEntry(ofQoQ("simple_coordinates"), new ModDebugEntrySimpleCoordinates());
-        MethodHelper.registerDebugEntry(ofQoQ("fastest_flight"), new ModDebugEntryFastestFlight());
-        MethodHelper.registerDebugEntry(ofQoQ("accurate_facing"), new ModDebugEntryAccurateFacing());
+        MethodHelper.registerDebugEntry(qoqIdentifier("real_life_time"), new ModDebugEntryRealLifeTime());
+        MethodHelper.registerDebugEntry(qoqIdentifier("in_game_time"), new ModDebugEntryInGameTime());
+        MethodHelper.registerDebugEntry(qoqIdentifier("date"), new ModDebugEntryDate());
+        MethodHelper.registerDebugEntry(qoqIdentifier("simple_coordinates"), new ModDebugEntrySimpleCoordinates());
+        MethodHelper.registerDebugEntry(qoqIdentifier("fastest_flight"), new ModDebugEntryFastestFlight());
+        MethodHelper.registerDebugEntry(qoqIdentifier("accurate_facing"), new ModDebugEntryAccurateFacing());
     }
 }

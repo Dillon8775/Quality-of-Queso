@@ -1,7 +1,7 @@
 package net.dillon.qualityofqueso.registry;
 
+import net.dillon.qualityofqueso.helper.ModConstants;
 import net.dillon.qualityofqueso.sound.ModSoundEvents;
-import net.dillon.qualityofqueso.util.ModConstants;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.sounds.SoundEvent;
 import net.neoforged.bus.api.IEventBus;

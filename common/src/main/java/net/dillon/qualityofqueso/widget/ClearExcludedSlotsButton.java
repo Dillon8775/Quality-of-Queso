@@ -1,6 +1,7 @@
 package net.dillon.qualityofqueso.widget;
 
-import net.dillon.qualityofqueso.util.ModConstants;
+import com.mojang.blaze3d.platform.InputConstants;
+import net.dillon.qualityofqueso.helper.ModConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -43,7 +44,7 @@ public class ClearExcludedSlotsButton extends ToggleableButton {
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDouble) {
-        if (event.button() == 1) {
+        if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT) {
             ModConstants.SAVING_EXCLUDED_SLOTS = !ModConstants.SAVING_EXCLUDED_SLOTS;
             this.playDownSound(Minecraft.getInstance().getSoundManager());
             return true;

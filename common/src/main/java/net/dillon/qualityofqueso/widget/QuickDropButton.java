@@ -13,11 +13,11 @@ import java.util.function.Supplier;
 import static net.dillon.dillonlib.task.ClientTasks.getScreen;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.isInventoryScreen;
 import static net.dillon.qualityofqueso.helper.MethodHelper.getHoveredSlot;
-import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
-import static net.dillon.qualityofqueso.helper.ModHelper.ofQoQ;
+import static net.dillon.qualityofqueso.helper.ModConstants.MOVE_ONE_PATH;
+import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
 import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.hasAllQuickDropModifiersDown;
-import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.hasDropOnlyOneItemKeyDown;
-import static net.dillon.qualityofqueso.util.ModConstants.MOVE_ONE_PATH;
+import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.hasDropOnlyOneItemModifierDown;
+import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 /**
  * Representation of the quick drop button.
@@ -46,7 +46,7 @@ public class QuickDropButton extends QuesoButton {
             transferableString = ".png";
         }
         this.renderBaseTexture(graphics);
-        graphics.blit(RenderPipelines.GUI_TEXTURED, ofQoQ("textures/gui/sprites/button/" + id + transferableString), buttonReference.getX() - 1, buttonReference.getY() - 1, 0.0F, 0.0F, 12, 12, 12, 12);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, qoqIdentifier("textures/gui/sprites/button/" + id + transferableString), buttonReference.getX() - 1, buttonReference.getY() - 1, 0.0F, 0.0F, 12, 12, 12, 12);
         this.renderHoveredTexture(graphics);
         boolean shortcutKeyPressed = hasAllQuickDropModifiersDown();
         if (shortcutKeyPressed) {
@@ -56,8 +56,8 @@ public class QuickDropButton extends QuesoButton {
             }
             ButtonHelper.drawButtonTexture(graphics, "quick_drop/" + outline, this);
         }
-        if (hasDropOnlyOneItemKeyDown()
-                && ((clientOptionsInstance().getManagementOptions().scrollMoving && ((this.isHovered()) || getScreen() instanceof AbstractContainerScreen<?> screen && getHoveredSlot(screen) != null && getHoveredSlot(screen).hasItem())) || shortcutKeyPressed)) {
+        if (hasDropOnlyOneItemModifierDown()
+                && ((client().management().scrollMoving && ((this.isHovered()) || getScreen() instanceof AbstractContainerScreen<?> screen && getHoveredSlot(screen) != null && getHoveredSlot(screen).hasItem())) || shortcutKeyPressed)) {
             ButtonHelper.drawButtonTexture(graphics, MOVE_ONE_PATH, this);
         }
     }

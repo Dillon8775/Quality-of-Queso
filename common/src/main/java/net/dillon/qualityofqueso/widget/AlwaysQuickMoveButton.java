@@ -4,7 +4,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 
-import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
+import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 /**
  * Always quicks moves items when toggled on.
@@ -27,7 +27,7 @@ public class AlwaysQuickMoveButton extends ToggleableButton {
 
     @Override
     protected boolean option() {
-        return clientOptionsInstance().getAlwaysQuickMove();
+        return client().getAlwaysQuickMove();
     }
 
     @Override

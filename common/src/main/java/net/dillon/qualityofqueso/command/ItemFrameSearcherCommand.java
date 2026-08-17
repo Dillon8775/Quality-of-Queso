@@ -10,7 +10,9 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 
-import static net.dillon.qualityofqueso.helper.ModHelper.*;
+import static net.dillon.qualityofqueso.helper.ModHelper.handleGlowPacket;
+import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.OptionInstances.common;
 
 /**
  * The command to search item frames, separate from the GUI screen.
@@ -47,7 +49,7 @@ public class ItemFrameSearcherCommand {
     public static LiteralArgumentBuilder<CommandSourceStack> itemFrameSearcherCommand(CommandBuildContext commandBuildContext) {
         return Commands.literal("itemframesearcher")
                 // Works if the player has item frame searching enabled and the mod is enabled
-                .requires(source -> commonOptionsInstance().itemFrameSearching && clientOptionsInstance().getGeneralOptions().enableMod)
+                .requires(source -> common().itemFrameSearching && client().general().enableMod)
                 .then(
                         Commands.literal("clear") // Clear argument, which removes all glow from item frames
                                 .executes(
@@ -56,7 +58,7 @@ public class ItemFrameSearcherCommand {
                                                 "",
                                                 true,
                                                 0,
-                                                clientOptionsInstance().getMiscOptions().itemFrameSearchRadius
+                                                client().misc().itemFrameSearchRadius
                                         )
                                 )
                                 .then( // Radius for the clear argument
@@ -82,7 +84,7 @@ public class ItemFrameSearcherCommand {
                                                                 StringArgumentType.getString(context, ITEM),
                                                                 false,
                                                                 0,
-                                                                clientOptionsInstance().getMiscOptions().itemFrameSearchRadius
+                                                                client().misc().itemFrameSearchRadius
                                                         )
                                                 )
                                                 .then( // Radius argument for searching item frames

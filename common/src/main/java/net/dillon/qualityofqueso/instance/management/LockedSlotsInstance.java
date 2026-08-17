@@ -1,5 +1,6 @@
 package net.dillon.qualityofqueso.instance.management;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.dillon.qualityofqueso.helper.ContainerHelper;
 import net.dillon.qualityofqueso.instance.QuesoScreen;
 import net.minecraft.client.Minecraft;
@@ -14,11 +15,11 @@ import java.util.Set;
 
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
 import static net.dillon.qualityofqueso.helper.MethodHelper.kumaMousePressed;
-import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
-import static net.dillon.qualityofqueso.helper.ModHelper.ofQoQ;
+import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
 import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.*;
 import static net.dillon.qualityofqueso.keybind.ModKeyMappings.LOCK_SLOT;
 import static net.dillon.qualityofqueso.keybind.ModKeyMappings.SCROLL_MOVE;
+import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 /**
  * Handles locked slot colors, overlays, and functions.
@@ -33,14 +34,14 @@ public class LockedSlotsInstance extends ManagementInstance {
      * @return the set of locked container slots.
      */
     public Set<Integer> getLockedContainerSlots() {
-        return clientOptionsInstance().getLockedSlotOptions().lockedSlots ? ContainerHelper.getLockedSlots(true) : Collections.emptySet();
+        return client().lockedSlots().lockedSlots ? ContainerHelper.getLockedSlots(true) : Collections.emptySet();
     }
 
     /**
      * @return the set of locked player slots.
      */
     public Set<Integer> getLockedPlayerSlots() {
-        return clientOptionsInstance().getLockedSlotOptions().lockedSlots ? ContainerHelper.getLockedSlots(false) : Collections.emptySet();
+        return client().lockedSlots().lockedSlots ? ContainerHelper.getLockedSlots(false) : Collections.emptySet();
     }
 
     /**
@@ -60,7 +61,7 @@ public class LockedSlotsInstance extends ManagementInstance {
      * @return if the user is attempting to drop an entire locked slot stack.
      */
     public boolean droppingEntireLockedSlotStack() {
-        return SCROLL_MOVE.isActiveAndDown() && hasDropOnlyOneItemKeyDown() && instance().getScreensHoveredSlot() != null && lockedSlotsInstance().isLockedSlot(instance().getScreensHoveredSlot().index);
+        return SCROLL_MOVE.isActiveAndDown() && hasDropOnlyOneItemModifierDown() && instance().getScreensHoveredSlot() != null && lockedSlotsInstance().isLockedSlot(instance().getScreensHoveredSlot().index);
     }
 
     /**
@@ -69,8 +70,8 @@ public class LockedSlotsInstance extends ManagementInstance {
     public boolean shouldCancelDrop() {
         if (lockedSlotsInstance().droppingEntireLockedSlotStack()
                 ? lockedSlotsInstance().droppingEntireLockedSlotStack() && canScrollMoveAndHasScrollModifierDown()
-                : canScrollMoveAndHasScrollModifierDown() && !hasDropOnlyOneItemKeyDown()) {
-            return !(canScrollMoveAndHasScrollModifierDown() && hasDropOnlyOneItemKeyDown() && Minecraft.getInstance().hasAltDown());
+                : canScrollMoveAndHasScrollModifierDown() && !hasDropOnlyOneItemModifierDown()) {
+            return !(canScrollMoveAndHasScrollModifierDown() && hasDropOnlyOneItemModifierDown() && Minecraft.getInstance().hasAltDown());
         }
         return false;
     }
@@ -80,7 +81,7 @@ public class LockedSlotsInstance extends ManagementInstance {
      */
     public void renderUnlockedSlot(GuiGraphicsExtractor graphics, boolean isSlotLocked, int mouseX, int mouseY) {
         int xy = 10;
-        graphics.blit(RenderPipelines.GUI_TEXTURED, ofQoQ("textures/gui/sprites/locked_slot/" + (isSlotLocked ? "key" : "unlock") + ".png"), mouseX - 8, mouseY + 1, 0.0F, 0.0F, xy, xy, xy, xy);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, qoqIdentifier("textures/gui/sprites/locked_slot/" + (isSlotLocked ? "key" : "unlock") + ".png"), mouseX - 8, mouseY + 1, 0.0F, 0.0F, xy, xy, xy, xy);
     }
 
     /**
@@ -99,10 +100,10 @@ public class LockedSlotsInstance extends ManagementInstance {
             if (lockOnly) {
                 if (slot.hasItem()) {
                     int xy = 10;
-                    graphics.blit(RenderPipelines.GUI_TEXTURED, ofQoQ("textures/gui/sprites/locked_slot/locked.png"), slot.x - 3, slot.y + 9, 0.0F, 0.0F, xy, xy, xy, xy);
+                    graphics.blit(RenderPipelines.GUI_TEXTURED, qoqIdentifier("textures/gui/sprites/locked_slot/locked.png"), slot.x - 3, slot.y + 9, 0.0F, 0.0F, xy, xy, xy, xy);
                 }
             } else {
-                graphics.fill(slot.x - 1, slot.y - 1, slot.x + 17, slot.y + 17, clientOptionsInstance().getLockedSlotOptions().lockedSlotColor);
+                graphics.fill(slot.x - 1, slot.y - 1, slot.x + 17, slot.y + 17, client().lockedSlots().lockedSlotColor);
             }
         }
     }
@@ -149,7 +150,7 @@ public class LockedSlotsInstance extends ManagementInstance {
             return;
         }
 
-        if (isValidScreen(instance().getScreen()) && clientOptionsInstance().getLockedSlotOptions().lockedSlots && notExcluding && hasLockSlotModifierDown() && lockingSlot) {
+        if (isValidScreen(instance().getScreen()) && client().lockedSlots().lockedSlots && notExcluding && hasLockSlotModifierDown() && lockingSlot) {
             if (instance().getLastLockedSlotIndex() != slot.index) {
                 if (instance().getLockDragAction() == 0) {
                     instance().setLockDragAction(isLockedSlot(slot.index) ? -1 : 1);
@@ -175,7 +176,7 @@ public class LockedSlotsInstance extends ManagementInstance {
             }
         }
 
-        if (!clientOptionsInstance().getManagementOptions().dragSorting) {
+        if (!client().management().dragSorting) {
             return;
         } else if (!lockingSlot) {
             if (notExcluding && !instance().getExcludedAll()) {
@@ -183,13 +184,13 @@ public class LockedSlotsInstance extends ManagementInstance {
                     instance().getExcludedSlots().add(s.index);
                 }
                 instance().setExcludedAll(true);
-            } else if (event.button() == 1) {
+            } else if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT) {
                 if (notExcluding) {
                     instance().getExcludedSlots().add(slot.index);
                 } else {
                     instance().getExcludedSlots().remove(slot.index);
                 }
-            } else if (event.button() == 0) {
+            } else if (event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
                 if (notExcluding) {
                     instance().getExcludedSlots().remove(slot.index);
                 } else {

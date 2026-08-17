@@ -2,7 +2,7 @@ package net.dillon.qualityofqueso.platform;
 
 import net.dillon.dillonlib.platform.PlatformLoader;
 import net.dillon.dillonlib.platform.client.ClientModPlatform;
-import net.dillon.qualityofqueso.util.ModConstants;
+import net.dillon.qualityofqueso.helper.ModConstants;
 
 public class QualityOfQuesoPlatforms {
     private static final QualityOfQuesoPlatform PLATFORM = PlatformLoader.load(QualityOfQuesoPlatform.class, ModConstants.MOD_ID);

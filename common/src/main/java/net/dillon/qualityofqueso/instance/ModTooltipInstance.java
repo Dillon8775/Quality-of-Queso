@@ -26,10 +26,10 @@ import java.util.*;
 
 import static net.dillon.qualityofqueso.helper.GuiHelper.ofItalicAndGray;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
-import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
+import static net.dillon.qualityofqueso.helper.ModConstants.MOVE_AMOUNT;
 import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.*;
+import static net.dillon.qualityofqueso.option.OptionInstances.client;
 import static net.dillon.qualityofqueso.util.EnchantingHelper.isEnchantmentInGroup;
-import static net.dillon.qualityofqueso.util.ModConstants.MOVE_AMOUNT;
 
 /**
  * Handles tooltip rendering for this mod.
@@ -107,14 +107,14 @@ public class ModTooltipInstance extends ManagementInstance {
         // Check if a shortcut key is held down
         // If quick drop is hovered, then we only check for if shift is held (to only drop one of each item)
         // Otherwise, check if the quick drop keys are down (CTRL + ALT), OR if CTRL/move single modifier itself is held down, to move singular items
-        boolean hasKeyDown = quickDropHovered ? hasDropOnlyOneItemKeyDown() : hasAllQuickDropModifiersDown() || canScrollMoveAndHasScrollModifierDown();
-        boolean droppingOne = hoveredSlotHasItem && hasDropOnlyOneItemKeyDown();
+        boolean hasKeyDown = quickDropHovered ? hasDropOnlyOneItemModifierDown() : hasAllQuickDropModifiersDown() || canScrollMoveAndHasScrollModifierDown();
+        boolean droppingOne = hoveredSlotHasItem && hasDropOnlyOneItemModifierDown();
 
         // The boolean expression to modify tooltips based on the conditions above
         // We can modify tooltips if we are attempting to drop one, or if we have a shortcut key down and one of the buttons are hovered/the hovered slot has an item (for quick dropping)
-        boolean bl = clientOptionsInstance().getManagementOptions().scrollMoving && (droppingOne || (hasKeyDown && (buttonHovered || hoveredSlotHasItem)));
+        boolean bl = client().management().scrollMoving && (droppingOne || (hasKeyDown && (buttonHovered || hoveredSlotHasItem)));
         instance().setCanMoveOne(bl);
-        boolean onlySingleMoveModifierDown = canScrollMoveAndHasScrollModifierDown() && !hasAllQuickDropModifiersDown() && !hasDropOnlyOneItemKeyDown();
+        boolean onlySingleMoveModifierDown = canScrollMoveAndHasScrollModifierDown() && !hasAllQuickDropModifiersDown() && !hasDropOnlyOneItemModifierDown();
 
         // Create a new tooltip to render
         List<Component> tooltipToRender = new ArrayList<>();
@@ -142,7 +142,7 @@ public class ModTooltipInstance extends ManagementInstance {
             boolean canContinueToAddTooltips = true;
             boolean skip = false;
             // Create ignores locked slots variable
-            Component ignoresLockedSlots = Component.translatable("qualityofqueso.gui.move_amount.ignores_locked_slots").withColor(clientOptionsInstance().getLockedSlotOptions().lockedSlotColor);
+            Component ignoresLockedSlots = Component.translatable("qualityofqueso.gui.move_amount.ignores_locked_slots").withColor(client().lockedSlots().lockedSlotColor);
             // If the quick drop keys are down and the hovered slot has an item, continue through this statement
             if (hasAllQuickDropModifiersDown() && hoveredSlotHasItem(hoveredSlot)) {
                 boolean containerScreen = isContainerScreen(instance().getScreen());
@@ -152,7 +152,7 @@ public class ModTooltipInstance extends ManagementInstance {
                             .withStyle(ChatFormatting.RED));
                     canContinueToAddTooltips = false;
                 } else { // Then check if we are attempting to drop only one of each item
-                    if (hasDropOnlyOneItemKeyDown()) { // Display that item name w/ the move amount
+                    if (hasDropOnlyOneItemModifierDown()) { // Display that item name w/ the move amount
                         moveAmountTooltip.add(Component.translatable("qualityofqueso.gui.quick_drop_button.move_amount.type",
                                 getActualMoveAmount(), hoveredSlot.getItem().getItemName()));
                     } else { // Otherwise display that item name, no move amount because we are dropping full stacks
@@ -181,8 +181,8 @@ public class ModTooltipInstance extends ManagementInstance {
             Component reset = Component.translatable("qualityofqueso.gui.move_amount.reset");
 
             // Add those helper tooltips to the rendered tooltip if we can
-            if (clientOptionsInstance().getGeneralOptions().tooltips.enabled() && canContinueToAddTooltips && !skip) {
-                if (!(instance().getScreensHoveredSlot() != null && instance().getScreensHoveredSlot().hasItem() && (canScrollMoveAndHasScrollModifierDown() && !hasDropOnlyOneItemKeyDown()))) {
+            if (client().general().tooltips.enabled() && canContinueToAddTooltips && !skip) {
+                if (!(instance().getScreensHoveredSlot() != null && instance().getScreensHoveredSlot().hasItem() && (canScrollMoveAndHasScrollModifierDown() && !hasDropOnlyOneItemModifierDown()))) {
                     moveAmountTooltip.add(scroll);
                     moveAmountTooltip.add(reset);
                     moveAmountTooltip.add(ignoresLockedSlots);
@@ -220,7 +220,7 @@ public class ModTooltipInstance extends ManagementInstance {
 
         // Enchantment helper functionality
         // Goes through all enchantments on an enchanted book and determines what items the enchanted book itself can be applied to
-        if (clientOptionsInstance().getMiscOptions().enchantmentHelper && instance().getScreensHoveredSlot().getItem().is(Items.ENCHANTED_BOOK)) {
+        if (client().misc().enchantmentHelper && instance().getScreensHoveredSlot().getItem().is(Items.ENCHANTED_BOOK)) {
             ItemEnchantments enchantments = instance().getScreensHoveredSlot().getItem().getOrDefault(DataComponents.STORED_ENCHANTMENTS, ItemEnchantments.EMPTY);
             Set<Component> enchantmentApplicables = new HashSet<>();
 

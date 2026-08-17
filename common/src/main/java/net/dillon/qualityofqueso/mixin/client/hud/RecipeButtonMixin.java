@@ -1,7 +1,7 @@
 package net.dillon.qualityofqueso.mixin.client.hud;
 
+import net.dillon.qualityofqueso.helper.ModConstants;
 import net.dillon.qualityofqueso.mixin.client.accessor.RecipeBookComponentAccessor;
-import net.dillon.qualityofqueso.util.ModConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -19,8 +19,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import static net.dillon.dillonlib.task.ClientTasks.getScreen;
 import static net.dillon.qualityofqueso.helper.MethodHelper.getRecipeBookComponent;
-import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
 import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
+import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 @Mixin(RecipeButton.class)
 public abstract class RecipeButtonMixin extends AbstractWidget {
@@ -37,7 +37,7 @@ public abstract class RecipeButtonMixin extends AbstractWidget {
     @Inject(method = "extractWidgetRenderState", at = @At("TAIL"))
     private void extractSelectedRecipe(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a, CallbackInfo ci) {
         Minecraft minecraft = Minecraft.getInstance();
-        if (!modEnabled(minecraft) || !clientOptionsInstance().getManagementOptions().bulkCraft || !clientOptionsInstance().getButtonDisplayOptions().displayBulkCraft) {
+        if (!modEnabled(minecraft) || !client().management().bulkCraft || !client().buttonDisplayOptions().displayBulkCraft) {
             return;
         }
 

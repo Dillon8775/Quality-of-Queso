@@ -8,8 +8,7 @@ import net.dillon.dillonlib.platform.info.LogoWidth;
 import net.dillon.dillonlib.platform.info.PlatformName;
 import net.dillon.dillonlib.platform.info.PlatformRelease;
 import net.dillon.qualityofqueso.command.ItemFrameSearcherCommand;
-import net.dillon.qualityofqueso.helper.ModHelper;
-import net.dillon.qualityofqueso.util.ModConstants;
+import net.dillon.qualityofqueso.helper.ModConstants;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import org.jetbrains.annotations.NotNull;
@@ -34,7 +33,7 @@ public abstract class QualityOfQuesoPlatform extends ModPlatform {
 
     @Override
     public @NotNull Logger logger() {
-        return ModHelper.LOGGER;
+        return ModConstants.LOGGER;
     }
 
     @Override

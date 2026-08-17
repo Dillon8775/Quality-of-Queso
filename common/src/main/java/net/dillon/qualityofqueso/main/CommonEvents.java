@@ -1,23 +1,13 @@
 package net.dillon.qualityofqueso.main;
 
-import com.mojang.brigadier.CommandDispatcher;
 import net.blay09.mods.balm.Balm;
-import net.dillon.qualityofqueso.option.ModCommonOptions;
+import net.dillon.qualityofqueso.helper.ModConstants;
 import net.dillon.qualityofqueso.packet.*;
-import net.dillon.qualityofqueso.util.ModConstants;
-import net.minecraft.commands.CommandBuildContext;
-import net.minecraft.commands.CommandSourceStack;
 
 /**
  * Common events for Quality of Queso.
  */
 public class CommonEvents {
-
-    public static void registerCommonCommands(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext commandRegistryAccess) {
-        if (ModCommonOptions.INSTANCE.getInstance().itemFrameSearching) {
-
-        }
-    }
 
     public static void registerCommonPackets() {
         Balm.networking().allowClientAndServerOnly(ModConstants.MOD_ID);

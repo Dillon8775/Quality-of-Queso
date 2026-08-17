@@ -1,5 +1,6 @@
 package net.dillon.qualityofqueso.helper;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.blay09.mods.balm.Balm;
 import net.dillon.dillonlib.platform.Platforms;
 import net.dillon.qualityofqueso.option.*;
@@ -30,9 +31,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.FogType;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import org.lwjgl.glfw.GLFW;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.io.File;
@@ -40,14 +38,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import static net.dillon.qualityofqueso.util.ModConstants.*;
+import static net.dillon.qualityofqueso.helper.ModConstants.*;
+import static net.dillon.qualityofqueso.option.OptionInstances.*;
 
 /**
  * Utility class for the Quality of Queso mod.
  */
 public class ModHelper {
-    public static final Logger LOGGER = LoggerFactory.getLogger("Quality of Queso");
-
     public static boolean LOADED = false;
     private static boolean UNLOADED = false;
     private static boolean CONTINUE = true;
@@ -57,36 +54,8 @@ public class ModHelper {
     /**
      * @return an identifier with the quality of queso namespace.
      */
-    public static Identifier ofQoQ(String name) {
+    public static Identifier qoqIdentifier(String name) {
         return Identifier.fromNamespaceAndPath("qualityofqueso", name);
-    }
-
-    /**
-     * Sends a message to console.
-     */
-    public static void info(String message) {
-        LOGGER.info(message);
-    }
-
-    /**
-     * Sends a {@code warning} message to console.
-     */
-    public static void warn(String message) {
-        LOGGER.warn(message);
-    }
-
-    /**
-     * Sends an {@code error} message to the console.
-     */
-    public static void error(String message) {
-        LOGGER.error(message);
-    }
-
-    /**
-     * Sends a {@code debug} message to the console.
-     */
-    public static void debug(String message) {
-        LOGGER.debug(message);
     }
 
     /**
@@ -94,55 +63,6 @@ public class ModHelper {
      */
     public static boolean isLeftHanded(Minecraft minecraft) {
         return minecraft.player.getMainArm().getOpposite() == HumanoidArm.RIGHT;
-    }
-
-    /**
-     * @return the client-options.
-     */
-    public static ModClientOptions clientOptionsInstance() {
-        return ModClientOptions.INSTANCE.getInstance();
-    }
-
-    /**
-     * @return the common-options.
-     */
-    public static ModCommonOptions commonOptionsInstance() {
-        return ModCommonOptions.INSTANCE.getInstance();
-    }
-
-    /**
-     * @return universal options, unaffected by server configs.
-     */
-    public static UniversalOptions universalOptionsInstance() {
-        return UniversalOptions.INSTANCE.getInstance();
-    }
-
-    /**
-     * @return mixin options, unaffected by server configs.
-     */
-    public static MixinOptions mixinOptionsInstance() {
-        return MixinOptions.INSTANCE.getInstance();
-    }
-
-    /**
-     * @return tracked containers options.
-     */
-    public static ContainerData containerDataInstance() {
-        return ContainerData.INSTANCE.getInstance();
-    }
-
-    /**
-     * @return locked player slots, respective to the client-player.
-     */
-    public static LockedPlayerSlots lockedPlayerSlotsInstance() {
-        return LockedPlayerSlots.INSTANCE.getInstance();
-    }
-
-    /**
-     * @return locked container slots, for each container in a world.
-     */
-    public static LockedContainerSlots lockedContainerSlotsInstance() {
-        return LockedContainerSlots.INSTANCE.getInstance();
     }
 
     /**
@@ -158,7 +78,7 @@ public class ModHelper {
         }
 
         // Otherwise, return if enableMod is enabled
-        return clientOptionsInstance().getGeneralOptions().enableMod;
+        return client().general().enableMod;
     }
 
     /**
@@ -173,7 +93,7 @@ public class ModHelper {
         }
 
         // Search through the blacklisted servers lists, and see if current IP address is in the list. Return true if present
-        return universalOptionsInstance().blacklistedServers.contains(instance.getCurrentServer().ip);
+        return universal().blacklistedServers.contains(instance.getCurrentServer().ip);
     }
 
     /**
@@ -188,9 +108,9 @@ public class ModHelper {
      */
     public static void sendClientPreferencesToServer() {
         Balm.networking().sendToServer(new ClientPreferencesC2SPacket(
-                clientOptionsInstance().getManagementOptions().includingHotbar,
-                !clientOptionsInstance().getManagementOptions().includingHotbar || clientOptionsInstance().getAccessibilityOptions().perpendicularQuickMoving,
-                !clientOptionsInstance().getButtonDisplayOptions().displayLockInventory ? "UNLOCKED" : clientOptionsInstance().getManagementOptions().lockInventory.name()
+                client().management().includingHotbar,
+                !client().management().includingHotbar || client().accessibility().perpendicularQuickMoving,
+                !client().buttonDisplayOptions().displayLockInventory ? "UNLOCKED" : client().management().lockInventory.name()
                 ));
     }
 
@@ -214,7 +134,7 @@ public class ModHelper {
      * Cancels out fluid FOV change.
      */
     public static void cancelFluidFov(FogType state, float fov, CallbackInfoReturnable<Float> cir) {
-        if (!clientOptionsInstance().getFovEffectOptions().fluids && (state == FogType.LAVA || state == FogType.WATER)) {
+        if (!client().fovEffects().fluids && (state == FogType.LAVA || state == FogType.WATER)) {
             cir.setReturnValue(fov);
         }
     }
@@ -253,34 +173,34 @@ public class ModHelper {
      * @return if the passed in effect instance is a beacon effect (or ambient).
      */
     public static boolean canApplyEffect(MobEffectInstance effect) {
-        if (!clientOptionsInstance().getFovEffectOptions().potions.enabled()) {
+        if (!client().fovEffects().potions.enabled()) {
             return false;
         }
 
-        if (clientOptionsInstance().getFovEffectOptions().potions.nonBeacon() && effect.isAmbient()) {
+        if (client().fovEffects().potions.nonBeacon() && effect.isAmbient()) {
             return false;
         }
 
-        return clientOptionsInstance().getFovEffectOptions().potions.enabled();
+        return client().fovEffects().potions.enabled();
     }
 
     /**
      * Handles all cooldown-related timers.
      */
     public static void tickCooldowns() {
-        if (clientOptionsInstance().getManagementOptions().containerFiltering && TRACKED_CONTAINER_COOLDOWN > 0) {
+        if (client().management().containerFiltering && TRACKED_CONTAINER_COOLDOWN > 0) {
             TRACKED_CONTAINER_COOLDOWN--;
         }
 
-        if (clientOptionsInstance().getLockedSlotOptions().lockedSlots && LOCKED_SLOT_SOUND_COOLDOWN > 0) {
+        if (client().lockedSlots().lockedSlots && LOCKED_SLOT_SOUND_COOLDOWN > 0) {
             LOCKED_SLOT_SOUND_COOLDOWN--;
         }
 
-        if (clientOptionsInstance().getSortingOptions().sorting.buttonOrKeyOrKeyOnly() && SORT_SOUND_COOLDOWN > 0) {
+        if (client().sorting().sorting.any() && SORT_SOUND_COOLDOWN > 0) {
             SORT_SOUND_COOLDOWN--;
         }
 
-        if (clientOptionsInstance().getManagementOptions().swapping.buttonOrKeyOrKeyOnly() && SwapButton.SWAP_COOLDOWN > 0) {
+        if (client().management().swapping.any() && SwapButton.SWAP_COOLDOWN > 0) {
             SwapButton.SWAP_COOLDOWN--;
         }
     }
@@ -294,7 +214,7 @@ public class ModHelper {
             KEY_ATTACK_WASDOWN = false;
         } else if (!KEY_ATTACK_WASDOWN
                 && minecraft.player != null
-                && clientOptionsInstance().getManagementOptions().lockInventory.inventoryLocked()
+                && client().management().lockInventory.inventoryLocked()
                 && minecraft.player.isShiftKeyDown()) {
             ItemEntity target = ModHelper.raycastItemEntity(minecraft);
             if (target != null) {
@@ -351,8 +271,8 @@ public class ModHelper {
                 fogtype != FogType.LAVA &&
                 fogtype != FogType.POWDER_SNOW) {
             // Check overworld fog first
-            if (clientOptionsInstance().getFogOptions().overworldFog && entity.level().dimension() == Level.OVERWORLD) {
-                float percent = clientOptionsInstance().getFogOptions().overworldFogIntensity;
+            if (client().fog().overworldFog && entity.level().dimension() == Level.OVERWORLD) {
+                float percent = client().fog().overworldFogIntensity;
                 float safePercent = Math.max(percent, 25F);
                 float distanceScale = 100F / safePercent;
                 distanceScale = Math.min(distanceScale, 4F);
@@ -361,13 +281,13 @@ public class ModHelper {
             }
 
             // Then check all fog types
-            if (!clientOptionsInstance().getFogOptions().allFog
-                    || (!clientOptionsInstance().getFogOptions().overworldFog && entity.level().dimension() == Level.OVERWORLD)
-                    || (!clientOptionsInstance().getFogOptions().netherFog && entity.level().dimension() == Level.NETHER)) {
+            if (!client().fog().allFog
+                    || (!client().fog().overworldFog && entity.level().dimension() == Level.OVERWORLD)
+                    || (!client().fog().netherFog && entity.level().dimension() == Level.NETHER)) {
                 fogData.renderDistanceEnd = Integer.MAX_VALUE;
                 fogData.environmentalEnd = Integer.MAX_VALUE;
-            } else if (clientOptionsInstance().getFogOptions().netherFog && entity.level().dimension() == Level.NETHER) { // Check nether fog
-                float percent = clientOptionsInstance().getFogOptions().netherFogIntensity;
+            } else if (client().fog().netherFog && entity.level().dimension() == Level.NETHER) { // Check nether fog
+                float percent = client().fog().netherFogIntensity;
                 float t = (percent - 10F) / 90F;
                 float fogEnd = 250F + t * (96F - 250F);
 
@@ -382,7 +302,7 @@ public class ModHelper {
      */
     public static void handleGlowPacket(ServerPlayer player, String query, boolean matchCase, boolean clear, int timer,
                                         int radius) {
-        if (commonOptionsInstance().itemFrameSearching) {
+        if (common().itemFrameSearching) {
             ServerLevel world = player.level();
 
             Vec3 playerPos = player.position();
@@ -466,14 +386,14 @@ public class ModHelper {
     public static void saveAndApplyConfigs(Minecraft instance) {
         UniversalOptions.INSTANCE.save();
         // Continue if multi-server configs are enabled
-        if (universalOptionsInstance().multiServerConfigs) {
+        if (universal().multiServerConfigs) {
             CONTINUE = true;
         }
         if (instance.getCurrentServer() != null && instance.getCurrentServer().ip != null) {
             // If the server is blacklisted, and multi-server configs are off, the config hasn't already been unloaded, unload it
-            if (isServerBlacklisted(instance) && !universalOptionsInstance().multiServerConfigs && !UNLOADED) {
+            if (isServerBlacklisted(instance) && !universal().multiServerConfigs && !UNLOADED) {
                 unload(true);
-            } else if (!universalOptionsInstance().multiServerConfigs && !UNLOADED) { // Otherwise, if multi-server configs are off and it hasn't been unloaded, unload it
+            } else if (!universal().multiServerConfigs && !UNLOADED) { // Otherwise, if multi-server configs are off and it hasn't been unloaded, unload it
                 unload(true);
             }
             // If we can continue...
@@ -503,7 +423,7 @@ public class ModHelper {
      */
     public static void loadServerConfig() {
         // Don't try to load a new config if multi-server configs are disabled
-        if (!universalOptionsInstance().multiServerConfigs) {
+        if (!universal().multiServerConfigs) {
             return;
         }
 
@@ -571,7 +491,7 @@ public class ModHelper {
 
         // If the config wasn't present, send created message, and set the instance
         if (!configExists) {
-            ModHelper.info("Creating new Quality of Queso server config instance for \"" + address + "\".");
+            LOGGER.info("Creating new Quality of Queso server config instance for \"{}\".", address);
 
             ModClientOptions.INSTANCE.setInstance(cachedClientInstance);
             ModClientOptions.INSTANCE.save();
@@ -604,7 +524,7 @@ public class ModHelper {
         }
 
         // Log the multi-server config
-        ModHelper.info("Successfully loaded Quality of Queso config for \"" + address + "\".");
+        LOGGER.info("Successfully loaded Quality of Queso config for \"{}\".", address);
     }
 
     /**
@@ -638,8 +558,8 @@ public class ModHelper {
             instance.player.sendSystemMessage(Component.translatable("qualityofqueso.unloaded_server_config").withStyle(ChatFormatting.GOLD));
         }
         // Log the message
-        if (universalOptionsInstance().multiServerConfigs) {
-            ModHelper.info("Reverting back to global Quality of Queso config.");
+        if (universal().multiServerConfigs) {
+            LOGGER.info("Reverting back to global Quality of Queso config.");
         }
     }
 
@@ -648,7 +568,7 @@ public class ModHelper {
      */
     public static List<Integer> popularKeys() {
         return List.of(
-                GLFW.GLFW_KEY_T, GLFW.GLFW_KEY_E
+                InputConstants.KEY_T, InputConstants.KEY_E
         );
     }
 
@@ -658,15 +578,15 @@ public class ModHelper {
     @Deprecated
     public static List<Integer> disallowedKeys() {
         return List.of(
-                GLFW.GLFW_KEY_ESCAPE,
-                GLFW.GLFW_KEY_LEFT_SHIFT,
-                GLFW.GLFW_KEY_RIGHT_SHIFT,
-                GLFW.GLFW_KEY_LEFT_CONTROL,
-                GLFW.GLFW_KEY_RIGHT_CONTROL,
-                GLFW.GLFW_KEY_LEFT_ALT,
-                GLFW.GLFW_KEY_RIGHT_ALT,
-                GLFW.GLFW_KEY_LEFT_SUPER,
-                GLFW.GLFW_KEY_RIGHT_SUPER
+                InputConstants.KEY_ESCAPE,
+                InputConstants.KEY_LSHIFT,
+                InputConstants.KEY_RSHIFT,
+                InputConstants.KEY_LCONTROL,
+                InputConstants.KEY_RCONTROL,
+                InputConstants.KEY_LALT,
+                InputConstants.KEY_RALT,
+                InputConstants.KEY_LGUI,
+                InputConstants.KEY_RGUI
         );
     }
 
@@ -675,24 +595,24 @@ public class ModHelper {
      */
     public static List<Integer> allDisallowedKeys() {
         return List.of(
-                GLFW.GLFW_KEY_1,
-                GLFW.GLFW_KEY_2,
-                GLFW.GLFW_KEY_3,
-                GLFW.GLFW_KEY_4,
-                GLFW.GLFW_KEY_5,
-                GLFW.GLFW_KEY_6,
-                GLFW.GLFW_KEY_7,
-                GLFW.GLFW_KEY_8,
-                GLFW.GLFW_KEY_9,
-                GLFW.GLFW_KEY_ESCAPE,
-                GLFW.GLFW_KEY_LEFT_SHIFT,
-                GLFW.GLFW_KEY_RIGHT_SHIFT,
-                GLFW.GLFW_KEY_LEFT_CONTROL,
-                GLFW.GLFW_KEY_RIGHT_CONTROL,
-                GLFW.GLFW_KEY_LEFT_ALT,
-                GLFW.GLFW_KEY_RIGHT_ALT,
-                GLFW.GLFW_KEY_LEFT_SUPER,
-                GLFW.GLFW_KEY_RIGHT_SUPER
+                InputConstants.KEY_1,
+                InputConstants.KEY_2,
+                InputConstants.KEY_3,
+                InputConstants.KEY_4,
+                InputConstants.KEY_5,
+                InputConstants.KEY_6,
+                InputConstants.KEY_7,
+                InputConstants.KEY_8,
+                InputConstants.KEY_9,
+                InputConstants.KEY_ESCAPE,
+                InputConstants.KEY_LSHIFT,
+                InputConstants.KEY_RSHIFT,
+                InputConstants.KEY_LCONTROL,
+                InputConstants.KEY_RCONTROL,
+                InputConstants.KEY_LALT,
+                InputConstants.KEY_RALT,
+                InputConstants.KEY_LGUI,
+                InputConstants.KEY_RGUI
         );
     }
 }

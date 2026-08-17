@@ -15,7 +15,9 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static net.dillon.qualityofqueso.helper.ModHelper.*;
+import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
+import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
+import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 @Mixin(EditBox.class)
 public abstract class EditBoxMixin extends AbstractWidget {
@@ -40,7 +42,7 @@ public abstract class EditBoxMixin extends AbstractWidget {
     /**
      * Applies a vanilla-like search bar texture.
      */
-    @ModifyArg(method = "extractWidgetRenderState", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;blitSprite(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIII)V"), index = 1)
+    @ModifyArg(method = "extractWidgetRenderState", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;blitSprite(Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIII)V"), index = 1)
     private Identifier applySearchBarTexture(Identifier original) {
         if (!modEnabled(Minecraft.getInstance())) {
             return original;
@@ -51,10 +53,10 @@ public abstract class EditBoxMixin extends AbstractWidget {
         }
 
         Identifier newId = SearchBar.getSprites().get(this.isActive(), this.isFocused());
-        if (clientOptionsInstance().getSearchingOptions().searchBarColor.black()) {
+        if (client().searching().searchBarColor.black()) {
             return original;
-        } else if (clientOptionsInstance().getGeneralOptions().theme.searchBarTransparent()) {
-            return ofQoQ("widget/search/transparent/search_bar_transparent");
+        } else if (client().general().theme.searchBarTransparent()) {
+            return qoqIdentifier("widget/search/transparent/search_bar_transparent");
         } else {
             return newId;
         }
@@ -66,7 +68,7 @@ public abstract class EditBoxMixin extends AbstractWidget {
     @Inject(method = "updateTextPosition", at = @At("TAIL"))
     private void rightAlignText(CallbackInfo ci) {
         if (!((EditBox) (Object) this instanceof SearchBar) || this.font == null
-                || clientOptionsInstance().getSearchingOptions().searchBarColor.black() || !clientOptionsInstance().getGeneralOptions().theme.searchBarTransparent()) {
+                || client().searching().searchBarColor.black() || !client().general().theme.searchBarTransparent()) {
             return;
         }
 

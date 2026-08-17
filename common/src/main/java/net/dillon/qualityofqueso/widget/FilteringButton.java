@@ -1,9 +1,10 @@
 package net.dillon.qualityofqueso.widget;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.dillon.qualityofqueso.helper.ContainerHelper;
+import net.dillon.qualityofqueso.helper.ModConstants;
 import net.dillon.qualityofqueso.option.eum.management.FilteringMode;
 import net.dillon.qualityofqueso.screen.FilterItemsScreen;
-import net.dillon.qualityofqueso.util.ModConstants;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -15,7 +16,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import static net.dillon.dillonlib.task.ClientTasks.getScreen;
 import static net.dillon.dillonlib.task.ClientTasks.openScreen;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.isDropperDispenserOrHopperScreen;
-import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
+import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 /**
  * A button to only transfer what is present in the opposite container.
@@ -41,7 +42,7 @@ public class FilteringButton extends ToggleableButton {
     protected String onTextureId() {
         boolean trackedFilteringEnabled = ContainerHelper.isTrackedFilteringActive();
         if (!trackedFilteringEnabled) {
-            return switch (clientOptionsInstance().getManagementOptions().filteringMode) {
+            return switch (client().management().filteringMode) {
                 case NONE -> of("move_anything");
                 case MATCHING -> of("move_matching_items");
                 case CURRENT_STACKS -> of("current_stacks");
@@ -64,14 +65,14 @@ public class FilteringButton extends ToggleableButton {
     @Override
     protected boolean option() {
         boolean trackedFilteringEnabled = ContainerHelper.isTrackedFilteringActive();
-        return trackedFilteringEnabled || clientOptionsInstance().getManagementOptions().filteringMode.matchingOrCurrentStacks();
+        return trackedFilteringEnabled || client().management().filteringMode.matchingOrCurrentStacks();
     }
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDouble) {
         boolean trackedFilteringEnabled = ContainerHelper.isTrackedFilteringActive();
         if (trackedFilteringEnabled) {
-            if (event.button() == 1) {
+            if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT) {
                 ContainerHelper.OPENING_PLACEHOLDER_SCREEN = true;
                 openScreen(new FilterItemsScreen(this.parent));
             } else {
@@ -86,7 +87,7 @@ public class FilteringButton extends ToggleableButton {
     @Override
     protected Component getTooltipToRender() {
         Component original;
-        switch (clientOptionsInstance().getManagementOptions().filteringMode) {
+        switch (client().management().filteringMode) {
             case MATCHING -> original = Component.translatable("qualityofqueso.gui.move_matching");
             case CURRENT_STACKS -> original = Component.translatable("qualityofqueso.gui.move_current_stacks");
             default -> original = Component.translatable("qualityofqueso.gui.move_anything");

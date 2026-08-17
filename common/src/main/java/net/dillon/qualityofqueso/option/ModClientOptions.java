@@ -1,5 +1,6 @@
 package net.dillon.qualityofqueso.option;
 
+import net.dillon.qualityofqueso.helper.ModConstants;
 import net.dillon.qualityofqueso.option.eum.fov_effects.Bows;
 import net.dillon.qualityofqueso.option.eum.fov_effects.PotionEffects;
 import net.dillon.qualityofqueso.option.eum.general.Theme;
@@ -16,12 +17,11 @@ import net.dillon.qualityofqueso.option.eum.misc.ViewLastKnownEnderChestButton;
 import net.dillon.qualityofqueso.option.eum.searching.QuickSearch;
 import net.dillon.qualityofqueso.option.eum.searching.SearchBarColor;
 import net.dillon.qualityofqueso.option.eum.searching.SearchBarPosition;
-import net.dillon.qualityofqueso.util.ModConstants;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static net.dillon.qualityofqueso.util.ModConstants.*;
+import static net.dillon.qualityofqueso.helper.ModConstants.*;
 
 /**
  * Client-side options, only loaded on client side.
@@ -56,6 +56,7 @@ public class ModClientOptions {
             CLEAR_EXCLUDED_SLOTS_BUTTON_SERIALIZED_NAME
     );
     public static final ClientOptionsHandler INSTANCE = new ClientOptionsHandler();
+
     private final GeneralOptions generalOptions = new GeneralOptions();
     private final SearchingOptions searchingOptions = new SearchingOptions();
     private final ManagementOptions managementOptions = new ManagementOptions();
@@ -71,59 +72,59 @@ public class ModClientOptions {
     private final FovEffectOptions forEffects = new FovEffectOptions();
     private final AccessibilityOptions accessibilityOptions = new AccessibilityOptions();
 
-    public GeneralOptions getGeneralOptions() {
+    public GeneralOptions general() {
         return this.generalOptions;
     }
 
-    public SearchingOptions getSearchingOptions() {
+    public SearchingOptions searching() {
         return this.searchingOptions;
     }
 
-    public ManagementOptions getManagementOptions() {
+    public ManagementOptions management() {
         return this.managementOptions;
     }
 
-    public SortingOptions getSortingOptions() {
+    public SortingOptions sorting() {
         return this.sortingOptions;
     }
 
-    public LockedSlotOptions getLockedSlotOptions() {
+    public LockedSlotOptions lockedSlots() {
         return this.lockedSlotOptions;
     }
 
-    public ButtonDisplayOptions getButtonDisplayOptions() {
+    public ButtonDisplayOptions buttonDisplayOptions() {
         return this.buttonDisplayOptions;
     }
 
-    public HudOptions getHudOptions() {
+    public HudOptions hud() {
         return this.hudOptions;
     }
 
-    public ItemCounterOptions getItemCounterOptions() {
+    public ItemCounterOptions itemCounter() {
         return this.itemCounterOptions;
     }
 
-    public ElytraAlarmOptions getElytraAlarmOptions() {
+    public ElytraAlarmOptions elytraAlarm() {
         return this.elytraAlarmOptions;
     }
 
-    public MiscellaneousOptions getMiscOptions() {
+    public MiscellaneousOptions misc() {
         return this.miscellaneousOptions;
     }
 
-    public VisualTimeOptions getVisualTimeOptions() {
+    public VisualTimeOptions visualTime() {
         return this.visualTimeOptions;
     }
 
-    public FogOptions getFogOptions() {
+    public FogOptions fog() {
         return this.fogOptions;
     }
 
-    public FovEffectOptions getFovEffectOptions() {
+    public FovEffectOptions fovEffects() {
         return this.forEffects;
     }
 
-    public AccessibilityOptions getAccessibilityOptions() {
+    public AccessibilityOptions accessibility() {
         return this.accessibilityOptions;
     }
 

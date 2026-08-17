@@ -1,5 +1,6 @@
 package net.dillon.qualityofqueso.widget;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.dillon.qualityofqueso.option.ModClientOptions;
 import net.dillon.qualityofqueso.option.eum.general.Theme;
 import net.minecraft.ChatFormatting;
@@ -20,10 +21,10 @@ import org.spongepowered.asm.mixin.injection.callback.CancellationException;
 import static net.dillon.dillonlib.task.ClientTasks.getScreen;
 import static net.dillon.qualityofqueso.helper.ButtonHelper.getWidgetPath;
 import static net.dillon.qualityofqueso.helper.GuiHelper.drawTooltip;
-import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
-import static net.dillon.qualityofqueso.helper.ModHelper.ofQoQ;
-import static net.dillon.qualityofqueso.util.ModConstants.DEFAULT_TRANSPARENT_SEARCH_BAR_TEXT_COLOR;
-import static net.dillon.qualityofqueso.util.ModConstants.SEARCH_TEXTURE;
+import static net.dillon.qualityofqueso.helper.ModConstants.DEFAULT_TRANSPARENT_SEARCH_BAR_TEXT_COLOR;
+import static net.dillon.qualityofqueso.helper.ModConstants.SEARCH_TEXTURE;
+import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
+import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 /**
  * An representation of a search bar.
@@ -36,22 +37,22 @@ public class SearchBar extends EditBox {
     public SearchBar(Font font, int x, int y) {
         super(font, x, y, 90, 12, Component.empty());
         this.font = font;
-        if (clientOptionsInstance().getSearchingOptions().saveSearchText) {
-            this.setValue(clientOptionsInstance().getSearchingOptions().savedSearchText);
+        if (client().searching().saveSearchText) {
+            this.setValue(client().searching().savedSearchText);
         }
         this.setMaxLength(50);
-        if (clientOptionsInstance().getGeneralOptions().theme.searchBarTransparent() && !clientOptionsInstance().getSearchingOptions().searchBarColor.black()) {
+        if (client().general().theme.searchBarTransparent() && !client().searching().searchBarColor.black()) {
             this.setTextShadow(false);
-            int textColor = clientOptionsInstance().getSearchingOptions().searchBarTextColor;
-            if (clientOptionsInstance().getSearchingOptions().searchBarTextColor == DEFAULT_TRANSPARENT_SEARCH_BAR_TEXT_COLOR
-                    && (clientOptionsInstance().getGeneralOptions().theme != Theme.VANILLA || clientOptionsInstance().getSearchingOptions().searchBarColor.transparent())) {
+            int textColor = client().searching().searchBarTextColor;
+            if (client().searching().searchBarTextColor == DEFAULT_TRANSPARENT_SEARCH_BAR_TEXT_COLOR
+                    && (client().general().theme != Theme.VANILLA || client().searching().searchBarColor.transparent())) {
                 textColor = CommonColors.WHITE;
             }
-            if (clientOptionsInstance().getGeneralOptions().theme == Theme.VANILLA && clientOptionsInstance().getSearchingOptions().searchBarColor.transparent()) {
-                textColor = clientOptionsInstance().getSearchingOptions().searchBarTextColor;
+            if (client().general().theme == Theme.VANILLA && client().searching().searchBarColor.transparent()) {
+                textColor = client().searching().searchBarTextColor;
             }
             this.setTextColor(textColor);
-            this.addFormatter((text, offset) -> FormattedCharSequence.forward(text, Style.EMPTY.withUnderlined(clientOptionsInstance().getSearchingOptions().underlineText)));
+            this.addFormatter((text, offset) -> FormattedCharSequence.forward(text, Style.EMPTY.withUnderlined(client().searching().underlineText)));
             this.setCentered(true);
         } else {
             this.setHint(Component.translatable("qualityofqueso.gui.search.placeholder").withStyle(ChatFormatting.ITALIC));
@@ -63,7 +64,7 @@ public class SearchBar extends EditBox {
      */
     public static WidgetSprites getSprites() {
         return new WidgetSprites(
-                ofQoQ("widget/search/" + getWidgetPath(true) + "search_bar"), ofQoQ("widget/search/" + getWidgetPath(true) + "search_bar_highlighted")
+                qoqIdentifier("widget/search/" + getWidgetPath(true) + "search_bar"), qoqIdentifier("widget/search/" + getWidgetPath(true) + "search_bar_highlighted")
         );
     }
 
@@ -86,17 +87,17 @@ public class SearchBar extends EditBox {
     @Override
     public void insertText(String input) {
         super.insertText(input);
-        ModClientOptions.INSTANCE.update(options -> options.getSearchingOptions().savedSearchText = this.getValue());
+        ModClientOptions.INSTANCE.update(options -> options.searching().savedSearchText = this.getValue());
     }
 
     @Override
     public boolean mouseClicked(MouseButtonEvent click, boolean doubled) {
         if (this.isHovered()) {
-            if (click.button() == 1) {
+            if (click.button() == InputConstants.MOUSE_BUTTON_RIGHT) {
                 this.setValue("");
                 this.setFocused(false);
                 return true;
-            } else if (click.button() == 0) {
+            } else if (click.button() == InputConstants.MOUSE_BUTTON_LEFT) {
                 this.setFocused(true);
                 this.onClick(click, doubled);
                 return true;
@@ -114,7 +115,7 @@ public class SearchBar extends EditBox {
             return false;
         }
 
-        if (!clientOptionsInstance().getSearchingOptions().searchBarPosition.top() || clientOptionsInstance().getSearchingOptions().searchBarColor.black()) {
+        if (!client().searching().searchBarPosition.top() || client().searching().searchBarColor.black()) {
             return super.isMouseOver(mouseX, mouseY);
         }
 
@@ -123,17 +124,17 @@ public class SearchBar extends EditBox {
 
     @Override
     public void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks) {
-        if (!clientOptionsInstance().getSearchingOptions().searchBarColor.black()) {
-            if ((this.isFocused() || !clientOptionsInstance().getSearchingOptions().searchBarColor.transparent()) && clientOptionsInstance().getSearchingOptions().searchBarPosition.top()) {
-                graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ofQoQ("widget/search/" + getWidgetPath(true) + "search_bar_overlay"),
+        if (!client().searching().searchBarColor.black()) {
+            if ((this.isFocused() || !client().searching().searchBarColor.transparent()) && client().searching().searchBarPosition.top()) {
+                graphics.blitSprite(RenderPipelines.GUI_TEXTURED, qoqIdentifier("widget/search/" + getWidgetPath(true) + "search_bar_overlay"),
                         this.getX() - 3, this.getY() - 3, OVERLAY_WIDTH, OVERLAY_HEIGHT);
             }
-            if (!this.isFocused() && this.getValue().isEmpty() && clientOptionsInstance().getGeneralOptions().theme.searchBarTransparent()) {
+            if (!this.isFocused() && this.getValue().isEmpty() && client().general().theme.searchBarTransparent()) {
                 graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SEARCH_TEXTURE, this.getX() + (getScreen() instanceof InventoryScreen ? 78 : 80), this.getY(), 12, 12);
             }
         }
         super.extractWidgetRenderState(graphics, mouseX, mouseY, deltaTicks);
-        if (clientOptionsInstance().getGeneralOptions().tooltips.enabled() && this.isHovered() && this.getValue().isEmpty()) {
+        if (client().general().tooltips.enabled() && this.isHovered() && this.getValue().isEmpty()) {
             Component matchCase = Component.literal(":").withStyle(ChatFormatting.BOLD).withColor(0xC4FFD7);
             Component multiple = Component.literal(",").withStyle(ChatFormatting.ITALIC);
             Component tag = Component.literal("#").withStyle(ChatFormatting.ITALIC).withColor(0x7FFFFF);

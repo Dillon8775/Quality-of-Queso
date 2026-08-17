@@ -1,10 +1,12 @@
 package net.dillon.qualityofqueso.screen;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.dillon.dillonlib.platform.Platforms;
 import net.dillon.dillonlib.task.ClientTasks;
-import net.dillon.qualityofqueso.helper.ModHelper;
+import net.dillon.dillonlib.util.KeybindScrollHelper;
+import net.dillon.qualityofqueso.helper.ModConstants;
+import net.dillon.qualityofqueso.keybind.ModKeyMappings;
 import net.dillon.qualityofqueso.platform.QualityOfQuesoPlatforms;
-import net.dillon.qualityofqueso.util.KeybindScrollHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -15,13 +17,10 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.options.OptionsSubScreen;
 import net.minecraft.client.gui.screens.options.controls.KeyBindsScreen;
 import net.minecraft.client.input.KeyEvent;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.CommonColors;
 import net.minecraft.util.Util;
 import net.minecraft.world.level.storage.LevelResource;
-import org.lwjgl.glfw.GLFW;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -30,8 +29,9 @@ import java.util.List;
 import static net.dillon.dillonlib.task.ClientTasks.*;
 import static net.dillon.qualityofqueso.helper.ButtonHelper.*;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.buttonActive;
+import static net.dillon.qualityofqueso.helper.ModConstants.*;
 import static net.dillon.qualityofqueso.helper.ModHelper.*;
-import static net.dillon.qualityofqueso.util.ModConstants.*;
+import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 /**
  * A basic screen for Quality of Queso.
@@ -46,14 +46,6 @@ public abstract class AbstractModScreen extends OptionsSubScreen {
     }
 
     /**
-     * @return an {@link AbstractWidget} from an {@link OptionInstance}.
-     */
-    @Deprecated
-    private static AbstractWidget createOption(OptionInstance<?> instance) {
-        return instance.createButton(Minecraft.getInstance().options);
-    }
-
-    /**
      * The list of {@link OptionInstance}s that should be added to the screen.
      */
     protected abstract AbstractWidget[] options();
@@ -62,7 +54,7 @@ public abstract class AbstractModScreen extends OptionsSubScreen {
      * Opens the keybinds screen.
      */
     protected void openKeybinds() {
-        KeybindScrollHelper.requestScroll();
+        KeybindScrollHelper.request(ModKeyMappings.QOQ_KEY_CATEGORY);
         openScreen(new KeyBindsScreen(this, this.options));
     }
 
@@ -89,7 +81,7 @@ public abstract class AbstractModScreen extends OptionsSubScreen {
     @Override
     public void onClose() {
         saveAndApplyConfigs(this.minecraft);
-        ModHelper.debug("Saved changes.");
+        ModConstants.LOGGER.debug("Saved changes.");
         if (this.minecraft.level != null) {
             sendClientPreferencesToServer();
         }
@@ -109,7 +101,8 @@ public abstract class AbstractModScreen extends OptionsSubScreen {
         }).width(175).build());
 
         this.screenshotsButton = this.addRenderableWidget(ClientTasks.createSpriteIconButton(
-                ofQoQ(OPEN_SCREENSHOTS_DIRECTORY_TEXTURE),
+                "Open Screenshots Button",
+                qoqIdentifier(OPEN_SCREENSHOTS_DIRECTORY_TEXTURE),
                 (button) -> {
                     File screenshots = new File(Minecraft.getInstance().gameDirectory, "screenshots");
                     if (!screenshots.exists()) {
@@ -117,51 +110,62 @@ public abstract class AbstractModScreen extends OptionsSubScreen {
                     }
                     Util.getPlatform().openFile(screenshots);
                 },
-                Component.translatable("qualityofqueso.gui.open_screenshots_folder")
+                Component.translatable("qualityofqueso.gui.open_screenshots_folder"),
+                false
         ));
 
         if (this.minecraft.level != null) {
             if (this.minecraft.getSingleplayerServer() != null) {
                 this.worldDirectoryButton = this.addRenderableWidget(ClientTasks.createSpriteIconButton(
-                        ofQoQ(OPEN_WORLD_DIRECTORY_TEXTURE),
+                        "Open World Directory Button",
+                        qoqIdentifier(OPEN_WORLD_DIRECTORY_TEXTURE),
                         (button) -> {
                             Path worldPath = this.minecraft.getSingleplayerServer().getWorldPath(LevelResource.ROOT);
                             Util.getPlatform().openFile(worldPath.toFile());
                         },
-                        Component.translatable("qualityofqueso.gui.open_world_folder")
+                        Component.translatable("qualityofqueso.gui.open_world_folder"),
+                        false
                 ));
             }
-            if (ModHelper.clientOptionsInstance().getAccessibilityOptions().eChestButton.qoqMenu()) {
+            if (client().accessibility().eChestButton.qoqMenu()) {
                 executeIfClientPlayer(localPlayer -> {
                     this.viewLastKnownEnderChestButton = this.addRenderableWidget(ClientTasks.createSpriteIconButton(
-                            ofQoQ(ENDER_CHEST),
+                            "View Last Known Ender Chest Button",
+                            qoqIdentifier(ENDER_CHEST),
                             (button) -> {
                                 openScreen(new EnderChestPreviewScreen());
                             },
-                            Component.translatable("qualityofqueso.gui.view_ender_chest.tooltip")
+                            Component.translatable("qualityofqueso.gui.view_ender_chest.tooltip"),
+                            false
                     ));
                 });
             }
         } else {
             this.worldDirectoryButton = this.addRenderableWidget(ClientTasks.createSpriteIconButton(
-                    ofQoQ(OPEN_CONFIG_DIRECTORY_TEXTURE),
+                    "Open Config Directory Button",
+                    qoqIdentifier(OPEN_CONFIG_DIRECTORY_TEXTURE),
                     (button) -> {
                         this.openConfigDirectory();
                     },
-                    Component.translatable("qualityofqueso.gui.open_config_directory")
+                    Component.translatable("qualityofqueso.gui.open_config_directory"),
+                    false
             ));
         }
 
         this.wikiButton = this.addRenderableWidget(ClientTasks.createSpriteIconButton(
-                ofQoQ(WIKI_TEXTURE),
+                "Wiki Button",
+                qoqIdentifier(WIKI_TEXTURE),
                 (button) -> openLink(this, WIKI_LINK, false),
-                Component.translatable("qualityofqueso.gui.learn_more")
+                Component.translatable("qualityofqueso.gui.learn_more"),
+                false
         ));
 
         this.discordButton = this.addRenderableWidget(ClientTasks.createSpriteIconButton(
-                ofQoQ(DISCORD_TEXTURE),
+                "Discord Button",
+                qoqIdentifier(DISCORD_TEXTURE),
                 (button) -> openLink(this, DISCORD_LINK, false),
-                Component.translatable("qualityofqueso.gui.discord")
+                Component.translatable("qualityofqueso.gui.discord"),
+                false
         ));
 
         this.youtubeButton = this.addRenderableWidget(createYouTubeButton(this, this.youtubeLink()));
@@ -172,15 +176,14 @@ public abstract class AbstractModScreen extends OptionsSubScreen {
      */
     @Override
     public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks) {
-        int textWidth = this.width - 20;
-        int textHeight = this.height - 21;
-        int imageWidth = this.width - QualityOfQuesoPlatforms.getPlatform().logoWidth().getWidthModifier();
-        int imageHeight = this.height - 26;
-        graphics.centeredText(this.font, VERSION, textWidth, textHeight, CommonColors.WHITE);
-        graphics.blit(RenderPipelines.GUI_TEXTURED, ofQoQ("textures/gui/sprites/" + CHEESE_WHEEL_TEXTURE + ".png"), imageWidth, imageHeight, 0.0F, 0.0F, 18, 18, 18, 18);
-        if (HAS_UPDATE) {
-            ClientTasks.drawUpdateSprite(graphics, imageWidth - 2, imageHeight - 2);
-        }
+        ClientTasks.drawModInfo(
+                graphics,
+                this,
+                VERSION,
+                QualityOfQuesoPlatforms.getPlatform().logoWidth().getWidthModifier(),
+                qoqIdentifier("textures/gui/sprites/" + CHEESE_WHEEL_TEXTURE + ".png"),
+                HAS_UPDATE
+        );
 
         int leftIndex = 0;
         if (buttonActive(this.screenshotsButton)) {
@@ -219,7 +222,7 @@ public abstract class AbstractModScreen extends OptionsSubScreen {
 
     @Override
     public boolean keyPressed(final KeyEvent event) {
-        if (event.key() == GLFW.GLFW_KEY_F4) {
+        if (event.key() == InputConstants.KEY_F4) {
             this.openConfigDirectory();
             return true;
         }

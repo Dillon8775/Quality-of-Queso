@@ -5,15 +5,15 @@ import net.blay09.mods.balm.core.BalmRegistrars;
 import net.dillon.dillonlib.annotation.Dill;
 import net.dillon.dillonlib.annotation.DillType;
 import net.dillon.dillonlib.platform.info.PlatformRelease;
+import net.dillon.qualityofqueso.helper.ModConstants;
 import net.dillon.qualityofqueso.option.ModCommonOptions;
 import net.dillon.qualityofqueso.option.UniversalOptions;
 import net.dillon.qualityofqueso.platform.QualityOfQuesoPlatforms;
-import net.dillon.qualityofqueso.util.ModConstants;
 
 import java.util.Set;
 import java.util.TreeSet;
 
-import static net.dillon.qualityofqueso.helper.ModHelper.*;
+import static net.dillon.qualityofqueso.helper.ModHelper.stop;
 import static net.dillon.qualityofqueso.main.CommonEvents.registerCommonPackets;
 
 /**
@@ -34,16 +34,16 @@ public class CommonMain {
 
         QualityOfQuesoPlatforms.getPlatform().addModIds();
 
-        info("Quality of Queso version " + QualityOfQuesoPlatforms.getPlatform().modVersion() + " (for " + Balm.platform().name() + ") loaded successfully!");
+        ModConstants.LOGGER.info("Quality of Queso version {} (for {}) loaded successfully!", QualityOfQuesoPlatforms.getPlatform().modVersion(), Balm.platform().name());
 
         if (QualityOfQuesoPlatforms.getPlatform().platformRelease() == PlatformRelease.BETA) {
-            warn("Please be aware that this version of Quality of Queso is marked as beta, use at your own risk!");
+            ModConstants.LOGGER.warn("Please be aware that this version of Quality of Queso is marked as beta, use at your own risk!");
         } else if (QualityOfQuesoPlatforms.getPlatform().platformRelease() == PlatformRelease.ALPHA) {
-            error("Please note that this version of Quality of Queso is in the alpha state, so there will be unknown bugs. Use at your own risk!");
+            ModConstants.LOGGER.error("Please note that this version of Quality of Queso is in the alpha state, so there will be unknown bugs. Use at your own risk!");
         }
 
         if (ModConstants.HAS_UPDATE) {
-            warn("A newer version of Quality of Queso is available. Download it here: https://modrinth.com/mod/quality-of-queso/versions");
+            ModConstants.LOGGER.warn("A newer version of Quality of Queso is available. Download it here: https://modrinth.com/mod/quality-of-queso/versions");
         }
     }
 
@@ -62,12 +62,12 @@ public class CommonMain {
         boolean shouldStop = false;
         String configName = "";
         if (UniversalOptions.INSTANCE.getInstance() == null) {
-            error("Quality of Queso's universal config is null! Please delete it and relaunch your game.");
+            ModConstants.LOGGER.error("Quality of Queso's universal config is null! Please delete it and relaunch your game.");
             shouldStop = true;
             configName = "universal config";
         }
         if (ModCommonOptions.INSTANCE.getInstance() == null) {
-            error("Quality of Queso's common config is null! Please delete it and relaunch your game.");
+            ModConstants.LOGGER.error("Quality of Queso's common config is null! Please delete it and relaunch your game.");
             shouldStop = true;
             configName = ModConstants.DEFAULT_COMMON_CONFIG_FILE_NAME;
         }

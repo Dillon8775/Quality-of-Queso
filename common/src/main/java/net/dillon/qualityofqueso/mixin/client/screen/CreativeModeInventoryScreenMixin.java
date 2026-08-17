@@ -1,12 +1,13 @@
 package net.dillon.qualityofqueso.mixin.client.screen;
 
+import com.mojang.blaze3d.platform.InputConstants;
+import net.dillon.qualityofqueso.helper.GuiHelper;
 import net.dillon.qualityofqueso.option.ModClientOptions;
 import net.dillon.qualityofqueso.widget.SearchBar;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
-import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
@@ -15,6 +16,7 @@ import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
@@ -28,6 +30,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.hoveredSlotHasItem;
 import static net.dillon.qualityofqueso.helper.MethodHelper.key;
 import static net.dillon.qualityofqueso.helper.ModHelper.*;
+import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 @Mixin(CreativeModeInventoryScreen.class)
 public abstract class CreativeModeInventoryScreenMixin extends AbstractContainerScreen<CreativeModeInventoryScreen.ItemPickerMenu> {
@@ -54,7 +57,7 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
     @Override
     public void onClose() {
         if (this.searchBox != null) {
-            ModClientOptions.INSTANCE.update(options -> options.getSearchingOptions().savedCreativeMenuText = this.searchBox.getValue());
+            ModClientOptions.INSTANCE.update(options -> options.searching().savedCreativeMenuText = this.searchBox.getValue());
         }
         super.onClose();
     }
@@ -64,7 +67,7 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
      */
     @Redirect(method = "<init>", at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/screens/inventory/CreativeModeInventoryScreen;displayOperatorCreativeTab:Z"))
     private void enableOperatorTabByDefault(CreativeModeInventoryScreen instance, boolean value) {
-        this.displayOperatorCreativeTab = clientOptionsInstance().getAccessibilityOptions().operatorItemsTab || Minecraft.getInstance().options.operatorItemsTab().get();
+        this.displayOperatorCreativeTab = client().accessibility().operatorItemsTab || Minecraft.getInstance().options.operatorItemsTab().get();
     }
 
     /**
@@ -72,11 +75,11 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
      */
     @Inject(method = "init", at = @At("TAIL"))
     private void setText(CallbackInfo ci) {
-        if (!modEnabled(this.minecraft) || !clientOptionsInstance().getSearchingOptions().saveSearchText || this.searchBox == null) {
+        if (!modEnabled(this.minecraft) || !client().searching().saveSearchText || this.searchBox == null) {
             return;
         }
 
-        this.searchBox.setValue(clientOptionsInstance().getSearchingOptions().savedCreativeMenuText);
+        this.searchBox.setValue(client().searching().savedCreativeMenuText);
         this.refreshSearchResults();
     }
 
@@ -89,11 +92,11 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
             return;
         }
 
-        if (event.button() == 1) {
+        if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT) {
             this.searchBox.setValue("");
             this.setFocused(false);
             cir.setReturnValue(true);
-        } else if (event.button() == 0) {
+        } else if (event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
             this.setFocused(true);
             this.searchBox.onClick(event, doubleClick);
             cir.setReturnValue(true);
@@ -109,7 +112,7 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
             return;
         }
 
-        if (clientOptionsInstance().getMiscOptions().quickGuiExit && this.menu.getCarried().isEmpty() && mouseButton == 0 && slot == null) {
+        if (client().misc().quickGuiExit && this.menu.getCarried().isEmpty() && mouseButton == 0 && slot == null) {
             this.onClose();
         }
     }
@@ -135,14 +138,14 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
             }
         }
 
-        if (clientOptionsInstance().getSearchingOptions().quickSearch.creativeMenu()) {
+        if (client().searching().quickSearch.creativeMenu()) {
             if (hoveredSlotHasItem(this.hoveredSlot) && !this.searchBox.isFocused()) {
                 this.ignoreTextInput = true;
                 cir.setReturnValue(super.keyPressed(event));
                 return;
             }
 
-            if (clientOptionsInstance().getAccessibilityOptions().preventEFromTyping && event.key() == key(Minecraft.getInstance().options.keyInventory).getValue() && !this.searchBox.isFocused()) {
+            if (client().accessibility().preventEFromTyping && event.key() == key(Minecraft.getInstance().options.keyInventory).getValue() && !this.searchBox.isFocused()) {
                 this.ignoreTextInput = true;
                 this.onClose();
                 cir.setReturnValue(true);
@@ -158,41 +161,42 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
             }
 
             for (int i = 9; i < allDisallowedKeys().size(); i++) {
-                if (!Minecraft.getInstance().hasShiftDown() && event.key() == allDisallowedKeys().get(i)) {
-                    this.ignoreTextInput = true;
-                    cir.setReturnValue(super.keyPressed(event));
-                    return;
-                }
-            }
-        }
-    }
-
-    /**
-     * Improves typing in the creative menu, for quick searching and moving of slots.
-     */
-    @Inject(method = "charTyped", at = @At("HEAD"), cancellable = true)
-    private void improveCreativeMenuSearching(CharacterEvent event, CallbackInfoReturnable<Boolean> cir) {
-        if (!modEnabled(this.minecraft) || !clientOptionsInstance().getSearchingOptions().quickSearch.creativeMenu()) {
-            return;
-        }
-
-        if (this.ignoreTextInput || (!(clientOptionsInstance().getSearchingOptions().quickSearch.creativeMenu()) && selectedTab.getType() != CreativeModeTab.Type.SEARCH)) {
-            cir.setReturnValue(false);
-            return;
-        }
-
-        if (hoveredSlotHasItem(this.hoveredSlot)) {
-            for (int i = 0; i < 9; i++) {
-                if (Minecraft.getInstance().options.keyHotbarSlots[i].consumeClick()) {
-                    if (this.searchBox != null && this.searchBox.isFocused()) {
-                        this.searchBox.setFocused(false);
+                if (event.key() == allDisallowedKeys().get(i)) {
+                    if (event.key() != InputConstants.KEY_LCONTROL || this.searchBox == null || !this.searchBox.isFocused()) {
+                        this.ignoreTextInput = true;
+                        cir.setReturnValue(super.keyPressed(event));
+                        return;
                     }
-                    cir.setReturnValue(true);
-                    return;
                 }
             }
-        } else {
+
+            if (this.ignoreTextInput || (!(client().searching().quickSearch.creativeMenu()) && selectedTab.getType() != CreativeModeTab.Type.SEARCH)) {
+                cir.setReturnValue(false);
+                return;
+            }
+
+            for (int i = 0; i < 9; i++) {
+                if (this.hoveredSlot != null && Minecraft.getInstance().options.keyHotbarSlots[i].matches(event)) {
+                    Inventory inventory = this.minecraft.player.getInventory();
+                    ItemStack stack = inventory.getItem(i);
+
+                    if (!stack.isEmpty()) {
+                        if (this.searchBox != null && this.searchBox.isFocused()) {
+                            this.searchBox.setFocused(false);
+                        }
+
+                        // Prevents opening search tab
+                        this.ignoreTextInput = true;
+                        cir.setReturnValue(super.keyPressed(event));
+                        return;
+                    }
+                }
+            }
+
+            boolean overrideFocus = selectedTab.getType() != CreativeModeTab.Type.SEARCH;
             this.selectTab(CreativeModeTabs.searchTab());
+            GuiHelper.autoFocusElement(this.searchBox, event, true, overrideFocus);
+            this.refreshSearchResults();
         }
     }
 }

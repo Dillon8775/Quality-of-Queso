@@ -10,8 +10,8 @@ import net.dillon.qualityofqueso.option.eum.fov_effects.PotionEffects;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 
-import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
-import static net.dillon.qualityofqueso.helper.ModHelper.mixinOptionsInstance;
+import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.OptionInstances.mixins;
 
 /**
  * The Fov effects options category for the {@link ConfigurationScreen}.
@@ -47,62 +47,62 @@ public class FovEffectsCategory {
                                         Option.<Integer>createBuilder()
                                                 .name(Component.translatable("qualityofqueso.options.fov_effects.sprinting"))
                                                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.fov_effects.sprinting.description")))
-                                                .binding(100, () -> clientOptionsInstance().getFovEffectOptions().sprinting, v -> clientOptionsInstance().getFovEffectOptions().sprinting = v)
+                                                .binding(100, () -> client().fovEffects().sprinting, v -> client().fovEffects().sprinting = v)
                                                 .controller(o -> IntegerSliderControllerBuilder.create(o)
                                                         .range(99, 200)
                                                         .step(1)
                                                         .formatValue(v -> v < 100 ? Component.literal("§7OFF") : Component.literal(v + "%"))
                                                 )
-                                                .available(mixinOptionsInstance().fovEffectsMixin)
+                                                .available(mixins().fovEffectsMixin)
                                                 .build()
                                 )
                                 .option(
                                         Option.<PotionEffects>createBuilder()
                                                 .name(Component.translatable("qualityofqueso.options.fov_effects.potions"))
                                                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.fov_effects.potions.description")))
-                                                .binding(PotionEffects.ENABLED, () -> clientOptionsInstance().getFovEffectOptions().potions, v -> clientOptionsInstance().getFovEffectOptions().potions = v)
+                                                .binding(PotionEffects.ENABLED, () -> client().fovEffects().potions, v -> client().fovEffects().potions = v)
                                                 .controller(o -> EnumControllerBuilder.create(o)
                                                         .enumClass(PotionEffects.class)
                                                         .formatValue(v -> Component.literal(v.getSerializedName())))
-                                                .available(mixinOptionsInstance().fovEffectsMixin)
+                                                .available(mixins().fovEffectsMixin)
                                                 .build()
                                 )
                                 .option(
                                         Option.<Bows>createBuilder()
                                                 .name(Component.translatable("qualityofqueso.options.fov_effects.bows"))
                                                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.fov_effects.bows.description")))
-                                                .binding(Bows.ENABLED, () -> clientOptionsInstance().getFovEffectOptions().bows, v -> clientOptionsInstance().getFovEffectOptions().bows = v)
+                                                .binding(Bows.ENABLED, () -> client().fovEffects().bows, v -> client().fovEffects().bows = v)
                                                 .controller(o -> EnumControllerBuilder.create(o)
                                                         .enumClass(Bows.class)
                                                         .formatValue(v -> Component.literal(v.getSerializedName())))
-                                                .available(mixinOptionsInstance().fovEffectsMixin)
+                                                .available(mixins().fovEffectsMixin)
                                                 .build()
                                 )
                                 .option(
                                         Option.<Boolean>createBuilder()
                                                 .name(Component.translatable("qualityofqueso.options.fov_effects.flying"))
                                                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.fov_effects.flying.description")))
-                                                .binding(true, () -> clientOptionsInstance().getFovEffectOptions().flying, v -> clientOptionsInstance().getFovEffectOptions().flying = v)
+                                                .binding(true, () -> client().fovEffects().flying, v -> client().fovEffects().flying = v)
                                                 .controller(TickBoxControllerBuilder::create)
-                                                .available(mixinOptionsInstance().fovEffectsMixin)
+                                                .available(mixins().fovEffectsMixin)
                                                 .build()
                                 )
                                 .option(
                                         Option.<Boolean>createBuilder()
                                                 .name(Component.translatable("qualityofqueso.options.fov_effects.fluids"))
                                                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.fov_effects.fluids.description")))
-                                                .binding(true, () -> clientOptionsInstance().getFovEffectOptions().fluids, v -> clientOptionsInstance().getFovEffectOptions().fluids = v)
+                                                .binding(true, () -> client().fovEffects().fluids, v -> client().fovEffects().fluids = v)
                                                 .controller(TickBoxControllerBuilder::create)
-                                                .available(mixinOptionsInstance().fovEffectsMixin)
+                                                .available(mixins().fovEffectsMixin)
                                                 .build()
                                 )
                                 .option(
                                         Option.<Boolean>createBuilder()
                                                 .name(Component.translatable("qualityofqueso.options.fov_effects.lock_fov"))
                                                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.fov_effects.lock_fov.description")))
-                                                .binding(false, () -> clientOptionsInstance().getFovEffectOptions().lockFov, v -> clientOptionsInstance().getFovEffectOptions().lockFov = v)
+                                                .binding(false, () -> client().fovEffects().lockFov, v -> client().fovEffects().lockFov = v)
                                                 .controller(BooleanControllerBuilder::create)
-                                                .available(mixinOptionsInstance().fovEffectsMixin)
+                                                .available(mixins().fovEffectsMixin)
                                                 .build()
                                 )
                                 .build()

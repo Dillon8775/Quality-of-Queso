@@ -8,8 +8,8 @@ import net.dillon.qualityofqueso.option.eum.hud.ItemCounter;
 import net.minecraft.network.chat.Component;
 
 import static net.dillon.qualityofqueso.config.ConfigurationScreen.fixedSizeImage;
-import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
-import static net.dillon.qualityofqueso.helper.ModHelper.ofQoQ;
+import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
+import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 /**
  * The item counter optons category for the {@link ConfigurationScreen}.
@@ -20,35 +20,35 @@ public class ItemCounterCategory {
         Option<Boolean> countContainers = Option.<Boolean>createBuilder()
                 .name(Component.translatable("qualityofqueso.options.count_containers"))
                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.count_containers.description")))
-                .binding(true, () -> clientOptionsInstance().getItemCounterOptions().countContainers, v -> clientOptionsInstance().getItemCounterOptions().countContainers = v)
+                .binding(true, () -> client().itemCounter().countContainers, v -> client().itemCounter().countContainers = v)
                 .controller(TickBoxControllerBuilder::create)
                 .build();
 
         Option<Boolean> countEnderChest = Option.<Boolean>createBuilder()
                 .name(Component.translatable("qualityofqueso.options.count_ender_chest"))
                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.count_ender_chest.description")))
-                .binding(false, () -> clientOptionsInstance().getItemCounterOptions().countEnderChest, v -> clientOptionsInstance().getItemCounterOptions().countEnderChest = v)
+                .binding(false, () -> client().itemCounter().countEnderChest, v -> client().itemCounter().countEnderChest = v)
                 .controller(TickBoxControllerBuilder::create)
                 .build();
 
         Option<Boolean> onlyCountMatchingItems = Option.<Boolean>createBuilder()
                 .name(Component.translatable("qualityofqueso.options.only_count_matching_items"))
                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.only_count_matching_items.description")))
-                .binding(false, () -> clientOptionsInstance().getItemCounterOptions().onlyCountMatchingItems, v -> clientOptionsInstance().getItemCounterOptions().onlyCountMatchingItems = v)
+                .binding(false, () -> client().itemCounter().onlyCountMatchingItems, v -> client().itemCounter().onlyCountMatchingItems = v)
                 .controller(TickBoxControllerBuilder::create)
                 .build();
 
         Option<Boolean> displayOnPickup = Option.<Boolean>createBuilder()
                 .name(Component.translatable("qualityofqueso.options.display_on_pickup"))
                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.display_on_pickup.description")))
-                .binding(true, () -> clientOptionsInstance().getItemCounterOptions().displayOnPickup, v -> clientOptionsInstance().getItemCounterOptions().displayOnPickup = v)
+                .binding(true, () -> client().itemCounter().displayOnPickup, v -> client().itemCounter().displayOnPickup = v)
                 .controller(TickBoxControllerBuilder::create)
                 .build();
 
         Option<Boolean> displayOnThrow = Option.<Boolean>createBuilder()
                 .name(Component.translatable("qualityofqueso.options.display_on_throw"))
                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.display_on_throw.description")))
-                .binding(true, () -> clientOptionsInstance().getItemCounterOptions().displayOnThrow, v -> clientOptionsInstance().getItemCounterOptions().displayOnThrow = v)
+                .binding(true, () -> client().itemCounter().displayOnThrow, v -> client().itemCounter().displayOnThrow = v)
                 .controller(TickBoxControllerBuilder::create)
                 .build();
 
@@ -57,38 +57,38 @@ public class ItemCounterCategory {
                 .description(
                         OptionDescription.createBuilder()
                                 .text(Component.translatable("qualityofqueso.options.display_total_with_stacks.description"))
-                                .customImage(fixedSizeImage(ofQoQ("options/item_counter/total_with_stacks"), 75, 32))
+                                .customImage(fixedSizeImage(qoqIdentifier("options/item_counter/total_with_stacks"), 75, 32))
                                 .build()
                 )
-                .binding(false, () -> clientOptionsInstance().getItemCounterOptions().displayTotalWithStacks, v -> clientOptionsInstance().getItemCounterOptions().displayTotalWithStacks = v)
+                .binding(false, () -> client().itemCounter().displayTotalWithStacks, v -> client().itemCounter().displayTotalWithStacks = v)
                 .controller(TickBoxControllerBuilder::create)
                 .build();
 
         Option<Boolean> countAllArrows = Option.<Boolean>createBuilder()
                 .name(Component.translatable("qualityofqueso.options.count_all_arrows"))
                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.count_all_arrows.description")))
-                .binding(true, () -> clientOptionsInstance().getItemCounterOptions().countAllArrows, v -> clientOptionsInstance().getItemCounterOptions().countAllArrows = v)
+                .binding(true, () -> client().itemCounter().countAllArrows, v -> client().itemCounter().countAllArrows = v)
                 .controller(TickBoxControllerBuilder::create)
                 .build();
 
         Option<Boolean> onlyShowArrowCounter = Option.<Boolean>createBuilder()
                 .name(Component.translatable("qualityofqueso.options.only_show_arrow_counter"))
                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.only_show_arrow_counter.description")))
-                .binding(false, () -> clientOptionsInstance().getItemCounterOptions().onlyShowArrowCounter, v -> clientOptionsInstance().getItemCounterOptions().onlyShowArrowCounter = v)
+                .binding(false, () -> client().itemCounter().onlyShowArrowCounter, v -> client().itemCounter().onlyShowArrowCounter = v)
                 .controller(TickBoxControllerBuilder::create)
                 .build();
 
         Option<Boolean> alwaysShowArrowCounter = Option.<Boolean>createBuilder()
                 .name(Component.translatable("qualityofqueso.options.always_show_arrow_counter"))
                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.always_show_arrow_counter.description")))
-                .binding(false, () -> clientOptionsInstance().getItemCounterOptions().alwaysShowArrowCounter, v -> clientOptionsInstance().getItemCounterOptions().alwaysShowArrowCounter = v)
+                .binding(false, () -> client().itemCounter().alwaysShowArrowCounter, v -> client().itemCounter().alwaysShowArrowCounter = v)
                 .controller(TickBoxControllerBuilder::create)
                 .build();
 
         Option<Boolean> arrowCounter = Option.<Boolean>createBuilder()
                 .name(Component.translatable("qualityofqueso.options.arrow_counter"))
                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.arrow_counter.description")))
-                .binding(true, () -> clientOptionsInstance().getItemCounterOptions().arrowCounter, v -> clientOptionsInstance().getItemCounterOptions().arrowCounter = v)
+                .binding(true, () -> client().itemCounter().arrowCounter, v -> client().itemCounter().arrowCounter = v)
                 .controller(BooleanControllerBuilder::create)
                 .addListener((opt, event) -> {
                     if (event == OptionEventListener.Event.STATE_CHANGE || event == OptionEventListener.Event.INITIAL) {
@@ -115,12 +115,12 @@ public class ItemCounterCategory {
                                                             .text(Component.translatable("qualityofqueso.options.item_counter.description"));
 
                                                     return switch (value) {
-                                                        case TOTAL -> builder.customImage(fixedSizeImage(ofQoQ("options/item_counter/total"), 75, 27)).build();
-                                                        case STACKS -> builder.customImage(fixedSizeImage(ofQoQ("options/item_counter/stacks"), 75, 27)).build();
+                                                        case TOTAL -> builder.customImage(fixedSizeImage(qoqIdentifier("options/item_counter/total"), 75, 27)).build();
+                                                        case STACKS -> builder.customImage(fixedSizeImage(qoqIdentifier("options/item_counter/stacks"), 75, 27)).build();
                                                         default -> builder.build();
                                                     };
                                                 })
-                                                .binding(ItemCounter.STACKS, () -> clientOptionsInstance().getItemCounterOptions().itemCounter, v -> clientOptionsInstance().getItemCounterOptions().itemCounter = v)
+                                                .binding(ItemCounter.STACKS, () -> client().itemCounter().itemCounter, v -> client().itemCounter().itemCounter = v)
                                                 .controller(o -> EnumControllerBuilder.create(o)
                                                         .enumClass(ItemCounter.class)
                                                         .formatValue(v -> Component.literal(v.getSerializedName())))

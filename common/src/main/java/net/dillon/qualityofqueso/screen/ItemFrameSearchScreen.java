@@ -1,5 +1,6 @@
 package net.dillon.qualityofqueso.screen;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.blay09.mods.balm.Balm;
 import net.dillon.dillonlib.util.Texts;
 import net.dillon.qualityofqueso.option.ModClientOptions;
@@ -15,11 +16,10 @@ import net.minecraft.client.input.KeyEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.CommonColors;
 import org.jspecify.annotations.Nullable;
-import org.lwjgl.glfw.GLFW;
 
 import static net.dillon.dillonlib.task.ClientTasks.openScreen;
 import static net.dillon.qualityofqueso.helper.GuiHelper.drawTooltip;
-import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
+import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 /**
  * A utility screen to search for all nearby item frames. If an item frame is found, it glows.
@@ -41,7 +41,7 @@ public class ItemFrameSearchScreen extends Screen {
 
     private void clear() {
         this.searchField.setValue("");
-        this.sendPacket(true, 0, clientOptionsInstance().getMiscOptions().itemFrameSearchRadius);
+        this.sendPacket(true, 0, client().misc().itemFrameSearchRadius);
     }
 
     private void sendPacket(boolean clear, int timer, int radius) {
@@ -57,7 +57,7 @@ public class ItemFrameSearchScreen extends Screen {
     }
 
     private void close(boolean backToParent) {
-        ModClientOptions.INSTANCE.update(options -> options.getSearchingOptions().savedItemFrameSearchText = this.searchField.getValue());
+        ModClientOptions.INSTANCE.update(options -> options.searching().savedItemFrameSearchText = this.searchField.getValue());
         if (backToParent && this.parent != null) {
             openScreen(this.parent);
         } else {
@@ -76,10 +76,10 @@ public class ItemFrameSearchScreen extends Screen {
     @Override
     public boolean keyPressed(KeyEvent input) {
         // Send the packet upon pressing enter.
-        if (input.key() == GLFW.GLFW_KEY_ENTER && !this.searchField.getValue().isEmpty()) {
-            this.sendPacket(false, clientOptionsInstance().getMiscOptions().itemFrameSearchGlowDuration != 0 ? clientOptionsInstance().getMiscOptions().itemFrameSearchGlowDuration : 0, clientOptionsInstance().getMiscOptions().itemFrameSearchRadius);
+        if (input.key() == InputConstants.KEY_RETURN && !this.searchField.getValue().isEmpty()) {
+            this.sendPacket(false, client().misc().itemFrameSearchGlowDuration != 0 ? client().misc().itemFrameSearchGlowDuration : 0, client().misc().itemFrameSearchRadius);
         }
-        if (Minecraft.getInstance().hasControlDown() && input.key() == GLFW.GLFW_KEY_C) {
+        if (Minecraft.getInstance().hasControlDown() && input.key() == InputConstants.KEY_C) {
             this.clear();
         }
         return super.keyPressed(input);
@@ -88,13 +88,13 @@ public class ItemFrameSearchScreen extends Screen {
     @Override
     protected void init() {
         this.searchField = new EditBox(this.font, this.width / 2 - 100, this.height / 2 - 24, 200, 20, Component.empty());
-        if (clientOptionsInstance().getSearchingOptions().saveSearchText) {
-            this.searchField.setValue(clientOptionsInstance().getSearchingOptions().savedItemFrameSearchText);
+        if (client().searching().saveSearchText) {
+            this.searchField.setValue(client().searching().savedItemFrameSearchText);
         }
         this.searchField.setMaxLength(50);
 
         this.searchButton = this.addRenderableWidget(Button.builder(Component.translatable("qualityofqueso.gui.search"), button -> {
-            this.sendPacket(false, clientOptionsInstance().getMiscOptions().itemFrameSearchGlowDuration != 0 ? clientOptionsInstance().getMiscOptions().itemFrameSearchGlowDuration : 0, clientOptionsInstance().getMiscOptions().itemFrameSearchRadius);
+            this.sendPacket(false, client().misc().itemFrameSearchGlowDuration != 0 ? client().misc().itemFrameSearchGlowDuration : 0, client().misc().itemFrameSearchRadius);
         }).bounds(this.width / 2 + 115, this.height / 2 + 24, 100, 20).build());
 
         AbstractWidget itemFrameSearchRadius = this.addRenderableWidget(ListOptions.itemFrameSearchRadius().createButton(Minecraft.getInstance().options, this.width / 2 + 5, 20, 100));
@@ -133,7 +133,7 @@ public class ItemFrameSearchScreen extends Screen {
         if (this.clearButton.isHovered()) {
             drawTooltip(Component.translatable("qualityofqueso.gui.clear.tooltip"), graphics, this.font, mouseX, mouseY);
         }
-        if (clientOptionsInstance().getGeneralOptions().tooltips.enabled() && this.searchField.isHovered() && this.searchField.getValue().isEmpty()) {
+        if (client().general().tooltips.enabled() && this.searchField.isHovered() && this.searchField.getValue().isEmpty()) {
             drawTooltip(Component.translatable("qualityofqueso.gui.search_item_frames.search_filtering"), graphics, this.font, mouseX, mouseY);
         }
 

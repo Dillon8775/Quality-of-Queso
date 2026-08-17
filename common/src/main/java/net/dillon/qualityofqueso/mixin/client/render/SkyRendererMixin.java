@@ -8,8 +8,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
 import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
+import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 @Mixin(SkyRenderer.class)
 public class SkyRendererMixin {
@@ -19,7 +19,7 @@ public class SkyRendererMixin {
      */
     @Inject(method = "shouldRenderDarkDisc", at = @At("HEAD"), cancellable = true)
     private void cancelOutDarkDisc(float deltaPartialTick, ClientLevel level, CallbackInfoReturnable<Boolean> cir) {
-        if (!modEnabled(Minecraft.getInstance()) || clientOptionsInstance().getAccessibilityOptions().darkDisc) {
+        if (!modEnabled(Minecraft.getInstance()) || client().accessibility().darkDisc) {
             return;
         }
 

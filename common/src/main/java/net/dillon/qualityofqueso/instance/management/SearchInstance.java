@@ -1,8 +1,8 @@
 package net.dillon.qualityofqueso.instance.management;
 
+import net.dillon.qualityofqueso.helper.ModConstants;
 import net.dillon.qualityofqueso.instance.QuesoScreen;
 import net.dillon.qualityofqueso.option.eum.general.Theme;
-import net.dillon.qualityofqueso.util.ModConstants;
 import net.dillon.qualityofqueso.widget.SearchBar;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -25,8 +25,8 @@ import net.minecraft.world.item.enchantment.ItemEnchantments;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.getBarWidth;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.isInventoryScreen;
 import static net.dillon.qualityofqueso.helper.MethodHelper.*;
-import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
-import static net.dillon.qualityofqueso.helper.ModHelper.ofQoQ;
+import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
+import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 /**
  * Handles searching-related functions.
@@ -43,7 +43,7 @@ public class SearchInstance extends ManagementInstance {
     public SearchBar initializeSearchField(boolean inventory) {
         return new SearchBar(Minecraft.getInstance().font,
                 instance().getScreen().width / 2 +  getBarWidth(getImageWidth(instance().getScreen())) / 2 - (inventory ? 60 : 64),
-                getTopPos(instance().getScreen()) + getTitleLabelY(instance().getScreen()) - 2 + (clientOptionsInstance().getSearchingOptions().searchBarPosition.top() ? (clientOptionsInstance().getSearchingOptions().searchBarColor.black() ? -19 : -21) : 0));
+                getTopPos(instance().getScreen()) + getTitleLabelY(instance().getScreen()) - 2 + (client().searching().searchBarPosition.top() ? (client().searching().searchBarColor.black() ? -19 : -21) : 0));
     }
 
     /**
@@ -100,10 +100,10 @@ public class SearchInstance extends ManagementInstance {
         String id = "grayed";
         if (hotbarOverlay) {
             id = "grayed_hotbar";
-        } else if (clientOptionsInstance().getAccessibilityOptions().darkerOverlay || clientOptionsInstance().getGeneralOptions().theme != Theme.VANILLA) {
+        } else if (client().accessibility().darkerOverlay || client().general().theme != Theme.VANILLA) {
             id = "grayed_dark";
         }
-        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ofQoQ("slot/" + id), slot.x, slot.y, 16, 16);
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, qoqIdentifier("slot/" + id), slot.x, slot.y, 16, 16);
     }
 
     /**
@@ -119,10 +119,10 @@ public class SearchInstance extends ManagementInstance {
 
         // The "search inventory" option only gates container-screen player inventory scanning.
         // InventoryScreen should always keep its own hotbar/include behavior.
-        if (!clientOptionsInstance().getManagementOptions().includingHotbar
+        if (!client().management().includingHotbar
                 && isHotbarSlot(instance().getScreenMenu().slots.size(), dropping ? slot.index + 1 : slot.index)
                 && (!dropping || !isInventoryScreen(instance().getScreen()) || slot.index != 45)) {
-            boolean applyHotbarFilter = clientOptionsInstance().getAccessibilityOptions().searchInventory || isInventoryScreen(instance().getScreen());
+            boolean applyHotbarFilter = client().accessibility().searchInventory || isInventoryScreen(instance().getScreen());
             if (applyHotbarFilter) {
                 return false;
             }
@@ -132,7 +132,7 @@ public class SearchInstance extends ManagementInstance {
             return true;
         }
 
-        if (!ModConstants.SEARCHING_TRANSPORTABLES || !clientOptionsInstance().getButtonDisplayOptions().displaySearchTransportables) {
+        if (!ModConstants.SEARCHING_TRANSPORTABLES || !client().buttonDisplayOptions().displaySearchTransportables) {
             return false;
         }
 
@@ -142,7 +142,7 @@ public class SearchInstance extends ManagementInstance {
         }
 
         BundleContents bundleContents = stack.get(DataComponents.BUNDLE_CONTENTS);
-        return bundleContents != null && bundleContents.itemCopyStream().anyMatch(contained -> matchesQuery(searchQuery, contained));
+        return bundleContents != null && bundleContents.itemCopies().anyMatch(contained -> matchesQuery(searchQuery, contained));
     }
 
     /**

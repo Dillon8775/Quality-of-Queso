@@ -1,7 +1,6 @@
 package net.dillon.qualityofqueso.screen;
 
 import net.dillon.dillonlib.util.Texts;
-import net.dillon.qualityofqueso.helper.ModHelper;
 import net.dillon.qualityofqueso.util.ListOptions;
 import net.dillon.qualityofqueso.util.VisualTimeTracker;
 import net.minecraft.client.Minecraft;
@@ -17,8 +16,8 @@ import net.minecraft.util.CommonColors;
 import java.util.Locale;
 
 import static net.dillon.dillonlib.task.ClientTasks.openScreen;
-import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
-import static net.dillon.qualityofqueso.helper.ModHelper.ofQoQ;
+import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
+import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 /**
  * A utility screen to change the visual time client-side.
@@ -77,12 +76,12 @@ public class VisualTimeScreen extends Screen {
         Identifier clockTexture = Identifier.withDefaultNamespace("textures/item/clock_" + String.format(Locale.ROOT, "%02d", clockFrame) + ".png");
         graphics.blit(RenderPipelines.GUI_TEXTURED, clockTexture, this.visualTime.getX() - 48, this.visualTime.getY() - 2, 0.0F, 0.0F, SIZE, SIZE, SIZE, SIZE);
 
-        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ofQoQ("visual_time/speed"), this.visualTimeSpeed.getX() - 48, this.visualTimeSpeed.getY() + 1, 24, 18);
-        graphics.blit(RenderPipelines.GUI_TEXTURED, Identifier.withDefaultNamespace("textures/block/daylight_detector" + (clientOptionsInstance().getVisualTimeOptions().syncLocalTime ? "_inverted" : "") + "_top.png"), this.syncLocalTime.getX() - 48, this.syncLocalTime.getY() - 2, 0.0F, 0.0F, SIZE, SIZE, SIZE, SIZE);
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, qoqIdentifier("visual_time/speed"), this.visualTimeSpeed.getX() - 48, this.visualTimeSpeed.getY() + 1, 24, 18);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, Identifier.withDefaultNamespace("textures/block/daylight_detector" + (client().visualTime().syncLocalTime ? "_inverted" : "") + "_top.png"), this.syncLocalTime.getX() - 48, this.syncLocalTime.getY() - 2, 0.0F, 0.0F, SIZE, SIZE, SIZE, SIZE);
 
-        boolean overrideClientTime = ModHelper.clientOptionsInstance().getVisualTimeOptions().overrideClientTime;
-        boolean matchWithIRLTime = ModHelper.clientOptionsInstance().getVisualTimeOptions().syncLocalTime;
-        this.visualTime.active = overrideClientTime && ModHelper.clientOptionsInstance().getVisualTimeOptions().visualTimeSpeed == 0 && !matchWithIRLTime;
+        boolean overrideClientTime = client().visualTime().overrideClientTime;
+        boolean matchWithIRLTime = client().visualTime().syncLocalTime;
+        this.visualTime.active = overrideClientTime && client().visualTime().visualTimeSpeed == 0 && !matchWithIRLTime;
         this.visualTimeSpeed.active = overrideClientTime && !matchWithIRLTime;
         this.syncLocalTime.active = overrideClientTime;
 

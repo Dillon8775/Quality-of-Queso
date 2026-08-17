@@ -13,8 +13,8 @@ import java.util.List;
 
 import static net.dillon.qualityofqueso.helper.ManagementHelper.isContainerScreen;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.isInventoryScreen;
+import static net.dillon.qualityofqueso.helper.ModConstants.*;
 import static net.dillon.qualityofqueso.helper.ModHelper.sendClientPreferencesToServer;
-import static net.dillon.qualityofqueso.util.ModConstants.*;
 
 /**
  * Initializes buttons and widgets.
@@ -77,7 +77,7 @@ public class WidgetHandlerInstance extends ManagementInstance {
                 "include_hotbar",
                 b -> {
                     ModClientOptions.INSTANCE.update(options -> {
-                        options.getManagementOptions().includingHotbar = !options.getManagementOptions().includingHotbar;
+                        options.management().includingHotbar = !options.management().includingHotbar;
                     });
                     sendClientPreferencesToServer();
                 });
@@ -205,7 +205,7 @@ public class WidgetHandlerInstance extends ManagementInstance {
                 searchInstance().getSearchFieldText(),
                 "trade_all",
                 b -> ModClientOptions.INSTANCE.update(options -> {
-                    options.getManagementOptions().bulkTrade = !options.getManagementOptions().bulkTrade;
+                    options.management().bulkTrade = !options.management().bulkTrade;
                 })
         );
     }
@@ -220,7 +220,7 @@ public class WidgetHandlerInstance extends ManagementInstance {
                 searchInstance().getSearchFieldText(),
                 "craft_all",
                 b -> ModClientOptions.INSTANCE.update(options -> {
-                    options.getManagementOptions().bulkCraft = !options.getManagementOptions().bulkCraft;
+                    options.management().bulkCraft = !options.management().bulkCraft;
                 })
         );
     }

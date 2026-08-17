@@ -10,7 +10,6 @@ import net.dillon.qualityofqueso.option.eum.management.sorting.DefaultSortingMod
 import net.dillon.qualityofqueso.packet.RequestShulkerStateC2SPacket;
 import net.dillon.qualityofqueso.packet.SyncShulkerStateS2CPacket;
 import net.dillon.qualityofqueso.packet.UpdateShulkerStateC2SPacket;
-import net.dillon.qualityofqueso.util.ModConstants;
 import net.dillon.qualityofqueso.util.ShulkerStateHolder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -32,7 +31,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static net.dillon.qualityofqueso.helper.ManagementHelper.playLockSlotSound;
-import static net.dillon.qualityofqueso.helper.ModHelper.*;
+import static net.dillon.qualityofqueso.option.OptionInstances.*;
 
 /**
  * Tracks client-selected containers.
@@ -66,7 +65,7 @@ public class ContainerHelper {
      * @return {@code true} when tracked-container filtering behavior should be active.
      */
     public static boolean isTrackedFilteringActive() {
-        return IS_TRACKED_CONTAINER && clientOptionsInstance().getManagementOptions().containerFiltering;
+        return IS_TRACKED_CONTAINER && client().management().containerFiltering;
     }
 
     /**
@@ -99,70 +98,70 @@ public class ContainerHelper {
      * @return the tracked chests list.
      */
     private static Set<String> itemFilteredContainers() {
-        if (containerDataInstance().itemFilteredContainers == null) {
-            containerDataInstance().itemFilteredContainers = new HashSet<>();
+        if (containerData().itemFilteredContainers == null) {
+            containerData().itemFilteredContainers = new HashSet<>();
         }
-        return containerDataInstance().itemFilteredContainers;
+        return containerData().itemFilteredContainers;
     }
 
     /**
      * @return the tracked tag-filtered container list.
      */
     private static Set<String> tagFilteredContainers() {
-        if (containerDataInstance().tagFilteredContainers == null) {
-            containerDataInstance().tagFilteredContainers = new HashSet<>();
+        if (containerData().tagFilteredContainers == null) {
+            containerData().tagFilteredContainers = new HashSet<>();
         }
-        return containerDataInstance().tagFilteredContainers;
+        return containerData().tagFilteredContainers;
     }
 
     /**
      * @return the tracked placeholder item IDs by container key group.
      */
     private static Map<String, List<String>> containerFilterItems() {
-        if (containerDataInstance().containerFilterItems == null) {
-            containerDataInstance().containerFilterItems = new HashMap<>();
+        if (containerData().containerFilterItems == null) {
+            containerData().containerFilterItems = new HashMap<>();
         }
-        return containerDataInstance().containerFilterItems;
+        return containerData().containerFilterItems;
     }
 
     /**
      * @return the tracked sorting modes by container key group.
      */
     private static Map<String, String> containerSortingModes() {
-        if (containerDataInstance().containerSortingModes == null) {
-            containerDataInstance().containerSortingModes = new HashMap<>();
+        if (containerData().containerSortingModes == null) {
+            containerData().containerSortingModes = new HashMap<>();
         }
-        return containerDataInstance().containerSortingModes;
+        return containerData().containerSortingModes;
     }
 
     /**
      * @return the tracked filtering modes by container key group.
      */
     private static Map<String, String> containerFilteringModes() {
-        if (containerDataInstance().containerFilteringModes == null) {
-            containerDataInstance().containerFilteringModes = new HashMap<>();
+        if (containerData().containerFilteringModes == null) {
+            containerData().containerFilteringModes = new HashMap<>();
         }
-        return containerDataInstance().containerFilteringModes;
+        return containerData().containerFilteringModes;
     }
 
     /**
      * @return the locked player slot map.
      */
     private static Map<String, List<Integer>> playerLockedSlotsMap() {
-        if (lockedPlayerSlotsInstance().lockedPlayerSlots == null) {
-            lockedPlayerSlotsInstance().lockedPlayerSlots = new HashMap<>();
+        if (lockedPlayerSlots().lockedPlayerSlots == null) {
+            lockedPlayerSlots().lockedPlayerSlots = new HashMap<>();
         }
-        return ModHelper.lockedPlayerSlotsInstance().lockedPlayerSlots;
+        return lockedPlayerSlots().lockedPlayerSlots;
     }
 
     /**
      * @return the locked container slot map.
      */
     private static Map<String, List<Integer>> containerLockedSlotsMap() {
-        if (lockedContainerSlotsInstance().lockedContainerSlots == null) {
-            lockedContainerSlotsInstance().lockedContainerSlots = new HashMap<>();
+        if (lockedContainerSlots().lockedContainerSlots == null) {
+            lockedContainerSlots().lockedContainerSlots = new HashMap<>();
         }
-        return lockedContainerSlotsInstance().lockedContainerSlots;
+        return lockedContainerSlots().lockedContainerSlots;
     }
 
     /**
@@ -224,13 +223,13 @@ public class ContainerHelper {
         }
 
         // Do not set sorting mode based on container if user is using a global sorting mode.
-        if (clientOptionsInstance().getSortingOptions().useGlobalSortingMode) {
+        if (client().sorting().useGlobalSortingMode) {
             return;
         }
 
         // Capture the pre-container sort mode once so close-screen restore is stable.
         if (!capturedGlobalSortingModeForActiveContainer) {
-            ModConstants.GLOBAL_SORTING_MODE = clientOptionsInstance().getSortingOptions().currentSortingMode;
+            ModConstants.GLOBAL_SORTING_MODE = client().sorting().currentSortingMode;
             capturedGlobalSortingModeForActiveContainer = true;
         }
 
@@ -240,13 +239,13 @@ public class ContainerHelper {
             String sortingMode = state == null ? null : state.sortingMode;
             if (sortingMode == null || sortingMode.isBlank()) {
                 CurrentSortingMode mode = getDefaultSortingModeForContainer();
-                ModHelper.clientOptionsInstance().getSortingOptions().currentSortingMode = mode;
+                client().sorting().currentSortingMode = mode;
                 if (state != null) {
                     state.sortingMode = mode.name();
                     pushActiveShulkerStateToServer();
                 }
             } else {
-                ModHelper.clientOptionsInstance().getSortingOptions().currentSortingMode = CurrentSortingMode.fromName(sortingMode);
+                client().sorting().currentSortingMode = CurrentSortingMode.fromName(sortingMode);
             }
             return;
         }
@@ -254,7 +253,7 @@ public class ContainerHelper {
         // Otherwise, get a container's sorting mode, and set the sorting mode to it
         String key = activeSortKey();
         if (key.isEmpty()) {
-            ModHelper.clientOptionsInstance().getSortingOptions().currentSortingMode = getDefaultSortingModeForContainer();
+            client().sorting().currentSortingMode = getDefaultSortingModeForContainer();
             return;
         }
 
@@ -262,30 +261,30 @@ public class ContainerHelper {
         String stored = containerSortingModes().get(key);
         if (stored == null || stored.isBlank()) {
             CurrentSortingMode mode = getDefaultSortingModeForContainer();
-            ModHelper.clientOptionsInstance().getSortingOptions().currentSortingMode = mode;
+            client().sorting().currentSortingMode = mode;
             containerSortingModes().put(key, mode.name());
             ContainerData.INSTANCE.save();
             return;
         }
 
         // Set the sorting mode to the sorting mode's name
-        ModHelper.clientOptionsInstance().getSortingOptions().currentSortingMode = CurrentSortingMode.fromName(stored);
+        client().sorting().currentSortingMode = CurrentSortingMode.fromName(stored);
     }
 
     /**
      * @return the default sorting mode to use for unsorted containers.
      */
     private static CurrentSortingMode getDefaultSortingModeForContainer() {
-        if (clientOptionsInstance().getSortingOptions().useGlobalSortingMode) {
+        if (client().sorting().useGlobalSortingMode) {
             return CurrentSortingMode.ALPHABETICAL;
         } else {
-            if (clientOptionsInstance().getSortingOptions().defaultSortingMode == DefaultSortingMode.BY_TAG) {
+            if (client().sorting().defaultSortingMode == DefaultSortingMode.BY_TAG) {
                 return CurrentSortingMode.TAG;
-            } else if (clientOptionsInstance().getSortingOptions().defaultSortingMode == DefaultSortingMode.ASCENDING) {
+            } else if (client().sorting().defaultSortingMode == DefaultSortingMode.ASCENDING) {
                 return CurrentSortingMode.COUNT_ASCENDING;
-            } else if (clientOptionsInstance().getSortingOptions().defaultSortingMode == DefaultSortingMode.DESCENDING) {
+            } else if (client().sorting().defaultSortingMode == DefaultSortingMode.DESCENDING) {
                 return CurrentSortingMode.COUNT_DESCENDING;
-            } else if (clientOptionsInstance().getSortingOptions().defaultSortingMode == DefaultSortingMode.CREATIVE_MENU) {
+            } else if (client().sorting().defaultSortingMode == DefaultSortingMode.CREATIVE_MENU) {
                 return CurrentSortingMode.CREATIVE_MENU;
             }
         }
@@ -349,7 +348,7 @@ public class ContainerHelper {
      * @return the default filtering mode to use for unconfigured containers.
      */
     private static FilteringMode getDefaultFilteringModeForContainer() {
-        return clientOptionsInstance().isFillingCurrentStacks() ? FilteringMode.CURRENT_STACKS : FilteringMode.MATCHING;
+        return client().isFillingCurrentStacks() ? FilteringMode.CURRENT_STACKS : FilteringMode.MATCHING;
     }
 
     /**

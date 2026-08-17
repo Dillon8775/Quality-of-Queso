@@ -4,6 +4,7 @@ import com.llamalad7.mixinextras.expression.Definition;
 import com.llamalad7.mixinextras.expression.Expression;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.dillon.dillonlib.mixinplugin.PredicateSigned;
+import net.dillon.dillonlib.platform.info.UpdatableSpriteButton;
 import net.dillon.dillonlib.task.ClientTasks;
 import net.dillon.qualityofqueso.helper.ButtonHelper;
 import net.dillon.qualityofqueso.option.eum.general.MenuButton;
@@ -30,11 +31,13 @@ import static net.dillon.dillonlib.task.ClientTasks.openScreen;
 import static net.dillon.qualityofqueso.helper.ButtonHelper.getConfigButtonX;
 import static net.dillon.qualityofqueso.helper.ButtonHelper.getConfigButtonY;
 import static net.dillon.qualityofqueso.helper.GuiHelper.drawTooltip;
+import static net.dillon.qualityofqueso.helper.ModConstants.*;
 import static net.dillon.qualityofqueso.helper.ModHelper.*;
-import static net.dillon.qualityofqueso.util.ModConstants.*;
+import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.OptionInstances.universal;
 
 @PredicateSigned
-@Mixin(PauseScreen.class)
+@Mixin(value = PauseScreen.class, priority = 1010)
 public class PauseScreenMixin extends Screen {
     @Shadow
     @Final
@@ -42,7 +45,7 @@ public class PauseScreenMixin extends Screen {
     @Shadow
     private Button disconnectButton;
     @Unique
-    private SpriteIconButton menuButton;
+    private UpdatableSpriteButton menuButton;
     @Unique
     private Button blacklistServerButton, viewLastKnownEnderChestButton;
 
@@ -71,7 +74,7 @@ public class PauseScreenMixin extends Screen {
      */
     @Unique
     private boolean isServerBlacklisted(String serverAddress) {
-        return universalOptionsInstance().blacklistedServers.contains(serverAddress);
+        return universal().blacklistedServers.contains(serverAddress);
     }
 
     /**
@@ -81,11 +84,11 @@ public class PauseScreenMixin extends Screen {
     @Expression("integratedServer = ?")
     @Inject(method = "createPauseMenu", at = @At("MIXINEXTRAS:EXPRESSION"))
     private void addQualityOfQuesoButtons(CallbackInfo ci, @Local(name = "iconButtonRow") LinearLayout iconButtonRow) {
-        if (!universalOptionsInstance().menuButton.everywhere()) {
+        if (!universal().menuButton.everywhere()) {
             return;
         }
 
-        boolean everywhere = universalOptionsInstance().menuButton == MenuButton.EVERYWHERE;
+        boolean everywhere = universal().menuButton == MenuButton.EVERYWHERE;
 
         int button = 0;
         this.menuButton = ButtonHelper.createMainMenuButton(this);
@@ -109,13 +112,15 @@ public class PauseScreenMixin extends Screen {
             button++;
         }
 
-        if (clientOptionsInstance().getAccessibilityOptions().eChestButton.pauseScreen()) {
+        if (client().accessibility().eChestButton.pauseScreen()) {
             SpriteIconButton viewLastKnownEnderChestButton = ClientTasks.createSpriteIconButton(
-                    ofQoQ(ENDER_CHEST),
+                    "View Last Known Ender Chest Button",
+                    qoqIdentifier(ENDER_CHEST),
                     (b) -> {
                         openScreen(new EnderChestPreviewScreen());
                     },
-                    Component.translatable("qualityofqueso.gui.view_ender_chest.tooltip")
+                    Component.translatable("qualityofqueso.gui.view_ender_chest.tooltip"),
+                    false
             );
             if (everywhere) {
                 this.viewLastKnownEnderChestButton = iconButtonRow.addChild(viewLastKnownEnderChestButton);
@@ -135,28 +140,28 @@ public class PauseScreenMixin extends Screen {
             return;
         }
 
-        if (clientOptionsInstance().getMiscOptions().antiRageQuit && this.disconnectButton != null) {
+        if (client().misc().antiRageQuit && this.disconnectButton != null) {
             this.disconnectButton.active = false;
-            if (clientOptionsInstance().getGeneralOptions().tooltips.enabled() && this.disconnectButton.isHovered()) {
+            if (client().general().tooltips.enabled() && this.disconnectButton.isHovered()) {
                 drawTooltip(Component.translatable("qualityofqueso.gui.disconnect"), graphics, this.font, mouseX, mouseY);
             }
         }
 
-        if (universalOptionsInstance().menuButton.everywhere() && !(this.minecraft.getCurrentServer() == null)) {
+        if (universal().menuButton.everywhere() && !(this.minecraft.getCurrentServer() == null)) {
             if (this.blacklistServerButton != null) {
                 this.blacklistServerButton.active = isOnServer(this.minecraft);
                 String address = this.getServerAddress();
 
-                if (universalOptionsInstance().multiServerConfigs) {
-                    graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ofQoQ(MULTI_CONFIG_TEXTURE), this.blacklistServerButton.getX() - 2, this.blacklistServerButton.getY() - 1, 16, 16);
+                if (universal().multiServerConfigs) {
+                    graphics.blitSprite(RenderPipelines.GUI_TEXTURED, qoqIdentifier(MULTI_CONFIG_TEXTURE), this.blacklistServerButton.getX() - 2, this.blacklistServerButton.getY() - 1, 16, 16);
                 }
-                drawSmallSprite(graphics, this.isServerBlacklisted(address) ? ofQoQ(DISABLED_TEXTURE) : ofQoQ(ENABLED_TEXTURE), this.blacklistServerButton);
+                drawSmallSprite(graphics, this.isServerBlacklisted(address) ? qoqIdentifier(DISABLED_TEXTURE) : qoqIdentifier(ENABLED_TEXTURE), this.blacklistServerButton);
 
                 Component tooltip = this.isServerBlacklisted(address) ?
                         Component.translatable("qualityofqueso.gui.remove_blacklisted_server") :
                         Component.translatable("qualityofqueso.gui.add_blacklisted_server");
                 Component finalTooltip = tooltip;
-                if (universalOptionsInstance().multiServerConfigs) {
+                if (universal().multiServerConfigs) {
                     finalTooltip = tooltip.copy().append(Component.translatable("qualityofqueso.gui.multi_server_configs_enabled"));
                 }
                 if (this.blacklistServerButton.isHovered()) {
@@ -168,11 +173,11 @@ public class PauseScreenMixin extends Screen {
 
         if (this.viewLastKnownEnderChestButton != null) {
             this.viewLastKnownEnderChestButton.active = modEnabled(this.minecraft);
-            if (clientOptionsInstance().getGeneralOptions().tooltips.enabled() && this.viewLastKnownEnderChestButton.isHovered()) {
+            if (client().general().tooltips.enabled() && this.viewLastKnownEnderChestButton.isHovered()) {
                 drawTooltip(Component.translatable("qualityofqueso.gui.view_ender_chest.tooltip"), graphics, this.font, mouseX, mouseY);
             }
         }
 
-        ClientTasks.renderUpdateIconOnButton(graphics, this.menuButton, HAS_UPDATE);
+        ClientTasks.renderUpdateIconOnButton(graphics, this.menuButton);
     }
 }

@@ -3,7 +3,7 @@ package net.dillon.qualityofqueso.option.eum.general;
 import com.mojang.serialization.Codec;
 import net.minecraft.util.StringRepresentable;
 
-import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
+import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 public enum Theme implements StringRepresentable {
     VANILLA("Vanilla"),
@@ -19,7 +19,7 @@ public enum Theme implements StringRepresentable {
     }
 
     public boolean searchBarTransparent() {
-        return clientOptionsInstance().getSearchingOptions().searchBarColor.transparent() || this == TRANSPARENT;
+        return client().searching().searchBarColor.transparent() || this == TRANSPARENT;
     }
 
     @Override

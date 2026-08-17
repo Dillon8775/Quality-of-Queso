@@ -1,9 +1,9 @@
 package net.dillon.qualityofqueso.event;
 
+import net.dillon.qualityofqueso.helper.ModConstants;
 import net.dillon.qualityofqueso.keybind.ModKeyMappings;
 import net.dillon.qualityofqueso.main.ClientEvents;
 import net.dillon.qualityofqueso.platform.QualityOfQuesoPlatforms;
-import net.dillon.qualityofqueso.util.ModConstants;
 import net.minecraft.client.Minecraft;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;

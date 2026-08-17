@@ -1,7 +1,7 @@
 package net.dillon.qualityofqueso.option.eum.management;
 
 import com.mojang.serialization.Codec;
-import net.dillon.qualityofqueso.util.ModConstants;
+import net.dillon.qualityofqueso.helper.ModConstants;
 import net.minecraft.util.StringRepresentable;
 
 public enum Swapping implements StringRepresentable {
@@ -20,7 +20,7 @@ public enum Swapping implements StringRepresentable {
         return this == BUTTON_OR_KEY;
     }
 
-    public boolean buttonOrKeyOrKeyOnly() {
+    public boolean any() {
         return this == BUTTON_OR_KEY || this == KEY_ONLY;
     }
 

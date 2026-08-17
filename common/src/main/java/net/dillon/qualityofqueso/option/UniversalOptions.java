@@ -1,7 +1,7 @@
 package net.dillon.qualityofqueso.option;
 
+import net.dillon.qualityofqueso.helper.ModConstants;
 import net.dillon.qualityofqueso.option.eum.general.MenuButton;
-import net.dillon.qualityofqueso.util.ModConstants;
 
 import java.util.ArrayList;
 import java.util.List;

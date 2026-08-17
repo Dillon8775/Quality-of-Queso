@@ -5,7 +5,7 @@ import net.minecraft.client.OptionInstance;
 import net.minecraft.client.Options;
 import net.minecraft.network.chat.Component;
 
-import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
+import static net.dillon.qualityofqueso.option.OptionInstances.client;
 import static net.dillon.qualityofqueso.util.ModOptionUtil.*;
 
 /**
@@ -14,8 +14,8 @@ import static net.dillon.qualityofqueso.util.ModOptionUtil.*;
 public class ListOptions {
 
     public static OptionInstance<Boolean> overrideClientTime() {
-        return createClientBooleanOption("qualityofqueso.options.override_client_time", true, clientOptionsInstance().getVisualTimeOptions().overrideClientTime,
-                (options, value) -> options.getVisualTimeOptions().overrideClientTime = value
+        return createClientBooleanOption("qualityofqueso.options.override_client_time", true, client().visualTime().overrideClientTime,
+                (options, value) -> options.visualTime().overrideClientTime = value
         );
     }
 
@@ -23,7 +23,7 @@ public class ListOptions {
         return new OptionInstance<>("qualityofqueso.options.visual_time",
                 OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.visual_time.tooltip")),
                 (optionText, value) -> Options.genericValueLabel(optionText, Component.literal(formatMinecraftTime(value * 5))),
-                new OptionInstance.IntRange(0, 287), clientOptionsInstance().getVisualTimeOptions().visualTime, value -> clientOptionsInstance().getVisualTimeOptions().visualTime = value);
+                new OptionInstance.IntRange(0, 287), client().visualTime().visualTime, value -> client().visualTime().visualTime = value);
     }
 
     public static OptionInstance<Integer> visualTimeSpeed() {
@@ -38,14 +38,14 @@ public class ListOptions {
                 },
                 0,
                 100,
-                clientOptionsInstance().getVisualTimeOptions().visualTimeSpeed,
-                (options, value) -> options.getVisualTimeOptions().visualTimeSpeed = value
+                client().visualTime().visualTimeSpeed,
+                (options, value) -> options.visualTime().visualTimeSpeed = value
         );
     }
 
     public static OptionInstance<Boolean> syncLocalTime() {
-        return createClientBooleanOption("qualityofqueso.options.sync_local_time", true, clientOptionsInstance().getVisualTimeOptions().syncLocalTime,
-                (options, value) -> options.getVisualTimeOptions().syncLocalTime = value
+        return createClientBooleanOption("qualityofqueso.options.sync_local_time", true, client().visualTime().syncLocalTime,
+                (options, value) -> options.visualTime().syncLocalTime = value
         );
     }
 
@@ -55,8 +55,8 @@ public class ListOptions {
                 ModOptionUtil::posFormatted,
                 -600,
                 300,
-                clientOptionsInstance().getHudOptions().armorStatusPosition[0],
-                (options, value) -> options.getHudOptions().armorStatusPosition[0] = value
+                client().hud().armorStatusPosition[0],
+                (options, value) -> options.hud().armorStatusPosition[0] = value
         );
     }
 
@@ -66,8 +66,8 @@ public class ListOptions {
                 ModOptionUtil::invertedPosFormat,
                 -525,
                 25,
-                clientOptionsInstance().getHudOptions().armorStatusPosition[1],
-                (options, value) -> options.getHudOptions().armorStatusPosition[1] = value
+                client().hud().armorStatusPosition[1],
+                (options, value) -> options.hud().armorStatusPosition[1] = value
         );
     }
 
@@ -77,8 +77,8 @@ public class ListOptions {
                 ModOptionUtil::posFormatted,
                 -400,
                 600,
-                clientOptionsInstance().getItemCounterOptions().itemCounterPosition[0],
-                (options, value) -> options.getItemCounterOptions().itemCounterPosition[0] = value
+                client().itemCounter().itemCounterPosition[0],
+                (options, value) -> options.itemCounter().itemCounterPosition[0] = value
         );
     }
 
@@ -88,8 +88,8 @@ public class ListOptions {
                 ModOptionUtil::invertedPosFormat,
                 -525,
                 25,
-                clientOptionsInstance().getItemCounterOptions().itemCounterPosition[1],
-                (options, value) -> options.getItemCounterOptions().itemCounterPosition[1] = value
+                client().itemCounter().itemCounterPosition[1],
+                (options, value) -> options.itemCounter().itemCounterPosition[1] = value
         );
     }
 
@@ -99,8 +99,8 @@ public class ListOptions {
                 ModOptionUtil::invertedPosFormat,
                 -525,
                 25,
-                clientOptionsInstance().getHudOptions().otherElementsY,
-                (options, value) -> options.getHudOptions().otherElementsY = value
+                client().hud().otherElementsY,
+                (options, value) -> options.hud().otherElementsY = value
         );
     }
 
@@ -124,8 +124,8 @@ public class ListOptions {
                 },
                 0,
                 180,
-                clientOptionsInstance().getMiscOptions().itemFrameSearchGlowDuration,
-                (options, value) -> options.getMiscOptions().itemFrameSearchGlowDuration = value
+                client().misc().itemFrameSearchGlowDuration,
+                (options, value) -> options.misc().itemFrameSearchGlowDuration = value
         );
     }
 
@@ -133,6 +133,6 @@ public class ListOptions {
         return new OptionInstance<>("qualityofqueso.options.item_frame_search_radius",
                 OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.item_frame_search_radius.tooltip")),
                 (optionText, value) -> Options.genericValueLabel(optionText, Component.literal(value + " blocks")),
-                new OptionInstance.IntRange(10, 256).xmap(value -> value * 2, value -> value / 2, true), clientOptionsInstance().getMiscOptions().itemFrameSearchRadius, value -> clientOptionsInstance().getMiscOptions().itemFrameSearchRadius = value);
+                new OptionInstance.IntRange(10, 256).xmap(value -> value * 2, value -> value / 2, true), client().misc().itemFrameSearchRadius, value -> client().misc().itemFrameSearchRadius = value);
     }
 }

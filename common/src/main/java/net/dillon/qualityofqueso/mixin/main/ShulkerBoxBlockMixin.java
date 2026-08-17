@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static net.dillon.qualityofqueso.util.ModConstants.*;
+import static net.dillon.qualityofqueso.helper.ModConstants.*;
 
 /**
  * Copies shulker state from block entity data into dropped shulker item custom data.

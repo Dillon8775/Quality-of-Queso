@@ -5,15 +5,15 @@ import net.dillon.dillonlib.annotation.DillType;
 import net.dillon.qualityofqueso.util.ShulkerStateHolder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.ShulkerBoxBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -24,7 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static net.dillon.qualityofqueso.util.ModConstants.*;
+import static net.dillon.qualityofqueso.helper.ModConstants.*;
 
 /**
  * Restores shulker state from shulker item custom data into the placed block entity.
@@ -36,8 +36,12 @@ public class BlockItemMixin {
     /**
      * Applies shulker state from the placing stack to the placed shulker block entity.
      */
-    @Inject(method = "updateCustomBlockEntityTag(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/block/state/BlockState;)Z", at = @At("TAIL"))
-    private void restoreShulkerIdentityOnPlace(BlockPos pos, Level level, Player player, ItemStack stack, BlockState state, CallbackInfoReturnable<Boolean> cir) {
+    @Inject(method = "place", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/Block;setPlacedBy(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/item/ItemStack;)V", shift = At.Shift.BEFORE))
+    private void restoreShulkerIdentityOnPlace(BlockPlaceContext context, CallbackInfoReturnable<InteractionResult> cir) {
+        Level level = context.getLevel();
+        BlockPos pos = context.getClickedPos();
+        ItemStack stack = context.getItemInHand();
+
         BlockItem self = (BlockItem) (Object) this;
         if (!(self.getBlock() instanceof ShulkerBoxBlock)) {
             return;

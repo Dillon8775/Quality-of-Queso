@@ -1,8 +1,8 @@
 package net.dillon.qualityofqueso.mixin.client.util;
 
 import net.dillon.qualityofqueso.helper.ContainerHelper;
+import net.dillon.qualityofqueso.helper.ModConstants;
 import net.dillon.qualityofqueso.util.ItemHudTracker;
-import net.dillon.qualityofqueso.util.ModConstants;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
@@ -34,10 +34,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import static net.dillon.qualityofqueso.helper.ContainerHelper.isValidBlockEntity;
 import static net.dillon.qualityofqueso.helper.GuiHelper.isHoldingItem;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.playButtonSound;
-import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
+import static net.dillon.qualityofqueso.helper.ModConstants.DEFAULT_TRACKED_CONTAINER_COOLDOWN;
+import static net.dillon.qualityofqueso.helper.ModConstants.TRACKED_CONTAINER_COOLDOWN;
 import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
-import static net.dillon.qualityofqueso.util.ModConstants.DEFAULT_TRACKED_CONTAINER_COOLDOWN;
-import static net.dillon.qualityofqueso.util.ModConstants.TRACKED_CONTAINER_COOLDOWN;
+import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 @Mixin(MultiPlayerGameMode.class)
 public class MultiPlayerGameModeMixin {
@@ -69,7 +69,7 @@ public class MultiPlayerGameModeMixin {
      */
     @Inject(method = "handleContainerInput", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientPacketListener;send(Lnet/minecraft/network/protocol/Packet;)V"))
     private void onThrowFromGUI(int containerId, int slotIndex, int buttonNum, ContainerInput containerInput, Player player, CallbackInfo ci) {
-        if (!modEnabled(Minecraft.getInstance()) || !clientOptionsInstance().getItemCounterOptions().displayOnThrow || containerInput != ContainerInput.THROW) {
+        if (!modEnabled(Minecraft.getInstance()) || !client().itemCounter().displayOnThrow || containerInput != ContainerInput.THROW) {
             return;
         }
 
@@ -96,7 +96,7 @@ public class MultiPlayerGameModeMixin {
             return;
         }
 
-        if (!modEnabled(Minecraft.getInstance()) || localPlayer.isCreative() || !localPlayer.level().isClientSide() || !clientOptionsInstance().getItemCounterOptions().arrowCounter) {
+        if (!modEnabled(Minecraft.getInstance()) || localPlayer.isCreative() || !localPlayer.level().isClientSide() || !client().itemCounter().arrowCounter) {
             return;
         }
 
@@ -106,7 +106,7 @@ public class MultiPlayerGameModeMixin {
         }
 
         ChargedProjectiles chargedProjectiles = player.getItemInHand(hand).get(DataComponents.CHARGED_PROJECTILES);
-        ItemHudTracker.setStack(chargedProjectiles.isEmpty() ? new ItemStack(Items.ARROW) : chargedProjectiles.itemCopies().get(0), true);
+        ItemHudTracker.setStack(chargedProjectiles.isEmpty() ? new ItemStack(Items.ARROW) : chargedProjectiles.itemCopies().toList().getFirst(), true);
     }
 
     /**
@@ -213,7 +213,7 @@ public class MultiPlayerGameModeMixin {
      */
     @Unique
     private static boolean shouldCancelForContainerFilter(Minecraft minecraft, BlockPos pos) {
-        if (!modEnabled(minecraft) || !clientOptionsInstance().getManagementOptions().containerFiltering || minecraft.player == null || minecraft.level == null
+        if (!modEnabled(minecraft) || !client().management().containerFiltering || minecraft.player == null || minecraft.level == null
                 || !minecraft.player.isShiftKeyDown() || isHoldingItem(minecraft.player, DataComponents.TOOL)) {
             return false;
         }

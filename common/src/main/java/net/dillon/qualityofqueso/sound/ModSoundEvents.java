@@ -5,7 +5,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 
-import static net.dillon.qualityofqueso.helper.ModHelper.ofQoQ;
+import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
 
 /**
  * Custom sound events for {@code Quality of Queso.}
@@ -22,10 +22,10 @@ public class ModSoundEvents {
      * @return a Quality of Queso sound event.
      */
     private static SoundEvent qoqSound(String id) {
-        return Registry.register(BuiltInRegistries.SOUND_EVENT, id, SoundEvent.createVariableRangeEvent(ofQoQ(id)));
+        return Registry.register(BuiltInRegistries.SOUND_EVENT, id, SoundEvent.createVariableRangeEvent(qoqIdentifier(id)));
     }
 
-    public static final Identifier FORTNITE_BATTLE_PASS_ID = ofQoQ("fortnite_battle_pass");
+    public static final Identifier FORTNITE_BATTLE_PASS_ID = qoqIdentifier("fortnite_battle_pass");
     public static SoundEvent FORTNITE_BATTLE_PASS = SoundEvent.createVariableRangeEvent(FORTNITE_BATTLE_PASS_ID);
 
     /**

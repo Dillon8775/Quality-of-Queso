@@ -1,8 +1,9 @@
 package net.dillon.qualityofqueso.screen;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.dillon.qualityofqueso.helper.EnderChestHelper;
+import net.dillon.qualityofqueso.helper.ModConstants;
 import net.dillon.qualityofqueso.option.ContainerData;
-import net.dillon.qualityofqueso.util.ModConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
@@ -16,7 +17,6 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,7 +68,7 @@ public class EnderChestPreviewScreen extends Screen {
 
     @Override
     public boolean keyPressed(KeyEvent input) {
-        if (input.key() == GLFW.GLFW_KEY_ESCAPE || input.key() == key(Minecraft.getInstance().options.keyInventory).getValue()) {
+        if (input.key() == InputConstants.KEY_ESCAPE || input.key() == key(Minecraft.getInstance().options.keyInventory).getValue()) {
             this.onClose();
             return true;
         }

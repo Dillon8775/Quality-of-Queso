@@ -10,6 +10,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.AbstractRecipeBookScreen;
@@ -17,6 +18,7 @@ import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
+import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentType;
@@ -35,6 +37,7 @@ import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
+import org.lwjgl.sdl.SDLKeyboard;
 
 import java.awt.*;
 import java.util.List;
@@ -43,8 +46,10 @@ import java.util.Set;
 import static net.dillon.dillonlib.task.ClientTasks.*;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
 import static net.dillon.qualityofqueso.helper.MethodHelper.*;
-import static net.dillon.qualityofqueso.helper.ModHelper.*;
-import static net.dillon.qualityofqueso.util.ModConstants.*;
+import static net.dillon.qualityofqueso.helper.ModConstants.*;
+import static net.dillon.qualityofqueso.helper.ModHelper.isLeftHanded;
+import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
+import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 /**
  * Utility class for GUI-related things.
@@ -76,14 +81,14 @@ public class GuiHelper {
     public static void drawTextTooltip(Component tooltip, GuiGraphicsExtractor graphics, Font font, Container container, AbstractContainerScreen<?> screen) {
         WidgetLayout widgetLayout = ((QuesoScreen)screen).getWidgetLayout();
         int width = isInventoryScreen(screen)
-                && !clientOptionsInstance().getManagementOptions().layout.horizontal()
+                && !client().management().layout.horizontal()
                 && RENDERED_BUTTONS > 0
                 && widgetLayout != null && widgetLayout.hasTooManyEffects(Minecraft.getInstance().player)
                 ? 125 : 150;
         int x = getTextTooltipX(screen ,graphics, font, tooltip, width);
         int y = getTextTooltipY(container, screen);
         List<ClientTooltipComponent> lines = getTooltipLines(font, tooltip, width);
-        graphics.tooltip(font, lines, x, y, DefaultTooltipPositioner.INSTANCE, null);
+        graphics.tooltip(font, lines, x, y, DefaultTooltipPositioner.INSTANCE, null, false);
     }
 
     /**
@@ -99,10 +104,10 @@ public class GuiHelper {
      * @return the {@code X-position} for tooltips. Only counts for {@link AbstractContainerScreen}s and {@link InventoryScreen}s.
      */
     public static int getTooltipX(GuiGraphicsExtractor graphics, Screen screen, int mouseX) {
-        if (!clientOptionsInstance().getGeneralOptions().tooltips.ddefault()) {
+        if (!client().general().tooltips.ddefault()) {
             return mouseX;
         }
-        int x = !clientOptionsInstance().getMiscOptions().noRecipeBookShift && screen instanceof AbstractRecipeBookScreen<?> recipeBookScreen && getRecipeBookComponent(recipeBookScreen).isVisible() ? 161 : 84;
+        int x = !client().misc().noRecipeBookShift && screen instanceof AbstractRecipeBookScreen<?> recipeBookScreen && getRecipeBookComponent(recipeBookScreen).isVisible() ? 161 : 84;
         return graphics.guiWidth() / 2 + x;
     }
 
@@ -110,7 +115,7 @@ public class GuiHelper {
      * @return the {@code Y-position} for tooltips. Only counts for {@link AbstractContainerScreen}s, {@link InventoryScreen}s, and secondary screens.
      */
     public static int getTooltipY(Container container, Screen screen, int mouseY, boolean searchBar) {
-        if (!clientOptionsInstance().getGeneralOptions().tooltips.ddefault() || (!(screen instanceof AbstractContainerScreen<?>))) {
+        if (!client().general().tooltips.ddefault() || (!(screen instanceof AbstractContainerScreen<?>))) {
             return mouseY;
         }
 
@@ -118,14 +123,14 @@ public class GuiHelper {
         int y = 0;
         int l;
         if (screen instanceof InventoryScreen inventoryScreen) {
-            l = clientOptionsInstance().getManagementOptions().layout.horizontal() ? -12 : 8;
-            if (!clientOptionsInstance().getManagementOptions().layout.horizontal()) {
+            l = client().management().layout.horizontal() ? -12 : 8;
+            if (!client().management().layout.horizontal()) {
                 l += (RENDERED_BUTTONS > 4 ? l * 2 : l);
             }
             y = getTopPos(inventoryScreen) + getTitleLabelY(inventoryScreen) + containerY + l;
         } else if (screen instanceof AbstractContainerScreen<?> abstractContainerScreen) {
-            l = clientOptionsInstance().getManagementOptions().layout.horizontal() && abstractContainerScreen instanceof ContainerScreen ? 14 : 36;
-            if (!clientOptionsInstance().getManagementOptions().layout.horizontal()) {
+            l = client().management().layout.horizontal() && abstractContainerScreen instanceof ContainerScreen ? 14 : 36;
+            if (!client().management().layout.horizontal()) {
                 if (RENDERED_BUTTONS > 8) {
                     l += l / 3 + (RENDERED_BUTTONS > 10 ? 12 : 0);
                 } else if (RENDERED_BUTTONS > 4) {
@@ -138,7 +143,7 @@ public class GuiHelper {
             y = getTopPos(abstractContainerScreen) + getTitleLabelY(abstractContainerScreen) + containerY + l;
         }
 
-        if (searchBar && clientOptionsInstance().getManagementOptions().layout.horizontal()) {
+        if (searchBar && client().management().layout.horizontal()) {
             y -= 64;
         }
 
@@ -181,7 +186,7 @@ public class GuiHelper {
      * @return the y-position for text-rendered tooltips.
      */
     public static int getTextTooltipY(Container container, AbstractContainerScreen<?> screen) {
-        int y = !clientOptionsInstance().getMiscOptions().noRecipeBookShift && screen instanceof AbstractRecipeBookScreen<?> recipeBookScreen && getRecipeBookComponent(recipeBookScreen).isVisible() ? 82 : -40;
+        int y = !client().misc().noRecipeBookShift && screen instanceof AbstractRecipeBookScreen<?> recipeBookScreen && getRecipeBookComponent(recipeBookScreen).isVisible() ? 82 : -40;
         if (isDropperDispenserOrHopperScreen(screen)) {
             y = -10;
         }
@@ -220,7 +225,7 @@ public class GuiHelper {
      * @return if an item and item components equal an item.
      */
     public static boolean itemMatchesInventoryItem(ItemStack mainStack, ItemStack otherStack) {
-        return clientOptionsInstance().getItemCounterOptions().onlyCountMatchingItems ? ItemStack.isSameItemSameComponents(mainStack, otherStack) : otherStack.is(mainStack.getItem());
+        return client().itemCounter().onlyCountMatchingItems ? ItemStack.isSameItemSameComponents(mainStack, otherStack) : otherStack.is(mainStack.getItem());
     }
 
     /**
@@ -253,7 +258,7 @@ public class GuiHelper {
      * Plays a generic ding sound.
      */
     public static void playDingSound() {
-        playLocalSound(SoundEvents.ARROW_HIT_PLAYER, 0.2F, 0.72F);
+        playLocalSound(SoundEvents.ARROW_HIT_PLAYER, 0.72F, 0.2F);
     }
 
     /**
@@ -296,14 +301,14 @@ public class GuiHelper {
      * @return if the arrow count can be displayed at all.
      */
     public static boolean holdingArrowDisplayableProjectileWeapon(Minecraft minecraft, ItemStack stack) {
-        return clientOptionsInstance().getItemCounterOptions().arrowCounter && !minecraft.player.isCreative() && (stack.getItem() instanceof BowItem || stack.getItem() instanceof CrossbowItem);
+        return client().itemCounter().arrowCounter && !minecraft.player.isCreative() && (stack.getItem() instanceof BowItem || stack.getItem() instanceof CrossbowItem);
     }
 
     /**
      * @return if the always show arrow counter is enabled.
      */
     public static boolean isAlwaysShowArrowCounterEnabled(Minecraft minecraft) {
-        return clientOptionsInstance().getItemCounterOptions().arrowCounter && clientOptionsInstance().getItemCounterOptions().alwaysShowArrowCounter && !minecraft.player.isCreative();
+        return client().itemCounter().arrowCounter && client().itemCounter().alwaysShowArrowCounter && !minecraft.player.isCreative();
     }
 
     /**
@@ -325,7 +330,7 @@ public class GuiHelper {
      * @return the armor hotbar texture.
      */
     public static Identifier getArmorHotbarTexture() {
-        return clientOptionsInstance().getGeneralOptions().theme == Theme.TRUE_DARK ? ofQoQ("hud/armor_hotbar_true_dark") : ofQoQ("hud/armor_hotbar");
+        return client().general().theme == Theme.TRUE_DARK ? qoqIdentifier("hud/armor_hotbar_true_dark") : qoqIdentifier("hud/armor_hotbar");
     }
 
     /**
@@ -334,7 +339,7 @@ public class GuiHelper {
     public static Identifier getHighlightedSlotTexture(Minecraft minecraft, Identifier defaultSprite, ItemStack stack, EquipmentSlot equipmentSlot) {
         float healthPercentage = getItemHealthPercentage(stack);
 
-        if (!clientOptionsInstance().getHudOptions().coloredHighlighting) {
+        if (!client().hud().coloredHighlighting) {
             return defaultSprite;
         } else if (healthPercentage < 0.21F) {
             return SLOT_CRITICAL;
@@ -346,7 +351,7 @@ public class GuiHelper {
             return SLOT_DECENT;
         } else if (healthPercentage < 1.0F) {
             return SLOT_GOOD;
-        } else if ((clientOptionsInstance().getLockedSlotOptions().preventDropping || clientOptionsInstance().getLockedSlotOptions().showLock.inHud()) && isLockedHotbarSlot(minecraft, false) && equipmentSlot == null) {
+        } else if ((client().lockedSlots().preventDropping || client().lockedSlots().showLock.inHud()) && isLockedHotbarSlot(minecraft, false) && equipmentSlot == null) {
             return SLOT_LOCKED;
         }
         return defaultSprite;
@@ -356,7 +361,7 @@ public class GuiHelper {
      * @return if a hotbar slot is locked.
      */
     public static boolean isLockedHotbarSlot(Minecraft minecraft, boolean checkForEmpty) {
-        if (!clientOptionsInstance().getLockedSlotOptions().lockedSlots) {
+        if (!client().lockedSlots().lockedSlots) {
             return false;
         }
 
@@ -416,7 +421,7 @@ public class GuiHelper {
      * @return the count color to display.
      */
     public static int getArrowCounterTextColor(int count, boolean hasInfinity) {
-        if (!clientOptionsInstance().getHudOptions().coloredHighlighting || count > (clientOptionsInstance().getItemCounterOptions().itemCounter == ItemCounter.STACKS ? 64 : 99)) {
+        if (!client().hud().coloredHighlighting || count > (client().itemCounter().itemCounter == ItemCounter.STACKS ? 64 : 99)) {
             return CommonColors.WHITE;
         }
 
@@ -518,16 +523,57 @@ public class GuiHelper {
      * @return the display time for armor status.
      */
     public static int getDisplayTimeInTicks() {
-        return (int) (clientOptionsInstance().getHudOptions().displayTime * 20);
+        return (int) (client().hud().displayTime * 20);
     }
 
     /**
      * @return the actual animation time for the armor status.
      */
     public static int getAnimationTimeInTicks(Minecraft minecraft, boolean factorItemCounter) {
-        if (!clientOptionsInstance().getHudOptions().animations || (factorItemCounter && isAlwaysShowArrowCounterEnabled(minecraft))) {
+        if (!client().hud().animations || (factorItemCounter && isAlwaysShowArrowCounterEnabled(minecraft))) {
             return 0;
         }
-        return (int) (clientOptionsInstance().getHudOptions().animationTime * 20);
+        return (int) (client().hud().animationTime * 20);
+    }
+
+    /**
+     * Auto-focuses an element and records the captured input to add to the {@link EditBox}.
+     */
+    public static void autoFocusElement(EditBox editBox, KeyEvent event, boolean focus) {
+        autoFocusElement(editBox, event, focus, false);
+    }
+
+    /**
+     * Allows for overriding of focus to always input character typed.
+     */
+    public static void autoFocusElement(EditBox editBox, KeyEvent event, boolean focus, boolean overrideFocus) {
+        if (editBox == null) {
+            return;
+        }
+        boolean wasFocused = editBox.isFocused();
+        editBox.setFocused(focus);
+
+        if (!focus) {
+            return;
+        }
+
+        Screen screen = getScreen();
+        if (screen != null) {
+            screen.setFocused(editBox);
+        }
+
+        if (!wasFocused || overrideFocus) {
+            String input = SDLKeyboard.SDL_GetKeyName(event.keycode());
+
+            if (input == null || input.length() > 1) {
+                return;
+            }
+
+            if (!event.hasShiftDown()) {
+                input = input.toLowerCase();
+            }
+
+            editBox.setValue(editBox.getValue() + input);
+        }
     }
 }

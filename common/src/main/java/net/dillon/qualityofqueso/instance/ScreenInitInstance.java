@@ -2,17 +2,17 @@ package net.dillon.qualityofqueso.instance;
 
 import net.dillon.qualityofqueso.helper.ContainerHelper;
 import net.dillon.qualityofqueso.helper.MethodHelper;
+import net.dillon.qualityofqueso.helper.ModConstants;
 import net.dillon.qualityofqueso.instance.management.ManagementInstance;
 import net.dillon.qualityofqueso.option.ModClientOptions;
 import net.dillon.qualityofqueso.option.eum.management.FilteringMode;
-import net.dillon.qualityofqueso.util.ModConstants;
 import net.minecraft.client.gui.screens.inventory.*;
 
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
 import static net.dillon.qualityofqueso.helper.MethodHelper.*;
-import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
-import static net.dillon.qualityofqueso.util.ModConstants.CURRENT_CONTAINER;
-import static net.dillon.qualityofqueso.util.ModConstants.SAVED_EXCLUDED_SLOTS;
+import static net.dillon.qualityofqueso.helper.ModConstants.CURRENT_CONTAINER;
+import static net.dillon.qualityofqueso.helper.ModConstants.SAVED_EXCLUDED_SLOTS;
+import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 /**
  * Handles screen creation, with creating and initializing the correct variables.
@@ -35,10 +35,10 @@ public class ScreenInitInstance extends ManagementInstance {
                 ContainerHelper.IS_TRACKED_CONTAINER = true;
             } else if (ContainerHelper.consumePendingOpenIsTracked()) { // Next, check if the container is tracked. Then temporarily set "fill what's present" to true, so that filtering works correctly. Once the screen closes, disable "fill what's present"
                 ContainerHelper.IS_TRACKED_CONTAINER = true;
-                if (clientOptionsInstance().getManagementOptions().containerFiltering) {
+                if (client().management().containerFiltering) {
                     ModClientOptions.INSTANCE.update(options -> {
                         if (!options.isFiltering()) {
-                            options.getManagementOptions().filteringMode = FilteringMode.MATCHING;
+                            options.management().filteringMode = FilteringMode.MATCHING;
                             instance().setDisableFilteringOnClose(true);
                         }
                     });
@@ -57,14 +57,14 @@ public class ScreenInitInstance extends ManagementInstance {
      * Initializes search fields for the screen.
      */
     public void initializeSearchFields() {
-        if (isContainerScreen(instance().getScreen()) && clientOptionsInstance().getSearchingOptions().containerSearching) {
+        if (isContainerScreen(instance().getScreen()) && client().searching().containerSearching) {
             // Initialize the container search field, if it should be initialized
             widgetHandler().setContainerSearchField(searchInstance().initializeSearchField(false));
             MethodHelper.addRenderableModWidget(instance().getScreen(), instance().getSearchFields().container());
         } else if (isInventoryScreen(instance().getScreen())) { // Initialize the inventory search field, if it should be initialized
             // Also initialize the "container" variable to the player's inventory, if the container was never initialized from any of the other screens
             instance().setCachedContainer(instance().getMinecraft().player.getInventory());
-            if (clientOptionsInstance().getSearchingOptions().inventorySearching) {
+            if (client().searching().inventorySearching) {
                 widgetHandler().setInventorySearchField(searchInstance().initializeSearchField(true));
                 MethodHelper.addRenderableModWidget(instance().getScreen(), instance().getSearchFields().inventory());
             }

@@ -1,14 +1,14 @@
 package net.dillon.qualityofqueso.instance;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.dillon.qualityofqueso.instance.management.ManagementInstance;
 import net.minecraft.client.input.MouseButtonEvent;
-import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
-import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
+import static net.dillon.qualityofqueso.helper.ModConstants.MOVE_AMOUNT;
 import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.*;
-import static net.dillon.qualityofqueso.util.ModConstants.MOVE_AMOUNT;
+import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 /**
  * Handles mouse-clicking events.
@@ -32,7 +32,7 @@ public class MouseClickInstance extends ManagementInstance {
      * Quickly equips an item.
      */
     public void quickEquipItem(MouseButtonEvent event, CallbackInfoReturnable<Boolean> cir) {
-        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT && instance().getScreensHoveredSlot() != null && quickEquipInstance().isQuicklyEquippable(instance().getScreensHoveredSlot().getItem())) {
+        if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT && instance().getScreensHoveredSlot() != null && quickEquipInstance().isQuicklyEquippable(instance().getScreensHoveredSlot().getItem())) {
             quickEquipInstance().quickEquipItem();
             cir.setReturnValue(true);
         }
@@ -65,10 +65,10 @@ public class MouseClickInstance extends ManagementInstance {
      * Handles moving only one or dropping one item in a stack.
      */
     public void moveOnlyOne(MouseButtonEvent event, CallbackInfoReturnable<Boolean> cir) {
-        if (clientOptionsInstance().getManagementOptions().scrollMoving) {
-            boolean dropOnlyOne = hasDropOnlyOneItemKeyDown();
+        if (client().management().scrollMoving) {
+            boolean dropOnlyOne = hasDropOnlyOneItemModifierDown();
             boolean hasSingleModifierDown = canScrollMoveAndHasScrollModifierDown();
-            if (event.button() == 1 && ((((dropOnlyOne || hasSingleModifierDown) && hoveredSlotHasItem(instance().getScreensHoveredSlot())))
+            if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT && ((((dropOnlyOne || hasSingleModifierDown) && hoveredSlotHasItem(instance().getScreensHoveredSlot())))
                     || buttonHoveredAndActive(instance().getManagementButtons().transferInventory())
                     || buttonHoveredAndActive(instance().getManagementButtons().transferContainer()))) {
                 MOVE_AMOUNT = 1;

@@ -21,7 +21,7 @@ import java.util.*;
 
 import static net.dillon.dillonlib.task.ClientTasks.getScreen;
 import static net.dillon.qualityofqueso.helper.ContainerHelper.worldKey;
-import static net.dillon.qualityofqueso.helper.ModHelper.containerDataInstance;
+import static net.dillon.qualityofqueso.option.OptionInstances.containerData;
 
 /**
  * Handles persistent ender chest cache storage in container_data.json.
@@ -64,10 +64,10 @@ public class EnderChestHelper {
             serialized.add(storedStack);
         }
 
-        Map<String, List<ContainerData.StoredEnderChestStack>> byWorld = containerDataInstance().enderChestItems;
+        Map<String, List<ContainerData.StoredEnderChestStack>> byWorld = containerData().enderChestItems;
         if (byWorld == null) {
-            containerDataInstance().enderChestItems = new HashMap<>();
-            byWorld = containerDataInstance().enderChestItems;
+            containerData().enderChestItems = new HashMap<>();
+            byWorld = containerData().enderChestItems;
         }
         List<ContainerData.StoredEnderChestStack> cached = byWorld.getOrDefault(worldKey(), new ArrayList<>());
 
@@ -83,7 +83,7 @@ public class EnderChestHelper {
      * @return persisted ender chest items for the current world/server context.
      */
     public static List<ContainerData.StoredEnderChestStack> getPersistedEnderChestItemsForCurrentWorld() {
-        Map<String, List<ContainerData.StoredEnderChestStack>> byWorld = containerDataInstance().enderChestItems;
+        Map<String, List<ContainerData.StoredEnderChestStack>> byWorld = containerData().enderChestItems;
         if (byWorld == null || byWorld.isEmpty()) {
             return new ArrayList<>();
         }

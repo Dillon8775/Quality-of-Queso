@@ -1,7 +1,8 @@
 package net.dillon.qualityofqueso.screen;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.dillon.qualityofqueso.helper.ContainerHelper;
-import net.dillon.qualityofqueso.util.ModConstants;
+import net.dillon.qualityofqueso.helper.ModConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
@@ -15,7 +16,6 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -189,7 +189,7 @@ public class FilterItemsScreen extends Screen {
      */
     @Override
     public boolean keyPressed(KeyEvent input) {
-        if (input.key() == GLFW.GLFW_KEY_ESCAPE || input.key() == key(Minecraft.getInstance().options.keyInventory).getValue()) {
+        if (input.key() == InputConstants.KEY_ESCAPE || input.key() == key(Minecraft.getInstance().options.keyInventory).getValue()) {
             this.onClose();
             return true;
         }
@@ -233,7 +233,7 @@ public class FilterItemsScreen extends Screen {
         int mouseY = this.lastMouseY;
 
         int sourceSlot = this.sourceSlotAt(mouseX, mouseY);
-        if (sourceSlot >= 0 && event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        if (sourceSlot >= 0 && event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
             ItemStack stack = this.sourceStackAt(sourceSlot);
             if (!stack.isEmpty()) {
                 if (event.hasShiftDown()) {
@@ -263,12 +263,12 @@ public class FilterItemsScreen extends Screen {
 
         int placeholderSlot = this.placeholderSlotAt(mouseX, mouseY);
         if (placeholderSlot >= 0) {
-            if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT && !this.placeholders.get(placeholderSlot).isEmpty()) {
+            if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT && !this.placeholders.get(placeholderSlot).isEmpty()) {
                 this.placeholders.set(placeholderSlot, ItemStack.EMPTY);
                 playButtonSound(this.minecraft);
                 return true;
             }
-            if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+            if (event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
                 if (this.alreadyHasPlaceholderItem(this.selectedStack)) {
                     return false;
                 }
@@ -284,7 +284,7 @@ public class FilterItemsScreen extends Screen {
             }
         }
 
-        if (event.button() == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+        if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT) {
             if (!this.selectedStack.isEmpty()) {
                 playButtonSound(this.minecraft);
             }

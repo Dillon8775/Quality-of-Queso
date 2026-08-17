@@ -24,7 +24,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.concurrent.CompletableFuture;
 
-import static net.dillon.qualityofqueso.helper.ModHelper.commonOptionsInstance;
+import static net.dillon.qualityofqueso.option.OptionInstances.common;
 
 @PredicateSigned
 @Dill(DillType.COMMON)
@@ -36,7 +36,7 @@ public class ItemArgumentMixin {
      */
     @Inject(method = "listSuggestions", at = @At("HEAD"), cancellable = true)
     private void fixCommandArgumentSuggestions(CommandContext<SharedSuggestionProvider> context, SuggestionsBuilder builder, CallbackInfoReturnable<CompletableFuture<Suggestions>> cir) {
-        if (!commonOptionsInstance().optimizeItemArgument) {
+        if (!common().optimizeItemArgument) {
             return;
         }
 
@@ -85,7 +85,7 @@ public class ItemArgumentMixin {
      */
     @Inject(method = "parse(Lcom/mojang/brigadier/StringReader;)Lnet/minecraft/commands/arguments/item/ItemInput;", at = @At("HEAD"), cancellable = true)
     private void modifyItemParsing(StringReader reader, CallbackInfoReturnable<ItemInput> cir) {
-        if (!commonOptionsInstance().optimizeItemArgument) {
+        if (!common().optimizeItemArgument) {
             return;
         }
 

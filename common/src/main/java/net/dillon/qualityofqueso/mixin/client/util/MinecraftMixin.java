@@ -20,8 +20,10 @@ import java.util.Random;
 
 import static net.dillon.dillonlib.task.ClientTasks.openScreen;
 import static net.dillon.dillonlib.task.ClientTasks.playLocalSound;
-import static net.dillon.qualityofqueso.helper.ModHelper.*;
+import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
 import static net.dillon.qualityofqueso.keybind.ModKeyMappings.OPEN_ITEM_FRAME_SEARCH_GUI;
+import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.OptionInstances.common;
 
 @Mixin(Minecraft.class)
 public abstract class MinecraftMixin {
@@ -42,7 +44,7 @@ public abstract class MinecraftMixin {
             return;
         }
 
-        if (commonOptionsInstance().itemFrameSearching) {
+        if (common().itemFrameSearching) {
             while (OPEN_ITEM_FRAME_SEARCH_GUI.isActiveAndDown()) {
                 openScreen(new ItemFrameSearchScreen(null));
             }
@@ -67,13 +69,13 @@ public abstract class MinecraftMixin {
         ClickSlotInstance.tickBulkCraftTask();
         MobHitDingTracker.tick(minecraft);
 
-        if (!clientOptionsInstance().getMiscOptions().fortniteBattlePass) {
+        if (!client().misc().fortniteBattlePass) {
             return;
         }
 
         Random random = new Random();
         if (this.getSoundManager() != null && random.nextFloat() < 0.01F) {
-            playLocalSound(ModSoundEvents.FORTNITE_BATTLE_PASS, 1.0F, 5.0F);
+            playLocalSound(ModSoundEvents.FORTNITE_BATTLE_PASS, 5.0F, 1.0F);
         }
     }
 }

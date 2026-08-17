@@ -8,8 +8,8 @@ import net.minecraft.client.input.MouseButtonEvent;
 
 import static net.dillon.qualityofqueso.helper.MethodHelper.kumaAnyModifierDown;
 import static net.dillon.qualityofqueso.helper.MethodHelper.kumaMousePressed;
-import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
 import static net.dillon.qualityofqueso.keybind.ModKeyMappings.*;
+import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 /**
  * A helper class for Quality of Queso's keybinds.
@@ -19,7 +19,7 @@ public class ModKeyMappingHelper {
     /**
      * @return the user's current drop keybinding.
      */
-    public static KeyMapping getUsersDropKey() {
+    public static KeyMapping getDropKey() {
         return Minecraft.getInstance().options.keyDrop;
     }
 
@@ -44,7 +44,7 @@ public class ModKeyMappingHelper {
     /**
      * @return if the user has the shift key down, to only drop one of each item via quick dropping.
      */
-    public static boolean hasDropOnlyOneItemKeyDown() {
+    public static boolean hasDropOnlyOneItemModifierDown() {
         return Minecraft.getInstance().hasShiftDown();
     }
 
@@ -52,25 +52,25 @@ public class ModKeyMappingHelper {
      * @return if the management modifier key is held down.
      */
     public static boolean hasAnyManagementModifierDown() {
-        return (clientOptionsInstance().getManagementOptions().transferring.buttonOrKeyOrKeyOnly() && (kumaAnyModifierDown(MOVE_TO_CONTAINER) || kumaAnyModifierDown(MOVE_TO_INVENTORY)))
-                || (clientOptionsInstance().getSortingOptions().sorting.buttonOrKeyOrKeyOnly() && kumaAnyModifierDown(SORT))
-                || (clientOptionsInstance().getManagementOptions().quickDrop.buttonOrKeyOrKeyOnly() && hasAllQuickDropModifiersDown())
-                || (clientOptionsInstance().getManagementOptions().swapping.buttonOrKeyOrKeyOnly() && kumaAnyModifierDown(SWAP_ITEMS));
+        return (client().management().transferring.any() && (kumaAnyModifierDown(MOVE_TO_CONTAINER) || kumaAnyModifierDown(MOVE_TO_INVENTORY)))
+                || (client().sorting().sorting.any() && kumaAnyModifierDown(SORT))
+                || (client().management().quickDrop.any() && hasAllQuickDropModifiersDown())
+                || (client().management().swapping.any() && kumaAnyModifierDown(SWAP_ITEMS));
     }
 
     /**
      * @return if the user has the {@code scroll move modifier} key down.
      */
     public static boolean canScrollMoveAndHasScrollModifierDown() {
-        return clientOptionsInstance().getManagementOptions().scrollMoving && SCROLL_MOVE.isActiveAndDown();
+        return client().management().scrollMoving && SCROLL_MOVE.isActiveAndDown();
     }
 
     /**
      * @return if the user has attempted to lock, unlock, select or deselect a slot.
      */
     public static boolean hasAttemptedToLockSelectOrDeselect(MouseButtonEvent event) {
-        return event.button() == 0 || event.button() == 1
-                || (clientOptionsInstance().getLockedSlotOptions().lockedSlots && kumaMousePressed(LOCK_SLOT, event));
+        return event.button() == InputConstants.MOUSE_BUTTON_LEFT || event.button() == InputConstants.MOUSE_BUTTON_RIGHT
+                || (client().lockedSlots().lockedSlots && kumaMousePressed(LOCK_SLOT, event));
     }
 
     /**
@@ -79,20 +79,20 @@ public class ModKeyMappingHelper {
      * Automatically returns {@code true} if the lock slot key has {@code no modifiers}.
      */
     public static boolean hasLockSlotModifierDown() {
-        return clientOptionsInstance().getLockedSlotOptions().lockedSlots && kumaAnyModifierDown(LOCK_SLOT);
+        return client().lockedSlots().lockedSlots && kumaAnyModifierDown(LOCK_SLOT);
     }
 
     /**
      * @return if the user has the keybind to {@code select} slots down, via drag sorting.
      */
-    public static boolean hasSelectSlotsKeyDown() {
+    public static boolean hasSelectSlotsModifierDown() {
         return Minecraft.getInstance().hasAltDown();
     }
 
     /**
      * @return if the user has the keybind to {@code exclude slots} down, via drag sorting.
      */
-    public static boolean hasExcludeSlotsKeyDown() {
+    public static boolean hasExcludeSlotsModifierDown() {
         return Minecraft.getInstance().hasAltDown() && Minecraft.getInstance().hasShiftDown();
     }
 }

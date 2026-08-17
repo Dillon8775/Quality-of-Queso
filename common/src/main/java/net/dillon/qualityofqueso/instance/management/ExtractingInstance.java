@@ -25,11 +25,11 @@ import java.util.List;
 
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
 import static net.dillon.qualityofqueso.helper.MethodHelper.*;
-import static net.dillon.qualityofqueso.helper.ModHelper.clientOptionsInstance;
+import static net.dillon.qualityofqueso.helper.ModConstants.*;
 import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.*;
 import static net.dillon.qualityofqueso.keybind.ModKeyMappings.MOVE_TO_CONTAINER;
 import static net.dillon.qualityofqueso.keybind.ModKeyMappings.MOVE_TO_INVENTORY;
-import static net.dillon.qualityofqueso.util.ModConstants.*;
+import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 /**
  * Handles extracting and rendering events.
@@ -44,7 +44,7 @@ public class ExtractingInstance extends ManagementInstance {
      * Draws an enhanced cursor on the screen.
      */
     public void extractEnhancedCursor(GuiGraphicsExtractor graphics) {
-        if (!clientOptionsInstance().getMiscOptions().enhancedCursor) {
+        if (!client().misc().enhancedCursor) {
             return;
         }
 
@@ -61,7 +61,7 @@ public class ExtractingInstance extends ManagementInstance {
             if (canScrollMoveAndHasScrollModifierDown()) {
                 graphics.requestCursor(CursorTypes.RESIZE_NS);
             }
-            if (hasDropOnlyOneItemKeyDown() || hasAllQuickDropModifiersDown()) {
+            if (hasDropOnlyOneItemModifierDown() || hasAllQuickDropModifiersDown()) {
                 graphics.requestCursor(CursorTypes.CROSSHAIR);
             }
         }
@@ -75,7 +75,7 @@ public class ExtractingInstance extends ManagementInstance {
      * Renders the blue "locked" overlay for locked slots (not the lock icon, the color itself)
      */
     public void extractLockedSlotColor(GuiGraphicsExtractor graphics) {
-        if (!clientOptionsInstance().getLockedSlotOptions().lockedSlots || !isValidScreenForRenderingLockedSlotOverlay(instance().getScreen())) {
+        if (!client().lockedSlots().lockedSlots || !isValidScreenForRenderingLockedSlotOverlay(instance().getScreen())) {
             return;
         }
 
@@ -92,12 +92,12 @@ public class ExtractingInstance extends ManagementInstance {
         // Only render other locked slot textures on valid screens
         if (isValidScreen(instance().getScreen())) {
             // Renders the key, or unlocked slot texture beside the mouse, indicating that the user is attempting to lock/unlock slots
-            if (clientOptionsInstance().getLockedSlotOptions().lockedSlots && clientOptionsInstance().getLockedSlotOptions().showLock.inScreens() && instance().getScreensHoveredSlot() != null && instance().getExcludedSlots().isEmpty()
+            if (client().lockedSlots().lockedSlots && client().lockedSlots().showLock.inScreens() && instance().getScreensHoveredSlot() != null && instance().getExcludedSlots().isEmpty()
                     && hasLockSlotModifierDown() && !hasAnyManagementModifierDown() && !Minecraft.getInstance().hasControlDown() && !Minecraft.getInstance().hasShiftDown()) {
                 lockedSlotsInstance().renderUnlockedSlot(graphics, lockedSlotsInstance().isLockedSlot(instance().getScreensHoveredSlot().index), mouseX, mouseY);
             }
             // For drag sorting and/or locking slots, set the cursor to "pointing hand", like the user is grabbing onto slots to lock/select them
-            if (clientOptionsInstance().getMiscOptions().enhancedCursor && (clientOptionsInstance().getManagementOptions().dragSorting || clientOptionsInstance().getLockedSlotOptions().lockedSlots)
+            if (client().misc().enhancedCursor && (client().management().dragSorting || client().lockedSlots().lockedSlots)
                     && instance().getScreensHoveredSlot() != null
                     && !Minecraft.getInstance().hasControlDown()
                     && Minecraft.getInstance().hasAltDown()) {
@@ -125,9 +125,9 @@ public class ExtractingInstance extends ManagementInstance {
                     alreadyExcluded = true;
                 }
                 // Otherwise, gray out slots that don't match the search
-                else if (!clientOptionsInstance().getManagementOptions().includingHotbar
+                else if (!client().management().includingHotbar
                         && (isInventoryScreen(instance().getScreen()) ? isInventoryHotbarSlot(true, slot.index) : isHotbarSlot(instance().getScreenMenu().slots.size(), slot.index))
-                        && (clientOptionsInstance().getManagementOptions().transferring.buttonOrKeyOrKeyOnly() || clientOptionsInstance().getManagementOptions().scrollMoving)) {
+                        && (client().management().transferring.any() || client().management().scrollMoving)) {
                     if (shouldGrayout(slot)) {
                         searchInstance().renderGrayedSlot(graphics, slot, slot.hasItem());
                         alreadyExcluded = true;
@@ -135,7 +135,7 @@ public class ExtractingInstance extends ManagementInstance {
                 }
             }
             // Renders the lock texture on locked slots (yes, the lock icon itself, not the color)
-            if (isValidScreenForRenderingLockedSlotOverlay(instance().getScreen()) && clientOptionsInstance().getLockedSlotOptions().showLock.inScreens() && clientOptionsInstance().getLockedSlotOptions().lockedSlots && instance().getSearchFields().searchText().isEmpty() && instance().getExcludedSlots().isEmpty()) {
+            if (isValidScreenForRenderingLockedSlotOverlay(instance().getScreen()) && client().lockedSlots().showLock.inScreens() && client().lockedSlots().lockedSlots && instance().getSearchFields().searchText().isEmpty() && instance().getExcludedSlots().isEmpty()) {
                 lockedSlotsInstance().renderLockedSlot(graphics, slot, true);
             }
 
@@ -145,14 +145,14 @@ public class ExtractingInstance extends ManagementInstance {
             }
 
             // Gray out player-chosen excluded slots
-            if (!alreadyExcluded && clientOptionsInstance().getManagementOptions().dragSorting) {
+            if (!alreadyExcluded && client().management().dragSorting) {
                 for (int id : instance().getExcludedSlots()) {
                     if (slot.index == id) {
                         boolean renderUnavailable = true;
 
                         if (isContainerScreen(instance().getScreen())) {
                             // Don't grayout if CTRL is pressed and transfer keys are bounded
-                            if (clientOptionsInstance().getManagementOptions().transferring.buttonOrKeyOrKeyOnly()
+                            if (client().management().transferring.any()
                                     && (kumaAnyModifierDown(MOVE_TO_INVENTORY) || kumaAnyModifierDown(MOVE_TO_CONTAINER))
                                     && MOVE_TO_INVENTORY.getBinding().key().getValue() != InputConstants.UNKNOWN.getValue()
                                     && MOVE_TO_CONTAINER.getBinding().key().getValue() != InputConstants.UNKNOWN.getValue()) {
@@ -207,7 +207,7 @@ public class ExtractingInstance extends ManagementInstance {
         if (instance().getSearchFields().inventory() != null) {
             // Re-position the inventory search field if the recipe book screen is open
             instance().getSearchFields().inventory().setX(instance().getScreen().width / 2 + getBarWidth(getImageWidth(instance().getScreen())) / 2 - (
-                    !clientOptionsInstance().getMiscOptions().noRecipeBookShift && instance().getScreen() instanceof AbstractRecipeBookScreen<?> recipeBookScreen && getRecipeBookComponent(recipeBookScreen).isVisible() ? -16 : 60
+                    !client().misc().noRecipeBookShift && instance().getScreen() instanceof AbstractRecipeBookScreen<?> recipeBookScreen && getRecipeBookComponent(recipeBookScreen).isVisible() ? -16 : 60
             ));
             instance().getSearchFields().inventory().extractWidgetRenderState(graphics, mouseX, mouseY, a);
         }
@@ -219,7 +219,7 @@ public class ExtractingInstance extends ManagementInstance {
     public boolean shouldGrayout(Slot slot) {
         boolean inventoryScreen = isInventoryScreen(instance().getScreen());
         boolean shortcutKeyReady = inventoryScreen
-                ? clientOptionsInstance().getSortingOptions().sorting.buttonOrKeyOrKeyOnly() ? hasAnyManagementModifierDown() : hasAllQuickDropModifiersDown()
+                ? client().sorting().sorting.any() ? hasAnyManagementModifierDown() : hasAllQuickDropModifiersDown()
                 : hasAnyManagementModifierDown();
         return shortcutKeyReady
                 || (!inventoryScreen && shiftHeld(false))
@@ -237,7 +237,7 @@ public class ExtractingInstance extends ManagementInstance {
         int totalSlots = getTotalSlots();
         Slot hoveredSlot = getHoveredSlot(instance().getScreen());
         return Minecraft.getInstance().hasShiftDown()
-                && (!clientOptionsInstance().getManagementOptions().dragSorting || !hasSelectSlotsKeyDown())
+                && (!client().management().dragSorting || !hasSelectSlotsModifierDown())
                 && hoveredSlot != null
                 && hoveredSlot.hasItem()
                 && (inventory ? hoveredSlot.index >= totalSlots - 36 : hoveredSlot.index <= totalSlots - 37);
@@ -257,7 +257,7 @@ public class ExtractingInstance extends ManagementInstance {
         boolean craftingScreen = isCraftingScreen(instance().getScreen());
 
         // Begin initializing buttons, starting with the transfer buttons
-        if (clientOptionsInstance().getManagementOptions().transferring.buttonOrKey()) {
+        if (client().management().transferring.buttonOrKey()) {
 
             if (containerScreen || dropperDispenserOrHopperScreen || brewingOrFurnaceScreen) {
                 // TRANSFER CONTAINER BUTTON (container -> inventory)
@@ -274,15 +274,15 @@ public class ExtractingInstance extends ManagementInstance {
 
         // Only add these buttons in container, inventory, hopper and dropper screens
         if (validScreen || dropperDispenserOrHopperScreen) {
-            if (clientOptionsInstance().getSortingOptions().sorting.buttonOrKey()) {
+            if (client().sorting().sorting.buttonOrKey()) {
                 // SORT BUTTON
                 widgetHandler().getManagementButtons().initSort(
                         widgetHandlerInstance().addWidget(widgetHandlerInstance().createSort()));
             }
 
             if (!inventoryScreen
-                    && (ContainerHelper.isTrackedFilteringActive() || !clientOptionsInstance().getButtonDisplayOptions().displayFiltering.filteredContainersOnly()
-                    && ((containerScreen || dropperDispenserOrHopperScreen) && clientOptionsInstance().getManagementOptions().transferring.buttonOrKeyOrKeyOnly()))) {
+                    && (ContainerHelper.isTrackedFilteringActive() || !client().buttonDisplayOptions().displayFiltering.filteredContainersOnly()
+                    && ((containerScreen || dropperDispenserOrHopperScreen) && client().management().transferring.any()))) {
                 // MOVE MATCHING ITEMS BUTTON
                 widgetHandler().getManagementButtons().initFiltering(
                         widgetHandlerInstance().addWidget(widgetHandlerInstance().createFiltering()));
@@ -291,7 +291,7 @@ public class ExtractingInstance extends ManagementInstance {
 
         // Continue initializing buttons
         if (isValidScreenForSingularMoving(instance().getScreen(), true)) {
-            if (clientOptionsInstance().getButtonDisplayOptions().displayAlwaysQuickMove) {
+            if (client().buttonDisplayOptions().displayAlwaysQuickMove) {
                 // ALWAYS QUICK MOVE BUTTON
                 widgetHandler().getManagementButtons().initAlwaysQuickMove(widgetHandlerInstance().addWidget(widgetHandlerInstance().createAlwaysQuickMove()));
             }
@@ -299,9 +299,9 @@ public class ExtractingInstance extends ManagementInstance {
 
         // Only initialize these buttons in container/inventory screens
         if (validScreen) {
-            if (containerScreen && clientOptionsInstance().getManagementOptions().transferring.buttonOrKeyOrKeyOnly() || clientOptionsInstance().getManagementOptions().quickDrop.buttonOrKeyOrKeyOnly()) {
-                boolean canDisplayIncludeHotbarButton = clientOptionsInstance().getButtonDisplayOptions().displayIncludeHotbar != IncludeHotbar.OFF
-                        && (!inventoryScreen || !clientOptionsInstance().getButtonDisplayOptions().displayIncludeHotbar.containerScreensOnly());
+            if (containerScreen && client().management().transferring.any() || client().management().quickDrop.any()) {
+                boolean canDisplayIncludeHotbarButton = client().buttonDisplayOptions().displayIncludeHotbar != IncludeHotbar.OFF
+                        && (!inventoryScreen || !client().buttonDisplayOptions().displayIncludeHotbar.containerScreensOnly());
 
                 if (canDisplayIncludeHotbarButton) {
                     // INCLUDE HOTBAR BUTTON
@@ -309,7 +309,7 @@ public class ExtractingInstance extends ManagementInstance {
                 }
             }
 
-            if (clientOptionsInstance().getManagementOptions().quickDrop.buttonOrKey() || (clientOptionsInstance().getManagementOptions().quickDrop.buttonOrKeyOrKeyOnly() && hasAllQuickDropModifiersDown())) {
+            if (client().management().quickDrop.buttonOrKey() || (client().management().quickDrop.any() && hasAllQuickDropModifiersDown())) {
                 // QUICK DROP BUTTON
                 widgetHandler().getManagementButtons().initQuickDrop(
                         widgetHandlerInstance().addWidget(widgetHandlerInstance().createQuickDrop()));
@@ -318,7 +318,7 @@ public class ExtractingInstance extends ManagementInstance {
             if ((
                     (instance().getSearchFields().inventory() != null && !instance().getSearchFields().inventory().getValue().isEmpty())
                             || (instance().getSearchFields().container() != null && !instance().getSearchFields().container().getValue().isEmpty())
-            ) && clientOptionsInstance().getButtonDisplayOptions().displaySearchTransportables && ((clientOptionsInstance().getSearchingOptions().containerSearching && containerScreen) || (clientOptionsInstance().getSearchingOptions().inventorySearching && inventoryScreen))) {
+            ) && client().buttonDisplayOptions().displaySearchTransportables && ((client().searching().containerSearching && containerScreen) || (client().searching().inventorySearching && inventoryScreen))) {
                 boolean canRenderTransportablesButton = false;
                 for (int i = 0; i < searchInstance().getSearchSlotCount(); i++) {
                     ItemStack stack = instance().getScreenMenu().getSlot(i).getItem();
@@ -335,32 +335,32 @@ public class ExtractingInstance extends ManagementInstance {
                 }
             }
 
-            if (clientOptionsInstance().getManagementOptions().swapping.buttonOrKey() && containerScreen) {
+            if (client().management().swapping.buttonOrKey() && containerScreen) {
                 // SWAP BUTTON
                 widgetHandler().getManagementButtons().initSwap(
                         widgetHandlerInstance().addWidget(widgetHandlerInstance().createSwap()));
             }
 
-            if (clientOptionsInstance().getManagementOptions().dragSorting && !instance().getExcludedSlots().isEmpty()) {
+            if (client().management().dragSorting && !instance().getExcludedSlots().isEmpty()) {
                 // CLEAR EXCLUDED SLOTS BUTTON
                 widgetHandler().getManagementButtons().initClearExcludedSlots(
                         widgetHandlerInstance().addWidget(widgetHandlerInstance().createClearExcludedSlots()));
             }
         }
 
-        if (clientOptionsInstance().getButtonDisplayOptions().displayBulkTrade && merchantScreen) {
+        if (client().buttonDisplayOptions().displayBulkTrade && merchantScreen) {
             // TRADE ALL BUTTON
             widgetHandler().getManagementButtons().initTradeAll(
                     widgetHandlerInstance().addWidget(widgetHandlerInstance().createTradeAll()));
         }
 
-        if (clientOptionsInstance().getButtonDisplayOptions().displayBulkCraft && (craftingScreen || inventoryScreen)) {
+        if (client().buttonDisplayOptions().displayBulkCraft && (craftingScreen || inventoryScreen)) {
             // CRAFT ALL BUTTON
             widgetHandler().getManagementButtons().initBulkCraft(
                     widgetHandlerInstance().addWidget(widgetHandlerInstance().createBulkCraft()));
         }
 
-        if (clientOptionsInstance().getButtonDisplayOptions().displayLockInventory && inventoryScreen) {
+        if (client().buttonDisplayOptions().displayLockInventory && inventoryScreen) {
             widgetHandler().getManagementButtons().initLockInventory(
                     widgetHandlerInstance().addWidget(widgetHandlerInstance().createLockInventory()));
         }
@@ -368,13 +368,13 @@ public class ExtractingInstance extends ManagementInstance {
         // Finally, render the widget layout
         if (validScreen || isOtherValidScreen(instance().getScreen()) || merchantScreen || craftingScreen) {
             // Create the default, horizontal layout
-            AbstractList<AbstractWidget> horizontalLayout = buttonLayoutFromButtonName(clientOptionsInstance().getManagementOptions().horizontalButtonLayout, instance().getManagementButtons());
+            AbstractList<AbstractWidget> horizontalLayout = buttonLayoutFromButtonName(client().management().horizontalButtonLayout, instance().getManagementButtons());
 
             // Create the vertical layout (up-down, box beside GUI)
-            AbstractList<AbstractWidget> verticalLayout = buttonLayoutFromButtonName(clientOptionsInstance().getManagementOptions().verticalButtonLayout, instance().getManagementButtons());
+            AbstractList<AbstractWidget> verticalLayout = buttonLayoutFromButtonName(client().management().verticalButtonLayout, instance().getManagementButtons());
 
             // Construct the final layout
-            AbstractList<AbstractWidget> finalLayout = clientOptionsInstance().getManagementOptions().layout.horizontal() ? horizontalLayout : verticalLayout;
+            AbstractList<AbstractWidget> finalLayout = client().management().layout.horizontal() ? horizontalLayout : verticalLayout;
             if (merchantScreen) {
                 finalLayout = NonNullList.of(null, instance().getManagementButtons().tradeAll());
             }
