@@ -374,7 +374,7 @@ public class ModClientOptions {
         public ViewLastKnownEnderChestButton eChestButton = ViewLastKnownEnderChestButton.QOQ_MENU;
     }
 
-    public static class ClientOptionsHandler extends ModBaseOptions<ModClientOptions> {
+    public static class ClientOptionsHandler extends ModBaseOptionsHandler<ModClientOptions> {
 
         protected ClientOptionsHandler() {
             super(ModConstants.DEFAULT_CLIENT_CONFIG_FILE_NAME);

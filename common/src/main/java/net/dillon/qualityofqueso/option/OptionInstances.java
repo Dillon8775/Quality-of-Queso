@@ -1,5 +1,7 @@
 package net.dillon.qualityofqueso.option;
 
+import java.util.function.Consumer;
+
 /**
  * Getters for all Quality of Queso's option instances.
  */
@@ -52,5 +54,12 @@ public class OptionInstances {
      */
     public static LockedContainerSlots lockedContainerSlots() {
         return LockedContainerSlots.INSTANCE.getInstance();
+    }
+
+    /**
+     * Updates the client option instance.
+     */
+    public static void updateClient(Consumer<ModClientOptions> client) {
+        ModClientOptions.INSTANCE.update(client);
     }
 }

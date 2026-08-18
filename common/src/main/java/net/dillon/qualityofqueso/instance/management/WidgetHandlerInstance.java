@@ -15,6 +15,7 @@ import static net.dillon.qualityofqueso.helper.ManagementHelper.isContainerScree
 import static net.dillon.qualityofqueso.helper.ManagementHelper.isInventoryScreen;
 import static net.dillon.qualityofqueso.helper.ModConstants.*;
 import static net.dillon.qualityofqueso.helper.ModHelper.sendClientPreferencesToServer;
+import static net.dillon.qualityofqueso.option.OptionInstances.updateClient;
 
 /**
  * Initializes buttons and widgets.
@@ -76,8 +77,8 @@ public class WidgetHandlerInstance extends ManagementInstance {
                 searchInstance().getSearchFieldText(),
                 "include_hotbar",
                 b -> {
-                    ModClientOptions.INSTANCE.update(options -> {
-                        options.management().includingHotbar = !options.management().includingHotbar;
+                    updateClient(client -> {
+                        client.management().includingHotbar = !client.management().includingHotbar;
                     });
                     sendClientPreferencesToServer();
                 });
@@ -92,7 +93,7 @@ public class WidgetHandlerInstance extends ManagementInstance {
                 instance().getMinecraft().font,
                 searchInstance().getSearchFieldText(),
                 "always_quick_move",
-                b -> ModClientOptions.INSTANCE.update(ModClientOptions::toggleAlwaysQuickMove)
+                b -> updateClient(ModClientOptions::toggleAlwaysQuickMove)
         );
     }
 
@@ -107,7 +108,7 @@ public class WidgetHandlerInstance extends ManagementInstance {
                 "fill_whats_present",
                 b -> {
                     if (!ContainerHelper.isTrackedFilteringActive()) {
-                        ModClientOptions.INSTANCE.update(ModClientOptions::cycleFilteringMode);
+                        updateClient(ModClientOptions::cycleFilteringMode);
                     }
                 },
                 instance().getMinecraft(),
@@ -138,9 +139,7 @@ public class WidgetHandlerInstance extends ManagementInstance {
                 instance().getMinecraft().font,
                 searchInstance().getSearchFieldText(),
                 "search_transportables",
-                b -> ModClientOptions.INSTANCE.update(options -> {
-                    SEARCHING_TRANSPORTABLES = !SEARCHING_TRANSPORTABLES;
-                })
+                b -> SEARCHING_TRANSPORTABLES = !SEARCHING_TRANSPORTABLES
         );
     }
 
@@ -204,8 +203,8 @@ public class WidgetHandlerInstance extends ManagementInstance {
                 instance().getMinecraft().font,
                 searchInstance().getSearchFieldText(),
                 "trade_all",
-                b -> ModClientOptions.INSTANCE.update(options -> {
-                    options.management().bulkTrade = !options.management().bulkTrade;
+                b -> updateClient(client -> {
+                    client.management().bulkTrade = !client.management().bulkTrade;
                 })
         );
     }
@@ -219,8 +218,8 @@ public class WidgetHandlerInstance extends ManagementInstance {
                 instance().getMinecraft().font,
                 searchInstance().getSearchFieldText(),
                 "craft_all",
-                b -> ModClientOptions.INSTANCE.update(options -> {
-                    options.management().bulkCraft = !options.management().bulkCraft;
+                b -> updateClient(client -> {
+                    client.management().bulkCraft = !client.management().bulkCraft;
                 })
         );
     }
@@ -235,9 +234,7 @@ public class WidgetHandlerInstance extends ManagementInstance {
                 searchInstance().getSearchFieldText(),
                 "lock_inventory",
                 b -> {
-                    ModClientOptions.INSTANCE.update(options -> {
-                        ModClientOptions.INSTANCE.update(ModClientOptions::cycleLockedInventoryMode);
-                    });
+                    updateClient(ModClientOptions::cycleLockedInventoryMode);
                     sendClientPreferencesToServer();
                 }
         );

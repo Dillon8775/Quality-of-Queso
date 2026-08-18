@@ -3,7 +3,6 @@ package net.dillon.qualityofqueso.screen;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.blay09.mods.balm.Balm;
 import net.dillon.dillonlib.util.Texts;
-import net.dillon.qualityofqueso.option.ModClientOptions;
 import net.dillon.qualityofqueso.packet.GlowSearchC2SPacket;
 import net.dillon.qualityofqueso.util.ListOptions;
 import net.minecraft.client.Minecraft;
@@ -20,6 +19,7 @@ import org.jspecify.annotations.Nullable;
 import static net.dillon.dillonlib.task.ClientTasks.openScreen;
 import static net.dillon.qualityofqueso.helper.GuiHelper.drawTooltip;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.OptionInstances.updateClient;
 
 /**
  * A utility screen to search for all nearby item frames. If an item frame is found, it glows.
@@ -57,7 +57,7 @@ public class ItemFrameSearchScreen extends Screen {
     }
 
     private void close(boolean backToParent) {
-        ModClientOptions.INSTANCE.update(options -> options.searching().savedItemFrameSearchText = this.searchField.getValue());
+        updateClient(client -> client.searching().savedItemFrameSearchText = this.searchField.getValue());
         if (backToParent && this.parent != null) {
             openScreen(this.parent);
         } else {

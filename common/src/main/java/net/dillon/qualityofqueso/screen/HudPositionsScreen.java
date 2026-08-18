@@ -2,7 +2,6 @@ package net.dillon.qualityofqueso.screen;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.dillon.dillonlib.util.Texts;
-import net.dillon.qualityofqueso.option.ModClientOptions;
 import net.dillon.qualityofqueso.util.ListOptions;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -23,6 +22,7 @@ import static net.dillon.qualityofqueso.helper.ModConstants.ENABLED_TEXTURE;
 import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
 import static net.dillon.qualityofqueso.helper.ModHelper.saveAndApplyConfigs;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.OptionInstances.updateClient;
 
 /**
  * A screen used to configure the position of elements.
@@ -82,21 +82,21 @@ public class HudPositionsScreen extends Screen {
         this.itemCounterXPosition = this.addRenderableWidget(ListOptions.itemCounterXPosition().createButton(Minecraft.getInstance().options, this.armorStatusXPosition.getX(), this.armorStatusYPosition.getY() + 64, 200));
         this.itemCounterYPosition = this.addRenderableWidget(ListOptions.itemCounterYPosition().createButton(Minecraft.getInstance().options, this.armorStatusXPosition.getX(), this.itemCounterXPosition.getY() + 24, 200));
         this.moveItemCounterOver = this.addRenderableWidget(Button.builder(Texts.BLANK, button -> {
-            ModClientOptions.INSTANCE.update(options -> {
-                options.itemCounter().moveItemCounterOver = !options.itemCounter().moveItemCounterOver;
+            updateClient(client -> {
+                client.itemCounter().moveItemCounterOver = !client.itemCounter().moveItemCounterOver;
             });
         }).tooltip(
                 Tooltip.create(Component.translatable("qualityofqueso.options.move_item_counter_over.tooltip"))
         ).bounds(this.itemCounterXPosition.getX() - 24, this.itemCounterXPosition.getY(), 20, 20).build());
 
         AbstractWidget reset = this.addRenderableWidget(Button.builder(Component.translatable("qualityofqueso.gui.reset"), button -> {
-            ModClientOptions.INSTANCE.update(options -> {
-                options.hud().armorStatusPosition[0] = 0;
-                options.hud().armorStatusPosition[1] = 0;
-                options.itemCounter().itemCounterPosition[0] = 0;
-                options.itemCounter().itemCounterPosition[1] = 0;
-                options.itemCounter().moveItemCounterOver = true;
-                options.hud().otherElementsY = 0;
+            updateClient(client -> {
+                client.hud().armorStatusPosition[0] = 0;
+                client.hud().armorStatusPosition[1] = 0;
+                client.itemCounter().itemCounterPosition[0] = 0;
+                client.itemCounter().itemCounterPosition[1] = 0;
+                client.itemCounter().moveItemCounterOver = true;
+                client.hud().otherElementsY = 0;
             });
             this.init();
         }).bounds(this.itemCounterXPosition.getX() + 50, this.itemCounterYPosition.getY() + 28, 100, 20).build());

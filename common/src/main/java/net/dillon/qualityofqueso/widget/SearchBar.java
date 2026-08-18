@@ -1,7 +1,6 @@
 package net.dillon.qualityofqueso.widget;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import net.dillon.qualityofqueso.option.ModClientOptions;
 import net.dillon.qualityofqueso.option.eum.general.Theme;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
@@ -25,6 +24,7 @@ import static net.dillon.qualityofqueso.helper.ModConstants.DEFAULT_TRANSPARENT_
 import static net.dillon.qualityofqueso.helper.ModConstants.SEARCH_TEXTURE;
 import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.OptionInstances.updateClient;
 
 /**
  * An representation of a search bar.
@@ -87,7 +87,7 @@ public class SearchBar extends EditBox {
     @Override
     public void insertText(String input) {
         super.insertText(input);
-        ModClientOptions.INSTANCE.update(options -> options.searching().savedSearchText = this.getValue());
+        updateClient(client -> client.searching().savedSearchText = this.getValue());
     }
 
     @Override

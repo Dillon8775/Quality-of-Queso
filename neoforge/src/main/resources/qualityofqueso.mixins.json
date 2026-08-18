@@ -13,7 +13,6 @@
     "client.accessor.AbstractContainerScreenAccessor",
     "client.accessor.AbstractRecipeBookScreenAccessor",
     "client.accessor.BrewingStandMenuAccessor",
-    "client.accessor.DebugOptionsScreenAccessor",
     "client.accessor.DispenserMenuAccessor",
     "client.accessor.HopperMenuAccessor",
     "client.accessor.KeyMappingAccessor",

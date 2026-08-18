@@ -2,7 +2,6 @@ package net.dillon.qualityofqueso.mixin.client.screen;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.dillon.qualityofqueso.helper.GuiHelper;
-import net.dillon.qualityofqueso.option.ModClientOptions;
 import net.dillon.qualityofqueso.widget.SearchBar;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.EditBox;
@@ -31,6 +30,7 @@ import static net.dillon.qualityofqueso.helper.ManagementHelper.hoveredSlotHasIt
 import static net.dillon.qualityofqueso.helper.MethodHelper.key;
 import static net.dillon.qualityofqueso.helper.ModHelper.*;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.OptionInstances.updateClient;
 
 @Mixin(CreativeModeInventoryScreen.class)
 public abstract class CreativeModeInventoryScreenMixin extends AbstractContainerScreen<CreativeModeInventoryScreen.ItemPickerMenu> {
@@ -57,7 +57,7 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
     @Override
     public void onClose() {
         if (this.searchBox != null) {
-            ModClientOptions.INSTANCE.update(options -> options.searching().savedCreativeMenuText = this.searchBox.getValue());
+            updateClient(client -> client.searching().savedCreativeMenuText = this.searchBox.getValue());
         }
         super.onClose();
     }

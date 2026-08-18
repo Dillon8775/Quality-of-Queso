@@ -2,13 +2,11 @@ package net.dillon.qualityofqueso.screen;
 
 import net.dillon.dillonlib.task.ClientTasks;
 import net.dillon.qualityofqueso.config.ConfigurationScreen;
-import net.dillon.qualityofqueso.helper.MethodHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.debug.DebugOptionsScreen;
 import net.minecraft.network.chat.Component;
 
 import static net.dillon.dillonlib.task.ClientTasks.*;
@@ -45,12 +43,8 @@ public class MainMenuScreen extends AbstractModScreen {
                 Tooltip.create(Component.translatable("qualityofqueso.gui.hud_positions.tooltip"))
         ).build();
 
-        this.debugHuds = Button.builder(Component.translatable("qualityofqueso.gui.debug_huds"), button -> {
-            openScreen(new DebugOptionsScreen());
-            if (getScreen() instanceof DebugOptionsScreen debugOptionsScreen) {
-                MethodHelper.getDebugScreenSearchBox(debugOptionsScreen).setValue("qualityofqueso");
-            }
-        }).tooltip(
+        this.debugHuds = Button.builder(Component.translatable("qualityofqueso.gui.debug_huds"), button -> openDebugEntriesScreen("qualityofqueso")
+        ).tooltip(
                 Tooltip.create(Component.translatable("qualityofqueso.gui.debug_huds.tooltip"))
         ).build();
 

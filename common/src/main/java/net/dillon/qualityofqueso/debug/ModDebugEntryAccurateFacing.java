@@ -8,8 +8,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.LevelChunk;
 import org.jspecify.annotations.Nullable;
 
-import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
-
 /**
  * Displays your facing direction, accurately (ex. northwest, northeast, southwest, etc.)
  */
@@ -18,11 +16,6 @@ public class ModDebugEntryAccurateFacing extends ModDebugEntry {
     @Override
     public void display(DebugScreenDisplayer displayer, @Nullable Level serverOrClientLevel, @Nullable LevelChunk clientChunk, @Nullable LevelChunk serverChunk) {
         Minecraft minecraft = Minecraft.getInstance();
-
-        // Return out of the mod isn't enabled
-        if (!modEnabled(minecraft)) {
-            return;
-        }
 
         Entity entity = minecraft.getCameraEntity();
         // Ensure entity isn't null
@@ -62,6 +55,6 @@ public class ModDebugEntryAccurateFacing extends ModDebugEntry {
         }
 
         // Add the facing line
-        displayer.addLine("Facing: " + facing);
+        displayer.addToGroup(ModDebugScreenEntries.PLAYER_POS, "Facing: " + facing);
     }
 }

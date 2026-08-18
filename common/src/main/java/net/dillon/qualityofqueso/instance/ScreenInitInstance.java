@@ -4,7 +4,6 @@ import net.dillon.qualityofqueso.helper.ContainerHelper;
 import net.dillon.qualityofqueso.helper.MethodHelper;
 import net.dillon.qualityofqueso.helper.ModConstants;
 import net.dillon.qualityofqueso.instance.management.ManagementInstance;
-import net.dillon.qualityofqueso.option.ModClientOptions;
 import net.dillon.qualityofqueso.option.eum.management.FilteringMode;
 import net.minecraft.client.gui.screens.inventory.*;
 
@@ -13,6 +12,7 @@ import static net.dillon.qualityofqueso.helper.MethodHelper.*;
 import static net.dillon.qualityofqueso.helper.ModConstants.CURRENT_CONTAINER;
 import static net.dillon.qualityofqueso.helper.ModConstants.SAVED_EXCLUDED_SLOTS;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.OptionInstances.updateClient;
 
 /**
  * Handles screen creation, with creating and initializing the correct variables.
@@ -36,9 +36,9 @@ public class ScreenInitInstance extends ManagementInstance {
             } else if (ContainerHelper.consumePendingOpenIsTracked()) { // Next, check if the container is tracked. Then temporarily set "fill what's present" to true, so that filtering works correctly. Once the screen closes, disable "fill what's present"
                 ContainerHelper.IS_TRACKED_CONTAINER = true;
                 if (client().management().containerFiltering) {
-                    ModClientOptions.INSTANCE.update(options -> {
-                        if (!options.isFiltering()) {
-                            options.management().filteringMode = FilteringMode.MATCHING;
+                    updateClient(client -> {
+                        if (!client.isFiltering()) {
+                            client.management().filteringMode = FilteringMode.MATCHING;
                             instance().setDisableFilteringOnClose(true);
                         }
                     });

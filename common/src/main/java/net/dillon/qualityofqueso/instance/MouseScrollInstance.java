@@ -3,7 +3,6 @@ package net.dillon.qualityofqueso.instance;
 import net.dillon.qualityofqueso.helper.ContainerHelper;
 import net.dillon.qualityofqueso.instance.management.ManagementInstance;
 import net.dillon.qualityofqueso.instance.management.TransferInstance;
-import net.dillon.qualityofqueso.option.ModClientOptions;
 import net.dillon.qualityofqueso.option.eum.management.sorting.CurrentSortingMode;
 import net.dillon.qualityofqueso.option.eum.management.sorting.GlobalSortingMode;
 import net.minecraft.world.inventory.Slot;
@@ -14,6 +13,7 @@ import static net.dillon.qualityofqueso.helper.ModConstants.*;
 import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.canScrollMoveAndHasScrollModifierDown;
 import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.hasDropOnlyOneItemModifierDown;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.OptionInstances.updateClient;
 
 /**
  * Handles mouse scrolling events.
@@ -30,18 +30,18 @@ public class MouseScrollInstance extends ManagementInstance {
     public void changeSortMode(double scrollY) {
         if (buttonHoveredAndActive(instance().getManagementButtons().sort())) {
             CurrentSortingMode nextMode = client().sorting().currentSortingMode.next(scrollY > 0);
-            ModClientOptions.INSTANCE.update(options -> {
-                options.sorting().currentSortingMode = nextMode;
+            updateClient(client -> {
+                client.sorting().currentSortingMode = nextMode;
                 if (client().sorting().currentSortingMode == CurrentSortingMode.ALPHABETICAL) {
-                    options.sorting().globalSortingMode = GlobalSortingMode.ALPHABETICALLY;
-                } else if (options.sorting().currentSortingMode == CurrentSortingMode.TAG) {
-                    options.sorting().globalSortingMode = GlobalSortingMode.BY_TAG;
-                } else if (options.sorting().currentSortingMode == CurrentSortingMode.COUNT_DESCENDING) {
-                    options.sorting().globalSortingMode = GlobalSortingMode.DESCENDING;
-                } else if (options.sorting().currentSortingMode == CurrentSortingMode.COUNT_ASCENDING) {
-                    options.sorting().globalSortingMode = GlobalSortingMode.ASCENDING;
-                } else if (options.sorting().currentSortingMode == CurrentSortingMode.CREATIVE_MENU) {
-                    options.sorting().globalSortingMode = GlobalSortingMode.CREATIVE_MENU;
+                    client.sorting().globalSortingMode = GlobalSortingMode.ALPHABETICALLY;
+                } else if (client.sorting().currentSortingMode == CurrentSortingMode.TAG) {
+                    client.sorting().globalSortingMode = GlobalSortingMode.BY_TAG;
+                } else if (client.sorting().currentSortingMode == CurrentSortingMode.COUNT_DESCENDING) {
+                    client.sorting().globalSortingMode = GlobalSortingMode.DESCENDING;
+                } else if (client.sorting().currentSortingMode == CurrentSortingMode.COUNT_ASCENDING) {
+                    client.sorting().globalSortingMode = GlobalSortingMode.ASCENDING;
+                } else if (client.sorting().currentSortingMode == CurrentSortingMode.CREATIVE_MENU) {
+                    client.sorting().globalSortingMode = GlobalSortingMode.CREATIVE_MENU;
                 }
             });
             ContainerHelper.storeActiveSortMode(nextMode);

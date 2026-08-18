@@ -23,7 +23,7 @@ public class ContainerData {
         public List<StoredEnderChestStack> containedItems = new ArrayList<>();
     }
 
-    public static class ContainerDataHandler extends ModBaseOptions<ContainerData> {
+    public static class ContainerDataHandler extends ModBaseOptionsHandler<ContainerData> {
 
         protected ContainerDataHandler() {
             super(ModConstants.DEFAULT_CONTAINER_DATA_FILE_NAME);

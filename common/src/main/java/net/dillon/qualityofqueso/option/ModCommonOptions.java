@@ -11,7 +11,7 @@ public class ModCommonOptions {
     public boolean inventoryLocking = true;
     public boolean optimizeItemArgument = false;
 
-    public static class CommonOptionsHandler extends ModBaseOptions<ModCommonOptions> {
+    public static class CommonOptionsHandler extends ModBaseOptionsHandler<ModCommonOptions> {
 
         protected CommonOptionsHandler() {
             super(ModConstants.DEFAULT_COMMON_CONFIG_FILE_NAME);

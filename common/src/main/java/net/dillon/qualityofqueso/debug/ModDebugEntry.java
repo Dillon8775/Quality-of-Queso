@@ -1,7 +1,9 @@
 package net.dillon.qualityofqueso.debug;
 
-import net.minecraft.client.gui.components.debug.DebugEntryCategory;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.debug.DebugScreenEntry;
+
+import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
 
 /**
  * An abstract Quality of Queso {@link DebugScreenEntry}.
@@ -13,14 +15,6 @@ public abstract class ModDebugEntry implements DebugScreenEntry {
      */
     @Override
     public boolean isAllowed(boolean reducedDebugInfo) {
-        return true;
-    }
-
-    /**
-     * @return Always add the Quality of Queso debug entry to the mod's category.
-     */
-    @Override
-    public DebugEntryCategory category() {
-        return ModDebugScreenEntries.QOQ;
+        return modEnabled(Minecraft.getInstance());
     }
 }

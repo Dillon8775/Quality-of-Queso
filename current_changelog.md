@@ -1,9 +1,7 @@
-# Version 1.7.14
+# Version 1.7.15
 
-## Update to MC 26.3
-- Now requires [DillonLib](https://modrinth.com/mod/dillon-lib) version 1.1 or higher.
-- More backend optimizations.
-
-## Bugs Fixed
-- Missing textures appearing following DillonLib dependency.
-- Ordering of buttons mod are randomized on each startup on Minecraft.
+## Changes
+- (Officially) update to 26.3.
+- Similar debug entries are now grouped together.
+- The fastest flight debug entry now displays "Fastest Flight for Elytra (target = 40/-40): *value*".
+- Added a "visual time debug entry" which displays whether visual time is enabled.

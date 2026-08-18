@@ -1,25 +1,20 @@
 package net.dillon.qualityofqueso.debug;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.debug.DebugScreenDisplayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.LevelChunk;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
-import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
-
 /**
  * A debug hud to display Minecraft's in-game time.
  */
 public class ModDebugEntryInGameTime extends ModDebugEntry {
-    protected static boolean DISPLAYING_IN_GAME_TIME = false;
 
     @Override
     public void display(@NonNull DebugScreenDisplayer lines, @Nullable Level level, @Nullable LevelChunk clientChunk, @Nullable LevelChunk chunk) {
         // Return out of the mod isn't enabled, or the player is not in a world
-        if (!modEnabled(Minecraft.getInstance()) || level == null) {
-            DISPLAYING_IN_GAME_TIME = false;
+        if (level == null) {
             return;
         }
 
@@ -67,7 +62,11 @@ public class ModDebugEntryInGameTime extends ModDebugEntry {
 
         // Add the world's in-game time to the hud
         String formatted = String.format("%d:%02d %s", hours, minutes, amPm);
-        lines.addLine(description + " (" + formatted + ", in-game)");
-        DISPLAYING_IN_GAME_TIME = true;
+        lines.addToGroup(ModDebugScreenEntries.WORLD_TIME, description + " (" + formatted + ", in-game)");
+    }
+
+    @Override
+    public boolean isAllowed(boolean reducedDebugInfo) {
+        return true;
     }
 }
