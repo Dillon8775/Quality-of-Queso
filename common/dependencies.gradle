@@ -3,11 +3,13 @@ dependencies {
     // fabric and neoforge both bundle mixinextras, so it is safe to use it in common
     compileOnly group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.5.4'
     annotationProcessor group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.5.4'
+
     implementation("net.blay09.mods:balm-common:${balm_version}") {
         changing = balm_version.endsWith('SNAPSHOT')
     }
-    compileOnly ("dev.isxander:yet-another-config-lib:${project.yacl_version}+${project.yalc_mc}-fabric") {
+
+    compileOnly "maven.modrinth:dillon-lib:${project.mc_version}-${project.dillonlib_version}-fabric"
+    compileOnly ("dev.isxander:yet-another-config-lib:${project.yacl_version}-fabric") {
         transitive = false
     }
-    compileOnly "maven.modrinth:dillon-lib:${project.mc_version}-${project.dillonlib_version}-fabric"
 }

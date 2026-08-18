@@ -24,6 +24,8 @@ loom {
             setConfigName('Fabric Client')
             ideConfigGenerated(true)
             runDir('runs/client')
+
+            vmArgs.add("-Ddevauth.enabled=1")
         }
         server {
             server()

@@ -9,7 +9,7 @@ dependencies {
         changing = balm_version.contains('SNAPSHOT')
     }
 
-    implementation "dev.isxander:yet-another-config-lib:${project.yacl_version}+${project.yalc_mc}-fabric"
-
     implementation "maven.modrinth:dillon-lib:${project.mc_version}-${project.dillonlib_version}-fabric"
+    implementation "dev.isxander:yet-another-config-lib:${project.yacl_version}-fabric"
+    implementation "net.litetex.mcm:dev-auth-neo:${project.devauth_neo_version}"
 }
