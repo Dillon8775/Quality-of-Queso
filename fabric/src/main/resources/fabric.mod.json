@@ -41,7 +41,7 @@
     "balm-fabric": ">=${balm_version}",
     "dillonlib": ">=${dillonlib_version}"
   },
-  "suggets": {
+  "suggests": {
     "modmenu": "*"
   },
   "custom": {
