@@ -75,7 +75,7 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
      */
     @Inject(method = "init", at = @At("TAIL"))
     private void setText(CallbackInfo ci) {
-        if (!modEnabled(this.minecraft) || !client().searching().saveSearchText || this.searchBox == null) {
+        if (!modEnabled(this.minecraft) || !client().searching().saveSearchText || this.searchBox == null || selectedTab != CreativeModeTabs.searchTab()) {
             return;
         }
 
@@ -94,6 +94,7 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
 
         if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT) {
             this.searchBox.setValue("");
+            this.refreshSearchResults();
             this.setFocused(false);
             cir.setReturnValue(true);
         } else if (event.button() == InputConstants.MOUSE_BUTTON_LEFT) {

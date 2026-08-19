@@ -5,6 +5,7 @@ import net.dillon.qualityofqueso.instance.QuesoScreen;
 import net.dillon.qualityofqueso.option.eum.general.Theme;
 import net.dillon.qualityofqueso.option.eum.hud.ItemCounter;
 import net.dillon.qualityofqueso.screen.HudPositionsScreen;
+import net.dillon.qualityofqueso.util.VisualTimeTracker;
 import net.dillon.qualityofqueso.widget.WidgetLayout;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -20,6 +21,7 @@ import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
@@ -41,6 +43,7 @@ import org.lwjgl.sdl.SDLKeyboard;
 
 import java.awt.*;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import static net.dillon.dillonlib.task.ClientTasks.*;
@@ -415,6 +418,16 @@ public class GuiHelper {
                 context.itemDecorations(minecraft.font, stack, fx, y + yModifier, null);
             }
         }
+    }
+
+    /**
+     * Draws the visual time clock on the screen.
+     */
+    public static void drawVisualTimeClock(GuiGraphicsExtractor graphics, Minecraft minecraft, int x, int y, int size) {
+        long visualTime = VisualTimeTracker.getVisualTime(minecraft);
+        int clockFrame = Math.floorMod((int) ((visualTime * 64L) / 24000L), 64);
+        Identifier clockTexture = Identifier.withDefaultNamespace("textures/item/clock_" + String.format(Locale.ROOT, "%02d", clockFrame) + ".png");
+        graphics.blit(RenderPipelines.GUI_TEXTURED, clockTexture, x, y, 0.0F, 0.0F, size, size, size, size);
     }
 
     /**

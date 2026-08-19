@@ -19,6 +19,12 @@ public class ListOptions {
         );
     }
 
+    public static OptionInstance<Boolean> displayVisualClock() {
+        return createClientBooleanOption("qualityofqueso.options.display_visual_clock", true, client().visualTime().displayVisualClock,
+                (options, value) -> options.visualTime().displayVisualClock = value
+        );
+    }
+
     public static OptionInstance<Integer> visualTime() {
         return new OptionInstance<>("qualityofqueso.options.visual_time",
                 OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.visual_time.tooltip")),
@@ -53,8 +59,8 @@ public class ListOptions {
         return createIntegerOption(
                 "qualityofqueso.options.armor_status_x_position",
                 ModOptionUtil::posFormatted,
-                -600,
-                300,
+                -1200,
+                1200,
                 client().hud().armorStatusPosition[0],
                 (options, value) -> options.hud().armorStatusPosition[0] = value
         );
@@ -64,7 +70,7 @@ public class ListOptions {
         return createIntegerOption(
                 "qualityofqueso.options.armor_status_y_position",
                 ModOptionUtil::invertedPosFormat,
-                -525,
+                -1200,
                 25,
                 client().hud().armorStatusPosition[1],
                 (options, value) -> options.hud().armorStatusPosition[1] = value
@@ -75,8 +81,8 @@ public class ListOptions {
         return createIntegerOption(
                 "qualityofqueso.options.item_counter_x_position",
                 ModOptionUtil::posFormatted,
-                -400,
-                600,
+                -1200,
+                1200,
                 client().itemCounter().itemCounterPosition[0],
                 (options, value) -> options.itemCounter().itemCounterPosition[0] = value
         );
@@ -86,7 +92,7 @@ public class ListOptions {
         return createIntegerOption(
                 "qualityofqueso.options.item_counter_y_position",
                 ModOptionUtil::invertedPosFormat,
-                -525,
+                -1200,
                 25,
                 client().itemCounter().itemCounterPosition[1],
                 (options, value) -> options.itemCounter().itemCounterPosition[1] = value
@@ -97,10 +103,32 @@ public class ListOptions {
         return createIntegerOption(
                 "qualityofqueso.options.other_elements_y_position",
                 ModOptionUtil::invertedPosFormat,
-                -525,
+                -1200,
                 25,
                 client().hud().otherElementsY,
                 (options, value) -> options.hud().otherElementsY = value
+        );
+    }
+
+    public static OptionInstance<Integer> visualClockXPosition() {
+        return createIntegerOption(
+                "qualityofqueso.options.visual_clock_x_position",
+                ModOptionUtil::posFormatted,
+                -1200,
+                25,
+                client().visualTime().visualClockPosition[0],
+                (options, value) -> options.visualTime().visualClockPosition[0] = value
+        );
+    }
+
+    public static OptionInstance<Integer> visualClockYPosition() {
+        return createIntegerOption(
+                "qualityofqueso.options.visual_clock_y_position",
+                ModOptionUtil::invertedPosFormat,
+                -1200,
+                25,
+                client().visualTime().visualClockPosition[1],
+                (options, value) -> options.visualTime().visualClockPosition[1] = value
         );
     }
 

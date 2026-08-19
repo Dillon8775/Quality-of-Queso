@@ -35,7 +35,6 @@ public class ModConstants {
     public static final String DISCORD_LINK = "https://discord.gg/vfqEAn4YFy";
     public static final String SHOWCASE_VIDEO_LINK = "https://youtu.be/02wfcgHkPmQ";
     public static final String RESOURCE_PACK_TEMPLATE = "https://1drv.ms/f/c/dde4bd527f59679e/IgAnwmEFKQchQ727NndBW9D9AbeVC4Jl8CuXTXMQ_CWUorw?e=Q5gEW0";
-    public static final String OTHER_QOL_MODS_LINK = "https://modrinth.com/collection/PDFZoFqE";
     public static boolean SHOWN_BETA_TOAST = false;
 
     // Static variables for management

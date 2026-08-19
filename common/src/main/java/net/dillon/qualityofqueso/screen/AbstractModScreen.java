@@ -8,9 +8,7 @@ import net.dillon.qualityofqueso.helper.ModConstants;
 import net.dillon.qualityofqueso.keybind.ModKeyMappings;
 import net.dillon.qualityofqueso.platform.QualityOfQuesoPlatforms;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.OptionInstance;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.SpriteIconButton;
 import net.minecraft.client.gui.screens.Screen;
@@ -24,7 +22,6 @@ import net.minecraft.world.level.storage.LevelResource;
 
 import java.io.File;
 import java.nio.file.Path;
-import java.util.List;
 
 import static net.dillon.dillonlib.task.ClientTasks.*;
 import static net.dillon.qualityofqueso.helper.ButtonHelper.*;
@@ -44,11 +41,6 @@ public abstract class AbstractModScreen extends OptionsSubScreen {
     public AbstractModScreen(Screen parent, Component title) {
         super(parent, Minecraft.getInstance().options, title);
     }
-
-    /**
-     * The list of {@link OptionInstance}s that should be added to the screen.
-     */
-    protected abstract AbstractWidget[] options();
 
     /**
      * Opens the keybinds screen.
@@ -86,12 +78,6 @@ public abstract class AbstractModScreen extends OptionsSubScreen {
             sendClientPreferencesToServer();
         }
         super.onClose();
-    }
-
-    @Override
-    protected void init() {
-        super.init();
-        this.list.addSmall(List.of(this.options()));
     }
 
     @Override

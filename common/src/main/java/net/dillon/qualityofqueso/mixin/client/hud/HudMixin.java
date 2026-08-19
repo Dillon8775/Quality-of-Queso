@@ -260,6 +260,18 @@ public class HudMixin {
             return;
         }
 
+        if (isPositioningElements(this.minecraft) || (client().visualTime().overrideClientTime && client().visualTime().displayVisualClock)) {
+            int clockX = graphics.guiWidth() - 23 + client().visualTime().visualClockPosition[0];
+            int clockY = getGuiHeight(graphics) - 3 + client().visualTime().visualClockPosition[1];
+            drawVisualTimeClock(
+                    graphics,
+                    this.minecraft,
+                    clockX,
+                    clockY,
+                    18
+            );
+        }
+
         int tick = this.minecraft.player.tickCount;
         if (tick < this.lastObservedPlayerTick) {
             for (int timerIndex = 0; timerIndex < ARMOR_TIMERS.length; timerIndex++) {

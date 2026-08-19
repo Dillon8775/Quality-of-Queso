@@ -51,7 +51,7 @@ public class ButtonHelper {
                         ModConstants.HAS_UPDATE,
                         Component.translatable("qualityofqueso.gui.update_available")
                 ),
-                Component.translatable("qualityofqueso.gui.options.title"),
+                Component.translatable("qualityofqueso.menu.title"),
                 tooltip
         );
     }

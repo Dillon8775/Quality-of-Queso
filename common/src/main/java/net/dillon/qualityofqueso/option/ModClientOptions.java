@@ -335,6 +335,8 @@ public class ModClientOptions {
 
     public static class VisualTimeOptions {
         public boolean overrideClientTime = false;
+        public boolean displayVisualClock = true;
+        public int[] visualClockPosition = new int[]{0, 0};
         public int visualTime = 0;
         public int visualTimeSpeed = 0;
         public boolean syncLocalTime = false;
