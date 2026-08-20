@@ -1,7 +1,7 @@
 # Version 1.7.15
 
 ## Changes
-- (Officially) update to 26.3.
+- Update to 26.3.
 - Revamped the main menu screen and resources screen.
   - Removed the "Other QoL Mods" button in the resources screen.
 - Similar debug entries are now grouped together.
