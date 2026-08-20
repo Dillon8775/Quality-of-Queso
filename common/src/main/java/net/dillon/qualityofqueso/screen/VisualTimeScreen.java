@@ -67,7 +67,7 @@ public class VisualTimeScreen extends Screen {
     public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks) {
         super.extractRenderState(graphics, mouseX, mouseY, deltaTicks);
 
-        graphics.text(this.font, Component.translatable("qualityofqueso.gui.visual_time.description"), this.width / 2 - 105, this.height / 2 - 110, CommonColors.WHITE);
+        graphics.text(this.font, Component.translatable("qualityofqueso.menu.visual_time.description"), this.width / 2 - 105, this.height / 2 - 110, CommonColors.WHITE);
         graphics.text(this.font, Component.translatable("qualityofqueso.gui.visual_time.description.line2"), this.width / 2 - 145, this.height / 2 - 90, CommonColors.WHITE);
         graphics.text(this.font, Component.translatable("qualityofqueso.gui.visual_time.description.line3"), this.width / 2 - 40, this.height / 2 - 70, CommonColors.WHITE);
 
