@@ -15,7 +15,7 @@
 
   "qualityofqueso.menu.open_item_frame_search_gui": "Open Item Frame Search UI...",
   "qualityofqueso.menu.visual_time": "§2Visual Time...",
-  "qualityofqueso.gui.visual_time.description": "Override the client-time as a visual effect...",
+  "qualityofqueso.menu.visual_time.description": "Override the client-time as a visual effect...",
 
   "qualityofqueso.menu.debug_huds": "§cDebug HUDs...",
   "qualityofqueso.menu.debug_huds.tooltip": "Display local time, world time, and more...",

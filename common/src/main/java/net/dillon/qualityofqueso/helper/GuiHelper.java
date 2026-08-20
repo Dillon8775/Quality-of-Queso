@@ -39,6 +39,7 @@ import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
+import net.minecraft.world.level.Level;
 import org.lwjgl.sdl.SDLKeyboard;
 
 import java.awt.*;
@@ -423,9 +424,17 @@ public class GuiHelper {
     /**
      * Draws the visual time clock on the screen.
      */
-    public static void drawVisualTimeClock(GuiGraphicsExtractor graphics, Minecraft minecraft, int x, int y, int size) {
+    public static void drawVisualTimeClock(GuiGraphicsExtractor graphics, Minecraft minecraft, int x, int y, int size, boolean screen) {
+        boolean notOverworld = minecraft.level != null && minecraft.level.dimension() != Level.OVERWORLD;
+        if (!isPositioningElements(minecraft) && !screen && notOverworld) {
+            return;
+        }
+
         long visualTime = VisualTimeTracker.getVisualTime(minecraft);
         int clockFrame = Math.floorMod((int) ((visualTime * 64L) / 24000L), 64);
+        if (notOverworld) {
+            clockFrame = Math.floorMod((int) ((minecraft.level.getGameTime() * 64L) / 20L), 64);
+        }
         Identifier clockTexture = Identifier.withDefaultNamespace("textures/item/clock_" + String.format(Locale.ROOT, "%02d", clockFrame) + ".png");
         graphics.blit(RenderPipelines.GUI_TEXTURED, clockTexture, x, y, 0.0F, 0.0F, size, size, size, size);
     }

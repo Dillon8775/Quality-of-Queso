@@ -62,7 +62,12 @@ public class ModDebugEntryInGameTime extends ModDebugEntry {
 
         // Add the world's in-game time to the hud
         String formatted = String.format("%d:%02d %s", hours, minutes, amPm);
-        lines.addToGroup(ModDebugScreenEntries.WORLD_TIME, description + " (" + formatted + ", in-game)");
+
+        // Create the final string and add
+        String finalString = level.dimension() == Level.OVERWORLD
+                ? description + " (" + formatted + ", in-game)"
+                : "Unknown Time (in-game)";
+        lines.addToGroup(ModDebugScreenEntries.WORLD_TIME, finalString);
     }
 
     @Override

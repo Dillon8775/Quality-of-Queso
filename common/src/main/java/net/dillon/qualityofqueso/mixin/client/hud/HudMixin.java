@@ -260,7 +260,7 @@ public class HudMixin {
             return;
         }
 
-        if (isPositioningElements(this.minecraft) || (client().visualTime().overrideClientTime && client().visualTime().displayVisualClock)) {
+        if (client().visualTime().overrideClientTime && client().visualTime().displayVisualClock) {
             int clockX = graphics.guiWidth() - 23 + client().visualTime().visualClockPosition[0];
             int clockY = getGuiHeight(graphics) - 3 + client().visualTime().visualClockPosition[1];
             drawVisualTimeClock(
@@ -268,7 +268,8 @@ public class HudMixin {
                     this.minecraft,
                     clockX,
                     clockY,
-                    18
+                    18,
+                    false
             );
         }
 
@@ -322,8 +323,9 @@ public class HudMixin {
 
         boolean elytraWarning = client().elytraAlarm().elytraAlarm.enabled() && SHOULD_WARN_OF_ELYTRA;
         boolean canRenderArmorHotbar = client().hud().armorHotbar && (!client().hud().armorStatus.off() || elytraWarning);
+        boolean canEverRenderArmorHotbar = isPositioningElements(this.minecraft) && !client().hud().armorStatus.off();
         boolean renderingTheHotbar = armorStatusAlways || anyArmorTimerActive || syncArmorAnimating;
-        if (isPositioningElements(this.minecraft) || (canRenderArmorHotbar && renderingTheHotbar)) {
+        if ((canEverRenderArmorHotbar && client().hud().armorHotbar) || (canRenderArmorHotbar && renderingTheHotbar)) {
             graphics.blitSprite(
                     RenderPipelines.GUI_TEXTURED,
                     getArmorHotbarTexture(),
@@ -357,7 +359,7 @@ public class HudMixin {
                         }
                     }
 
-                    if (isPositioningElements(this.minecraft) || shouldRenderSlot) {
+                    if (canEverRenderArmorHotbar || shouldRenderSlot) {
                         if (client().hud().emptySlots && getItemBySlot(this.minecraft, slot).isEmpty()) {
                             String name = switch (slot) {
                                 case CHEST -> "chestplate";
@@ -383,7 +385,7 @@ public class HudMixin {
                         int elapsedTicks = tick - ARMOR_TIMERS[i];
                         slotHighlightAlpha = Mth.clamp(1.0F - ((float) elapsedTicks / animationTimeTicks), 0.0F, 1.0F);
                     }
-                    if ((isPositioningElements(this.minecraft) && client().hud().highlightArmor) || timerActive || animating || fadeAnimating) {
+                    if ((canEverRenderArmorHotbar && client().hud().highlightArmor) || timerActive || animating || fadeAnimating) {
                         this.renderHighlightedArmorSlot(this.minecraft, HOTBAR_SELECTION_SPRITE, graphics, equipmentSlots()[i], false, armorYOffset, slotHighlightAlpha);
                     }
                     if (shouldRenderSlot && getItemHealthPercentage(getItemBySlot(this.minecraft, slot)) < 0.11F) {

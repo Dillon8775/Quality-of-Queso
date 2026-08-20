@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.CommonColors;
+import net.minecraft.world.level.Level;
 
 import static net.dillon.dillonlib.task.ClientTasks.openScreen;
 import static net.dillon.qualityofqueso.helper.GuiHelper.drawVisualTimeClock;
@@ -70,7 +71,7 @@ public class VisualTimeScreen extends Screen {
         graphics.text(this.font, Component.translatable("qualityofqueso.gui.visual_time.description.line2"), this.width / 2 - 145, this.height / 2 - 90, CommonColors.WHITE);
         graphics.text(this.font, Component.translatable("qualityofqueso.gui.visual_time.description.line3"), this.width / 2 - 40, this.height / 2 - 70, CommonColors.WHITE);
 
-        drawVisualTimeClock(graphics, this.minecraft, this.visualTime.getX() - 48, this.visualTime.getY() - 2, 24);
+        drawVisualTimeClock(graphics, this.minecraft, this.visualTime.getX() - 48, this.visualTime.getY() - 2, 24, true);
 
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, qoqIdentifier("visual_time/speed"), this.visualTimeSpeed.getX() - 48, this.visualTimeSpeed.getY() + 1, 24, 18);
         graphics.blit(RenderPipelines.GUI_TEXTURED, Identifier.withDefaultNamespace("textures/block/daylight_detector" + (client().visualTime().syncLocalTime ? "_inverted" : "") + "_top.png"), this.syncLocalTime.getX() - 48, this.syncLocalTime.getY() - 2, 0.0F, 0.0F, SIZE, SIZE, SIZE, SIZE);
@@ -78,7 +79,7 @@ public class VisualTimeScreen extends Screen {
         boolean overrideClientTime = client().visualTime().overrideClientTime;
         boolean matchWithIRLTime = client().visualTime().syncLocalTime;
         this.visualTime.active = overrideClientTime && client().visualTime().visualTimeSpeed == 0 && !matchWithIRLTime;
-        this.displayVisualClock.active = overrideClientTime;
+        this.displayVisualClock.active = overrideClientTime && (this.minecraft.level == null || this.minecraft.level.dimension() == Level.OVERWORLD);
         this.visualTimeSpeed.active = overrideClientTime && !matchWithIRLTime;
         this.syncLocalTime.active = overrideClientTime;
 
