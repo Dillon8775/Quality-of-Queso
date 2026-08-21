@@ -1,6 +1,8 @@
 package net.dillon.qualityofqueso.helper;
 
+import net.dillon.dillonlib.util.Arithmetics;
 import net.dillon.dillonlib.util.UpdateChecker;
+import net.dillon.qualityofqueso.instance.management.CursorKey;
 import net.dillon.qualityofqueso.option.eum.management.sorting.CurrentSortingMode;
 import net.dillon.qualityofqueso.platform.QualityOfQuesoPlatforms;
 import net.minecraft.ChatFormatting;
@@ -87,6 +89,9 @@ public class ModConstants {
     public static int SORT_SOUND_COOLDOWN = DEFAULT_SORT_SOUND_COOLDOWN;
     public static final int DEFAULT_TRACKED_CONTAINER_COOLDOWN = 2;
     public static int TRACKED_CONTAINER_COOLDOWN = DEFAULT_TRACKED_CONTAINER_COOLDOWN;
+    public static final int DEFAULT_ENHANCED_COOLDOWN_SWAP = Arithmetics.sas(2);
+    public static int ENHANCED_COOLDOWN_SWAP = DEFAULT_ENHANCED_COOLDOWN_SWAP;
+    public static CursorKey CURSOR_KEY = CursorKey.NULL;
 
     // Other global variables
     public static Map<Integer, Set<Integer>> SAVED_EXCLUDED_SLOTS = new HashMap<>();

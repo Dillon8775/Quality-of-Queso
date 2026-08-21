@@ -1,6 +1,7 @@
 package net.dillon.qualityofqueso.instance;
 
 import net.dillon.qualityofqueso.helper.ContainerHelper;
+import net.dillon.qualityofqueso.instance.management.CursorKey;
 import net.dillon.qualityofqueso.instance.management.ManagementInstance;
 import net.dillon.qualityofqueso.instance.management.TransferInstance;
 import net.dillon.qualityofqueso.option.eum.management.sorting.CurrentSortingMode;
@@ -120,6 +121,7 @@ public class MouseScrollInstance extends ManagementInstance {
                 && canScrollMoveAndHasScrollModifierDown()
                 && !hasDropOnlyOneItemModifierDown()
                 && new TransferInstance(instance()).tryMoveSingleFromScroll(instance().getScreensHoveredSlot(), scrollY)) {
+            CURSOR_KEY = CursorKey.SCROLL;
             cir.setReturnValue(true);
         } else {
             setMoveAmount(instance().getScreensHoveredSlot(), scrollY);

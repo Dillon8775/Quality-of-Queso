@@ -2,6 +2,7 @@ package net.dillon.qualityofqueso.instance;
 
 import net.dillon.qualityofqueso.helper.ContainerHelper;
 import net.dillon.qualityofqueso.helper.MethodHelper;
+import net.dillon.qualityofqueso.instance.management.CursorKey;
 import net.dillon.qualityofqueso.instance.management.ManagementInstance;
 import net.dillon.qualityofqueso.option.eum.management.FilteringMode;
 import net.minecraft.client.gui.screens.inventory.AbstractRecipeBookScreen;
@@ -50,6 +51,8 @@ public class CloseScreenInstance extends ManagementInstance {
      * Disables certain features, like craft all and trade all.
      */
     public void disableFeatures() {
+        CURSOR_KEY = CursorKey.NULL;
+
         if (!client().buttonDisplayOptions().safeBulk) {
             return;
         }

@@ -38,6 +38,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+import static net.dillon.dillonlib.task.ClientTasks.getScreen;
 import static net.dillon.qualityofqueso.helper.ModConstants.*;
 import static net.dillon.qualityofqueso.option.OptionInstances.*;
 
@@ -202,6 +203,10 @@ public class ModHelper {
 
         if (client().management().swapping.any() && SwapButton.SWAP_COOLDOWN > 0) {
             SwapButton.SWAP_COOLDOWN--;
+        }
+
+        if (getScreen() != null && client().misc().enhancedCursor && ENHANCED_COOLDOWN_SWAP > 0) {
+            ENHANCED_COOLDOWN_SWAP--;
         }
     }
 

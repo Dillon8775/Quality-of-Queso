@@ -1,6 +1,7 @@
 package net.dillon.qualityofqueso.instance.management;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import com.mojang.blaze3d.platform.cursor.CursorType;
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import net.dillon.qualityofqueso.helper.ContainerHelper;
 import net.dillon.qualityofqueso.instance.QuesoScreen;
@@ -35,6 +36,7 @@ import static net.dillon.qualityofqueso.option.OptionInstances.client;
  * Handles extracting and rendering events.
  */
 public class ExtractingInstance extends ManagementInstance {
+    private static boolean swapCursor = false;
 
     public ExtractingInstance(QuesoScreen screen) {
         super(screen);
@@ -58,11 +60,21 @@ public class ExtractingInstance extends ManagementInstance {
         }
 
         if (Minecraft.getInstance().hasControlDown()) {
-            if (canScrollMoveAndHasScrollModifierDown()) {
-                graphics.requestCursor(CursorTypes.RESIZE_NS);
+            if (ENHANCED_COOLDOWN_SWAP == 0) {
+                swapCursor = !swapCursor;
+                ENHANCED_COOLDOWN_SWAP = DEFAULT_ENHANCED_COOLDOWN_SWAP;
             }
-            if (hasDropOnlyOneItemModifierDown() || hasAllQuickDropModifiersDown()) {
-                graphics.requestCursor(CursorTypes.CROSSHAIR);
+            CursorType cursor;
+            if (CURSOR_KEY == CursorKey.NULL) {
+                cursor = swapCursor ? CursorTypes.RESIZE_NS : CursorTypes.CROSSHAIR;
+                graphics.requestCursor(cursor);
+            } else {
+                if (CURSOR_KEY == CursorKey.SCROLL || canScrollMoveAndHasScrollModifierDown()) {
+                    graphics.requestCursor(CursorTypes.RESIZE_NS);
+                }
+                if (CURSOR_KEY == CursorKey.DROP || hasDropOnlyOneItemModifierDown() || hasAllQuickDropModifiersDown()) {
+                    graphics.requestCursor(CursorTypes.CROSSHAIR);
+                }
             }
         }
 

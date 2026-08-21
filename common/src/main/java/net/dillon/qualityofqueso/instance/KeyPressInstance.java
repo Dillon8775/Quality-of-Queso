@@ -3,6 +3,7 @@ package net.dillon.qualityofqueso.instance;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.dillon.qualityofqueso.helper.GuiHelper;
 import net.dillon.qualityofqueso.helper.MethodHelper;
+import net.dillon.qualityofqueso.instance.management.CursorKey;
 import net.dillon.qualityofqueso.instance.management.ManagementInstance;
 import net.dillon.qualityofqueso.keybind.ModKeyMappings;
 import net.minecraft.client.Minecraft;
@@ -17,6 +18,7 @@ import java.util.List;
 
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
 import static net.dillon.qualityofqueso.helper.MethodHelper.*;
+import static net.dillon.qualityofqueso.helper.ModConstants.CURSOR_KEY;
 import static net.dillon.qualityofqueso.helper.ModHelper.allDisallowedKeys;
 import static net.dillon.qualityofqueso.helper.ModHelper.popularKeys;
 import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.*;
@@ -125,6 +127,10 @@ public class KeyPressInstance extends ManagementInstance {
     public void handleKeyPressing(KeyEvent event, CallbackInfoReturnable<Boolean> cir) {
         if (isContainerScreen(instance().getScreen()) && hoveredSlotHasItem(instance().getScreensHoveredSlot()) && hasAllQuickDropModifiersDown() && !shouldButtonBeActive(false, null)) {
             cir.setReturnValue(true);
+        }
+
+        if (client().misc().enhancedCursor && event.key() == key(getDropKey()).getValue()) {
+            CURSOR_KEY = CursorKey.DROP;
         }
 
         if (handleInventoryCloseKey(event, cir)) {
