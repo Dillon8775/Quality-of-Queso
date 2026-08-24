@@ -54,6 +54,13 @@ public class ManagementInstance implements ModInstance {
     }
 
     /**
+     * the current extracting instance to use.
+     */
+    public ExtractingInstance extractingInstance() {
+        return new ExtractingInstance(this.screen);
+    }
+
+    /**
      * @return the current transferring instance to use.
      */
     public TransferInstance transferInstance() {
@@ -122,6 +129,13 @@ public class ManagementInstance implements ModInstance {
      */
     public boolean isFabricTag(String tagLocation) {
         return client().accessibility().ignoreFabricTags && tagLocation.startsWith("c:");
+    }
+
+    /**
+     * @return if the slot is a player inventory slot.
+     */
+    public boolean isPlayerInventorySlot(Slot slot) {
+        return slot.container == instance().getMinecraft().player.getInventory();
     }
 
     /**

@@ -48,11 +48,11 @@ public abstract class QualityOfQuesoPlatform extends ModPlatform {
 
     @Override
     public @NotNull PlatformRelease platformRelease() {
-        return PlatformRelease.STABLE;
+        return PlatformRelease.ALPHA;
     }
 
     @Override
     public @NotNull LogoWidth logoWidth() {
-        return LogoWidth.LONG_PATCH;
+        return LogoWidth.DEFAULT;
     }
 }

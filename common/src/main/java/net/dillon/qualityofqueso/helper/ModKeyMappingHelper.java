@@ -62,7 +62,7 @@ public class ModKeyMappingHelper {
      * @return if the user has the {@code scroll move modifier} key down.
      */
     public static boolean canScrollMoveAndHasScrollModifierDown() {
-        return client().management().scrollMoving && SCROLL_MOVE.isActiveAndDown();
+        return client().management().scrollMoving && Minecraft.getInstance().hasControlDown();
     }
 
     /**

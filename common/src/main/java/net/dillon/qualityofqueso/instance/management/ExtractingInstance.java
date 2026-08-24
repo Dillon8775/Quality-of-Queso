@@ -6,6 +6,7 @@ import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import net.dillon.qualityofqueso.helper.ContainerHelper;
 import net.dillon.qualityofqueso.instance.QuesoScreen;
 import net.dillon.qualityofqueso.instance.context.ManagementButtons;
+import net.dillon.qualityofqueso.option.eum.general.Theme;
 import net.dillon.qualityofqueso.option.eum.management.IncludeHotbar;
 import net.dillon.qualityofqueso.widget.QuesoButton;
 import net.dillon.qualityofqueso.widget.WidgetLayout;
@@ -14,6 +15,7 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.inventory.AbstractRecipeBookScreen;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.NonNullList;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.inventory.Slot;
@@ -27,6 +29,7 @@ import java.util.List;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
 import static net.dillon.qualityofqueso.helper.MethodHelper.*;
 import static net.dillon.qualityofqueso.helper.ModConstants.*;
+import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
 import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.*;
 import static net.dillon.qualityofqueso.keybind.ModKeyMappings.MOVE_TO_CONTAINER;
 import static net.dillon.qualityofqueso.keybind.ModKeyMappings.MOVE_TO_INVENTORY;
@@ -40,6 +43,13 @@ public class ExtractingInstance extends ManagementInstance {
 
     public ExtractingInstance(QuesoScreen screen) {
         super(screen);
+    }
+
+    /**
+     * Sets the cursor type to a new cursor type.
+     */
+    public void setCursor(CursorKey cursorKey) {
+        CURSOR_KEY = cursorKey;
     }
 
     /**
@@ -69,10 +79,10 @@ public class ExtractingInstance extends ManagementInstance {
                 cursor = swapCursor ? CursorTypes.RESIZE_NS : CursorTypes.CROSSHAIR;
                 graphics.requestCursor(cursor);
             } else {
-                if (CURSOR_KEY == CursorKey.SCROLL || canScrollMoveAndHasScrollModifierDown()) {
+                if (CURSOR_KEY == CursorKey.MOVE || canScrollMoveAndHasScrollModifierDown()) {
                     graphics.requestCursor(CursorTypes.RESIZE_NS);
                 }
-                if (CURSOR_KEY == CursorKey.DROP || hasDropOnlyOneItemModifierDown() || hasAllQuickDropModifiersDown()) {
+                if (CURSOR_KEY == CursorKey.CROSSHAIR || hasDropOnlyOneItemModifierDown() || hasAllQuickDropModifiersDown()) {
                     graphics.requestCursor(CursorTypes.CROSSHAIR);
                 }
             }
@@ -119,7 +129,27 @@ public class ExtractingInstance extends ManagementInstance {
     }
 
     /**
-     * Grays out filtered slots (or hotbar slots), and renders the locked slot texture.
+     * Grays out a search, typically from search queries or excluding hotbar.
+     */
+    public void renderGrayedSlot(GuiGraphicsExtractor graphics, Slot slot, boolean hotbarOverlay) {
+        String id = "grayed";
+        if (hotbarOverlay) {
+            id = "grayed_hotbar";
+        } else if (client().accessibility().darkerOverlay || client().general().theme != Theme.VANILLA) {
+            id = "grayed_dark";
+        }
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, qoqIdentifier("slot/" + id), slot.x, slot.y, 16, 16);
+    }
+
+    /**
+     * Renders a highlighted slot, based on the hovered or held item.
+     */
+    public void renderHighlightedSlot(GuiGraphicsExtractor graphics, Slot slot) {
+        graphics.fill(slot.x - 2, slot.y - 2, slot.x + 17, slot.y + 17, client().management().matchingItemsColor);
+    }
+
+    /**
+     * Grays out filtered slots (or hotbar slots), renders the locked slot texture, and highlights matching items according to the cursor.
      */
     public void grayoutSlotsAndExtractLockedIcon(GuiGraphicsExtractor graphics) {
         // Begin iterating slots to gray out
@@ -133,7 +163,7 @@ public class ExtractingInstance extends ManagementInstance {
             // Only do this on valid screens
             if (validScreen) {
                 if (searchInstance().isFilteredBySearch(slot, inventorySearchFieldPresent)) {
-                    searchInstance().renderGrayedSlot(graphics, slot, false);
+                    renderGrayedSlot(graphics, slot, false);
                     alreadyExcluded = true;
                 }
                 // Otherwise, gray out slots that don't match the search
@@ -141,7 +171,7 @@ public class ExtractingInstance extends ManagementInstance {
                         && (isInventoryScreen(instance().getScreen()) ? isInventoryHotbarSlot(true, slot.index) : isHotbarSlot(instance().getScreenMenu().slots.size(), slot.index))
                         && (client().management().transferring.any() || client().management().scrollMoving)) {
                     if (shouldGrayout(slot)) {
-                        searchInstance().renderGrayedSlot(graphics, slot, slot.hasItem());
+                        renderGrayedSlot(graphics, slot, slot.hasItem());
                         alreadyExcluded = true;
                     }
                 }
@@ -179,9 +209,45 @@ public class ExtractingInstance extends ManagementInstance {
 
                         // If a slot was found as "unavailable", render it as unavailable
                         if (renderUnavailable) {
-                            searchInstance().renderGrayedSlot(graphics, slot, false);
+                            renderGrayedSlot(graphics, slot, false);
                         }
                     }
+                }
+            }
+        }
+    }
+
+    /**
+     * Highlight matching items based on the cursor held item or hovered item
+     */
+    public void extractHighlightedSlots(GuiGraphicsExtractor graphics) {
+        if (!client().management().ctrlMoving) {
+            return;
+        }
+
+        if (client().management().ctrlMoving) {
+            Slot hoveredSlot = instance().getScreensHoveredSlot();
+
+            // Get the slot to check (if cursor stack isn't empty, or there is no hovered slot, then check cursor stack)
+            // Otherwise, check hovered slot stack
+            ItemStack cursorStack = getCursorStack();
+            ItemStack stackToCheck = (hoveredSlot == null || !cursorStack.isEmpty())
+                    ? cursorStack
+                    : hoveredSlot.getItem();
+
+            // Check all slots in current screen
+            for (int i = 0; i < getTotalSlots(); i++) {
+                Slot slot = instance().getScreenMenu().getSlot(i);
+                ItemStack slotStack = slot.getItem();
+
+                // Skip empty slots, always
+                if (stackToCheck.isEmpty()) {
+                    continue;
+                }
+
+                // If slot stack matches cursor, and it's not the same slot, highlight it
+                if (stackToCheck.is(slotStack.getItem())) {
+                    renderHighlightedSlot(graphics, slot);
                 }
             }
         }

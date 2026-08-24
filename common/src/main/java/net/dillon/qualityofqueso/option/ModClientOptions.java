@@ -161,6 +161,8 @@ public class ModClientOptions {
         public boolean quickEquip = true;
 
         public boolean scrollMoving = true;
+        public boolean ctrlMoving = true;
+        public int matchingItemsColor = DEFAULT_MATCHING_ITEMS_COLOR;
         public boolean dragMoving = true;
 
         public boolean bulkTrade = false;

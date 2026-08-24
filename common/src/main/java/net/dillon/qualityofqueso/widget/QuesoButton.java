@@ -23,7 +23,6 @@ import static net.dillon.qualityofqueso.helper.ButtonHelper.drawButtonTexture;
 import static net.dillon.qualityofqueso.helper.ButtonHelper.getWidgetPath;
 import static net.dillon.qualityofqueso.helper.GuiHelper.drawTooltip;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
-import static net.dillon.qualityofqueso.helper.MethodHelper.getHoveredSlot;
 import static net.dillon.qualityofqueso.helper.ModConstants.*;
 import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
 import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.*;
@@ -117,9 +116,7 @@ public class QuesoButton extends Button {
 
         Screen screen = getScreen();
         if (canScrollMoveAndHasScrollModifierDown() && client().management().scrollMoving && (isValidScreenForSingularMoving(screen, true))) {
-            if (this.isHovered() ||
-                    (getScreen() instanceof AbstractContainerScreen<?> abstractContainerScreen
-                            && getHoveredSlot(abstractContainerScreen) != null && getHoveredSlot(abstractContainerScreen).hasItem())) {
+            if (this.isHovered()) {
                 drawButtonTexture(graphics, MOVE_ONE_PATH, this);
             }
         }

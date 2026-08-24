@@ -235,6 +235,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                 (QuesoScreen) this.screen
         );
         extractingInstance.extractLockedSlotColor(graphics);
+        extractingInstance.extractHighlightedSlots(graphics);
     }
 
     /**
@@ -356,6 +357,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
                 (QuesoScreen) this.screen
         );
         mouseClickInstance.trySelectingOrLockingSlot(event, cir);
+        mouseClickInstance.tryQuickMoveHighlightedItems(event, cir);
         mouseClickInstance.moveOnlyOne(event, cir);
         mouseClickInstance.quickEquipItem(event, cir);
         mouseClickInstance.handleInventorySearchFieldClicking(event, doubleClick);

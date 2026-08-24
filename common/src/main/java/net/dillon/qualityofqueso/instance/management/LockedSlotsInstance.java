@@ -18,7 +18,6 @@ import static net.dillon.qualityofqueso.helper.MethodHelper.kumaMousePressed;
 import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
 import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.*;
 import static net.dillon.qualityofqueso.keybind.ModKeyMappings.LOCK_SLOT;
-import static net.dillon.qualityofqueso.keybind.ModKeyMappings.SCROLL_MOVE;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 /**
@@ -61,7 +60,7 @@ public class LockedSlotsInstance extends ManagementInstance {
      * @return if the user is attempting to drop an entire locked slot stack.
      */
     public boolean droppingEntireLockedSlotStack() {
-        return SCROLL_MOVE.isActiveAndDown() && hasDropOnlyOneItemModifierDown() && instance().getScreensHoveredSlot() != null && lockedSlotsInstance().isLockedSlot(instance().getScreensHoveredSlot().index);
+        return Minecraft.getInstance().hasControlDown() && hasDropOnlyOneItemModifierDown() && instance().getScreensHoveredSlot() != null && lockedSlotsInstance().isLockedSlot(instance().getScreensHoveredSlot().index);
     }
 
     /**

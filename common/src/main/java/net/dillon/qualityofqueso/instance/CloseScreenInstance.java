@@ -51,7 +51,7 @@ public class CloseScreenInstance extends ManagementInstance {
      * Disables certain features, like craft all and trade all.
      */
     public void disableFeatures() {
-        CURSOR_KEY = CursorKey.NULL;
+        extractingInstance().setCursor(CursorKey.NULL);
 
         if (!client().buttonDisplayOptions().safeBulk) {
             return;

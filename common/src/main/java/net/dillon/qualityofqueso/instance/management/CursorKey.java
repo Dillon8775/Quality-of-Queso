@@ -5,6 +5,6 @@ package net.dillon.qualityofqueso.instance.management;
  */
 public enum CursorKey {
     NULL,
-    DROP,
-    SCROLL
+    CROSSHAIR,
+    MOVE
 }
