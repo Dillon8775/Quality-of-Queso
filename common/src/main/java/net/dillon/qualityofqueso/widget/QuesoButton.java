@@ -10,7 +10,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.AbstractFurnaceScreen;
 import net.minecraft.client.input.MouseButtonEvent;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -18,6 +17,7 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.function.Supplier;
 
+import static net.dillon.dillonlib.task.ClientTasks.blitTexture;
 import static net.dillon.dillonlib.task.ClientTasks.getScreen;
 import static net.dillon.qualityofqueso.helper.ButtonHelper.drawButtonTexture;
 import static net.dillon.qualityofqueso.helper.ButtonHelper.getWidgetPath;
@@ -191,7 +191,14 @@ public class QuesoButton extends Button {
         }
 
         int xy = getTransferButtonXY(this);
-        graphics.blit(RenderPipelines.GUI_TEXTURED, qoqIdentifier("textures/gui/sprites/button/" + BASE_BUTTON_HOVERED_PATH + ".png"), this.getX() - 1, this.getY() - 1, 0.0F, 0.0F, xy, xy, xy, xy);
+        blitTexture(
+                graphics,
+                qoqIdentifier("textures/gui/sprites/button/" + BASE_BUTTON_HOVERED_PATH + ".png"),
+                this.getX() - 1,
+                this.getY() - 1,
+                xy,
+                xy
+        );
     }
 
     /**
@@ -200,7 +207,14 @@ public class QuesoButton extends Button {
     protected final void renderButtonTexture(String id, AbstractWidget buttonReference, GuiGraphicsExtractor graphics) {
         int xy = getTransferButtonXY(this);
         this.renderBaseTexture(graphics);
-        graphics.blit(RenderPipelines.GUI_TEXTURED, qoqIdentifier("textures/gui/sprites/button/" + id + this.getAppendedTexture()), buttonReference.getX() - 1, buttonReference.getY() - 1, 0.0F, 0.0F, xy, xy, xy, xy);
+        blitTexture(
+                graphics,
+                qoqIdentifier("textures/gui/sprites/button/" + id + this.getAppendedTexture()),
+                buttonReference.getX() - 1,
+                buttonReference.getY() - 1,
+                xy,
+                xy
+        );
         this.renderHoveredTexture(graphics);
     }
 

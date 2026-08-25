@@ -15,7 +15,6 @@ import net.minecraft.client.gui.components.SpriteIconButton;
 import net.minecraft.client.gui.layouts.LinearLayout;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.server.IntegratedServer;
 import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Final;
@@ -26,8 +25,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static net.dillon.dillonlib.task.ClientTasks.drawSmallSprite;
-import static net.dillon.dillonlib.task.ClientTasks.openScreen;
+import static net.dillon.dillonlib.task.ClientTasks.*;
 import static net.dillon.qualityofqueso.helper.ButtonHelper.getConfigButtonX;
 import static net.dillon.qualityofqueso.helper.ButtonHelper.getConfigButtonY;
 import static net.dillon.qualityofqueso.helper.GuiHelper.drawTooltip;
@@ -153,7 +151,7 @@ public class PauseScreenMixin extends Screen {
                 String address = this.getServerAddress();
 
                 if (universal().multiServerConfigs) {
-                    graphics.blitSprite(RenderPipelines.GUI_TEXTURED, qoqIdentifier(MULTI_CONFIG_TEXTURE), this.blacklistServerButton.getX() - 2, this.blacklistServerButton.getY() - 1, 16, 16);
+                    drawSprite(graphics, qoqIdentifier(MULTI_CONFIG_TEXTURE), this.blacklistServerButton.getX() - 2, this.blacklistServerButton.getY() - 1, 16, 16);
                 }
                 drawSmallSprite(graphics, this.isServerBlacklisted(address) ? qoqIdentifier(DISABLED_TEXTURE) : qoqIdentifier(ENABLED_TEXTURE), this.blacklistServerButton);
 

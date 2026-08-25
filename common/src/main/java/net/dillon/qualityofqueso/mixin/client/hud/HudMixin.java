@@ -11,7 +11,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.Hud;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -20,6 +19,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.util.CommonColors;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -37,8 +37,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import static net.dillon.dillonlib.task.ClientTasks.getGuiHeight;
-import static net.dillon.dillonlib.task.ClientTasks.getGuiWidth;
+import static net.dillon.dillonlib.task.ClientTasks.*;
 import static net.dillon.qualityofqueso.helper.GuiHelper.*;
 import static net.dillon.qualityofqueso.helper.ModConstants.*;
 import static net.dillon.qualityofqueso.helper.ModHelper.*;
@@ -143,8 +142,8 @@ public class HudMixin {
         }
 
         int yModifier = slot != EquipmentSlot.OFFHAND ? client().hud().armorStatusPosition[1] : client().hud().otherElementsY;
-        graphics.blitSprite(
-                RenderPipelines.GUI_TEXTURED,
+        drawSprite(
+                graphics,
                 warning ? SLOT_CRITICAL : getHighlightedSlotTexture(minecraft, defaultSprite, getItemBySlot(minecraft, slot), slot),
                 this.getHighlightedSlotX(minecraft, graphics, slot),
                 (getGuiHeight(graphics) - 3 + yOffset) + yModifier,
@@ -163,8 +162,8 @@ public class HudMixin {
             return;
         }
 
-        graphics.blitSprite(
-                RenderPipelines.GUI_TEXTURED,
+        drawSprite(
+                graphics,
                 Identifier.withDefaultNamespace("world_list/error_highlighted"),
                 getGuiWidth(graphics) + (itemX != 0 ? itemX : equipmentSlot == null ? -78 + (slot * 20) : this.getEquipmentSlotX(minecraft, equipmentSlot) + 10),
                 getGuiHeight(graphics) + 4 + yOffset,
@@ -200,8 +199,8 @@ public class HudMixin {
                 continue;
             }
 
-            graphics.blitSprite(
-                    RenderPipelines.GUI_TEXTURED,
+            drawSprite(
+                    graphics,
                     qoqIdentifier(LOCKED_TEXTURE),
                     getGuiWidth(graphics) - 91 + (slot * 20),
                     (getGuiHeight(graphics) + 11) + client().hud().otherElementsY,
@@ -326,8 +325,8 @@ public class HudMixin {
         boolean canEverRenderArmorHotbar = isPositioningElements(this.minecraft) && !client().hud().armorStatus.off();
         boolean renderingTheHotbar = armorStatusAlways || anyArmorTimerActive || syncArmorAnimating;
         if ((canEverRenderArmorHotbar && client().hud().armorHotbar) || (canRenderArmorHotbar && renderingTheHotbar)) {
-            graphics.blitSprite(
-                    RenderPipelines.GUI_TEXTURED,
+            drawSprite(
+                    graphics,
                     getArmorHotbarTexture(),
                     this.getArmorBarX(this.minecraft, graphics),
                     (getGuiHeight(graphics) - 2 + syncArmorAnimationYOffset) + client().hud().armorStatusPosition[1],
@@ -367,8 +366,8 @@ public class HudMixin {
                                 case FEET -> "boots";
                                 default -> "helmet";
                             };
-                            graphics.blitSprite(
-                                    RenderPipelines.GUI_TEXTURED,
+                            drawSprite(
+                                    graphics,
                                     Identifier.withDefaultNamespace("container/slot/" + name),
                                     this.getHighlightedSlotX(minecraft, graphics, slot) + 4,
                                     (getGuiHeight(graphics) + armorYOffset + 1) + client().hud().armorStatusPosition[1],
@@ -511,24 +510,41 @@ public class HudMixin {
             }
 
             if (positioningElements || (shouldRenderArrowUi && (isArrow || holdingArrowDisplayableProjectileWeapon))) {
-                graphics.blitSprite(RenderPipelines.GUI_TEXTURED, HOTBAR_OFFHAND_RIGHT_SPRITE,
-                        getGuiWidth(graphics) + itemX - 10,
+                int x = getGuiWidth(graphics) + itemX;
+
+                drawSprite(
+                        graphics,
+                        HOTBAR_OFFHAND_RIGHT_SPRITE,
+                        x - 10,
                         (getGuiHeight(graphics) - 3 + itemAnimationYOffset) + client().itemCounter().itemCounterPosition[1],
                         29,
                         24
                 );
-                graphics.blitSprite(RenderPipelines.GUI_TEXTURED,
+
+                drawSprite(
+                       graphics,
                         client().hud().coloredHighlighting
                                 ? count < 11 ? SLOT_CRITICAL
-                                  : count < 21 ? SLOT_AVERAGE
-                                    : count < 31 ? SLOT_DECENT
-                                      : SLOT_GOOD
+                                : count < 21 ? SLOT_AVERAGE
+                                : count < 31 ? SLOT_DECENT
+                                : SLOT_GOOD
                                 : HOTBAR_SELECTION_SPRITE,
-                        getGuiWidth(graphics) + itemX - 4,
+                        x - 4,
                         getGuiHeight(graphics) - 3 + itemAnimationYOffset + client().itemCounter().itemCounterPosition[1],
                         24,
                         23
                 );
+
+                if (heldStack.getItem() instanceof CrossbowItem && CrossbowItem.isCharged(heldStack)) {
+                    drawSprite(
+                            graphics,
+                            MINI_CROSSBOW,
+                            x - 8,
+                            getGuiHeight(graphics) - 2 + itemAnimationYOffset + client().itemCounter().itemCounterPosition[1],
+                            13,
+                            13
+                    );
+                }
             }
 
             boolean arrowAndZero = count == 0 && (trackedArrow || alwaysShowArrowFallback);

@@ -8,13 +8,13 @@ import net.dillon.dillonlib.annotation.Dill;
 import net.dillon.dillonlib.annotation.DillType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
+import static net.dillon.dillonlib.task.ClientTasks.drawSprite;
 import static net.dillon.qualityofqueso.helper.ModHelper.saveAndApplyConfigs;
 
 /**
@@ -66,7 +66,7 @@ public class ConfigurationScreen {
         return new ImageRenderer() {
             @Override
             public int render(GuiGraphicsExtractor graphics, int x, int y, int renderWidth, float tickDelta) {
-                graphics.blitSprite(RenderPipelines.GUI_TEXTURED, texture, x, y, width, height);
+                drawSprite(graphics, texture, x, y, width, height);
                 return height;
             }
 

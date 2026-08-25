@@ -24,6 +24,7 @@ import java.util.Optional;
 import static net.dillon.dillonlib.task.ClientTasks.openScreen;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.playButtonSound;
 import static net.dillon.qualityofqueso.helper.MethodHelper.key;
+import static net.dillon.qualityofqueso.helper.ModConstants.DEFAULT_MATCHING_ITEMS_COLOR;
 
 /**
  * Set filtered items in a container (fully 100% client-side).
@@ -356,7 +357,7 @@ public class FilterItemsScreen extends Screen {
                     ? sourceStartY + row * SLOT_SIZE
                     : hotbarY;
             if (this.selectedSourceSlot == i) {
-                graphics.fill(x - 1, y - 1, x + 17, y + 17, 0x66A0A0FF);
+                graphics.fill(x - 1, y - 1, x + 17, y + 17, DEFAULT_MATCHING_ITEMS_COLOR);
             }
 
             ItemStack stack = this.sourceStackAt(i);

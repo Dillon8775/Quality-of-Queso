@@ -11,13 +11,11 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.SpriteIconButton;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 
 import java.util.Map;
 
-import static net.dillon.dillonlib.task.ClientTasks.openLink;
-import static net.dillon.dillonlib.task.ClientTasks.openScreen;
+import static net.dillon.dillonlib.task.ClientTasks.*;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.getTransferButtonXY;
 import static net.dillon.qualityofqueso.helper.ModConstants.CHEESE_WHEEL_TEXTURE;
 import static net.dillon.qualityofqueso.helper.ModConstants.YOUTUBE_TEXTURE;
@@ -36,7 +34,14 @@ public class ButtonHelper {
      */
     public static void drawButtonTexture(GuiGraphicsExtractor graphics, String name, QuesoButton button) {
         int xy = getTransferButtonXY(button);
-        graphics.blit(RenderPipelines.GUI_TEXTURED, qoqIdentifier("textures/gui/sprites/button/" + name + ".png"), button.getX() - 1, button.getY() - 1, 0.0F, 0.0F, xy, xy, xy, xy);
+        blitTexture(
+                graphics,
+                qoqIdentifier("textures/gui/sprites/button/" + name + ".png"),
+                button.getX() - 1,
+                button.getY() - 1,
+                xy,
+                xy
+        );
     }
 
     /**

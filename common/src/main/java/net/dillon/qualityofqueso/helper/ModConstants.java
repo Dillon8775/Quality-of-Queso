@@ -117,6 +117,7 @@ public class ModConstants {
     public static final Identifier SLOT_DECENT = qoqIdentifier("hud/colored_slot/slot_decent");
     public static final Identifier SLOT_GOOD = qoqIdentifier("hud/colored_slot/slot_good");
     public static final Identifier SLOT_LOCKED = qoqIdentifier("hud/colored_slot/slot_locked");
+    public static final Identifier MINI_CROSSBOW = qoqIdentifier("hud/mini_crossbow");
     public static final Identifier SELECTED_RECIPE = qoqIdentifier("slot/selected_recipe");
 
     // Config constants
@@ -147,7 +148,7 @@ public class ModConstants {
     // Default colors
     public static final int DEFAULT_TRANSPARENT_SEARCH_BAR_TEXT_COLOR = -12566464;
     public static final int DEFAULT_LOCKED_SLOT_COLOR = 1721803007;
-    public static final int DEFAULT_MATCHING_ITEMS_COLOR = 808886070;
+    public static final int DEFAULT_MATCHING_ITEMS_COLOR = 959881014;
     public static final int TAG_COLOR = 0x7FFFFF;
     public static final int ITEM_COLOR = 0x96FFB7;
 }
