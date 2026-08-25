@@ -293,9 +293,21 @@ public class ManagementCategory {
                                                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.ctrl_moving.description")))
                                                 .binding(true, () -> client().management().ctrlMoving, v -> client().management().ctrlMoving = v)
                                                 .controller(BooleanControllerBuilder::create)
+                                                .build()
+                                )
+                                .option(
+                                        Option.<HighlightMatchingItems>createBuilder()
+                                                .name(Component.translatable("qualityofqueso.options.highlight_matching_items"))
+                                                .description(OptionDescription.of(
+                                                        Component.translatable("qualityofqueso.options.highlight_matching_items.description")
+                                                ))
+                                                .binding(HighlightMatchingItems.ALWAYS, () -> client().management().highlightMatchingItems, v -> client().management().highlightMatchingItems = v)
+                                                .controller(o -> EnumControllerBuilder.create(o)
+                                                        .enumClass(HighlightMatchingItems.class)
+                                                        .formatValue(v -> Component.literal(v.getSerializedName())))
                                                 .addListener((option, event) -> {
-                                                    boolean bl = option.pendingValue();
-                                                    matchingItemsColorOption.setAvailable(bl);
+                                                    HighlightMatchingItems opt = option.pendingValue();
+                                                    matchingItemsColorOption.setAvailable(opt != HighlightMatchingItems.OFF);
                                                 })
                                                 .build()
                                 )

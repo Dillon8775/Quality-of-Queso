@@ -54,13 +54,6 @@ public class ManagementInstance implements ModInstance {
     }
 
     /**
-     * the current extracting instance to use.
-     */
-    public ExtractingInstance extractingInstance() {
-        return new ExtractingInstance(this.screen);
-    }
-
-    /**
      * @return the current transferring instance to use.
      */
     public TransferInstance transferInstance() {

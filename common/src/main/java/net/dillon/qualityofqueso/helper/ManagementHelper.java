@@ -133,9 +133,9 @@ public class ManagementHelper {
     }
 
     /**
-     * @return if the screen is a valid screen for rendering the locked slot color overlay.
+     * @return if the screen is a valid screen for rendering slot overlays (locked slot and highlighted items)
      */
-    public static boolean isValidScreenForRenderingLockedSlotOverlay(AbstractContainerScreen<?> screen) {
+    public static boolean isValidScreenForRenderingSlotOverlays(AbstractContainerScreen<?> screen) {
         return (
                 isValidScreen(screen)
                         || isOtherValidScreen(screen)
