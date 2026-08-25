@@ -13,6 +13,7 @@ import net.minecraft.client.gui.Hud;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.ItemTags;
@@ -23,6 +24,7 @@ import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.ChargedProjectiles;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -535,10 +537,11 @@ public class HudMixin {
                         23
                 );
 
+                ChargedProjectiles chargedProjectiles = heldStack.get(DataComponents.CHARGED_PROJECTILES);
                 if (heldStack.getItem() instanceof CrossbowItem && CrossbowItem.isCharged(heldStack)) {
                     drawSprite(
                             graphics,
-                            MINI_CROSSBOW,
+                            isStackArrow(chargedProjectiles.itemCopies().toList().getFirst()) ? MINI_CROSSBOW : MINI_CROSSBOW_FIREWORK,
                             x - 8,
                             getGuiHeight(graphics) - 2 + itemAnimationYOffset + client().itemCounter().itemCounterPosition[1],
                             13,

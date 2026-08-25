@@ -118,6 +118,7 @@ public class ModConstants {
     public static final Identifier SLOT_GOOD = qoqIdentifier("hud/colored_slot/slot_good");
     public static final Identifier SLOT_LOCKED = qoqIdentifier("hud/colored_slot/slot_locked");
     public static final Identifier MINI_CROSSBOW = qoqIdentifier("hud/mini_crossbow");
+    public static final Identifier MINI_CROSSBOW_FIREWORK = qoqIdentifier("hud/mini_crossbow_firework");
     public static final Identifier SELECTED_RECIPE = qoqIdentifier("slot/selected_recipe");
 
     // Config constants
