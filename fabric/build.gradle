@@ -2,13 +2,16 @@ import net.darkhax.curseforgegradle.TaskPublishCurseForge
 
 plugins {
     id 'multiloader-loader'
-    id 'net.fabricmc.fabric-loom'
+    alias libs.plugins.fabricLoom
     alias libs.plugins.curseForgeGradle
     alias libs.plugins.modrinthMinotaur
 }
 
 apply from: rootProject.file('repositories.gradle')
 apply from: 'dependencies.gradle'
+
+Directory clientDir = project.layout.projectDirectory.dir('runs/client')
+Directory serverDir = project.layout.projectDirectory.dir('runs/server')
 
 loom {
     def aw = project(':common').file("src/main/resources/${mod_id}.accessWidener")
@@ -21,17 +24,17 @@ loom {
     runs {
         client {
             client()
-            setConfigName('Fabric Client')
-            ideConfigGenerated(true)
-            runDir('runs/client')
+            getDisplayName().set('Fabric Client')
+            getGenerateRunConfig().set(true)
+            getRunDirectory().set(clientDir)
 
-            vmArgs.add("-Ddevauth.enabled=" + "${devauth_enabled}")
+            jvmArguments.add("-Ddevauth.enabled=" + "${devauth_enabled}")
         }
         server {
             server()
-            setConfigName('Fabric Server')
-            ideConfigGenerated(true)
-            runDir('runs/server')
+            getDisplayName().set('Fabric Server')
+            getGenerateRunConfig().set(true)
+            getRunDirectory().set(serverDir)
         }
     }
 }
