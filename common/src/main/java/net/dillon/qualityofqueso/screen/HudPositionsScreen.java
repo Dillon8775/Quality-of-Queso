@@ -150,6 +150,6 @@ public class HudPositionsScreen extends Screen {
         drawSmallSprite(graphics, client().itemCounter().moveItemCounterOver ? qoqIdentifier(ENABLED_TEXTURE) : qoqIdentifier(DISABLED_TEXTURE), this.moveItemCounterOver);
 
         drawSprite(graphics, getArmorHotbarTexture(), this.armorStatusXPosition.getX() + 60, this.armorStatusXPosition.getY() - 28, 82, 22);
-        drawSprite(graphics, qoqIdentifier("hud/item_counter"), this.armorStatusXPosition.getX() + 74, this.itemCounterXPosition.getY() - 32, 58, 30);
+        drawSprite(graphics, qoqIdentifier("hud/hud_positions_screen/item_counter"), this.armorStatusXPosition.getX() + 74, this.itemCounterXPosition.getY() - 32, 58, 30);
     }
 }

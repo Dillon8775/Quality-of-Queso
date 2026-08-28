@@ -203,7 +203,7 @@ public class HudMixin {
 
             drawSprite(
                     graphics,
-                    qoqIdentifier(LOCKED_TEXTURE),
+                    qoqIdentifier(LOCKED_SLOT_TEXTURE),
                     getGuiWidth(graphics) - 91 + (slot * 20),
                     (getGuiHeight(graphics) + 11) + client().hud().otherElementsY,
                     10,
@@ -436,14 +436,19 @@ public class HudMixin {
                 playerItems.add(player.getInventory().getItem(i));
             }
         }
-        count += this.iterateThroughInventoryAndAddCount(playerItems, heldStack, holdingArrowDisplayableProjectileWeapon, items);
+        Item projectileItem = getProjectileItemForCounter(heldStack);
+        count += this.iterateThroughInventoryAndAddCount(playerItems, heldStack, holdingArrowDisplayableProjectileWeapon, projectileItem, items);
         if (client().itemCounter().countEnderChest) {
             count += this.iterateThroughPersistedEnderChestAndAddCount(heldStack, items);
         }
-
-        boolean trackedArrow = client().itemCounter().arrowCounter && (holdingArrowDisplayableProjectileWeapon || (isStackArrow(ItemHudTracker.getStack()) && ARROW_OUTLINE));
+        boolean trackedArrow = client().itemCounter().arrowCounter
+                && projectileItem == Items.ARROW
+                && (holdingArrowDisplayableProjectileWeapon
+                || (isStackArrow(ItemHudTracker.getStack()) && ARROW_OUTLINE));
         boolean alwaysShowArrowFallback = isAlwaysShowArrowCounterEnabled(this.minecraft) && isStackArrow(heldStack);
-        int maxCount = trackedArrow ? 64 : heldStack.getMaxStackSize();
+        int maxCount = holdingArrowDisplayableProjectileWeapon
+                ? new ItemStack(projectileItem).getMaxStackSize()
+                : heldStack.getMaxStackSize();
 
         boolean positioningElements = isPositioningElements(this.minecraft);
         if (positioningElements) {
@@ -554,8 +559,10 @@ public class HudMixin {
             ItemStack playerProjectile = getProjectileFromActiveHand(this.minecraft);
             ItemStack stackToRender = newStack;
             ItemStack arrow = new ItemStack(Items.ARROW, 1);
-            if (heldStack.getItem() instanceof CrossbowItem && player.getOffhandItem().is(Items.FIREWORK_ROCKET)) {
-                stackToRender = playerProjectile.copy();
+            if (heldStack.getItem() instanceof CrossbowItem) {
+                projectileItem = getProjectileItemForCounter(heldStack);
+
+                stackToRender = new ItemStack(projectileItem, count);
             } else if (arrowAndZero) {
                 if (holdingArrowDisplayableProjectileWeapon && !isStackArrow(ItemHudTracker.getStack())) {
                     stackToRender = arrow.copy();
@@ -664,10 +671,42 @@ public class HudMixin {
     }
 
     /**
+     * @return the projectile to display for the item counter.
+     */
+    @Unique
+    private Item getProjectileItemForCounter(ItemStack heldStack) {
+        if (!(heldStack.getItem() instanceof CrossbowItem)) {
+            ItemStack projectile = getProjectileFromActiveHand(this.minecraft);
+            return projectile.isEmpty() ? Items.ARROW : projectile.getItem();
+        }
+
+        // If the crossbow is already loaded, use the projectile inside it
+        if (CrossbowItem.isCharged(heldStack)) {
+            ChargedProjectiles chargedProjectiles = heldStack.get(DataComponents.CHARGED_PROJECTILES);
+
+            if (chargedProjectiles != null && !chargedProjectiles.itemCopies().toList().isEmpty()) {
+                ItemStack projectile = chargedProjectiles.itemCopies().toList().getFirst();
+
+                if (!projectile.isEmpty()) {
+                    return projectile.getItem();
+                }
+            }
+        }
+
+        // Fireworks are preferred when the player is using them with the crossbow
+        if (this.minecraft.player != null && this.minecraft.player.getOffhandItem().is(Items.FIREWORK_ROCKET)) {
+            return Items.FIREWORK_ROCKET;
+        }
+
+        ItemStack projectile = getProjectileFromActiveHand(this.minecraft);
+        return projectile.isEmpty() ? Items.ARROW : projectile.getItem();
+    }
+
+    /**
      * Iterates through all possible inventories, and returns a count to add.
      */
     @Unique
-    private int iterateThroughInventoryAndAddCount(NonNullList<ItemStack> inventory, ItemStack heldStack, boolean holdingArrowDisplayableProjectileWeapon, List<Integer> items) {
+    private int iterateThroughInventoryAndAddCount(NonNullList<ItemStack> inventory, ItemStack heldStack, boolean holdingArrowDisplayableProjectileWeapon, Item projectileItem, List<Integer> items) {
         int count = 0;
 
         for (ItemStack invStack : inventory) {
@@ -681,15 +720,15 @@ public class HudMixin {
                                     && isStackArrow(ItemHudTracker.getStack()) && !this.renderingItem)
                     )
                             || (
-                                    holdingArrowDisplayableProjectileWeapon
-                                            ? !client().itemCounter().countAllArrows
-                                                ? invStack.is(getProjectileFromActiveHand(this.minecraft).getItem())
-                                                    && isStackArrow(invStack)
-                                                        : isStackArrow(invStack)
-                                                            : invStack.is(heldStack.getItem())
+                            holdingArrowDisplayableProjectileWeapon
+                                    ? invStack.is(projectileItem)
+                                    : invStack.is(heldStack.getItem())
                     )
             ) {
-                if (itemMatchesInventoryItem(heldStack, invStack) || holdingArrowDisplayableProjectileWeapon || (client().itemCounter().countAllArrows && isStackArrow(ItemHudTracker.getStack()))) {
+                if (itemMatchesInventoryItem(heldStack, invStack)
+                        || holdingArrowDisplayableProjectileWeapon
+                        || (client().itemCounter().countAllArrows && isStackArrow(ItemHudTracker.getStack()))) {
+
                     count += invStack.getCount();
                     items.add(invStack.getCount());
                 }

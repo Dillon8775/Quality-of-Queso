@@ -97,7 +97,7 @@ public class ModConstants {
     public static Map<Integer, Set<Integer>> SAVED_EXCLUDED_SLOTS = new HashMap<>();
     public static CurrentSortingMode GLOBAL_SORTING_MODE = client().sorting().currentSortingMode;
 
-    // Texture constants
+    // Texture constants (sprites as strings)
     public static final String CHEESE_WHEEL_TEXTURE = "widget/logo";
     public static final String ENABLED_TEXTURE = "widget/enabled";
     public static final String DISABLED_TEXTURE = "widget/disabled";
@@ -107,9 +107,11 @@ public class ModConstants {
     public static final String ENDER_CHEST = "widget/ender_chest";
     public static final String DISCORD_TEXTURE = "widget/discord";
     public static final String YOUTUBE_TEXTURE = "widget/youtube";
-    public static final String LOCKED_TEXTURE = "locked_slot/locked";
     public static final String WIKI_TEXTURE = "widget/wiki";
     public static final String MULTI_CONFIG_TEXTURE = "widget/multi_config";
+    public static final String LOCKED_SLOT_TEXTURE = "slot/locked_slot";
+
+    // Texture constants (sprites as Identifiers)
     public static final Identifier SEARCH_TEXTURE = Identifier.withDefaultNamespace("icon/search");
     public static final Identifier SLOT_CRITICAL = qoqIdentifier("hud/colored_slot/slot_critical");
     public static final Identifier SLOT_LOW = qoqIdentifier("hud/colored_slot/slot_low");

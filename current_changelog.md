@@ -15,10 +15,11 @@
 
 ## Item Counter Changes
 - The arrow counter now works with firework rockets when using a crossbow.
-- Holding a charged crossbow now displays a small charged crossbow icon next to the arrow counter.
+- Holding a charged crossbow now displays a small charged crossbow, with either a firework or arrow next to the arrow counter.
 
 ## Miscellaneous Changes
 - The filtered item screen now uses the "matching items color" for selected items.
 - Removed "Scroll Move Modifier" keybind. It is now permanently bound to left-control.
 - The "1" number now only appears on transfer buttons if the button is hovered and the user has control down.
+- Moved some texture files around.
 - Backend optimizations.
