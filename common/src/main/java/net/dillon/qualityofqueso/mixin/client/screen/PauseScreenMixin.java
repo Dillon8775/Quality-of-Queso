@@ -140,7 +140,7 @@ public class PauseScreenMixin extends Screen {
 
         if (client().misc().antiRageQuit && this.disconnectButton != null) {
             this.disconnectButton.active = false;
-            if (client().general().tooltips.enabled() && this.disconnectButton.isHovered()) {
+            if (client().general().tooltips.enabled() && this.disconnectButton.isHovered() && !this.disconnectButton.active) {
                 drawTooltip(Component.translatable("qualityofqueso.gui.disconnect"), graphics, this.font, mouseX, mouseY);
             }
         }
