@@ -7,7 +7,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.LevelChunk;
 import org.jspecify.annotations.Nullable;
 
-import static net.dillon.dillonlib.util.Arithmetics.round;
+import static net.dillon.dillonlib.util.Arithmetics.roundToTenths;
 
 /**
  * A simple hud entry to display the player's coordinates. Just the coordinates alone.
@@ -26,7 +26,7 @@ public class ModDebugEntrySimpleCoordinates extends ModDebugEntry {
         }
 
         // Adds just the player's coordinates to the hud
-        String cords = String.format("XYZ: %s / %s / %s", round(localPlayer.getX()), round(localPlayer.getY()), round(localPlayer.getZ()));
+        String cords = String.format("XYZ: %s / %s / %s", roundToTenths(localPlayer.getX()), roundToTenths(localPlayer.getY()), roundToTenths(localPlayer.getZ()));
         lines.addToGroup(ModDebugScreenEntries.PLAYER_POS, cords);
     }
 }

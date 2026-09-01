@@ -11,7 +11,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.LevelChunk;
 import org.jspecify.annotations.Nullable;
 
-import static net.dillon.dillonlib.util.Arithmetics.round;
+import static net.dillon.dillonlib.util.Arithmetics.roundToTenths;
+
 
 /**
  * Displays the player'x {@code X-rotation,} which allows for perfection in flying the fastest with firework rockets and an elytra (40 = target).
@@ -34,6 +35,6 @@ public class ModDebugEntryFastestFlight extends ModDebugEntry {
         }
 
         // Add the x-rotation string for the player's fastest flight
-        displayer.addToGroup(ModDebugScreenEntries.PLAYER_POS, "Fastest Flight for Elytra (target = 40/-40): " + round(Mth.wrapDegrees(entity.getXRot())));
+        displayer.addToGroup(ModDebugScreenEntries.PLAYER_POS, "Fastest Flight for Elytra (target = 40/-40): " + roundToTenths(Mth.wrapDegrees(entity.getXRot())));
     }
 }

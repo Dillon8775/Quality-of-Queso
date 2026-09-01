@@ -7,7 +7,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.network.protocol.game.ServerboundPlayerActionPacket;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.ItemStack;
@@ -21,10 +20,8 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import static net.dillon.qualityofqueso.helper.GuiHelper.*;
-import static net.dillon.qualityofqueso.helper.ManagementHelper.playButtonInactiveSound;
 import static net.dillon.qualityofqueso.helper.ModConstants.PLAYER_FALL_DISTANCE;
 import static net.dillon.qualityofqueso.helper.ModConstants.SHOULD_WARN_OF_ELYTRA;
 import static net.dillon.qualityofqueso.helper.ModHelper.equipmentSlots;
@@ -59,33 +56,6 @@ public class LocalPlayerMixin extends AbstractClientPlayer {
         }
 
         ClientEvents.afterLevelChangeOrRespawn();
-    }
-
-    /**
-     * Prevents dropping locked hotbar slots while in-game.
-     */
-    @Inject(method = "drop", at = @At("HEAD"), cancellable = true)
-    private void preventDropFromLockedSlot(boolean entireStack, CallbackInfo ci) {
-        if (!modEnabled(this.minecraft) || !client().lockedSlots().lockedSlots || !client().lockedSlots().preventDropping) {
-            return;
-        }
-
-        if (isLockedHotbarSlot(this.minecraft, true)) {
-            playButtonInactiveSound(this.minecraft);
-            ci.cancel();
-        }
-    }
-
-    /**
-     * Tracks items to display total count near hotbar (when thrown {@code in-game}).
-     */
-    @Inject(method = "drop", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientPacketListener;send(Lnet/minecraft/network/protocol/Packet;)V"), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void onThrowFromInGame(boolean entireStack, CallbackInfo ci, ServerboundPlayerActionPacket.Action action, ItemStack itemStack) {
-        if (!modEnabled(Minecraft.getInstance()) || !client().itemCounter().displayOnThrow || !itemStack.isStackable()) {
-            return;
-        }
-
-        ItemHudTracker.setStack(itemStack.copy(), false);
     }
 
     /**
