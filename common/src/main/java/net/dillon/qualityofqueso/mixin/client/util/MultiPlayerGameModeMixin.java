@@ -11,6 +11,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ServerboundPlayerActionPacket;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -24,15 +25,20 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.EnderChestBlockEntity;
 import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import static net.dillon.qualityofqueso.helper.ContainerHelper.isValidBlockEntity;
 import static net.dillon.qualityofqueso.helper.GuiHelper.isHoldingItem;
+import static net.dillon.qualityofqueso.helper.GuiHelper.isLockedHotbarSlot;
+import static net.dillon.qualityofqueso.helper.ManagementHelper.playButtonInactiveSound;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.playButtonSound;
 import static net.dillon.qualityofqueso.helper.ModConstants.DEFAULT_TRACKED_CONTAINER_COOLDOWN;
 import static net.dillon.qualityofqueso.helper.ModConstants.TRACKED_CONTAINER_COOLDOWN;
@@ -41,6 +47,8 @@ import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 @Mixin(MultiPlayerGameMode.class)
 public class MultiPlayerGameModeMixin {
+    @Shadow @Final
+    private Minecraft minecraft;
     @Unique
     private ItemStack stackBeforeGuiThrow = ItemStack.EMPTY;
     @Unique
@@ -107,6 +115,33 @@ public class MultiPlayerGameModeMixin {
 
         ChargedProjectiles chargedProjectiles = player.getItemInHand(hand).get(DataComponents.CHARGED_PROJECTILES);
         ItemHudTracker.setStack(chargedProjectiles.isEmpty() ? new ItemStack(Items.ARROW) : chargedProjectiles.itemCopies().toList().getFirst(), true);
+    }
+
+    /**
+     * Prevents dropping locked hotbar slots while in-game.
+     */
+    @Inject(method = "dropItem", at = @At("HEAD"), cancellable = true)
+    private void preventDropFromLockedSlot(LocalPlayer player, boolean all, CallbackInfo ci) {
+        if (!modEnabled(this.minecraft) || !client().lockedSlots().lockedSlots || !client().lockedSlots().preventDropping) {
+            return;
+        }
+
+        if (isLockedHotbarSlot(this.minecraft, true)) {
+            playButtonInactiveSound(this.minecraft);
+            ci.cancel();
+        }
+    }
+
+    /**
+     * Tracks items to display total count near hotbar (when thrown {@code in-game}).
+     */
+    @Inject(method = "dropItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientPacketListener;send(Lnet/minecraft/network/protocol/Packet;)V"), locals = LocalCapture.CAPTURE_FAILHARD)
+    private void onThrowFromInGame(LocalPlayer player, boolean all, CallbackInfo ci, ServerboundPlayerActionPacket.Action action, ItemStack itemStack) {
+        if (!modEnabled(Minecraft.getInstance()) || !client().itemCounter().displayOnThrow || !itemStack.isStackable()) {
+            return;
+        }
+
+        ItemHudTracker.setStack(itemStack.copy(), false);
     }
 
     /**

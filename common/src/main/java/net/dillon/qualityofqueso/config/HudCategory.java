@@ -9,8 +9,8 @@ import net.dillon.qualityofqueso.option.eum.hud.ArmorStatus;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 
-import static net.dillon.dillonlib.util.Arithmetics.round;
-import static net.dillon.dillonlib.util.Arithmetics.roundBig;
+import static net.dillon.dillonlib.util.Arithmetics.roundToHundredths;
+import static net.dillon.dillonlib.util.Arithmetics.roundToTenths;
 import static net.dillon.qualityofqueso.config.ConfigurationScreen.fixedSizeImage;
 import static net.dillon.qualityofqueso.config.ConfigurationScreen.fixedSizeWebpImage;
 import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
@@ -68,7 +68,7 @@ public class HudCategory {
                 .controller(o -> DoubleSliderControllerBuilder.create(o)
                         .range(0.25D, 3.0D)
                         .step(0.01D)
-                        .formatValue(v -> Component.literal(roundBig(v) + " second(s)"))
+                        .formatValue(v -> Component.literal(roundToHundredths(v) + " second(s)"))
                 )
                 .build();
 
@@ -170,7 +170,7 @@ public class HudCategory {
                                                 .controller(o -> DoubleSliderControllerBuilder.create(o)
                                                         .range(2.0, 8.0D)
                                                         .step(0.1D)
-                                                        .formatValue(v -> Component.literal(round(v) + " second(s)"))
+                                                        .formatValue(v -> Component.literal(roundToTenths(v) + " second(s)"))
                                                 )
                                                 .build()
                                 )
