@@ -2,12 +2,9 @@ package net.dillon.qualityofqueso.instance.management;
 
 import net.dillon.qualityofqueso.helper.ModConstants;
 import net.dillon.qualityofqueso.instance.QuesoScreen;
-import net.dillon.qualityofqueso.option.eum.general.Theme;
 import net.dillon.qualityofqueso.widget.SearchBar;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -25,7 +22,6 @@ import net.minecraft.world.item.enchantment.ItemEnchantments;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.getBarWidth;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.isInventoryScreen;
 import static net.dillon.qualityofqueso.helper.MethodHelper.*;
-import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 /**
@@ -91,19 +87,6 @@ public class SearchInstance extends ManagementInstance {
             return instance().getScreenMenu().slots.size();
         }
         return 0;
-    }
-
-    /**
-     * Grays out a search, typically from search queries or excluding hotbar.
-     */
-    public void renderGrayedSlot(GuiGraphicsExtractor graphics, Slot slot, boolean hotbarOverlay) {
-        String id = "grayed";
-        if (hotbarOverlay) {
-            id = "grayed_hotbar";
-        } else if (client().accessibility().darkerOverlay || client().general().theme != Theme.VANILLA) {
-            id = "grayed_dark";
-        }
-        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, qoqIdentifier("slot/" + id), slot.x, slot.y, 16, 16);
     }
 
     /**

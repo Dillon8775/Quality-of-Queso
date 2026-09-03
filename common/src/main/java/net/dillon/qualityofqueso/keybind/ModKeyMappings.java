@@ -30,11 +30,6 @@ public class ModKeyMappings {
             .withDefault(InputBinding.mouse(InputConstants.MOUSE_BUTTON_MIDDLE, KeyModifiers.of(KeyModifier.ALT)))
             .build();
 
-    public static final ManagedKeyMapping SCROLL_MOVE = Kuma.createKeyMapping(qoqIdentifier("scroll_move"))
-            .overrideCategory(QOQ_KEY_CATEGORY)
-            .withDefault(InputBinding.key(InputConstants.KEY_LCONTROL))
-            .build();
-
     public static final ManagedKeyMapping MOVE_TO_CONTAINER = Kuma.createKeyMapping(qoqIdentifier("move_to_container"))
             .overrideCategory(QOQ_KEY_CATEGORY)
             .withDefault(InputBinding.key(InputConstants.KEY_C, KeyModifiers.of(KeyModifier.CONTROL)))

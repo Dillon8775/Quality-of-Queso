@@ -82,7 +82,7 @@ public class ButtonHelper {
      */
     public static SpriteIconButton createYouTubeButton(Screen parent, String link) {
         return ClientTasks.createSpriteIconButton("YouTube Button", qoqIdentifier(YOUTUBE_TEXTURE), (button) -> openLink(parent, link, false),
-                Component.translatable("qualityofqueso.gui.showcase.main.tooltip"), false);
+                Component.translatable("qualityofqueso.gui.showcase.main.tooltip"), 16, 16, false);
     }
 
     /**

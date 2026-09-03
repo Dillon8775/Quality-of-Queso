@@ -100,6 +100,18 @@ public class ManagementCategory {
                         .allowAlpha(true))
                 .build();
 
+        Option<Color> matchingItemsColorOption = Option.<Color>createBuilder()
+                .name(Component.translatable("qualityofqueso.options.matching_items_color"))
+                .description(OptionDescription.of(Component.translatable("qualityofqueso.options.matching_items_color.description")))
+                .binding(
+                        new Color(ModConstants.DEFAULT_MATCHING_ITEMS_COLOR, true),
+                        () -> new Color(client().management().matchingItemsColor, true),
+                        v -> client().management().matchingItemsColor = v.getRGB()
+                )
+                .controller(o -> ColorControllerBuilder.create(o)
+                        .allowAlpha(true))
+                .build();
+
         Option<Boolean> preventDroppingOption = Option.<Boolean>createBuilder()
                 .name(Component.translatable("qualityofqueso.options.prevent_dropping"))
                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.prevent_dropping.description")))
@@ -269,12 +281,26 @@ public class ManagementCategory {
                                         Option.<Boolean>createBuilder()
                                                 .name(Component.translatable("qualityofqueso.options.scroll_moving"))
                                                 .description(OptionDescription.of(
-                                                        Component.translatable("qualityofqueso.options.scroll_moving.description",
-                                                                fullKumaKeyMappingAsString(ModKeyMappings.SCROLL_MOVE)
-                                                        )))
+                                                        Component.translatable("qualityofqueso.options.scroll_moving.description"))
+                                                )
                                                 .binding(true, () -> client().management().scrollMoving, v -> client().management().scrollMoving = v)
                                                 .controller(BooleanControllerBuilder::create)
                                                 .build()
+                                )
+                                .option(
+                                        Option.<Boolean>createBuilder()
+                                                .name(Component.translatable("qualityofqueso.options.ctrl_moving"))
+                                                .description(OptionDescription.of(Component.translatable("qualityofqueso.options.ctrl_moving.description")))
+                                                .binding(true, () -> client().management().ctrlMoving, v -> client().management().ctrlMoving = v)
+                                                .controller(BooleanControllerBuilder::create)
+                                                .addListener((option, event) -> {
+                                                    boolean bl = option.pendingValue();
+                                                    matchingItemsColorOption.setAvailable(bl);
+                                                })
+                                                .build()
+                                )
+                                .option(
+                                        matchingItemsColorOption
                                 )
                                 .option(
                                         Option.<Boolean>createBuilder()

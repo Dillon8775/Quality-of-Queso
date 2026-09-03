@@ -120,6 +120,8 @@ public class PauseScreenMixin extends Screen {
                         openScreen(new EnderChestPreviewScreen());
                     },
                     Component.translatable("qualityofqueso.gui.view_ender_chest.tooltip"),
+                    16,
+                    16,
                     false
             );
             if (everywhere) {

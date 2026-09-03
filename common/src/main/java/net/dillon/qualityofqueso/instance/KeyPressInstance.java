@@ -18,7 +18,6 @@ import java.util.List;
 
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
 import static net.dillon.qualityofqueso.helper.MethodHelper.*;
-import static net.dillon.qualityofqueso.helper.ModConstants.CURSOR_KEY;
 import static net.dillon.qualityofqueso.helper.ModHelper.allDisallowedKeys;
 import static net.dillon.qualityofqueso.helper.ModHelper.popularKeys;
 import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.*;
@@ -130,7 +129,7 @@ public class KeyPressInstance extends ManagementInstance {
         }
 
         if (client().misc().enhancedCursor && event.key() == key(getDropKey()).getValue()) {
-            CURSOR_KEY = CursorKey.DROP;
+            extractingInstance().setCursor(CursorKey.CROSSHAIR);
         }
 
         if (handleInventoryCloseKey(event, cir)) {

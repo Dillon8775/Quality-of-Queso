@@ -121,7 +121,7 @@ public class MouseScrollInstance extends ManagementInstance {
                 && canScrollMoveAndHasScrollModifierDown()
                 && !hasDropOnlyOneItemModifierDown()
                 && new TransferInstance(instance()).tryMoveSingleFromScroll(instance().getScreensHoveredSlot(), scrollY)) {
-            CURSOR_KEY = CursorKey.SCROLL;
+            extractingInstance().setCursor(CursorKey.MOVE);
             cir.setReturnValue(true);
         } else {
             setMoveAmount(instance().getScreensHoveredSlot(), scrollY);

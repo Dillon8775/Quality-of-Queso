@@ -97,6 +97,8 @@ public abstract class AbstractModScreen extends OptionsSubScreen {
                     Util.getPlatform().openFile(screenshots);
                 },
                 Component.translatable("qualityofqueso.gui.open_screenshots_folder"),
+                16,
+                16,
                 false
         ));
 
@@ -110,6 +112,8 @@ public abstract class AbstractModScreen extends OptionsSubScreen {
                             Util.getPlatform().openFile(worldPath.toFile());
                         },
                         Component.translatable("qualityofqueso.gui.open_world_folder"),
+                        16,
+                        16,
                         false
                 ));
             }
@@ -122,6 +126,8 @@ public abstract class AbstractModScreen extends OptionsSubScreen {
                                 openScreen(new EnderChestPreviewScreen());
                             },
                             Component.translatable("qualityofqueso.gui.view_ender_chest.tooltip"),
+                            16,
+                            16,
                             false
                     ));
                 });
@@ -134,6 +140,8 @@ public abstract class AbstractModScreen extends OptionsSubScreen {
                         this.openConfigDirectory();
                     },
                     Component.translatable("qualityofqueso.gui.open_config_directory"),
+                    16,
+                    16,
                     false
             ));
         }
@@ -143,6 +151,8 @@ public abstract class AbstractModScreen extends OptionsSubScreen {
                 qoqIdentifier(WIKI_TEXTURE),
                 (button) -> openLink(this, WIKI_LINK, false),
                 Component.translatable("qualityofqueso.gui.learn_more"),
+                16,
+                16,
                 false
         ));
 
@@ -151,6 +161,8 @@ public abstract class AbstractModScreen extends OptionsSubScreen {
                 qoqIdentifier(DISCORD_TEXTURE),
                 (button) -> openLink(this, DISCORD_LINK, false),
                 Component.translatable("qualityofqueso.gui.discord"),
+                16,
+                16,
                 false
         ));
 
