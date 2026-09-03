@@ -162,6 +162,7 @@ public class ModClientOptions {
 
         public boolean scrollMoving = true;
         public boolean ctrlMoving = true;
+        public HighlightMatchingItems highlightMatchingItems = HighlightMatchingItems.ON_CTRL;
         public int matchingItemsColor = DEFAULT_MATCHING_ITEMS_COLOR;
         public boolean dragMoving = true;
 

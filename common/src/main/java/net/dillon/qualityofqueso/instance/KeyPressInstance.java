@@ -21,6 +21,7 @@ import static net.dillon.qualityofqueso.helper.MethodHelper.*;
 import static net.dillon.qualityofqueso.helper.ModHelper.allDisallowedKeys;
 import static net.dillon.qualityofqueso.helper.ModHelper.popularKeys;
 import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.*;
+import static net.dillon.qualityofqueso.instance.management.ExtractingInstance.setCursor;
 import static net.dillon.qualityofqueso.keybind.ModKeyMappings.QUICK_DROP;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
@@ -129,7 +130,7 @@ public class KeyPressInstance extends ManagementInstance {
         }
 
         if (client().misc().enhancedCursor && event.key() == key(getDropKey()).getValue()) {
-            extractingInstance().setCursor(CursorKey.CROSSHAIR);
+            setCursor(CursorKey.CROSSHAIR);
         }
 
         if (handleInventoryCloseKey(event, cir)) {

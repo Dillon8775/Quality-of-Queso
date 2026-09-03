@@ -13,6 +13,7 @@ import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
 import static net.dillon.qualityofqueso.helper.ModConstants.*;
 import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.canScrollMoveAndHasScrollModifierDown;
 import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.hasDropOnlyOneItemModifierDown;
+import static net.dillon.qualityofqueso.instance.management.ExtractingInstance.setCursor;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 import static net.dillon.qualityofqueso.option.OptionInstances.updateClient;
 
@@ -121,7 +122,7 @@ public class MouseScrollInstance extends ManagementInstance {
                 && canScrollMoveAndHasScrollModifierDown()
                 && !hasDropOnlyOneItemModifierDown()
                 && new TransferInstance(instance()).tryMoveSingleFromScroll(instance().getScreensHoveredSlot(), scrollY)) {
-            extractingInstance().setCursor(CursorKey.MOVE);
+            setCursor(CursorKey.MOVE);
             cir.setReturnValue(true);
         } else {
             setMoveAmount(instance().getScreensHoveredSlot(), scrollY);

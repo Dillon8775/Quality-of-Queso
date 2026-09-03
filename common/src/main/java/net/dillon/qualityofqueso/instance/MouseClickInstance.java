@@ -14,6 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
 import static net.dillon.qualityofqueso.helper.ModConstants.MOVE_AMOUNT;
 import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.*;
+import static net.dillon.qualityofqueso.instance.management.ExtractingInstance.setCursor;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 /**
@@ -87,9 +88,10 @@ public class MouseClickInstance extends ManagementInstance {
      * Attempts to quick move any highlighted or similar items related to the cursor/hovered stack.
      */
     public void tryQuickMoveHighlightedItems(MouseButtonEvent event, CallbackInfoReturnable<Boolean> cir) {
-        if (!isContainerScreen(instance().getScreen()) || !event.hasControlDown() || event.button() != InputConstants.MOUSE_BUTTON_LEFT) {
+        if (!(isContainerScreen(instance().getScreen()) || isDropperDispenserOrHopperScreen(instance().getScreen())) || !event.hasControlDown() || event.button() != InputConstants.MOUSE_BUTTON_LEFT) {
             return;
         }
+
         // Get common variables
         AbstractContainerMenu menu = instance().getScreenMenu();
         Slot hoveredSlot = instance().getScreensHoveredSlot();
@@ -141,7 +143,7 @@ public class MouseClickInstance extends ManagementInstance {
         }
 
         // Return true for mouse clicked
-        extractingInstance().setCursor(CursorKey.MOVE);
+        setCursor(CursorKey.MOVE);
         cir.setReturnValue(true);
     }
 }

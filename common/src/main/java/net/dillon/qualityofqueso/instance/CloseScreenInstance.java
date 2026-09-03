@@ -13,6 +13,7 @@ import static net.dillon.qualityofqueso.helper.ManagementHelper.isContainerScree
 import static net.dillon.qualityofqueso.helper.ManagementHelper.isInventoryScreen;
 import static net.dillon.qualityofqueso.helper.MethodHelper.getRecipeBookComponent;
 import static net.dillon.qualityofqueso.helper.ModConstants.*;
+import static net.dillon.qualityofqueso.instance.management.ExtractingInstance.setCursor;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 import static net.dillon.qualityofqueso.option.OptionInstances.updateClient;
 
@@ -51,7 +52,7 @@ public class CloseScreenInstance extends ManagementInstance {
      * Disables certain features, like craft all and trade all.
      */
     public void disableFeatures() {
-        extractingInstance().setCursor(CursorKey.NULL);
+        setCursor(CursorKey.NULL);
 
         if (!client().buttonDisplayOptions().safeBulk) {
             return;

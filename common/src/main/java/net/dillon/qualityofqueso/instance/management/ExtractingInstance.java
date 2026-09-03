@@ -48,7 +48,7 @@ public class ExtractingInstance extends ManagementInstance {
     /**
      * Sets the cursor type to a new cursor type.
      */
-    public void setCursor(CursorKey cursorKey) {
+    public static void setCursor(CursorKey cursorKey) {
         CURSOR_KEY = cursorKey;
     }
 
@@ -97,7 +97,7 @@ public class ExtractingInstance extends ManagementInstance {
      * Renders the blue "locked" overlay for locked slots (not the lock icon, the color itself)
      */
     public void extractLockedSlotColor(GuiGraphicsExtractor graphics) {
-        if (!client().lockedSlots().lockedSlots || !isValidScreenForRenderingLockedSlotOverlay(instance().getScreen())) {
+        if (!client().lockedSlots().lockedSlots || !isValidScreenForRenderingSlotOverlays(instance().getScreen())) {
             return;
         }
 
@@ -177,7 +177,7 @@ public class ExtractingInstance extends ManagementInstance {
                 }
             }
             // Renders the lock texture on locked slots (yes, the lock icon itself, not the color)
-            if (isValidScreenForRenderingLockedSlotOverlay(instance().getScreen()) && client().lockedSlots().showLock.inScreens() && client().lockedSlots().lockedSlots && instance().getSearchFields().searchText().isEmpty() && instance().getExcludedSlots().isEmpty()) {
+            if (isValidScreenForRenderingSlotOverlays(instance().getScreen()) && client().lockedSlots().showLock.inScreens() && client().lockedSlots().lockedSlots && instance().getSearchFields().searchText().isEmpty() && instance().getExcludedSlots().isEmpty()) {
                 lockedSlotsInstance().renderLockedSlot(graphics, slot, true);
             }
 
@@ -221,34 +221,32 @@ public class ExtractingInstance extends ManagementInstance {
      * Highlight matching items based on the cursor held item or hovered item
      */
     public void extractHighlightedSlots(GuiGraphicsExtractor graphics) {
-        if (!client().management().ctrlMoving) {
+        if (!isValidScreenForRenderingSlotOverlays(instance().getScreen()) || !(client().management().highlightMatchingItems.always() || (client().management().highlightMatchingItems.onCtrl() && Minecraft.getInstance().hasControlDown()))) {
             return;
         }
 
-        if (client().management().ctrlMoving) {
-            Slot hoveredSlot = instance().getScreensHoveredSlot();
+        Slot hoveredSlot = instance().getScreensHoveredSlot();
 
-            // Get the slot to check (if cursor stack isn't empty, or there is no hovered slot, then check cursor stack)
-            // Otherwise, check hovered slot stack
-            ItemStack cursorStack = getCursorStack();
-            ItemStack stackToCheck = (hoveredSlot == null || !cursorStack.isEmpty())
-                    ? cursorStack
-                    : hoveredSlot.getItem();
+        // Get the slot to check (if cursor stack isn't empty, or there is no hovered slot, then check cursor stack)
+        // Otherwise, check hovered slot stack
+        ItemStack cursorStack = getCursorStack();
+        ItemStack stackToCheck = (hoveredSlot == null || !cursorStack.isEmpty())
+                ? cursorStack
+                : hoveredSlot.getItem();
 
-            // Check all slots in current screen
-            for (int i = 0; i < getTotalSlots(); i++) {
-                Slot slot = instance().getScreenMenu().getSlot(i);
-                ItemStack slotStack = slot.getItem();
+        // Check all slots in current screen
+        for (int i = 0; i < getTotalSlots(); i++) {
+            Slot slot = instance().getScreenMenu().getSlot(i);
+            ItemStack slotStack = slot.getItem();
 
-                // Skip empty slots, always
-                if (stackToCheck.isEmpty()) {
-                    continue;
-                }
+            // Skip empty slots, always
+            if (stackToCheck.isEmpty()) {
+                continue;
+            }
 
-                // If slot stack matches cursor, and it's not the same slot, highlight it
-                if (stackToCheck.is(slotStack.getItem())) {
-                    renderHighlightedSlot(graphics, slot);
-                }
+            // If slot stack matches cursor, and it's not the same slot, highlight it
+            if (stackToCheck.is(slotStack.getItem())) {
+                renderHighlightedSlot(graphics, slot);
             }
         }
     }
