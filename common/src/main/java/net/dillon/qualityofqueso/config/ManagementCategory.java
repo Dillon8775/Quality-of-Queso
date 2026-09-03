@@ -301,7 +301,7 @@ public class ManagementCategory {
                                                 .description(OptionDescription.of(
                                                         Component.translatable("qualityofqueso.options.highlight_matching_items.description")
                                                 ))
-                                                .binding(HighlightMatchingItems.ALWAYS, () -> client().management().highlightMatchingItems, v -> client().management().highlightMatchingItems = v)
+                                                .binding(HighlightMatchingItems.ON_CTRL, () -> client().management().highlightMatchingItems, v -> client().management().highlightMatchingItems = v)
                                                 .controller(o -> EnumControllerBuilder.create(o)
                                                         .enumClass(HighlightMatchingItems.class)
                                                         .formatValue(v -> Component.literal(v.getSerializedName())))

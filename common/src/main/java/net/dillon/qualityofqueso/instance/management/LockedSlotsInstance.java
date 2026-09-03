@@ -15,6 +15,7 @@ import java.util.Set;
 import static net.dillon.dillonlib.task.ClientTasks.blitTexture;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
 import static net.dillon.qualityofqueso.helper.MethodHelper.kumaMousePressed;
+import static net.dillon.qualityofqueso.helper.ModConstants.LOCKED_SLOT_TEXTURE;
 import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
 import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.*;
 import static net.dillon.qualityofqueso.keybind.ModKeyMappings.LOCK_SLOT;
@@ -82,7 +83,7 @@ public class LockedSlotsInstance extends ManagementInstance {
         int xy = 10;
         blitTexture(
                 graphics,
-                qoqIdentifier("textures/gui/sprites/locked_slot/" + (isSlotLocked ? "key" : "unlock") + ".png"),
+                qoqIdentifier("textures/gui/sprites/slot/" + (isSlotLocked ? "slot_key" : "unlock_slot") + ".png"),
                 mouseX - 8,
                 mouseY + 1,
                 xy,
@@ -108,7 +109,7 @@ public class LockedSlotsInstance extends ManagementInstance {
                     int xy = 10;
                     blitTexture(
                             graphics,
-                            qoqIdentifier("textures/gui/sprites/locked_slot/locked.png"),
+                            qoqIdentifier("textures/gui/sprites/" + LOCKED_SLOT_TEXTURE + ".png"),
                             slot.x - 3,
                             slot.y + 9,
                             xy, xy
