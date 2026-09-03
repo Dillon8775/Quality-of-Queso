@@ -10,12 +10,10 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.CommonColors;
 
-import static net.dillon.dillonlib.task.ClientTasks.drawSmallSprite;
-import static net.dillon.dillonlib.task.ClientTasks.openScreen;
+import static net.dillon.dillonlib.task.ClientTasks.*;
 import static net.dillon.qualityofqueso.helper.GuiHelper.getArmorHotbarTexture;
 import static net.dillon.qualityofqueso.helper.ModConstants.DISABLED_TEXTURE;
 import static net.dillon.qualityofqueso.helper.ModConstants.ENABLED_TEXTURE;
@@ -151,7 +149,7 @@ public class HudPositionsScreen extends Screen {
         graphics.text(this.font, Component.translatable("qualityofqueso.gui.hud_positions.warning"), this.width / 2 - 130, 44, CommonColors.WHITE);
         drawSmallSprite(graphics, client().itemCounter().moveItemCounterOver ? qoqIdentifier(ENABLED_TEXTURE) : qoqIdentifier(DISABLED_TEXTURE), this.moveItemCounterOver);
 
-        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, getArmorHotbarTexture(), this.armorStatusXPosition.getX() + 60, this.armorStatusXPosition.getY() - 28, 82, 22);
-        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, qoqIdentifier("hud/item_counter"), this.armorStatusXPosition.getX() + 74, this.itemCounterXPosition.getY() - 32, 58, 30);
+        drawSprite(graphics, getArmorHotbarTexture(), this.armorStatusXPosition.getX() + 60, this.armorStatusXPosition.getY() - 28, 82, 22);
+        drawSprite(graphics, qoqIdentifier("hud/item_counter"), this.armorStatusXPosition.getX() + 74, this.itemCounterXPosition.getY() - 32, 58, 30);
     }
 }

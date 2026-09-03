@@ -5,11 +5,11 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 
 import java.util.function.Supplier;
 
+import static net.dillon.dillonlib.task.ClientTasks.blitTexture;
 import static net.dillon.dillonlib.task.ClientTasks.getScreen;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.isInventoryScreen;
 import static net.dillon.qualityofqueso.helper.MethodHelper.getHoveredSlot;
@@ -46,7 +46,14 @@ public class QuickDropButton extends QuesoButton {
             transferableString = ".png";
         }
         this.renderBaseTexture(graphics);
-        graphics.blit(RenderPipelines.GUI_TEXTURED, qoqIdentifier("textures/gui/sprites/button/" + id + transferableString), buttonReference.getX() - 1, buttonReference.getY() - 1, 0.0F, 0.0F, 12, 12, 12, 12);
+        blitTexture(
+                graphics,
+                qoqIdentifier("textures/gui/sprites/button/" + id + transferableString),
+                buttonReference.getX() - 1,
+                buttonReference.getY() - 1,
+                12,
+                12
+        );
         this.renderHoveredTexture(graphics);
         boolean shortcutKeyPressed = hasAllQuickDropModifiersDown();
         if (shortcutKeyPressed) {

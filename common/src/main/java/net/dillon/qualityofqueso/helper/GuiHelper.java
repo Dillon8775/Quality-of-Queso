@@ -21,7 +21,6 @@ import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
@@ -436,7 +435,14 @@ public class GuiHelper {
             clockFrame = Math.floorMod((int) ((minecraft.level.getGameTime() * 64L) / 20L), 64);
         }
         Identifier clockTexture = Identifier.withDefaultNamespace("textures/item/clock_" + String.format(Locale.ROOT, "%02d", clockFrame) + ".png");
-        graphics.blit(RenderPipelines.GUI_TEXTURED, clockTexture, x, y, 0.0F, 0.0F, size, size, size, size);
+        blitTexture(
+                graphics,
+                clockTexture,
+                x,
+                y,
+                size,
+                size
+        );
     }
 
     /**

@@ -7,13 +7,12 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.CommonColors;
 import net.minecraft.world.level.Level;
 
-import static net.dillon.dillonlib.task.ClientTasks.openScreen;
+import static net.dillon.dillonlib.task.ClientTasks.*;
 import static net.dillon.qualityofqueso.helper.GuiHelper.drawVisualTimeClock;
 import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
@@ -73,8 +72,8 @@ public class VisualTimeScreen extends Screen {
 
         drawVisualTimeClock(graphics, this.minecraft, this.visualTime.getX() - 48, this.visualTime.getY() - 2, 24, true);
 
-        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, qoqIdentifier("visual_time/speed"), this.visualTimeSpeed.getX() - 48, this.visualTimeSpeed.getY() + 1, 24, 18);
-        graphics.blit(RenderPipelines.GUI_TEXTURED, Identifier.withDefaultNamespace("textures/block/daylight_detector" + (client().visualTime().syncLocalTime ? "_inverted" : "") + "_top.png"), this.syncLocalTime.getX() - 48, this.syncLocalTime.getY() - 2, 0.0F, 0.0F, SIZE, SIZE, SIZE, SIZE);
+        drawSprite(graphics, qoqIdentifier("visual_time/speed"), this.visualTimeSpeed.getX() - 48, this.visualTimeSpeed.getY() + 1, 24, 18);
+        blitTexture(graphics, Identifier.withDefaultNamespace("textures/block/daylight_detector" + (client().visualTime().syncLocalTime ? "_inverted" : "") + "_top.png"), this.syncLocalTime.getX() - 48, this.syncLocalTime.getY() - 2, SIZE, SIZE);
 
         boolean overrideClientTime = client().visualTime().overrideClientTime;
         boolean matchWithIRLTime = client().visualTime().syncLocalTime;

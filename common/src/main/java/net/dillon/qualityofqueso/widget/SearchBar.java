@@ -9,7 +9,6 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.input.MouseButtonEvent;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.util.CommonColors;
@@ -17,6 +16,7 @@ import net.minecraft.util.FormattedCharSequence;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.CancellationException;
 
+import static net.dillon.dillonlib.task.ClientTasks.drawSprite;
 import static net.dillon.dillonlib.task.ClientTasks.getScreen;
 import static net.dillon.qualityofqueso.helper.ButtonHelper.getWidgetPath;
 import static net.dillon.qualityofqueso.helper.GuiHelper.drawTooltip;
@@ -126,11 +126,24 @@ public class SearchBar extends EditBox {
     public void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks) {
         if (!client().searching().searchBarColor.black()) {
             if ((this.isFocused() || !client().searching().searchBarColor.transparent()) && client().searching().searchBarPosition.top()) {
-                graphics.blitSprite(RenderPipelines.GUI_TEXTURED, qoqIdentifier("widget/search/" + getWidgetPath(true) + "search_bar_overlay"),
-                        this.getX() - 3, this.getY() - 3, OVERLAY_WIDTH, OVERLAY_HEIGHT);
+                drawSprite(
+                        graphics,
+                        qoqIdentifier("widget/search/" + getWidgetPath(true) + "search_bar_overlay"),
+                        this.getX() - 3,
+                        this.getY() - 3,
+                        OVERLAY_WIDTH,
+                        OVERLAY_HEIGHT
+                );
             }
             if (!this.isFocused() && this.getValue().isEmpty() && client().general().theme.searchBarTransparent()) {
-                graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SEARCH_TEXTURE, this.getX() + (getScreen() instanceof InventoryScreen ? 78 : 80), this.getY(), 12, 12);
+                drawSprite(
+                        graphics,
+                        SEARCH_TEXTURE,
+                        this.getX() + (getScreen() instanceof InventoryScreen ? 78 : 80),
+                        this.getY(),
+                        12,
+                        12
+                );
             }
         }
         super.extractWidgetRenderState(graphics, mouseX, mouseY, deltaTicks);

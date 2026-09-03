@@ -15,7 +15,6 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.inventory.AbstractRecipeBookScreen;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.NonNullList;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.inventory.Slot;
@@ -26,6 +25,7 @@ import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
 
+import static net.dillon.dillonlib.task.ClientTasks.drawSprite;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
 import static net.dillon.qualityofqueso.helper.MethodHelper.*;
 import static net.dillon.qualityofqueso.helper.ModConstants.*;
@@ -138,7 +138,7 @@ public class ExtractingInstance extends ManagementInstance {
         } else if (client().accessibility().darkerOverlay || client().general().theme != Theme.VANILLA) {
             id = "grayed_dark";
         }
-        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, qoqIdentifier("slot/" + id), slot.x, slot.y, 16, 16);
+        drawSprite(graphics, qoqIdentifier("slot/" + id), slot.x, slot.y, 16, 16);
     }
 
     /**

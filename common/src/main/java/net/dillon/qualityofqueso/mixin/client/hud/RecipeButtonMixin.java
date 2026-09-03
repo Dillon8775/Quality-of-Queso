@@ -8,7 +8,6 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.AbstractRecipeBookScreen;
 import net.minecraft.client.gui.screens.recipebook.RecipeButton;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.crafting.display.RecipeDisplayId;
 import org.spongepowered.asm.mixin.Mixin;
@@ -17,6 +16,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import static net.dillon.dillonlib.task.ClientTasks.drawSprite;
 import static net.dillon.dillonlib.task.ClientTasks.getScreen;
 import static net.dillon.qualityofqueso.helper.MethodHelper.getRecipeBookComponent;
 import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
@@ -54,6 +54,6 @@ public abstract class RecipeButtonMixin extends AbstractWidget {
             return;
         }
 
-        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, ModConstants.SELECTED_RECIPE, this.getX(), this.getY(), this.width, this.height);
+        drawSprite(graphics, ModConstants.SELECTED_RECIPE, this.getX(), this.getY(), this.width, this.height);
     }
 }

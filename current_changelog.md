@@ -1,5 +1,5 @@
 # Version 1.7.15
-- Update to 26.3.
+### - Update to 26.3.
 
 ## Ctrl Moving
 - A new management feature, enabled by default, which allows you to quickly move all the same item type.
@@ -22,6 +22,8 @@
 - You can no longer tell the in-game time via the in-game time debug hud when you are in other dimensions.
 
 ## Hud Changes
+- The arrow counter now works with firework rockets when using a crossbow.
+- Holding a charged crossbow now displays a small charged crossbow, with either a firework or arrow next to the arrow counter.
 - A clock now displays on the Hud when visual time is enabled (this is toggleable in the Visual Time screen, and you can configure an offset in the Hud positions screen).
 - Stretched minimum and maximum values for configuring Hud elements, like the item counter and armor status.
 - Added a warning message to the Hud positions screen, which warns the user that positions may alter based on screen resolution.

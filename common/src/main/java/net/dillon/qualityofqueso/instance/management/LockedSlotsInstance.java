@@ -6,13 +6,13 @@ import net.dillon.qualityofqueso.instance.QuesoScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.MouseButtonEvent;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.world.inventory.Slot;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Collections;
 import java.util.Set;
 
+import static net.dillon.dillonlib.task.ClientTasks.blitTexture;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
 import static net.dillon.qualityofqueso.helper.MethodHelper.kumaMousePressed;
 import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
@@ -80,7 +80,14 @@ public class LockedSlotsInstance extends ManagementInstance {
      */
     public void renderUnlockedSlot(GuiGraphicsExtractor graphics, boolean isSlotLocked, int mouseX, int mouseY) {
         int xy = 10;
-        graphics.blit(RenderPipelines.GUI_TEXTURED, qoqIdentifier("textures/gui/sprites/locked_slot/" + (isSlotLocked ? "key" : "unlock") + ".png"), mouseX - 8, mouseY + 1, 0.0F, 0.0F, xy, xy, xy, xy);
+        blitTexture(
+                graphics,
+                qoqIdentifier("textures/gui/sprites/locked_slot/" + (isSlotLocked ? "key" : "unlock") + ".png"),
+                mouseX - 8,
+                mouseY + 1,
+                xy,
+                xy
+        );
     }
 
     /**
@@ -99,7 +106,13 @@ public class LockedSlotsInstance extends ManagementInstance {
             if (lockOnly) {
                 if (slot.hasItem()) {
                     int xy = 10;
-                    graphics.blit(RenderPipelines.GUI_TEXTURED, qoqIdentifier("textures/gui/sprites/locked_slot/locked.png"), slot.x - 3, slot.y + 9, 0.0F, 0.0F, xy, xy, xy, xy);
+                    blitTexture(
+                            graphics,
+                            qoqIdentifier("textures/gui/sprites/locked_slot/locked.png"),
+                            slot.x - 3,
+                            slot.y + 9,
+                            xy, xy
+                    );
                 }
             } else {
                 graphics.fill(slot.x - 1, slot.y - 1, slot.x + 17, slot.y + 17, client().lockedSlots().lockedSlotColor);
