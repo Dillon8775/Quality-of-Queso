@@ -31,7 +31,6 @@ import static net.dillon.qualityofqueso.helper.ButtonHelper.getConfigButtonY;
 import static net.dillon.qualityofqueso.helper.GuiHelper.drawTooltip;
 import static net.dillon.qualityofqueso.helper.ModConstants.*;
 import static net.dillon.qualityofqueso.helper.ModHelper.*;
-import static net.dillon.qualityofqueso.helper.ModHelper.isOnServer;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 import static net.dillon.qualityofqueso.option.OptionInstances.universal;
 

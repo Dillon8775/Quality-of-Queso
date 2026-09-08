@@ -1,5 +1,6 @@
 # Version 1.7.15
-### - Update to 26.3.
+## Update to 26.3.
+### Now requires [Fabric Loader version 0.19.5](https://fabricmc.net/use/installer/) or greater.
 
 ## Ctrl Moving
 - A new management feature, enabled by default, which allows you to quickly move all the same item type.
