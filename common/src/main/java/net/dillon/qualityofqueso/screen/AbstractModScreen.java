@@ -1,5 +1,6 @@
 package net.dillon.qualityofqueso.screen;
 
+import com.mojang.blaze3d.Blaze3D;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.dillon.dillonlib.platform.Platforms;
 import net.dillon.dillonlib.task.ClientTasks;
@@ -17,7 +18,6 @@ import net.minecraft.client.gui.screens.options.controls.KeyBindsScreen;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.Util;
 import net.minecraft.world.level.storage.LevelResource;
 
 import java.io.File;
@@ -67,7 +67,7 @@ public abstract class AbstractModScreen extends OptionsSubScreen {
      * Opens the config directory.
      */
     private void openConfigDirectory() {
-        Util.getPlatform().openFile(Platforms.getCommonPlatform().configDir().resolve("qualityofqueso").toFile());
+        Blaze3D.openPath(Platforms.getCommonPlatform().configDir().resolve("qualityofqueso").toFile().toPath());
     }
 
     @Override
@@ -94,7 +94,7 @@ public abstract class AbstractModScreen extends OptionsSubScreen {
                     if (!screenshots.exists()) {
                         screenshots.mkdirs();
                     }
-                    Util.getPlatform().openFile(screenshots);
+                    Blaze3D.openPath(screenshots.toPath());
                 },
                 Component.translatable("qualityofqueso.gui.open_screenshots_folder"),
                 16,
@@ -109,7 +109,7 @@ public abstract class AbstractModScreen extends OptionsSubScreen {
                         qoqIdentifier(OPEN_WORLD_DIRECTORY_TEXTURE),
                         (button) -> {
                             Path worldPath = this.minecraft.getSingleplayerServer().getWorldPath(LevelResource.ROOT);
-                            Util.getPlatform().openFile(worldPath.toFile());
+                            Blaze3D.openPath(worldPath);
                         },
                         Component.translatable("qualityofqueso.gui.open_world_folder"),
                         16,
