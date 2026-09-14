@@ -151,7 +151,7 @@ public class ModConstants {
     // Default colors
     public static final int DEFAULT_TRANSPARENT_SEARCH_BAR_TEXT_COLOR = -12566464;
     public static final int DEFAULT_LOCKED_SLOT_COLOR = 1721803007;
-    public static final int DEFAULT_MATCHING_ITEMS_COLOR = 959881014;
+    public static final int DEFAULT_MATCHING_ITEMS_COLOR = 1882627894;
     public static final int TAG_COLOR = 0x7FFFFF;
     public static final int ITEM_COLOR = 0x96FFB7;
 }

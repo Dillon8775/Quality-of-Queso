@@ -16,6 +16,8 @@ import net.minecraft.network.chat.Component;
 import java.awt.*;
 import java.util.ArrayList;
 
+import static net.dillon.qualityofqueso.config.ConfigurationScreen.fixedSizeImage;
+import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 import static net.dillon.qualityofqueso.option.OptionInstances.common;
 import static net.dillon.qualityofqueso.util.ModOptionUtil.fullKumaKeyMappingAsString;
@@ -298,9 +300,12 @@ public class ManagementCategory {
                                 .option(
                                         Option.<HighlightMatchingItems>createBuilder()
                                                 .name(Component.translatable("qualityofqueso.options.highlight_matching_items"))
-                                                .description(OptionDescription.of(
-                                                        Component.translatable("qualityofqueso.options.highlight_matching_items.description")
-                                                ))
+                                                .description(
+                                                        OptionDescription.createBuilder()
+                                                                .text(Component.translatable("qualityofqueso.options.highlight_matching_items.description"))
+                                                                .customImage(fixedSizeImage(qoqIdentifier("options/management/highlight_matching_items"), 117, 111))
+                                                                .build()
+                                                )
                                                 .binding(HighlightMatchingItems.ON_CTRL, () -> client().management().highlightMatchingItems, v -> client().management().highlightMatchingItems = v)
                                                 .controller(o -> EnumControllerBuilder.create(o)
                                                         .enumClass(HighlightMatchingItems.class)

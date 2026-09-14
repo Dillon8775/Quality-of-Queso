@@ -235,18 +235,30 @@ public class ExtractingInstance extends ManagementInstance {
                 : hoveredSlot.getItem();
 
         // Check all slots in current screen
+        boolean foundMatchingItem = false;
+
         for (int i = 0; i < getTotalSlots(); i++) {
             Slot slot = instance().getScreenMenu().getSlot(i);
             ItemStack slotStack = slot.getItem();
 
-            // Skip empty slots, always
-            if (stackToCheck.isEmpty()) {
+            if (slotStack.isEmpty()) {
                 continue;
             }
 
-            // If slot stack matches cursor, and it's not the same slot, highlight it
-            if (stackToCheck.is(slotStack.getItem())) {
+            boolean isHoveredSlot = hoveredSlot != null && slot.index == hoveredSlot.index;
+
+            if (stackToCheck.is(slotStack.getItem()) && !isHoveredSlot) {
                 renderHighlightedSlot(graphics, slot);
+                foundMatchingItem = true;
+            }
+        }
+
+        // Highlight hovered slot afterward if another match exists
+        if (foundMatchingItem && hoveredSlot != null) {
+            ItemStack hoveredStack = hoveredSlot.getItem();
+
+            if (!hoveredStack.isEmpty() && stackToCheck.is(hoveredStack.getItem())) {
+                renderHighlightedSlot(graphics, hoveredSlot);
             }
         }
     }
