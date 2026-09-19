@@ -8,14 +8,18 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
 
+import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
+
 /**
  * Client-to-server packet requesting the authoritative QoQ state for a shulker at a position.
  *
  * @param pos the shulker block position.
  */
 @Dill(DillType.COMMON)
-public record RequestShulkerStateC2SPacket(BlockPos pos) implements CustomPacketPayload {
-    private static final Identifier ID = Identifier.fromNamespaceAndPath("qualityofqueso", "request_shulker_state");
+public record RequestShulkerStateC2SPacket(
+        BlockPos pos
+) implements CustomPacketPayload {
+    private static final Identifier ID = qoqIdentifier("request_shulker_state");
     public static final Type<RequestShulkerStateC2SPacket> PACKET_TYPE = new Type<>(ID);
     public static final StreamCodec<RegistryFriendlyByteBuf, RequestShulkerStateC2SPacket> CODEC =
             StreamCodec.composite(
@@ -24,9 +28,6 @@ public record RequestShulkerStateC2SPacket(BlockPos pos) implements CustomPacket
                     RequestShulkerStateC2SPacket::new
             );
 
-    /**
-     * @return the registered payload type for this packet.
-     */
     @Override
     public Type<? extends CustomPacketPayload> type() {
         return PACKET_TYPE;

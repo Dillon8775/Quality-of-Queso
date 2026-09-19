@@ -5,9 +5,9 @@ import com.mojang.blaze3d.platform.InputConstants;
 import net.dillon.dillonlib.platform.Platforms;
 import net.dillon.dillonlib.task.ClientTasks;
 import net.dillon.dillonlib.util.KeybindScrollHelper;
+import net.dillon.dillonlib.util.Links;
 import net.dillon.qualityofqueso.helper.ModConstants;
 import net.dillon.qualityofqueso.keybind.ModKeyMappings;
-import net.dillon.qualityofqueso.platform.QualityOfQuesoPlatforms;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
@@ -159,7 +159,7 @@ public abstract class AbstractModScreen extends OptionsSubScreen {
         this.discordButton = this.addRenderableWidget(ClientTasks.createSpriteIconButton(
                 "Discord Button",
                 qoqIdentifier(DISCORD_TEXTURE),
-                (button) -> openLink(this, DISCORD_LINK, false),
+                (button) -> openLink(this, Links.DILLONS_DISCORD, false),
                 Component.translatable("qualityofqueso.gui.discord"),
                 16,
                 16,
@@ -178,7 +178,6 @@ public abstract class AbstractModScreen extends OptionsSubScreen {
                 graphics,
                 this,
                 VERSION,
-                QualityOfQuesoPlatforms.getPlatform().logoWidth().getWidthModifier(),
                 qoqIdentifier(CHEESE_WHEEL_TEXTURE),
                 HAS_UPDATE
         );

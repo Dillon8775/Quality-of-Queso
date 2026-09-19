@@ -4,15 +4,12 @@ import com.mojang.brigadier.CommandDispatcher;
 import net.blay09.mods.balm.Balm;
 import net.dillon.dillonlib.platform.ModPlatform;
 import net.dillon.dillonlib.platform.Platforms;
-import net.dillon.dillonlib.platform.info.LogoWidth;
-import net.dillon.dillonlib.platform.info.PlatformName;
-import net.dillon.dillonlib.platform.info.PlatformRelease;
+import net.dillon.dillonlib.platform.info.Platform;
+import net.dillon.dillonlib.platform.info.Release;
 import net.dillon.qualityofqueso.command.ItemFrameSearcherCommand;
 import net.dillon.qualityofqueso.helper.ModConstants;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
-import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
 
 public abstract class QualityOfQuesoPlatform extends ModPlatform {
 
@@ -32,27 +29,17 @@ public abstract class QualityOfQuesoPlatform extends ModPlatform {
     }
 
     @Override
-    public @NotNull Logger logger() {
-        return ModConstants.LOGGER;
-    }
-
-    @Override
     public String modVersion() {
         return Platforms.getCommonPlatform().commonModVersion(ModConstants.MOD_ID);
     }
 
     @Override
-    public @NotNull PlatformName platformName() {
-        return Balm.platform().name().equals("fabric") ? PlatformName.FABRIC : PlatformName.NEOFORGE;
+    public Release release() {
+        return Release.STABLE;
     }
 
     @Override
-    public @NotNull PlatformRelease platformRelease() {
-        return PlatformRelease.STABLE;
-    }
-
-    @Override
-    public @NotNull LogoWidth logoWidth() {
-        return LogoWidth.LONG_PATCH;
+    public Platform platform() {
+        return Balm.platform().name().equals("fabric") ? Platform.FABRIC : Platform.NEOFORGE;
     }
 }

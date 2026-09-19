@@ -9,6 +9,8 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
 
+import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
+
 /**
  * Client-to-server packet updating QoQ state for a specific shulker.
  *
@@ -20,8 +22,15 @@ import net.minecraft.resources.Identifier;
  * @param sortingMode    current sorting mode enum name.
  */
 @Dill(DillType.COMMON)
-public record UpdateShulkerStateC2SPacket(BlockPos pos, boolean filtered, boolean tagMode, String filterItemsCsv, String lockedSlotsCsv, String sortingMode) implements CustomPacketPayload {
-    private static final Identifier ID = Identifier.fromNamespaceAndPath("qualityofqueso", "update_shulker_state");
+public record UpdateShulkerStateC2SPacket(
+        BlockPos pos,
+        boolean filtered,
+        boolean tagMode,
+        String filterItemsCsv,
+        String lockedSlotsCsv,
+        String sortingMode
+) implements CustomPacketPayload {
+    private static final Identifier ID = qoqIdentifier("update_shulker_state");
     public static final Type<UpdateShulkerStateC2SPacket> PACKET_TYPE = new Type<>(ID);
     public static final StreamCodec<RegistryFriendlyByteBuf, UpdateShulkerStateC2SPacket> CODEC =
             StreamCodec.composite(
@@ -40,9 +49,6 @@ public record UpdateShulkerStateC2SPacket(BlockPos pos, boolean filtered, boolea
                     UpdateShulkerStateC2SPacket::new
             );
 
-    /**
-     * @return the registered payload type for this packet.
-     */
     @Override
     public Type<? extends CustomPacketPayload> type() {
         return PACKET_TYPE;

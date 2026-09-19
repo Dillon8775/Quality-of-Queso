@@ -8,7 +8,7 @@ import dev.isxander.yacl3.api.controller.BooleanControllerBuilder;
 import dev.isxander.yacl3.api.controller.EnumControllerBuilder;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
 import net.blay09.mods.balm.Balm;
-import net.dillon.dillonlib.platform.info.PlatformRelease;
+import net.dillon.dillonlib.platform.info.Release;
 import net.dillon.qualityofqueso.option.eum.general.Theme;
 import net.dillon.qualityofqueso.option.eum.misc.ViewLastKnownEnderChestButton;
 import net.dillon.qualityofqueso.platform.QualityOfQuesoPlatforms;
@@ -92,7 +92,7 @@ public class AccessibilityCategory {
                                                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.beta_warning.description")))
                                                 .binding(true, () -> client().accessibility().betaWarning, v -> client().accessibility().betaWarning = v)
                                                 .controller(BooleanControllerBuilder::create)
-                                                .available(mixins().titleScreenMixin && QualityOfQuesoPlatforms.getPlatform().platformRelease() != PlatformRelease.STABLE)
+                                                .available(mixins().titleScreenMixin && QualityOfQuesoPlatforms.getPlatform().release() != Release.STABLE)
                                                 .build()
                                 )
                                 .option(

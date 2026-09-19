@@ -4,7 +4,7 @@ import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.core.BalmRegistrars;
 import net.dillon.dillonlib.annotation.Dill;
 import net.dillon.dillonlib.annotation.DillType;
-import net.dillon.dillonlib.platform.info.PlatformRelease;
+import net.dillon.dillonlib.platform.info.Release;
 import net.dillon.qualityofqueso.helper.ModConstants;
 import net.dillon.qualityofqueso.option.ModCommonOptions;
 import net.dillon.qualityofqueso.option.UniversalOptions;
@@ -36,9 +36,9 @@ public class CommonMain {
 
         ModConstants.LOGGER.info("Quality of Queso version {} (for {}) loaded successfully!", QualityOfQuesoPlatforms.getPlatform().modVersion(), Balm.platform().name());
 
-        if (QualityOfQuesoPlatforms.getPlatform().platformRelease() == PlatformRelease.BETA) {
+        if (QualityOfQuesoPlatforms.getPlatform().release() == Release.BETA) {
             ModConstants.LOGGER.warn("Please be aware that this version of Quality of Queso is marked as beta, use at your own risk!");
-        } else if (QualityOfQuesoPlatforms.getPlatform().platformRelease() == PlatformRelease.ALPHA) {
+        } else if (QualityOfQuesoPlatforms.getPlatform().release() == Release.ALPHA) {
             ModConstants.LOGGER.error("Please note that this version of Quality of Queso is in the alpha state, so there will be unknown bugs. Use at your own risk!");
         }
 

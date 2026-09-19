@@ -124,7 +124,7 @@ public class ButtonHelper {
         if (universal().menuButton.left() || universal().menuButton.right()) {
             return height - 29;
         } else {
-            return height / 4 + 72 + (button * 24) - 16 + (QualityOfQuesoPlatforms.getPlatform().platformName().neoforge() ? -6 : 0);
+            return height / 4 + 72 + (button * 24) - 16 + (QualityOfQuesoPlatforms.getPlatform().platform().neoforge() ? -6 : 0);
         }
     }
 

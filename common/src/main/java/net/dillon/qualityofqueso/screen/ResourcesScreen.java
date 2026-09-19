@@ -1,5 +1,6 @@
 package net.dillon.qualityofqueso.screen;
 
+import net.dillon.dillonlib.util.Links;
 import net.dillon.qualityofqueso.helper.ModConstants;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
@@ -41,13 +42,13 @@ public class ResourcesScreen extends AbstractModScreen {
         this.list.addSmall(
                 List.of(
                         Button.builder(Component.translatable("qualityofqueso.gui.ask_questions"),
-                                (button) -> openLink(this, ModConstants.DISCORD_LINK, false)
+                                (button) -> openLink(this, Links.DILLONS_DISCORD, false)
                         ).tooltip(
                                 Tooltip.create(Component.translatable("qualityofqueso.gui.ask_questions.tooltip"))
                         ).build(),
 
                         Button.builder(Component.translatable("qualityofqueso.gui.report_bugs"),
-                                (button) -> openLink(this, "https://github.com/Dillon8775/Quality-of-Queso/issues", false)
+                                (button) -> openLink(this, Links.githubIssues("Dillon8775/Quality-of-Queso"), false)
                         ).tooltip(
                                 Tooltip.create(Component.translatable("qualityofqueso.gui.report_bugs.tooltip"))
                         ).build()
