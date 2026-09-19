@@ -1,6 +1,6 @@
 package net.dillon.qualityofqueso.mixin;
 
-import net.dillon.dillonlib.mixinplugin.PredicateSigned;
+import net.dillon.dillonlib.mixinplugin.Predicated;
 import net.dillon.qualityofqueso.helper.ModHelper;
 import net.minecraft.client.Camera;
 import net.minecraft.client.DeltaTracker;
@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-@PredicateSigned
+@Predicated
 @Mixin(FogRenderer.class)
 public class FogRendererMixin {
 

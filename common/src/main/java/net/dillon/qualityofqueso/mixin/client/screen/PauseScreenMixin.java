@@ -3,7 +3,7 @@ package net.dillon.qualityofqueso.mixin.client.screen;
 import com.llamalad7.mixinextras.expression.Definition;
 import com.llamalad7.mixinextras.expression.Expression;
 import com.llamalad7.mixinextras.sugar.Local;
-import net.dillon.dillonlib.mixinplugin.PredicateSigned;
+import net.dillon.dillonlib.mixinplugin.Predicated;
 import net.dillon.dillonlib.platform.info.UpdatableSpriteButton;
 import net.dillon.dillonlib.task.ClientTasks;
 import net.dillon.qualityofqueso.helper.ButtonHelper;
@@ -35,7 +35,7 @@ import static net.dillon.qualityofqueso.helper.ModHelper.isOnServer;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 import static net.dillon.qualityofqueso.option.OptionInstances.universal;
 
-@PredicateSigned
+@Predicated
 @Mixin(value = PauseScreen.class, priority = 1010)
 public class PauseScreenMixin extends Screen {
     @Shadow
@@ -112,15 +112,13 @@ public class PauseScreenMixin extends Screen {
         }
 
         if (client().accessibility().eChestButton.pauseScreen()) {
-            SpriteIconButton viewLastKnownEnderChestButton = ClientTasks.createSpriteIconButton(
+            SpriteIconButton viewLastKnownEnderChestButton = UpdatableSpriteButton.ofDefault(
                     "View Last Known Ender Chest Button",
                     qoqIdentifier(ENDER_CHEST),
                     (b) -> {
                         openScreen(new EnderChestPreviewScreen());
                     },
                     Component.translatable("qualityofqueso.gui.view_ender_chest.tooltip"),
-                    16,
-                    16,
                     false
             );
             if (everywhere) {

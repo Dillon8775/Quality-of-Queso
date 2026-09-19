@@ -22,11 +22,9 @@ public abstract class ClientQualityOfQuesoPlatform extends ClientModPlatform {
     @Override
     public List<PlatformMenuButton> menuButtons() {
         return List.of(
-                new PlatformMenuButton(
+                PlatformMenuButton.titleOnlyEmpty(
                         universal().menuButton.enabled(),
-                        false,
-                        ButtonHelper.createMainMenuButton(getScreen()),
-                        spriteIconButton -> {})
+                        ButtonHelper.createMainMenuButton(getScreen()))
         );
     }
 

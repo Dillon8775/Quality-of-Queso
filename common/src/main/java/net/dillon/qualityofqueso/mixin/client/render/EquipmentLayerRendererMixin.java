@@ -1,7 +1,7 @@
 package net.dillon.qualityofqueso.mixin.client.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.dillon.dillonlib.mixinplugin.PredicateSigned;
+import net.dillon.dillonlib.mixinplugin.Predicated;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.layers.EquipmentLayerRenderer;
@@ -25,7 +25,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
-@PredicateSigned
+@Predicated
 @Mixin(EquipmentLayerRenderer.class)
 public class EquipmentLayerRendererMixin {
     @Unique

@@ -1,7 +1,5 @@
 package net.dillon.qualityofqueso.screen;
 
-import net.dillon.dillonlib.core.DillonLibModReferences;
-import net.dillon.dillonlib.platform.info.ModConfigLib;
 import net.dillon.dillonlib.task.ClientTasks;
 import net.dillon.qualityofqueso.config.ConfigurationScreen;
 import net.minecraft.ChatFormatting;
@@ -28,13 +26,9 @@ public class MainMenuScreen extends AbstractModScreen {
     protected void init() {
         super.init();
 
-        this.configure = Button.builder(Component.translatable("qualityofqueso.menu.configure"), button -> ClientTasks.tryOpenConfigScreen(
+        this.configure = Button.builder(Component.translatable("qualityofqueso.menu.configure"), button -> ClientTasks.tryOpenYaclScreen(
                 () -> ConfigurationScreen.configScreen().generateScreen(this),
-                Component.translatable("qualityofqueso.title"),
-                new ModConfigLib(
-                        Component.literal("YetAnotherConfigLib"),
-                        DillonLibModReferences.YACL
-                )
+                Component.translatable("qualityofqueso.title")
         )).build();
 
         this.keybinds = Button.builder(Component.translatable("qualityofqueso.menu.keybinds"), button -> {

@@ -7,7 +7,7 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.dillon.dillonlib.annotation.Dill;
 import net.dillon.dillonlib.annotation.DillType;
-import net.dillon.dillonlib.mixinplugin.PredicateSigned;
+import net.dillon.dillonlib.mixinplugin.Predicated;
 import net.dillon.qualityofqueso.main.CommonMain;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.item.ItemArgument;
@@ -26,7 +26,7 @@ import java.util.concurrent.CompletableFuture;
 
 import static net.dillon.qualityofqueso.option.OptionInstances.common;
 
-@PredicateSigned
+@Predicated
 @Dill(DillType.COMMON)
 @Mixin(ItemArgument.class)
 public class ItemArgumentMixin {

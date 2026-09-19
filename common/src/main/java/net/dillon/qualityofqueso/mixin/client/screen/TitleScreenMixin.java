@@ -1,6 +1,6 @@
 package net.dillon.qualityofqueso.mixin.client.screen;
 
-import net.dillon.dillonlib.mixinplugin.PredicateSigned;
+import net.dillon.dillonlib.mixinplugin.Predicated;
 import net.dillon.dillonlib.platform.info.Release;
 import net.dillon.qualityofqueso.helper.ModConstants;
 import net.dillon.qualityofqueso.platform.QualityOfQuesoPlatforms;
@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
-@PredicateSigned
+@Predicated
 @Mixin(TitleScreen.class)
 public abstract class TitleScreenMixin extends Screen {
 

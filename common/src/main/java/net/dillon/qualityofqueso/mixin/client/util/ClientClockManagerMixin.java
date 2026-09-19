@@ -1,6 +1,6 @@
 package net.dillon.qualityofqueso.mixin.client.util;
 
-import net.dillon.dillonlib.mixinplugin.PredicateSigned;
+import net.dillon.dillonlib.mixinplugin.Predicated;
 import net.dillon.qualityofqueso.util.VisualTimeTracker;
 import net.minecraft.client.ClientClockManager;
 import net.minecraft.client.Minecraft;
@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
-@PredicateSigned
+@Predicated
 @Mixin(ClientClockManager.ClientClockInstance.class)
 public class ClientClockManagerMixin {
 

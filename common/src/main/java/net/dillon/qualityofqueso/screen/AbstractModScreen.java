@@ -3,6 +3,7 @@ package net.dillon.qualityofqueso.screen;
 import com.mojang.blaze3d.Blaze3D;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.dillon.dillonlib.platform.Platforms;
+import net.dillon.dillonlib.platform.info.UpdatableSpriteButton;
 import net.dillon.dillonlib.task.ClientTasks;
 import net.dillon.dillonlib.util.KeybindScrollHelper;
 import net.dillon.dillonlib.util.Links;
@@ -86,85 +87,84 @@ public abstract class AbstractModScreen extends OptionsSubScreen {
             this.onClose();
         }).width(175).build());
 
-        this.screenshotsButton = this.addRenderableWidget(ClientTasks.createSpriteIconButton(
-                "Open Screenshots Button",
-                qoqIdentifier(OPEN_SCREENSHOTS_DIRECTORY_TEXTURE),
-                (button) -> {
-                    File screenshots = new File(Minecraft.getInstance().gameDirectory, "screenshots");
-                    if (!screenshots.exists()) {
-                        screenshots.mkdirs();
-                    }
-                    Blaze3D.openPath(screenshots.toPath());
-                },
-                Component.translatable("qualityofqueso.gui.open_screenshots_folder"),
-                16,
-                16,
-                false
-        ));
+        this.screenshotsButton = this.addRenderableWidget(
+                UpdatableSpriteButton.ofDefault(
+                        "Open Screenshots Button",
+                        qoqIdentifier(OPEN_SCREENSHOTS_DIRECTORY_TEXTURE),
+                        (button) -> {
+                            File screenshots = new File(Minecraft.getInstance().gameDirectory, "screenshots");
+                            if (!screenshots.exists()) {
+                                screenshots.mkdirs();
+                            }
+                            Blaze3D.openPath(screenshots.toPath());
+                        },
+                        Component.translatable("qualityofqueso.gui.open_screenshots_folder"),
+                        false
+                ));
 
         if (this.minecraft.level != null) {
             if (this.minecraft.getSingleplayerServer() != null) {
-                this.worldDirectoryButton = this.addRenderableWidget(ClientTasks.createSpriteIconButton(
-                        "Open World Directory Button",
-                        qoqIdentifier(OPEN_WORLD_DIRECTORY_TEXTURE),
-                        (button) -> {
-                            Path worldPath = this.minecraft.getSingleplayerServer().getWorldPath(LevelResource.ROOT);
-                            Blaze3D.openPath(worldPath);
-                        },
-                        Component.translatable("qualityofqueso.gui.open_world_folder"),
-                        16,
-                        16,
-                        false
-                ));
+                this.worldDirectoryButton = this.addRenderableWidget(
+                        UpdatableSpriteButton.ofDefault(
+                                "Open World Directory Button",
+                                qoqIdentifier(OPEN_WORLD_DIRECTORY_TEXTURE),
+                                (button) -> {
+                                    Path worldPath = this.minecraft.getSingleplayerServer().getWorldPath(LevelResource.ROOT);
+                                    Blaze3D.openPath(worldPath);
+                                },
+                                Component.translatable("qualityofqueso.gui.open_world_folder"),
+                                false
+                        )
+                );
             }
             if (client().accessibility().eChestButton.qoqMenu()) {
                 executeIfClientPlayer(localPlayer -> {
-                    this.viewLastKnownEnderChestButton = this.addRenderableWidget(ClientTasks.createSpriteIconButton(
-                            "View Last Known Ender Chest Button",
-                            qoqIdentifier(ENDER_CHEST),
-                            (button) -> {
-                                openScreen(new EnderChestPreviewScreen());
-                            },
-                            Component.translatable("qualityofqueso.gui.view_ender_chest.tooltip"),
-                            16,
-                            16,
-                            false
-                    ));
+                    this.viewLastKnownEnderChestButton = this.addRenderableWidget(
+                            UpdatableSpriteButton.ofDefault(
+                                    "View Last Known Ender Chest Button",
+                                    qoqIdentifier(ENDER_CHEST),
+                                    (button) -> {
+                                        openScreen(new EnderChestPreviewScreen());
+                                    },
+                                    Component.translatable("qualityofqueso.gui.view_ender_chest.tooltip"),
+                                    false
+                            )
+                    );
                 });
             }
         } else {
-            this.worldDirectoryButton = this.addRenderableWidget(ClientTasks.createSpriteIconButton(
-                    "Open Config Directory Button",
-                    qoqIdentifier(OPEN_CONFIG_DIRECTORY_TEXTURE),
-                    (button) -> {
-                        this.openConfigDirectory();
-                    },
-                    Component.translatable("qualityofqueso.gui.open_config_directory"),
-                    16,
-                    16,
-                    false
-            ));
+            this.worldDirectoryButton = this.addRenderableWidget(
+                    UpdatableSpriteButton.ofDefault(
+                            "Open Config Directory Button",
+                            qoqIdentifier(OPEN_CONFIG_DIRECTORY_TEXTURE),
+                            (button) -> {
+                                this.openConfigDirectory();
+                            },
+                            Component.translatable("qualityofqueso.gui.open_config_directory"),
+                            false
+                    )
+            );
         }
 
-        this.wikiButton = this.addRenderableWidget(ClientTasks.createSpriteIconButton(
-                "Wiki Button",
-                qoqIdentifier(WIKI_TEXTURE),
-                (button) -> openLink(this, WIKI_LINK, false),
-                Component.translatable("qualityofqueso.gui.learn_more"),
-                16,
-                16,
-                false
-        ));
+        this.wikiButton = this.addRenderableWidget(
+                UpdatableSpriteButton.ofDefault(
+                        "Wiki Button",
+                        qoqIdentifier(WIKI_TEXTURE),
+                        (button) -> openLink(this, WIKI_LINK, false),
+                        Component.translatable("qualityofqueso.gui.learn_more"),
+                        false
+                )
+        );
 
-        this.discordButton = this.addRenderableWidget(ClientTasks.createSpriteIconButton(
-                "Discord Button",
-                qoqIdentifier(DISCORD_TEXTURE),
-                (button) -> openLink(this, Links.DILLONS_DISCORD, false),
-                Component.translatable("qualityofqueso.gui.discord"),
-                16,
-                16,
-                false
-        ));
+        this.discordButton = this.addRenderableWidget(
+                UpdatableSpriteButton.ofDefault(
+                        "Discord Button",
+                        qoqIdentifier(DISCORD_TEXTURE),
+                        (button) -> openLink(this, Links.DILLONS_DISCORD, false),
+                        Component.translatable("qualityofqueso.gui.discord"),
+                        false
+                )
+        );
 
         this.youtubeButton = this.addRenderableWidget(createYouTubeButton(this, this.youtubeLink()));
     }
