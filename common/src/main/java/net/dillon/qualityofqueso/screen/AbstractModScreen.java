@@ -4,6 +4,7 @@ import com.mojang.blaze3d.Blaze3D;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.dillon.dillonlib.platform.Platforms;
 import net.dillon.dillonlib.platform.info.UpdatableSpriteButton;
+import net.dillon.dillonlib.screen.DillonLibScreen;
 import net.dillon.dillonlib.task.ClientTasks;
 import net.dillon.dillonlib.util.KeybindScrollHelper;
 import net.dillon.dillonlib.util.Links;
@@ -14,7 +15,6 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.SpriteIconButton;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.options.OptionsSubScreen;
 import net.minecraft.client.gui.screens.options.controls.KeyBindsScreen;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.network.chat.CommonComponents;
@@ -32,43 +32,40 @@ import static net.dillon.qualityofqueso.helper.ModHelper.*;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 /**
- * A basic screen for Quality of Queso.
+ * An abstract screen for Quality of Queso.
  */
-public abstract class AbstractModScreen extends OptionsSubScreen {
+public class AbstractModScreen extends DillonLibScreen {
     private Button doneButton;
     private SpriteIconButton viewLastKnownEnderChestButton, worldDirectoryButton, screenshotsButton, discordButton, wikiButton;
     protected SpriteIconButton youtubeButton;
 
     public AbstractModScreen(Screen parent, Component title) {
-        super(parent, Minecraft.getInstance().options, title);
+        super(parent, title);
     }
 
-    /**
-     * Opens the keybinds screen.
-     */
+    @Override
+    protected void renderModInfo(GuiGraphicsExtractor graphics) {
+        ClientTasks.drawModInfo(
+                graphics,
+                this,
+                VERSION,
+                qoqIdentifier(CHEESE_WHEEL_TEXTURE),
+                HAS_UPDATE
+        );
+    }
+
+    @Override
+    public void openConfigDirectory() {
+        Blaze3D.openPath(
+                Platforms.getCommonPlatform().configDir().resolve("qualityofqueso")
+                        .toFile().toPath()
+        );
+    }
+
+    @Override
     protected void openKeybinds() {
         KeybindScrollHelper.request(ModKeyMappings.QOQ_KEY_CATEGORY);
         openScreen(new KeyBindsScreen(this, this.options));
-    }
-
-    /**
-     * Determines if buttons can be active, and renders custom tooltips on them.
-     */
-    protected void activateButtons() {
-    }
-
-    /**
-     * @return the showcase video link to use.
-     */
-    private String youtubeLink() {
-        return SHOWCASE_VIDEO_LINK;
-    }
-
-    /**
-     * Opens the config directory.
-     */
-    private void openConfigDirectory() {
-        Blaze3D.openPath(Platforms.getCommonPlatform().configDir().resolve("qualityofqueso").toFile().toPath());
     }
 
     @Override
@@ -79,6 +76,15 @@ public abstract class AbstractModScreen extends OptionsSubScreen {
             sendClientPreferencesToServer();
         }
         super.onClose();
+    }
+
+    @Override
+    public boolean keyPressed(final KeyEvent event) {
+        if (event.key() == InputConstants.KEY_F4) {
+            this.openConfigDirectory();
+            return true;
+        }
+        return super.keyPressed(event);
     }
 
     @Override
@@ -166,7 +172,7 @@ public abstract class AbstractModScreen extends OptionsSubScreen {
                 )
         );
 
-        this.youtubeButton = this.addRenderableWidget(createYouTubeButton(this, this.youtubeLink()));
+        this.youtubeButton = this.addRenderableWidget(createYouTubeButton(this, SHOWCASE_VIDEO_LINK));
     }
 
     /**
@@ -174,14 +180,6 @@ public abstract class AbstractModScreen extends OptionsSubScreen {
      */
     @Override
     public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks) {
-        ClientTasks.drawModInfo(
-                graphics,
-                this,
-                VERSION,
-                qoqIdentifier(CHEESE_WHEEL_TEXTURE),
-                HAS_UPDATE
-        );
-
         int leftIndex = 0;
         if (buttonActive(this.screenshotsButton)) {
             this.screenshotsButton.setPosition(getLeftButtonPosition(this.width, leftIndex), this.doneButton.getY());
@@ -215,21 +213,5 @@ public abstract class AbstractModScreen extends OptionsSubScreen {
 
         this.activateButtons();
         super.extractRenderState(graphics, mouseX, mouseY, deltaTicks);
-    }
-
-    @Override
-    public boolean keyPressed(final KeyEvent event) {
-        if (event.key() == InputConstants.KEY_F4) {
-            this.openConfigDirectory();
-            return true;
-        }
-        return super.keyPressed(event);
-    }
-
-    /**
-     * Required method.
-     */
-    @Override
-    protected void addOptions() {
     }
 }

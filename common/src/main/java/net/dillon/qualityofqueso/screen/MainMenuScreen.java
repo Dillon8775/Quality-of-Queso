@@ -9,8 +9,6 @@ import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
-import java.util.List;
-
 import static net.dillon.dillonlib.task.ClientTasks.*;
 import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
 import static net.dillon.qualityofqueso.option.OptionInstances.*;
@@ -23,9 +21,7 @@ public class MainMenuScreen extends AbstractModScreen {
     }
 
     @Override
-    protected void init() {
-        super.init();
-
+    protected void widgets() {
         this.configure = Button.builder(Component.translatable("qualityofqueso.menu.configure"), button -> ClientTasks.tryOpenYaclScreen(
                 () -> ConfigurationScreen.configScreen().generateScreen(this),
                 Component.translatable("qualityofqueso.title")
@@ -67,23 +63,19 @@ public class MainMenuScreen extends AbstractModScreen {
                 Tooltip.create(Component.translatable("qualityofqueso.menu.resources.tooltip"))
         ).build();
 
-        this.list.addHeader(Component.translatable("qualityofqueso.menu.settings"));
-        this.list.addBig(this.configure);
-        this.list.addSmall(
-                List.of(
-                        this.keybinds,
-                        this.hudPositions
-                )
+        this.createHeaderWithBig(
+                Component.translatable("qualityofqueso.menu.settings"),
+                this.configure,
+                this.keybinds,
+                this.hudPositions
         );
 
-        this.list.addHeader(Component.translatable("qualityofqueso.menu.utilities"));
-        this.list.addSmall(
-                List.of(
-                        this.visualTime,
-                        this.openItemFrameSearchGUIOptions,
-                        this.debugHuds,
-                        this.resources
-                )
+        this.createHeader(
+                Component.translatable("qualityofqueso.menu.utilities"),
+                this.visualTime,
+                this.openItemFrameSearchGUIOptions,
+                this.debugHuds,
+                this.resources
         );
     }
 
