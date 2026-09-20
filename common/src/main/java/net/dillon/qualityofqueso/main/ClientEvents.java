@@ -48,7 +48,7 @@ public class ClientEvents {
             }
             if (ModConstants.HAS_UPDATE) {
                 CommonTasks.sendUpdateMessage(localPlayer,
-                        Component.translatable("qualityofqueso.title").withStyle(ChatFormatting.GOLD),
+                        Component.translatable("qualityofqueso").withStyle(ChatFormatting.GOLD),
                         "https://modrinth.com/mod/quality-of-queso/versions",
                         TextColor.GOLD.getValue());
             }

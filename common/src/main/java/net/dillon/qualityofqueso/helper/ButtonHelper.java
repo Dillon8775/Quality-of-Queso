@@ -54,9 +54,9 @@ public class ButtonHelper {
                 onPress,
                 Map.of(
                         ModConstants.HAS_UPDATE,
-                        Component.translatable("qualityofqueso.gui.update_available")
+                        Component.translatable("qualityofqueso.update_available")
                 ),
-                Component.translatable("qualityofqueso.menu.title"),
+                Component.translatable("qualityofqueso"),
                 tooltip
         );
     }
@@ -87,7 +87,7 @@ public class ButtonHelper {
      */
     public static SpriteIconButton createYouTubeButton(Screen parent, String link) {
         return UpdatableSpriteButton.ofDefault("YouTube Button", qoqIdentifier(YOUTUBE_TEXTURE), (button) -> openLink(parent, link, false),
-                Component.translatable("qualityofqueso.gui.showcase.main.tooltip"), false);
+                Component.translatable("qualityofqueso.menu.showcase_video.tooltip"), false);
     }
 
     /**

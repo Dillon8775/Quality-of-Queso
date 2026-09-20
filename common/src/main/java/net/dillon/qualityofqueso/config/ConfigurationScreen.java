@@ -25,7 +25,7 @@ public class ConfigurationScreen {
 
     public static YetAnotherConfigLib configScreen() {
         return YetAnotherConfigLib.createBuilder()
-                .title(Component.translatable("qualityofqueso.title"))
+                .title(Component.translatable("qualityofqueso"))
                 .category(
                         GeneralCategory.create()
                 )

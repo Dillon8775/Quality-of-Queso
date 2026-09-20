@@ -104,7 +104,7 @@ public class AbstractModScreen extends DillonLibScreen {
                             }
                             Blaze3D.openPath(screenshots.toPath());
                         },
-                        Component.translatable("qualityofqueso.gui.open_screenshots_folder"),
+                        Component.translatable("qualityofqueso.open_screenshots_folder"),
                         false
                 ));
 
@@ -118,7 +118,7 @@ public class AbstractModScreen extends DillonLibScreen {
                                     Path worldPath = this.minecraft.getSingleplayerServer().getWorldPath(LevelResource.ROOT);
                                     Blaze3D.openPath(worldPath);
                                 },
-                                Component.translatable("qualityofqueso.gui.open_world_folder"),
+                                Component.translatable("qualityofqueso.open_world_folder"),
                                 false
                         )
                 );
@@ -146,7 +146,7 @@ public class AbstractModScreen extends DillonLibScreen {
                             (button) -> {
                                 this.openConfigDirectory();
                             },
-                            Component.translatable("qualityofqueso.gui.open_config_directory"),
+                            Component.translatable("qualityofqueso.open_config_directory"),
                             false
                     )
             );
@@ -157,7 +157,7 @@ public class AbstractModScreen extends DillonLibScreen {
                         "Wiki Button",
                         qoqIdentifier(WIKI_TEXTURE),
                         (button) -> openLink(this, WIKI_LINK, false),
-                        Component.translatable("qualityofqueso.gui.learn_more"),
+                        Component.translatable("qualityofqueso.wiki"),
                         false
                 )
         );
@@ -167,7 +167,7 @@ public class AbstractModScreen extends DillonLibScreen {
                         "Discord Button",
                         qoqIdentifier(DISCORD_TEXTURE),
                         (button) -> openLink(this, Links.DILLONS_DISCORD, false),
-                        Component.translatable("qualityofqueso.gui.discord"),
+                        Component.translatable("qualityofqueso.discord"),
                         false
                 )
         );

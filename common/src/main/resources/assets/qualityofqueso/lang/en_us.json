@@ -1,27 +1,38 @@
 {
-  "qualityofqueso.title": "Quality of Queso",
-  "qualityofqueso.gui.update_available": "A newer version of Quality of Queso is available",
-  "qualityofqueso.gui.learn_more": "Wiki",
-  "qualityofqueso.gui.discord": "Discord",
+  "qualityofqueso": "Quality of Queso",
+  "qualityofqueso.update_available": "A newer version of Quality of Queso is available",
+  "qualityofqueso.wiki": "Wiki",
+  "qualityofqueso.discord": "Discord",
+  "qualityofqueso.open_screenshots_folder": "Open Screenshots Folder",
+  "qualityofqueso.open_world_folder": "Open World Folder\nF4 to open Config Directory",
+  "qualityofqueso.open_config_directory": "Open Config Directory",
 
-  "qualityofqueso.menu.title": "Quality of Queso Main Menu",
-  "qualityofqueso.menu.settings": "§l§nSettings",
-  "qualityofqueso.menu.utilities": "§l§nUtilities",
-  "qualityofqueso.menu.mod_resources": "§l§nMod Resources",
-  "qualityofqueso.menu.questions_and_bugs": "§l§nQuestions and Bugs",
+  "qualityofqueso.title": "Quality of Queso Main Menu",
+  "qualityofqueso.title.resources": "§6Quality of Queso Resources",
+
+  "qualityofqueso.header.settings": "§l§nSettings",
+  "qualityofqueso.header.utilities": "§l§nUtilities",
+  "qualityofqueso.header.mod_resources": "§l§nMod Resources",
+  "qualityofqueso.header.questions_and_bugs": "§l§nQuestions and Bugs",
 
   "qualityofqueso.menu.configure": "§6§nConfigure Quality of Queso...",
   "qualityofqueso.menu.keybinds": "§6Keybinds...",
-
   "qualityofqueso.menu.open_item_frame_search_gui": "Open Item Frame Search UI...",
   "qualityofqueso.menu.visual_time": "§2Visual Time...",
   "qualityofqueso.menu.visual_time.description": "Override the client-time as a visual effect...",
-
   "qualityofqueso.menu.debug_huds": "§cDebug HUDs...",
   "qualityofqueso.menu.debug_huds.tooltip": "Display local time, world time, and more...",
-
   "qualityofqueso.menu.resources": "Resources...",
   "qualityofqueso.menu.resources.tooltip": "Ask questions, report a bug, and more...",
+
+  "qualityofqueso.menu.showcase_video": "Showcase Video...",
+  "qualityofqueso.menu.showcase_video.tooltip": "Watch a video that goes over the mod's biggest features!",
+  "qualityofqueso.menu.resource_pack_template": "Resource Pack Template...",
+  "qualityofqueso.menu.resource_pack_template.tooltip": "Download the official Quality of Queso textures, and create your own resource pack!",
+  "qualityofqueso.menu.ask_questions": "Ask questions...",
+  "qualityofqueso.menu.ask_questions.tooltip": "Join Dillon's Discord and ask more questions...",
+  "qualityofqueso.menu.report_bugs": "Report a bug...",
+  "qualityofqueso.menu.report_bugs.tooltip": "Report a bug on the GitHub repository...",
 
   "qualityofqueso.gui.search_item_frames": "Search for §oitem §r§fto make all item frames with §oitem §r§fglow.",
   "qualityofqueso.gui.search_item_frames.warning.line1": "§cPlease note: §r§fthis feature only works if the server has this mod installed",
@@ -61,28 +72,6 @@
   "qualityofqueso.gui.search.placeholder": "Search items...",
   "qualityofqueso.gui.search.placeholder.small": "Search...",
 
-  "qualityofqueso.gui.title.resources": "§6Quality of Queso Resources",
-  "qualityofqueso.gui.showcase_video": "Showcase Video...",
-  "qualityofqueso.gui.showcase_video.tooltip": "Watch a video that goes over the mod's biggest features!",
-  "qualityofqueso.gui.showcase.main.tooltip": "Learn more about the mod by watching this video!",
-  "qualityofqueso.gui.showcase.searching.tooltip": "Learn more about searching features from this video...",
-  "qualityofqueso.gui.showcase.management.tooltip": "Learn more about management features from this video...",
-  "qualityofqueso.gui.showcase.locked_slots.tooltip": "Learn more about locked slots from this video...",
-  "qualityofqueso.gui.resource_pack_template": "Resource Pack Template...",
-  "qualityofqueso.gui.resource_pack_template.tooltip": "Download the official Quality of Queso textures, and create your own resource pack!",
-  "qualityofqueso.gui.ask_questions": "Ask questions...",
-  "qualityofqueso.gui.ask_questions.tooltip": "Join Dillon's Discord and ask more questions...",
-  "qualityofqueso.gui.report_bugs": "Report a bug...",
-  "qualityofqueso.gui.report_bugs.tooltip": "Report a bug on the GitHub repository...",
-
-  "qualityofqueso.gui.open_screenshots_folder": "Open Screenshots Folder",
-  "qualityofqueso.gui.open_world_folder": "Open World Folder\nF4 to open Config Directory",
-  "qualityofqueso.gui.open_config_directory": "Open Config Directory",
-
-  "qualityofqueso.gui.on": "ON",
-  "qualityofqueso.gui.off": "OFF",
-  "qualityofqueso.gui.yes": "YES",
-  "qualityofqueso.gui.no": "NO",
   "qualityofqueso.gui.save_changes": "Save Changes",
   "qualityofqueso.gui.reset": "Reset",
 
@@ -573,8 +562,6 @@
 
   "qualityofqueso.toast.title.beta_or_alpha": "Mod Warning",
   "qualityofqueso.toast.beta_or_alpha": "Please be aware that the current Quality of Queso version you are using is in a beta state, so be aware of bugs!",
-  "qualityofqueso.toast.title.yacl": "YetAnotherConfigLib Required",
-  "qualityofqueso.toast.yacl": "Please download YetAnotherConfigLib (YACL) to configure Quality of Queso.",
 
   "qualityofqueso.fortnite_battle_pass": "Fortnite battle pass..."
 }

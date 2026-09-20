@@ -17,14 +17,14 @@ public class MainMenuScreen extends AbstractModScreen {
     private AbstractWidget configure, openItemFrameSearchGUIOptions, keybinds, visualTime, hudPositions, debugHuds, resources;
 
     public MainMenuScreen(Screen parent) {
-        super(parent, Component.translatable("qualityofqueso.menu.title").withStyle(ChatFormatting.GOLD));
+        super(parent, Component.translatable("qualityofqueso.title").withStyle(ChatFormatting.GOLD));
     }
 
     @Override
     protected void widgets() {
         this.configure = Button.builder(Component.translatable("qualityofqueso.menu.configure"), button -> ClientTasks.tryOpenYaclScreen(
                 () -> ConfigurationScreen.configScreen().generateScreen(this),
-                Component.translatable("qualityofqueso.title")
+                Component.translatable("qualityofqueso")
         )).build();
 
         this.keybinds = Button.builder(Component.translatable("qualityofqueso.menu.keybinds"), button -> {
@@ -64,14 +64,14 @@ public class MainMenuScreen extends AbstractModScreen {
         ).build();
 
         this.createHeaderWithBig(
-                Component.translatable("qualityofqueso.menu.settings"),
+                Component.translatable("qualityofqueso.header.settings"),
                 this.configure,
                 this.keybinds,
                 this.hudPositions
         );
 
         this.createHeader(
-                Component.translatable("qualityofqueso.menu.utilities"),
+                Component.translatable("qualityofqueso.header.utilities"),
                 this.visualTime,
                 this.openItemFrameSearchGUIOptions,
                 this.debugHuds,

@@ -11,7 +11,7 @@ import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
  * All debug hud entries.
  */
 public class ModDebugScreenEntries {
-    public static final DebugEntryCategory QOQ = new DebugEntryCategory(Component.translatable("qualityofqueso.title"), 3.0F);
+    public static final DebugEntryCategory QOQ = new DebugEntryCategory(Component.translatable("qualityofqueso"), 3.0F);
     public static final Identifier REAL_TIME = qoqIdentifier("time");
     public static final Identifier WORLD_TIME = qoqIdentifier("world_time");
     public static final Identifier PLAYER_POS = qoqIdentifier("player_pos");
