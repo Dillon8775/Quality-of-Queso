@@ -3,6 +3,6 @@ dependencies {
         changing = balm_version.contains('SNAPSHOT')
     }
 
-    implementation "maven.modrinth:dillon-lib:${project.mc_version}-${project.dillonlib_version}-neoforge"
+    implementation "net.dillon.dillonlib:dillonlib-neoforge-mc26.3:unspecified"
     implementation "dev.isxander:yet-another-config-lib:${project.yacl_version}-neoforge"
 }

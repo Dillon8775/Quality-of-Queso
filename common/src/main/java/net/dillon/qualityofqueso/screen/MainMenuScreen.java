@@ -14,78 +14,85 @@ import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
 import static net.dillon.qualityofqueso.option.OptionInstances.*;
 
 public class MainMenuScreen extends AbstractModScreen {
-    private AbstractWidget configure, openItemFrameSearchGUIOptions, keybinds, visualTime, hudPositions, debugHuds, resources;
 
     public MainMenuScreen(Screen parent) {
         super(parent, Component.translatable("qualityofqueso.title").withStyle(ChatFormatting.GOLD));
     }
 
     @Override
-    protected void widgets() {
-        this.configure = Button.builder(Component.translatable("qualityofqueso.menu.configure"), button -> ClientTasks.tryOpenYaclScreen(
-                () -> ConfigurationScreen.configScreen().generateScreen(this),
-                Component.translatable("qualityofqueso")
-        )).build();
+    public void widgets() {
+        boolean modEnabled = modEnabled(this.minecraft);
 
-        this.keybinds = Button.builder(Component.translatable("qualityofqueso.menu.keybinds"), button -> {
-            this.openKeybinds();
-        }).build();
+        AbstractWidget configure = this.createWidget(
+                Button.builder(Component.translatable("qualityofqueso.menu.configure"), button -> ClientTasks.tryOpenYaclScreen(
+                        () -> ConfigurationScreen.configScreen().generateScreen(this),
+                        Component.translatable("qualityofqueso")
+                )).build()
+        );
 
-        this.openItemFrameSearchGUIOptions = Button.builder(Component.translatable("qualityofqueso.menu.open_item_frame_search_gui"), button -> {
-            if (common().itemFrameSearching) {
-                executeIfClientLevel(clientLevel -> {
-                    openScreen(new ItemFrameSearchScreen(this));
-                });
-            }
-        }).build();
+        AbstractWidget keybinds = this.createWidget(
+                this.createOpenKeybindsButton(Component.translatable("qualityofqueso.menu.keybinds"))
+        );
 
-        this.visualTime = Button.builder(Component.translatable("qualityofqueso.menu.visual_time"), button ->
-                openScreen(new VisualTimeScreen(this))
-        ).tooltip(
-                Tooltip.create(Component.translatable("qualityofqueso.menu.visual_time.description"))
-        ).build();
-        this.visualTime.active = mixins().clockManagerMixin;
+        AbstractWidget openItemFrameSearchGUIOptions = this.createWidget(
+                Button.builder(Component.translatable("qualityofqueso.menu.open_item_frame_search_gui"), button -> {
+                    if (common().itemFrameSearching) {
+                        executeIfClientLevel(clientLevel -> {
+                            openScreen(new ItemFrameSearchScreen(this));
+                        });
+                    }
+                }).build(),
+                modEnabled && common().itemFrameSearching && this.minecraft.level != null
+        );
 
-        this.hudPositions = Button.builder(Component.translatable("qualityofqueso.menu.hud_positions"), button -> {
-            openScreen(new HudPositionsScreen(this));
-        }).tooltip(
-                Tooltip.create(Component.translatable("qualityofqueso.menu.hud_positions.tooltip"))
-        ).build();
+        AbstractWidget visualTime = this.createWidget(
+                Button.builder(Component.translatable("qualityofqueso.menu.visual_time"), button ->
+                        openScreen(new VisualTimeScreen(this))
+                ).tooltip(
+                        Tooltip.create(Component.translatable("qualityofqueso.menu.visual_time.description"))
+                ).build(),
+                modEnabled && mixins().clockManagerMixin
+        );
 
-        this.debugHuds = Button.builder(Component.translatable("qualityofqueso.menu.debug_huds"), button -> openDebugEntriesScreen(this, "qualityofqueso")
-        ).tooltip(
-                Tooltip.create(Component.translatable("qualityofqueso.menu.debug_huds.tooltip"))
-        ).build();
+        AbstractWidget hudPositions = this.createWidget(
+                Button.builder(Component.translatable("qualityofqueso.menu.hud_positions"), button -> {
+                    openScreen(new HudPositionsScreen(this));
+                }).tooltip(
+                        Tooltip.create(Component.translatable("qualityofqueso.menu.hud_positions.tooltip"))
+                ).build(),
+                modEnabled && this.minecraft.level != null && (!client().hud().armorStatus.off() || client().itemCounter().itemCounter.enabled())
+        );
 
-        this.resources = Button.builder(Component.translatable("qualityofqueso.menu.resources"), button -> {
-            openScreen(new ResourcesScreen(this));
-        }).tooltip(
-                Tooltip.create(Component.translatable("qualityofqueso.menu.resources.tooltip"))
-        ).build();
+        AbstractWidget debugHuds = this.createWidget(
+                Button.builder(Component.translatable("qualityofqueso.menu.debug_huds"), button -> openDebugEntriesScreen(this, "qualityofqueso")
+                ).tooltip(
+                        Tooltip.create(Component.translatable("qualityofqueso.menu.debug_huds.tooltip"))
+                ).build(),
+                modEnabled
+        );
+
+        AbstractWidget resources = this.createWidget(
+                Button.builder(Component.translatable("qualityofqueso.menu.resources"), button -> {
+                    openScreen(new ResourcesScreen(this));
+                }).tooltip(
+                        Tooltip.create(Component.translatable("qualityofqueso.menu.resources.tooltip"))
+                ).build()
+        );
 
         this.createHeaderWithBig(
                 Component.translatable("qualityofqueso.header.settings"),
-                this.configure,
-                this.keybinds,
-                this.hudPositions
+                configure,
+                keybinds,
+                hudPositions
         );
 
         this.createHeader(
                 Component.translatable("qualityofqueso.header.utilities"),
-                this.visualTime,
-                this.openItemFrameSearchGUIOptions,
-                this.debugHuds,
-                this.resources
+                visualTime,
+                openItemFrameSearchGUIOptions,
+                debugHuds,
+                resources
         );
-    }
-
-    @Override
-    protected void activateButtons() {
-        boolean modEnabled = modEnabled(this.minecraft);
-        this.openItemFrameSearchGUIOptions.active = modEnabled && common().itemFrameSearching && this.minecraft.level != null;
-        this.visualTime.active = modEnabled;
-        this.hudPositions.active = modEnabled && this.minecraft.level != null && (!client().hud().armorStatus.off() || client().itemCounter().itemCounter.enabled());
-        this.debugHuds.active = modEnabled;
     }
 
     @Override

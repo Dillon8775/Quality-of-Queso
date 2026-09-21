@@ -8,7 +8,7 @@ dependencies {
         changing = balm_version.endsWith('SNAPSHOT')
     }
 
-    compileOnly "maven.modrinth:dillon-lib:${project.mc_version}-${project.dillonlib_version}-fabric"
+    compileOnly "net.dillon.dillonlib:dillonlib-common-mc26.3:unspecified"
     compileOnly ("dev.isxander:yet-another-config-lib:${project.yacl_version}-fabric") {
         transitive = false
     }

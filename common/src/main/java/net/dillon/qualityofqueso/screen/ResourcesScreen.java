@@ -16,35 +16,43 @@ public class ResourcesScreen extends AbstractModScreen {
     }
 
     @Override
-    protected void widgets() {
+    public void widgets() {
         this.createHeader(
                 Component.translatable("qualityofqueso.header.mod_resources"),
-                Button.builder(Component.translatable("qualityofqueso.menu.showcase_video"),
-                        (button) -> openLink(this, ModConstants.SHOWCASE_VIDEO_LINK, false)
-                ).tooltip(
-                        Tooltip.create(Component.translatable("qualityofqueso.menu.showcase_video.tooltip"))
-                ).build(),
+                this.createWidget(
+                        Button.builder(Component.translatable("qualityofqueso.menu.showcase_video"),
+                                (button) -> openLink(this, ModConstants.SHOWCASE_VIDEO_LINK, false)
+                        ).tooltip(
+                                Tooltip.create(Component.translatable("qualityofqueso.menu.showcase_video.tooltip"))
+                        ).build()
+                ),
 
-                Button.builder(Component.translatable("qualityofqueso.menu.resource_pack_template"),
-                        (button) -> openLink(this, ModConstants.RESOURCE_PACK_TEMPLATE, false)
-                ).tooltip(
-                        Tooltip.create(Component.translatable("qualityofqueso.menu.resource_pack_template.tooltip"))
-                ).build()
+                this.createWidget(
+                        Button.builder(Component.translatable("qualityofqueso.menu.resource_pack_template"),
+                                (button) -> openLink(this, ModConstants.RESOURCE_PACK_TEMPLATE, false)
+                        ).tooltip(
+                                Tooltip.create(Component.translatable("qualityofqueso.menu.resource_pack_template.tooltip"))
+                        ).build()
+                )
         );
 
         this.createHeader(
                 Component.translatable("qualityofqueso.header.questions_and_bugs"),
-                Button.builder(Component.translatable("qualityofqueso.menu.ask_questions"),
-                        (button) -> openLink(this, Links.DILLONS_DISCORD, false)
-                ).tooltip(
-                        Tooltip.create(Component.translatable("qualityofqueso.menu.ask_questions.tooltip"))
-                ).build(),
+                this.createWidget(
+                        Button.builder(Component.translatable("qualityofqueso.menu.ask_questions"),
+                                (button) -> openLink(this, Links.DILLONS_DISCORD, false)
+                        ).tooltip(
+                                Tooltip.create(Component.translatable("qualityofqueso.menu.ask_questions.tooltip"))
+                        ).build()
+                ),
 
-                Button.builder(Component.translatable("qualityofqueso.menu.report_bugs"),
-                        (button) -> openLink(this, Links.githubIssues("Dillon8775/Quality-of-Queso"), false)
-                ).tooltip(
-                        Tooltip.create(Component.translatable("qualityofqueso.menu.report_bugs.tooltip"))
-                ).build()
+                this.createWidget(
+                        Button.builder(Component.translatable("qualityofqueso.menu.report_bugs"),
+                                (button) -> openLink(this, Links.githubIssues("Dillon8775/Quality-of-Queso"), false)
+                        ).tooltip(
+                                Tooltip.create(Component.translatable("qualityofqueso.menu.report_bugs.tooltip"))
+                        ).build()
+                )
         );
     }
 }
