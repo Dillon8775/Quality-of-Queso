@@ -1,4 +1,4 @@
-package net.dillon.qualityofqueso.packet;
+package net.dillon.qualityofqueso.packet.serverbound;
 
 import net.dillon.dillonlib.annotation.Dill;
 import net.dillon.dillonlib.annotation.DillType;
@@ -12,17 +12,17 @@ import net.minecraft.resources.Identifier;
 import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
 
 /**
- * Server-to-client packet with authoritative QoQ state for a specific shulker.
+ * Client-to-server packet updating QoQ state for a specific shulker.
  *
  * @param pos            the shulker block position.
- * @param filtered       whether filtering is enabled.
+ * @param filtered       whether filtering is enabled for this shulker.
  * @param tagMode        whether the filter mode is tag-based.
- * @param filterItemsCsv comma-separated item identifiers for placeholders.
+ * @param filterItemsCsv comma-separated item identifiers for filter placeholders.
  * @param lockedSlotsCsv comma-separated locked slot indices.
  * @param sortingMode    current sorting mode enum name.
  */
 @Dill(DillType.COMMON)
-public record SyncShulkerStateS2CPacket(
+public record UpdateShulkerStateC2SPacket(
         BlockPos pos,
         boolean filtered,
         boolean tagMode,
@@ -30,23 +30,23 @@ public record SyncShulkerStateS2CPacket(
         String lockedSlotsCsv,
         String sortingMode
 ) implements CustomPacketPayload {
-    private static final Identifier ID = qoqIdentifier("sync_shulker_state");
-    public static final Type<SyncShulkerStateS2CPacket> PACKET_TYPE = new Type<>(ID);
-    public static final StreamCodec<RegistryFriendlyByteBuf, SyncShulkerStateS2CPacket> CODEC =
+    private static final Identifier ID = qoqIdentifier("update_shulker_state");
+    public static final Type<UpdateShulkerStateC2SPacket> PACKET_TYPE = new Type<>(ID);
+    public static final StreamCodec<RegistryFriendlyByteBuf, UpdateShulkerStateC2SPacket> CODEC =
             StreamCodec.composite(
                     BlockPos.STREAM_CODEC,
-                    SyncShulkerStateS2CPacket::pos,
+                    UpdateShulkerStateC2SPacket::pos,
                     ByteBufCodecs.BOOL,
-                    SyncShulkerStateS2CPacket::filtered,
+                    UpdateShulkerStateC2SPacket::filtered,
                     ByteBufCodecs.BOOL,
-                    SyncShulkerStateS2CPacket::tagMode,
+                    UpdateShulkerStateC2SPacket::tagMode,
                     ByteBufCodecs.STRING_UTF8,
-                    SyncShulkerStateS2CPacket::filterItemsCsv,
+                    UpdateShulkerStateC2SPacket::filterItemsCsv,
                     ByteBufCodecs.STRING_UTF8,
-                    SyncShulkerStateS2CPacket::lockedSlotsCsv,
+                    UpdateShulkerStateC2SPacket::lockedSlotsCsv,
                     ByteBufCodecs.STRING_UTF8,
-                    SyncShulkerStateS2CPacket::sortingMode,
-                    SyncShulkerStateS2CPacket::new
+                    UpdateShulkerStateC2SPacket::sortingMode,
+                    UpdateShulkerStateC2SPacket::new
             );
 
     @Override

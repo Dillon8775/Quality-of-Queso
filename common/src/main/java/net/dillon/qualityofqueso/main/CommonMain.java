@@ -14,7 +14,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import static net.dillon.qualityofqueso.helper.ModHelper.stop;
-import static net.dillon.qualityofqueso.main.CommonEvents.registerCommonPackets;
+import static net.dillon.qualityofqueso.main.CommonEvents.registerPackets;
 
 /**
  * The main entrypoint for Quality of Queso.
@@ -27,7 +27,7 @@ public class CommonMain {
      * Initializes common (or server)-side features.
      */
     public static void initialize(BalmRegistrars balmRegistrars) {
-        registerCommonPackets();
+        registerPackets();
 
         checkCommonConfigs();
         loadCommonConfigs();

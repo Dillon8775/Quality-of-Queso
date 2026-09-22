@@ -4,6 +4,8 @@ import net.blay09.mods.balm.Balm;
 import net.dillon.dillonlib.annotation.Dill;
 import net.dillon.dillonlib.annotation.DillType;
 import net.dillon.qualityofqueso.option.ModCommonOptions;
+import net.dillon.qualityofqueso.packet.clientbound.SyncShulkerStateS2CPacket;
+import net.dillon.qualityofqueso.packet.serverbound.*;
 import net.dillon.qualityofqueso.server.DedicatedServerStorage;
 import net.dillon.qualityofqueso.server.LockedInventoryStorage;
 import net.dillon.qualityofqueso.server.PendingManualPickup;
@@ -46,7 +48,7 @@ public class ServerPacketHandlers {
     /**
      * Handles C2S glow-search packet payloads.
      */
-    public static void sendGlowPacket(ServerPlayer player, GlowSearchC2SPacket packet) {
+    public static void handleGlowPacket(ServerPlayer player, GlowSearchC2SPacket packet) {
         handleGlowPacket(player, packet.query(), packet.matchCase(), packet.clear(), packet.timer(), packet.radius());
     }
 

@@ -146,7 +146,7 @@ public class AbstractModScreen extends DillonLibMenuScreen {
                                             Component.translatable("qualityofqueso.gui.view_ender_chest.tooltip"),
                                             false
                                     ),
-                                    modEnabled(this.minecraft),
+                                    () -> modEnabled(this.minecraft),
                                     () -> getLeftButtonPosition(this.width, 2),
                                     doneButton::getY
                             )

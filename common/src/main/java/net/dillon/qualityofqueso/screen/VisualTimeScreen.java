@@ -1,5 +1,6 @@
 package net.dillon.qualityofqueso.screen;
 
+import net.dillon.dillonlib.screen.BasicDillonLibScreen;
 import net.dillon.dillonlib.util.Texts;
 import net.dillon.qualityofqueso.util.ListOptions;
 import net.minecraft.client.Minecraft;
@@ -9,7 +10,6 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import net.minecraft.util.CommonColors;
 import net.minecraft.world.level.Level;
 
 import static net.dillon.dillonlib.task.ClientTasks.*;
@@ -20,9 +20,9 @@ import static net.dillon.qualityofqueso.option.OptionInstances.client;
 /**
  * A utility screen to change the visual time client-side.
  */
-public class VisualTimeScreen extends Screen {
-    private static final int SIZE = 24;
-    private AbstractWidget overrideClientTime, visualTime, displayVisualClock, visualTimeSpeed, syncLocalTime;
+public class VisualTimeScreen extends BasicDillonLibScreen {
+    private static final int DAYLIGHT_DETECTOR_TEXTURE_SIZE = 24;
+    private AbstractWidget visualTime, visualTimeSpeed, syncLocalTime;
     private final Screen parent;
 
     public VisualTimeScreen(Screen parent) {
@@ -41,17 +41,178 @@ public class VisualTimeScreen extends Screen {
     }
 
     @Override
-    protected void init() {
-        int width = this.width / 2 - 40;
-        this.overrideClientTime = this.addRenderableWidget(ListOptions.overrideClientTime().createButton(Minecraft.getInstance().options, this.width / 2 - 100, this.height / 2 - 48, 200));
-        this.visualTime = this.addRenderableWidget(ListOptions.visualTime().createButton(Minecraft.getInstance().options, width, this.overrideClientTime.getY() + 32, 120));
-        this.displayVisualClock = this.addRenderableWidget(ListOptions.displayVisualClock().createButton(Minecraft.getInstance().options, this.visualTime.getX() + 130, this.visualTime.getY(), 90));
-        this.visualTimeSpeed = this.addRenderableWidget(ListOptions.visualTimeSpeed().createButton(Minecraft.getInstance().options, width, this.visualTime.getY() + 28, 120));
-        this.syncLocalTime = this.addRenderableWidget(ListOptions.syncLocalTime().createButton(Minecraft.getInstance().options, width, this.visualTimeSpeed.getY() + 28, 120));
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks) {
+        super.extractRenderState(graphics, mouseX, mouseY, deltaTicks);
+
+        this.extractBlurredBackground(graphics);
+    }
+
+    /**
+     * @return if the user can override the client time.
+     */
+    private boolean canOverrideClientTime() {
+        return client().visualTime().overrideClientTime;
+    }
+
+    /**
+     * @return if the user can match with irl time.
+     */
+    private boolean canMatchWithIrlTime() {
+        return client().visualTime().syncLocalTime;
+    }
+
+    /**
+     * @return the visual time button.
+     */
+    private AbstractWidget visualTimeButton() {
+        return this.createWidget(
+                ListOptions.visualTime().createButton(
+                        Minecraft.getInstance().options,
+                        builder().captureWidth(),
+                        builder().captureHeight(),
+                        120
+                ),
+                () -> canOverrideClientTime() && !canMatchWithIrlTime() && client().visualTime().visualTimeSpeed == 0
+        );
+    }
+
+    /**
+     * @return the visual time speed button.
+     */
+    private AbstractWidget visualTimeSpeedButton() {
+        return this.createWidget(
+                ListOptions.visualTimeSpeed().createButton(
+                        Minecraft.getInstance().options,
+                        builder().captureWidth(),
+                        builder().captureHeight(),
+                        120
+                ),
+                () -> canOverrideClientTime() && !canMatchWithIrlTime()
+        );
+    }
+
+    /**
+     * @return the sync local time button.
+     */
+    private AbstractWidget syncLocalTimeButton() {
+        return this.createWidget(
+                ListOptions.syncLocalTime().createButton(
+                        Minecraft.getInstance().options,
+                        builder().captureWidth(),
+                        builder().captureHeight(),
+                        120
+                ),
+                this::canOverrideClientTime
+        );
+    }
+
+    /**
+     * @return the display visual clock button.
+     */
+    private AbstractWidget displayVisualClockButton() {
+        return this.createWidget(
+                ListOptions.displayVisualClock().createButton(
+                        Minecraft.getInstance().options,
+                        builder().captureWidth(),
+                        builder().captureHeight(),
+                        90
+                ),
+                () -> canOverrideClientTime() && (this.minecraft.level == null || this.minecraft.level.dimension() == Level.OVERWORLD)
+        );
+    }
+
+    @Override
+    public void widgets() {
+        builder().widthCenter().apply();
+        builder().heightCenter().apply();
+
+        builder().widthLeft(100).apply();
+        builder().heightUp(builder().defaultOffset() * 2).apply();
+
+        this.addRenderableWidget(
+                ListOptions.overrideClientTime().createButton(
+                        Minecraft.getInstance().options,
+                        builder().captureWidth(),
+                        builder().captureHeight(),
+                        200
+                )
+        );
+
+        builder().heightDown(32).apply();
+        builder().widthRight(60).apply();
+
+        this.visualTime = this.addRenderableWidget(visualTimeButton());
+
+        builder().heightDown(28).apply();
+
+        this.visualTimeSpeed = this.addRenderableWidget(visualTimeSpeedButton());
+
+        builder().heightDown(28).apply();
+
+        this.syncLocalTime = this.addRenderableWidget(syncLocalTimeButton());
+
+        builder().heightDown(32).apply();
+        builder().widthRight(12).apply();
 
         this.addRenderableWidget(Button.builder(Component.translatable("qualityofqueso.gui.save_changes"), button -> {
             this.onClose();
-        }).bounds(this.syncLocalTime.getX() + 12, this.syncLocalTime.getY() + 32, 100, 20).build());
+        }).bounds(builder().captureWidth(), builder().captureHeight(), 100, 20).build());
+
+        builder().width(visualTime).apply();
+        builder().height(visualTime).apply();
+        builder().widthRight(130).apply();
+
+        this.addRenderableWidget(displayVisualClockButton());
+    }
+
+    @Override
+    protected void drawGraphics(GuiGraphicsExtractor graphics) {
+        builder().renderHeight(
+                builder().heightCenter().pop() - 110
+        ).apply();
+
+        builder().textCenterAndHeightDown(graphics, Component.translatable("qualityofqueso.menu.visual_time.description")).apply();
+        builder().textCenterAndHeightDown(graphics, Component.translatable("qualityofqueso.gui.visual_time.description.line2")).apply();
+        builder().textCenterAndHeightDown(graphics, Component.translatable("qualityofqueso.gui.visual_time.description.line3")).apply();
+
+        builder().renderHeight(visualTime).apply();
+        builder().renderWidth(visualTime).apply();
+        builder().renderWidthLeft(48).apply();
+
+        drawVisualTimeClock(
+                graphics,
+                this.minecraft,
+                builder().captureRenderWidth(),
+                builder().captureRenderHeight() - 2,
+                24,
+                true
+        );
+
+        builder().renderHeight(visualTimeSpeed).apply();
+        builder().renderWidth(visualTimeSpeed).apply();
+        builder().renderWidthLeft(48).apply();
+
+        drawSprite(
+                graphics,
+                qoqIdentifier("visual_time/speed"),
+                builder().captureRenderWidth(),
+                builder().captureRenderHeight() + 1,
+                24,
+                18
+        );
+
+        builder().renderHeight(syncLocalTime).apply();
+        builder().renderWidth(syncLocalTime).apply();
+        builder().renderWidthLeft(48).apply();
+
+        blitTexture(
+                graphics,
+                Identifier.withDefaultNamespace("textures/block/daylight_detector" + (client().visualTime().syncLocalTime ? "_inverted" : "") + "_top.png"),
+                builder().captureRenderWidth(),
+                builder().captureRenderHeight() - 2,
+                DAYLIGHT_DETECTOR_TEXTURE_SIZE,
+                DAYLIGHT_DETECTOR_TEXTURE_SIZE
+        );
     }
 
     @Override
@@ -60,28 +221,5 @@ public class VisualTimeScreen extends Screen {
             this.extractPanorama(graphics, deltaTicks);
         }
         this.extractMenuBackground(graphics);
-    }
-
-    @Override
-    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks) {
-        super.extractRenderState(graphics, mouseX, mouseY, deltaTicks);
-
-        graphics.text(this.font, Component.translatable("qualityofqueso.menu.visual_time.description"), this.width / 2 - 105, this.height / 2 - 110, CommonColors.WHITE);
-        graphics.text(this.font, Component.translatable("qualityofqueso.gui.visual_time.description.line2"), this.width / 2 - 145, this.height / 2 - 90, CommonColors.WHITE);
-        graphics.text(this.font, Component.translatable("qualityofqueso.gui.visual_time.description.line3"), this.width / 2 - 40, this.height / 2 - 70, CommonColors.WHITE);
-
-        drawVisualTimeClock(graphics, this.minecraft, this.visualTime.getX() - 48, this.visualTime.getY() - 2, 24, true);
-
-        drawSprite(graphics, qoqIdentifier("visual_time/speed"), this.visualTimeSpeed.getX() - 48, this.visualTimeSpeed.getY() + 1, 24, 18);
-        blitTexture(graphics, Identifier.withDefaultNamespace("textures/block/daylight_detector" + (client().visualTime().syncLocalTime ? "_inverted" : "") + "_top.png"), this.syncLocalTime.getX() - 48, this.syncLocalTime.getY() - 2, SIZE, SIZE);
-
-        boolean overrideClientTime = client().visualTime().overrideClientTime;
-        boolean matchWithIRLTime = client().visualTime().syncLocalTime;
-        this.visualTime.active = overrideClientTime && client().visualTime().visualTimeSpeed == 0 && !matchWithIRLTime;
-        this.displayVisualClock.active = overrideClientTime && (this.minecraft.level == null || this.minecraft.level.dimension() == Level.OVERWORLD);
-        this.visualTimeSpeed.active = overrideClientTime && !matchWithIRLTime;
-        this.syncLocalTime.active = overrideClientTime;
-
-        this.extractBlurredBackground(graphics);
     }
 }

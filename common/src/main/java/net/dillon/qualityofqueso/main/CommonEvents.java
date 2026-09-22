@@ -2,21 +2,23 @@ package net.dillon.qualityofqueso.main;
 
 import net.blay09.mods.balm.Balm;
 import net.dillon.qualityofqueso.helper.ModConstants;
-import net.dillon.qualityofqueso.packet.*;
+import net.dillon.qualityofqueso.packet.ServerPacketHandlers;
+import net.dillon.qualityofqueso.packet.clientbound.SyncShulkerStateS2CPacket;
+import net.dillon.qualityofqueso.packet.serverbound.*;
 
 /**
  * Common events for Quality of Queso.
  */
 public class CommonEvents {
 
-    public static void registerCommonPackets() {
+    public static void registerPackets() {
         Balm.networking().allowClientAndServerOnly(ModConstants.MOD_ID);
 
         Balm.networking().registerServerboundPacket(
                 GlowSearchC2SPacket.PACKET_TYPE,
                 GlowSearchC2SPacket.class,
                 GlowSearchC2SPacket.CODEC,
-                ServerPacketHandlers::sendGlowPacket
+                ServerPacketHandlers::handleGlowPacket
         );
 
         Balm.networking().registerServerboundPacket(

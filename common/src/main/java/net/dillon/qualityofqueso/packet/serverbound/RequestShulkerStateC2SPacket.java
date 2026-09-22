@@ -1,4 +1,4 @@
-package net.dillon.qualityofqueso.packet;
+package net.dillon.qualityofqueso.packet.serverbound;
 
 import net.dillon.dillonlib.annotation.Dill;
 import net.dillon.dillonlib.annotation.DillType;

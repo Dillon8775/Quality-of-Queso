@@ -1,6 +1,7 @@
 package net.dillon.qualityofqueso.packet;
 
 import net.dillon.qualityofqueso.helper.ContainerHelper;
+import net.dillon.qualityofqueso.packet.clientbound.SyncShulkerStateS2CPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;
 

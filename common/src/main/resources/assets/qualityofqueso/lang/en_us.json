@@ -34,10 +34,10 @@
   "qualityofqueso.menu.report_bugs": "Report a bug...",
   "qualityofqueso.menu.report_bugs.tooltip": "Report a bug on the GitHub repository...",
 
-  "qualityofqueso.gui.search_item_frames": "Search for §oitem §r§fto make all item frames with §oitem §r§fglow.",
+  "qualityofqueso.gui.search_item_frames.line1": "Search for §oitem §r§fto make all item frames with §oitem §r§fglow.",
   "qualityofqueso.gui.search_item_frames.warning.line1": "§cPlease note: §r§fthis feature only works if the server has this mod installed",
   "qualityofqueso.gui.search_item_frames.warning.line2": "§oAND §r§fthe server has this feature enabled.",
-  "qualityofqueso.gui.search_item_frames.line3": "You can also use the §b/itemframesearcher§r§f command if you'd like.",
+  "qualityofqueso.gui.search_item_frames.line2": "You can also use the §b/itemframesearcher§r§f command if you'd like.",
   "qualityofqueso.gui.chest_search.search_filtering": "Match case with %s\n§r§fSearch multiple items with %s\n§r§fSearch item by tag with %s\n§r§fExclude search with %s\n§r§fSearch by mod name with %s\n§r§fRight-click to clear",
   "qualityofqueso.gui.search_item_frames.search_filtering": "Match case with §l:\n§r§fSearch multiple items with §o,",
   "qualityofqueso.gui.search": "Search...",

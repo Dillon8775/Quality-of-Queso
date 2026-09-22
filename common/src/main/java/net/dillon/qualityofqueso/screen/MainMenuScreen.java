@@ -42,7 +42,7 @@ public class MainMenuScreen extends AbstractModScreen {
                         });
                     }
                 }).build(),
-                modEnabled && common().itemFrameSearching && this.minecraft.level != null
+                () -> modEnabled && common().itemFrameSearching && this.minecraft.level != null
         );
 
         AbstractWidget visualTime = this.createWidget(
@@ -51,7 +51,7 @@ public class MainMenuScreen extends AbstractModScreen {
                 ).tooltip(
                         Tooltip.create(Component.translatable("qualityofqueso.menu.visual_time.description"))
                 ).build(),
-                modEnabled && mixins().clockManagerMixin
+                () -> modEnabled && mixins().clockManagerMixin
         );
 
         AbstractWidget hudPositions = this.createWidget(
@@ -60,7 +60,7 @@ public class MainMenuScreen extends AbstractModScreen {
                 }).tooltip(
                         Tooltip.create(Component.translatable("qualityofqueso.menu.hud_positions.tooltip"))
                 ).build(),
-                modEnabled && this.minecraft.level != null && (!client().hud().armorStatus.off() || client().itemCounter().itemCounter.enabled())
+                () -> modEnabled && this.minecraft.level != null && (!client().hud().armorStatus.off() || client().itemCounter().itemCounter.enabled())
         );
 
         AbstractWidget debugHuds = this.createWidget(
@@ -68,7 +68,7 @@ public class MainMenuScreen extends AbstractModScreen {
                 ).tooltip(
                         Tooltip.create(Component.translatable("qualityofqueso.menu.debug_huds.tooltip"))
                 ).build(),
-                modEnabled
+                () -> modEnabled
         );
 
         AbstractWidget resources = this.createWidget(
