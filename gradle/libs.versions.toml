@@ -1,6 +1,6 @@
 [versions]
 fabric-loom = "1.17-SNAPSHOT"
-modrinth-minotaur = "2.9.0"
+modrinth-minotaur = "2.10.0"
 curseforgegradle = "1.2.30"
 neoforge-moddev = "2.0.147"
 

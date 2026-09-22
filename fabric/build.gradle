@@ -114,4 +114,5 @@ modrinth {
         required.project "yacl"
         required.project "dillon-lib"
     }
+    environment = "client_only_server_optional"
 }
