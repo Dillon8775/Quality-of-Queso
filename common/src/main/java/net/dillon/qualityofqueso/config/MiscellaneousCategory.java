@@ -200,14 +200,6 @@ public class MiscellaneousCategory {
                                                 .controller(BooleanControllerBuilder::create)
                                                 .build()
                                 )
-                                .option(
-                                        Option.<Boolean>createBuilder()
-                                                .name(Component.translatable("qualityofqueso.options.fortnite_battle_pass"))
-                                                .description(OptionDescription.of(Component.translatable("qualityofqueso.options.fortnite_battle_pass.description")))
-                                                .binding(false, () -> client().misc().fortniteBattlePass, v -> client().misc().fortniteBattlePass = v)
-                                                .controller(TickBoxControllerBuilder::create)
-                                                .build()
-                                )
                                 .build()
                 )
                 .build();

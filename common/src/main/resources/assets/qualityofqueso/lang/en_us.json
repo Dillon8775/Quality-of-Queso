@@ -323,8 +323,6 @@
   "qualityofqueso.options.enhanced_cursor.description": "Enhances the cursor by relating it to things you are doing in a screen.\n\n§cFeature not available in Minecraft 1.21.1 and below.",
   "qualityofqueso.options.quick_gui_exit": "Quick GUI Exit",
   "qualityofqueso.options.quick_gui_exit.description": "Close any GUI menu by clicking outside of the GUI screen.",
-  "qualityofqueso.options.fortnite_battle_pass": "Fortnite Battle Pass",
-  "qualityofqueso.options.fortnite_battle_pass.description": "Just, don't...",
 
   "qualityofqueso.options.title.accessibility": "Accessibility",
   "qualityofqueso.options.accessibility.tooltip": "Configure Quality of Queso to your liking with these accessibility options.",
@@ -561,7 +559,5 @@
   "qualityofqueso.gui.disconnect": "Control that anger of yours!\n\nManny struggles with this...",
 
   "qualityofqueso.toast.title.beta_or_alpha": "Mod Warning",
-  "qualityofqueso.toast.beta_or_alpha": "Please be aware that the current Quality of Queso version you are using is in a beta state, so be aware of bugs!",
-
-  "qualityofqueso.fortnite_battle_pass": "Fortnite battle pass..."
+  "qualityofqueso.toast.beta_or_alpha": "Please be aware that the current Quality of Queso version you are using is in a beta state, so be aware of bugs!"
 }

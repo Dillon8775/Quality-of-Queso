@@ -10,7 +10,6 @@ import net.fabricmc.api.Environment;
 
 import static net.dillon.qualityofqueso.event.FabricClientEvents.registerFabricClientEvents;
 import static net.dillon.qualityofqueso.event.FabricClientEvents.registerFabricKeyBindings;
-import static net.dillon.qualityofqueso.sound.ModSoundEvents.registerBoundSoundEvents;
 
 @Environment(EnvType.CLIENT)
 public class ClientQoQ implements ClientModInitializer {
@@ -19,7 +18,6 @@ public class ClientQoQ implements ClientModInitializer {
     public void onInitializeClient() {
         registerFabricClientEvents();
         registerFabricKeyBindings();
-        registerBoundSoundEvents();
 
         Balm.initializeMod(ModConstants.MOD_ID, FabricLoadContext.INSTANCE, ClientMain::cInitialize);
     }

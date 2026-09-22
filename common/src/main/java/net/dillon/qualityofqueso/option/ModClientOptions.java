@@ -330,7 +330,6 @@ public class ModClientOptions {
         public boolean enchantmentHelper = true;
         public boolean enhancedCursor = true;
         public boolean quickGuiExit = true;
-        public boolean fortniteBattlePass = false;
 
         public int itemFrameSearchGlowDuration = 0;
         public int itemFrameSearchRadius = 150;

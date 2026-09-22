@@ -4,7 +4,6 @@ import net.dillon.qualityofqueso.helper.ModHelper;
 import net.dillon.qualityofqueso.instance.management.ClickSlotInstance;
 import net.dillon.qualityofqueso.keybind.ModKeyMappings;
 import net.dillon.qualityofqueso.screen.ItemFrameSearchScreen;
-import net.dillon.qualityofqueso.sound.ModSoundEvents;
 import net.dillon.qualityofqueso.util.MobHitDingTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
@@ -16,13 +15,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.Random;
-
 import static net.dillon.dillonlib.task.ClientTasks.openScreen;
-import static net.dillon.dillonlib.task.ClientTasks.playLocalSound;
 import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
 import static net.dillon.qualityofqueso.keybind.ModKeyMappings.OPEN_ITEM_FRAME_SEARCH_GUI;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
 import static net.dillon.qualityofqueso.option.OptionInstances.common;
 
 @Mixin(Minecraft.class)
@@ -68,14 +63,5 @@ public abstract class MinecraftMixin {
         ClickSlotInstance.tickTradeAllTask();
         ClickSlotInstance.tickBulkCraftTask();
         MobHitDingTracker.tick(minecraft);
-
-        if (!client().misc().fortniteBattlePass) {
-            return;
-        }
-
-        Random random = new Random();
-        if (this.getSoundManager() != null && random.nextFloat() < 0.01F) {
-            playLocalSound(ModSoundEvents.FORTNITE_BATTLE_PASS, 5.0F, 1.0F);
-        }
     }
 }
