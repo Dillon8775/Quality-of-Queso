@@ -12,4 +12,6 @@ dependencies {
     implementation "net.dillon.dillonlib:dillonlib-fabric-mc26.3:unspecified"
     implementation "dev.isxander:yet-another-config-lib:${project.yacl_version}-fabric"
     implementation "net.litetex.mcm:dev-auth-neo:${project.devauth_neo_version}"
+
+    runtimeOnly "net.dillon.simplekeybinds:simplekeybinds-fabric-mc26.3:unspecified"
 }
