@@ -164,12 +164,12 @@ public class ItemFrameSearchScreen extends BasicDillonLibScreen {
         builder().widthCenter().apply();
         builder().heightCenter().apply();
 
-        builder().heightUp().apply();
+        builder().heightUp(10).apply();
         builder().widthLeft(100).apply();
 
         this.searchField = searchField();
 
-        builder().heightDown(builder().defaultOffset() * 2).apply();
+        builder().heightDown(36).apply();
         builder().widthCenter().apply();
         builder().widthRight(115).apply();
 
@@ -222,9 +222,8 @@ public class ItemFrameSearchScreen extends BasicDillonLibScreen {
 
     @Override
     protected void drawGraphics(GuiGraphicsExtractor graphics) {
-        builder().renderHeightDown(
-                builder().heightCenter().pop() - 110
-        ).apply();
+        builder().renderHeightCenter().apply();
+        builder().renderHeightUp(96).apply();
 
         builder().textCenterAndHeightDown(graphics, Component.translatable("qualityofqueso.gui.search_item_frames.line1")).apply();
         builder().textCenterAndHeightDown(graphics, Component.translatable("qualityofqueso.gui.search_item_frames.warning.line1")).apply();

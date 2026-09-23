@@ -167,9 +167,8 @@ public class VisualTimeScreen extends BasicDillonLibScreen {
 
     @Override
     protected void drawGraphics(GuiGraphicsExtractor graphics) {
-        builder().renderHeightDown(
-                builder().heightCenter().pop() - 110
-        ).apply();
+        builder().renderHeightCenter().apply();
+        builder().renderHeightUp(110).apply();
 
         builder().textCenterAndHeightDown(graphics, Component.translatable("qualityofqueso.menu.visual_time.description")).apply();
         builder().textCenterAndHeightDown(graphics, Component.translatable("qualityofqueso.gui.visual_time.description.line2")).apply();
