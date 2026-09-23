@@ -222,7 +222,7 @@ public class ItemFrameSearchScreen extends BasicDillonLibScreen {
 
     @Override
     protected void drawGraphics(GuiGraphicsExtractor graphics) {
-        builder().renderHeight(
+        builder().renderHeightDown(
                 builder().heightCenter().pop() - 110
         ).apply();
 

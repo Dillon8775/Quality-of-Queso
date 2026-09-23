@@ -21,7 +21,7 @@ import static net.dillon.qualityofqueso.option.OptionInstances.client;
  * A utility screen to change the visual time client-side.
  */
 public class VisualTimeScreen extends BasicDillonLibScreen {
-    private static final int DAYLIGHT_DETECTOR_TEXTURE_SIZE = 24;
+    private static final int TEXTURE_SIZE = 24;
     private AbstractWidget visualTime, visualTimeSpeed, syncLocalTime;
     private final Screen parent;
 
@@ -167,7 +167,7 @@ public class VisualTimeScreen extends BasicDillonLibScreen {
 
     @Override
     protected void drawGraphics(GuiGraphicsExtractor graphics) {
-        builder().renderHeight(
+        builder().renderHeightDown(
                 builder().heightCenter().pop() - 110
         ).apply();
 
@@ -184,7 +184,7 @@ public class VisualTimeScreen extends BasicDillonLibScreen {
                 this.minecraft,
                 builder().captureRenderWidth(),
                 builder().captureRenderHeight() - 2,
-                24,
+                TEXTURE_SIZE,
                 true
         );
 
@@ -197,7 +197,7 @@ public class VisualTimeScreen extends BasicDillonLibScreen {
                 qoqIdentifier("visual_time/speed"),
                 builder().captureRenderWidth(),
                 builder().captureRenderHeight() + 1,
-                24,
+                TEXTURE_SIZE,
                 18
         );
 
@@ -210,8 +210,8 @@ public class VisualTimeScreen extends BasicDillonLibScreen {
                 Identifier.withDefaultNamespace("textures/block/daylight_detector" + (client().visualTime().syncLocalTime ? "_inverted" : "") + "_top.png"),
                 builder().captureRenderWidth(),
                 builder().captureRenderHeight() - 2,
-                DAYLIGHT_DETECTOR_TEXTURE_SIZE,
-                DAYLIGHT_DETECTOR_TEXTURE_SIZE
+                TEXTURE_SIZE,
+                TEXTURE_SIZE
         );
     }
 
