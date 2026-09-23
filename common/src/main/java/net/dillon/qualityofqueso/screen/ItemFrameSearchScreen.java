@@ -222,13 +222,13 @@ public class ItemFrameSearchScreen extends BasicDillonLibScreen {
 
     @Override
     protected void drawGraphics(GuiGraphicsExtractor graphics) {
-        builder().renderHeightCenter().apply();
-        builder().renderHeightUp(96).apply();
+        builder().graphicsHeightCenter().apply();
+        builder().graphicsHeightUp(96).apply();
 
-        builder().textCenterAndHeightDown(graphics, Component.translatable("qualityofqueso.gui.search_item_frames.line1")).apply();
-        builder().textCenterAndHeightDown(graphics, Component.translatable("qualityofqueso.gui.search_item_frames.warning.line1")).apply();
-        builder().textCenterAndHeightDown(graphics, Component.translatable("qualityofqueso.gui.search_item_frames.warning.line2")).apply();
-        builder().textCenterAndHeightDown(graphics, Component.translatable("qualityofqueso.gui.search_item_frames.line2")).apply();
+        builder().textCenterAndGraphicsHeightDown(graphics, Component.translatable("qualityofqueso.gui.search_item_frames.line1")).apply();
+        builder().textCenterAndGraphicsHeightDown(graphics, Component.translatable("qualityofqueso.gui.search_item_frames.warning.line1")).apply();
+        builder().textCenterAndGraphicsHeightDown(graphics, Component.translatable("qualityofqueso.gui.search_item_frames.warning.line2")).apply();
+        builder().textCenterAndGraphicsHeightDown(graphics, Component.translatable("qualityofqueso.gui.search_item_frames.line2")).apply();
     }
 
     @Override

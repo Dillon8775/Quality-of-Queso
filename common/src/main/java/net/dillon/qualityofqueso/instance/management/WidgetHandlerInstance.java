@@ -1,8 +1,8 @@
 package net.dillon.qualityofqueso.instance.management;
 
+import net.dillon.dillonlib.mixin.accessor.ScreenInvoker;
 import net.dillon.qualityofqueso.helper.ContainerHelper;
 import net.dillon.qualityofqueso.instance.QuesoScreen;
-import net.dillon.qualityofqueso.mixin.client.accessor.ScreenAccessor;
 import net.dillon.qualityofqueso.option.ModClientOptions;
 import net.dillon.qualityofqueso.widget.*;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -31,7 +31,7 @@ public class WidgetHandlerInstance extends ManagementInstance {
      * Adds a widget to the screen, and adds it to the dynamic buttons for reference.
      */
     public <T extends GuiEventListener & NarratableEntry> T addWidget(T widget) {
-        ((ScreenAccessor)instance().getScreen()).addModWidget(widget);
+        ((ScreenInvoker)instance().getScreen()).addModWidget(widget);
         this.dynamicButtons.add(widget);
         return widget;
     }

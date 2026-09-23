@@ -263,25 +263,26 @@ public class HudPositionsScreen extends BasicDillonLibScreen {
 
     @Override
     protected void drawGraphics(GuiGraphicsExtractor graphics) {
-        builder().renderHeightTop().apply();
-        builder().renderWidthCenter().apply();
+        builder().textTitleGraphicsHeight(graphics);
 
-        builder().renderHeightDown(13).apply();
+        builder().graphicsHeightTop().apply();
+        builder().graphicsWidthCenter().apply();
 
-        builder().textCenterAndHeightDown(graphics, this.title, 31).apply();
-        builder().textCenterAndHeightDown(graphics, Component.translatable("qualityofqueso.gui.hud_positions.warning")).apply();
+        builder().graphicsHeightDown(44).apply();
+
+        builder().textCenterAndGraphicsHeightDown(graphics, Component.translatable("qualityofqueso.gui.hud_positions.warning")).apply();
 
         if (this.moveItemCounterOver instanceof Button button) {
             drawSmallSprite(graphics, client().itemCounter().moveItemCounterOver ? qoqIdentifier(ENABLED_TEXTURE) : qoqIdentifier(DISABLED_TEXTURE), button);
         }
 
-        builder().renderWidth(xPosArmorStatus).apply();
+        builder().graphicsWidth(xPosArmorStatus).apply();
 
         drawSprite(
                 graphics,
                 getArmorHotbarTexture(),
-                builder().captureRenderWidth() + 60,
-                builder().renderHeight(xPosArmorStatus).pop() - 28,
+                builder().captureGraphicsWidth() + 60,
+                builder().graphicsHeight(xPosArmorStatus).pop() - 28,
                 82,
                 22
         );
@@ -289,8 +290,8 @@ public class HudPositionsScreen extends BasicDillonLibScreen {
         drawSprite(
                 graphics,
                 qoqIdentifier("hud/hud_positions_screen/item_counter"),
-                builder().captureRenderWidth() + 74,
-                builder().renderHeight(xPosItemCounter).pop() - 32,
+                builder().captureGraphicsWidth() + 74,
+                builder().graphicsHeight(xPosItemCounter).pop() - 32,
                 58,
                 30
         );

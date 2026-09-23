@@ -109,7 +109,7 @@ processResources {
             'minecraft_version'            : minecraft_version,
             'balm_version'                 : balm_version,
             'dillonlib_version'            : dillonlib_version,
-            fabric_api_version             : fabric_api_version,
+            'fabric_api_version'           : fabric_api_version,
             'fabric_loader_version'        : fabric_loader_version,
             'modmenu_version'              : modmenu_version,
             'neoforge_loader_version'      : neoforge_loader_version,

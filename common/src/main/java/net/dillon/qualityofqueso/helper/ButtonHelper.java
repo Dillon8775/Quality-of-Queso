@@ -56,7 +56,7 @@ public class ButtonHelper {
                         ModConstants.HAS_UPDATE,
                         Component.translatable("qualityofqueso.update_available")
                 ),
-                Component.translatable("qualityofqueso"),
+                Component.translatable("qualityofqueso.title"),
                 tooltip
         );
     }

@@ -167,48 +167,48 @@ public class VisualTimeScreen extends BasicDillonLibScreen {
 
     @Override
     protected void drawGraphics(GuiGraphicsExtractor graphics) {
-        builder().renderHeightCenter().apply();
-        builder().renderHeightUp(110).apply();
+        builder().graphicsHeightCenter().apply();
+        builder().graphicsHeightUp(110).apply();
 
-        builder().textCenterAndHeightDown(graphics, Component.translatable("qualityofqueso.menu.visual_time.description")).apply();
-        builder().textCenterAndHeightDown(graphics, Component.translatable("qualityofqueso.gui.visual_time.description.line2")).apply();
-        builder().textCenterAndHeightDown(graphics, Component.translatable("qualityofqueso.gui.visual_time.description.line3")).apply();
+        builder().textCenterAndGraphicsHeightDown(graphics, Component.translatable("qualityofqueso.menu.visual_time.description")).apply();
+        builder().textCenterAndGraphicsHeightDown(graphics, Component.translatable("qualityofqueso.gui.visual_time.description.line2")).apply();
+        builder().textCenterAndGraphicsHeightDown(graphics, Component.translatable("qualityofqueso.gui.visual_time.description.line3")).apply();
 
-        builder().renderHeight(visualTime).apply();
-        builder().renderWidth(visualTime).apply();
-        builder().renderWidthLeft(48).apply();
+        builder().graphicsHeight(visualTime).apply();
+        builder().graphicsWidth(visualTime).apply();
+        builder().graphicsWidthLeft(48).apply();
 
         drawVisualTimeClock(
                 graphics,
                 this.minecraft,
-                builder().captureRenderWidth(),
-                builder().captureRenderHeight() - 2,
+                builder().captureGraphicsWidth(),
+                builder().captureGraphicsHeight() - 2,
                 TEXTURE_SIZE,
                 true
         );
 
-        builder().renderHeight(visualTimeSpeed).apply();
-        builder().renderWidth(visualTimeSpeed).apply();
-        builder().renderWidthLeft(48).apply();
+        builder().graphicsHeight(visualTimeSpeed).apply();
+        builder().graphicsWidth(visualTimeSpeed).apply();
+        builder().graphicsWidthLeft(48).apply();
 
         drawSprite(
                 graphics,
                 qoqIdentifier("visual_time/speed"),
-                builder().captureRenderWidth(),
-                builder().captureRenderHeight() + 1,
+                builder().captureGraphicsWidth(),
+                builder().captureGraphicsHeight() + 1,
                 TEXTURE_SIZE,
                 18
         );
 
-        builder().renderHeight(syncLocalTime).apply();
-        builder().renderWidth(syncLocalTime).apply();
-        builder().renderWidthLeft(48).apply();
+        builder().graphicsHeight(syncLocalTime).apply();
+        builder().graphicsWidth(syncLocalTime).apply();
+        builder().graphicsWidthLeft(48).apply();
 
         blitTexture(
                 graphics,
                 Identifier.withDefaultNamespace("textures/block/daylight_detector" + (client().visualTime().syncLocalTime ? "_inverted" : "") + "_top.png"),
-                builder().captureRenderWidth(),
-                builder().captureRenderHeight() - 2,
+                builder().captureGraphicsWidth(),
+                builder().captureGraphicsHeight() - 2,
                 TEXTURE_SIZE,
                 TEXTURE_SIZE
         );

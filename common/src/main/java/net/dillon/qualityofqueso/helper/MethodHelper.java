@@ -5,6 +5,7 @@ import net.blay09.mods.kuma.api.KeyModifier;
 import net.blay09.mods.kuma.api.KeyModifiers;
 import net.blay09.mods.kuma.api.Kuma;
 import net.blay09.mods.kuma.api.ManagedKeyMapping;
+import net.dillon.dillonlib.mixin.accessor.ScreenInvoker;
 import net.dillon.qualityofqueso.mixin.client.accessor.*;
 import net.dillon.qualityofqueso.mixin.main.AbstractContainerMenuAccessor;
 import net.minecraft.client.KeyMapping;
@@ -111,21 +112,21 @@ public class MethodHelper {
      * Adds a renderable widget to a screen.
      */
     public static <T extends GuiEventListener & Renderable & NarratableEntry> void addRenderableModWidget(Screen screen, T widget) {
-        ((ScreenAccessor) screen).addRenderableModWidget(widget);
+        ((ScreenInvoker) screen).addRenderableModWidget(widget);
     }
 
     /**
      * Removes a widget from a screen.
      */
     public static void removeModWidget(Screen screen, GuiEventListener widget) {
-        ((ScreenAccessor) screen).removeModWidget(widget);
+        ((ScreenInvoker) screen).removeModWidget(widget);
     }
 
     /**
      * Refreshes the elements on the screen.
      */
     public static void refreshWidgets(AbstractContainerScreen<?> screen) {
-        ((ScreenAccessor) screen).refreshWidgets();
+        ((ScreenInvoker) screen).refreshWidgets();
     }
 
     /**

@@ -18,7 +18,6 @@
     "client.accessor.KeyMappingAccessor",
     "client.accessor.MerchantScreenAccessor",
     "client.accessor.RecipeBookComponentAccessor",
-    "client.accessor.ScreenAccessor",
     "client.accessor.ShulkerBoxMenuAccessor",
     "client.hud.AbstractRecipeBookScreenMixin",
     "client.hud.EditBoxMixin",
