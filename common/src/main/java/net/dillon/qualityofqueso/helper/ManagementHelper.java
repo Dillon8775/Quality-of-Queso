@@ -21,6 +21,7 @@ import net.minecraft.world.inventory.Slot;
 import static net.dillon.qualityofqueso.helper.MethodHelper.getRecipeBookComponent;
 import static net.dillon.qualityofqueso.helper.ModConstants.*;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.sound.ModSoundEvents.getSound;
 
 /**
  * Utility and handler class for management features.
@@ -242,7 +243,7 @@ public class ManagementHelper {
             return;
         }
 
-        client.getSoundManager().play(SimpleSoundInstance.forUI(drop ? ModSoundEvents.MANAGEMENT_DROP : ModSoundEvents.MANAGEMENT_SUCCEED, 1.0F, 5.0F));
+        client.getSoundManager().play(SimpleSoundInstance.forUI(drop ? getSound(ModSoundEvents.MANAGEMENT_DROP) : getSound(ModSoundEvents.MANAGEMENT_SUCCEED), 1.0F, 5.0F));
     }
 
     /**
@@ -253,7 +254,7 @@ public class ManagementHelper {
             return;
         }
 
-        client.getSoundManager().play(SimpleSoundInstance.forUI(ModSoundEvents.MANAGEMENT_SORT, 1.0F, 5.0F));
+        client.getSoundManager().play(SimpleSoundInstance.forUI(getSound(ModSoundEvents.MANAGEMENT_SORT), 1.0F, 5.0F));
     }
 
     /**
@@ -264,7 +265,7 @@ public class ManagementHelper {
             return;
         }
 
-        client.getSoundManager().play(SimpleSoundInstance.forUI(ModSoundEvents.MANAGEMENT_REJECT, 1.0F, 0.6F));
+        client.getSoundManager().play(SimpleSoundInstance.forUI(getSound(ModSoundEvents.MANAGEMENT_REJECT), 1.0F, 0.6F));
     }
 
     /**
@@ -275,7 +276,7 @@ public class ManagementHelper {
             return;
         }
 
-        client.getSoundManager().play(SimpleSoundInstance.forUI(lock ? ModSoundEvents.LOCK_SLOT : ModSoundEvents.UNLOCK_SLOT, 1.0F, 0.10F));
+        client.getSoundManager().play(SimpleSoundInstance.forUI(lock ? getSound(ModSoundEvents.LOCK_SLOT) : getSound(ModSoundEvents.UNLOCK_SLOT), 1.0F, 0.10F));
         LOCKED_SLOT_SOUND_COOLDOWN = DEFAULT_LOCKED_SLOT_SOUND_COOLDOWN;
     }
 

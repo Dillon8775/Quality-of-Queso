@@ -20,7 +20,7 @@ public class ModKeyMappings {
     public static final KeyMapping.Category QOQ_KEY_CATEGORY = KeyMapping.Category.register(qoqIdentifier("quality_of_queso"));
 
     /**
-     * Initializes Quality of Queso keybinds, using the {@link Kuma} API.
+     * Initializes all keybinds.
      */
     public static void initKeybinds() {
     }

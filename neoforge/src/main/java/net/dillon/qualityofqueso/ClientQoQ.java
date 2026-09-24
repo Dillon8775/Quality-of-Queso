@@ -18,6 +18,7 @@ public class ClientQoQ {
 
     public ClientQoQ(ModContainer container, IEventBus modEventBus) {
         ModKeyMappings.initKeybinds();
+
         modEventBus.addListener(this::clientSetup);
 
         container.registerExtensionPoint(

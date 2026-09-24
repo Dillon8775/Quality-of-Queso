@@ -6,6 +6,7 @@ import net.dillon.qualityofqueso.option.ContainerData;
 import net.dillon.qualityofqueso.option.LockedContainerSlots;
 import net.dillon.qualityofqueso.option.LockedPlayerSlots;
 import net.dillon.qualityofqueso.option.ModClientOptions;
+import net.dillon.qualityofqueso.sound.ModSoundEvents;
 
 import static net.dillon.qualityofqueso.debug.ModDebugScreenEntries.registerDebugEntries;
 import static net.dillon.qualityofqueso.helper.ModHelper.stop;
@@ -19,6 +20,8 @@ public class ClientMain {
      * Initializes client-side features.
      */
     public static void cInitialize(BalmRegistrars registrars) {
+        ModSoundEvents.registerSounds(registrars);
+
         registerDebugEntries();
 
         checkClientConfigs();
