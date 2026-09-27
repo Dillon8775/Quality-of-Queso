@@ -35,7 +35,7 @@ public abstract class MinecraftMixin {
     private void handleSpecialKeyPressing(CallbackInfo ci) {
         Minecraft minecraft = Minecraft.getInstance();
 
-        if (!modEnabled(minecraft)) {
+        if (!modEnabled()) {
             return;
         }
 
@@ -53,7 +53,7 @@ public abstract class MinecraftMixin {
     private void tickModEvents(CallbackInfo ci) {
         Minecraft minecraft = Minecraft.getInstance();
 
-        if (!modEnabled(minecraft)) {
+        if (!modEnabled()) {
             return;
         }
 

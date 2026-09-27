@@ -148,7 +148,7 @@ public class PauseScreenMixin extends Screen {
 
         if (universal().menuButton.everywhere() && !(this.minecraft.getCurrentServer() == null)) {
             if (this.blacklistServerButton != null) {
-                this.blacklistServerButton.active = isOnServer(this.minecraft);
+                this.blacklistServerButton.active = isOnServer();
                 String address = this.getServerAddress();
 
                 if (universal().multiServerConfigs) {
@@ -171,7 +171,7 @@ public class PauseScreenMixin extends Screen {
         }
 
         if (this.viewLastKnownEnderChestButton != null) {
-            this.viewLastKnownEnderChestButton.active = modEnabled(this.minecraft);
+            this.viewLastKnownEnderChestButton.active = modEnabled();
             if (client().general().tooltips.enabled() && this.viewLastKnownEnderChestButton.isHovered()) {
                 drawTooltip(Component.translatable("qualityofqueso.gui.view_ender_chest.tooltip"), graphics, this.font, mouseX, mouseY);
             }

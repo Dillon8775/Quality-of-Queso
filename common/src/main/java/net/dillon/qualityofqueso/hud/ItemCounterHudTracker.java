@@ -1,15 +1,15 @@
-package net.dillon.qualityofqueso.util;
+package net.dillon.qualityofqueso.hud;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.item.ItemStack;
 
-import static net.dillon.qualityofqueso.helper.GuiHelper.getAnimationTimeInTicks;
-import static net.dillon.qualityofqueso.helper.GuiHelper.getDisplayTimeInTicks;
+import static net.dillon.qualityofqueso.hud.ModHudElement.getAnimationTimeInTicks;
+import static net.dillon.qualityofqueso.hud.ModHudElement.getDisplayTimeInTicks;
 
 /**
- * Utility class, for handling
+ * Utility class, for handling the item counter.
  */
-public class ItemHudTracker {
+public class ItemCounterHudTracker {
     public static boolean ARROW_OUTLINE;
     private static ItemStack stack = ItemStack.EMPTY;
     private static int expireTick;
@@ -56,14 +56,14 @@ public class ItemHudTracker {
      * @return when the tracked item should fully disappear.
      */
     public static int getAnimationEndTick() {
-        return expireTick + getAnimationTimeInTicks(Minecraft.getInstance(), true);
+        return expireTick + getAnimationTimeInTicks(true);
     }
 
     /**
      * @return the slide-out animation time.
      */
     public static int getAnimationTimeTicks() {
-        return getAnimationTimeInTicks(Minecraft.getInstance(), true);
+        return getAnimationTimeInTicks(true);
     }
 
     /**

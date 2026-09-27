@@ -53,7 +53,7 @@ public class RecipeBookComponentMixin {
      */
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
     private void cancelOutChatKey(KeyEvent input, CallbackInfoReturnable<Boolean> cir) {
-        if (!modEnabled(this.minecraft)) {
+        if (!modEnabled()) {
             return;
         }
 

@@ -1,7 +1,6 @@
 package net.dillon.qualityofqueso.mixin.client.screen;
 
 import net.dillon.qualityofqueso.instance.QuesoScreen;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,7 +19,7 @@ public class InventoryScreenMixin {
      */
     @Inject(method = "extractLabels", at = @At("HEAD"), cancellable = true)
     private void removeInventoryScreenTitleText(GuiGraphicsExtractor graphics, int xm, int ym, CallbackInfo ci) {
-        if (!modEnabled(Minecraft.getInstance())) {
+        if (!modEnabled()) {
             return;
         }
 

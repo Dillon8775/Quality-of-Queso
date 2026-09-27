@@ -94,7 +94,7 @@ public class ModKeyMappings {
             .withDefault(InputBinding.key(InputConstants.KEY_N, KeyModifiers.of(KeyModifier.CONTROL)))
             .handleWorldInput(event -> {
                 Minecraft minecraft =  Minecraft.getInstance();
-                if (modEnabled(minecraft) && minecraft.level != null && minecraft.player != null) {
+                if (modEnabled() && minecraft.level != null && minecraft.player != null) {
                     openScreen(new EnderChestPreviewScreen());
                     return true;
                 }

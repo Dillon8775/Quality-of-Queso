@@ -1,6 +1,6 @@
 package net.dillon.qualityofqueso.mixin.client.util;
 
-import net.dillon.qualityofqueso.util.ItemHudTracker;
+import net.dillon.qualityofqueso.hud.ItemCounterHudTracker;
 import net.dillon.qualityofqueso.util.MobHitDingTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -34,7 +34,7 @@ public class ClientPacketListenerMixin {
      */
     @Inject(method = "handleTakeItemEntity", at = @At("HEAD"))
     private void trackPickedUpItem(ClientboundTakeItemEntityPacket packet, CallbackInfo ci) {
-        if (!modEnabled(Minecraft.getInstance()) || !client().itemCounter().displayOnPickup) {
+        if (!modEnabled() || !client().itemCounter().displayOnPickup) {
             return;
         }
 
@@ -77,7 +77,7 @@ public class ClientPacketListenerMixin {
         if (!stack.isStackable()) {
             return;
         }
-        ItemHudTracker.setStack(stack, false);
+        ItemCounterHudTracker.setStack(stack, false);
     }
 
     /**
@@ -86,7 +86,7 @@ public class ClientPacketListenerMixin {
     @Inject(method = "handleDamageEvent", at = @At("HEAD"))
     private void playMobHitDing(ClientboundDamageEventPacket packet, CallbackInfo ci) {
         Minecraft minecraft = Minecraft.getInstance();
-        if (!modEnabled(minecraft) || !client().misc().mobHitDing || minecraft.player == null) {
+        if (!modEnabled() || !client().misc().mobHitDing || minecraft.player == null) {
             return;
         }
 

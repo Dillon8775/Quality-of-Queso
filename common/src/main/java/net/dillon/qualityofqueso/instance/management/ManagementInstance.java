@@ -142,7 +142,7 @@ public class ManagementInstance implements ModInstance {
      * @return if the click can quickly move an item.
      */
     public boolean canQuickMove(MouseButtonEvent event) {
-        return modEnabled(Minecraft.getInstance())
+        return modEnabled()
                 && event.button() == InputConstants.MOUSE_BUTTON_LEFT
                 && !isExcludingOrLockingSlots()
                 && instance().getManagementButtons().alwaysQuickMove() != null

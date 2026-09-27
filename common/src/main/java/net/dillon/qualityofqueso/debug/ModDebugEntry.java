@@ -1,6 +1,5 @@
 package net.dillon.qualityofqueso.debug;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.debug.DebugScreenEntry;
 
 import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
@@ -15,6 +14,6 @@ public abstract class ModDebugEntry implements DebugScreenEntry {
      */
     @Override
     public boolean isAllowed(boolean reducedDebugInfo) {
-        return modEnabled(Minecraft.getInstance());
+        return modEnabled();
     }
 }

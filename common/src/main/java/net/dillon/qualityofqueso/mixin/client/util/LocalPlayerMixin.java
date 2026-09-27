@@ -1,8 +1,8 @@
 package net.dillon.qualityofqueso.mixin.client.util;
 
 import com.mojang.authlib.GameProfile;
+import net.dillon.qualityofqueso.hud.ItemCounterHudTracker;
 import net.dillon.qualityofqueso.main.ClientEvents;
-import net.dillon.qualityofqueso.util.ItemHudTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -24,8 +24,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import static net.dillon.qualityofqueso.helper.GuiHelper.*;
 import static net.dillon.qualityofqueso.helper.ModConstants.PLAYER_FALL_DISTANCE;
 import static net.dillon.qualityofqueso.helper.ModConstants.SHOULD_WARN_OF_ELYTRA;
-import static net.dillon.qualityofqueso.helper.ModHelper.equipmentSlots;
-import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
+import static net.dillon.qualityofqueso.helper.ModHelper.*;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 @Mixin(LocalPlayer.class)
@@ -51,7 +50,7 @@ public class LocalPlayerMixin extends AbstractClientPlayer {
      */
     @Inject(method = "respawn", at = @At("TAIL"))
     private void resetArmorStateWhenRespawning(CallbackInfo ci) {
-        if (!modEnabled(this.minecraft)) {
+        if (!modEnabled()) {
             return;
         }
 
@@ -64,7 +63,7 @@ public class LocalPlayerMixin extends AbstractClientPlayer {
     @Inject(method = "stopUsingItem", at = @At("HEAD"))
     private void onBowUse(CallbackInfo ci) {
         LocalPlayer player = (LocalPlayer) (Object) this;
-        if (!modEnabled(Minecraft.getInstance()) || player.isCreative() || !player.level().isClientSide() || !client().itemCounter().arrowCounter) {
+        if (!modEnabled() || player.isCreative() || !player.level().isClientSide() || !client().itemCounter().arrowCounter) {
             return;
         }
 
@@ -76,7 +75,7 @@ public class LocalPlayerMixin extends AbstractClientPlayer {
         ItemStack projectile = player.getProjectile(useItem);
 
         if (!hasInfinity(useItem) || !projectile.is(Items.ARROW)) {
-            ItemHudTracker.setStack(projectile.isEmpty() ? new ItemStack(Items.ARROW) : projectile.copyWithCount(1), true);
+            ItemCounterHudTracker.setStack(projectile.isEmpty() ? new ItemStack(Items.ARROW) : projectile.copyWithCount(1), true);
         }
     }
 
@@ -85,7 +84,7 @@ public class LocalPlayerMixin extends AbstractClientPlayer {
      */
     @Inject(method = "tick", at = @At("TAIL"))
     private void playDingSounds(CallbackInfo ci) {
-        if (!modEnabled(Minecraft.getInstance())) {
+        if (!modEnabled()) {
             return;
         }
 

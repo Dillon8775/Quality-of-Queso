@@ -37,7 +37,7 @@ public abstract class RecipeButtonMixin extends AbstractWidget {
     @Inject(method = "extractWidgetRenderState", at = @At("TAIL"))
     private void extractSelectedRecipe(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a, CallbackInfo ci) {
         Minecraft minecraft = Minecraft.getInstance();
-        if (!modEnabled(minecraft) || !client().management().bulkCraft || !client().buttonDisplayOptions().displayBulkCraft) {
+        if (!modEnabled() || !client().management().bulkCraft || !client().buttonDisplayOptions().displayBulkCraft) {
             return;
         }
 

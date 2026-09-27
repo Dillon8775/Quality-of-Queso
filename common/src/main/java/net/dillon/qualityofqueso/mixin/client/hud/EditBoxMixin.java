@@ -1,7 +1,6 @@
 package net.dillon.qualityofqueso.mixin.client.hud;
 
 import net.dillon.qualityofqueso.widget.SearchBar;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.EditBox;
@@ -44,7 +43,7 @@ public abstract class EditBoxMixin extends AbstractWidget {
      */
     @ModifyArg(method = "extractWidgetRenderState", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;blitSprite(Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIII)V"), index = 1)
     private Identifier applySearchBarTexture(Identifier original) {
-        if (!modEnabled(Minecraft.getInstance())) {
+        if (!modEnabled()) {
             return original;
         }
 

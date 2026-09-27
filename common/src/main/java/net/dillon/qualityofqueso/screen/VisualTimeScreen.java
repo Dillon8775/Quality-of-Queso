@@ -180,7 +180,6 @@ public class VisualTimeScreen extends BasicDillonLibScreen {
 
         drawVisualTimeClock(
                 graphics,
-                this.minecraft,
                 builder().captureGraphicsWidth(),
                 builder().captureGraphicsHeight() - 2,
                 TEXTURE_SIZE,

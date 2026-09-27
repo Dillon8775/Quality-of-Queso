@@ -30,12 +30,12 @@ public class ClientEvents {
             ModHelper.LOADED = true;
             loadServerConfig();
         }
-        if (isOnServer(minecraft) && client().misc().forceAntiRageQuit) {
+        if (isOnServer() && client().misc().forceAntiRageQuit) {
             client().misc().antiRageQuit = true;
             saveAndApplyConfigs(minecraft);
         }
         executeIfClientPlayer(localPlayer -> {
-            if (client().accessibility().serverWarnings && isOnServer(minecraft)) {
+            if (client().accessibility().serverWarnings && isOnServer()) {
                 for (String server : bannedServers) {
                     if (minecraft.getCurrentServer().ip.contains(server)) {
                         localPlayer.sendSystemMessage(Component.translatable("qualityofqueso.gui.banned_server",
@@ -59,7 +59,7 @@ public class ClientEvents {
     public static void onPlayerDisconnect(Minecraft minecraft) {
         resetArmorHudState();
 
-        if (isOnServer(minecraft)) {
+        if (isOnServer()) {
             unloadServerConfig();
         }
     }
@@ -68,7 +68,7 @@ public class ClientEvents {
      * Warns the user that certain features won't be available because the server doesn't have the mod installed.
      */
     public static void warnModNotPresent(Minecraft minecraft) {
-        if (!modEnabled(minecraft)) {
+        if (!modEnabled()) {
             return;
         }
 

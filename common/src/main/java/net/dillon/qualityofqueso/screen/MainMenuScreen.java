@@ -21,7 +21,7 @@ public class MainMenuScreen extends AbstractModScreen {
 
     @Override
     public void widgets() {
-        boolean modEnabled = modEnabled(this.minecraft);
+        boolean modEnabled = modEnabled();
 
         AbstractWidget configure = this.createWidget(
                 Button.builder(Component.translatable("qualityofqueso.menu.configure"), button -> ClientTasks.tryOpenYaclScreen(

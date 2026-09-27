@@ -75,7 +75,7 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
      */
     @Inject(method = "init", at = @At("TAIL"))
     private void setText(CallbackInfo ci) {
-        if (!modEnabled(this.minecraft) || !client().searching().saveSearchText || this.searchBox == null || selectedTab != CreativeModeTabs.searchTab()) {
+        if (!modEnabled() || !client().searching().saveSearchText || this.searchBox == null || selectedTab != CreativeModeTabs.searchTab()) {
             return;
         }
 
@@ -88,7 +88,7 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
      */
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
     private void handleSearchBarClicking(MouseButtonEvent event, boolean doubleClick, CallbackInfoReturnable<Boolean> cir) {
-        if (!modEnabled(this.minecraft) || this.searchBox == null || !this.searchBox.isHovered()) {
+        if (!modEnabled() || this.searchBox == null || !this.searchBox.isHovered()) {
             return;
         }
 
@@ -109,7 +109,7 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
      */
     @Inject(method = "slotClicked", at = @At("HEAD"))
     private void quickGuiClose(Slot slot, int slotId, int mouseButton, ContainerInput type, CallbackInfo ci) {
-        if (!modEnabled(this.minecraft)) {
+        if (!modEnabled()) {
             return;
         }
 
@@ -123,7 +123,7 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
      */
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
     private void allowCharsUnfocusSearchBar(KeyEvent event, CallbackInfoReturnable<Boolean> cir) {
-        if (!modEnabled(this.minecraft)) {
+        if (!modEnabled()) {
             return;
         }
 

@@ -1,12 +1,9 @@
 package net.dillon.qualityofqueso.helper;
 
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import net.dillon.qualityofqueso.instance.QuesoScreen;
 import net.dillon.qualityofqueso.option.eum.general.Theme;
-import net.dillon.qualityofqueso.option.eum.hud.ItemCounter;
 import net.dillon.qualityofqueso.screen.HudPositionsScreen;
 import net.dillon.qualityofqueso.util.VisualTimeTracker;
-import net.dillon.qualityofqueso.widget.WidgetLayout;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -17,8 +14,6 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.AbstractRecipeBookScreen;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
-import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
-import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.Holder;
@@ -26,31 +21,22 @@ import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.util.CommonColors;
-import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.item.*;
-import net.minecraft.world.item.component.BundleContents;
-import net.minecraft.world.item.component.ItemContainerContents;
+import net.minecraft.world.item.BowItem;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
 import org.lwjgl.sdl.SDLKeyboard;
 
-import java.awt.*;
-import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
 import static net.dillon.dillonlib.task.ClientTasks.*;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
 import static net.dillon.qualityofqueso.helper.MethodHelper.*;
-import static net.dillon.qualityofqueso.helper.ModConstants.*;
-import static net.dillon.qualityofqueso.helper.ModHelper.isLeftHanded;
+import static net.dillon.qualityofqueso.helper.ModConstants.CURRENT_CONTAINER;
+import static net.dillon.qualityofqueso.helper.ModConstants.RENDERED_BUTTONS;
 import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
@@ -75,32 +61,6 @@ public class GuiHelper {
         int x = validScreen ? getTooltipX(graphics, screen, mouseX) : mouseX;
         int y = validScreen ? getTooltipY(CURRENT_CONTAINER, screen, mouseY, searchBar) : mouseY;
         graphics.setTooltipForNextFrame(font, font.split(tooltip, 200), x, y);
-    }
-
-    /**
-     * Draws rendered text on the screen.
-     */
-    @Deprecated
-    public static void drawTextTooltip(Component tooltip, GuiGraphicsExtractor graphics, Font font, Container container, AbstractContainerScreen<?> screen) {
-        WidgetLayout widgetLayout = ((QuesoScreen)screen).getWidgetLayout();
-        int width = isInventoryScreen(screen)
-                && !client().management().layout.horizontal()
-                && RENDERED_BUTTONS > 0
-                && widgetLayout != null && widgetLayout.hasTooManyEffects(Minecraft.getInstance().player)
-                ? 125 : 150;
-        int x = getTextTooltipX(screen ,graphics, font, tooltip, width);
-        int y = getTextTooltipY(container, screen);
-        List<ClientTooltipComponent> lines = getTooltipLines(font, tooltip, width);
-        graphics.tooltip(font, lines, x, y, DefaultTooltipPositioner.INSTANCE, null, false);
-    }
-
-    /**
-     * @return the width to render tooltips.
-     */
-    public static List<ClientTooltipComponent> getTooltipLines(Font font, Component tooltip, int width) {
-        return font.split(tooltip, width).stream()
-                .map(ClientTooltipComponent::create)
-                .toList();
     }
 
     /**
@@ -157,43 +117,10 @@ public class GuiHelper {
     }
 
     /**
-     * @return the x-position for text-rendered tooltips.
+     * @return if the user is positioning HUD elements.
      */
-    public static int getTextTooltipX(AbstractContainerScreen<?> screen, GuiGraphicsExtractor graphics, Font font, Component tooltip, int width) {
-        int textWidth = 0;
-        for (ClientTooltipComponent line : getTooltipLines(font, tooltip, width)) {
-            int lineWidth = line.getWidth(font);
-            if (lineWidth > textWidth) {
-                textWidth = lineWidth;
-            }
-        }
-        int guiWidth = graphics.guiWidth() / 2;
-        int x = guiWidth - textWidth - 108;
-        if (screen instanceof AbstractRecipeBookScreen<?> recipeBookScreen && getRecipeBookComponent(recipeBookScreen).isVisible()) {
-            x += 94;
-        }
-
-        int padding = 4;
-        int maxX = graphics.guiWidth() - textWidth - padding;
-
-        if (x < padding) {
-            x = padding;
-        } else if (x > maxX) {
-            x = maxX;
-        }
-
-        return x;
-    }
-
-    /**
-     * @return the y-position for text-rendered tooltips.
-     */
-    public static int getTextTooltipY(Container container, AbstractContainerScreen<?> screen) {
-        int y = !client().misc().noRecipeBookShift && screen instanceof AbstractRecipeBookScreen<?> recipeBookScreen && getRecipeBookComponent(recipeBookScreen).isVisible() ? 82 : -40;
-        if (isDropperDispenserOrHopperScreen(screen)) {
-            y = -10;
-        }
-        return getTopPos(screen) + getTitleLabelY(screen) + getContainerY(container) + y;
+    public static boolean isPositioningElements() {
+        return getMinecraft().gui.screen() instanceof HudPositionsScreen;
     }
 
     /**
@@ -211,69 +138,10 @@ public class GuiHelper {
     }
 
     /**
-     * @return the item in the given slot.
-     */
-    public static ItemStack getItemBySlot(Minecraft minecraft, EquipmentSlot slot) {
-        return minecraft.player.getItemBySlot(slot);
-    }
-
-    /**
      * @return text with italic and gray.
      */
     public static Component ofItalicAndGray(Component text) {
         return text.copy().withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY);
-    }
-
-    /**
-     * @return if an item and item components equal an item.
-     */
-    public static boolean itemMatchesInventoryItem(ItemStack mainStack, ItemStack otherStack) {
-        return client().itemCounter().onlyCountMatchingItems ? ItemStack.isSameItemSameComponents(mainStack, otherStack) : otherStack.is(mainStack.getItem());
-    }
-
-    /**
-     * @return if a armor slot was changed at all.
-     */
-    public static boolean armorChanged(int slotIndex, ItemStack current) {
-        ItemStack previous = LAST_ARMOR_STACKS[slotIndex];
-        return !ItemStack.isSameItemSameComponents(previous, current);
-    }
-
-    /**
-     * @return if the stack is an arrow.
-     */
-    public static boolean isStackArrow(ItemStack stack) {
-        return stack.is(ItemTags.ARROWS);
-    }
-
-    /**
-     * @return an increased X-value, based on the user's main hand.
-     */
-    public static int increasedBasedOnHand(Minecraft minecraft, int negIncrease, boolean reverse) {
-        if (reverse) {
-            return isLeftHanded(minecraft) ? negIncrease : Math.abs(negIncrease);
-        } else {
-            return isLeftHanded(minecraft) ? Math.abs(negIncrease) : negIncrease;
-        }
-    }
-
-    /**
-     * Plays a generic ding sound.
-     */
-    public static void playDingSound() {
-        playLocalSound(SoundEvents.ARROW_HIT_PLAYER, 0.72F, 0.2F);
-    }
-
-    /**
-     * @return if projectile from either of the player's hand.
-     */
-    public static ItemStack getProjectileFromActiveHand(Minecraft minecraft) {
-        ItemStack offHandItem = minecraft.player.getOffhandItem();
-        if (isProjectileWeapon(offHandItem.getItem())) {
-            return minecraft.player.getProjectile(offHandItem);
-        } else {
-            return minecraft.player.getProjectile(minecraft.player.getMainHandItem());
-        }
     }
 
     /**
@@ -294,27 +162,6 @@ public class GuiHelper {
     }
 
     /**
-     * @return if stack is a projectile weapon.
-     */
-    public static boolean isProjectileWeapon(Item item) {
-        return item instanceof BowItem || item instanceof CrossbowItem;
-    }
-
-    /**
-     * @return if the arrow count can be displayed at all.
-     */
-    public static boolean holdingArrowDisplayableProjectileWeapon(Minecraft minecraft, ItemStack stack) {
-        return client().itemCounter().arrowCounter && !minecraft.player.isCreative() && (stack.getItem() instanceof BowItem || stack.getItem() instanceof CrossbowItem);
-    }
-
-    /**
-     * @return if the always show arrow counter is enabled.
-     */
-    public static boolean isAlwaysShowArrowCounterEnabled(Minecraft minecraft) {
-        return client().itemCounter().arrowCounter && client().itemCounter().alwaysShowArrowCounter && !minecraft.player.isCreative();
-    }
-
-    /**
      * @return the health percentage (or durability %) of an item.
      */
     public static float getItemHealthPercentage(ItemStack stack) {
@@ -323,63 +170,10 @@ public class GuiHelper {
     }
 
     /**
-     * @return if the user is positioning HUD elements.
-     */
-    public static boolean isPositioningElements(Minecraft minecraft) {
-        return minecraft.gui.screen() instanceof HudPositionsScreen;
-    }
-
-    /**
      * @return the armor hotbar texture.
      */
     public static Identifier getArmorHotbarTexture() {
         return client().general().theme == Theme.TRUE_DARK ? qoqIdentifier("hud/armor_hotbar_true_dark") : qoqIdentifier("hud/armor_hotbar");
-    }
-
-    /**
-     * @return the correct sprite to use.
-     */
-    public static Identifier getHighlightedSlotTexture(Minecraft minecraft, Identifier defaultSprite, ItemStack stack, EquipmentSlot equipmentSlot) {
-        float healthPercentage = getItemHealthPercentage(stack);
-
-        if (!client().hud().coloredHighlighting) {
-            return defaultSprite;
-        } else if (healthPercentage < 0.21F) {
-            return SLOT_CRITICAL;
-        } else if (healthPercentage < 0.41F) {
-            return SLOT_LOW;
-        } else if (healthPercentage < 0.61F) {
-            return SLOT_AVERAGE;
-        } else if (healthPercentage < 0.71F) {
-            return SLOT_DECENT;
-        } else if (healthPercentage < 1.0F) {
-            return SLOT_GOOD;
-        } else if ((client().lockedSlots().preventDropping || client().lockedSlots().showLock.inHud()) && isLockedHotbarSlot(minecraft, false) && equipmentSlot == null) {
-            return SLOT_LOCKED;
-        }
-        return defaultSprite;
-    }
-
-    /**
-     * @return if a hotbar slot is locked.
-     */
-    public static boolean isLockedHotbarSlot(Minecraft minecraft, boolean checkForEmpty) {
-        if (!client().lockedSlots().lockedSlots) {
-            return false;
-        }
-
-        Set<Integer> lockedPlayerSlots = ContainerHelper.getLockedSlots(false);
-        if (checkForEmpty && lockedPlayerSlots.isEmpty()) {
-            return false;
-        }
-
-        LocalPlayer player = Minecraft.getInstance().player;
-        if (player == null || (checkForEmpty && getMainHandStack(player).isEmpty())) {
-            return false;
-        }
-
-        int selectedHotbarSlot = minecraft.player.getInventory().getSelectedSlot();
-        return lockedPlayerSlots.contains(selectedHotbarSlot);
     }
 
     /**
@@ -399,33 +193,12 @@ public class GuiHelper {
     }
 
     /**
-     * Draws an equipped stack item.
-     */
-    public static void drawItem(Minecraft minecraft, GuiGraphicsExtractor context, ItemStack stack, int x, int yModifier, boolean overlay) {
-        drawItem(minecraft, context, stack, x, yModifier, overlay, 0);
-    }
-
-    /**
-     * Draws an equipped stack item with a vertical offset.
-     */
-    public static void drawItem(Minecraft minecraft, GuiGraphicsExtractor context, ItemStack stack, int x, int yModifier, boolean overlay, int yOffset) {
-        int i = getGuiWidth(context);
-        int y = getGuiHeight(context) + 1 + yOffset;
-        int fx = i + x;
-        if (!stack.isEmpty()) {
-            context.item(stack, fx, y + yModifier);
-            if (overlay) {
-                context.itemDecorations(minecraft.font, stack, fx, y + yModifier, null);
-            }
-        }
-    }
-
-    /**
      * Draws the visual time clock on the screen.
      */
-    public static void drawVisualTimeClock(GuiGraphicsExtractor graphics, Minecraft minecraft, int x, int y, int size, boolean screen) {
+    public static void drawVisualTimeClock(GuiGraphicsExtractor graphics, int x, int y, int size, boolean screen) {
+        Minecraft minecraft = getMinecraft();
         boolean notOverworld = minecraft.level != null && minecraft.level.dimension() != Level.OVERWORLD;
-        if (!isPositioningElements(minecraft) && !screen && notOverworld) {
+        if (!isPositioningElements() && !screen && notOverworld) {
             return;
         }
 
@@ -443,125 +216,6 @@ public class GuiHelper {
                 size,
                 size
         );
-    }
-
-    /**
-     * @return the count color to display.
-     */
-    public static int getArrowCounterTextColor(int count, boolean hasInfinity) {
-        if (!client().hud().coloredHighlighting || count > (client().itemCounter().itemCounter == ItemCounter.STACKS ? 64 : 99)) {
-            return CommonColors.WHITE;
-        }
-
-        int lightGreen = new Color(0x94FF97).getRGB();
-        int green = CommonColors.GREEN;
-
-        if (hasInfinity) {
-            return green;
-        }
-
-        if (count < 6) {
-            return CommonColors.RED;
-        } else if (count < 11) {
-            return CommonColors.SOFT_RED;
-        } else if (count < 21) {
-            return CommonColors.YELLOW;
-        } else if (count < 31) {
-            return lightGreen;
-        } else {
-            return green;
-        }
-    }
-
-    /**
-     * Iterates through transportable inventories, and returns a count to add.
-     */
-    public static int iterateTransportablesAndAddCount(ItemStack invStack, ItemStack heldStack, List<Integer> items) {
-        int itemInTransportableCount = 0;
-
-        ItemContainerContents container = invStack.get(DataComponents.CONTAINER);
-        BundleContents bundleContents = invStack.get(DataComponents.BUNDLE_CONTENTS);
-
-        if (container != null) {
-            for (ItemStackTemplate containerStack : container.nonEmptyItems()) {
-                if (itemMatchesInventoryItem(heldStack, containerStack.create())) {
-                    itemInTransportableCount += containerStack.count();
-                    items.add(containerStack.count());
-                }
-            }
-        }
-        if (bundleContents != null) {
-            for (ItemStackTemplate bundleStack : bundleContents.items()) {
-                if (itemMatchesInventoryItem(heldStack, bundleStack.create())) {
-                    itemInTransportableCount += bundleStack.count();
-                    items.add(bundleStack.count());
-                }
-            }
-        }
-
-        return itemInTransportableCount;
-    }
-
-    /**
-     * Matches spectator GUI movement timing from a tick timer ending.
-     */
-    public static int getSpectatorAnimationYOffsetFromTicks(int currentTick, int timerEndTick, int animationTicks) {
-        if (currentTick <= timerEndTick || animationTicks <= 0) {
-            return 0;
-        }
-
-        int animationEndTick = timerEndTick + animationTicks;
-        float alpha = Mth.clamp((float) (animationEndTick - currentTick) / animationTicks, 0.0F, 1.0F);
-        return Mth.floor(22.0F * (1.0F - alpha));
-    }
-
-    /**
-     * @return if the current tick is before the target tick.
-     */
-    public static boolean isBeforeTick(int currentTick, int targetTick) {
-        return currentTick - targetTick < 0;
-    }
-
-    /**
-     * @return if the tick is valid for the duration ticks.
-     */
-    public static boolean isWithinTickWindow(int currentTick, int startTick, int durationTicks) {
-        if (durationTicks <= 0) {
-            return false;
-        }
-        int elapsed = currentTick - startTick;
-        return elapsed >= 0 && elapsed < durationTicks;
-    }
-
-    /**
-     * Matches spectator GUI movement timing from a millisecond timer ending.
-     */
-    @Deprecated
-    public static int getSpectatorAnimationYOffsetFromMillis(long currentTimeMillis, long timerEndMillis, long animationMillis) {
-        if (currentTimeMillis <= timerEndMillis || animationMillis <= 0L) {
-            return 0;
-        }
-
-        long animationEndMillis = timerEndMillis + animationMillis;
-        float alpha = Mth.clamp((float) (animationEndMillis - currentTimeMillis) / animationMillis, 0.0F, 1.0F);
-        return Mth.floor(22.0F * (1.0F - alpha));
-    }
-
-    /**
-     * @return the display time for armor status.
-     */
-    public static int getDisplayTimeInTicks() {
-        return (int) (client().hud().displayTime * 20);
-    }
-
-    /**
-     * @return the actual animation time for the armor status.
-     */
-    public static int getAnimationTimeInTicks(Minecraft minecraft, boolean factorItemCounter) {
-        if (!client().hud().animations || (factorItemCounter && isAlwaysShowArrowCounterEnabled(minecraft))) {
-            return 0;
-        }
-        return (int) (client().hud().animationTime * 20);
     }
 
     /**

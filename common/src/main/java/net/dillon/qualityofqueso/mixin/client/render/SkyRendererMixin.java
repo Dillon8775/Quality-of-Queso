@@ -1,6 +1,5 @@
 package net.dillon.qualityofqueso.mixin.client.render;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.SkyRenderer;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,7 +18,7 @@ public class SkyRendererMixin {
      */
     @Inject(method = "shouldRenderDarkDisc", at = @At("HEAD"), cancellable = true)
     private void cancelOutDarkDisc(float deltaPartialTick, ClientLevel level, CallbackInfoReturnable<Boolean> cir) {
-        if (!modEnabled(Minecraft.getInstance()) || client().accessibility().darkDisc) {
+        if (!modEnabled() || client().accessibility().darkDisc) {
             return;
         }
 

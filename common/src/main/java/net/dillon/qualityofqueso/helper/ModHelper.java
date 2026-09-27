@@ -22,7 +22,6 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -36,9 +35,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
-import static net.dillon.dillonlib.task.ClientTasks.getScreen;
+import static net.dillon.dillonlib.task.ClientTasks.*;
 import static net.dillon.qualityofqueso.helper.ModConstants.*;
 import static net.dillon.qualityofqueso.option.OptionInstances.*;
 
@@ -60,21 +58,11 @@ public class ModHelper {
     }
 
     /**
-     * @return if the player is left-handed.
-     */
-    public static boolean isLeftHanded(Minecraft minecraft) {
-        return minecraft.player.getMainArm().getOpposite() == HumanoidArm.RIGHT;
-    }
-
-    /**
      * Checks if any of the mod's features should function.
      */
-    public static boolean modEnabled(Minecraft minecraft) {
-        // Ensure minecraft object is not null
-        Objects.requireNonNull(minecraft, "\"client\" cannot be null.");
-
+    public static boolean modEnabled() {
         // If the player is on a server and the server is blacklisted, the mod is not considered enabled, so return false
-        if (isOnServer(minecraft) && isServerBlacklisted(minecraft)) {
+        if (isOnServer() && isServerBlacklisted()) {
             return false;
         }
 
@@ -85,23 +73,32 @@ public class ModHelper {
     /**
      * @return true if a server is blacklisted.
      */
-    public static boolean isServerBlacklisted(Minecraft instance) {
+    public static boolean isServerBlacklisted() {
+        Minecraft minecraft = getMinecraft();
+
         // If the current server is null, not blacklisted, return false
-        if (instance.getCurrentServer() == null) {
+        if (minecraft.getCurrentServer() == null) {
             return false;
-        } else if (instance.getCurrentServer().ip == null) { // If the IP is null, not blacklisted, return false
+        } else if (minecraft.getCurrentServer().ip == null) { // If the IP is null, not blacklisted, return false
             return false;
         }
 
         // Search through the blacklisted servers lists, and see if current IP address is in the list. Return true if present
-        return universal().blacklistedServers.contains(instance.getCurrentServer().ip);
+        return universal().blacklistedServers.contains(minecraft.getCurrentServer().ip);
     }
 
     /**
      * @return if the player is on a server.
      */
-    public static boolean isOnServer(Minecraft client) {
-        return !(client.getCurrentServer() == null);
+    public static boolean isOnServer() {
+        return !(getMinecraft().getCurrentServer() == null);
+    }
+
+    /**
+     * Plays a generic ding sound.
+     */
+    public static void playDingSound() {
+        playLocalSound(SoundEvents.ARROW_HIT_PLAYER, 0.72F, 0.2F);
     }
 
     /**
@@ -265,7 +262,7 @@ public class ModHelper {
      * Handles removing fog functionality.
      */
     public static void handleFog(Entity entity, FogType fogtype, FogData fogData) {
-        if (!modEnabled(Minecraft.getInstance())) {
+        if (!modEnabled()) {
             return;
         }
 
@@ -396,14 +393,14 @@ public class ModHelper {
         }
         if (instance.getCurrentServer() != null && instance.getCurrentServer().ip != null) {
             // If the server is blacklisted, and multi-server configs are off, the config hasn't already been unloaded, unload it
-            if (isServerBlacklisted(instance) && !universal().multiServerConfigs && !UNLOADED) {
+            if (isServerBlacklisted() && !universal().multiServerConfigs && !UNLOADED) {
                 unload(true);
             } else if (!universal().multiServerConfigs && !UNLOADED) { // Otherwise, if multi-server configs are off and it hasn't been unloaded, unload it
                 unload(true);
             }
             // If we can continue...
             if (CONTINUE) {
-                if (isServerBlacklisted(instance)) {
+                if (isServerBlacklisted()) {
                     // If server is blacklisted and not been unloaded, unload it
                     if (!UNLOADED) {
                         unload(false);

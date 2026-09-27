@@ -1,7 +1,7 @@
 package net.dillon.qualityofqueso.instance;
 
 import net.dillon.qualityofqueso.helper.MethodHelper;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.dillon.qualityofqueso.instance.management.ManagementInstance;
 import net.minecraft.client.gui.screens.inventory.AbstractRecipeBookScreen;
 import net.minecraft.client.input.CharacterEvent;
 
@@ -14,7 +14,11 @@ import static net.dillon.qualityofqueso.option.OptionInstances.client;
 /**
  * Handles char typing events.
  */
-public record CharTypedInstance(AbstractContainerScreen<?> screen) implements ModInstance {
+public class CharTypedInstance extends ManagementInstance {
+
+    public CharTypedInstance(QuesoScreen screen) {
+        super(screen);
+    }
 
     /**
      * Ensures variables and stored values aren't lost during resizing of window.
@@ -24,27 +28,22 @@ public record CharTypedInstance(AbstractContainerScreen<?> screen) implements Mo
             return instance().getSearchFields().container().charTyped(event);
         }
 
-        if (isInventoryScreen(screen)) {
-            if (screen instanceof AbstractRecipeBookScreen<?> recipeScreen
+        if (isInventoryScreen(instance().getScreen())) {
+            if (instance().getScreen() instanceof AbstractRecipeBookScreen<?> recipeScreen
                     && getRecipeBookComponent(recipeScreen).isVisible()
                     && instance().getSearchFields().inventory() != null
                     && instance().getSearchFields().inventory().isFocused()) {
                 String text = instance().getSearchFields().searchText();
                 getRecipeBookComponent(recipeScreen).toggleVisibility();
-                MethodHelper.refreshWidgets(screen);
+                MethodHelper.refreshWidgets(instance().getScreen());
                 if (instance().getSearchFields().inventory() != null) {
                     instance().getSearchFields().inventory().setValue(text);
                     instance().getSearchFields().inventory().setFocused(true);
-                    screen.setFocused(instance().getSearchFields().inventory());
+                    instance().getScreen().setFocused(instance().getSearchFields().inventory());
                 }
             }
         }
 
         return superCharTyped.getAsBoolean();
-    }
-
-    @Override
-    public QuesoScreen instance() {
-        return (QuesoScreen) this.screen;
     }
 }

@@ -208,7 +208,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
      */
     @Inject(method = "init", at = @At("TAIL"))
     private void initialize(CallbackInfo ci) {
-        if (!modEnabled(this.minecraft)) {
+        if (!modEnabled()) {
             return;
         }
 
@@ -227,7 +227,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
      */
     @Inject(method = "extractContents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;extractLabels(Lnet/minecraft/client/gui/GuiGraphicsExtractor;II)V"))
     private void renderLockedSlotsOverlay(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a, CallbackInfo ci) {
-        if (!modEnabled(this.minecraft)) {
+        if (!modEnabled()) {
             return;
         }
 
@@ -243,7 +243,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
      */
     @Inject(method = "extractContents", at = @At("TAIL"))
     private void renderAndInitializeWidgets(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a, CallbackInfo ci) {
-        if (!modEnabled(this.minecraft)) {
+        if (!modEnabled()) {
             return;
         }
 
@@ -262,7 +262,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
      */
     @Inject(method = "extractContents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;extractSlotHighlightFront(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V", shift = At.Shift.AFTER))
     private void grayOutAndRenderLockTexture(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a, CallbackInfo ci) {
-        if (!modEnabled(this.minecraft)) {
+        if (!modEnabled()) {
             return;
         }
 
@@ -277,7 +277,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
      */
     @Inject(method = "extractTooltip", at = @At("HEAD"), cancellable = true)
     private void modifyExistingAndNewTooltips(GuiGraphicsExtractor graphics, int mouseX, int mouseY, CallbackInfo ci) {
-        if (!modEnabled(this.minecraft)) {
+        if (!modEnabled()) {
             return;
         }
 
@@ -294,17 +294,18 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
      */
     @Inject(method = "hasClickedOutside", at = @At("HEAD"), cancellable = true)
     private void handleHasClickedOutside(double mx, double my, int xo, int yo, CallbackInfoReturnable<Boolean> cir) {
-        if (!modEnabled(this.minecraft)) {
+        if (!modEnabled()) {
             return;
         }
 
+
         WidgetBoxBoundsInstance widgetBoxBoundsInstance = new WidgetBoxBoundsInstance(
-                this.screen
+                (QuesoScreen) this.screen
         );
         widgetBoxBoundsInstance.handleClickingOnBox(mx, my, this.widgetLayout, cir);
 
         SearchBarBoundsInstance searchBarBoundsInstance = new SearchBarBoundsInstance(
-                this.screen
+                (QuesoScreen) this.screen
         );
         searchBarBoundsInstance.handleClickingOnBox(mx, my,
                 this.getSearchFields().inventory() != null ? this.getSearchFields().inventory() : this.getSearchFields().container(),
@@ -316,7 +317,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
      */
     @Inject(method = "slotClicked(Lnet/minecraft/world/inventory/Slot;IILnet/minecraft/world/inventory/ContainerInput;)V", at = @At("HEAD"), cancellable = true)
     private void handleSlotClicked(Slot slot, int slotId, int buttonNum, ContainerInput containerInput, CallbackInfo ci) {
-        if (!modEnabled(this.minecraft)) {
+        if (!modEnabled()) {
             return;
         }
 
@@ -334,7 +335,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
      */
     @Inject(method = "mouseReleased", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;slotClicked(Lnet/minecraft/world/inventory/Slot;ILnet/minecraft/client/input/MouseButtonEvent;Lnet/minecraft/world/inventory/ContainerInput;)V", ordinal = 0), cancellable = true, locals = LocalCapture.CAPTURE_FAILEXCEPTION)
     private void handleMouseReleased(MouseButtonEvent event, CallbackInfoReturnable<Boolean> cir, Slot slot, int xo, int yo, boolean clickedOutside, int slotId, Iterator var7, Slot target) {
-        if (!modEnabled(this.minecraft)) {
+        if (!modEnabled()) {
             return;
         }
 
@@ -349,7 +350,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
      */
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
     private void handleMouseClicking(MouseButtonEvent event, boolean doubleClick, CallbackInfoReturnable<Boolean> cir) {
-        if (!modEnabled(this.minecraft)) {
+        if (!modEnabled()) {
             return;
         }
 
@@ -369,7 +370,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
      */
     @Inject(method = "mouseScrolled", at = @At("HEAD"), cancellable = true)
     private void handleMouseScrolling(double x, double y, double scrollX, double scrollY, CallbackInfoReturnable<Boolean> cir) {
-        if (!modEnabled(this.minecraft)) {
+        if (!modEnabled()) {
             return;
         }
 
@@ -386,7 +387,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
      */
     @Inject(method = "mouseReleased", at = @At("HEAD"), cancellable = true)
     private void handleMouseReleasing(MouseButtonEvent event, CallbackInfoReturnable<Boolean> cir) {
-        if (!modEnabled(this.minecraft)) {
+        if (!modEnabled()) {
             return;
         }
 
@@ -401,7 +402,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
      */
     @Inject(method = "mouseDragged", at = @At("HEAD"), cancellable = true)
     private void handleDragClicking(MouseButtonEvent event, double dx, double dy, CallbackInfoReturnable<Boolean> cir) {
-        if (!modEnabled(this.minecraft)) {
+        if (!modEnabled()) {
             return;
         }
 
@@ -416,7 +417,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
      */
     @Inject(method = "keyPressed", at = @At("HEAD"), cancellable = true)
     private void handleKeyPressing(KeyEvent event, CallbackInfoReturnable<Boolean> cir) {
-        if (!modEnabled(this.minecraft)) {
+        if (!modEnabled()) {
             return;
         }
 
@@ -432,7 +433,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
     @Override
     public boolean charTyped(CharacterEvent event) {
         CharTypedInstance charTypedInstance = new CharTypedInstance(
-                this.screen
+                (QuesoScreen) this.screen
         );
         return charTypedInstance.handleCharTyped(event, () -> super.charTyped(event));
     }
@@ -442,14 +443,13 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
      */
     @Override
     public void resize(int width, int height) {
-        if (!modEnabled(this.minecraft)) {
+        if (!modEnabled()) {
             super.resize(width, height);
             return;
         }
 
         ResizeInstance resizeInstance = new ResizeInstance(
-                this.screen,
-                this.getSearchFields()
+                (QuesoScreen) this.screen
         );
         resizeInstance.handleResizing(width, height, this.excludedSlots);
     }
@@ -459,7 +459,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
      */
     @Inject(method = "onClose", at = @At("TAIL"))
     private void handleOnClose(CallbackInfo ci) {
-        if (!modEnabled(this.minecraft)) {
+        if (!modEnabled()) {
             return;
         }
 

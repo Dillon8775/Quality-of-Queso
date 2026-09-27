@@ -22,7 +22,7 @@ public class ClientClockManagerMixin {
     @Inject(method = "totalTicks", at = @At("HEAD"), cancellable = true)
     private void overrideOverworldClockTime(CallbackInfoReturnable<Long> cir) {
         Minecraft minecraft = Minecraft.getInstance();
-        if (!modEnabled(minecraft) || !client().visualTime().overrideClientTime) {
+        if (!modEnabled() || !client().visualTime().overrideClientTime) {
             return;
         }
 
