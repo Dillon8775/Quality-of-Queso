@@ -112,7 +112,7 @@ public class QuickEquipInstance extends ManagementInstance {
 
         // Play sound if not equippable
         if (notEquippable) {
-            playQuickEquipSound(minecraft);
+            playQuickEquipSound();
         }
     }
 }

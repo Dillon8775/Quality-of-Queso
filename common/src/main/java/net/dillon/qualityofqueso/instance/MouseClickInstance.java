@@ -64,7 +64,7 @@ public class MouseClickInstance extends ManagementInstance {
                 || buttonHoveredButInactive(instance().getManagementButtons().sort())
                 || buttonHoveredButInactive(instance().getManagementButtons().swap())
         ) {
-            playButtonInactiveSound(instance().getMinecraft());
+            playButtonInactiveSound();
         }
     }
 
@@ -144,6 +144,7 @@ public class MouseClickInstance extends ManagementInstance {
 
         // Return true for mouse clicked
         setCursor(CursorKey.MOVE);
+        playSortSound();
         cir.setReturnValue(true);
     }
 }

@@ -60,9 +60,9 @@ public class SortingInstance extends ManagementInstance {
     public void trySort() {
         if (canSort()) {
             sortItems();
-            playButtonSound(instance().getMinecraft());
+            playButtonSound();
         } else {
-            playButtonInactiveSound(instance().getMinecraft());
+            playButtonInactiveSound();
         }
     }
 

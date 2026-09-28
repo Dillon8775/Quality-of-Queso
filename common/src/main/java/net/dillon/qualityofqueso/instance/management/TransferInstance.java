@@ -215,9 +215,9 @@ public class TransferInstance extends ManagementInstance {
         }
 
         if (movedItem) {
-            playButtonSound(instance().getMinecraft(), drop);
+            playButtonSound(drop);
         } else {
-            playButtonInactiveSound(instance().getMinecraft());
+            playButtonInactiveSound();
         }
     }
 
@@ -868,9 +868,9 @@ public class TransferInstance extends ManagementInstance {
         }
 
         if (swappedItem) {
-            playButtonSound(instance().getMinecraft(), false);
+            playButtonSound(false);
         } else {
-            playButtonInactiveSound(instance().getMinecraft());
+            playButtonInactiveSound();
         }
     }
 
@@ -892,10 +892,10 @@ public class TransferInstance extends ManagementInstance {
     public void trySwap() {
         if (SwapButton.SWAP_COOLDOWN == 0 && canSwap()) {
             swapItems();
-            playButtonSound(instance().getMinecraft(), false);
+            playButtonSound(false);
             SwapButton.resetCooldown();
         } else {
-            playButtonInactiveSound(instance().getMinecraft());
+            playButtonInactiveSound();
         }
     }
 }

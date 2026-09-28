@@ -40,10 +40,24 @@ public abstract class ModHudElement {
     }
 
     /**
+     * @return if the arrow counter feature is enabled.
+     */
+    private static boolean isArrowCounterEnabled() {
+        return client().itemCounter().arrowCounter;
+    }
+
+    /**
+     * @return if the only show arrow counter is enabled.
+     */
+    protected static boolean isOnlyShowArrowCounterEnabled() {
+        return isArrowCounterEnabled() && client().itemCounter().onlyShowArrowCounter && !getMinecraft().player.isCreative();
+    }
+
+    /**
      * @return if the always show arrow counter is enabled.
      */
     protected static boolean isAlwaysShowArrowCounterEnabled() {
-        return client().itemCounter().arrowCounter && client().itemCounter().alwaysShowArrowCounter && !getMinecraft().player.isCreative();
+        return isArrowCounterEnabled() && client().itemCounter().alwaysShowArrowCounter && !getMinecraft().player.isCreative();
     }
 
     /**

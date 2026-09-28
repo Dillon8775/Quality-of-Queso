@@ -49,7 +49,7 @@ public class MouseScrollInstance extends ManagementInstance {
             ContainerHelper.storeActiveSortMode(nextMode);
             if (SORT_SOUND_COOLDOWN == 0) {
                 SORT_SOUND_COOLDOWN = DEFAULT_SORT_SOUND_COOLDOWN;
-                playSortSound(instance().getMinecraft());
+                playSortSound();
             }
         }
     }
@@ -69,7 +69,7 @@ public class MouseScrollInstance extends ManagementInstance {
         }
 
         ContainerHelper.toggleCurrentFilterMode();
-        playSortSound(instance().getMinecraft());
+        playSortSound();
     }
 
     /**

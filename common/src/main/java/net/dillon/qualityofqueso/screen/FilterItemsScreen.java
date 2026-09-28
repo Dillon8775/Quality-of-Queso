@@ -181,7 +181,7 @@ public class FilterItemsScreen extends Screen {
         ContainerHelper.setCurrentPlaceholderStacks(this.placeholders);
         ContainerHelper.RETURNING_FROM_PLACEHOLDER_SCREEN = true;
         openScreen(this.parentScreen);
-        playButtonSound(this.minecraft);
+        playButtonSound();
     }
 
     /**
@@ -202,7 +202,7 @@ public class FilterItemsScreen extends Screen {
      */
     @Override
     protected void init() {
-        playButtonSound(this.minecraft);
+        playButtonSound();
         this.placeholders.clear();
         this.scrollRow = 0;
         int size = MAX_PLACEHOLDER_SLOTS;
@@ -248,7 +248,7 @@ public class FilterItemsScreen extends Screen {
                         this.placeholders.set(placeholderSlot, copy);
                         this.selectedStack = ItemStack.EMPTY;
                         this.selectedSourceSlot = -1;
-                        playButtonSound(this.minecraft);
+                        playButtonSound();
                     }
                     return true;
                 }
@@ -257,7 +257,7 @@ public class FilterItemsScreen extends Screen {
                 copy.setCount(1);
                 this.selectedStack = copy;
                 this.selectedSourceSlot = sourceSlot;
-                playButtonSound(this.minecraft);
+                playButtonSound();
             }
             return true;
         }
@@ -266,7 +266,7 @@ public class FilterItemsScreen extends Screen {
         if (placeholderSlot >= 0) {
             if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT && !this.placeholders.get(placeholderSlot).isEmpty()) {
                 this.placeholders.set(placeholderSlot, ItemStack.EMPTY);
-                playButtonSound(this.minecraft);
+                playButtonSound();
                 return true;
             }
             if (event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
@@ -279,7 +279,7 @@ public class FilterItemsScreen extends Screen {
                     this.placeholders.set(placeholderSlot, copy);
                     this.selectedStack = ItemStack.EMPTY;
                     this.selectedSourceSlot = -1;
-                    playButtonSound(this.minecraft);
+                    playButtonSound();
                 }
                 return true;
             }
@@ -287,7 +287,7 @@ public class FilterItemsScreen extends Screen {
 
         if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT) {
             if (!this.selectedStack.isEmpty()) {
-                playButtonSound(this.minecraft);
+                playButtonSound();
             }
             this.selectedStack = ItemStack.EMPTY;
             this.selectedSourceSlot = -1;

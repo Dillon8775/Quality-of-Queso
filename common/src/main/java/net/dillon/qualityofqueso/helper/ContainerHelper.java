@@ -668,7 +668,7 @@ public class ContainerHelper {
             // Send the new data over to the server (if it can receive it)
             pushActiveShulkerStateToServer();
             // Play the locked slot sound, finished and return out
-            playLockSlotSound(Minecraft.getInstance(), locked);
+            playLockSlotSound(locked);
             return;
         }
 
@@ -701,7 +701,7 @@ public class ContainerHelper {
         }
 
         // Play the locked slot sound
-        playLockSlotSound(Minecraft.getInstance(), locked);
+        playLockSlotSound(locked);
 
         // Save, according to if container or player inventory
         if (containerSlot) {

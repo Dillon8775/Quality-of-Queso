@@ -4,7 +4,6 @@ import net.dillon.qualityofqueso.instance.management.ExtractingInstance;
 import net.dillon.qualityofqueso.sound.ModSoundEvents;
 import net.dillon.qualityofqueso.widget.QuesoButton;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.*;
@@ -18,6 +17,7 @@ import net.minecraft.world.inventory.AbstractMountInventoryMenu;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.Slot;
 
+import static net.dillon.dillonlib.task.ClientTasks.getMinecraft;
 import static net.dillon.qualityofqueso.helper.MethodHelper.getRecipeBookComponent;
 import static net.dillon.qualityofqueso.helper.ModConstants.*;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
@@ -231,60 +231,60 @@ public class ManagementHelper {
     /**
      * Plays the bundle sounds without the drop when using buttons.
      */
-    public static void playButtonSound(Minecraft client) {
-        playButtonSound(client, false);
+    public static void playButtonSound() {
+        playButtonSound(false);
     }
 
     /**
      * Plays the bundle sounds when using buttons.
      */
-    public static void playButtonSound(Minecraft client, boolean drop) {
+    public static void playButtonSound(boolean drop) {
         if (!client().management().playSounds) {
             return;
         }
 
-        client.getSoundManager().play(SimpleSoundInstance.forUI(drop ? getSound(ModSoundEvents.MANAGEMENT_DROP) : getSound(ModSoundEvents.MANAGEMENT_SUCCEED), 1.0F, 5.0F));
+        getMinecraft().getSoundManager().play(SimpleSoundInstance.forUI(drop ? getSound(ModSoundEvents.MANAGEMENT_DROP) : getSound(ModSoundEvents.MANAGEMENT_SUCCEED), 1.0F, 5.0F));
     }
 
     /**
      * Plays the bundle sounds when sorting
      */
-    public static void playSortSound(Minecraft client) {
+    public static void playSortSound() {
         if (!client().management().playSounds) {
             return;
         }
 
-        client.getSoundManager().play(SimpleSoundInstance.forUI(getSound(ModSoundEvents.MANAGEMENT_SORT), 1.0F, 5.0F));
+        getMinecraft().getSoundManager().play(SimpleSoundInstance.forUI(getSound(ModSoundEvents.MANAGEMENT_SORT), 1.0F, 5.0F));
     }
 
     /**
      * Plays the inactive bundle sound.
      */
-    public static void playButtonInactiveSound(Minecraft client) {
+    public static void playButtonInactiveSound() {
         if (!client().management().playSounds) {
             return;
         }
 
-        client.getSoundManager().play(SimpleSoundInstance.forUI(getSound(ModSoundEvents.MANAGEMENT_REJECT), 1.0F, 0.6F));
+        getMinecraft().getSoundManager().play(SimpleSoundInstance.forUI(getSound(ModSoundEvents.MANAGEMENT_REJECT), 1.0F, 0.6F));
     }
 
     /**
      * Plays the lock slot sound.
      */
-    public static void playLockSlotSound(Minecraft client, boolean lock) {
+    public static void playLockSlotSound(boolean lock) {
         if (!client().lockedSlots().lockedSlots || !client().lockedSlots().lockSound || LOCKED_SLOT_SOUND_COOLDOWN > 0) {
             return;
         }
 
-        client.getSoundManager().play(SimpleSoundInstance.forUI(lock ? getSound(ModSoundEvents.LOCK_SLOT) : getSound(ModSoundEvents.UNLOCK_SLOT), 1.0F, 0.10F));
+        getMinecraft().getSoundManager().play(SimpleSoundInstance.forUI(lock ? getSound(ModSoundEvents.LOCK_SLOT) : getSound(ModSoundEvents.UNLOCK_SLOT), 1.0F, 0.10F));
         LOCKED_SLOT_SOUND_COOLDOWN = DEFAULT_LOCKED_SLOT_SOUND_COOLDOWN;
     }
 
     /**
      * Plays the quick equip sound.
      */
-    public static void playQuickEquipSound(Minecraft client) {
-        client.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.ARMOR_EQUIP_GENERIC.value(), 1.0F, 0.45F));
+    public static void playQuickEquipSound() {
+        getMinecraft().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.ARMOR_EQUIP_GENERIC.value(), 1.0F, 0.45F));
     }
 
     /**

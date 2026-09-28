@@ -2,7 +2,7 @@ package net.dillon.qualityofqueso.mixin.client.util;
 
 import net.dillon.qualityofqueso.helper.ContainerHelper;
 import net.dillon.qualityofqueso.helper.ModConstants;
-import net.dillon.qualityofqueso.hud.ItemCounterHudTracker;
+import net.dillon.qualityofqueso.util.ItemHudTracker;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
@@ -25,9 +25,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.EnderChestBlockEntity;
 import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -47,8 +45,6 @@ import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 @Mixin(MultiPlayerGameMode.class)
 public class MultiPlayerGameModeMixin {
-    @Shadow @Final
-    private Minecraft minecraft;
     @Unique
     private ItemStack stackBeforeGuiThrow = ItemStack.EMPTY;
     @Unique
@@ -90,7 +86,7 @@ public class MultiPlayerGameModeMixin {
                 return;
             }
 
-            ItemCounterHudTracker.setStack(stack.copy(), false);
+            ItemHudTracker.setBaseStack(stack.copy());
         } catch (IndexOutOfBoundsException e) {
         }
     }
@@ -114,7 +110,7 @@ public class MultiPlayerGameModeMixin {
         }
 
         ChargedProjectiles chargedProjectiles = player.getItemInHand(hand).get(DataComponents.CHARGED_PROJECTILES);
-        ItemCounterHudTracker.setStack(chargedProjectiles.isEmpty() ? new ItemStack(Items.ARROW) : chargedProjectiles.itemCopies().toList().getFirst(), true);
+        ItemHudTracker.setShotStack(chargedProjectiles.isEmpty() ? new ItemStack(Items.ARROW) : chargedProjectiles.itemCopies().toList().getFirst());
     }
 
     /**
@@ -127,7 +123,7 @@ public class MultiPlayerGameModeMixin {
         }
 
         if (isLockedHotbarSlot(true)) {
-            playButtonInactiveSound(this.minecraft);
+            playButtonInactiveSound();
             ci.cancel();
         }
     }
@@ -141,7 +137,7 @@ public class MultiPlayerGameModeMixin {
             return;
         }
 
-        ItemCounterHudTracker.setStack(itemStack.copy(), false);
+        ItemHudTracker.setBaseStack(itemStack.copy());
     }
 
     /**
@@ -198,7 +194,7 @@ public class MultiPlayerGameModeMixin {
                 pos.getZ(),
                 filteredContainer
         ));
-        playButtonSound(minecraft, false);
+        playButtonSound(false);
         TRACKED_CONTAINER_COOLDOWN = DEFAULT_TRACKED_CONTAINER_COOLDOWN;
     }
 
