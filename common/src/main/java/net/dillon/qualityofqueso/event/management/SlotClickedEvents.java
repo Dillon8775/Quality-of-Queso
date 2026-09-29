@@ -1,6 +1,6 @@
 package net.dillon.qualityofqueso.event.management;
 
-import net.dillon.qualityofqueso.event.QuesoScreen;
+import net.dillon.qualityofqueso.event.QuesoScreenHolder;
 import net.dillon.qualityofqueso.mixin.client.accessor.MerchantScreenAccessor;
 import net.dillon.qualityofqueso.mixin.client.accessor.RecipeBookComponentAccessor;
 import net.minecraft.client.Minecraft;
@@ -35,7 +35,7 @@ public class SlotClickedEvents extends ManagementEvents {
     private record ActiveTradeAllTask(int containerId, int selectedTradeIndex, int remainingClicks, int emptyResultTicks) {}
     private record ActiveBulkCraftTask(int containerId, @Nullable RecipeDisplayId recipeId, int remainingClicks, int emptyResultTicks) {}
 
-    public SlotClickedEvents(QuesoScreen screen) {
+    public SlotClickedEvents(QuesoScreenHolder screen) {
         super(screen);
     }
 
@@ -58,7 +58,7 @@ public class SlotClickedEvents extends ManagementEvents {
         }
 
         // Prevents any interaction on locked slots
-        if (lockedSlotsInstance().isLockedSlot(slot.index)) {
+        if (lockedSlotEvents().isLockedSlot(slot.index)) {
             ci.cancel();
         }
     }

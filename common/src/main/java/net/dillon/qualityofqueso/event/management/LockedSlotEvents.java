@@ -1,7 +1,7 @@
 package net.dillon.qualityofqueso.event.management;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import net.dillon.qualityofqueso.event.QuesoScreen;
+import net.dillon.qualityofqueso.event.QuesoScreenHolder;
 import net.dillon.qualityofqueso.helper.ContainerHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -26,7 +26,7 @@ import static net.dillon.qualityofqueso.option.OptionInstances.client;
  */
 public class LockedSlotEvents extends ManagementEvents {
 
-    public LockedSlotEvents(QuesoScreen screen) {
+    public LockedSlotEvents(QuesoScreenHolder screen) {
         super(screen);
     }
 
@@ -61,15 +61,15 @@ public class LockedSlotEvents extends ManagementEvents {
      * @return if the user is attempting to drop an entire locked slot stack.
      */
     public boolean droppingEntireLockedSlotStack() {
-        return Minecraft.getInstance().hasControlDown() && hasDropOnlyOneItemModifierDown() && holder().screensHoveredSlot() != null && lockedSlotsInstance().isLockedSlot(holder().screensHoveredSlot().index);
+        return Minecraft.getInstance().hasControlDown() && hasDropOnlyOneItemModifierDown() && holder().screensHoveredSlot() != null && lockedSlotEvents().isLockedSlot(holder().screensHoveredSlot().index);
     }
 
     /**
      * @return if a locked slot drop full stack is valid.
      */
     public boolean shouldCancelDrop() {
-        if (lockedSlotsInstance().droppingEntireLockedSlotStack()
-                ? lockedSlotsInstance().droppingEntireLockedSlotStack() && canScrollMoveAndHasScrollModifierDown()
+        if (lockedSlotEvents().droppingEntireLockedSlotStack()
+                ? lockedSlotEvents().droppingEntireLockedSlotStack() && canScrollMoveAndHasScrollModifierDown()
                 : canScrollMoveAndHasScrollModifierDown() && !hasDropOnlyOneItemModifierDown()) {
             return !(canScrollMoveAndHasScrollModifierDown() && hasDropOnlyOneItemModifierDown() && Minecraft.getInstance().hasAltDown());
         }

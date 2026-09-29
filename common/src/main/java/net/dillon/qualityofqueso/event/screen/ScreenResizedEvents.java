@@ -1,6 +1,6 @@
 package net.dillon.qualityofqueso.event.screen;
 
-import net.dillon.qualityofqueso.event.QuesoScreen;
+import net.dillon.qualityofqueso.event.QuesoScreenHolder;
 import net.dillon.qualityofqueso.event.management.ManagementEvents;
 import net.dillon.qualityofqueso.helper.ContainerHelper;
 import net.minecraft.client.gui.screens.inventory.AbstractRecipeBookScreen;
@@ -15,7 +15,7 @@ import static net.dillon.qualityofqueso.helper.MethodHelper.getRecipeBookCompone
  */
 public class ScreenResizedEvents extends ManagementEvents {
 
-    public ScreenResizedEvents(QuesoScreen screen) {
+    public ScreenResizedEvents(QuesoScreenHolder screen) {
         super(screen);
     }
 

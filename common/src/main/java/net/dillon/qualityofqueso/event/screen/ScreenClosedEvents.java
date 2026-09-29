@@ -1,6 +1,6 @@
 package net.dillon.qualityofqueso.event.screen;
 
-import net.dillon.qualityofqueso.event.QuesoScreen;
+import net.dillon.qualityofqueso.event.QuesoScreenHolder;
 import net.dillon.qualityofqueso.event.management.CursorKey;
 import net.dillon.qualityofqueso.event.management.ManagementEvents;
 import net.dillon.qualityofqueso.helper.ContainerHelper;
@@ -23,7 +23,7 @@ import static net.dillon.qualityofqueso.option.OptionInstances.updateClient;
  */
 public class ScreenClosedEvents extends ManagementEvents {
 
-    public ScreenClosedEvents(QuesoScreen screen) {
+    public ScreenClosedEvents(QuesoScreenHolder screen) {
         super(screen);
     }
 

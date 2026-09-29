@@ -1,6 +1,6 @@
 package net.dillon.qualityofqueso.event.mouse;
 
-import net.dillon.qualityofqueso.event.QuesoScreen;
+import net.dillon.qualityofqueso.event.QuesoScreenHolder;
 import net.dillon.qualityofqueso.event.management.ManagementEvents;
 import net.dillon.qualityofqueso.widget.WidgetLayout;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  */
 public class WidgetBoxClickedEvents extends ManagementEvents {
 
-    public WidgetBoxClickedEvents(QuesoScreen screen) {
+    public WidgetBoxClickedEvents(QuesoScreenHolder screen) {
         super(screen);
     }
 

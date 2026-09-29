@@ -1,6 +1,6 @@
 package net.dillon.qualityofqueso.mixin.client.screen;
 
-import net.dillon.qualityofqueso.event.QuesoScreen;
+import net.dillon.qualityofqueso.event.QuesoScreenHolder;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import org.spongepowered.asm.mixin.Mixin;
@@ -24,7 +24,7 @@ public class InventoryScreenMixin {
         }
 
         if (!client().searching().searchBarPosition.top() && client().searching().inventorySearching && (
-                ((QuesoScreen)this).searchFields().inventory() != null && (((QuesoScreen)this).searchFields().inventory().isFocused() || !(((QuesoScreen)this).searchFields().searchText().isEmpty()))
+                ((QuesoScreenHolder)this).searchFields().inventory() != null && (((QuesoScreenHolder)this).searchFields().inventory().isFocused() || !(((QuesoScreenHolder)this).searchFields().searchText().isEmpty()))
         )) {
             ci.cancel();
         }

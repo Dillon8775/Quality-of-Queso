@@ -1,6 +1,6 @@
 package net.dillon.qualityofqueso.event.management;
 
-import net.dillon.qualityofqueso.event.QuesoScreen;
+import net.dillon.qualityofqueso.event.QuesoScreenHolder;
 import net.dillon.qualityofqueso.helper.ModConstants;
 import net.dillon.qualityofqueso.widget.SearchBar;
 import net.minecraft.client.Minecraft;
@@ -29,7 +29,7 @@ import static net.dillon.qualityofqueso.option.OptionInstances.client;
  */
 public class SearchEvents extends ManagementEvents {
 
-    public SearchEvents(QuesoScreen screen) {
+    public SearchEvents(QuesoScreenHolder screen) {
         super(screen);
     }
 

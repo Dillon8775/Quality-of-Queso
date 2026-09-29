@@ -14,8 +14,7 @@ import net.minecraft.world.item.ItemStack;
 import java.util.Set;
 
 import static net.dillon.dillonlib.task.ClientTasks.*;
-import static net.dillon.qualityofqueso.helper.GuiHelper.getItemHealthPercentage;
-import static net.dillon.qualityofqueso.helper.GuiHelper.getMainHandStack;
+import static net.dillon.qualityofqueso.helper.GuiHelper.*;
 import static net.dillon.qualityofqueso.helper.ModConstants.*;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
@@ -58,6 +57,15 @@ public abstract class ModHudElement {
      */
     protected static boolean isAlwaysShowArrowCounterEnabled() {
         return isArrowCounterEnabled() && client().itemCounter().alwaysShowArrowCounter && !getMinecraft().player.isCreative();
+    }
+
+    /**
+     * @return if the main or offhand has infinity.
+     */
+    public static boolean mainOrOffHandHasInfinity() {
+        ItemStack mainHand = getMainHandStack(minecraft.player);
+        ItemStack offHand = getOffHandStack(minecraft.player);
+        return hasInfinity(mainHand) || hasInfinity(offHand);
     }
 
     /**

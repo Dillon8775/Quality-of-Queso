@@ -5,17 +5,19 @@ import net.dillon.qualityofqueso.event.context.SearchFields;
 import net.dillon.qualityofqueso.mixin.client.screen.AbstractContainerScreenMixin;
 import net.dillon.qualityofqueso.widget.WidgetLayout;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 
+import java.util.List;
 import java.util.Set;
 
 /**
  * Exposes basic methods and variables created in {@link AbstractContainerScreenMixin}.
  */
-public interface QuesoScreen {
+public interface QuesoScreenHolder {
 
     /**
      * @return the current instance of {@link Minecraft} that is running.
@@ -127,4 +129,24 @@ public interface QuesoScreen {
      * @return the {@link WidgetLayout} for a screen.
      */
     WidgetLayout getWidgetLayout();
+
+    /**
+     * @return the list of dynamic buttons.
+     */
+    List<GuiEventListener> dynamicButtons();
+
+    /**
+     * Adds a new dynamic button.
+     */
+    void addDynamicButton(GuiEventListener widget);
+
+    /**
+     * Removes a dynamic button.
+     */
+    void removeDynamicButton(GuiEventListener widget);
+
+    /**
+     * Clears all dynamic buttons.
+     */
+    void clearDynamicButtons();
 }

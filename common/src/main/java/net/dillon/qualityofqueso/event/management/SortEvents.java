@@ -1,6 +1,6 @@
 package net.dillon.qualityofqueso.event.management;
 
-import net.dillon.qualityofqueso.event.QuesoScreen;
+import net.dillon.qualityofqueso.event.QuesoScreenHolder;
 import net.dillon.qualityofqueso.option.eum.management.sorting.CurrentSortingMode;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -24,7 +24,7 @@ import static net.dillon.qualityofqueso.option.OptionInstances.client;
  */
 public class SortEvents extends ManagementEvents {
 
-    public SortEvents(QuesoScreen screen) {
+    public SortEvents(QuesoScreenHolder screen) {
         super(screen);
     }
 
@@ -43,7 +43,7 @@ public class SortEvents extends ManagementEvents {
             Slot slot = holder().menu().getSlot(i);
             if (slot.hasItem()
                     && !isExcludedSlot(slot.index)
-                    && !lockedSlotsInstance().isLockedSlot(slot.index)) {
+                    && !lockedSlotEvents().isLockedSlot(slot.index)) {
                 hasSortableItem = true;
                 break;
             }
@@ -117,7 +117,7 @@ public class SortEvents extends ManagementEvents {
         List<Integer> sortableSlots = new ArrayList<>();
 
         if (inventoryScreen) {
-            Set<Integer> lockedPlayerSlots = lockedSlotsInstance().getLockedPlayerSlots();
+            Set<Integer> lockedPlayerSlots = lockedSlotEvents().getLockedPlayerSlots();
             int end = client().management().includingHotbar ? 45 : 36;
             for (int slotIndex = 9; slotIndex < end; slotIndex++) {
                 int playerSlotId = slotIndex >= 36 ? slotIndex - 36 : slotIndex;
@@ -131,7 +131,7 @@ public class SortEvents extends ManagementEvents {
                 return;
             }
 
-            Set<Integer> lockedContainerSlots = lockedSlotsInstance().getLockedContainerSlots();
+            Set<Integer> lockedContainerSlots = lockedSlotEvents().getLockedContainerSlots();
             for (int i = 0; i < containerSize; i++) {
                 if (!lockedContainerSlots.contains(i) && !(isExcludedSlot(i) && holder().menu().getSlot(i).hasItem())) {
                     sortableSlots.add(i);
@@ -279,7 +279,7 @@ public class SortEvents extends ManagementEvents {
                 continue;
             }
 
-            transferInstance().swapSlots(source, target, sortableSlots);
+            transferEvents().swapSlots(source, target, sortableSlots);
             clearCarriedStack(sortableSlots);
         }
 

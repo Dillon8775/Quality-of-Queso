@@ -74,7 +74,7 @@ public class LocalPlayerMixin extends AbstractClientPlayer {
 
         ItemStack projectile = player.getProjectile(useItem);
 
-        if (!hasInfinity(useItem) || !projectile.is(Items.ARROW)) {
+        if (!hasInfinity(useItem)) {
             ItemHudTracker.setShotStack(projectile.isEmpty() ? new ItemStack(Items.ARROW) : projectile.copyWithCount(1));
         }
     }

@@ -8,7 +8,7 @@ public interface ModInstance {
     /**
      * Simplifies the process of having to call "this.screen" each time.
      */
-    QuesoScreen holder();
+    QuesoScreenHolder holder();
 
     /**
      * @return the default widget handler.

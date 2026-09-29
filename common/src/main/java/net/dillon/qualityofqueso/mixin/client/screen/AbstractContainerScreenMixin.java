@@ -1,6 +1,6 @@
 package net.dillon.qualityofqueso.mixin.client.screen;
 
-import net.dillon.qualityofqueso.event.QuesoScreen;
+import net.dillon.qualityofqueso.event.QuesoScreenHolder;
 import net.dillon.qualityofqueso.event.WidgetHandler;
 import net.dillon.qualityofqueso.event.context.ManagementButtons;
 import net.dillon.qualityofqueso.event.context.SearchFields;
@@ -17,6 +17,7 @@ import net.dillon.qualityofqueso.widget.WidgetLayout;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.MenuAccess;
@@ -39,14 +40,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
 
 @Mixin(AbstractContainerScreen.class)
-public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMenu> extends Screen implements MenuAccess<T>, QuesoScreen, WidgetHandler {
+public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMenu> extends Screen implements MenuAccess<T>, QuesoScreenHolder, WidgetHandler {
     @Shadow
     @Final
     protected T menu;
@@ -62,6 +61,8 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
     private EditBox containerSearchField, inventorySearchField;
     @Unique
     private final ManagementButtons managementButtons = new ManagementButtons();
+    @Unique
+    private final List<GuiEventListener> dynamicButtons = new ArrayList<>();
 
     @Unique
     private Container container;
@@ -129,6 +130,26 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
     @Override
     public ManagementButtons managementButtons() {
         return this.managementButtons;
+    }
+
+    @Override
+    public List<GuiEventListener> dynamicButtons() {
+        return this.dynamicButtons;
+    }
+
+    @Override
+    public void addDynamicButton(GuiEventListener widget) {
+        this.dynamicButtons.add(widget);
+    }
+
+    @Override
+    public void removeDynamicButton(GuiEventListener widget) {
+        this.dynamicButtons.remove(widget);
+    }
+
+    @Override
+    public void clearDynamicButtons() {
+        this.dynamicButtons.clear();
     }
 
     @Override
@@ -221,7 +242,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
         }
 
         ScreenInitializedEvents screenInitInstance = new ScreenInitializedEvents(
-                (QuesoScreen) this.screen
+                (QuesoScreenHolder) this.screen
         );
         screenInitInstance.initializeContainer();
         screenInitInstance.handleTrackedContainers();
@@ -240,7 +261,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
         }
 
         ExtractingEvents extractingInstance = new ExtractingEvents(
-                (QuesoScreen) this.screen
+                (QuesoScreenHolder) this.screen
         );
         extractingInstance.extractLockedSlotColor(graphics);
         extractingInstance.extractHighlightedSlots(graphics);
@@ -256,10 +277,10 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
         }
 
         ExtractingEvents extractingInstance = new ExtractingEvents(
-                (QuesoScreen) this.screen
+                (QuesoScreenHolder) this.screen
         );
         extractingInstance.extractEnhancedCursor(graphics);
-        extractingInstance.clearWidgets();
+        extractingInstance.clearToRefreshWidgets();
         extractingInstance.extractSearchFields(graphics, mouseX, mouseY, a);
         extractingInstance.extractButtons(graphics, mouseX, mouseY, a);
         extractingInstance.extractLockingUnlockingSlots(graphics, mouseX, mouseY);
@@ -275,7 +296,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
         }
 
         ExtractingEvents extractingInstance = new ExtractingEvents(
-                (QuesoScreen) this.screen
+                (QuesoScreenHolder) this.screen
         );
         extractingInstance.grayoutSlotsAndExtractLockedIcon(graphics);
     }
@@ -290,7 +311,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
         }
 
         TooltipEvents modTooltips = new TooltipEvents(
-                (QuesoScreen) this.screen
+                (QuesoScreenHolder) this.screen
         );
         modTooltips.displaySingleMovingTooltips(graphics, this.font, mouseX, mouseY, ci);
         modTooltips.displayEnchantmentHelperTooltips(graphics, this.font, mouseX, mouseY, ci);
@@ -308,12 +329,12 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
 
 
         WidgetBoxClickedEvents widgetBoxBoundsInstance = new WidgetBoxClickedEvents(
-                (QuesoScreen) this.screen
+                (QuesoScreenHolder) this.screen
         );
         widgetBoxBoundsInstance.handleClickingOnBox(mx, my, this.widgetLayout, cir);
 
         SearchBarClickedEvents searchBarBoundsInstance = new SearchBarClickedEvents(
-                (QuesoScreen) this.screen
+                (QuesoScreenHolder) this.screen
         );
         searchBarBoundsInstance.handleClickingOnBox(mx, my,
                 this.searchFields().inventory() != null ? this.searchFields().inventory() : this.searchFields().container(),
@@ -330,7 +351,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
         }
 
         SlotClickedEvents clickSlotInstance = new SlotClickedEvents(
-                (QuesoScreen) this.screen
+                (QuesoScreenHolder) this.screen
         );
         clickSlotInstance.quickGuiClose(slot, buttonNum);
         clickSlotInstance.handleHardLockedSlots(slot, ci);
@@ -348,7 +369,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
         }
 
         MouseReleasedEvents mouseReleasedInstance = new MouseReleasedEvents(
-                (QuesoScreen) this.screen
+                (QuesoScreenHolder) this.screen
         );
         mouseReleasedInstance.disableHardLockedSlotsOnDoubleClick(slot, target, cir);
     }
@@ -363,7 +384,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
         }
 
         MouseClickedEvents mouseClickInstance = new MouseClickedEvents(
-                (QuesoScreen) this.screen
+                (QuesoScreenHolder) this.screen
         );
         mouseClickInstance.trySelectingOrLockingSlot(event, cir);
         mouseClickInstance.tryQuickMoveHighlightedItems(event, cir);
@@ -383,7 +404,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
         }
 
         MouseScrolledEvents mouseScrollInstance = new MouseScrolledEvents(
-                (QuesoScreen) this
+                (QuesoScreenHolder) this
         );
         mouseScrollInstance.changeSortMode(scrollY);
         mouseScrollInstance.changeFilterType(scrollY);
@@ -400,7 +421,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
         }
 
         MouseReleasedEvents mouseReleaseInstance = new MouseReleasedEvents(
-                (QuesoScreen) this.screen
+                (QuesoScreenHolder) this.screen
         );
         mouseReleaseInstance.trackSlotAndLockOrSelect(event, cir);
     }
@@ -415,7 +436,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
         }
 
         MouseDraggedEvents mouseDragInstance = new MouseDraggedEvents(
-                (QuesoScreen) this.screen
+                (QuesoScreenHolder) this.screen
         );
         mouseDragInstance.handleSingularMovingAndLockingOrSelectingSlots(event, cir);
     }
@@ -430,7 +451,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
         }
 
         KeyPressedEvents keyPressInstance = new KeyPressedEvents(
-                (QuesoScreen) this.screen
+                (QuesoScreenHolder) this.screen
         );
         keyPressInstance.handleKeyPressing(event, cir);
     }
@@ -441,7 +462,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
     @Override
     public boolean charTyped(CharacterEvent event) {
         CharTypedEvents charTypedInstance = new CharTypedEvents(
-                (QuesoScreen) this.screen
+                (QuesoScreenHolder) this.screen
         );
         return charTypedInstance.handleCharTyped(event, () -> super.charTyped(event));
     }
@@ -457,7 +478,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
         }
 
         ScreenResizedEvents resizeInstance = new ScreenResizedEvents(
-                (QuesoScreen) this.screen
+                (QuesoScreenHolder) this.screen
         );
         resizeInstance.handleResizing(width, height, this.excludedSlots);
     }
@@ -472,7 +493,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
         }
 
         ScreenClosedEvents closeScreenInstance = new ScreenClosedEvents(
-                (QuesoScreen) this.screen
+                (QuesoScreenHolder) this.screen
         );
         closeScreenInstance.putExcludedSlots();
         closeScreenInstance.saveSearchText();

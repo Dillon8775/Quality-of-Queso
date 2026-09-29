@@ -1,7 +1,7 @@
 package net.dillon.qualityofqueso.event.screen;
 
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import net.dillon.qualityofqueso.event.QuesoScreen;
+import net.dillon.qualityofqueso.event.QuesoScreenHolder;
 import net.dillon.qualityofqueso.event.management.ManagementEvents;
 import net.dillon.qualityofqueso.util.EnchantingHelper;
 import net.minecraft.ChatFormatting;
@@ -37,7 +37,7 @@ import static net.dillon.qualityofqueso.util.EnchantingHelper.isEnchantmentInGro
  */
 public class TooltipEvents extends ManagementEvents {
 
-    public TooltipEvents(QuesoScreen screen) {
+    public TooltipEvents(QuesoScreenHolder screen) {
         super(screen);
     }
 
@@ -100,10 +100,10 @@ public class TooltipEvents extends ManagementEvents {
         boolean hoveredSlotHasItem = hoveredSlotHasItem(hoveredSlot);
 
         // Check if the quick drop button itself is hovered
-        boolean quickDropHovered = buttonHoveredAndActive(holder().managementButtons().quickDrop());
+        boolean quickDropHovered = buttonHoveredAndActive(holder().managementButtons().getQuickDrop());
 
         // Check if any transfer button is hovered (this includes quick drop, transfer container, or transfer inventory)
-        boolean buttonHovered = quickDropHovered || buttonHoveredAndActive(holder().managementButtons().transferContainer()) || buttonHoveredAndActive(holder().managementButtons().transferInventory());
+        boolean buttonHovered = quickDropHovered || buttonHoveredAndActive(holder().managementButtons().getTransferContainer()) || buttonHoveredAndActive(holder().managementButtons().getTransferInventory());
 
         // Check if a shortcut key is held down
         // If quick drop is hovered, then we only check for if shift is held (to only drop one of each item)
@@ -162,18 +162,18 @@ public class TooltipEvents extends ManagementEvents {
                     }
                 }
             } else { // Otherwise just add the raw translation for a singular move amount for a single item
-                if (lockedSlotsInstance().droppingEntireLockedSlotStack()) {
+                if (lockedSlotEvents().droppingEntireLockedSlotStack()) {
                     translation = "qualityofqueso.gui.quick_drop_button.move_amount.full";
                     skip = true;
                 }
                 moveAmountTooltip.add(Component.translatable(translation, getActualMoveAmount()));
-                if (lockedSlotsInstance().droppingEntireLockedSlotStack()) {
+                if (lockedSlotEvents().droppingEntireLockedSlotStack()) {
                     moveAmountTooltip.add(ignoresLockedSlots);
                 }
             }
 
             // Cancel out if we cannot render tooltip
-            if (!canRender && (!lockedSlotsInstance().isLockedSlot(hoveredSlot.index) || !lockedSlotsInstance().droppingEntireLockedSlotStack())) {
+            if (!canRender && (!lockedSlotEvents().isLockedSlot(hoveredSlot.index) || !lockedSlotEvents().droppingEntireLockedSlotStack())) {
                 return;
             }
 

@@ -1,7 +1,7 @@
 package net.dillon.qualityofqueso.event.key;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import net.dillon.qualityofqueso.event.QuesoScreen;
+import net.dillon.qualityofqueso.event.QuesoScreenHolder;
 import net.dillon.qualityofqueso.event.management.CursorKey;
 import net.dillon.qualityofqueso.event.management.ManagementEvents;
 import net.dillon.qualityofqueso.helper.GuiHelper;
@@ -31,7 +31,7 @@ import static net.dillon.qualityofqueso.option.OptionInstances.client;
  */
 public class KeyPressedEvents extends ManagementEvents {
 
-    public KeyPressedEvents(QuesoScreen screen) {
+    public KeyPressedEvents(QuesoScreenHolder screen) {
         super(screen);
     }
 
@@ -43,11 +43,11 @@ public class KeyPressedEvents extends ManagementEvents {
 
         if (!quickDropShortcutPressed
                 && !isCreativeInventoryScreen(holder().screen())
-                && transferInstance().canSingularQuickDrop(event)) {
-            transferInstance().performSingularDrop();
+                && transferEvents().canSingularQuickDrop(event)) {
+            transferEvents().performSingularDrop();
         }
 
-        if (client().lockedSlots().lockedSlots && client().lockedSlots().preventDropping && event.key() == key(getDropKey()).getValue() && holder().screensHoveredSlot() != null && lockedSlotsInstance().isLockedSlot(holder().screensHoveredSlot().index)) {
+        if (client().lockedSlots().lockedSlots && client().lockedSlots().preventDropping && event.key() == key(getDropKey()).getValue() && holder().screensHoveredSlot() != null && lockedSlotEvents().isLockedSlot(holder().screensHoveredSlot().index)) {
             if (canScrollMoveAndHasScrollModifierDown() && hasDropOnlyOneItemModifierDown()) {
                 if (!Minecraft.getInstance().hasAltDown()) {
                     performClickSlot(holder().screen(), holder().screensHoveredSlot(), holder().screensHoveredSlot().index, 1, ContainerInput.THROW);
@@ -67,26 +67,26 @@ public class KeyPressedEvents extends ManagementEvents {
 
         if (client().management().transferring.any()) {
             if (kumaKeyPressed(ModKeyMappings.MOVE_TO_INVENTORY, event)) {
-                transferInstance().transferItems(true, false);
+                transferEvents().transferItems(true, false);
             }
             if (!isBrewingOrFurnaceScreen(holder().screen()) && kumaKeyPressed(ModKeyMappings.MOVE_TO_CONTAINER, event)) {
-                transferInstance().transferItems(false, false);
+                transferEvents().transferItems(false, false);
             }
         }
 
         if (client().sorting().sorting.any()
                 && kumaKeyPressed(ModKeyMappings.SORT, event)) {
-            sortingInstance().trySort();
+            sortingEvents().trySort();
         }
 
         if (client().management().quickDrop.any() && quickDropShortcutPressed) {
-            transferInstance().dropItems(!isContainerScreen(holder().screen()));
+            transferEvents().dropItems(!isContainerScreen(holder().screen()));
         }
 
         if (isContainerScreen(holder().screen())
                 && client().management().swapping.any()
                 && kumaKeyPressed(ModKeyMappings.SWAP_ITEMS, event)) {
-            transferInstance().trySwap();
+            transferEvents().trySwap();
         }
     }
 
@@ -103,7 +103,7 @@ public class KeyPressedEvents extends ManagementEvents {
         boolean isContainer = isContainerScreen(holder().screen());
         boolean isInventory = isInventoryScreen(holder().screen());
 
-        if (!searchInstance().hasSearchField()) {
+        if (!searchEvents().hasSearchField()) {
             holder().screen().onClose();
             cir.setReturnValue(true);
             return true;
@@ -141,7 +141,7 @@ public class KeyPressedEvents extends ManagementEvents {
 
         // Quick equip logic
         if (kumaKeyPressed(ModKeyMappings.QUICK_EQUIP, event)) {
-            quickEquipInstance().quickEquipItem();
+            quickEquipEvents().quickEquipItem();
             if (hoveredSlotHasItem(holder().screensHoveredSlot())) {
                 if (holder().searchFields().inventory() != null && holder().searchFields().inventory().isFocused()) {
                     holder().searchFields().inventory().setFocused(false);

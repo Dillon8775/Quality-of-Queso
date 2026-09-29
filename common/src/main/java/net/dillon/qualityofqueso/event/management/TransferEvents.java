@@ -1,6 +1,6 @@
 package net.dillon.qualityofqueso.event.management;
 
-import net.dillon.qualityofqueso.event.QuesoScreen;
+import net.dillon.qualityofqueso.event.QuesoScreenHolder;
 import net.dillon.qualityofqueso.helper.ContainerHelper;
 import net.dillon.qualityofqueso.option.eum.management.FilteringMode;
 import net.dillon.qualityofqueso.server.DedicatedServerStorage;
@@ -34,7 +34,7 @@ import static net.dillon.qualityofqueso.option.OptionInstances.client;
  */
 public class TransferEvents extends ManagementEvents {
 
-    public TransferEvents(QuesoScreen screen) {
+    public TransferEvents(QuesoScreenHolder screen) {
         super(screen);
     }
 
@@ -135,7 +135,7 @@ public class TransferEvents extends ManagementEvents {
                 continue;
             }
 
-            if (searchInstance().isFilteredBySearch(fromSlot, false)) {
+            if (searchEvents().isFilteredBySearch(fromSlot, false)) {
                 continue; // Then skip container slot if query not found via search
             } else if (!client().management().includingHotbar) {
                 if (drop) {
@@ -147,7 +147,7 @@ public class TransferEvents extends ManagementEvents {
                 }
             }
 
-            if (client().lockedSlots().lockedSlots && lockedSlotsInstance().isLockedSlot(fromSlot.index)) { // Skip locked slots (always)
+            if (client().lockedSlots().lockedSlots && lockedSlotEvents().isLockedSlot(fromSlot.index)) { // Skip locked slots (always)
                 continue;
             } else if (!drop && shouldApplyMatchingFilter() && !isPresent(toInventory, fromStack)) { // Skip items that aren't already present/filtered
                 continue;
@@ -548,13 +548,13 @@ public class TransferEvents extends ManagementEvents {
         if (isExcludedSlot(sourceSlot.index)) {
             return false;
         }
-        if (client().lockedSlots().lockedSlots && client().lockedSlots().hardLockSlots && lockedSlotsInstance().isLockedSlot(sourceSlot.index)) {
+        if (client().lockedSlots().lockedSlots && client().lockedSlots().hardLockSlots && lockedSlotEvents().isLockedSlot(sourceSlot.index)) {
             return false;
         }
         if (toContainer && !client().management().includingHotbar && isHotbarSlot(totalSlots, sourceSlot.index)) {
             return false;
         }
-        return !searchInstance().isFilteredBySearch(sourceSlot, false);
+        return !searchEvents().isFilteredBySearch(sourceSlot, false);
     }
 
     /**
@@ -844,7 +844,7 @@ public class TransferEvents extends ManagementEvents {
                 }
             }
             // Skip locked slots
-            if (lockedSlotsInstance().isLockedSlot(chestSlot.index) || lockedSlotsInstance().isLockedSlot(playerSlot.index)) {
+            if (lockedSlotEvents().isLockedSlot(chestSlot.index) || lockedSlotEvents().isLockedSlot(playerSlot.index)) {
                 continue;
             }
             if (skip) {

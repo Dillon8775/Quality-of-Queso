@@ -1,7 +1,7 @@
 package net.dillon.qualityofqueso.event.mouse;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import net.dillon.qualityofqueso.event.QuesoScreen;
+import net.dillon.qualityofqueso.event.QuesoScreenHolder;
 import net.dillon.qualityofqueso.event.management.ManagementEvents;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.world.inventory.ContainerInput;
@@ -16,7 +16,7 @@ import static net.dillon.qualityofqueso.option.OptionInstances.client;
  */
 public class MouseDraggedEvents extends ManagementEvents {
 
-    public MouseDraggedEvents(QuesoScreen screen) {
+    public MouseDraggedEvents(QuesoScreenHolder screen) {
         super(screen);
     }
 
@@ -25,14 +25,14 @@ public class MouseDraggedEvents extends ManagementEvents {
      */
     public void handleSingularMovingAndLockingOrSelectingSlots(MouseButtonEvent event, CallbackInfoReturnable<Boolean> cir) {
         if (isExcludingOrLockingSlots() && hasAttemptedToLockSelectOrDeselect(event)) {
-            lockedSlotsInstance().selectOrLockSlot(event, cir);
+            lockedSlotEvents().selectOrLockSlot(event, cir);
         }
 
         if (event.button() == InputConstants.MOUSE_BUTTON_LEFT
                 && hoveredSlotHasItem(holder().screensHoveredSlot())
-                && !transferInstance().canSingularMove()
+                && !transferEvents().canSingularMove()
                 && !isExcludingOrLockingSlots()
-                && !lockedSlotsInstance().isLockedSlot(holder().screensHoveredSlot().index)
+                && !lockedSlotEvents().isLockedSlot(holder().screensHoveredSlot().index)
                 && !isExcludedSlot(holder().screensHoveredSlot().index)
                 && (client().isAlwaysQuickMove() || (client().management().dragMoving && event.hasShiftDown()))) {
             sendClickSlotPacket(holder().screensHoveredSlot().index, ContainerInput.QUICK_MOVE);

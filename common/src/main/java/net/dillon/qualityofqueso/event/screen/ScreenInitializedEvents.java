@@ -1,6 +1,6 @@
 package net.dillon.qualityofqueso.event.screen;
 
-import net.dillon.qualityofqueso.event.QuesoScreen;
+import net.dillon.qualityofqueso.event.QuesoScreenHolder;
 import net.dillon.qualityofqueso.event.management.ManagementEvents;
 import net.dillon.qualityofqueso.helper.ContainerHelper;
 import net.dillon.qualityofqueso.helper.MethodHelper;
@@ -20,7 +20,7 @@ import static net.dillon.qualityofqueso.option.OptionInstances.updateClient;
  */
 public class ScreenInitializedEvents extends ManagementEvents {
 
-    public ScreenInitializedEvents(QuesoScreen screen) {
+    public ScreenInitializedEvents(QuesoScreenHolder screen) {
         super(screen);
     }
 
@@ -60,13 +60,13 @@ public class ScreenInitializedEvents extends ManagementEvents {
     public void initializeSearchFields() {
         if (isContainerScreen(holder().screen()) && client().searching().containerSearching) {
             // Initialize the container search field, if it should be initialized
-            widgetHandler().setContainerSearchField(searchInstance().initializeSearchField(false));
+            widgetHandler().setContainerSearchField(searchEvents().initializeSearchField(false));
             MethodHelper.addRenderableModWidget(holder().screen(), holder().searchFields().container());
         } else if (isInventoryScreen(holder().screen())) { // Initialize the inventory search field, if it should be initialized
             // Also initialize the "container" variable to the player's inventory, if the container was never initialized from any of the other screens
             holder().setCachedContainer(holder().mc().player.getInventory());
             if (client().searching().inventorySearching) {
-                widgetHandler().setInventorySearchField(searchInstance().initializeSearchField(true));
+                widgetHandler().setInventorySearchField(searchEvents().initializeSearchField(true));
                 MethodHelper.addRenderableModWidget(holder().screen(), holder().searchFields().inventory());
             }
         }

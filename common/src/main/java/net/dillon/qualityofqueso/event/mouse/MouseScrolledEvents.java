@@ -1,6 +1,6 @@
 package net.dillon.qualityofqueso.event.mouse;
 
-import net.dillon.qualityofqueso.event.QuesoScreen;
+import net.dillon.qualityofqueso.event.QuesoScreenHolder;
 import net.dillon.qualityofqueso.event.management.CursorKey;
 import net.dillon.qualityofqueso.event.management.ManagementEvents;
 import net.dillon.qualityofqueso.event.management.TransferEvents;
@@ -23,7 +23,7 @@ import static net.dillon.qualityofqueso.option.OptionInstances.updateClient;
  */
 public class MouseScrolledEvents extends ManagementEvents {
 
-    public MouseScrolledEvents(QuesoScreen screen) {
+    public MouseScrolledEvents(QuesoScreenHolder screen) {
         super(screen);
     }
 
@@ -31,7 +31,7 @@ public class MouseScrolledEvents extends ManagementEvents {
      * Changes the sort mode when scrolling on the sort button.
      */
     public void changeSortMode(double scrollY) {
-        if (buttonHoveredAndActive(holder().managementButtons().sort())) {
+        if (buttonHoveredAndActive(holder().managementButtons().getSort())) {
             CurrentSortingMode nextMode = client().sorting().currentSortingMode.next(scrollY > 0);
             updateClient(client -> {
                 client.sorting().currentSortingMode = nextMode;
@@ -65,7 +65,7 @@ public class MouseScrolledEvents extends ManagementEvents {
         if (!ContainerHelper.isTrackedFilteringActive()) {
             return;
         }
-        if (!buttonHoveredAndActive(holder().managementButtons().filtering())) {
+        if (!buttonHoveredAndActive(holder().managementButtons().getFiltering())) {
             return;
         }
 
@@ -82,20 +82,20 @@ public class MouseScrolledEvents extends ManagementEvents {
         }
 
         try {
-            if (canScrollMoveAndHasScrollModifierDown() && (holder().managementButtons().transferContainer().isHovered() || holder().managementButtons().transferInventory().isHovered())) {
+            if (canScrollMoveAndHasScrollModifierDown() && (holder().managementButtons().getTransferContainer().isHovered() || holder().managementButtons().getTransferInventory().isHovered())) {
                 changeMountAmount(hoveredSlot, scrollY);
             }
         } catch (NullPointerException o) {
         }
 
-        if (lockedSlotsInstance().shouldCancelDrop()) {
+        if (lockedSlotEvents().shouldCancelDrop()) {
             return;
         }
 
         boolean validHoveredSlot = hoveredSlotHasItem(hoveredSlot) && hoveredSlot.getItem().count() > 1;
         if (!isCreativeInventoryScreen(holder().screen()) && holder().getCanMoveOne() && (validHoveredSlot && hasDropOnlyOneItemModifierDown())
-                || buttonHoveredAndActive(holder().managementButtons().quickDrop()) ? hasDropOnlyOneItemModifierDown()
-                : ((validHoveredSlot || buttonHoveredAndActive(holder().managementButtons().transferContainer()) || buttonHoveredAndActive(holder().managementButtons().transferInventory())) && canScrollMoveAndHasScrollModifierDown())) {
+                || buttonHoveredAndActive(holder().managementButtons().getQuickDrop()) ? hasDropOnlyOneItemModifierDown()
+                : ((validHoveredSlot || buttonHoveredAndActive(holder().managementButtons().getTransferContainer()) || buttonHoveredAndActive(holder().managementButtons().getTransferInventory())) && canScrollMoveAndHasScrollModifierDown())) {
             changeMountAmount(hoveredSlot, scrollY);
         }
     }

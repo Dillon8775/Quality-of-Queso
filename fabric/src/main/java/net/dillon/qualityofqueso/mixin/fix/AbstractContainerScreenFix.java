@@ -1,7 +1,7 @@
 package net.dillon.qualityofqueso.mixin.fix;
 
 import net.dillon.dillonlib.mixinplugin.Predicated;
-import net.dillon.qualityofqueso.event.QuesoScreen;
+import net.dillon.qualityofqueso.event.QuesoScreenHolder;
 import net.dillon.qualityofqueso.event.management.ManagementEvents;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -19,7 +19,7 @@ public class AbstractContainerScreenFix {
      */
     @Unique
     private ManagementEvents managementInstance() {
-        return new ManagementEvents((QuesoScreen) (AbstractContainerScreen<?>)(Object)this);
+        return new ManagementEvents((QuesoScreenHolder) (AbstractContainerScreen<?>)(Object)this);
     }
 
     /**

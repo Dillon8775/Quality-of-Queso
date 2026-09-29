@@ -22,8 +22,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static net.dillon.dillonlib.task.ClientTasks.*;
-import static net.dillon.qualityofqueso.helper.GuiHelper.hasInfinity;
-import static net.dillon.qualityofqueso.helper.GuiHelper.isPositioningElements;
+import static net.dillon.qualityofqueso.helper.GuiHelper.*;
 import static net.dillon.qualityofqueso.helper.ModConstants.*;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
@@ -265,7 +264,10 @@ public class ItemCounterHudElement extends ModHudElement {
                 count,
                 shouldRender,
                 // Arrow counter can be valid if counting stack is an arrow, user is holding a projectile, or should always show arrow counter
-                isStackArrow(countStack) || projectile || alwaysShowArrowFallback,
+                (
+                        (isStackArrow(countStack) || countStack.is(Items.FIREWORK_ROCKET))
+                                && !ItemHudTracker.getShotStack().isEmpty()
+                ) || shouldCountProjectile(getOffHandStack(minecraft.player)) /* offhand check */ || projectile /* main hand check */ || alwaysShowArrowFallback,
                 projectile,
                 animationYOffset,
                 items
@@ -318,6 +320,11 @@ public class ItemCounterHudElement extends ModHudElement {
 
             // Continue iteration if nothing matches
             if (!matchesProjectile && !matchesNormalItem) {
+                continue;
+            }
+
+            // Continue if held bow has infinity and inventory stack is an arrow
+            if (invStack.is(Items.ARROW) && mainOrOffHandHasInfinity()) {
                 continue;
             }
 
@@ -515,6 +522,11 @@ public class ItemCounterHudElement extends ModHudElement {
                 renderStack
         );
 
+        boolean renderBowProjectile = shouldRenderBowProjectile(
+                heldStack,
+                renderStack
+        );
+
         return new CounterRenderState(
                 renderStack,
                 count.count(),
@@ -523,6 +535,7 @@ public class ItemCounterHudElement extends ModHudElement {
                 renderOutline,
                 renderWarning,
                 renderCrossbowProjectile,
+                renderBowProjectile,
                 infinity,
                 count.evenStack(),
                 count.animationYOffset()
@@ -552,7 +565,13 @@ public class ItemCounterHudElement extends ModHudElement {
                 && count.arrowCounter()
                 && isStackArrow(count.stack());
 
+        // Return fake arrow if held bow has infinity and the next projectile is certainly a normal arrow
+        if (mainOrOffHandHasInfinity() && getProjectileFromActiveHand().is(Items.ARROW)) {
+            return fakeArrow();
+        }
+
         if (arrowAndZero) {
+            // If the tracked stack isn't an arrow but holding a projectile weapon, return a fake arrow
             if (count.projectileWeapon() && !isStackArrow(trackerStack)) {
                 return fakeArrow();
             }
@@ -640,9 +659,9 @@ public class ItemCounterHudElement extends ModHudElement {
             return CommonColors.WHITE;
         }
 
-        // Green for infinity
+        // White for infinity
         if (infinity) {
-            return CommonColors.GREEN;
+            return CommonColors.WHITE;
         }
 
         // Red for 5 or under
@@ -702,7 +721,7 @@ public class ItemCounterHudElement extends ModHudElement {
         }
 
         // Must be valid arrow counter to render
-        if (!client().hud().warningIndicators || infinity || !count.arrowCounter()) {
+        if (!client().hud().warningIndicators || infinity || mainOrOffHandHasInfinity() || !count.arrowCounter()) {
             return false;
         }
 
@@ -717,6 +736,16 @@ public class ItemCounterHudElement extends ModHudElement {
         // Current render stack must be empty in order to render crossbow projectile
         return heldStack.getItem() instanceof CrossbowItem
                 && CrossbowItem.isCharged(heldStack)
+                && !renderStack.isEmpty();
+    }
+
+    /**
+     * @return if the bow projectile indicator should be rendered.
+     */
+    private boolean shouldRenderBowProjectile(ItemStack heldStack, ItemStack renderStack) {
+        // Current render stack must be empty in order to render bow projectile
+        return heldStack.getItem() instanceof BowItem
+                && BowItem.getPowerForTime(minecraft.player.getTicksUsingItem()) > 0.1F
                 && !renderStack.isEmpty();
     }
 
@@ -744,6 +773,15 @@ public class ItemCounterHudElement extends ModHudElement {
             renderCrossbowProjectile(
                     graphics,
                     state.renderStack(),
+                    itemX,
+                    animationYOffset
+            );
+        }
+
+        // Render the counter for a bow projectile
+        if (state.renderBowProjectile()) {
+            renderBowProjectile(
+                    graphics,
                     itemX,
                     animationYOffset
             );
@@ -857,7 +895,7 @@ public class ItemCounterHudElement extends ModHudElement {
 
         // Get the highlighted color (if any)
         Identifier sprite = HOTBAR_SELECTION_SPRITE;
-        if (client().hud().coloredHighlighting) {
+        if (client().hud().coloredHighlighting && !mainOrOffHandHasInfinity()) {
             sprite = count < 11
                     ? SLOT_CRITICAL
                     : count < 21
@@ -948,13 +986,35 @@ public class ItemCounterHudElement extends ModHudElement {
     }
 
     /**
-     * Renders the correct projectile when holding a crossbow.
+     * Renders the mini crossbow overlay when charged.
      */
     private void renderCrossbowProjectile(GuiGraphicsExtractor graphics, ItemStack renderStack, int itemX, int animationYOffset) {
         // Get the correct sprite
         Identifier sprite = isStackArrow(renderStack)
                 ? MINI_CROSSBOW
                 : MINI_CROSSBOW_FIREWORK;
+
+        // Then draw the sprite
+        drawSprite(
+                graphics,
+                sprite,
+                (getGuiWidth(graphics) + itemX) - 8,
+                getGuiHeight(graphics) - 2
+                        + animationYOffset
+                        + client().itemCounter().itemCounterPosition[1],
+                13,
+                13
+        );
+    }
+
+    /**
+     * Renders the mini bow overlay when charging up.
+     */
+    private void renderBowProjectile(GuiGraphicsExtractor graphics, int itemX, int animationYOffset) {
+        // Get the correct sprite
+        Identifier sprite = BowItem.getPowerForTime(minecraft.player.getTicksUsingItem()) == 1.0F
+                ? MINI_BOW_CRITICAL
+                : MINI_BOW;
 
         // Then draw the sprite
         drawSprite(
@@ -1000,6 +1060,7 @@ public class ItemCounterHudElement extends ModHudElement {
             boolean renderOutline,
             boolean renderWarning,
             boolean renderCrossbowProjectile,
+            boolean renderBowProjectile,
             boolean infinity,
             boolean evenStack,
             int animationYOffset

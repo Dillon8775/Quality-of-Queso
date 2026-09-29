@@ -1,6 +1,5 @@
 package net.dillon.qualityofqueso.event;
 
-import net.dillon.qualityofqueso.event.context.ManagementButtons;
 import net.minecraft.client.gui.components.EditBox;
 
 /**
@@ -17,9 +16,4 @@ public interface WidgetHandler {
      * Sets the inventory search field.
      */
     void setInventorySearchField(EditBox inventorySearchField);
-
-    /**
-     * @return all management buttons.
-     */
-    ManagementButtons getManagementButtons();
 }

@@ -1,6 +1,6 @@
 package net.dillon.qualityofqueso.event.management;
 
-import net.dillon.qualityofqueso.event.QuesoScreen;
+import net.dillon.qualityofqueso.event.QuesoScreenHolder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -18,7 +18,7 @@ import static net.dillon.qualityofqueso.option.OptionInstances.client;
  */
 public class QuickEquipEvents extends ManagementEvents {
 
-    public QuickEquipEvents(QuesoScreen screen) {
+    public QuickEquipEvents(QuesoScreenHolder screen) {
         super(screen);
     }
 

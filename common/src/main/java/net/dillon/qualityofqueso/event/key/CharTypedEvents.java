@@ -1,6 +1,6 @@
 package net.dillon.qualityofqueso.event.key;
 
-import net.dillon.qualityofqueso.event.QuesoScreen;
+import net.dillon.qualityofqueso.event.QuesoScreenHolder;
 import net.dillon.qualityofqueso.event.management.ManagementEvents;
 import net.dillon.qualityofqueso.helper.MethodHelper;
 import net.minecraft.client.gui.screens.inventory.AbstractRecipeBookScreen;
@@ -17,7 +17,7 @@ import static net.dillon.qualityofqueso.option.OptionInstances.client;
  */
 public class CharTypedEvents extends ManagementEvents {
 
-    public CharTypedEvents(QuesoScreen screen) {
+    public CharTypedEvents(QuesoScreenHolder screen) {
         super(screen);
     }
 

@@ -1,6 +1,6 @@
 package net.dillon.qualityofqueso.event.mouse;
 
-import net.dillon.qualityofqueso.event.QuesoScreen;
+import net.dillon.qualityofqueso.event.QuesoScreenHolder;
 import net.dillon.qualityofqueso.event.management.ManagementEvents;
 import net.dillon.qualityofqueso.keybind.ModKeyMappings;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -16,7 +16,7 @@ import static net.dillon.qualityofqueso.option.OptionInstances.client;
  */
 public class MouseReleasedEvents extends ManagementEvents {
 
-    public MouseReleasedEvents(QuesoScreen screen) {
+    public MouseReleasedEvents(QuesoScreenHolder screen) {
         super(screen);
     }
 
@@ -27,8 +27,8 @@ public class MouseReleasedEvents extends ManagementEvents {
         // If hovered slot is excluded or locked, or if the matching target slot is excluded or locked, do not move it when double-clicking quick move
         if (isExcludedSlot(slot.index)
                 || isExcludedSlot(target.index)
-                || lockedSlotsInstance().isLockedSlot(target.index)
-                || lockedSlotsInstance().isLockedSlot(slot.index)) {
+                || lockedSlotEvents().isLockedSlot(target.index)
+                || lockedSlotEvents().isLockedSlot(slot.index)) {
             cir.cancel();
         }
     }
@@ -38,7 +38,7 @@ public class MouseReleasedEvents extends ManagementEvents {
      */
     public void trackSlotAndLockOrSelect(MouseButtonEvent event, CallbackInfoReturnable<Boolean> cir) {
         if (isExcludingOrLockingSlots() && hasAttemptedToLockSelectOrDeselect(event)) {
-            lockedSlotsInstance().selectOrLockSlot(event, cir);
+            lockedSlotEvents().selectOrLockSlot(event, cir);
         }
 
         if (client().lockedSlots().lockedSlots && kumaMousePressed(ModKeyMappings.LOCK_SLOT, event)) {

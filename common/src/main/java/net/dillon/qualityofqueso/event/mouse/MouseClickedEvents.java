@@ -1,7 +1,7 @@
 package net.dillon.qualityofqueso.event.mouse;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import net.dillon.qualityofqueso.event.QuesoScreen;
+import net.dillon.qualityofqueso.event.QuesoScreenHolder;
 import net.dillon.qualityofqueso.event.management.CursorKey;
 import net.dillon.qualityofqueso.event.management.ManagementEvents;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -23,7 +23,7 @@ import static net.dillon.qualityofqueso.option.OptionInstances.client;
  */
 public class MouseClickedEvents extends ManagementEvents {
 
-    public MouseClickedEvents(QuesoScreen screen) {
+    public MouseClickedEvents(QuesoScreenHolder screen) {
         super(screen);
     }
 
@@ -32,7 +32,7 @@ public class MouseClickedEvents extends ManagementEvents {
      */
     public void trySelectingOrLockingSlot(MouseButtonEvent event, CallbackInfoReturnable<Boolean> cir) {
         if (isExcludingOrLockingSlots() && hasAttemptedToLockSelectOrDeselect(event)) {
-            lockedSlotsInstance().selectOrLockSlot(event, cir);
+            lockedSlotEvents().selectOrLockSlot(event, cir);
         }
     }
 
@@ -40,8 +40,8 @@ public class MouseClickedEvents extends ManagementEvents {
      * Quickly equips an item.
      */
     public void quickEquipItem(MouseButtonEvent event, CallbackInfoReturnable<Boolean> cir) {
-        if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT && holder().screensHoveredSlot() != null && quickEquipInstance().isQuicklyEquippable(holder().screensHoveredSlot().getItem())) {
-            quickEquipInstance().quickEquipItem();
+        if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT && holder().screensHoveredSlot() != null && quickEquipEvents().isQuicklyEquippable(holder().screensHoveredSlot().getItem())) {
+            quickEquipEvents().quickEquipItem();
             cir.setReturnValue(true);
         }
     }
@@ -59,11 +59,11 @@ public class MouseClickedEvents extends ManagementEvents {
      * Handles clicking inactive buttons.
      */
     public void handleButtonInactiveSounds() {
-        if (buttonHoveredButInactive(holder().managementButtons().transferContainer())
-                || buttonHoveredButInactive(holder().managementButtons().transferInventory())
-                || buttonHoveredButInactive(holder().managementButtons().quickDrop())
-                || buttonHoveredButInactive(holder().managementButtons().sort())
-                || buttonHoveredButInactive(holder().managementButtons().swap())
+        if (buttonHoveredButInactive(holder().managementButtons().getTransferContainer())
+                || buttonHoveredButInactive(holder().managementButtons().getTransferInventory())
+                || buttonHoveredButInactive(holder().managementButtons().getQuickDrop())
+                || buttonHoveredButInactive(holder().managementButtons().getSort())
+                || buttonHoveredButInactive(holder().managementButtons().getSwap())
         ) {
             playButtonInactiveSound();
         }
@@ -77,8 +77,8 @@ public class MouseClickedEvents extends ManagementEvents {
             boolean dropOnlyOne = hasDropOnlyOneItemModifierDown();
             boolean hasSingleModifierDown = canScrollMoveAndHasScrollModifierDown();
             if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT && ((((dropOnlyOne || hasSingleModifierDown) && hoveredSlotHasItem(holder().screensHoveredSlot())))
-                    || buttonHoveredAndActive(holder().managementButtons().transferInventory())
-                    || buttonHoveredAndActive(holder().managementButtons().transferContainer()))) {
+                    || buttonHoveredAndActive(holder().managementButtons().getTransferInventory())
+                    || buttonHoveredAndActive(holder().managementButtons().getTransferContainer()))) {
                 MOVE_AMOUNT = 1;
                 cir.setReturnValue(true);
             }
@@ -142,7 +142,7 @@ public class MouseClickedEvents extends ManagementEvents {
             }
 
             // Move items, as long as its not locked
-            if (!lockedSlotsInstance().isLockedSlot(slot.index)) {
+            if (!lockedSlotEvents().isLockedSlot(slot.index)) {
                 int slotCount = getSlotCount(slot);
                 holder().mc().gameMode.handleContainerInput(
                         menu.containerId,

@@ -3,7 +3,7 @@ package net.dillon.qualityofqueso.event.management;
 import com.mojang.blaze3d.platform.InputConstants;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.dillon.qualityofqueso.event.ModInstance;
-import net.dillon.qualityofqueso.event.QuesoScreen;
+import net.dillon.qualityofqueso.event.QuesoScreenHolder;
 import net.dillon.qualityofqueso.event.WidgetHandler;
 import net.dillon.qualityofqueso.helper.ContainerHelper;
 import net.dillon.qualityofqueso.option.eum.management.FilteringMode;
@@ -39,9 +39,9 @@ import static net.dillon.qualityofqueso.option.OptionInstances.client;
  * Holds management related methods.
  */
 public class ManagementEvents implements ModInstance {
-    private final QuesoScreen screen;
+    private final QuesoScreenHolder screen;
 
-    public ManagementEvents(QuesoScreen screen) {
+    public ManagementEvents(QuesoScreenHolder screen) {
         this.screen = screen;
     }
 
@@ -49,42 +49,42 @@ public class ManagementEvents implements ModInstance {
      * The current searching instance to use.
      * <p>For accessing search fields, use {@link WidgetHandler}.</p>
      */
-    public SearchEvents searchInstance() {
+    public SearchEvents searchEvents() {
         return new SearchEvents(this.screen);
     }
 
     /**
      * @return the current transferring instance to use.
      */
-    public TransferEvents transferInstance() {
+    public TransferEvents transferEvents() {
         return new TransferEvents(this.screen);
     }
 
     /**
      * @return the current locked slot instance to use.
      */
-    public LockedSlotEvents lockedSlotsInstance() {
+    public LockedSlotEvents lockedSlotEvents() {
         return new LockedSlotEvents(this.screen);
     }
 
     /**
      * @return the current sorting instance to use.
      */
-    public SortEvents sortingInstance() {
+    public SortEvents sortingEvents() {
         return new SortEvents(this.screen);
     }
 
     /**
-     * @return the current widget handler instance to use.
+     * @return the widget instance to use.
      */
-    public WidgetHandlerEvents widgetHandlerInstance() {
-        return new WidgetHandlerEvents(this.screen);
+    public WidgetEvents widgetEvents() {
+        return new WidgetEvents(this.screen);
     }
 
     /**
      * @return the current quick equip instance to use.
      */
-    public QuickEquipEvents quickEquipInstance() {
+    public QuickEquipEvents quickEquipEvents() {
         return new QuickEquipEvents(this.screen);
     }
 
@@ -145,8 +145,8 @@ public class ManagementEvents implements ModInstance {
         return modEnabled()
                 && event.button() == InputConstants.MOUSE_BUTTON_LEFT
                 && !isExcludingOrLockingSlots()
-                && holder().managementButtons().alwaysQuickMove() != null
-                && !transferInstance().canSingularMove()
+                && holder().managementButtons().getAlwaysQuickMove() != null
+                && !transferEvents().canSingularMove()
                 ? client().isAlwaysQuickMove() || event.hasShiftDown()
                 : event.hasShiftDown();
     }
@@ -206,10 +206,10 @@ public class ManagementEvents implements ModInstance {
 
             // Skip locked slots
             if (isPlayerInventory) {
-                if (lockedSlotsInstance().getLockedPlayerSlots().contains(i)) {
+                if (lockedSlotEvents().getLockedPlayerSlots().contains(i)) {
                     continue;
                 }
-            } else if (lockedSlotsInstance().isLockedSlot(slot.index)) {
+            } else if (lockedSlotEvents().isLockedSlot(slot.index)) {
                 continue;
             }
 
@@ -260,8 +260,8 @@ public class ManagementEvents implements ModInstance {
                     continue;
                 }
 
-                if (searchInstance().search(holder().searchFields().searchText(), slot, false)) {
-                    if (!lockedSlotsInstance().isLockedSlot(slot.index) && !(isShulkerBoxScreen(holder().screen()) && slot.getItem().is(ItemTags.SHULKER_BOXES))) {
+                if (searchEvents().search(holder().searchFields().searchText(), slot, false)) {
+                    if (!lockedSlotEvents().isLockedSlot(slot.index) && !(isShulkerBoxScreen(holder().screen()) && slot.getItem().is(ItemTags.SHULKER_BOXES))) {
                         if (!applyFillWhatsPresentFilter || !shouldApplyMatchingFilter() || isPresent(toInventory, slot.getItem())) {
                             foundQueries++;
                         }
@@ -272,7 +272,7 @@ public class ManagementEvents implements ModInstance {
             for (int i = 0; i < holder().container().getContainerSize(); i++) {
                 Slot slot = holder().menu().getSlot(i);
 
-                if (lockedSlotsInstance().isLockedSlot(slot.index)) {
+                if (lockedSlotEvents().isLockedSlot(slot.index)) {
                     continue;
                 }
 
@@ -280,7 +280,7 @@ public class ManagementEvents implements ModInstance {
                     continue;
                 }
 
-                if (searchInstance().search(holder().searchFields().searchText(), slot, false)) {
+                if (searchEvents().search(holder().searchFields().searchText(), slot, false)) {
                     foundQueries++;
                 }
             }
@@ -554,10 +554,10 @@ public class ManagementEvents implements ModInstance {
             if (isExcludedSlot(sourceSlot.index)) {
                 continue;
             }
-            if (!searchInstance().search(holder().searchFields().searchText(), sourceSlot, false)) {
+            if (!searchEvents().search(holder().searchFields().searchText(), sourceSlot, false)) {
                 continue;
             }
-            if (lockedSlotsInstance().isLockedSlot(sourceSlot.index)) {
+            if (lockedSlotEvents().isLockedSlot(sourceSlot.index)) {
                 continue;
             }
             if (isShulkerBoxScreen(holder().screen()) && sourceSlot.getItem().is(ItemTags.SHULKER_BOXES)) {
@@ -720,7 +720,7 @@ public class ManagementEvents implements ModInstance {
             if (isExcludedSlot(slot.index)) {
                 continue;
             }
-            if (client().lockedSlots().lockedSlots && lockedSlotsInstance().isLockedSlot(slot.index)) {
+            if (client().lockedSlots().lockedSlots && lockedSlotEvents().isLockedSlot(slot.index)) {
                 continue;
             }
             return slot.index;
@@ -729,7 +729,7 @@ public class ManagementEvents implements ModInstance {
     }
 
     @Override
-    public QuesoScreen holder() {
+    public QuesoScreenHolder holder() {
         return this.screen;
     }
 }
