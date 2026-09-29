@@ -1,7 +1,6 @@
 package net.dillon.qualityofqueso.mixin.client.screen;
 
 import net.dillon.qualityofqueso.event.QuesoScreenHolder;
-import net.dillon.qualityofqueso.event.WidgetHandler;
 import net.dillon.qualityofqueso.event.context.ManagementButtons;
 import net.dillon.qualityofqueso.event.context.SearchFields;
 import net.dillon.qualityofqueso.event.key.CharTypedEvents;
@@ -45,7 +44,7 @@ import java.util.*;
 import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
 
 @Mixin(AbstractContainerScreen.class)
-public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMenu> extends Screen implements MenuAccess<T>, QuesoScreenHolder, WidgetHandler {
+public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMenu> extends Screen implements MenuAccess<T>, QuesoScreenHolder {
     @Shadow
     @Final
     protected T menu;
@@ -135,11 +134,6 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
     @Override
     public List<GuiEventListener> dynamicButtons() {
         return this.dynamicButtons;
-    }
-
-    @Override
-    public void addDynamicButton(GuiEventListener widget) {
-        this.dynamicButtons.add(widget);
     }
 
     @Override

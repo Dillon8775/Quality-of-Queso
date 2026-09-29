@@ -60,13 +60,13 @@ public class ScreenInitializedEvents extends ManagementEvents {
     public void initializeSearchFields() {
         if (isContainerScreen(holder().screen()) && client().searching().containerSearching) {
             // Initialize the container search field, if it should be initialized
-            widgetHandler().setContainerSearchField(searchEvents().initializeSearchField(false));
+            holder().setContainerSearchField(searchEvents().initializeSearchField(false));
             MethodHelper.addRenderableModWidget(holder().screen(), holder().searchFields().container());
         } else if (isInventoryScreen(holder().screen())) { // Initialize the inventory search field, if it should be initialized
             // Also initialize the "container" variable to the player's inventory, if the container was never initialized from any of the other screens
             holder().setCachedContainer(holder().mc().player.getInventory());
             if (client().searching().inventorySearching) {
-                widgetHandler().setInventorySearchField(searchEvents().initializeSearchField(true));
+                holder().setInventorySearchField(searchEvents().initializeSearchField(true));
                 MethodHelper.addRenderableModWidget(holder().screen(), holder().searchFields().inventory());
             }
         }

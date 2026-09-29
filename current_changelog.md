@@ -13,6 +13,7 @@
 - The color for the arrow counter text when a held bow has infinity is now white instead of green.
 - Held bows w/ infinity no longer count normal arrows to the arrow counter when using a special type of arrow.
 - Held bows w/ infinity do not display colored highlighting on the arrow counter or render the warning indicator when using a special type of arrow.
+- Tapping a crossbow to attempt to charge it but not fully charging will no longer display the arrow counter for # of seconds.
 - Several bugs fixed (some not mentioned below) related to arrow x item counter.
 
 ## Bugs Fixed

@@ -5,6 +5,7 @@ import net.dillon.qualityofqueso.event.context.SearchFields;
 import net.dillon.qualityofqueso.mixin.client.screen.AbstractContainerScreenMixin;
 import net.dillon.qualityofqueso.widget.WidgetLayout;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.world.Container;
@@ -131,14 +132,19 @@ public interface QuesoScreenHolder {
     WidgetLayout getWidgetLayout();
 
     /**
+     * Sets the container search field.
+     */
+    void setContainerSearchField(EditBox containerSearchField);
+
+    /**
+     * Sets the inventory search field.
+     */
+    void setInventorySearchField(EditBox inventorySearchField);
+
+    /**
      * @return the list of dynamic buttons.
      */
     List<GuiEventListener> dynamicButtons();
-
-    /**
-     * Adds a new dynamic button.
-     */
-    void addDynamicButton(GuiEventListener widget);
 
     /**
      * Removes a dynamic button.

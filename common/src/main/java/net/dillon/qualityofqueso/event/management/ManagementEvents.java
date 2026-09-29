@@ -2,9 +2,8 @@ package net.dillon.qualityofqueso.event.management;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import net.dillon.qualityofqueso.event.ModInstance;
+import net.dillon.qualityofqueso.event.ModEvent;
 import net.dillon.qualityofqueso.event.QuesoScreenHolder;
-import net.dillon.qualityofqueso.event.WidgetHandler;
 import net.dillon.qualityofqueso.helper.ContainerHelper;
 import net.dillon.qualityofqueso.option.eum.management.FilteringMode;
 import net.minecraft.client.Minecraft;
@@ -38,7 +37,7 @@ import static net.dillon.qualityofqueso.option.OptionInstances.client;
 /**
  * Holds management related methods.
  */
-public class ManagementEvents implements ModInstance {
+public class ManagementEvents implements ModEvent {
     private final QuesoScreenHolder screen;
 
     public ManagementEvents(QuesoScreenHolder screen) {

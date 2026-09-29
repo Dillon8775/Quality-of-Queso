@@ -8,10 +8,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.item.BowItem;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.ProjectileWeaponItem;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.GameType;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -69,6 +66,10 @@ public class LocalPlayerMixin extends AbstractClientPlayer {
 
         ItemStack useItem = player.getUseItem();
         if (!(useItem.getItem() instanceof ProjectileWeaponItem) || BowItem.getPowerForTime(player.getTicksUsingItem()) < 0.1F) {
+            return;
+        }
+
+        if (useItem.getItem() instanceof CrossbowItem crossbowItem && !CrossbowItem.isCharged(crossbowItem.getDefaultInstance())) {
             return;
         }
 
