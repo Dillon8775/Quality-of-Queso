@@ -1,6 +1,6 @@
-package net.dillon.qualityofqueso.instance.management;
+package net.dillon.qualityofqueso.event.management;
 
-import net.dillon.qualityofqueso.instance.QuesoScreen;
+import net.dillon.qualityofqueso.event.QuesoScreen;
 import net.dillon.qualityofqueso.option.eum.management.sorting.CurrentSortingMode;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -22,9 +22,9 @@ import static net.dillon.qualityofqueso.option.OptionInstances.client;
 /**
  * Handles sorting features.
  */
-public class SortingInstance extends ManagementInstance {
+public class SortEvents extends ManagementEvents {
 
-    public SortingInstance(QuesoScreen screen) {
+    public SortEvents(QuesoScreen screen) {
         super(screen);
     }
 
@@ -32,7 +32,7 @@ public class SortingInstance extends ManagementInstance {
      * @return if a container can be sorted.
      */
     public boolean canSort() {
-        boolean inventory = isInventoryScreen(instance().getScreen());
+        boolean inventory = isInventoryScreen(holder().screen());
         int sortStart = inventory ? 9 : 0;
         int sortEnd = inventory
                 ? (client().management().includingHotbar ? 45 : 36)
@@ -40,7 +40,7 @@ public class SortingInstance extends ManagementInstance {
 
         boolean hasSortableItem = false;
         for (int i = sortStart; i < sortEnd; i++) {
-            Slot slot = instance().getScreenMenu().getSlot(i);
+            Slot slot = holder().menu().getSlot(i);
             if (slot.hasItem()
                     && !isExcludedSlot(slot.index)
                     && !lockedSlotsInstance().isLockedSlot(slot.index)) {
@@ -50,7 +50,7 @@ public class SortingInstance extends ManagementInstance {
         }
 
         return hasSortableItem
-                && instance().getSearchFields().searchText().isEmpty()
+                && holder().searchFields().searchText().isEmpty()
                 && getCursorStack().isEmpty();
     }
 
@@ -106,14 +106,14 @@ public class SortingInstance extends ManagementInstance {
      * Sorts all items in a container.
      */
     public void sortItems() {
-        if (instance().getMinecraft().player == null || instance().getMinecraft().getConnection() == null) {
+        if (holder().mc().player == null || holder().mc().getConnection() == null) {
             return;
         }
         if (!(getScreen() instanceof AbstractContainerScreen<?> || getScreen() instanceof InventoryScreen)) {
             return;
         }
 
-        boolean inventoryScreen = isInventoryScreen(instance().getScreen());
+        boolean inventoryScreen = isInventoryScreen(holder().screen());
         List<Integer> sortableSlots = new ArrayList<>();
 
         if (inventoryScreen) {
@@ -121,7 +121,7 @@ public class SortingInstance extends ManagementInstance {
             int end = client().management().includingHotbar ? 45 : 36;
             for (int slotIndex = 9; slotIndex < end; slotIndex++) {
                 int playerSlotId = slotIndex >= 36 ? slotIndex - 36 : slotIndex;
-                if (!lockedPlayerSlots.contains(playerSlotId) && !(isExcludedSlot(slotIndex) && instance().getScreenMenu().getSlot(slotIndex).hasItem())) {
+                if (!lockedPlayerSlots.contains(playerSlotId) && !(isExcludedSlot(slotIndex) && holder().menu().getSlot(slotIndex).hasItem())) {
                     sortableSlots.add(slotIndex);
                 }
             }
@@ -133,7 +133,7 @@ public class SortingInstance extends ManagementInstance {
 
             Set<Integer> lockedContainerSlots = lockedSlotsInstance().getLockedContainerSlots();
             for (int i = 0; i < containerSize; i++) {
-                if (!lockedContainerSlots.contains(i) && !(isExcludedSlot(i) && instance().getScreenMenu().getSlot(i).hasItem())) {
+                if (!lockedContainerSlots.contains(i) && !(isExcludedSlot(i) && holder().menu().getSlot(i).hasItem())) {
                     sortableSlots.add(i);
                 }
             }
@@ -149,7 +149,7 @@ public class SortingInstance extends ManagementInstance {
             mergedAnyInPass = false;
             for (int sourcePos = 0; sourcePos < sortableSlots.size(); sourcePos++) {
                 int i = sortableSlots.get(sourcePos);
-                Slot source = instance().getScreenMenu().slots.get(i);
+                Slot source = holder().menu().slots.get(i);
                 if (!source.hasItem()) {
                     continue;
                 }
@@ -164,7 +164,7 @@ public class SortingInstance extends ManagementInstance {
 
                 for (int targetPos = sourcePos + 1; targetPos < sortableSlots.size(); targetPos++) {
                     int j = sortableSlots.get(targetPos);
-                    Slot target = instance().getScreenMenu().slots.get(j);
+                    Slot target = holder().menu().slots.get(j);
                     if (!target.hasItem()) {
                         continue;
                     }
@@ -184,7 +184,7 @@ public class SortingInstance extends ManagementInstance {
                     clickSlot(i);
 
                     // If cursor still has items, put them back
-                    if (!instance().getMinecraft().player.containerMenu.getCarried().isEmpty()) {
+                    if (!holder().mc().player.containerMenu.getCarried().isEmpty()) {
                         clickSlot(j);
                     }
 
@@ -205,7 +205,7 @@ public class SortingInstance extends ManagementInstance {
         // Build list from LIVE slots AFTER merge
         List<ItemStack> stacks = new ArrayList<>();
         for (int slotIndex : sortableSlots) {
-            ItemStack stack = instance().getScreenMenu().slots.get(slotIndex).getItem();
+            ItemStack stack = holder().menu().slots.get(slotIndex).getItem();
             if (!stack.isEmpty()) {
                 stacks.add(stack.copy());
             }
@@ -268,7 +268,7 @@ public class SortingInstance extends ManagementInstance {
         for (int targetPos = 0; targetPos < sortableSlots.size(); targetPos++) {
             int target = sortableSlots.get(targetPos);
             ItemStack desired = stacks.get(targetPos);
-            ItemStack actual = instance().getScreenMenu().slots.get(target).getItem();
+            ItemStack actual = holder().menu().slots.get(target).getItem();
 
             if (areEquivalentSortStacks(actual, desired, strictCountMatch)) {
                 continue;
@@ -303,9 +303,9 @@ public class SortingInstance extends ManagementInstance {
 
         // Prefer locating where the player's inventory section actually begins.
         // This avoids assuming a fixed 36-slot tail on modded menus that expose extra player slots.
-        if (instance().getMinecraft().player != null) {
-            AbstractContainerMenu menu = instance().getScreenMenu();
-            Inventory playerInventory = instance().getMinecraft().player.getInventory();
+        if (holder().mc().player != null) {
+            AbstractContainerMenu menu = holder().menu();
+            Inventory playerInventory = holder().mc().player.getInventory();
             for (int i = 0; i < totalSlots; i++) {
                 if (menu.getSlot(i).container == playerInventory) {
                     return i;
@@ -376,7 +376,7 @@ public class SortingInstance extends ManagementInstance {
      * Tries to never leave a stack on the cursor during/after sort.
      */
     private void clearCarriedStack(List<Integer> allowedSlots) {
-        AbstractContainerMenu menu = instance().getScreenMenu();
+        AbstractContainerMenu menu = holder().menu();
         ItemStack carried = menu.getCarried();
         if (carried.isEmpty()) {
             return;
@@ -424,7 +424,7 @@ public class SortingInstance extends ManagementInstance {
 
         for (int i = startPos + 1; i < sortableSlots.size(); i++) {
             int slotIndex = sortableSlots.get(i);
-            ItemStack stack = instance().getScreenMenu().slots.get(slotIndex).getItem();
+            ItemStack stack = holder().menu().slots.get(slotIndex).getItem();
             if (areEquivalentSortStacks(stack, target, strictCountMatch)) {
                 return slotIndex;
             }

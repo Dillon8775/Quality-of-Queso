@@ -1,28 +1,29 @@
-package net.dillon.qualityofqueso.instance;
+package net.dillon.qualityofqueso.event.screen;
 
+import net.dillon.qualityofqueso.event.QuesoScreen;
+import net.dillon.qualityofqueso.event.management.CursorKey;
+import net.dillon.qualityofqueso.event.management.ManagementEvents;
 import net.dillon.qualityofqueso.helper.ContainerHelper;
 import net.dillon.qualityofqueso.helper.MethodHelper;
-import net.dillon.qualityofqueso.instance.management.CursorKey;
-import net.dillon.qualityofqueso.instance.management.ManagementInstance;
 import net.dillon.qualityofqueso.option.eum.management.FilteringMode;
 import net.minecraft.client.gui.screens.inventory.AbstractRecipeBookScreen;
 
 import java.util.HashSet;
 
+import static net.dillon.qualityofqueso.event.management.ExtractingEvents.setCursor;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.isContainerScreen;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.isInventoryScreen;
 import static net.dillon.qualityofqueso.helper.MethodHelper.getRecipeBookComponent;
 import static net.dillon.qualityofqueso.helper.ModConstants.*;
-import static net.dillon.qualityofqueso.instance.management.ExtractingInstance.setCursor;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 import static net.dillon.qualityofqueso.option.OptionInstances.updateClient;
 
 /**
  * Handles closing of screens.
  */
-public class CloseScreenInstance extends ManagementInstance {
+public class ScreenClosedEvents extends ManagementEvents {
 
-    public CloseScreenInstance(QuesoScreen screen) {
+    public ScreenClosedEvents(QuesoScreen screen) {
         super(screen);
     }
 
@@ -31,7 +32,7 @@ public class CloseScreenInstance extends ManagementInstance {
      */
     public void putExcludedSlots() {
         if (SAVING_EXCLUDED_SLOTS) {
-            SAVED_EXCLUDED_SLOTS.put(getTotalSlots(), new HashSet<>(instance().getExcludedSlots()));
+            SAVED_EXCLUDED_SLOTS.put(getTotalSlots(), new HashSet<>(holder().excludedSlots()));
         }
     }
 
@@ -40,10 +41,10 @@ public class CloseScreenInstance extends ManagementInstance {
      */
     public void saveSearchText() {
         if (client().searching().saveSearchText) {
-            if (isInventoryScreen(instance().getScreen()) && instance().getSearchFields().inventory() != null) {
-                updateClient(client -> client.searching().savedSearchText = instance().getSearchFields().inventory().getValue());
-            } else if (isContainerScreen(instance().getScreen()) && instance().getSearchFields().container() != null) {
-                updateClient(client -> client.searching().savedSearchText = instance().getSearchFields().container().getValue());
+            if (isInventoryScreen(holder().screen()) && holder().searchFields().inventory() != null) {
+                updateClient(client -> client.searching().savedSearchText = holder().searchFields().inventory().getValue());
+            } else if (isContainerScreen(holder().screen()) && holder().searchFields().container() != null) {
+                updateClient(client -> client.searching().savedSearchText = holder().searchFields().container().getValue());
             }
         }
     }
@@ -69,10 +70,10 @@ public class CloseScreenInstance extends ManagementInstance {
      */
     public void autoCloseRecipeBook() {
         if (client().misc().autoCloseRecipeBook
-                && instance().getScreen() instanceof AbstractRecipeBookScreen<?> recipeBookScreen
+                && holder().screen() instanceof AbstractRecipeBookScreen<?> recipeBookScreen
                 && getRecipeBookComponent(recipeBookScreen).isVisible()) {
             getRecipeBookComponent(recipeBookScreen).toggleVisibility();
-            MethodHelper.refreshWidgets(instance().getScreen());
+            MethodHelper.refreshWidgets(holder().screen());
         }
     }
 
@@ -80,13 +81,13 @@ public class CloseScreenInstance extends ManagementInstance {
      * Handles tracked containers when closing a screen.
      */
     public void handleTrackedContainers() {
-        if (instance().getDisableFilteringOnClose()) {
+        if (holder().getDisableFilteringOnClose()) {
             updateClient(client -> {
                 client.management().filteringMode = FilteringMode.NONE;
             });
         }
 
-        if (isContainerScreen(instance().getScreen())) {
+        if (isContainerScreen(holder().screen())) {
             if (ContainerHelper.OPENING_PLACEHOLDER_SCREEN) {
                 ContainerHelper.OPENING_PLACEHOLDER_SCREEN = false;
                 return;

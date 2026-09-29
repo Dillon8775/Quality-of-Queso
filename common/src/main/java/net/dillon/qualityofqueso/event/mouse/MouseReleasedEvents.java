@@ -1,6 +1,7 @@
-package net.dillon.qualityofqueso.instance;
+package net.dillon.qualityofqueso.event.mouse;
 
-import net.dillon.qualityofqueso.instance.management.ManagementInstance;
+import net.dillon.qualityofqueso.event.QuesoScreen;
+import net.dillon.qualityofqueso.event.management.ManagementEvents;
 import net.dillon.qualityofqueso.keybind.ModKeyMappings;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.world.inventory.Slot;
@@ -13,9 +14,9 @@ import static net.dillon.qualityofqueso.option.OptionInstances.client;
 /**
  * Handles mouse-releasing functions.
  */
-public class MouseReleaseInstance extends ManagementInstance {
+public class MouseReleasedEvents extends ManagementEvents {
 
-    public MouseReleaseInstance(QuesoScreen screen) {
+    public MouseReleasedEvents(QuesoScreen screen) {
         super(screen);
     }
 
@@ -41,8 +42,8 @@ public class MouseReleaseInstance extends ManagementInstance {
         }
 
         if (client().lockedSlots().lockedSlots && kumaMousePressed(ModKeyMappings.LOCK_SLOT, event)) {
-            instance().setLastLockedSlotIndex(-1);
-            instance().setLockDragAction(0);
+            holder().setLastLockedSlotIndex(-1);
+            holder().setLockDragAction(0);
         }
     }
 }

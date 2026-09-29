@@ -1,8 +1,8 @@
-package net.dillon.qualityofqueso.instance.management;
+package net.dillon.qualityofqueso.event.management;
 
 import net.dillon.dillonlib.mixin.accessor.ScreenInvoker;
+import net.dillon.qualityofqueso.event.QuesoScreen;
 import net.dillon.qualityofqueso.helper.ContainerHelper;
-import net.dillon.qualityofqueso.instance.QuesoScreen;
 import net.dillon.qualityofqueso.option.ModClientOptions;
 import net.dillon.qualityofqueso.widget.*;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -20,10 +20,10 @@ import static net.dillon.qualityofqueso.option.OptionInstances.updateClient;
 /**
  * Initializes buttons and widgets.
  */
-public class WidgetHandlerInstance extends ManagementInstance {
+public class WidgetHandlerEvents extends ManagementEvents {
     public final List<GuiEventListener> dynamicButtons = new ArrayList<>();
 
-    public WidgetHandlerInstance(QuesoScreen screen) {
+    public WidgetHandlerEvents(QuesoScreen screen) {
         super(screen);
     }
 
@@ -31,7 +31,7 @@ public class WidgetHandlerInstance extends ManagementInstance {
      * Adds a widget to the screen, and adds it to the dynamic buttons for reference.
      */
     public <T extends GuiEventListener & NarratableEntry> T addWidget(T widget) {
-        ((ScreenInvoker)instance().getScreen()).addModWidget(widget);
+        ((ScreenInvoker) holder().screen()).addModWidget(widget);
         this.dynamicButtons.add(widget);
         return widget;
     }
@@ -41,8 +41,8 @@ public class WidgetHandlerInstance extends ManagementInstance {
      */
     public QuesoButton createTransferContainer() {
         return new QuesoButton(
-                instance().getScreenMenu(),
-                instance().getMinecraft().font,
+                holder().menu(),
+                holder().mc().font,
                 searchInstance().getSearchFieldText(),
                 TRANSFER_CONTAINER_BUTTON_PATH,
                 TRANSFER_CONTAINER_BUTTON_NAME,
@@ -56,14 +56,14 @@ public class WidgetHandlerInstance extends ManagementInstance {
      */
     public QuesoButton createTransferInventory() {
         return new QuesoButton(
-                instance().getScreenMenu(),
-                instance().getMinecraft().font,
+                holder().menu(),
+                holder().mc().font,
                 searchInstance().getSearchFieldText(),
                 TRANSFER_INVENTORY_BUTTON_PATH,
                 TRANSFER_INVENTORY_BUTTON_NAME,
                 true,
                 b -> transferInstance().transferItems(false, true),
-                () -> !isContainerFull(false) && shouldButtonBeActive(true, instance().getMinecraft().player.getInventory(), true, true)
+                () -> !isContainerFull(false) && shouldButtonBeActive(true, holder().mc().player.getInventory(), true, true)
         );
     }
 
@@ -72,8 +72,8 @@ public class WidgetHandlerInstance extends ManagementInstance {
      */
     public QuesoButton createIncludeHotbar() {
         return new IncludeHotbarButton(
-                instance().getScreenMenu(),
-                instance().getMinecraft().font,
+                holder().menu(),
+                holder().mc().font,
                 searchInstance().getSearchFieldText(),
                 "include_hotbar",
                 b -> {
@@ -89,8 +89,8 @@ public class WidgetHandlerInstance extends ManagementInstance {
      */
     public QuesoButton createAlwaysQuickMove() {
         return new AlwaysQuickMoveButton(
-                instance().getScreenMenu(),
-                instance().getMinecraft().font,
+                holder().menu(),
+                holder().mc().font,
                 searchInstance().getSearchFieldText(),
                 "always_quick_move",
                 b -> updateClient(ModClientOptions::toggleAlwaysQuickMove)
@@ -102,8 +102,8 @@ public class WidgetHandlerInstance extends ManagementInstance {
      */
     public QuesoButton createFiltering() {
         return new FilteringButton(
-                instance().getScreenMenu(),
-                instance().getMinecraft().font,
+                holder().menu(),
+                holder().mc().font,
                 searchInstance().getSearchFieldText(),
                 "fill_whats_present",
                 b -> {
@@ -111,8 +111,8 @@ public class WidgetHandlerInstance extends ManagementInstance {
                         updateClient(ModClientOptions::cycleFilteringMode);
                     }
                 },
-                instance().getMinecraft(),
-                instance().getScreen());
+                holder().mc(),
+                holder().screen());
     }
 
     /**
@@ -120,8 +120,8 @@ public class WidgetHandlerInstance extends ManagementInstance {
      */
     public QuesoButton createSort() {
         return new SortButton(
-                instance().getScreenMenu(),
-                instance().getMinecraft().font,
+                holder().menu(),
+                holder().mc().font,
                 searchInstance().getSearchFieldText(),
                 "sort/",
                 "sort",
@@ -135,8 +135,8 @@ public class WidgetHandlerInstance extends ManagementInstance {
      */
     public QuesoButton createSearchTransportables() {
         return new SearchTransportablesButton(
-                instance().getScreenMenu(),
-                instance().getMinecraft().font,
+                holder().menu(),
+                holder().mc().font,
                 searchInstance().getSearchFieldText(),
                 "search_transportables",
                 b -> SEARCHING_TRANSPORTABLES = !SEARCHING_TRANSPORTABLES
@@ -147,19 +147,19 @@ public class WidgetHandlerInstance extends ManagementInstance {
      * @return the {@code quick drop} button.
      */
     public QuesoButton createQuickDrop() {
-        boolean containerScreen = isContainerScreen(instance().getScreen());
+        boolean containerScreen = isContainerScreen(holder().screen());
         return new QuickDropButton(
-                instance().getScreenMenu(),
-                instance().getMinecraft().font,
+                holder().menu(),
+                holder().mc().font,
                 searchInstance().getSearchFieldText(),
                 "quick_drop/",
                 "quick_drop",
                 b -> transferInstance().dropItems(!containerScreen),
-                () -> (isInventoryScreen(instance().getScreen()) ?
+                () -> (isInventoryScreen(holder().screen()) ?
                         isAnySlotFilled(true, 9, 36) :
                         isAnySlotFilled(false, 0, getContainerSize()))
                         && getCursorStack().isEmpty()
-                        && shouldButtonBeActive(!containerScreen, containerScreen ? null : instance().getMinecraft().player.getInventory())
+                        && shouldButtonBeActive(!containerScreen, containerScreen ? null : holder().mc().player.getInventory())
         );
     }
 
@@ -168,8 +168,8 @@ public class WidgetHandlerInstance extends ManagementInstance {
      */
     public QuesoButton createSwap() {
         return new SwapButton(
-                instance().getScreenMenu(),
-                instance().getMinecraft().font,
+                holder().menu(),
+                holder().mc().font,
                 searchInstance().getSearchFieldText(),
                 "swap/",
                 "swap",
@@ -183,13 +183,13 @@ public class WidgetHandlerInstance extends ManagementInstance {
      */
     public QuesoButton createClearExcludedSlots() {
         return new ClearExcludedSlotsButton(
-                instance().getScreenMenu(),
-                instance().getMinecraft().font,
+                holder().menu(),
+                holder().mc().font,
                 searchInstance().getSearchFieldText(),
                 "clear_excluded_slots",
                 b -> {
-                    instance().getExcludedSlots().clear();
-                    instance().setExcludedAll(false);
+                    holder().excludedSlots().clear();
+                    holder().setExcludedAll(false);
                 }
         );
     }
@@ -199,8 +199,8 @@ public class WidgetHandlerInstance extends ManagementInstance {
      */
     public QuesoButton createTradeAll() {
         return new BulkTradeButton(
-                instance().getScreenMenu(),
-                instance().getMinecraft().font,
+                holder().menu(),
+                holder().mc().font,
                 searchInstance().getSearchFieldText(),
                 "trade_all",
                 b -> updateClient(client -> {
@@ -214,8 +214,8 @@ public class WidgetHandlerInstance extends ManagementInstance {
      */
     public QuesoButton createBulkCraft() {
         return new BulkCraftButton(
-                instance().getScreenMenu(),
-                instance().getMinecraft().font,
+                holder().menu(),
+                holder().mc().font,
                 searchInstance().getSearchFieldText(),
                 "craft_all",
                 b -> updateClient(client -> {
@@ -229,8 +229,8 @@ public class WidgetHandlerInstance extends ManagementInstance {
      */
     public QuesoButton createLockInventory() {
         return new LockInventoryButton(
-                instance().getScreenMenu(),
-                instance().getMinecraft().font,
+                holder().menu(),
+                holder().mc().font,
                 searchInstance().getSearchFieldText(),
                 "lock_inventory",
                 b -> {

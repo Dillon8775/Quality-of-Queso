@@ -1,8 +1,9 @@
-package net.dillon.qualityofqueso.instance;
+package net.dillon.qualityofqueso.event.mouse;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import net.dillon.qualityofqueso.instance.management.CursorKey;
-import net.dillon.qualityofqueso.instance.management.ManagementInstance;
+import net.dillon.qualityofqueso.event.QuesoScreen;
+import net.dillon.qualityofqueso.event.management.CursorKey;
+import net.dillon.qualityofqueso.event.management.ManagementEvents;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerInput;
@@ -11,18 +12,18 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import static net.dillon.qualityofqueso.event.management.ExtractingEvents.setCursor;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
 import static net.dillon.qualityofqueso.helper.ModConstants.MOVE_AMOUNT;
 import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.*;
-import static net.dillon.qualityofqueso.instance.management.ExtractingInstance.setCursor;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 /**
  * Handles mouse-clicking events.
  */
-public class MouseClickInstance extends ManagementInstance {
+public class MouseClickedEvents extends ManagementEvents {
 
-    public MouseClickInstance(QuesoScreen screen) {
+    public MouseClickedEvents(QuesoScreen screen) {
         super(screen);
     }
 
@@ -39,7 +40,7 @@ public class MouseClickInstance extends ManagementInstance {
      * Quickly equips an item.
      */
     public void quickEquipItem(MouseButtonEvent event, CallbackInfoReturnable<Boolean> cir) {
-        if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT && instance().getScreensHoveredSlot() != null && quickEquipInstance().isQuicklyEquippable(instance().getScreensHoveredSlot().getItem())) {
+        if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT && holder().screensHoveredSlot() != null && quickEquipInstance().isQuicklyEquippable(holder().screensHoveredSlot().getItem())) {
             quickEquipInstance().quickEquipItem();
             cir.setReturnValue(true);
         }
@@ -49,8 +50,8 @@ public class MouseClickInstance extends ManagementInstance {
      * Refocus fromInventory search field if clicked.
      */
     public void handleInventorySearchFieldClicking(MouseButtonEvent event, boolean doubleClick) {
-        if (instance().getSearchFields().inventory() != null && instance().getSearchFields().inventory().mouseClicked(event, doubleClick)) {
-            instance().getSearchFields().inventory().setFocused(true);
+        if (holder().searchFields().inventory() != null && holder().searchFields().inventory().mouseClicked(event, doubleClick)) {
+            holder().searchFields().inventory().setFocused(true);
         }
     }
 
@@ -58,11 +59,11 @@ public class MouseClickInstance extends ManagementInstance {
      * Handles clicking inactive buttons.
      */
     public void handleButtonInactiveSounds() {
-        if (buttonHoveredButInactive(instance().getManagementButtons().transferContainer())
-                || buttonHoveredButInactive(instance().getManagementButtons().transferInventory())
-                || buttonHoveredButInactive(instance().getManagementButtons().quickDrop())
-                || buttonHoveredButInactive(instance().getManagementButtons().sort())
-                || buttonHoveredButInactive(instance().getManagementButtons().swap())
+        if (buttonHoveredButInactive(holder().managementButtons().transferContainer())
+                || buttonHoveredButInactive(holder().managementButtons().transferInventory())
+                || buttonHoveredButInactive(holder().managementButtons().quickDrop())
+                || buttonHoveredButInactive(holder().managementButtons().sort())
+                || buttonHoveredButInactive(holder().managementButtons().swap())
         ) {
             playButtonInactiveSound();
         }
@@ -75,9 +76,9 @@ public class MouseClickInstance extends ManagementInstance {
         if (client().management().scrollMoving) {
             boolean dropOnlyOne = hasDropOnlyOneItemModifierDown();
             boolean hasSingleModifierDown = canScrollMoveAndHasScrollModifierDown();
-            if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT && ((((dropOnlyOne || hasSingleModifierDown) && hoveredSlotHasItem(instance().getScreensHoveredSlot())))
-                    || buttonHoveredAndActive(instance().getManagementButtons().transferInventory())
-                    || buttonHoveredAndActive(instance().getManagementButtons().transferContainer()))) {
+            if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT && ((((dropOnlyOne || hasSingleModifierDown) && hoveredSlotHasItem(holder().screensHoveredSlot())))
+                    || buttonHoveredAndActive(holder().managementButtons().transferInventory())
+                    || buttonHoveredAndActive(holder().managementButtons().transferContainer()))) {
                 MOVE_AMOUNT = 1;
                 cir.setReturnValue(true);
             }
@@ -85,16 +86,23 @@ public class MouseClickInstance extends ManagementInstance {
     }
 
     /**
+     * @return the current count in a slot.
+     */
+    private int getSlotCount(Slot slot) {
+        return slot.getItem().getCount();
+    }
+
+    /**
      * Attempts to quick move any highlighted or similar items related to the cursor/hovered stack.
      */
     public void tryQuickMoveHighlightedItems(MouseButtonEvent event, CallbackInfoReturnable<Boolean> cir) {
-        if (!(isContainerScreen(instance().getScreen()) || isDropperDispenserOrHopperScreen(instance().getScreen())) || !event.hasControlDown() || event.button() != InputConstants.MOUSE_BUTTON_LEFT) {
+        if (!(isContainerScreen(holder().screen()) || isDropperDispenserOrHopperScreen(holder().screen())) || !event.hasControlDown() || event.button() != InputConstants.MOUSE_BUTTON_LEFT) {
             return;
         }
 
         // Get common variables
-        AbstractContainerMenu menu = instance().getScreenMenu();
-        Slot hoveredSlot = instance().getScreensHoveredSlot();
+        AbstractContainerMenu menu = holder().menu();
+        Slot hoveredSlot = holder().screensHoveredSlot();
 
         // Ensure hovered slot isn't null
         if (hoveredSlot == null) {
@@ -116,6 +124,9 @@ public class MouseClickInstance extends ManagementInstance {
         boolean fromInventory = isPlayerInventorySlot(hoveredSlot);
         Item targetItem = hoveredStack.getItem();
 
+        // Track if any item was moved
+        boolean moved = false;
+
         for (int i = 0; i < getTotalSlots(); i++) {
             Slot slot = menu.getSlot(i);
             ItemStack stack = slot.getItem();
@@ -132,19 +143,30 @@ public class MouseClickInstance extends ManagementInstance {
 
             // Move items, as long as its not locked
             if (!lockedSlotsInstance().isLockedSlot(slot.index)) {
-                instance().getMinecraft().gameMode.handleContainerInput(
+                int slotCount = getSlotCount(slot);
+                holder().mc().gameMode.handleContainerInput(
                         menu.containerId,
                         slot.index,
                         0,
                         ContainerInput.QUICK_MOVE,
-                        instance().getMinecraft().player
+                        holder().mc().player
                 );
+
+                // Item was moved if slot count is different
+                if (slotCount != getSlotCount(slot)) {
+                    moved = true;
+                }
             }
         }
 
         // Return true for mouse clicked
         setCursor(CursorKey.MOVE);
-        playSortSound();
+
+        // Play sound if moved
+        if (moved) {
+            playSortSound();
+        }
+
         cir.setReturnValue(true);
     }
 }

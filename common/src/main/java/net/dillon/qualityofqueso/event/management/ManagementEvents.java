@@ -1,11 +1,11 @@
-package net.dillon.qualityofqueso.instance.management;
+package net.dillon.qualityofqueso.event.management;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import net.dillon.qualityofqueso.event.ModInstance;
+import net.dillon.qualityofqueso.event.QuesoScreen;
+import net.dillon.qualityofqueso.event.WidgetHandler;
 import net.dillon.qualityofqueso.helper.ContainerHelper;
-import net.dillon.qualityofqueso.instance.ModInstance;
-import net.dillon.qualityofqueso.instance.QuesoScreen;
-import net.dillon.qualityofqueso.instance.WidgetHandler;
 import net.dillon.qualityofqueso.option.eum.management.FilteringMode;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractFurnaceScreen;
@@ -38,10 +38,10 @@ import static net.dillon.qualityofqueso.option.OptionInstances.client;
 /**
  * Holds management related methods.
  */
-public class ManagementInstance implements ModInstance {
+public class ManagementEvents implements ModInstance {
     private final QuesoScreen screen;
 
-    public ManagementInstance(QuesoScreen screen) {
+    public ManagementEvents(QuesoScreen screen) {
         this.screen = screen;
     }
 
@@ -49,71 +49,71 @@ public class ManagementInstance implements ModInstance {
      * The current searching instance to use.
      * <p>For accessing search fields, use {@link WidgetHandler}.</p>
      */
-    public SearchInstance searchInstance() {
-        return new SearchInstance(this.screen);
+    public SearchEvents searchInstance() {
+        return new SearchEvents(this.screen);
     }
 
     /**
      * @return the current transferring instance to use.
      */
-    public TransferInstance transferInstance() {
-        return new TransferInstance(this.screen);
+    public TransferEvents transferInstance() {
+        return new TransferEvents(this.screen);
     }
 
     /**
      * @return the current locked slot instance to use.
      */
-    public LockedSlotsInstance lockedSlotsInstance() {
-        return new LockedSlotsInstance(this.screen);
+    public LockedSlotEvents lockedSlotsInstance() {
+        return new LockedSlotEvents(this.screen);
     }
 
     /**
      * @return the current sorting instance to use.
      */
-    public SortingInstance sortingInstance() {
-        return new SortingInstance(this.screen);
+    public SortEvents sortingInstance() {
+        return new SortEvents(this.screen);
     }
 
     /**
      * @return the current widget handler instance to use.
      */
-    public WidgetHandlerInstance widgetHandlerInstance() {
-        return new WidgetHandlerInstance(this.screen);
+    public WidgetHandlerEvents widgetHandlerInstance() {
+        return new WidgetHandlerEvents(this.screen);
     }
 
     /**
      * @return the current quick equip instance to use.
      */
-    public QuickEquipInstance quickEquipInstance() {
-        return new QuickEquipInstance(this.screen);
+    public QuickEquipEvents quickEquipInstance() {
+        return new QuickEquipEvents(this.screen);
     }
 
     /**
      * @return current screen's cursor stack.
      */
     public ItemStack getCursorStack() {
-        return instance().getScreenMenu().getCarried();
+        return holder().menu().getCarried();
     }
 
     /**
      * @return the current {@code container size.}
      */
     public int getContainerSize() {
-        return instance().getCurrentInventory() == null ? 0 : instance().getCurrentInventory().getContainerSize();
+        return holder().container() == null ? 0 : holder().container().getContainerSize();
     }
 
     /**
      * @return the total size of the {@code screen's slots.}
      */
     public int getTotalSlots() {
-        return instance().getScreenMenu().slots.size();
+        return holder().menu().slots.size();
     }
 
     /**
      * @return the fromInventory (size) that should be searched.
      */
     public int getInventorySize() {
-        return client().accessibility().searchInventory ? instance().getScreenMenu().slots.size() : instance().getCurrentInventory() == null ? 0 : instance().getCurrentInventory().getContainerSize();
+        return client().accessibility().searchInventory ? holder().menu().slots.size() : holder().container() == null ? 0 : holder().container().getContainerSize();
     }
 
     /**
@@ -128,7 +128,7 @@ public class ManagementInstance implements ModInstance {
      * @return if the slot is a player inventory slot.
      */
     public boolean isPlayerInventorySlot(Slot slot) {
-        return slot.container == instance().getMinecraft().player.getInventory();
+        return slot.container == holder().mc().player.getInventory();
     }
 
     /**
@@ -145,7 +145,7 @@ public class ManagementInstance implements ModInstance {
         return modEnabled()
                 && event.button() == InputConstants.MOUSE_BUTTON_LEFT
                 && !isExcludingOrLockingSlots()
-                && instance().getManagementButtons().alwaysQuickMove() != null
+                && holder().managementButtons().alwaysQuickMove() != null
                 && !transferInstance().canSingularMove()
                 ? client().isAlwaysQuickMove() || event.hasShiftDown()
                 : event.hasShiftDown();
@@ -163,12 +163,12 @@ public class ManagementInstance implements ModInstance {
      * @return if the button should be active.
      */
     public boolean shouldButtonBeActive(boolean isPlayerInventory, @Nullable Inventory playerInventory, boolean applyFillWhatsPresentFilter, boolean applyFillStacksFilter) {
-        if (instance().getCurrentInventory() == null || (isPlayerInventory && playerInventory == null)) {
+        if (holder().container() == null || (isPlayerInventory && playerInventory == null)) {
             return false;
         }
 
         boolean toInventory = !isPlayerInventory;
-        int size = isPlayerInventory ? playerInventory.getNonEquipmentItems().size() : instance().getCurrentInventory().getContainerSize();
+        int size = isPlayerInventory ? playerInventory.getNonEquipmentItems().size() : holder().container().getContainerSize();
         int filledSlots = 0;
 
         // Determine the size to iterate through for container-side scans only.
@@ -187,15 +187,15 @@ public class ManagementInstance implements ModInstance {
 
         // Loop through all slots
         for (int i = 0; i < size; i++) {
-            Slot slot = instance().getScreenMenu().getSlot(i);
+            Slot slot = holder().menu().getSlot(i);
             ItemStack stack = isPlayerInventory ? playerInventory.getItem(i) : slot.getItem();
             ItemStack cursorStack = getCursorStack();
-            boolean isShulkerScreen = isShulkerBoxScreen(instance().getScreen());
-            boolean isCursorShulker = isShulkerScreen && instance().getScreenMenu().getCarried().is(ItemTags.SHULKER_BOXES);
+            boolean isShulkerScreen = isShulkerBoxScreen(holder().screen());
+            boolean isCursorShulker = isShulkerScreen && holder().menu().getCarried().is(ItemTags.SHULKER_BOXES);
             boolean isStackShulker = isShulkerScreen && stack.is(ItemTags.SHULKER_BOXES);
 
             // Skip stacks that are not what the user is attempting to drop
-            if (hoveredSlotHasItem(instance().getScreensHoveredSlot()) && hasAllQuickDropModifiersDown() && !stack.is(instance().getScreensHoveredSlot().getItem().getItem())) {
+            if (hoveredSlotHasItem(holder().screensHoveredSlot()) && hasAllQuickDropModifiersDown() && !stack.is(holder().screensHoveredSlot().getItem().getItem())) {
                 continue;
             }
 
@@ -217,13 +217,13 @@ public class ManagementInstance implements ModInstance {
             if (!cursorStack.isEmpty()) {
                 boolean canMoveCursorStack = false;
                 for (int k = 0; k < getTotalSlots(); k++) {
-                    if (isPlayerInventory && instance().getScreenMenu().getSlot(k).index < instance().getCurrentInventory().getContainerSize()) {
+                    if (isPlayerInventory && holder().menu().getSlot(k).index < holder().container().getContainerSize()) {
                         continue;
-                    } else if (!isPlayerInventory && instance().getScreenMenu().getSlot(k).index > instance().getCurrentInventory().getContainerSize()) {
+                    } else if (!isPlayerInventory && holder().menu().getSlot(k).index > holder().container().getContainerSize()) {
                         continue;
                     }
 
-                    if (canMoveCursorItem(instance().getScreenMenu().getSlot(k), true, isPlayerInventory)) {
+                    if (canMoveCursorItem(holder().menu().getSlot(k), true, isPlayerInventory)) {
                         canMoveCursorStack = true;
                         break;
                     }
@@ -251,7 +251,7 @@ public class ManagementInstance implements ModInstance {
         int foundQueries = 0;
 
         if (isPlayerInventory) {
-            for (Slot slot : instance().getScreenMenu().slots) {
+            for (Slot slot : holder().menu().slots) {
                 if (slot.container != playerInventory) {
                     continue;
                 }
@@ -260,8 +260,8 @@ public class ManagementInstance implements ModInstance {
                     continue;
                 }
 
-                if (searchInstance().search(instance().getSearchFields().searchText(), slot, false)) {
-                    if (!lockedSlotsInstance().isLockedSlot(slot.index) && !(isShulkerBoxScreen(instance().getScreen()) && slot.getItem().is(ItemTags.SHULKER_BOXES))) {
+                if (searchInstance().search(holder().searchFields().searchText(), slot, false)) {
+                    if (!lockedSlotsInstance().isLockedSlot(slot.index) && !(isShulkerBoxScreen(holder().screen()) && slot.getItem().is(ItemTags.SHULKER_BOXES))) {
                         if (!applyFillWhatsPresentFilter || !shouldApplyMatchingFilter() || isPresent(toInventory, slot.getItem())) {
                             foundQueries++;
                         }
@@ -269,8 +269,8 @@ public class ManagementInstance implements ModInstance {
                 }
             }
         } else {
-            for (int i = 0; i < instance().getCurrentInventory().getContainerSize(); i++) {
-                Slot slot = instance().getScreenMenu().getSlot(i);
+            for (int i = 0; i < holder().container().getContainerSize(); i++) {
+                Slot slot = holder().menu().getSlot(i);
 
                 if (lockedSlotsInstance().isLockedSlot(slot.index)) {
                     continue;
@@ -280,7 +280,7 @@ public class ManagementInstance implements ModInstance {
                     continue;
                 }
 
-                if (searchInstance().search(instance().getSearchFields().searchText(), slot, false)) {
+                if (searchInstance().search(holder().searchFields().searchText(), slot, false)) {
                     foundQueries++;
                 }
             }
@@ -293,10 +293,10 @@ public class ManagementInstance implements ModInstance {
      * @return if the user is attempting to exclude or lock slots.
      */
     public boolean isExcludingOrLockingSlots() {
-        return isValidScreen(instance().getScreen())
+        return isValidScreen(holder().screen())
                 && (hasSelectSlotsModifierDown() || hasExcludeSlotsModifierDown())
-                && getHoveredSlot(instance().getScreen()) != null
-                && instance().getScreenMenu().getCarried().isEmpty();
+                && getHoveredSlot(holder().screen()) != null
+                && holder().menu().getCarried().isEmpty();
     }
 
     /**
@@ -320,7 +320,7 @@ public class ManagementInstance implements ModInstance {
      */
     public boolean isExcludedInventorySlot(int slotIndex) {
         // Index 5-8 are armor slots. Index 45 is offhand slot. NEVER drop those items.
-        return isInventoryScreen(instance().getScreen()) && (slotIndex <= 8 && slotIndex >= 5 || slotIndex == 45);
+        return isInventoryScreen(holder().screen()) && (slotIndex <= 8 && slotIndex >= 5 || slotIndex == 45);
     }
 
     /**
@@ -329,7 +329,7 @@ public class ManagementInstance implements ModInstance {
      */
     public boolean isAnySlotFilled(boolean checkHotbar, int start, int end) {
         for (int i = start; i < (client().management().includingHotbar && checkHotbar ? end + 9 : end); i++) {
-            Slot slot = instance().getScreenMenu().getSlot(i);
+            Slot slot = holder().menu().getSlot(i);
             if (slot.hasItem()) {
                 return true;
             }
@@ -341,7 +341,7 @@ public class ManagementInstance implements ModInstance {
      * @return if a slot should be skipped.
      */
     public boolean isExcludedSlot(int slotId) {
-        for (int id : instance().getExcludedSlots()) {
+        for (int id : holder().excludedSlots()) {
             if (slotId == id) {
                 return true;
             }
@@ -403,9 +403,9 @@ public class ManagementInstance implements ModInstance {
      * @return true if the item is present in the opposing inventory/container.
      */
     public boolean isPresent(boolean toInventory, ItemStack sourceStack) {
-        if (!isContainerScreen(instance().getScreen())
-                && !isShulkerBoxScreen(instance().getScreen())
-                && !isDropperDispenserOrHopperScreen(instance().getScreen())) {
+        if (!isContainerScreen(holder().screen())
+                && !isShulkerBoxScreen(holder().screen())
+                && !isDropperDispenserOrHopperScreen(holder().screen())) {
             return true;
         }
 
@@ -419,7 +419,7 @@ public class ManagementInstance implements ModInstance {
         int containerSize = getContainerSize();
         int slotSize = getTotalSlots();
         for (int i = (toInventory ? containerSize : 0); i < (toInventory ? slotSize : containerSize); i++) {
-            ItemStack opposingStack = instance().getScreenMenu().getSlot(i).getItem();
+            ItemStack opposingStack = holder().menu().getSlot(i).getItem();
             if (!opposingStack.isEmpty() && matchesFillFilter(sourceStack, opposingStack)) {
                 return true;
             }
@@ -460,12 +460,12 @@ public class ManagementInstance implements ModInstance {
      * Performs the {@code click action} to sort items.
      */
     public void clickSlot(int slotId) {
-        instance().getMinecraft().gameMode.handleContainerInput(
-                instance().getScreenMenu().containerId,
+        holder().mc().gameMode.handleContainerInput(
+                holder().menu().containerId,
                 slotId,
                 0,
                 ContainerInput.PICKUP,
-                instance().getMinecraft().player
+                holder().mc().player
         );
     }
 
@@ -535,13 +535,13 @@ public class ManagementInstance implements ModInstance {
         int toStart = toInventory ? containerSize : 0;
         int toEnd = toInventory ? totalSlots : containerSize;
 
-        if (!isContainerScreen(instance().getScreen())
-                && !isShulkerBoxScreen(instance().getScreen())
-                && !isDropperDispenserOrHopperScreen(instance().getScreen())) {
+        if (!isContainerScreen(holder().screen())
+                && !isShulkerBoxScreen(holder().screen())
+                && !isDropperDispenserOrHopperScreen(holder().screen())) {
             return true;
         }
 
-        for (Slot sourceSlot : instance().getScreenMenu().slots) {
+        for (Slot sourceSlot : holder().menu().slots) {
             if (isPlayerInventory && sourceSlot.container != playerInventory) {
                 continue;
             }
@@ -554,13 +554,13 @@ public class ManagementInstance implements ModInstance {
             if (isExcludedSlot(sourceSlot.index)) {
                 continue;
             }
-            if (!searchInstance().search(instance().getSearchFields().searchText(), sourceSlot, false)) {
+            if (!searchInstance().search(holder().searchFields().searchText(), sourceSlot, false)) {
                 continue;
             }
             if (lockedSlotsInstance().isLockedSlot(sourceSlot.index)) {
                 continue;
             }
-            if (isShulkerBoxScreen(instance().getScreen()) && sourceSlot.getItem().is(ItemTags.SHULKER_BOXES)) {
+            if (isShulkerBoxScreen(holder().screen()) && sourceSlot.getItem().is(ItemTags.SHULKER_BOXES)) {
                 continue;
             }
             if (applyFillWhatsPresentFilter
@@ -605,7 +605,7 @@ public class ManagementInstance implements ModInstance {
     public int getDestinationFreeSpaceForStack(ItemStack sourceStack, int toStart, int toEnd) {
         int totalFreeSpace = 0;
         for (int j = toStart; j < toEnd; j++) {
-            Slot toSlot = instance().getScreenMenu().getSlot(j);
+            Slot toSlot = holder().menu().getSlot(j);
             ItemStack toStack = toSlot.getItem();
             if (toStack.isEmpty()) {
                 continue;
@@ -632,7 +632,7 @@ public class ManagementInstance implements ModInstance {
      * @return {@code true} if the container (or inventory) is full, including/excluding hotbar slots.
      */
     public boolean isContainerFull(boolean inventory) {
-        AbstractContainerMenu menu = instance().getScreenMenu();
+        AbstractContainerMenu menu = holder().menu();
         var options = client();
 
         int containerSize = getContainerSize();
@@ -702,7 +702,7 @@ public class ManagementInstance implements ModInstance {
                 continue;
             }
 
-            if (!instance().getScreenMenu().slots.get(i).hasItem()) {
+            if (!holder().menu().slots.get(i).hasItem()) {
                 return i;
             }
         }
@@ -713,7 +713,7 @@ public class ManagementInstance implements ModInstance {
      * @return a temporary empty slot for parking the carried stack.
      */
     public int findTemporaryEmptySlotForCursor() {
-        for (Slot slot : instance().getScreenMenu().slots) {
+        for (Slot slot : holder().menu().slots) {
             if (slot.hasItem()) {
                 continue;
             }
@@ -729,7 +729,7 @@ public class ManagementInstance implements ModInstance {
     }
 
     @Override
-    public QuesoScreen instance() {
+    public QuesoScreen holder() {
         return this.screen;
     }
 }

@@ -1,7 +1,7 @@
-package net.dillon.qualityofqueso.instance;
+package net.dillon.qualityofqueso.event;
 
-import net.dillon.qualityofqueso.instance.context.ManagementButtons;
-import net.dillon.qualityofqueso.instance.context.SearchFields;
+import net.dillon.qualityofqueso.event.context.ManagementButtons;
+import net.dillon.qualityofqueso.event.context.SearchFields;
 import net.dillon.qualityofqueso.mixin.client.screen.AbstractContainerScreenMixin;
 import net.dillon.qualityofqueso.widget.WidgetLayout;
 import net.minecraft.client.Minecraft;
@@ -20,43 +20,43 @@ public interface QuesoScreen {
     /**
      * @return the current instance of {@link Minecraft} that is running.
      */
-    Minecraft getMinecraft();
+    Minecraft mc();
 
     /**
      * @return the current instance of {@link AbstractContainerScreen}.
      */
-    AbstractContainerScreen<?> getScreen();
+    AbstractContainerScreen<?> screen();
 
     /**
      * @return the {@link AbstractContainerMenu} for the {@link AbstractContainerScreen}.
      */
-    AbstractContainerMenu getScreenMenu();
+    AbstractContainerMenu menu();
 
     /**
      * @return the current inventory (or {@link Container}) for the screen.
      */
-    Container getCurrentInventory();
+    Container container();
 
     /**
      * @return the current {@link AbstractContainerScreen}'s hovered slot.
      */
-    Slot getScreensHoveredSlot();
+    Slot screensHoveredSlot();
 
     /**
      * @return the set of excluded slots in the current instance of {@link AbstractContainerScreen}.
      */
-    Set<Integer> getExcludedSlots();
+    Set<Integer> excludedSlots();
 
     /**
      * @return all present search fields.
 
      */
-    SearchFields getSearchFields();
+    SearchFields searchFields();
 
     /**
      * @return all present management buttons.
      */
-    ManagementButtons getManagementButtons();
+    ManagementButtons managementButtons();
 
     /**
      * Sets the cached container for a screen.

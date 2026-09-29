@@ -1,10 +1,11 @@
-package net.dillon.qualityofqueso.instance;
+package net.dillon.qualityofqueso.event.key;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import net.dillon.qualityofqueso.event.QuesoScreen;
+import net.dillon.qualityofqueso.event.management.CursorKey;
+import net.dillon.qualityofqueso.event.management.ManagementEvents;
 import net.dillon.qualityofqueso.helper.GuiHelper;
 import net.dillon.qualityofqueso.helper.MethodHelper;
-import net.dillon.qualityofqueso.instance.management.CursorKey;
-import net.dillon.qualityofqueso.instance.management.ManagementInstance;
 import net.dillon.qualityofqueso.keybind.ModKeyMappings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -16,21 +17,21 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
 
+import static net.dillon.qualityofqueso.event.management.ExtractingEvents.setCursor;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
 import static net.dillon.qualityofqueso.helper.MethodHelper.*;
 import static net.dillon.qualityofqueso.helper.ModHelper.allDisallowedKeys;
 import static net.dillon.qualityofqueso.helper.ModHelper.popularKeys;
 import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.*;
-import static net.dillon.qualityofqueso.instance.management.ExtractingInstance.setCursor;
 import static net.dillon.qualityofqueso.keybind.ModKeyMappings.QUICK_DROP;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 /**
  * Handles all key pressing events.
  */
-public class KeyPressInstance extends ManagementInstance {
+public class KeyPressedEvents extends ManagementEvents {
 
-    public KeyPressInstance(QuesoScreen screen) {
+    public KeyPressedEvents(QuesoScreen screen) {
         super(screen);
     }
 
@@ -41,15 +42,15 @@ public class KeyPressInstance extends ManagementInstance {
         boolean quickDropShortcutPressed = kumaKeyPressed(QUICK_DROP, event);
 
         if (!quickDropShortcutPressed
-                && !isCreativeInventoryScreen(instance().getScreen())
+                && !isCreativeInventoryScreen(holder().screen())
                 && transferInstance().canSingularQuickDrop(event)) {
             transferInstance().performSingularDrop();
         }
 
-        if (client().lockedSlots().lockedSlots && client().lockedSlots().preventDropping && event.key() == key(getDropKey()).getValue() && instance().getScreensHoveredSlot() != null && lockedSlotsInstance().isLockedSlot(instance().getScreensHoveredSlot().index)) {
+        if (client().lockedSlots().lockedSlots && client().lockedSlots().preventDropping && event.key() == key(getDropKey()).getValue() && holder().screensHoveredSlot() != null && lockedSlotsInstance().isLockedSlot(holder().screensHoveredSlot().index)) {
             if (canScrollMoveAndHasScrollModifierDown() && hasDropOnlyOneItemModifierDown()) {
                 if (!Minecraft.getInstance().hasAltDown()) {
-                    performClickSlot(instance().getScreen(), instance().getScreensHoveredSlot(), instance().getScreensHoveredSlot().index, 1, ContainerInput.THROW);
+                    performClickSlot(holder().screen(), holder().screensHoveredSlot(), holder().screensHoveredSlot().index, 1, ContainerInput.THROW);
                 }
             } else {
                 cir.setReturnValue(false);
@@ -60,7 +61,7 @@ public class KeyPressInstance extends ManagementInstance {
             return;
         }
 
-        if (!(instance().getScreen() instanceof AbstractContainerScreen<?>)) {
+        if (!(holder().screen() instanceof AbstractContainerScreen<?>)) {
             return;
         }
 
@@ -68,7 +69,7 @@ public class KeyPressInstance extends ManagementInstance {
             if (kumaKeyPressed(ModKeyMappings.MOVE_TO_INVENTORY, event)) {
                 transferInstance().transferItems(true, false);
             }
-            if (!isBrewingOrFurnaceScreen(instance().getScreen()) && kumaKeyPressed(ModKeyMappings.MOVE_TO_CONTAINER, event)) {
+            if (!isBrewingOrFurnaceScreen(holder().screen()) && kumaKeyPressed(ModKeyMappings.MOVE_TO_CONTAINER, event)) {
                 transferInstance().transferItems(false, false);
             }
         }
@@ -79,10 +80,10 @@ public class KeyPressInstance extends ManagementInstance {
         }
 
         if (client().management().quickDrop.any() && quickDropShortcutPressed) {
-            transferInstance().dropItems(!isContainerScreen(instance().getScreen()));
+            transferInstance().dropItems(!isContainerScreen(holder().screen()));
         }
 
-        if (isContainerScreen(instance().getScreen())
+        if (isContainerScreen(holder().screen())
                 && client().management().swapping.any()
                 && kumaKeyPressed(ModKeyMappings.SWAP_ITEMS, event)) {
             transferInstance().trySwap();
@@ -99,21 +100,21 @@ public class KeyPressInstance extends ManagementInstance {
             return false;
         }
 
-        boolean isContainer = isContainerScreen(instance().getScreen());
-        boolean isInventory = isInventoryScreen(instance().getScreen());
+        boolean isContainer = isContainerScreen(holder().screen());
+        boolean isInventory = isInventoryScreen(holder().screen());
 
         if (!searchInstance().hasSearchField()) {
-            instance().getScreen().onClose();
+            holder().screen().onClose();
             cir.setReturnValue(true);
             return true;
         }
 
         if (client().accessibility().preventEFromTyping) {
-            boolean isFocused = (instance().getSearchFields().container() != null && instance().getSearchFields().container().isFocused())
-                    || (instance().getSearchFields().inventory() != null && instance().getSearchFields().inventory().isFocused());
+            boolean isFocused = (holder().searchFields().container() != null && holder().searchFields().container().isFocused())
+                    || (holder().searchFields().inventory() != null && holder().searchFields().inventory().isFocused());
 
             if (!isFocused || (!isContainer && !isInventory)) {
-                instance().getScreen().onClose();
+                holder().screen().onClose();
                 cir.setReturnValue(true);
             }
         }
@@ -125,7 +126,7 @@ public class KeyPressInstance extends ManagementInstance {
      * Handles key pressing events, such as management keybinds, quick searching into different search bars, and correct closing of screens.
      */
     public void handleKeyPressing(KeyEvent event, CallbackInfoReturnable<Boolean> cir) {
-        if (isContainerScreen(instance().getScreen()) && hoveredSlotHasItem(instance().getScreensHoveredSlot()) && hasAllQuickDropModifiersDown() && !shouldButtonBeActive(false, null)) {
+        if (isContainerScreen(holder().screen()) && hoveredSlotHasItem(holder().screensHoveredSlot()) && hasAllQuickDropModifiersDown() && !shouldButtonBeActive(false, null)) {
             cir.setReturnValue(true);
         }
 
@@ -141,27 +142,27 @@ public class KeyPressInstance extends ManagementInstance {
         // Quick equip logic
         if (kumaKeyPressed(ModKeyMappings.QUICK_EQUIP, event)) {
             quickEquipInstance().quickEquipItem();
-            if (hoveredSlotHasItem(instance().getScreensHoveredSlot())) {
-                if (instance().getSearchFields().inventory() != null && instance().getSearchFields().inventory().isFocused()) {
-                    instance().getSearchFields().inventory().setFocused(false);
+            if (hoveredSlotHasItem(holder().screensHoveredSlot())) {
+                if (holder().searchFields().inventory() != null && holder().searchFields().inventory().isFocused()) {
+                    holder().searchFields().inventory().setFocused(false);
                 }
-                if (isInventoryScreen(instance().getScreen())) {
+                if (isInventoryScreen(holder().screen())) {
                     return;
                 }
             }
         }
 
         // Prevent E from typing entirely in fromInventory screens
-        boolean canCloseFromE = (instance().getSearchFields().container() != null && !instance().getSearchFields().container().isFocused()) || (instance().getSearchFields().inventory() != null && !instance().getSearchFields().inventory().isFocused());
+        boolean canCloseFromE = (holder().searchFields().container() != null && !holder().searchFields().container().isFocused()) || (holder().searchFields().inventory() != null && !holder().searchFields().inventory().isFocused());
         if ((event.key() == key(Minecraft.getInstance().options.keyInventory).getValue() && client().accessibility().preventEFromTyping && canCloseFromE)
-                && (isContainerScreen(instance().getScreen()) || isInventoryScreen(instance().getScreen()) || isCreativeInventoryScreen(instance().getScreen()))) {
-            instance().getScreen().onClose();
+                && (isContainerScreen(holder().screen()) || isInventoryScreen(holder().screen()) || isCreativeInventoryScreen(holder().screen()))) {
+            holder().screen().onClose();
             cir.setReturnValue(true);
         }
 
         // Declare typing variables
         // Both of these variables apply to disallowed keys and hotbar switching
-        boolean ignoreTyping = hoveredSlotHasItem(instance().getScreensHoveredSlot()); // Basic ignore typing variable; applies to recipe book screens only.
+        boolean ignoreTyping = hoveredSlotHasItem(holder().screensHoveredSlot()); // Basic ignore typing variable; applies to recipe book screens only.
         boolean secondaryIgnoreTyping = false; // Secondary ignore typing variable; applies to "T" and "E" keys and chest searching screens only.
 
         // These variables only apply to the chest search bar
@@ -180,16 +181,16 @@ public class KeyPressInstance extends ManagementInstance {
         }
 
         // handle switching items from hotbar to another containerSlot in fromInventory; cancel out typing if an query can be moved
-        if (instance().getScreen().getMenu().getCarried().isEmpty() && instance().getScreensHoveredSlot() != null) {
+        if (holder().screen().getMenu().getCarried().isEmpty() && holder().screensHoveredSlot() != null) {
             for (int i = 0; i < 9; i++) {
-                if (instance().getMinecraft().options.keyHotbarSlots[i].matches(event)) {
+                if (holder().mc().options.keyHotbarSlots[i].matches(event)) {
                     ignoreTyping = true;
                     secondaryIgnoreTyping = true;
                     hotbarKeyPressed = true;
                     break;
                 }
             }
-            if (instance().getScreen() instanceof InventoryScreen && kumaKeyPressed(ModKeyMappings.QUICK_EQUIP, event) && hoveredSlotHasItem(instance().getScreensHoveredSlot())) {
+            if (holder().screen() instanceof InventoryScreen && kumaKeyPressed(ModKeyMappings.QUICK_EQUIP, event) && hoveredSlotHasItem(holder().screensHoveredSlot())) {
                 ignoreTyping = true;
             }
         }
@@ -223,13 +224,13 @@ public class KeyPressInstance extends ManagementInstance {
         }
 
         // Check if drop key or swap hands key was pressed
-        if (instance().getScreensHoveredSlot() != null) {
+        if (holder().screensHoveredSlot() != null) {
             if (event.key() == key(getDropKey()).getValue()) {
                 secondaryIgnoreTyping = true;
                 dropKeyPressed = true;
             }
         }
-        if (hoveredSlotHasItem(instance().getScreensHoveredSlot()) || !Minecraft.getInstance().player.getOffhandItem().isEmpty()) {
+        if (hoveredSlotHasItem(holder().screensHoveredSlot()) || !Minecraft.getInstance().player.getOffhandItem().isEmpty()) {
             if (event.key() == key(Minecraft.getInstance().options.keySwapOffhand).getValue()) {
                 secondaryIgnoreTyping = true;
                 swapKeyPressed = true;
@@ -237,22 +238,22 @@ public class KeyPressInstance extends ManagementInstance {
         }
 
         // If any of these are true, the user cannot type in the search field
-        boolean cannotType = (numberKeyPressed || hotbarKeyPressed || dropKeyPressed || swapKeyPressed) && hoveredSlotHasItem(instance().getScreensHoveredSlot());
+        boolean cannotType = (numberKeyPressed || hotbarKeyPressed || dropKeyPressed || swapKeyPressed) && hoveredSlotHasItem(holder().screensHoveredSlot());
 
         // Recipe book search field logic
-        if (instance().getScreen() instanceof AbstractRecipeBookScreen<?> recipeScreen && !Minecraft.getInstance().hasControlDown()) {
-            boolean swapKeyValid = swapKeyPressed && (hoveredSlotHasItem(instance().getScreensHoveredSlot()) || instance().getScreen().getMenu().getSlot(45).hasItem());
+        if (holder().screen() instanceof AbstractRecipeBookScreen<?> recipeScreen && !Minecraft.getInstance().hasControlDown()) {
+            boolean swapKeyValid = swapKeyPressed && (hoveredSlotHasItem(holder().screensHoveredSlot()) || holder().screen().getMenu().getSlot(45).hasItem());
             if (!client().accessibility().preventEFromTyping || event.key() != key(Minecraft.getInstance().options.keyInventory).getValue()) {
                 if (client().searching().quickSearch.enabledForAny() && !ignoreTyping && !swapKeyValid && !dropKeyPressed && !getRecipeBookComponent(recipeScreen).isVisible() &&
-                        (instance().getSearchFields().inventory() == null ||
-                                (!instance().getSearchFields().inventory().isFocused() && !client().searching().quickSearch.searchBar()))) {
+                        (holder().searchFields().inventory() == null ||
+                                (!holder().searchFields().inventory().isFocused() && !client().searching().quickSearch.searchBar()))) {
                     getRecipeBookComponent(recipeScreen).toggleVisibility();
-                    MethodHelper.refreshWidgets(instance().getScreen());
+                    MethodHelper.refreshWidgets(holder().screen());
                 }
                 if (getSearchBoxInsideRecipeBook(recipeScreen) != null) {
                     boolean unfocus = false;
                     for (int i = 0; i < 9; i++) {
-                        if (instance().getScreensHoveredSlot() != null && instance().getMinecraft().options.keyHotbarSlots[i].matches(event)) {
+                        if (holder().screensHoveredSlot() != null && holder().mc().options.keyHotbarSlots[i].matches(event)) {
                             unfocus = true;
                             break;
                         }
@@ -261,7 +262,7 @@ public class KeyPressInstance extends ManagementInstance {
                         getSearchBoxInsideRecipeBook(recipeScreen).setFocused(false);
                         return;
                     }
-                    if (!cannotType && instance().getSearchFields().inventory() == null) {
+                    if (!cannotType && holder().searchFields().inventory() == null) {
                         GuiHelper.autoFocusElement(getSearchBoxInsideRecipeBook(recipeScreen), event, true);
                     } else if (client().searching().quickSearch.onForAny() || client().searching().quickSearch.recipeBook()) {
                         getRecipeBookComponent(recipeScreen).setFocused(!cannotType);
@@ -276,49 +277,49 @@ public class KeyPressInstance extends ManagementInstance {
             }
         }
         // Inventory search field logic
-        if (client().searching().inventorySearching && instance().getSearchFields().inventory() != null) {
-            if (!Minecraft.getInstance().hasControlDown() && instance().getScreen() instanceof AbstractRecipeBookScreen<?> recipeScreen && getRecipeBookComponent(recipeScreen).isVisible() && !instance().getSearchFields().inventory().isFocused()) {
+        if (client().searching().inventorySearching && holder().searchFields().inventory() != null) {
+            if (!Minecraft.getInstance().hasControlDown() && holder().screen() instanceof AbstractRecipeBookScreen<?> recipeScreen && getRecipeBookComponent(recipeScreen).isVisible() && !holder().searchFields().inventory().isFocused()) {
                 GuiHelper.autoFocusElement(getSearchBoxInsideRecipeBook(recipeScreen), event, !cannotType);
             } else if ((client().searching().quickSearch.enabledForAny() || client().searching().quickSearch.searchBar()) && !secondaryIgnoreTyping && (!Minecraft.getInstance().hasControlDown() || (Minecraft.getInstance().hasControlDown() && event.key() == InputConstants.KEY_A))) {
-                GuiHelper.autoFocusElement(instance().getSearchFields().inventory(), event, true);
-            } else if (instance().getSearchFields().inventory().isFocused() && cannotType) {
-                instance().getSearchFields().inventory().setFocused(false);
+                GuiHelper.autoFocusElement(holder().searchFields().inventory(), event, true);
+            } else if (holder().searchFields().inventory().isFocused() && cannotType) {
+                holder().searchFields().inventory().setFocused(false);
             }
 
             // Unfocus and close recipe book when fromInventory search field is focused
-            if (instance().getScreen() instanceof AbstractRecipeBookScreen<?> recipeScreen && getSearchBoxInsideRecipeBook(recipeScreen) != null) {
-                if (instance().getSearchFields().inventory().isFocused()) {
+            if (holder().screen() instanceof AbstractRecipeBookScreen<?> recipeScreen && getSearchBoxInsideRecipeBook(recipeScreen) != null) {
+                if (holder().searchFields().inventory().isFocused()) {
                     getSearchBoxInsideRecipeBook(recipeScreen).setFocused(false);
                     if (event.key() == InputConstants.KEY_BACKSPACE && getRecipeBookComponent(recipeScreen).isVisible()) {
-                        String text = instance().getSearchFields().searchText();
+                        String text = holder().searchFields().searchText();
                         getRecipeBookComponent(recipeScreen).toggleVisibility();
-                        MethodHelper.refreshWidgets(instance().getScreen());
-                        instance().getSearchFields().inventory().setValue(text.substring(0, text.length() - 1));
-                        instance().getSearchFields().inventory().setFocused(true);
-                        instance().getScreen().setFocused(instance().getSearchFields().inventory());
+                        MethodHelper.refreshWidgets(holder().screen());
+                        holder().searchFields().inventory().setValue(text.substring(0, text.length() - 1));
+                        holder().searchFields().inventory().setFocused(true);
+                        holder().screen().setFocused(holder().searchFields().inventory());
                     }
                     return;
                 }
                 // Unfocus fromInventory search field when recipe book search field is focused
                 else if (getSearchBoxInsideRecipeBook(recipeScreen).isFocused()) {
-                    instance().getSearchFields().inventory().setFocused(false);
+                    holder().searchFields().inventory().setFocused(false);
                 }
             }
 
-            if (instance().getSearchFields().inventory().isFocused() && instance().getSearchFields().inventory().keyPressed(event)) {
+            if (holder().searchFields().inventory().isFocused() && holder().searchFields().inventory().keyPressed(event)) {
                 cir.setReturnValue(true);
             }
         }
 
         // Chest search field logic
-        if (client().searching().containerSearching && isContainerScreen(instance().getScreen()) && instance().getSearchFields().container() != null) {
+        if (client().searching().containerSearching && isContainerScreen(holder().screen()) && holder().searchFields().container() != null) {
             if ((client().searching().quickSearch.onForAny() || client().searching().quickSearch.searchBar()) && !secondaryIgnoreTyping && (!Minecraft.getInstance().hasControlDown() || (Minecraft.getInstance().hasControlDown() && event.key() == InputConstants.KEY_A))) {
-                GuiHelper.autoFocusElement(instance().getSearchFields().container(), event, true);
-            } else if (instance().getSearchFields().container().isFocused() && cannotType) {
-                instance().getSearchFields().container().setFocused(false);
+                GuiHelper.autoFocusElement(holder().searchFields().container(), event, true);
+            } else if (holder().searchFields().container().isFocused() && cannotType) {
+                holder().searchFields().container().setFocused(false);
             }
 
-            if (instance().getSearchFields().container().isFocused() && instance().getSearchFields().container().keyPressed(event)) {
+            if (holder().searchFields().container().isFocused() && holder().searchFields().container().keyPressed(event)) {
                 cir.setReturnValue(true);
             }
         }

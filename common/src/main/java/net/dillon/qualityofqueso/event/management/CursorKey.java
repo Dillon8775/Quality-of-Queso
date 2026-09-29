@@ -1,4 +1,4 @@
-package net.dillon.qualityofqueso.instance.management;
+package net.dillon.qualityofqueso.event.management;
 
 /**
  * Records an action that was consumed to determine which cursor to display.

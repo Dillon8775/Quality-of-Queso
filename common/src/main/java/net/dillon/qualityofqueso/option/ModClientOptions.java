@@ -376,6 +376,10 @@ public class ModClientOptions {
         public boolean darkDisc = true;
 
         public ViewLastKnownEnderChestButton eChestButton = ViewLastKnownEnderChestButton.QOQ_MENU;
+
+        public String[] bannedServers = new String[]{
+                "hypixel"
+        };
     }
 
     public static class ClientOptionsHandler extends ModBaseOptionsHandler<ModClientOptions> {

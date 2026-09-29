@@ -1,6 +1,6 @@
-package net.dillon.qualityofqueso.instance.management;
+package net.dillon.qualityofqueso.event.management;
 
-import net.dillon.qualityofqueso.instance.QuesoScreen;
+import net.dillon.qualityofqueso.event.QuesoScreen;
 import net.dillon.qualityofqueso.mixin.client.accessor.MerchantScreenAccessor;
 import net.dillon.qualityofqueso.mixin.client.accessor.RecipeBookComponentAccessor;
 import net.minecraft.client.Minecraft;
@@ -26,7 +26,7 @@ import static net.dillon.qualityofqueso.option.OptionInstances.client;
 /**
  * Handles clicking slots.
  */
-public class ClickSlotInstance extends ManagementInstance {
+public class SlotClickedEvents extends ManagementEvents {
     private static ActiveTradeAllTask activeTradeAllTask;
     private static boolean processingQueuedTradeAllClick;
     private static ActiveBulkCraftTask activeBulkCraftTask;
@@ -35,7 +35,7 @@ public class ClickSlotInstance extends ManagementInstance {
     private record ActiveTradeAllTask(int containerId, int selectedTradeIndex, int remainingClicks, int emptyResultTicks) {}
     private record ActiveBulkCraftTask(int containerId, @Nullable RecipeDisplayId recipeId, int remainingClicks, int emptyResultTicks) {}
 
-    public ClickSlotInstance(QuesoScreen screen) {
+    public SlotClickedEvents(QuesoScreen screen) {
         super(screen);
     }
 
@@ -44,7 +44,7 @@ public class ClickSlotInstance extends ManagementInstance {
      */
     public void quickGuiClose(Slot slot, int buttonNum) {
         if (client().misc().quickGuiExit && getCursorStack().isEmpty() && buttonNum == 0 && slot == null) {
-            instance().getScreen().onClose();
+            holder().screen().onClose();
         }
     }
 
@@ -71,7 +71,7 @@ public class ClickSlotInstance extends ManagementInstance {
             return;
         }
 
-        if ((!client().management().bulkTrade || !client().buttonDisplayOptions().displayBulkTrade) || !client().buttonDisplayOptions().displayBulkTrade || !(instance().getScreen() instanceof MerchantScreen merchantScreen)) {
+        if ((!client().management().bulkTrade || !client().buttonDisplayOptions().displayBulkTrade) || !client().buttonDisplayOptions().displayBulkTrade || !(holder().screen() instanceof MerchantScreen merchantScreen)) {
             return;
         }
 
@@ -93,7 +93,7 @@ public class ClickSlotInstance extends ManagementInstance {
             return;
         }
 
-        if (instance().getMinecraft().player == null || instance().getMinecraft().gameMode == null || !merchantMenu.getSlot(2).hasItem()) {
+        if (holder().mc().player == null || holder().mc().gameMode == null || !merchantMenu.getSlot(2).hasItem()) {
             return;
         }
 
@@ -110,7 +110,7 @@ public class ClickSlotInstance extends ManagementInstance {
             return;
         }
 
-        if ((!client().management().bulkCraft || !client().buttonDisplayOptions().displayBulkCraft) || !(isCraftingScreen(instance().getScreen()) || isInventoryScreen(instance().getScreen()))) {
+        if ((!client().management().bulkCraft || !client().buttonDisplayOptions().displayBulkCraft) || !(isCraftingScreen(holder().screen()) || isInventoryScreen(holder().screen()))) {
             return;
         }
 
@@ -124,12 +124,12 @@ public class ClickSlotInstance extends ManagementInstance {
             return;
         }
 
-        AbstractContainerMenu menu = instance().getScreenMenu();
-        if (instance().getMinecraft().player == null || instance().getMinecraft().gameMode == null || !menu.getSlot(0).hasItem()) {
+        AbstractContainerMenu menu = holder().menu();
+        if (holder().mc().player == null || holder().mc().gameMode == null || !menu.getSlot(0).hasItem()) {
             return;
         }
 
-        if (!(instance().getScreen() instanceof AbstractRecipeBookScreen<?> recipeBookScreen)) {
+        if (!(holder().screen() instanceof AbstractRecipeBookScreen<?> recipeBookScreen)) {
             return;
         }
 

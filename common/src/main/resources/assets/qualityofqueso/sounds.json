@@ -1,6 +1,6 @@
 {
-  "qualityofqueso.management.succeed": {
-    "subtitle": "qualityofqueso.gui.management_succeed",
+  "qualityofqueso.management.items_moved": {
+    "subtitle": "qualityofqueso.sound.items_moved",
     "sounds": [
       {
         "name": "minecraft:item.bundle.insert",
@@ -8,8 +8,8 @@
       }
     ]
   },
-  "qualityofqueso.management.reject": {
-    "subtitle": "qualityofqueso.gui.management_reject",
+  "qualityofqueso.management.item_moves_rejected": {
+    "subtitle": "qualityofqueso.sound.item_moves_rejected",
     "sounds": [
       {
         "name": "minecraft:item.bundle.insert_fail",
@@ -17,8 +17,8 @@
       }
     ]
   },
-  "qualityofqueso.management.drop": {
-    "subtitle": "qualityofqueso.gui.management_drop",
+  "qualityofqueso.management.items_dropped": {
+    "subtitle": "qualityofqueso.sound.items_dropped",
     "sounds": [
       {
         "name": "minecraft:item.bundle.drop_contents",
@@ -26,8 +26,8 @@
       }
     ]
   },
-  "qualityofqueso.management.sort": {
-    "subtitle": "qualityofqueso.gui.management_sort",
+  "qualityofqueso.management.items_sorted": {
+    "subtitle": "qualityofqueso.sound.items_sorted",
     "sounds": [
       {
         "name": "minecraft:item.bundle.remove_one",
@@ -35,14 +35,14 @@
       }
     ]
   },
-  "qualityofqueso.management.lock_slot": {
-    "subtitle": "qualityofqueso.gui.slot_locked",
+  "qualityofqueso.management.slot_locked": {
+    "subtitle": "qualityofqueso.sound.slot_locked",
     "sounds": [
       "qualityofqueso:slot_locked"
     ]
   },
-  "qualityofqueso.management.unlock_slot": {
-    "subtitle": "qualityofqueso.gui.slot_unlocked",
+  "qualityofqueso.management.slot_unlocked": {
+    "subtitle": "qualityofqueso.sound.slot_unlocked",
     "sounds": [
       "qualityofqueso:slot_unlocked"
     ]

@@ -1,28 +1,29 @@
-package net.dillon.qualityofqueso.instance;
+package net.dillon.qualityofqueso.event.mouse;
 
+import net.dillon.qualityofqueso.event.QuesoScreen;
+import net.dillon.qualityofqueso.event.management.CursorKey;
+import net.dillon.qualityofqueso.event.management.ManagementEvents;
+import net.dillon.qualityofqueso.event.management.TransferEvents;
 import net.dillon.qualityofqueso.helper.ContainerHelper;
-import net.dillon.qualityofqueso.instance.management.CursorKey;
-import net.dillon.qualityofqueso.instance.management.ManagementInstance;
-import net.dillon.qualityofqueso.instance.management.TransferInstance;
 import net.dillon.qualityofqueso.option.eum.management.sorting.CurrentSortingMode;
 import net.dillon.qualityofqueso.option.eum.management.sorting.GlobalSortingMode;
 import net.minecraft.world.inventory.Slot;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import static net.dillon.qualityofqueso.event.management.ExtractingEvents.setCursor;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
 import static net.dillon.qualityofqueso.helper.ModConstants.*;
 import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.canScrollMoveAndHasScrollModifierDown;
 import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.hasDropOnlyOneItemModifierDown;
-import static net.dillon.qualityofqueso.instance.management.ExtractingInstance.setCursor;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 import static net.dillon.qualityofqueso.option.OptionInstances.updateClient;
 
 /**
  * Handles mouse scrolling events.
  */
-public class MouseScrollInstance extends ManagementInstance {
+public class MouseScrolledEvents extends ManagementEvents {
 
-    public MouseScrollInstance(QuesoScreen screen) {
+    public MouseScrolledEvents(QuesoScreen screen) {
         super(screen);
     }
 
@@ -30,7 +31,7 @@ public class MouseScrollInstance extends ManagementInstance {
      * Changes the sort mode when scrolling on the sort button.
      */
     public void changeSortMode(double scrollY) {
-        if (buttonHoveredAndActive(instance().getManagementButtons().sort())) {
+        if (buttonHoveredAndActive(holder().managementButtons().sort())) {
             CurrentSortingMode nextMode = client().sorting().currentSortingMode.next(scrollY > 0);
             updateClient(client -> {
                 client.sorting().currentSortingMode = nextMode;
@@ -64,7 +65,7 @@ public class MouseScrollInstance extends ManagementInstance {
         if (!ContainerHelper.isTrackedFilteringActive()) {
             return;
         }
-        if (!buttonHoveredAndActive(instance().getManagementButtons().filtering())) {
+        if (!buttonHoveredAndActive(holder().managementButtons().filtering())) {
             return;
         }
 
@@ -81,7 +82,7 @@ public class MouseScrollInstance extends ManagementInstance {
         }
 
         try {
-            if (canScrollMoveAndHasScrollModifierDown() && (instance().getManagementButtons().transferContainer().isHovered() || instance().getManagementButtons().transferInventory().isHovered())) {
+            if (canScrollMoveAndHasScrollModifierDown() && (holder().managementButtons().transferContainer().isHovered() || holder().managementButtons().transferInventory().isHovered())) {
                 changeMountAmount(hoveredSlot, scrollY);
             }
         } catch (NullPointerException o) {
@@ -92,9 +93,9 @@ public class MouseScrollInstance extends ManagementInstance {
         }
 
         boolean validHoveredSlot = hoveredSlotHasItem(hoveredSlot) && hoveredSlot.getItem().count() > 1;
-        if (!isCreativeInventoryScreen(instance().getScreen()) && instance().getCanMoveOne() && (validHoveredSlot && hasDropOnlyOneItemModifierDown())
-                || buttonHoveredAndActive(instance().getManagementButtons().quickDrop()) ? hasDropOnlyOneItemModifierDown()
-                : ((validHoveredSlot || buttonHoveredAndActive(instance().getManagementButtons().transferContainer()) || buttonHoveredAndActive(instance().getManagementButtons().transferInventory())) && canScrollMoveAndHasScrollModifierDown())) {
+        if (!isCreativeInventoryScreen(holder().screen()) && holder().getCanMoveOne() && (validHoveredSlot && hasDropOnlyOneItemModifierDown())
+                || buttonHoveredAndActive(holder().managementButtons().quickDrop()) ? hasDropOnlyOneItemModifierDown()
+                : ((validHoveredSlot || buttonHoveredAndActive(holder().managementButtons().transferContainer()) || buttonHoveredAndActive(holder().managementButtons().transferInventory())) && canScrollMoveAndHasScrollModifierDown())) {
             changeMountAmount(hoveredSlot, scrollY);
         }
     }
@@ -117,15 +118,15 @@ public class MouseScrollInstance extends ManagementInstance {
      * Moves one hovered item by scrolling.
      */
     public void moveHoveredItem(double scrollY, CallbackInfoReturnable<Boolean> cir) {
-        if (!isCreativeInventoryScreen(instance().getScreen())
+        if (!isCreativeInventoryScreen(holder().screen())
                 && client().management().scrollMoving
                 && canScrollMoveAndHasScrollModifierDown()
                 && !hasDropOnlyOneItemModifierDown()
-                && new TransferInstance(instance()).tryMoveSingleFromScroll(instance().getScreensHoveredSlot(), scrollY)) {
+                && new TransferEvents(holder()).tryMoveSingleFromScroll(holder().screensHoveredSlot(), scrollY)) {
             setCursor(CursorKey.MOVE);
             cir.setReturnValue(true);
         } else {
-            setMoveAmount(instance().getScreensHoveredSlot(), scrollY);
+            setMoveAmount(holder().screensHoveredSlot(), scrollY);
         }
     }
 }

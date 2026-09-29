@@ -1,6 +1,6 @@
-package net.dillon.qualityofqueso.instance.management;
+package net.dillon.qualityofqueso.event.management;
 
-import net.dillon.qualityofqueso.instance.QuesoScreen;
+import net.dillon.qualityofqueso.event.QuesoScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -16,9 +16,9 @@ import static net.dillon.qualityofqueso.option.OptionInstances.client;
 /**
  * Handles quick equip feature and methods.
  */
-public class QuickEquipInstance extends ManagementInstance {
+public class QuickEquipEvents extends ManagementEvents {
 
-    public QuickEquipInstance(QuesoScreen screen) {
+    public QuickEquipEvents(QuesoScreen screen) {
         super(screen);
     }
 
@@ -80,13 +80,13 @@ public class QuickEquipInstance extends ManagementInstance {
      */
     public void quickEquipItem() {
         Minecraft minecraft = Minecraft.getInstance();
-        AbstractContainerMenu menu = instance().getScreenMenu();
-        if (!client().management().quickEquip || instance().getScreensHoveredSlot() == null || !isValidMenuForQuickEquipping(menu) || (client().management().dragSorting && hasSelectSlotsModifierDown())) {
+        AbstractContainerMenu menu = holder().menu();
+        if (!client().management().quickEquip || holder().screensHoveredSlot() == null || !isValidMenuForQuickEquipping(menu) || (client().management().dragSorting && hasSelectSlotsModifierDown())) {
             return;
         }
 
         // Get the screens hovered slot
-        Slot hoveredSlot = instance().getScreensHoveredSlot();
+        Slot hoveredSlot = holder().screensHoveredSlot();
         ItemStack stack = hoveredSlot.getItem();
 
         // Check if item isn't equippable

@@ -17,10 +17,6 @@ import static net.dillon.qualityofqueso.option.OptionInstances.universal;
  * Client events for Quality of Queso.
  */
 public class ClientEvents {
-    private static final String[] bannedServers = new String[]{
-            "hypixel"
-    };
-
     public static void afterLevelChangeOrRespawn() {
         resetArmorHudState();
     }
@@ -34,9 +30,10 @@ public class ClientEvents {
             client().misc().antiRageQuit = true;
             saveAndApplyConfigs(minecraft);
         }
+
         executeIfClientPlayer(localPlayer -> {
             if (client().accessibility().serverWarnings && isOnServer()) {
-                for (String server : bannedServers) {
+                for (String server : client().accessibility().bannedServers) {
                     if (minecraft.getCurrentServer().ip.contains(server)) {
                         localPlayer.sendSystemMessage(Component.translatable("qualityofqueso.gui.banned_server",
                                 Component.literal(minecraft.getCurrentServer().ip).withStyle(ChatFormatting.DARK_RED)));
@@ -46,6 +43,7 @@ public class ClientEvents {
                     localPlayer.sendSystemMessage(Component.translatable("qualityofqueso.gui.enable_multi_server_configs"));
                 }
             }
+
             if (ModConstants.HAS_UPDATE) {
                 CommonTasks.sendUpdateMessage(localPlayer,
                         Component.translatable("qualityofqueso").withStyle(ChatFormatting.GOLD),

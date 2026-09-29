@@ -1,10 +1,18 @@
 package net.dillon.qualityofqueso.mixin.client.screen;
 
-import net.dillon.qualityofqueso.instance.*;
-import net.dillon.qualityofqueso.instance.context.ManagementButtons;
-import net.dillon.qualityofqueso.instance.context.SearchFields;
-import net.dillon.qualityofqueso.instance.management.ClickSlotInstance;
-import net.dillon.qualityofqueso.instance.management.ExtractingInstance;
+import net.dillon.qualityofqueso.event.QuesoScreen;
+import net.dillon.qualityofqueso.event.WidgetHandler;
+import net.dillon.qualityofqueso.event.context.ManagementButtons;
+import net.dillon.qualityofqueso.event.context.SearchFields;
+import net.dillon.qualityofqueso.event.key.CharTypedEvents;
+import net.dillon.qualityofqueso.event.key.KeyPressedEvents;
+import net.dillon.qualityofqueso.event.management.ExtractingEvents;
+import net.dillon.qualityofqueso.event.management.SlotClickedEvents;
+import net.dillon.qualityofqueso.event.mouse.*;
+import net.dillon.qualityofqueso.event.screen.ScreenClosedEvents;
+import net.dillon.qualityofqueso.event.screen.ScreenInitializedEvents;
+import net.dillon.qualityofqueso.event.screen.ScreenResizedEvents;
+import net.dillon.qualityofqueso.event.screen.TooltipEvents;
 import net.dillon.qualityofqueso.widget.WidgetLayout;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -80,37 +88,37 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
     }
 
     @Override
-    public Minecraft getMinecraft() {
+    public Minecraft mc() {
         return this.minecraft;
     }
 
     @Override
-    public AbstractContainerScreen<?> getScreen() {
+    public AbstractContainerScreen<?> screen() {
         return this.screen;
     }
 
     @Override
-    public AbstractContainerMenu getScreenMenu() {
+    public AbstractContainerMenu menu() {
         return this.screen.getMenu();
     }
 
     @Override
-    public Container getCurrentInventory() {
+    public Container container() {
         return this.container;
     }
 
     @Override
-    public Slot getScreensHoveredSlot() {
+    public Slot screensHoveredSlot() {
         return this.hoveredSlot;
     }
 
     @Override
-    public Set<Integer> getExcludedSlots() {
+    public Set<Integer> excludedSlots() {
         return this.excludedSlots;
     }
 
     @Override
-    public SearchFields getSearchFields() {
+    public SearchFields searchFields() {
         return new SearchFields(
                 this.containerSearchField,
                 this.inventorySearchField,
@@ -119,7 +127,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
     }
 
     @Override
-    public ManagementButtons getManagementButtons() {
+    public ManagementButtons managementButtons() {
         return this.managementButtons;
     }
 
@@ -212,7 +220,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             return;
         }
 
-        ScreenInitInstance screenInitInstance = new ScreenInitInstance(
+        ScreenInitializedEvents screenInitInstance = new ScreenInitializedEvents(
                 (QuesoScreen) this.screen
         );
         screenInitInstance.initializeContainer();
@@ -231,7 +239,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             return;
         }
 
-        ExtractingInstance extractingInstance = new ExtractingInstance(
+        ExtractingEvents extractingInstance = new ExtractingEvents(
                 (QuesoScreen) this.screen
         );
         extractingInstance.extractLockedSlotColor(graphics);
@@ -247,7 +255,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             return;
         }
 
-        ExtractingInstance extractingInstance = new ExtractingInstance(
+        ExtractingEvents extractingInstance = new ExtractingEvents(
                 (QuesoScreen) this.screen
         );
         extractingInstance.extractEnhancedCursor(graphics);
@@ -266,14 +274,14 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             return;
         }
 
-        ExtractingInstance extractingInstance = new ExtractingInstance(
+        ExtractingEvents extractingInstance = new ExtractingEvents(
                 (QuesoScreen) this.screen
         );
         extractingInstance.grayoutSlotsAndExtractLockedIcon(graphics);
     }
 
     /**
-     * Renders mod tooltips with the help of the {@link ModTooltipInstance} record.
+     * Renders mod tooltips with the help of the {@link TooltipEvents} record.
      */
     @Inject(method = "extractTooltip", at = @At("HEAD"), cancellable = true)
     private void modifyExistingAndNewTooltips(GuiGraphicsExtractor graphics, int mouseX, int mouseY, CallbackInfo ci) {
@@ -281,7 +289,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             return;
         }
 
-        ModTooltipInstance modTooltips = new ModTooltipInstance(
+        TooltipEvents modTooltips = new TooltipEvents(
                 (QuesoScreen) this.screen
         );
         modTooltips.displaySingleMovingTooltips(graphics, this.font, mouseX, mouseY, ci);
@@ -299,21 +307,21 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
         }
 
 
-        WidgetBoxBoundsInstance widgetBoxBoundsInstance = new WidgetBoxBoundsInstance(
+        WidgetBoxClickedEvents widgetBoxBoundsInstance = new WidgetBoxClickedEvents(
                 (QuesoScreen) this.screen
         );
         widgetBoxBoundsInstance.handleClickingOnBox(mx, my, this.widgetLayout, cir);
 
-        SearchBarBoundsInstance searchBarBoundsInstance = new SearchBarBoundsInstance(
+        SearchBarClickedEvents searchBarBoundsInstance = new SearchBarClickedEvents(
                 (QuesoScreen) this.screen
         );
         searchBarBoundsInstance.handleClickingOnBox(mx, my,
-                this.getSearchFields().inventory() != null ? this.getSearchFields().inventory() : this.getSearchFields().container(),
+                this.searchFields().inventory() != null ? this.searchFields().inventory() : this.searchFields().container(),
                 cir);
     }
 
     /**
-     * Handles slot clicking with the help of the {@link ClickSlotInstance} record.
+     * Handles slot clicking with the help of the {@link SlotClickedEvents} record.
      */
     @Inject(method = "slotClicked(Lnet/minecraft/world/inventory/Slot;IILnet/minecraft/world/inventory/ContainerInput;)V", at = @At("HEAD"), cancellable = true)
     private void handleSlotClicked(Slot slot, int slotId, int buttonNum, ContainerInput containerInput, CallbackInfo ci) {
@@ -321,7 +329,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             return;
         }
 
-        ClickSlotInstance clickSlotInstance = new ClickSlotInstance(
+        SlotClickedEvents clickSlotInstance = new SlotClickedEvents(
                 (QuesoScreen) this.screen
         );
         clickSlotInstance.quickGuiClose(slot, buttonNum);
@@ -331,7 +339,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
     }
 
     /**
-     * Handles mouse-releasing events with the help of the {@link MouseReleaseInstance} record.
+     * Handles mouse-releasing events with the help of the {@link MouseReleasedEvents} record.
      */
     @Inject(method = "mouseReleased", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;slotClicked(Lnet/minecraft/world/inventory/Slot;ILnet/minecraft/client/input/MouseButtonEvent;Lnet/minecraft/world/inventory/ContainerInput;)V", ordinal = 0), cancellable = true, locals = LocalCapture.CAPTURE_FAILEXCEPTION)
     private void handleMouseReleased(MouseButtonEvent event, CallbackInfoReturnable<Boolean> cir, Slot slot, int xo, int yo, boolean clickedOutside, int slotId, Iterator var7, Slot target) {
@@ -339,14 +347,14 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             return;
         }
 
-        MouseReleaseInstance mouseReleasedInstance = new MouseReleaseInstance(
+        MouseReleasedEvents mouseReleasedInstance = new MouseReleasedEvents(
                 (QuesoScreen) this.screen
         );
         mouseReleasedInstance.disableHardLockedSlotsOnDoubleClick(slot, target, cir);
     }
 
     /**
-     * Selects and/or locks slots, and handles other mouse clicking events with the help of the {@link MouseClickInstance} record.
+     * Selects and/or locks slots, and handles other mouse clicking events with the help of the {@link MouseClickedEvents} record.
      */
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
     private void handleMouseClicking(MouseButtonEvent event, boolean doubleClick, CallbackInfoReturnable<Boolean> cir) {
@@ -354,7 +362,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             return;
         }
 
-        MouseClickInstance mouseClickInstance = new MouseClickInstance(
+        MouseClickedEvents mouseClickInstance = new MouseClickedEvents(
                 (QuesoScreen) this.screen
         );
         mouseClickInstance.trySelectingOrLockingSlot(event, cir);
@@ -366,7 +374,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
     }
 
     /**
-     * Handles mouse scrolling events with the help of the {@link MouseScrollInstance} record.
+     * Handles mouse scrolling events with the help of the {@link MouseScrolledEvents} record.
      */
     @Inject(method = "mouseScrolled", at = @At("HEAD"), cancellable = true)
     private void handleMouseScrolling(double x, double y, double scrollX, double scrollY, CallbackInfoReturnable<Boolean> cir) {
@@ -374,7 +382,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             return;
         }
 
-        MouseScrollInstance mouseScrollInstance = new MouseScrollInstance(
+        MouseScrolledEvents mouseScrollInstance = new MouseScrolledEvents(
                 (QuesoScreen) this
         );
         mouseScrollInstance.changeSortMode(scrollY);
@@ -391,7 +399,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             return;
         }
 
-        MouseReleaseInstance mouseReleaseInstance = new MouseReleaseInstance(
+        MouseReleasedEvents mouseReleaseInstance = new MouseReleasedEvents(
                 (QuesoScreen) this.screen
         );
         mouseReleaseInstance.trackSlotAndLockOrSelect(event, cir);
@@ -406,7 +414,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             return;
         }
 
-        MouseDragInstance mouseDragInstance = new MouseDragInstance(
+        MouseDraggedEvents mouseDragInstance = new MouseDraggedEvents(
                 (QuesoScreen) this.screen
         );
         mouseDragInstance.handleSingularMovingAndLockingOrSelectingSlots(event, cir);
@@ -421,7 +429,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             return;
         }
 
-        KeyPressInstance keyPressInstance = new KeyPressInstance(
+        KeyPressedEvents keyPressInstance = new KeyPressedEvents(
                 (QuesoScreen) this.screen
         );
         keyPressInstance.handleKeyPressing(event, cir);
@@ -432,7 +440,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
      */
     @Override
     public boolean charTyped(CharacterEvent event) {
-        CharTypedInstance charTypedInstance = new CharTypedInstance(
+        CharTypedEvents charTypedInstance = new CharTypedEvents(
                 (QuesoScreen) this.screen
         );
         return charTypedInstance.handleCharTyped(event, () -> super.charTyped(event));
@@ -448,7 +456,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             return;
         }
 
-        ResizeInstance resizeInstance = new ResizeInstance(
+        ScreenResizedEvents resizeInstance = new ScreenResizedEvents(
                 (QuesoScreen) this.screen
         );
         resizeInstance.handleResizing(width, height, this.excludedSlots);
@@ -463,7 +471,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             return;
         }
 
-        CloseScreenInstance closeScreenInstance = new CloseScreenInstance(
+        ScreenClosedEvents closeScreenInstance = new ScreenClosedEvents(
                 (QuesoScreen) this.screen
         );
         closeScreenInstance.putExcludedSlots();

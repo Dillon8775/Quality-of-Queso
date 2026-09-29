@@ -1,7 +1,7 @@
 package net.dillon.qualityofqueso.helper;
 
 import net.dillon.dillonlib.util.UpdateChecker;
-import net.dillon.qualityofqueso.instance.management.CursorKey;
+import net.dillon.qualityofqueso.event.management.CursorKey;
 import net.dillon.qualityofqueso.option.eum.management.sorting.CurrentSortingMode;
 import net.dillon.qualityofqueso.platform.QualityOfQuesoPlatforms;
 import net.minecraft.ChatFormatting;

@@ -1,8 +1,8 @@
 package net.dillon.qualityofqueso.mixin.fix;
 
 import net.dillon.dillonlib.mixinplugin.Predicated;
-import net.dillon.qualityofqueso.instance.QuesoScreen;
-import net.dillon.qualityofqueso.instance.management.ManagementInstance;
+import net.dillon.qualityofqueso.event.QuesoScreen;
+import net.dillon.qualityofqueso.event.management.ManagementEvents;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.input.MouseButtonEvent;
 import org.spongepowered.asm.mixin.Mixin;
@@ -15,11 +15,11 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 public class AbstractContainerScreenFix {
 
     /**
-     * @return a new {@link ManagementInstance} for {@code Fabric.}
+     * @return a new {@link ManagementEvents} for {@code Fabric.}
      */
     @Unique
-    private ManagementInstance managementInstance() {
-        return new ManagementInstance((QuesoScreen) (AbstractContainerScreen<?>)(Object)this);
+    private ManagementEvents managementInstance() {
+        return new ManagementEvents((QuesoScreen) (AbstractContainerScreen<?>)(Object)this);
     }
 
     /**

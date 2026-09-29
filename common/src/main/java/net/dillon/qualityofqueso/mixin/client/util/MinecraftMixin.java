@@ -1,7 +1,7 @@
 package net.dillon.qualityofqueso.mixin.client.util;
 
+import net.dillon.qualityofqueso.event.management.SlotClickedEvents;
 import net.dillon.qualityofqueso.helper.ModHelper;
-import net.dillon.qualityofqueso.instance.management.ClickSlotInstance;
 import net.dillon.qualityofqueso.keybind.ModKeyMappings;
 import net.dillon.qualityofqueso.screen.ItemFrameSearchScreen;
 import net.dillon.qualityofqueso.util.MobHitDingTracker;
@@ -60,8 +60,8 @@ public abstract class MinecraftMixin {
         ModHelper.tickCooldowns();
         ModHelper.tickManualItemPickup(minecraft);
 
-        ClickSlotInstance.tickTradeAllTask();
-        ClickSlotInstance.tickBulkCraftTask();
+        SlotClickedEvents.tickTradeAllTask();
+        SlotClickedEvents.tickBulkCraftTask();
         MobHitDingTracker.tick(minecraft);
     }
 }

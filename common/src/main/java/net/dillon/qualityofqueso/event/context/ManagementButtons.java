@@ -1,4 +1,4 @@
-package net.dillon.qualityofqueso.instance.context;
+package net.dillon.qualityofqueso.event.context;
 
 import net.dillon.qualityofqueso.widget.QuesoButton;
 

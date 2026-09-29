@@ -1,9 +1,10 @@
-package net.dillon.qualityofqueso.instance;
+package net.dillon.qualityofqueso.event.screen;
 
+import net.dillon.qualityofqueso.event.QuesoScreen;
+import net.dillon.qualityofqueso.event.management.ManagementEvents;
 import net.dillon.qualityofqueso.helper.ContainerHelper;
 import net.dillon.qualityofqueso.helper.MethodHelper;
 import net.dillon.qualityofqueso.helper.ModConstants;
-import net.dillon.qualityofqueso.instance.management.ManagementInstance;
 import net.dillon.qualityofqueso.option.eum.management.FilteringMode;
 import net.minecraft.client.gui.screens.inventory.*;
 
@@ -17,9 +18,9 @@ import static net.dillon.qualityofqueso.option.OptionInstances.updateClient;
 /**
  * Handles screen creation, with creating and initializing the correct variables.
  */
-public class ScreenInitInstance extends ManagementInstance {
+public class ScreenInitializedEvents extends ManagementEvents {
 
-    public ScreenInitInstance(QuesoScreen screen) {
+    public ScreenInitializedEvents(QuesoScreen screen) {
         super(screen);
     }
 
@@ -27,7 +28,7 @@ public class ScreenInitInstance extends ManagementInstance {
      * Handles tracked containers upon screen creation.
      */
     public void handleTrackedContainers() {
-        if (isContainerScreen(instance().getScreen())) {
+        if (isContainerScreen(holder().screen())) {
             // Handle tracked containers
             if (ContainerHelper.RETURNING_FROM_PLACEHOLDER_SCREEN) {
                 // If the user is returning from a placeholder screen, then we should re-track the container as "filtered", to ensure no variables are lost
@@ -39,7 +40,7 @@ public class ScreenInitInstance extends ManagementInstance {
                     updateClient(client -> {
                         if (!client.isFiltering()) {
                             client.management().filteringMode = FilteringMode.MATCHING;
-                            instance().setDisableFilteringOnClose(true);
+                            holder().setDisableFilteringOnClose(true);
                         }
                     });
                 }
@@ -57,16 +58,16 @@ public class ScreenInitInstance extends ManagementInstance {
      * Initializes search fields for the screen.
      */
     public void initializeSearchFields() {
-        if (isContainerScreen(instance().getScreen()) && client().searching().containerSearching) {
+        if (isContainerScreen(holder().screen()) && client().searching().containerSearching) {
             // Initialize the container search field, if it should be initialized
             widgetHandler().setContainerSearchField(searchInstance().initializeSearchField(false));
-            MethodHelper.addRenderableModWidget(instance().getScreen(), instance().getSearchFields().container());
-        } else if (isInventoryScreen(instance().getScreen())) { // Initialize the inventory search field, if it should be initialized
+            MethodHelper.addRenderableModWidget(holder().screen(), holder().searchFields().container());
+        } else if (isInventoryScreen(holder().screen())) { // Initialize the inventory search field, if it should be initialized
             // Also initialize the "container" variable to the player's inventory, if the container was never initialized from any of the other screens
-            instance().setCachedContainer(instance().getMinecraft().player.getInventory());
+            holder().setCachedContainer(holder().mc().player.getInventory());
             if (client().searching().inventorySearching) {
                 widgetHandler().setInventorySearchField(searchInstance().initializeSearchField(true));
-                MethodHelper.addRenderableModWidget(instance().getScreen(), instance().getSearchFields().inventory());
+                MethodHelper.addRenderableModWidget(holder().screen(), holder().searchFields().inventory());
             }
         }
     }
@@ -75,16 +76,16 @@ public class ScreenInitInstance extends ManagementInstance {
      * Re-adds all excluded slots to the screen.
      */
     public void readdExcludedSlots() {
-        if (isValidScreen(instance().getScreen()) && ModConstants.SAVING_EXCLUDED_SLOTS && instance().getCachedContainer() != null) {
+        if (isValidScreen(holder().screen()) && ModConstants.SAVING_EXCLUDED_SLOTS && holder().getCachedContainer() != null) {
             // Do not re-add excluded slots if the recipe book is open, because it breaks things
-            if (instance().getScreen() instanceof AbstractRecipeBookScreen<?> recipeScreen && getRecipeBookComponent(recipeScreen).isVisible()) {
+            if (holder().screen() instanceof AbstractRecipeBookScreen<?> recipeScreen && getRecipeBookComponent(recipeScreen).isVisible()) {
                 return;
             }
 
             // Otherwise, re-add all excluded slots to the screen (if the screen size is equal to a last saved excluded slot size)
-            instance().getExcludedSlots().clear();
+            holder().excludedSlots().clear();
             if (SAVED_EXCLUDED_SLOTS.containsKey(getTotalSlots())) {
-                instance().getExcludedSlots().addAll(SAVED_EXCLUDED_SLOTS.get(getTotalSlots()));
+                holder().excludedSlots().addAll(SAVED_EXCLUDED_SLOTS.get(getTotalSlots()));
             }
         }
     }
@@ -95,28 +96,28 @@ public class ScreenInitInstance extends ManagementInstance {
     public void initializeContainer() {
         // Figure out what the appropriate "container" should be for this instance of a screen
         // Check brewing stands, furnaces, dispeners/droppers, and hoppers first
-        if (instance().getScreen() instanceof BrewingStandScreen brewingStandScreen) {
-            instance().setCachedContainer(brewingStand(brewingStandScreen));
-        } else if (instance().getScreen() instanceof AbstractFurnaceScreen<?> abstractFurnaceScreen) {
-            instance().setCachedContainer(abstractFurnaceScreen.getMenu().getResultSlot().container);
-        } else if (instance().getScreen() instanceof DispenserScreen dispenserScreen) {
-            instance().setCachedContainer(dispenser(dispenserScreen));
-        } else if (instance().getScreen() instanceof HopperScreen hopperScreen) {
-            instance().setCachedContainer(hopper(hopperScreen));
+        if (holder().screen() instanceof BrewingStandScreen brewingStandScreen) {
+            holder().setCachedContainer(brewingStand(brewingStandScreen));
+        } else if (holder().screen() instanceof AbstractFurnaceScreen<?> abstractFurnaceScreen) {
+            holder().setCachedContainer(abstractFurnaceScreen.getMenu().getResultSlot().container);
+        } else if (holder().screen() instanceof DispenserScreen dispenserScreen) {
+            holder().setCachedContainer(dispenser(dispenserScreen));
+        } else if (holder().screen() instanceof HopperScreen hopperScreen) {
+            holder().setCachedContainer(hopper(hopperScreen));
         }
         // If screen isn't an instance of any of the above, then start checking for container/inventory screens
-        if (isContainerScreen(instance().getScreen())) {
+        if (isContainerScreen(holder().screen())) {
             // Determine fromInventory variable; if instance ShulkerBoxScreen, fromInventory is the shulker box's fromInventory
-            if (instance().getScreen() instanceof ShulkerBoxScreen shulkerBoxScreen) {
-                instance().setCachedContainer(shulkerBox(shulkerBoxScreen));
+            if (holder().screen() instanceof ShulkerBoxScreen shulkerBoxScreen) {
+                holder().setCachedContainer(shulkerBox(shulkerBoxScreen));
             }
             // If it's GenericContainerScreen, it's the generic container (or most likely chest/barrel)'s fromInventory
-            else if (instance().getScreen() instanceof ContainerScreen genericContainerScreen) {
-                instance().setCachedContainer(genericContainerScreen.getMenu().getContainer());
+            else if (holder().screen() instanceof ContainerScreen genericContainerScreen) {
+                holder().setCachedContainer(genericContainerScreen.getMenu().getContainer());
             }
             // Otherwise, fromInventory is null
             else {
-                instance().setCachedContainer(null);
+                holder().setCachedContainer(null);
             }
         }
     }
@@ -125,6 +126,6 @@ public class ScreenInitInstance extends ManagementInstance {
      * Resets the "current container" variable.
      */
     public void setCurrentContainer() {
-        CURRENT_CONTAINER = instance().getCachedContainer();
+        CURRENT_CONTAINER = holder().getCachedContainer();
     }
 }

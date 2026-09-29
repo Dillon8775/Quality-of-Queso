@@ -1,15 +1,16 @@
-package net.dillon.qualityofqueso.instance;
+package net.dillon.qualityofqueso.event.mouse;
 
-import net.dillon.qualityofqueso.instance.management.ManagementInstance;
+import net.dillon.qualityofqueso.event.QuesoScreen;
+import net.dillon.qualityofqueso.event.management.ManagementEvents;
 import net.dillon.qualityofqueso.widget.WidgetLayout;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /**
  * Handles clicking on a {@link WidgetLayout}.
  */
-public class WidgetBoxBoundsInstance extends ManagementInstance {
+public class WidgetBoxClickedEvents extends ManagementEvents {
 
-    public WidgetBoxBoundsInstance(QuesoScreen screen) {
+    public WidgetBoxClickedEvents(QuesoScreen screen) {
         super(screen);
     }
 

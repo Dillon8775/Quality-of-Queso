@@ -1,7 +1,7 @@
-package net.dillon.qualityofqueso.instance.management;
+package net.dillon.qualityofqueso.event.management;
 
+import net.dillon.qualityofqueso.event.QuesoScreen;
 import net.dillon.qualityofqueso.helper.ModConstants;
-import net.dillon.qualityofqueso.instance.QuesoScreen;
 import net.dillon.qualityofqueso.widget.SearchBar;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -27,9 +27,9 @@ import static net.dillon.qualityofqueso.option.OptionInstances.client;
 /**
  * Handles searching-related functions.
  */
-public class SearchInstance extends ManagementInstance {
+public class SearchEvents extends ManagementEvents {
 
-    public SearchInstance(QuesoScreen screen) {
+    public SearchEvents(QuesoScreen screen) {
         super(screen);
     }
 
@@ -38,31 +38,31 @@ public class SearchInstance extends ManagementInstance {
      */
     public SearchBar initializeSearchField(boolean inventory) {
         return new SearchBar(Minecraft.getInstance().font,
-                instance().getScreen().width / 2 +  getBarWidth(getImageWidth(instance().getScreen())) / 2 - (inventory ? 60 : 64),
-                getTopPos(instance().getScreen()) + getTitleLabelY(instance().getScreen()) - 2 + (client().searching().searchBarPosition.top() ? (client().searching().searchBarColor.black() ? -19 : -21) : 0));
+                holder().screen().width / 2 +  getBarWidth(getImageWidth(holder().screen())) / 2 - (inventory ? 60 : 64),
+                getTopPos(holder().screen()) + getTitleLabelY(holder().screen()) - 2 + (client().searching().searchBarPosition.top() ? (client().searching().searchBarColor.black() ? -19 : -21) : 0));
     }
 
     /**
      * @return the {@code searchField namespace} text.
      */
     public String getSearchFieldText() {
-        return instance().getSearchFields().inventory() != null
-                ? instance().getSearchFields().inventory().getValue()
-                : instance().getSearchFields().container() != null ? instance().getSearchFields().container().getValue() : "";
+        return holder().searchFields().inventory() != null
+                ? holder().searchFields().inventory().getValue()
+                : holder().searchFields().container() != null ? holder().searchFields().container().getValue() : "";
     }
 
     /**
      * @return if the screen has a search field present.
      */
     public boolean hasSearchField() {
-        return instance().getSearchFields().container() != null || instance().getSearchFields().inventory() != null;
+        return holder().searchFields().container() != null || holder().searchFields().inventory() != null;
     }
 
     /**
      * @return if the search field has a query in it (in other words, if the field isn't empty).
      */
     public boolean hasSearchQuery() {
-        return hasSearchField() && !instance().getSearchFields().searchText().isEmpty();
+        return hasSearchField() && !holder().searchFields().searchText().isEmpty();
     }
 
     /**
@@ -76,15 +76,15 @@ public class SearchInstance extends ManagementInstance {
      * @return the slot count that should be considered for searching/highlighting on the current screen.
      */
     public int getSearchSlotCount() {
-        if (isInventoryScreen(instance().getScreen())) {
-            return instance().getScreenMenu().slots.size();
+        if (isInventoryScreen(holder().screen())) {
+            return holder().menu().slots.size();
         }
         int searchSize = getInventorySize();
         if (searchSize > 0) {
             return searchSize;
         }
-        if (instance().getScreen() instanceof AbstractContainerScreen<?>) {
-            return instance().getScreenMenu().slots.size();
+        if (holder().screen() instanceof AbstractContainerScreen<?>) {
+            return holder().menu().slots.size();
         }
         return 0;
     }
@@ -103,9 +103,9 @@ public class SearchInstance extends ManagementInstance {
         // The "search inventory" option only gates container-screen player inventory scanning.
         // InventoryScreen should always keep its own hotbar/include behavior.
         if (!client().management().includingHotbar
-                && isHotbarSlot(instance().getScreenMenu().slots.size(), dropping ? slot.index + 1 : slot.index)
-                && (!dropping || !isInventoryScreen(instance().getScreen()) || slot.index != 45)) {
-            boolean applyHotbarFilter = client().accessibility().searchInventory || isInventoryScreen(instance().getScreen());
+                && isHotbarSlot(holder().menu().slots.size(), dropping ? slot.index + 1 : slot.index)
+                && (!dropping || !isInventoryScreen(holder().screen()) || slot.index != 45)) {
+            boolean applyHotbarFilter = client().accessibility().searchInventory || isInventoryScreen(holder().screen());
             if (applyHotbarFilter) {
                 return false;
             }

@@ -34,6 +34,13 @@
   "qualityofqueso.menu.report_bugs": "Report a bug...",
   "qualityofqueso.menu.report_bugs.tooltip": "Report a bug on the GitHub repository...",
 
+  "qualityofqueso.sound.items_moved": "Item(s) moved",
+  "qualityofqueso.sound.item_moves_rejected": "Item move(s) rejected",
+  "qualityofqueso.sound.items_dropped": "Item(s) dropped",
+  "qualityofqueso.sound.items_sorted": "Item(s) sorted",
+  "qualityofqueso.sound.slot_locked": "Slot locked",
+  "qualityofqueso.sound.slot_unlocked": "Slot unlocked",
+
   "qualityofqueso.gui.search_item_frames.line1": "Search for §oitem §r§fto make all item frames with §oitem §r§fglow.",
   "qualityofqueso.gui.search_item_frames.warning.line1": "§cPlease note: §r§fthis feature only works if the server has this mod installed",
   "qualityofqueso.gui.search_item_frames.warning.line2": "§oAND §r§fthe server has this feature enabled.",
@@ -403,13 +410,7 @@
   "qualityofqueso.gui.crossbows": "Crossbows",
   "qualityofqueso.gui.tools": "Tools",
   "qualityofqueso.gui.fishing_rods": "Fishing Rods",
-  "qualityofqueso.gui.management_succeed": "Management Succeeds",
-  "qualityofqueso.gui.management_reject": "Management Rejects",
-  "qualityofqueso.gui.management_drop": "Management Drops Item(s)",
-  "qualityofqueso.gui.management_sort": "Management Sorts",
 
-  "qualityofqueso.gui.slot_locked": "Slot locked",
-  "qualityofqueso.gui.slot_unlocked": "Slot unlocked",
   "qualityofqueso.gui.move_amount": "Scroll to move 1",
   "qualityofqueso.gui.move_amount.old": "Move %s",
   "qualityofqueso.gui.move_amount_each": "Move %s from each stack",

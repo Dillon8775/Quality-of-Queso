@@ -1,12 +1,13 @@
-package net.dillon.qualityofqueso.instance;
+package net.dillon.qualityofqueso.event;
 
-import net.dillon.qualityofqueso.instance.context.ManagementButtons;
+import net.dillon.qualityofqueso.event.context.ManagementButtons;
 import net.minecraft.client.gui.components.EditBox;
 
 /**
  * Exposes initialization methods, and buttons and search fields.
  */
 public interface WidgetHandler {
+
     /**
      * Sets the container search field.
      */

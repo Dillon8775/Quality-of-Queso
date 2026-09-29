@@ -1,6 +1,6 @@
 package net.dillon.qualityofqueso.helper;
 
-import net.dillon.qualityofqueso.instance.management.ExtractingInstance;
+import net.dillon.qualityofqueso.event.management.ExtractingEvents;
 import net.dillon.qualityofqueso.sound.ModSoundEvents;
 import net.dillon.qualityofqueso.widget.QuesoButton;
 import net.minecraft.ChatFormatting;
@@ -206,7 +206,7 @@ public class ManagementHelper {
     /**
      * @return if a button is hovered and active and shift is held.
      */
-    public static boolean buttonHoveredActiveOrShiftHeld(ExtractingInstance extractingInstance, Button button, boolean inventory) {
+    public static boolean buttonHoveredActiveOrShiftHeld(ExtractingEvents extractingInstance, Button button, boolean inventory) {
         return buttonHoveredAndActive(button) || extractingInstance.shiftHeld(inventory);
     }
 
@@ -243,7 +243,7 @@ public class ManagementHelper {
             return;
         }
 
-        getMinecraft().getSoundManager().play(SimpleSoundInstance.forUI(drop ? getSound(ModSoundEvents.MANAGEMENT_DROP) : getSound(ModSoundEvents.MANAGEMENT_SUCCEED), 1.0F, 5.0F));
+        getMinecraft().getSoundManager().play(SimpleSoundInstance.forUI(drop ? getSound(ModSoundEvents.ITEMS_DROPPED) : getSound(ModSoundEvents.ITEMS_MOVED), 1.0F, 5.0F));
     }
 
     /**
@@ -254,7 +254,7 @@ public class ManagementHelper {
             return;
         }
 
-        getMinecraft().getSoundManager().play(SimpleSoundInstance.forUI(getSound(ModSoundEvents.MANAGEMENT_SORT), 1.0F, 5.0F));
+        getMinecraft().getSoundManager().play(SimpleSoundInstance.forUI(getSound(ModSoundEvents.ITEMS_SORTED), 1.0F, 5.0F));
     }
 
     /**
@@ -265,7 +265,7 @@ public class ManagementHelper {
             return;
         }
 
-        getMinecraft().getSoundManager().play(SimpleSoundInstance.forUI(getSound(ModSoundEvents.MANAGEMENT_REJECT), 1.0F, 0.6F));
+        getMinecraft().getSoundManager().play(SimpleSoundInstance.forUI(getSound(ModSoundEvents.ITEM_MOVES_REJECTED), 1.0F, 0.6F));
     }
 
     /**
@@ -276,7 +276,7 @@ public class ManagementHelper {
             return;
         }
 
-        getMinecraft().getSoundManager().play(SimpleSoundInstance.forUI(lock ? getSound(ModSoundEvents.LOCK_SLOT) : getSound(ModSoundEvents.UNLOCK_SLOT), 1.0F, 0.10F));
+        getMinecraft().getSoundManager().play(SimpleSoundInstance.forUI(lock ? getSound(ModSoundEvents.SLOT_LOCKED) : getSound(ModSoundEvents.SLOT_UNLOCKED), 1.0F, 0.10F));
         LOCKED_SLOT_SOUND_COOLDOWN = DEFAULT_LOCKED_SLOT_SOUND_COOLDOWN;
     }
 

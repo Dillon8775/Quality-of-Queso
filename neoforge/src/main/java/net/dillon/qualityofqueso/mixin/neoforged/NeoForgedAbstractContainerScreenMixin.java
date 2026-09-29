@@ -1,8 +1,8 @@
 package net.dillon.qualityofqueso.mixin.neoforged;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import net.dillon.qualityofqueso.instance.QuesoScreen;
-import net.dillon.qualityofqueso.instance.management.ManagementInstance;
+import net.dillon.qualityofqueso.event.QuesoScreen;
+import net.dillon.qualityofqueso.event.management.ManagementEvents;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -18,11 +18,11 @@ import static net.dillon.qualityofqueso.option.OptionInstances.client;
 public class NeoForgedAbstractContainerScreenMixin {
 
     /**
-     * @return a new {@link ManagementInstance} for {@code NeoForged.}
+     * @return a new {@link ManagementEvents} for {@code NeoForged.}
      */
     @Unique
-    private ManagementInstance managementInstance() {
-        return new ManagementInstance((QuesoScreen) (AbstractContainerScreen<?>)(Object)this);
+    private ManagementEvents managementInstance() {
+        return new ManagementEvents((QuesoScreen) (AbstractContainerScreen<?>)(Object)this);
     }
 
     /**

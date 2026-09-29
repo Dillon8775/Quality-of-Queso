@@ -1,7 +1,8 @@
-package net.dillon.qualityofqueso.instance;
+package net.dillon.qualityofqueso.event.mouse;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import net.dillon.qualityofqueso.instance.management.ManagementInstance;
+import net.dillon.qualityofqueso.event.QuesoScreen;
+import net.dillon.qualityofqueso.event.management.ManagementEvents;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.world.inventory.ContainerInput;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -13,9 +14,9 @@ import static net.dillon.qualityofqueso.option.OptionInstances.client;
 /**
  * Handles mouse dragging events.
  */
-public class MouseDragInstance extends ManagementInstance {
+public class MouseDraggedEvents extends ManagementEvents {
 
-    public MouseDragInstance(QuesoScreen screen) {
+    public MouseDraggedEvents(QuesoScreen screen) {
         super(screen);
     }
 
@@ -28,13 +29,13 @@ public class MouseDragInstance extends ManagementInstance {
         }
 
         if (event.button() == InputConstants.MOUSE_BUTTON_LEFT
-                && hoveredSlotHasItem(instance().getScreensHoveredSlot())
+                && hoveredSlotHasItem(holder().screensHoveredSlot())
                 && !transferInstance().canSingularMove()
                 && !isExcludingOrLockingSlots()
-                && !lockedSlotsInstance().isLockedSlot(instance().getScreensHoveredSlot().index)
-                && !isExcludedSlot(instance().getScreensHoveredSlot().index)
+                && !lockedSlotsInstance().isLockedSlot(holder().screensHoveredSlot().index)
+                && !isExcludedSlot(holder().screensHoveredSlot().index)
                 && (client().isAlwaysQuickMove() || (client().management().dragMoving && event.hasShiftDown()))) {
-            sendClickSlotPacket(instance().getScreensHoveredSlot().index, ContainerInput.QUICK_MOVE);
+            sendClickSlotPacket(holder().screensHoveredSlot().index, ContainerInput.QUICK_MOVE);
         }
     }
 }

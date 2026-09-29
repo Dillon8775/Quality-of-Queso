@@ -1,7 +1,8 @@
-package net.dillon.qualityofqueso.instance;
+package net.dillon.qualityofqueso.event.screen;
 
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import net.dillon.qualityofqueso.instance.management.ManagementInstance;
+import net.dillon.qualityofqueso.event.QuesoScreen;
+import net.dillon.qualityofqueso.event.management.ManagementEvents;
 import net.dillon.qualityofqueso.util.EnchantingHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -34,33 +35,33 @@ import static net.dillon.qualityofqueso.util.EnchantingHelper.isEnchantmentInGro
 /**
  * Handles tooltip rendering for this mod.
  */
-public class ModTooltipInstance extends ManagementInstance {
+public class TooltipEvents extends ManagementEvents {
 
-    public ModTooltipInstance(QuesoScreen screen) {
+    public TooltipEvents(QuesoScreen screen) {
         super(screen);
     }
 
     /**
      * @return the original tooltip that is being displayed.
      */
-    public List<Component> getOriginalTooltip() {
-        return instance().getScreensHoveredSlot() == null ? null : instance().getScreensHoveredSlot().getItem().getTooltipLines(Item.TooltipContext.EMPTY, instance().getMinecraft().player, Minecraft.getInstance().options.advancedItemTooltips ? TooltipFlag.ADVANCED : TooltipFlag.NORMAL);
+    private List<Component> getOriginalTooltip() {
+        return holder().screensHoveredSlot() == null ? null : holder().screensHoveredSlot().getItem().getTooltipLines(Item.TooltipContext.EMPTY, holder().mc().player, Minecraft.getInstance().options.advancedItemTooltips ? TooltipFlag.ADVANCED : TooltipFlag.NORMAL);
     }
 
     /**
      * Displays all item tags on the hovered item.
      */
     public void displayTagsOnItems(GuiGraphicsExtractor graphics, Font font, int mouseX, int mouseY, CallbackInfo ci) {
-        if (!hoveredSlotHasItem(instance().getScreensHoveredSlot())) {
+        if (!hoveredSlotHasItem(holder().screensHoveredSlot())) {
             return;
         }
 
-        ItemStack stack = instance().getScreensHoveredSlot().getItem();
+        ItemStack stack = holder().screensHoveredSlot().getItem();
         List<Component> originalTooltip = getOriginalTooltip();
 
         // Render tags for tag search queries
-        String searchQuery = instance().getSearchFields().searchText();
-        if (instance().getSearchFields().container() != null || instance().getSearchFields().inventory() != null) {
+        String searchQuery = holder().searchFields().searchText();
+        if (holder().searchFields().container() != null || holder().searchFields().inventory() != null) {
             // Exit if search query doesn't start with #
             if (!searchQuery.startsWith("#")) {
                 return;
@@ -95,14 +96,14 @@ public class ModTooltipInstance extends ManagementInstance {
         }
 
         // Create variables to determine if the tooltips should be modified, based on quick dropping actions and moving singular items
-        Slot hoveredSlot = instance().getScreensHoveredSlot();
+        Slot hoveredSlot = holder().screensHoveredSlot();
         boolean hoveredSlotHasItem = hoveredSlotHasItem(hoveredSlot);
 
         // Check if the quick drop button itself is hovered
-        boolean quickDropHovered = buttonHoveredAndActive(instance().getManagementButtons().quickDrop());
+        boolean quickDropHovered = buttonHoveredAndActive(holder().managementButtons().quickDrop());
 
         // Check if any transfer button is hovered (this includes quick drop, transfer container, or transfer inventory)
-        boolean buttonHovered = quickDropHovered || buttonHoveredAndActive(instance().getManagementButtons().transferContainer()) || buttonHoveredAndActive(instance().getManagementButtons().transferInventory());
+        boolean buttonHovered = quickDropHovered || buttonHoveredAndActive(holder().managementButtons().transferContainer()) || buttonHoveredAndActive(holder().managementButtons().transferInventory());
 
         // Check if a shortcut key is held down
         // If quick drop is hovered, then we only check for if shift is held (to only drop one of each item)
@@ -113,14 +114,14 @@ public class ModTooltipInstance extends ManagementInstance {
         // The boolean expression to modify tooltips based on the conditions above
         // We can modify tooltips if we are attempting to drop one, or if we have a shortcut key down and one of the buttons are hovered/the hovered slot has an item (for quick dropping)
         boolean bl = client().management().scrollMoving && (droppingOne || (hasKeyDown && (buttonHovered || hoveredSlotHasItem)));
-        instance().setCanMoveOne(bl);
+        holder().setCanMoveOne(bl);
         boolean onlySingleMoveModifierDown = canScrollMoveAndHasScrollModifierDown() && !hasAllQuickDropModifiersDown() && !hasDropOnlyOneItemModifierDown();
 
         // Create a new tooltip to render
         List<Component> tooltipToRender = new ArrayList<>();
 
         // If bl is true, and the hovered slot's count is more than 1 (because if you are moving 1 singular, the count must be more than 1), OR if the user isn't hovering over a slot at all, begin modifying tooltips
-        if (!isCreativeInventoryScreen(instance().getScreen()) && bl && !onlySingleMoveModifierDown && (hoveredSlot == null || hoveredSlot.getItem().count() > 1)) {
+        if (!isCreativeInventoryScreen(holder().screen()) && bl && !onlySingleMoveModifierDown && (hoveredSlot == null || hoveredSlot.getItem().count() > 1)) {
             // Create the new tooltip variable
             List<Component> moveAmountTooltip = new ArrayList<>();
             // Determine the translation for the tooltip
@@ -145,7 +146,7 @@ public class ModTooltipInstance extends ManagementInstance {
             Component ignoresLockedSlots = Component.translatable("qualityofqueso.gui.move_amount.ignores_locked_slots").withColor(client().lockedSlots().lockedSlotColor);
             // If the quick drop keys are down and the hovered slot has an item, continue through this statement
             if (hasAllQuickDropModifiersDown() && hoveredSlotHasItem(hoveredSlot)) {
-                boolean containerScreen = isContainerScreen(instance().getScreen());
+                boolean containerScreen = isContainerScreen(holder().screen());
                 // If no respective item was found in the container for quick dropping, tell the user "none of this item was found", therefor cannot drop.
                 if (containerScreen && !shouldButtonBeActive(false, null)) {
                     moveAmountTooltip.add(Component.translatable("qualityofqueso.gui.quick_drop_button.no_items_found", hoveredSlot.getItem().getItemName()).copy()
@@ -182,7 +183,7 @@ public class ModTooltipInstance extends ManagementInstance {
 
             // Add those helper tooltips to the rendered tooltip if we can
             if (client().general().tooltips.enabled() && canContinueToAddTooltips && !skip) {
-                if (!(instance().getScreensHoveredSlot() != null && instance().getScreensHoveredSlot().hasItem() && (canScrollMoveAndHasScrollModifierDown() && !hasDropOnlyOneItemModifierDown()))) {
+                if (!(holder().screensHoveredSlot() != null && holder().screensHoveredSlot().hasItem() && (canScrollMoveAndHasScrollModifierDown() && !hasDropOnlyOneItemModifierDown()))) {
                     moveAmountTooltip.add(scroll);
                     moveAmountTooltip.add(reset);
                     moveAmountTooltip.add(ignoresLockedSlots);
@@ -212,7 +213,7 @@ public class ModTooltipInstance extends ManagementInstance {
      */
     public void displayEnchantmentHelperTooltips(GuiGraphicsExtractor graphics, Font font, int mouseX, int mouseY, CallbackInfo ci) {
         // Any further injection here will not be applied if the hovered slot is null or doesn't have an item
-        if (!hoveredSlotHasItem(instance().getScreensHoveredSlot())) {
+        if (!hoveredSlotHasItem(holder().screensHoveredSlot())) {
             return;
         }
 
@@ -220,8 +221,8 @@ public class ModTooltipInstance extends ManagementInstance {
 
         // Enchantment helper functionality
         // Goes through all enchantments on an enchanted book and determines what items the enchanted book itself can be applied to
-        if (client().misc().enchantmentHelper && instance().getScreensHoveredSlot().getItem().is(Items.ENCHANTED_BOOK)) {
-            ItemEnchantments enchantments = instance().getScreensHoveredSlot().getItem().getOrDefault(DataComponents.STORED_ENCHANTMENTS, ItemEnchantments.EMPTY);
+        if (client().misc().enchantmentHelper && holder().screensHoveredSlot().getItem().is(Items.ENCHANTED_BOOK)) {
+            ItemEnchantments enchantments = holder().screensHoveredSlot().getItem().getOrDefault(DataComponents.STORED_ENCHANTMENTS, ItemEnchantments.EMPTY);
             Set<Component> enchantmentApplicables = new HashSet<>();
 
             for (Object2IntMap.Entry<Holder<Enchantment>> enchantment : enchantments.entrySet()) {
@@ -267,7 +268,7 @@ public class ModTooltipInstance extends ManagementInstance {
             }
 
             // Determine the index to render the tooltips (if advanced tooltips are on, we need to go back 2)
-            int index = instance().getMinecraft().options.advancedItemTooltips ? originalTooltip.size() - 2 : originalTooltip.size();
+            int index = holder().mc().options.advancedItemTooltips ? originalTooltip.size() - 2 : originalTooltip.size();
             // Add the enchantment applicables to the original tooltip
             for (Component c : enchantmentApplicables) {
                 originalTooltip.add(index, c);

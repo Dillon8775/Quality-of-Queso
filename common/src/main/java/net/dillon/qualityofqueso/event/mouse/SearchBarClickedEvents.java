@@ -1,6 +1,7 @@
-package net.dillon.qualityofqueso.instance;
+package net.dillon.qualityofqueso.event.mouse;
 
-import net.dillon.qualityofqueso.instance.management.ManagementInstance;
+import net.dillon.qualityofqueso.event.QuesoScreen;
+import net.dillon.qualityofqueso.event.management.ManagementEvents;
 import net.dillon.qualityofqueso.widget.SearchBar;
 import net.minecraft.client.gui.components.EditBox;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -8,9 +9,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 /**
  * Handles clicking on the {@link SearchBar}.
  */
-public class SearchBarBoundsInstance extends ManagementInstance {
+public class SearchBarClickedEvents extends ManagementEvents {
 
-    public SearchBarBoundsInstance(QuesoScreen screen) {
+    public SearchBarClickedEvents(QuesoScreen screen) {
         super(screen);
     }
 

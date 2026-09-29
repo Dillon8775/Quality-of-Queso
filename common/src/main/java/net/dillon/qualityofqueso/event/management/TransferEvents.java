@@ -1,7 +1,7 @@
-package net.dillon.qualityofqueso.instance.management;
+package net.dillon.qualityofqueso.event.management;
 
+import net.dillon.qualityofqueso.event.QuesoScreen;
 import net.dillon.qualityofqueso.helper.ContainerHelper;
-import net.dillon.qualityofqueso.instance.QuesoScreen;
 import net.dillon.qualityofqueso.option.eum.management.FilteringMode;
 import net.dillon.qualityofqueso.server.DedicatedServerStorage;
 import net.dillon.qualityofqueso.widget.SwapButton;
@@ -32,9 +32,9 @@ import static net.dillon.qualityofqueso.option.OptionInstances.client;
 /**
  * Handles transferring/basic management related things.
  */
-public class TransferInstance extends ManagementInstance {
+public class TransferEvents extends ManagementEvents {
 
-    public TransferInstance(QuesoScreen screen) {
+    public TransferEvents(QuesoScreen screen) {
         super(screen);
     }
 
@@ -42,7 +42,7 @@ public class TransferInstance extends ManagementInstance {
      * Helper method to drop all selected items in the respective inventory/container.
      */
     public void dropItems(boolean fromInventory) {
-        boolean dropFromInventory = isInventoryScreen(instance().getScreen());
+        boolean dropFromInventory = isInventoryScreen(holder().screen());
         moveItems(true, true, dropFromInventory, false);
     }
 
@@ -67,7 +67,7 @@ public class TransferInstance extends ManagementInstance {
         return client().management().scrollMoving
                 && event.key() == key(getDropKey()).getValue()
                 && hasDropOnlyOneItemModifierDown()
-                && hoveredSlotHasItem(instance().getScreensHoveredSlot());
+                && hoveredSlotHasItem(holder().screensHoveredSlot());
     }
 
     /**
@@ -75,7 +75,7 @@ public class TransferInstance extends ManagementInstance {
      */
     public void performSingularDrop() {
         for (int i = 0; i < MOVE_AMOUNT; i++) {
-            sendClickSlotPacket(instance().getScreensHoveredSlot().index, ContainerInput.THROW);
+            sendClickSlotPacket(holder().screensHoveredSlot().index, ContainerInput.THROW);
         }
     }
 
@@ -94,7 +94,7 @@ public class TransferInstance extends ManagementInstance {
         int playerStorageStart = findPlayerStorageStartIndex();
         int playerStorageEnd = findPlayerStorageEndIndexExclusive();
         int containerSize = getContainerSize();
-        ItemStack hoveredDropFilter = drop && hoveredSlotHasItem(instance().getScreensHoveredSlot()) ? instance().getScreensHoveredSlot().getItem().copy() : ItemStack.EMPTY;
+        ItemStack hoveredDropFilter = drop && hoveredSlotHasItem(holder().screensHoveredSlot()) ? holder().screensHoveredSlot().getItem().copy() : ItemStack.EMPTY;
 
         int containerEnd = playerStorageStart != -1 ? playerStorageStart : Math.max(0, Math.min(containerSize, totalSlots));
         int effectivePlayerStart = playerStorageStart != -1 ? playerStorageStart : containerEnd;
@@ -110,12 +110,12 @@ public class TransferInstance extends ManagementInstance {
             fromEnd = effectivePlayerEnd;
         }
 
-        if (isBrewingStandScreen(instance().getScreen())) {
+        if (isBrewingStandScreen(holder().screen())) {
             fromStart = 0;
             fromEnd = 3;
         }
 
-        if (isFurnaceScreen(instance().getScreen())) {
+        if (isFurnaceScreen(holder().screen())) {
             fromStart = 2;
             fromEnd = 3;
         }
@@ -127,7 +127,7 @@ public class TransferInstance extends ManagementInstance {
 
         // Normal logic (dropping and quick move)
         for (int i = fromStart; i < fromEnd; i++) {
-            Slot fromSlot = instance().getScreenMenu().getSlot(i);
+            Slot fromSlot = holder().menu().getSlot(i);
             ItemStack fromStack = fromSlot.getItem();
 
             // Skip player-chosen excluded slots
@@ -139,7 +139,7 @@ public class TransferInstance extends ManagementInstance {
                 continue; // Then skip container slot if query not found via search
             } else if (!client().management().includingHotbar) {
                 if (drop) {
-                    if (isExcludedInventorySlot(fromSlot.index) || isInventoryHotbarSlot(isInventoryScreen(instance().getScreen()), fromSlot.index)) {
+                    if (isExcludedInventorySlot(fromSlot.index) || isInventoryHotbarSlot(isInventoryScreen(holder().screen()), fromSlot.index)) {
                         continue; // If dropping from InventoryScreen, and it's an excluded slot AND fromInventory hotbar slot, skip slot and continue
                     }
                 } else if (!toInventory && isHotbarSlot(fromEnd, fromSlot.index)) {
@@ -237,7 +237,7 @@ public class TransferInstance extends ManagementInstance {
             return false;
         }
 
-        if (hoveredSlot.index == 0 && (isCraftingScreen(instance().getScreen()) || isInventoryScreen(instance().getScreen()))) {
+        if (hoveredSlot.index == 0 && (isCraftingScreen(holder().screen()) || isInventoryScreen(holder().screen()))) {
             return moveSingleCraftingResult(hoveredSlot);
         }
 
@@ -249,7 +249,7 @@ public class TransferInstance extends ManagementInstance {
         int toStart;
         int toEnd;
 
-        if (isInventoryScreen(instance().getScreen())) {
+        if (isInventoryScreen(holder().screen())) {
             // Inventory screen layout:
             // 0 result, 1-4 crafting input, 5-8 armor, 9-35 inventory, 36-44 hotbar, 45 offhand.
             int playerStorageStart = 9;
@@ -305,7 +305,7 @@ public class TransferInstance extends ManagementInstance {
         }
 
         for (int i = fromStart; i < fromEnd; i++) {
-            Slot sourceSlot = instance().getScreenMenu().getSlot(i);
+            Slot sourceSlot = holder().menu().getSlot(i);
             if (sourceSlot.index == hoveredIndex || !canUseScrollSourceSlot(sourceSlot, targetItem, toContainer, totalSlots)) {
                 continue;
             }
@@ -342,7 +342,7 @@ public class TransferInstance extends ManagementInstance {
             return false;
         }
 
-        if (instance().getScreen() instanceof AbstractFurnaceScreen<?> && isFuel(sourceSlot.getItem())) {
+        if (holder().screen() instanceof AbstractFurnaceScreen<?> && isFuel(sourceSlot.getItem())) {
             // Furnace Slots: 0=input, 1=fuel, 2=result.
             return moveSingleFromSourceSlot(
                     sourceSlot,
@@ -357,7 +357,7 @@ public class TransferInstance extends ManagementInstance {
             );
         }
 
-        if (instance().getScreen() instanceof BrewingStandScreen && targetItem.is(Items.BLAZE_POWDER)) {
+        if (holder().screen() instanceof BrewingStandScreen && targetItem.is(Items.BLAZE_POWDER)) {
             // Brewing Slots: 0=input, 4=fuel, 5=last.
             return moveSingleFromSourceSlot(
                     sourceSlot,
@@ -372,7 +372,7 @@ public class TransferInstance extends ManagementInstance {
             );
         }
 
-        if (instance().getScreen() instanceof EnchantmentScreen && targetItem.is(Items.LAPIS_LAZULI)) {
+        if (holder().screen() instanceof EnchantmentScreen && targetItem.is(Items.LAPIS_LAZULI)) {
             // Enchantment Slots: 0=input, 1=lapis.
             return moveSingleFromSourceSlot(
                     sourceSlot,
@@ -402,7 +402,7 @@ public class TransferInstance extends ManagementInstance {
         int playerStart;
         int playerEnd;
 
-        if (isInventoryScreen(instance().getScreen())) {
+        if (isInventoryScreen(holder().screen())) {
             playerStart = 9;
             playerEnd = Math.min(totalSlots, 45);
         } else {
@@ -412,7 +412,7 @@ public class TransferInstance extends ManagementInstance {
 
         // Take exactly one crafted result (vanilla handles all crafting logic)
         performClickSlot(
-                instance().getScreen(),
+                holder().screen(),
                 resultSlot,
                 resultSlot.index,
                 0,
@@ -427,7 +427,7 @@ public class TransferInstance extends ManagementInstance {
 
         // Try to place into existing stacks first
         for (int i = playerStart; i < playerEnd; i++) {
-            Slot slot = instance().getScreenMenu().getSlot(i);
+            Slot slot = holder().menu().getSlot(i);
 
             if (!slot.hasItem()) {
                 continue;
@@ -445,7 +445,7 @@ public class TransferInstance extends ManagementInstance {
             }
 
             performClickSlot(
-                    instance().getScreen(),
+                    holder().screen(),
                     slot,
                     slot.index,
                     0,
@@ -458,7 +458,7 @@ public class TransferInstance extends ManagementInstance {
         // If still carrying item(s), place into empty slot
         if (!getCursorStack().isEmpty()) {
             for (int i = playerStart; i < playerEnd; i++) {
-                Slot slot = instance().getScreenMenu().getSlot(i);
+                Slot slot = holder().menu().getSlot(i);
 
                 if (slot.hasItem()) {
                     continue;
@@ -468,7 +468,7 @@ public class TransferInstance extends ManagementInstance {
                 }
 
                 performClickSlot(
-                        instance().getScreen(),
+                        holder().screen(),
                         slot,
                         slot.index,
                         0,
@@ -482,7 +482,7 @@ public class TransferInstance extends ManagementInstance {
         // If still not placed, return to cursor safety net
         if (!getCursorStack().isEmpty()) {
             performClickSlot(
-                    instance().getScreen(),
+                    holder().screen(),
                     resultSlot,
                     resultSlot.index,
                     0,
@@ -507,21 +507,21 @@ public class TransferInstance extends ManagementInstance {
             return playerStorageStart;
         }
 
-        return isCraftingScreen(instance().getScreen()) ? 5 : 0;
+        return isCraftingScreen(holder().screen()) ? 5 : 0;
     }
 
     /**
      * @return the first screen slot index that belongs to player storage (main inventory or hotbar).
      */
     private int findPlayerStorageStartIndex() {
-        if (instance().getMinecraft().player == null) {
+        if (holder().mc().player == null) {
             return -1;
         }
 
-        Inventory playerInventory = instance().getMinecraft().player.getInventory();
+        Inventory playerInventory = holder().mc().player.getInventory();
         int firstPlayerStorageSlot = Integer.MAX_VALUE;
 
-        for (Slot slot : instance().getScreenMenu().slots) {
+        for (Slot slot : holder().menu().slots) {
             if (slot.container != playerInventory) {
                 continue;
             }
@@ -589,8 +589,8 @@ public class TransferInstance extends ManagementInstance {
                 return false;
             }
 
-            Slot parkedSlot = instance().getScreenMenu().getSlot(parkedCursorSlot);
-            performClickSlot(instance().getScreen(), parkedSlot, parkedCursorSlot, 0, ContainerInput.PICKUP);
+            Slot parkedSlot = holder().menu().getSlot(parkedCursorSlot);
+            performClickSlot(holder().screen(), parkedSlot, parkedCursorSlot, 0, ContainerInput.PICKUP);
         }
 
         try {
@@ -600,14 +600,14 @@ public class TransferInstance extends ManagementInstance {
 
             Deque<Slot> emptySlots = new ArrayDeque<>();
             List<Slot> nonEmptySlots = new ArrayList<>();
-            LocalPlayer player = instance().getMinecraft().player;
+            LocalPlayer player = holder().mc().player;
             boolean iterateBackwards = (!DedicatedServerStorage.PERPENDICULAR_QUICK_MOVING.get(player.getUUID())) && toInventory;
             int step = iterateBackwards ? -1 : 1;
             int start = iterateBackwards ? toEnd - 1 : toStart;
             int endExclusive = iterateBackwards ? toStart - 1 : toEnd;
 
             for (int i = start; i != endExclusive; i += step) {
-                Slot target = instance().getScreenMenu().getSlot(i);
+                Slot target = holder().menu().getSlot(i);
                 if (target.index == parkedCursorSlot) {
                     continue;
                 }
@@ -628,16 +628,16 @@ public class TransferInstance extends ManagementInstance {
         } finally {
             if (parkedCursorSlot != -1) {
                 // If a move path left something on the cursor, attempt to return it to source first.
-                if (!instance().getScreenMenu().getCarried().isEmpty()) {
-                    Slot freshSourceSlot = instance().getScreenMenu().getSlot(sourceSlot.index);
-                    performClickSlot(instance().getScreen(), freshSourceSlot, sourceSlot.index, 0, ContainerInput.PICKUP);
+                if (!holder().menu().getCarried().isEmpty()) {
+                    Slot freshSourceSlot = holder().menu().getSlot(sourceSlot.index);
+                    performClickSlot(holder().screen(), freshSourceSlot, sourceSlot.index, 0, ContainerInput.PICKUP);
                 }
 
                 // Restore the originally parked carried stack when possible.
-                if (instance().getScreenMenu().getCarried().isEmpty()) {
-                    Slot parkedSlot = instance().getScreenMenu().getSlot(parkedCursorSlot);
+                if (holder().menu().getCarried().isEmpty()) {
+                    Slot parkedSlot = holder().menu().getSlot(parkedCursorSlot);
                     if (parkedSlot.hasItem()) {
-                        performClickSlot(instance().getScreen(), parkedSlot, parkedCursorSlot, 0, ContainerInput.PICKUP);
+                        performClickSlot(holder().screen(), parkedSlot, parkedCursorSlot, 0, ContainerInput.PICKUP);
                     }
                 }
             }
@@ -648,14 +648,14 @@ public class TransferInstance extends ManagementInstance {
      * @return the index after the last screen slot that belongs to player storage (main inventory or hotbar).
      */
     private int findPlayerStorageEndIndexExclusive() {
-        if (instance().getMinecraft().player == null) {
+        if (holder().mc().player == null) {
             return -1;
         }
 
-        Inventory playerInventory = instance().getMinecraft().player.getInventory();
+        Inventory playerInventory = holder().mc().player.getInventory();
         int lastPlayerStorageSlot = -1;
 
-        for (Slot slot : instance().getScreenMenu().slots) {
+        for (Slot slot : holder().menu().slots) {
             if (slot.container != playerInventory) {
                 continue;
             }
@@ -682,16 +682,16 @@ public class TransferInstance extends ManagementInstance {
             return false;
         }
 
-        if (!instance().getScreenMenu().getCarried().isEmpty()) {
+        if (!holder().menu().getCarried().isEmpty()) {
             return false;
         }
 
         int slotId = sourceSlot.index;
 
         // Pick up full stack
-        performClickSlot(instance().getScreen(), sourceSlot, slotId, 0, ContainerInput.PICKUP);
+        performClickSlot(holder().screen(), sourceSlot, slotId, 0, ContainerInput.PICKUP);
 
-        ItemStack carried = instance().getScreenMenu().getCarried();
+        ItemStack carried = holder().menu().getCarried();
         if (carried.isEmpty()) {
             return false;
         }
@@ -726,7 +726,7 @@ public class TransferInstance extends ManagementInstance {
             }
 
             // Right-click places 1 item
-            performClickSlot(instance().getScreen(), target, target.index, 1, ContainerInput.PICKUP);
+            performClickSlot(holder().screen(), target, target.index, 1, ContainerInput.PICKUP);
 
             movedOne = true;
             // Only move one item total per source sourceSlot
@@ -742,7 +742,7 @@ public class TransferInstance extends ManagementInstance {
                     continue;
                 }
 
-                performClickSlot(instance().getScreen(), empty, empty.index, 1, ContainerInput.PICKUP);
+                performClickSlot(holder().screen(), empty, empty.index, 1, ContainerInput.PICKUP);
 
                 if (empty.hasItem()) {
                     nonEmptySlots.add(empty);
@@ -754,14 +754,14 @@ public class TransferInstance extends ManagementInstance {
         }
 
         // Return leftovers to original sourceSlot
-        if (!instance().getScreenMenu().getCarried().isEmpty()) {
-            Slot freshSourceSlot = instance().getScreenMenu().getSlot(slotId);
-            performClickSlot(instance().getScreen(), freshSourceSlot, slotId, 0, ContainerInput.PICKUP);
+        if (!holder().menu().getCarried().isEmpty()) {
+            Slot freshSourceSlot = holder().menu().getSlot(slotId);
+            performClickSlot(holder().screen(), freshSourceSlot, slotId, 0, ContainerInput.PICKUP);
 
             // Defensive second pass: in edge cases (e.g., transient slot mutation), first restore can fail.
-            if (!instance().getScreenMenu().getCarried().isEmpty()) {
-                freshSourceSlot = instance().getScreenMenu().getSlot(slotId);
-                performClickSlot(instance().getScreen(), freshSourceSlot, slotId, 0, ContainerInput.PICKUP);
+            if (!holder().menu().getCarried().isEmpty()) {
+                freshSourceSlot = holder().menu().getSlot(slotId);
+                performClickSlot(holder().screen(), freshSourceSlot, slotId, 0, ContainerInput.PICKUP);
             }
         }
 
@@ -769,10 +769,10 @@ public class TransferInstance extends ManagementInstance {
     }
 
     /**
-     * Calls {@link ManagementInstance#clickSlot(int)} to sort items.
+     * Calls {@link ManagementEvents#clickSlot(int)} to sort items.
      */
     public void swapSlots(int a, int b, List<Integer> sortableSlots) {
-        AbstractContainerMenu menu = instance().getScreenMenu();
+        AbstractContainerMenu menu = holder().menu();
         ItemStack aStack = menu.slots.get(a).getItem();
         ItemStack bStack = menu.slots.get(b).getItem();
 
@@ -816,7 +816,7 @@ public class TransferInstance extends ManagementInstance {
      * Swaps all items in a container.
      */
     public void swapItems() {
-        AbstractContainerMenu menu = instance().getScreenMenu();
+        AbstractContainerMenu menu = holder().menu();
         int totalSlots = getTotalSlots();
         int containerSize = getContainerSize();
         int offset = totalSlots - 27 - 9;
@@ -837,7 +837,7 @@ public class TransferInstance extends ManagementInstance {
 
             // Skip player-chosen excluded slots
             boolean skip = false;
-            for (int id : instance().getExcludedSlots()) {
+            for (int id : holder().excludedSlots()) {
                 if (chestSlot.index == id || playerSlot.index == id) {
                     skip = true;
                     break;
@@ -878,10 +878,10 @@ public class TransferInstance extends ManagementInstance {
      * @return if a container is able to swap items with the player inventory.
      */
     public boolean canSwap() {
-        Inventory playerInventory = instance().getMinecraft().player.getInventory();
+        Inventory playerInventory = holder().mc().player.getInventory();
         return SwapButton.SWAP_COOLDOWN == 0 && (getContainerSize() != 27 || isAnySlotFilled(false, 27, 54))
                 && getCursorStack().isEmpty()
-                && instance().getSearchFields().searchText().isEmpty()
+                && holder().searchFields().searchText().isEmpty()
                 && shouldButtonBeActive(false, null)
                 && shouldButtonBeActive(true, playerInventory);
     }
