@@ -38,6 +38,7 @@
     "client.util.MinecraftMixin",
     "client.util.MultiPlayerGameModeMixin",
     "fabric.FabricAbstractContainerScreenMixin",
+    "fabric.FabricItemStackMixin",
     "fix.AbstractContainerScreenFix"
   ],
   "mixins": [

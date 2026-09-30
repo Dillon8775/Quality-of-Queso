@@ -31,6 +31,14 @@ public class ModOptionUtil {
     }
 
     /**
+     * @return a fabric-only option.
+     */
+    public static Component fabricOption(Component translation) {
+        Component serverSideTranslation = Component.translatable("qualityofqueso.option.fabric").withStyle(ChatFormatting.RED);
+        return translation.copy().append("\n\n").copy().append(serverSideTranslation);
+    }
+
+    /**
      * @return a normal format.
      */
     protected static Component posFormatted(Component optionText, int value) {

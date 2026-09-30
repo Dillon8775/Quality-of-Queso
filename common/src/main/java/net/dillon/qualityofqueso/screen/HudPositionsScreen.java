@@ -97,7 +97,7 @@ public class HudPositionsScreen extends BasicDillonLibScreen {
      * @return if the user is able to change the position of the visual clock.
      */
     private boolean isVisualClockEnabled() {
-        return client().visualTime().displayVisualClock;
+        return client().visualTime().overrideClientTime && client().visualTime().displayVisualClock;
     }
 
     /**
@@ -289,7 +289,7 @@ public class HudPositionsScreen extends BasicDillonLibScreen {
 
         drawSprite(
                 graphics,
-                qoqIdentifier("hud/hud_positions_screen/item_counter"),
+                qoqIdentifier("hud/hud_positions/item_counter"),
                 builder().captureGraphicsWidth() + 74,
                 builder().graphicsHeight(xPosItemCounter).pop() - 32,
                 58,

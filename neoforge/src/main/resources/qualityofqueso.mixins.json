@@ -36,7 +36,7 @@
     "client.util.LocalPlayerMixin",
     "client.util.MinecraftMixin",
     "client.util.MultiPlayerGameModeMixin",
-    "neoforged.NeoForgedAbstractContainerScreenMixin"
+    "neoforge.NeoForgeAbstractContainerScreenMixin"
   ],
   "mixins": [
     "main.AbstractContainerMenuAccessor",

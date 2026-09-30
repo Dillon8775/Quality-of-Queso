@@ -2,6 +2,7 @@ package net.dillon.qualityofqueso.widget;
 
 import net.dillon.qualityofqueso.option.eum.management.LockInventory;
 import net.dillon.qualityofqueso.platform.QualityOfQuesoPlatforms;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
@@ -38,13 +39,26 @@ public class LockInventoryButton extends ToggleableButton {
     @Override
     protected Component getTooltipToRender() {
         return switch (client().management().lockInventory) {
-            case UNLOCKED -> Component.translatable("qualityofqueso.gui.inventory_unlocked");
+            case UNLOCKED -> Component.translatable("qualityofqueso.gui.inventory_unlocked",
+                    canUse()
+                            ? ""
+                            : Component.translatable("qualityofqueso.gui.inventory_unlocked_blocked")
+                            .withStyle(ChatFormatting.RED)
+            );
             case LOCKED -> Component.translatable("qualityofqueso.gui.inventory_locked");
             case SOFT_LOCKED -> Component.translatable("qualityofqueso.gui.inventory_soft_locked");
         };
     }
 
+    @Override
     protected void activateButton() {
-        this.active = QualityOfQuesoPlatforms.getClientPlatform().canSendPacket(Minecraft.getInstance().player);
+        this.active = canUse();
+    }
+
+    /**
+     * @return if the button can be used.
+     */
+    private boolean canUse() {
+        return QualityOfQuesoPlatforms.getClientPlatform().canSendPacket(Minecraft.getInstance().player);
     }
 }

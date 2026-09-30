@@ -4,7 +4,6 @@ import dev.isxander.yacl3.api.*;
 import dev.isxander.yacl3.api.controller.BooleanControllerBuilder;
 import dev.isxander.yacl3.api.controller.EnumControllerBuilder;
 import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
-import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
 import net.dillon.qualityofqueso.option.eum.misc.ElytraAlarm;
 import net.minecraft.network.chat.Component;
 
@@ -48,13 +47,6 @@ public class MiscellaneousCategory {
                         .step(1)
                         .formatValue(v -> Component.literal(v + " blocks"))
                 )
-                .build();
-
-        Option<Boolean> forceAntiRageQuit = Option.<Boolean>createBuilder()
-                .name(Component.translatable("qualityofqueso.options.force_anti_rage_quit"))
-                .description(OptionDescription.of(Component.translatable("qualityofqueso.options.force_anti_rage_quit.description")))
-                .binding(false, () -> client().misc().forceAntiRageQuit, v -> client().misc().forceAntiRageQuit = v)
-                .controller(TickBoxControllerBuilder::create)
                 .build();
 
         return ConfigCategory.createBuilder()
@@ -121,50 +113,6 @@ public class MiscellaneousCategory {
                 )
                 .group(
                         OptionGroup.createBuilder()
-                                .name(Component.translatable("qualityofqueso.options.misc.recipe_book"))
-                                .description(OptionDescription.of(Component.translatable("qualityofqueso.options.misc.recipe_book.description")))
-                                .option(
-                                        Option.<Boolean>createBuilder()
-                                                .name(Component.translatable("qualityofqueso.options.no_recipe_book_shift"))
-                                                .description(OptionDescription.of(Component.translatable("qualityofqueso.options.no_recipe_book_shift.description")))
-                                                .binding(false, () -> client().misc().noRecipeBookShift, v -> client().misc().noRecipeBookShift = v)
-                                                .controller(TickBoxControllerBuilder::create)
-                                                .build()
-                                )
-                                .option(
-                                        Option.<Boolean>createBuilder()
-                                                .name(Component.translatable("qualityofqueso.options.auto_close_recipe_book"))
-                                                .description(OptionDescription.of(Component.translatable("qualityofqueso.options.auto_close_recipe_book.description")))
-                                                .binding(true, () -> client().misc().autoCloseRecipeBook, v -> client().misc().autoCloseRecipeBook = v)
-                                                .controller(TickBoxControllerBuilder::create)
-                                                .build()
-                                )
-                                .build()
-                )
-                .group(
-                        OptionGroup.createBuilder()
-                                .name(Component.translatable("qualityofqueso.options.misc.anti_rage"))
-                                .description(OptionDescription.of(Component.translatable("qualityofqueso.options.misc.anti_rage.description")))
-                                .option(
-                                        Option.<Boolean>createBuilder()
-                                                .name(Component.translatable("qualityofqueso.options.anti_rage_quit"))
-                                                .description(OptionDescription.of(Component.translatable("qualityofqueso.options.anti_rage_quit.description")))
-                                                .binding(false, () -> client().misc().antiRageQuit, v -> client().misc().antiRageQuit = v)
-                                                .controller(BooleanControllerBuilder::create)
-                                                .addListener((opt, event) -> {
-                                                    if (event == OptionEventListener.Event.STATE_CHANGE || event == OptionEventListener.Event.INITIAL) {
-                                                        forceAntiRageQuit.setAvailable(opt.pendingValue());
-                                                    }
-                                                })
-                                                .build()
-                                )
-                                .option(
-                                        forceAntiRageQuit
-                                )
-                                .build()
-                )
-                .group(
-                        OptionGroup.createBuilder()
                                 .name(Component.translatable("qualityofqueso.options.misc.other"))
                                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.misc.other.description")))
                                 .option(
@@ -174,30 +122,6 @@ public class MiscellaneousCategory {
                                                 .binding(false, () -> client().misc().redArmorTint, v -> client().misc().redArmorTint = v)
                                                 .controller(BooleanControllerBuilder::create)
                                                 .available(mixins().redArmorTintMixin)
-                                                .build()
-                                )
-                                .option(
-                                        Option.<Boolean>createBuilder()
-                                                .name(Component.translatable("qualityofqueso.options.enchantment_helper"))
-                                                .description(OptionDescription.of(Component.translatable("qualityofqueso.options.enchantment_helper.description")))
-                                                .binding(true, () -> client().misc().enchantmentHelper, v -> client().misc().enchantmentHelper = v)
-                                                .controller(BooleanControllerBuilder::create)
-                                                .build()
-                                )
-                                .option(
-                                        Option.<Boolean>createBuilder()
-                                                .name(Component.translatable("qualityofqueso.options.enhanced_cursor"))
-                                                .description(OptionDescription.of(Component.translatable("qualityofqueso.options.enhanced_cursor.description")))
-                                                .binding(true, () -> client().misc().enhancedCursor, v -> client().misc().enhancedCursor = v)
-                                                .controller(BooleanControllerBuilder::create)
-                                                .build()
-                                )
-                                .option(
-                                        Option.<Boolean>createBuilder()
-                                                .name(Component.translatable("qualityofqueso.options.quick_gui_exit"))
-                                                .description(OptionDescription.of(Component.translatable("qualityofqueso.options.quick_gui_exit.description")))
-                                                .binding(true, () -> client().misc().quickGuiExit, v -> client().misc().quickGuiExit = v)
-                                                .controller(BooleanControllerBuilder::create)
                                                 .build()
                                 )
                                 .build()

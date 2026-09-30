@@ -25,6 +25,10 @@ description = '''${description}'''
 [[mixins]]
 config = "${mod_id}.mixins.json"
 
+# Access Transformer
+[[accessTransformers]]
+file="accesstransformer.cfg"
+
 # NeoForge Dependency
 [[dependencies.${ mod_id }]]
 modId = "neoforge"

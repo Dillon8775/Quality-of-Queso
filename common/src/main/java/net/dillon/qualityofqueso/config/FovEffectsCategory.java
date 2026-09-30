@@ -28,7 +28,7 @@ public class FovEffectsCategory {
                                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.fov_effects.tooltip")))
                                 .option(
                                         Option.<Double>createBuilder()
-                                                .name(Component.translatable("qualityofqueso.options.fov_effects.generic_fov_percent_change"))
+                                                .name(Component.translatable("qualityofqueso.options.fov_effects.generic_fov_modifier"))
                                                 .description(OptionDescription.of(Component.translatable("options.fovEffectScale.tooltip")))
                                                 .binding(1.0D, () -> Minecraft.getInstance().options.fovEffectScale().get(), v -> {
                                                     Minecraft.getInstance().options.fovEffectScale().set(v);

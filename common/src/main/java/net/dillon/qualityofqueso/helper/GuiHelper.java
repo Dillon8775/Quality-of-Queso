@@ -21,6 +21,7 @@ import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.CommonColors;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.ItemStack;
@@ -30,13 +31,15 @@ import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
 import org.lwjgl.sdl.SDLKeyboard;
 
+import java.util.List;
 import java.util.Locale;
+import java.util.function.Consumer;
 
 import static net.dillon.dillonlib.task.ClientTasks.*;
+import static net.dillon.dillonlib.util.Arithmetics.roundToHundredths;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
 import static net.dillon.qualityofqueso.helper.MethodHelper.*;
-import static net.dillon.qualityofqueso.helper.ModConstants.CURRENT_CONTAINER;
-import static net.dillon.qualityofqueso.helper.ModConstants.RENDERED_BUTTONS;
+import static net.dillon.qualityofqueso.helper.ModConstants.*;
 import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
@@ -49,7 +52,7 @@ public class GuiHelper {
      * Draws a tooltip on a screen for anything other than a search bar.
      */
     public static void drawTooltip(Component tooltip, GuiGraphicsExtractor graphics, Font font, int mouseX, int mouseY) {
-        drawTooltip(tooltip, graphics,font, mouseX, mouseY, false);
+        drawTooltip(tooltip, graphics, font, mouseX, mouseY, false);
     }
 
     /**
@@ -114,6 +117,141 @@ public class GuiHelper {
             y += 22;
         }
         return y;
+    }
+
+    /**
+     * @return the dot tooltip for enhanced durability tooltips.
+     */
+    private static Component dotTooltip(ItemStack stack) {
+        return Component.literal("•")
+                .withColor(getDurabilityTooltipColor(stack));
+    }
+
+    /**
+     * @return the better durability tooltip with colors.
+     */
+    private static Component enhancedDurabilityTooltip(ItemStack stack) {
+        int color = getDurabilityTooltipColor(stack);
+        int percentage = (int) ((roundToHundredths(getItemHealthPercentage(stack))) * 100);
+        int damage = stack.getMaxDamage() - stack.getDamageValue();
+
+        Component maxItemDurability = Component.literal(String.valueOf(stack.getMaxDamage()))
+                .withColor(DEFAULT_LOCKED_SLOT_COLOR);
+
+        Component damageTooltip = Component.literal(String.valueOf(damage))
+                .withColor(
+                        damage == stack.getMaxDamage()
+                                ? DEFAULT_LOCKED_SLOT_COLOR
+                                : color
+                )
+                .copy()
+                .append(Component.literal("/")
+                        .withColor(CommonColors.WHITE)
+                )
+                .copy()
+                .append(maxItemDurability);
+
+        Component percentageTooltip = Component.literal(String.valueOf(percentage))
+                .append("%")
+                .withColor(color);
+
+        Component finalTooltip = Component.empty();
+        boolean showPercentage = client().enhancedDurabilityTooltips().showPercentage;
+        boolean showDamageValue = client().enhancedDurabilityTooltips().showDamageValue;
+
+        if (showDamageValue) {
+            finalTooltip = finalTooltip.copy()
+                    .append(bracketTooltip(damageTooltip))
+                    .append(showPercentage ? " " : "");
+        }
+
+        if (showPercentage) {
+            finalTooltip = finalTooltip.copy()
+                    .append(bracketTooltip(percentageTooltip));
+        }
+
+        return finalTooltip;
+    }
+
+    /**
+     * Accepts the dot durability tooltip.
+     */
+    public static void acceptDotTooltip(List<Component> lines, ItemStack stack) {
+        Component styledHoverName = stack.getStyledHoverName();
+        if (!client().enhancedDurabilityTooltips().enableEnhancedDurabilityTooltips || !client().enhancedDurabilityTooltips().showDot) {
+            lines.add(styledHoverName);
+            return;
+        }
+
+        if (!isValidPercentage(stack) || getItemHealthPercentage(stack) >= 1.0F) {
+            lines.add(styledHoverName);
+            return;
+        }
+
+        lines.add(
+                stack.getStyledHoverName()
+                        .copy()
+                        .append(Component.literal(" "))
+                        .copy()
+                        .append(dotTooltip(stack))
+        );
+    }
+
+    /**
+     * Accepts better durability tooltips.
+     */
+    public static void acceptEnhancedDurabilityTooltips(Consumer<Component> builder, ItemStack stack) {
+        if (!client().enhancedDurabilityTooltips().enableEnhancedDurabilityTooltips || !(client().enhancedDurabilityTooltips().showPercentage || client().enhancedDurabilityTooltips().showDamageValue)) {
+            return;
+        }
+
+        if (!isValidPercentage(stack)) {
+            return;
+        }
+
+        builder.accept(GuiHelper.enhancedDurabilityTooltip(stack));
+    }
+
+    /**
+     * @return a bracketed tooltip.
+     */
+    private static Component bracketTooltip(Component entry) {
+        int gray = CommonColors.LIGHT_GRAY;
+        return Component.literal("[")
+                .withColor(gray)
+                .copy()
+                .append(entry)
+                .copy()
+                .append("]")
+                .withColor(gray);
+    }
+
+    /**
+     * @return if the stack has the durability property.
+     */
+    private static boolean isValidPercentage(ItemStack stack) {
+        return getItemHealthPercentage(stack) > 0.0F && !Float.isNaN(getItemHealthPercentage(stack));
+    }
+
+    /**
+     * @return the correct tooltip color to use for durability based on item health.
+     */
+    private static int getDurabilityTooltipColor(ItemStack stack) {
+        float healthPercentage = getItemHealthPercentage(stack);
+
+        if (healthPercentage < 0.11F) {
+            return CommonColors.RED;
+        } else if (healthPercentage < 0.21F) {
+            return CommonColors.SOFT_RED;
+        } else if (healthPercentage < 0.41F) {
+            return CommonColors.YELLOW;
+        } else if (healthPercentage < 0.61F) {
+            return CommonColors.SOFT_YELLOW;
+        } else if (healthPercentage < 0.80F) {
+            return SOFT_GREEN;
+        }
+
+        return CommonColors.GREEN;
     }
 
     /**

@@ -16,7 +16,6 @@ import net.minecraft.world.item.component.BundleContents;
 import net.minecraft.world.item.component.ChargedProjectiles;
 import net.minecraft.world.item.component.ItemContainerContents;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -681,7 +680,7 @@ public class ItemCounterHudElement extends ModHudElement {
 
         // Soft-green for 30 or under
         if (amount < 31) {
-            return new Color(0x94FF97).getRGB();
+            return SOFT_GREEN;
         }
 
         // Otherwise just return green
@@ -989,6 +988,11 @@ public class ItemCounterHudElement extends ModHudElement {
      * Renders the mini crossbow overlay when charged.
      */
     private void renderCrossbowProjectile(GuiGraphicsExtractor graphics, ItemStack renderStack, int itemX, int animationYOffset) {
+        // Don't render if mini-bows are disabled
+        if (!client().itemCounter().miniBows) {
+            return;
+        }
+
         // Get the correct sprite
         Identifier sprite = isStackArrow(renderStack)
                 ? MINI_CROSSBOW
@@ -999,7 +1003,7 @@ public class ItemCounterHudElement extends ModHudElement {
                 graphics,
                 sprite,
                 (getGuiWidth(graphics) + itemX) - 8,
-                getGuiHeight(graphics) - 2
+                getGuiHeight(graphics) - 3
                         + animationYOffset
                         + client().itemCounter().itemCounterPosition[1],
                 13,
@@ -1011,9 +1015,14 @@ public class ItemCounterHudElement extends ModHudElement {
      * Renders the mini bow overlay when charging up.
      */
     private void renderBowProjectile(GuiGraphicsExtractor graphics, int itemX, int animationYOffset) {
+        // Don't render if mini-bows are disabled
+        if (!client().itemCounter().miniBows) {
+            return;
+        }
+
         // Get the correct sprite
         Identifier sprite = BowItem.getPowerForTime(minecraft.player.getTicksUsingItem()) == 1.0F
-                ? MINI_BOW_CRITICAL
+                ? MINI_BOW_READY
                 : MINI_BOW;
 
         // Then draw the sprite
@@ -1021,10 +1030,10 @@ public class ItemCounterHudElement extends ModHudElement {
                 graphics,
                 sprite,
                 (getGuiWidth(graphics) + itemX) - 8,
-                getGuiHeight(graphics) - 2
+                getGuiHeight(graphics) - 3
                         + animationYOffset
                         + client().itemCounter().itemCounterPosition[1],
-                13,
+                14,
                 13
         );
     }

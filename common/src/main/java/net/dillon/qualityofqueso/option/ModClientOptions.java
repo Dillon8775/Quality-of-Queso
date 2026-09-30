@@ -67,6 +67,7 @@ public class ModClientOptions {
     private final ItemCounterOptions itemCounterOptions = new ItemCounterOptions();
     private final ElytraAlarmOptions elytraAlarmOptions = new ElytraAlarmOptions();
     private final MiscellaneousOptions miscellaneousOptions = new MiscellaneousOptions();
+    private final EnhancedDurabilityTooltips enhancedDurabilityTooltips = new EnhancedDurabilityTooltips();
     private final VisualTimeOptions visualTimeOptions = new VisualTimeOptions();
     private final FogOptions fogOptions = new FogOptions();
     private final FovEffectOptions forEffects = new FovEffectOptions();
@@ -110,6 +111,10 @@ public class ModClientOptions {
 
     public MiscellaneousOptions misc() {
         return this.miscellaneousOptions;
+    }
+
+    public EnhancedDurabilityTooltips enhancedDurabilityTooltips() {
+        return this.enhancedDurabilityTooltips;
     }
 
     public VisualTimeOptions visualTime() {
@@ -293,6 +298,7 @@ public class ModClientOptions {
         public boolean countAllArrows = true;
         public boolean onlyShowArrowCounter = false;
         public boolean alwaysShowArrowCounter = false;
+        public boolean miniBows = true;
 
         public boolean displayOnThrow = true;
         public boolean displayOnPickup = true;
@@ -333,6 +339,13 @@ public class ModClientOptions {
 
         public int itemFrameSearchGlowDuration = 0;
         public int itemFrameSearchRadius = 150;
+    }
+
+    public static class EnhancedDurabilityTooltips {
+        public boolean enableEnhancedDurabilityTooltips = true;
+        public boolean showDamageValue = true;
+        public boolean showPercentage = false;
+        public boolean showDot = false;
     }
 
     public static class VisualTimeOptions {

@@ -85,6 +85,18 @@ public class ItemCounterCategory {
                 .controller(TickBoxControllerBuilder::create)
                 .build();
 
+        Option<Boolean> miniBows = Option.<Boolean>createBuilder()
+                .name(Component.translatable("qualityofqueso.options.mini_bows"))
+                .description(
+                        OptionDescription.createBuilder()
+                                .text(Component.translatable("qualityofqueso.options.mini_bows.description"))
+                                .customImage(fixedSizeImage(qoqIdentifier("options/hud/mini_bows"), 165, 106))
+                                .build()
+                )
+                .binding(true, () -> client().itemCounter().miniBows, v -> client().itemCounter().miniBows = v)
+                .controller(TickBoxControllerBuilder::create)
+                .build();
+
         Option<Boolean> arrowCounter = Option.<Boolean>createBuilder()
                 .name(Component.translatable("qualityofqueso.options.arrow_counter"))
                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.arrow_counter.description")))
@@ -96,6 +108,7 @@ public class ItemCounterCategory {
                         countAllArrows.setAvailable(bl);
                         onlyShowArrowCounter.setAvailable(bl);
                         alwaysShowArrowCounter.setAvailable(bl);
+                        miniBows.setAvailable(bl);
                     }
                 })
                 .build();
@@ -139,6 +152,7 @@ public class ItemCounterCategory {
                                                         countAllArrows.setAvailable(bl);
                                                         onlyShowArrowCounter.setAvailable(bl);
                                                         alwaysShowArrowCounter.setAvailable(bl);
+                                                        miniBows.setAvailable(bl);
                                                     }
                                                 })
                                                 .build()
@@ -169,6 +183,9 @@ public class ItemCounterCategory {
                                 )
                                 .option(
                                         alwaysShowArrowCounter
+                                )
+                                .option(
+                                        miniBows
                                 )
                                 .build()
                 )

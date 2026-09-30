@@ -46,7 +46,7 @@ public class ManagementEvents implements ModEvent {
 
     /**
      * The current searching instance to use.
-     * <p>For accessing search fields, use {@link WidgetHandler}.</p>
+     * <p>For accessing search fields, use {@link WidgetEvents}.</p>
      */
     public SearchEvents searchEvents() {
         return new SearchEvents(this.screen);

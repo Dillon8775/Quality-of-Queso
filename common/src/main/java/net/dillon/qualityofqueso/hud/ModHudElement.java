@@ -154,7 +154,7 @@ public abstract class ModHudElement {
     }
 
     /**
-     * @return the correct sprite to use.
+     * @return the correct sprite to use based on item health.
      */
     public static Identifier getHighlightedSlotTexture(Identifier defaultSprite, ItemStack stack, EquipmentSlot equipmentSlot) {
         float healthPercentage = getItemHealthPercentage(stack);
@@ -174,6 +174,7 @@ public abstract class ModHudElement {
         } else if ((client().lockedSlots().preventDropping || client().lockedSlots().showLock.inHud()) && isLockedHotbarSlot(false) && equipmentSlot == null) {
             return SLOT_LOCKED;
         }
+
         return defaultSprite;
     }
 

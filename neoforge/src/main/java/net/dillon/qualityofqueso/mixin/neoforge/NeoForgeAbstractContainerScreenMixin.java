@@ -1,4 +1,4 @@
-package net.dillon.qualityofqueso.mixin.neoforged;
+package net.dillon.qualityofqueso.mixin.neoforge;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.dillon.qualityofqueso.event.QuesoScreenHolder;
@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 @Mixin(AbstractContainerScreen.class)
-public class NeoForgedAbstractContainerScreenMixin {
+public class NeoForgeAbstractContainerScreenMixin {
 
     /**
      * @return a new {@link ManagementEvents} for {@code NeoForged.}

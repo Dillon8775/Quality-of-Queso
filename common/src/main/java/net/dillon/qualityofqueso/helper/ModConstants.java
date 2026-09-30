@@ -12,6 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -119,10 +120,13 @@ public class ModConstants {
     public static final Identifier SLOT_GOOD = qoqIdentifier("hud/colored_slot/slot_good");
     public static final Identifier SLOT_LOCKED = qoqIdentifier("hud/colored_slot/slot_locked");
     public static final Identifier MINI_BOW = qoqIdentifier("hud/mini_bow");
-    public static final Identifier MINI_BOW_CRITICAL = qoqIdentifier("hud/mini_bow_critical");
+    public static final Identifier MINI_BOW_READY = qoqIdentifier("hud/mini_bow_ready");
     public static final Identifier MINI_CROSSBOW = qoqIdentifier("hud/mini_crossbow");
     public static final Identifier MINI_CROSSBOW_FIREWORK = qoqIdentifier("hud/mini_crossbow_firework");
     public static final Identifier SELECTED_RECIPE = qoqIdentifier("slot/selected_recipe");
+
+    // Colors
+    public static final int SOFT_GREEN = new Color(0x94FF97).getRGB();
 
     // Config constants
     public static final String DEFAULT_CONFIG_DIR = "qualityofqueso/global";

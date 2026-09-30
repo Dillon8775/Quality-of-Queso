@@ -42,6 +42,9 @@ public class ConfigurationScreen {
                         ItemCounterCategory.create()
                 )
                 .category(
+                        GuiCategory.create()
+                )
+                .category(
                         FovEffectsCategory.create()
                 )
                 .category(
