@@ -14,6 +14,7 @@ public class MixinOptions {
     public boolean redArmorTintMixin = true;
     public boolean clockManagerMixin = true;
     public boolean itemArgumentMixin = true;
+    public boolean itemStackMixin = true;
 
     public static class MixinHandler extends ModBaseOptionsHandler<MixinOptions> {
 

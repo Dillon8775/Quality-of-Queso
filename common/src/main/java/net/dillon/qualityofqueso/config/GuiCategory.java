@@ -10,6 +10,7 @@ import net.minecraft.network.chat.Component;
 import static net.dillon.qualityofqueso.config.ConfigurationScreen.fixedSizeImage;
 import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.OptionInstances.mixins;
 import static net.dillon.qualityofqueso.util.ModOptionUtil.fabricOption;
 
 /**
@@ -25,7 +26,7 @@ public class GuiCategory {
                 .controller(TickBoxControllerBuilder::create)
                 .build();
 
-        boolean fabric = QualityOfQuesoPlatforms.getPlatform().platform().fabric();
+        boolean canUseEnhancedTooltips = QualityOfQuesoPlatforms.getPlatform().platform().fabric() && mixins().itemStackMixin;
 
         Option<Boolean> showDamageValue = Option.<Boolean>createBuilder()
                 .name(Component.translatable("qualityofqueso.options.show_damage_value"))
@@ -37,7 +38,7 @@ public class GuiCategory {
                 )
                 .binding(true, () -> client().enhancedDurabilityTooltips().showDamageValue, v -> client().enhancedDurabilityTooltips().showDamageValue = v)
                 .controller(TickBoxControllerBuilderImpl::new)
-                .available(fabric)
+                .available(canUseEnhancedTooltips)
                 .build();
 
         Option<Boolean> showPercentage = Option.<Boolean>createBuilder()
@@ -50,7 +51,7 @@ public class GuiCategory {
                 )
                 .binding(false, () -> client().enhancedDurabilityTooltips().showPercentage, v -> client().enhancedDurabilityTooltips().showPercentage = v)
                 .controller(TickBoxControllerBuilderImpl::new)
-                .available(fabric)
+                .available(canUseEnhancedTooltips)
                 .build();
 
         Option<Boolean> showDot = Option.<Boolean>createBuilder()
@@ -63,7 +64,7 @@ public class GuiCategory {
                 )
                 .binding(false, () -> client().enhancedDurabilityTooltips().showDot, v -> client().enhancedDurabilityTooltips().showDot = v)
                 .controller(TickBoxControllerBuilderImpl::new)
-                .available(fabric)
+                .available(canUseEnhancedTooltips)
                 .build();
 
         return ConfigCategory.createBuilder()
@@ -153,22 +154,22 @@ public class GuiCategory {
                         OptionGroup.createBuilder()
                                 .name(Component.translatable("qualityofqueso.options.misc.durability_tooltips"))
                                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.misc.durability_tooltips.description")))
-                                .collapsed(!fabric)
+                                .collapsed(!canUseEnhancedTooltips)
                                 .option(
                                         Option.<Boolean>createBuilder()
                                                 .name(Component.translatable("qualityofqueso.options.enhanced_durability_tooltips"))
                                                 .description(OptionDescription.of(fabricOption(Component.translatable("qualityofqueso.options.enhanced_durability_tooltips.description"))))
                                                 .binding(true, () -> client().enhancedDurabilityTooltips().enableEnhancedDurabilityTooltips, v -> client().enhancedDurabilityTooltips().enableEnhancedDurabilityTooltips = v)
                                                 .controller(BooleanControllerBuilder::create)
-                                                .available(fabric)
                                                 .addListener((opt, event) -> {
                                                     if (event == OptionEventListener.Event.STATE_CHANGE || event == OptionEventListener.Event.INITIAL) {
-                                                        boolean bl = opt.pendingValue();
+                                                        boolean bl = !mixins().itemStackMixin && opt.pendingValue();
                                                         showDamageValue.setAvailable(bl);
                                                         showPercentage.setAvailable(bl);
                                                         showDot.setAvailable(bl);
                                                     }
                                                 })
+                                                .available(canUseEnhancedTooltips)
                                                 .build()
                                 )
                                 .option(

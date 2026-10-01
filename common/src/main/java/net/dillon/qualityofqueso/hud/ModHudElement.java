@@ -10,6 +10,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 import java.util.Set;
 
@@ -63,6 +64,11 @@ public abstract class ModHudElement {
      * @return if the main or offhand has infinity.
      */
     public static boolean mainOrOffHandHasInfinity() {
+        // Automatically does not have infinity if player doesn't have normal arrow in inventory
+        if (!minecraft.player.getInventory().contains(stack -> stack.is(Items.ARROW))) {
+            return false;
+        }
+
         ItemStack mainHand = getMainHandStack(minecraft.player);
         ItemStack offHand = getOffHandStack(minecraft.player);
         return hasInfinity(mainHand) || hasInfinity(offHand);

@@ -67,6 +67,11 @@ public class QualityOfQuesoMixinPlugin extends MixinPluginUtil {
                         PredicateEntry.single("main.ItemArgumentMixin"),
                         !MixinOptions.INSTANCE.getInstance().itemArgumentMixin,
                         "\"item_argument_mixin\" is disabled."
+                ),
+                PredicateEntry.ofDebug(
+                        PredicateEntry.single("fabric.FabricItemStackMixin"),
+                        !MixinOptions.INSTANCE.getInstance().itemStackMixin,
+                        "\"item_stack_mixin\" is disabled."
                 )
         );
     }

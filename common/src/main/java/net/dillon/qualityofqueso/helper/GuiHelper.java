@@ -365,6 +365,7 @@ public class GuiHelper {
 
     /**
      * Allows for overriding of focus to always input character typed.
+     * @since mc26.3
      */
     public static void autoFocusElement(EditBox editBox, KeyEvent event, boolean focus, boolean overrideFocus) {
         if (editBox == null) {

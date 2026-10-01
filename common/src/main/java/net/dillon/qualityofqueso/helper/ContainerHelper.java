@@ -1016,7 +1016,7 @@ public class ContainerHelper {
     /**
      * Runtime client cache for the currently known state of one shulker position.
      */
-    private static final class ShulkerState {
+    private static class ShulkerState {
         boolean filtered;
         boolean tagFiltered;
         List<String> filterItems = new ArrayList<>();

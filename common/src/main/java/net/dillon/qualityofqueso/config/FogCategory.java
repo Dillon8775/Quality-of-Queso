@@ -46,7 +46,8 @@ public class FogCategory {
                 .controller(TickBoxControllerBuilder::create)
                 .addListener((opt, event) -> {
                     if (event == OptionEventListener.Event.STATE_CHANGE || event == OptionEventListener.Event.INITIAL) {
-                        overworldFogIntensity.setAvailable(opt.pendingValue());
+                        boolean bl = !mixins().fogMixins && opt.pendingValue();
+                        overworldFogIntensity.setAvailable(bl);
                     }
                 })
                 .available(mixins().fogMixins)
@@ -59,7 +60,8 @@ public class FogCategory {
                 .controller(TickBoxControllerBuilder::create)
                 .addListener((opt, event) -> {
                     if (event == OptionEventListener.Event.STATE_CHANGE || event == OptionEventListener.Event.INITIAL) {
-                        netherFogIntensity.setAvailable(opt.pendingValue());
+                        boolean bl = !mixins().fogMixins && opt.pendingValue();
+                        netherFogIntensity.setAvailable(bl);
                     }
                 })
                 .available(mixins().fogMixins)
@@ -78,7 +80,6 @@ public class FogCategory {
                                                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.all_fog.description")))
                                                 .binding(true, () -> client().fog().allFog, v -> client().fog().allFog = v)
                                                 .controller(BooleanControllerBuilder::create)
-                                                .available(mixins().fogMixins)
                                                 .addListener((opt, event) -> {
                                                     if (event == OptionEventListener.Event.STATE_CHANGE || event == OptionEventListener.Event.INITIAL) {
                                                         boolean bl = opt.pendingValue();
