@@ -43,99 +43,11 @@ public class ExtractingEvents extends ManagementEvents {
     }
 
     /**
-     * Draws an enhanced cursor on the screen.
+     * Handles all slot extracting events.
      */
-    public void extractEnhancedCursor(GuiGraphicsExtractor graphics) {
-        if (!client().misc().enhancedCursor) {
-            return;
-        }
-
-        boolean hasHoveredSlot = holder().screensHoveredSlot() != null && holder().screensHoveredSlot().hasItem();
-        if (!getCursorStack().isEmpty() || hasHoveredSlot) {
-            graphics.requestCursor(CursorTypes.POINTING_HAND);
-        }
-
-        if (!hasHoveredSlot) {
-            return;
-        }
-
-        if (Minecraft.getInstance().hasControlDown()) {
-            if (ENHANCED_COOLDOWN_SWAP == 0) {
-                swapCursor = !swapCursor;
-                ENHANCED_COOLDOWN_SWAP = DEFAULT_ENHANCED_COOLDOWN_SWAP;
-            }
-            CursorType cursor;
-            if (CURSOR_KEY == CursorKey.NULL) {
-                cursor = swapCursor ? CursorTypes.RESIZE_NS : CursorTypes.CROSSHAIR;
-                graphics.requestCursor(cursor);
-            } else {
-                if (CURSOR_KEY == CursorKey.MOVE || canScrollMoveAndHasScrollModifierDown()) {
-                    graphics.requestCursor(CursorTypes.RESIZE_NS);
-                }
-                if (CURSOR_KEY == CursorKey.CROSSHAIR || hasDropOnlyOneItemModifierDown() || hasAllQuickDropModifiersDown()) {
-                    graphics.requestCursor(CursorTypes.CROSSHAIR);
-                }
-            }
-        }
-
-        if (isContainerScreen(holder().screen()) && hasAllQuickDropModifiersDown() && !shouldButtonBeActive(false, null)) {
-            graphics.requestCursor(CursorTypes.NOT_ALLOWED);
-        }
-    }
-
-    /**
-     * Renders the blue "locked" overlay for locked slots (not the lock icon, the color itself)
-     */
-    public void extractLockedSlotColor(GuiGraphicsExtractor graphics) {
-        if (!client().lockedSlots().lockedSlots || !isValidScreenForRenderingSlotOverlays(holder().screen())) {
-            return;
-        }
-
-        for (int i = 0; i < searchEvents().getSearchSlotCount(); i++) {
-            Slot slot = holder().menu().getSlot(i);
-            lockedSlotEvents().renderLockedSlot(graphics, slot, false);
-        }
-    }
-
-    /**
-     * Renders the process of unlocking / locking slots.
-     */
-    public void extractLockingUnlockingSlots(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-        // Only render other locked slot textures on valid screens
-        if (isValidScreen(holder().screen())) {
-            // Renders the key, or unlocked slot texture beside the mouse, indicating that the user is attempting to lock/unlock slots
-            if (client().lockedSlots().lockedSlots && client().lockedSlots().showLock.inScreens() && holder().screensHoveredSlot() != null && holder().excludedSlots().isEmpty()
-                    && hasLockSlotModifierDown() && !hasAnyManagementModifierDown() && !Minecraft.getInstance().hasControlDown() && !Minecraft.getInstance().hasShiftDown()) {
-                lockedSlotEvents().renderUnlockedSlot(graphics, lockedSlotEvents().isLockedSlot(holder().screensHoveredSlot().index), mouseX, mouseY);
-            }
-            // For drag sorting and/or locking slots, set the cursor to "pointing hand", like the user is grabbing onto slots to lock/select them
-            if (client().misc().enhancedCursor && (client().management().dragSorting || client().lockedSlots().lockedSlots)
-                    && holder().screensHoveredSlot() != null
-                    && !Minecraft.getInstance().hasControlDown()
-                    && Minecraft.getInstance().hasAltDown()) {
-                graphics.requestCursor(CursorTypes.POINTING_HAND);
-            }
-        }
-    }
-
-    /**
-     * Grays out a search, typically from search queries or excluding hotbar.
-     */
-    public void renderGrayedSlot(GuiGraphicsExtractor graphics, Slot slot, boolean hotbarOverlay) {
-        String id = "grayed";
-        if (hotbarOverlay) {
-            id = "grayed_hotbar";
-        } else if (client().accessibility().darkerOverlay || client().general().theme != Theme.VANILLA) {
-            id = "grayed_dark";
-        }
-        drawSprite(graphics, qoqIdentifier("slot/" + id), slot.x, slot.y, 16, 16);
-    }
-
-    /**
-     * Renders a highlighted slot, based on the hovered or held item.
-     */
-    public void renderHighlightedSlot(GuiGraphicsExtractor graphics, Slot slot) {
-        graphics.fill(slot.x - 2, slot.y - 2, slot.x + 17, slot.y + 17, client().management().matchingItemsColor);
+    public void handleSlotExtraction(GuiGraphicsExtractor graphics) {
+        extractLockedSlotColor(graphics);
+        extractHighlightedSlots(graphics);
     }
 
     /**
@@ -208,9 +120,54 @@ public class ExtractingEvents extends ManagementEvents {
     }
 
     /**
+     * Handles all main extracting events.
+     */
+    public void handle(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+        extractEnhancedCursor(graphics);
+        clearToRefreshWidgets();
+        extractSearchFields(graphics, mouseX, mouseY, a);
+        extractButtons(graphics, mouseX, mouseY, a);
+        extractLockingUnlockingSlots(graphics, mouseX, mouseY);
+    }
+
+    /**
+     * Grays out a search, typically from search queries or excluding hotbar.
+     */
+    private void renderGrayedSlot(GuiGraphicsExtractor graphics, Slot slot, boolean hotbarOverlay) {
+        String id = "grayed";
+        if (hotbarOverlay) {
+            id = "grayed_hotbar";
+        } else if (client().accessibility().darkerOverlay || client().general().theme != Theme.VANILLA) {
+            id = "grayed_dark";
+        }
+        drawSprite(graphics, qoqIdentifier("slot_overlays/" + id), slot.x, slot.y, 16, 16);
+    }
+
+    /**
+     * Renders a highlighted slot, based on the hovered or held item.
+     */
+    private void renderHighlightedSlot(GuiGraphicsExtractor graphics, Slot slot) {
+        graphics.fill(slot.x - 2, slot.y - 2, slot.x + 17, slot.y + 17, client().management().matchingItemsColor);
+    }
+
+    /**
+     * Renders the blue "locked" overlay for locked slots (not the lock icon, the color itself)
+     */
+    private void extractLockedSlotColor(GuiGraphicsExtractor graphics) {
+        if (!client().lockedSlots().lockedSlots || !isValidScreenForRenderingSlotOverlays(holder().screen())) {
+            return;
+        }
+
+        for (int i = 0; i < searchEvents().getSearchSlotCount(); i++) {
+            Slot slot = holder().menu().getSlot(i);
+            lockedSlotEvents().renderLockedSlot(graphics, slot, false);
+        }
+    }
+
+    /**
      * Highlight matching items based on the cursor held item or hovered item
      */
-    public void extractHighlightedSlots(GuiGraphicsExtractor graphics) {
+    private void extractHighlightedSlots(GuiGraphicsExtractor graphics) {
         if (!isValidScreenForRenderingSlotOverlays(holder().screen()) || !(client().management().highlightMatchingItems.always() || (client().management().highlightMatchingItems.onCtrl() && Minecraft.getInstance().hasControlDown()))) {
             return;
         }
@@ -254,6 +211,68 @@ public class ExtractingEvents extends ManagementEvents {
     }
 
     /**
+     * Renders the process of unlocking / locking slots.
+     */
+    private void extractLockingUnlockingSlots(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+        // Only render other locked slot textures on valid screens
+        if (isValidScreen(holder().screen())) {
+            // Renders the key, or unlocked slot texture beside the mouse, indicating that the user is attempting to lock/unlock slots
+            if (client().lockedSlots().lockedSlots && client().lockedSlots().showLock.inScreens() && holder().screensHoveredSlot() != null && holder().excludedSlots().isEmpty()
+                    && hasLockSlotModifierDown() && !hasAnyManagementModifierDown() && !Minecraft.getInstance().hasControlDown() && !Minecraft.getInstance().hasShiftDown()) {
+                lockedSlotEvents().renderUnlockedSlot(graphics, lockedSlotEvents().isLockedSlot(holder().screensHoveredSlot().index), mouseX, mouseY);
+            }
+            // For drag sorting and/or locking slots, set the cursor to "pointing hand", like the user is grabbing onto slots to lock/select them
+            if (client().misc().enhancedCursor && (client().management().dragSorting || client().lockedSlots().lockedSlots)
+                    && holder().screensHoveredSlot() != null
+                    && !Minecraft.getInstance().hasControlDown()
+                    && Minecraft.getInstance().hasAltDown()) {
+                graphics.requestCursor(CursorTypes.POINTING_HAND);
+            }
+        }
+    }
+
+    /**
+     * Draws an enhanced cursor on the screen.
+     */
+    private void extractEnhancedCursor(GuiGraphicsExtractor graphics) {
+        if (!client().misc().enhancedCursor) {
+            return;
+        }
+
+        boolean hasHoveredSlot = holder().screensHoveredSlot() != null && holder().screensHoveredSlot().hasItem();
+        if (!getCursorStack().isEmpty() || hasHoveredSlot) {
+            graphics.requestCursor(CursorTypes.POINTING_HAND);
+        }
+
+        if (!hasHoveredSlot) {
+            return;
+        }
+
+        if (Minecraft.getInstance().hasControlDown()) {
+            if (ENHANCED_COOLDOWN_SWAP == 0) {
+                swapCursor = !swapCursor;
+                ENHANCED_COOLDOWN_SWAP = DEFAULT_ENHANCED_COOLDOWN_SWAP;
+            }
+            CursorType cursor;
+            if (CURSOR_KEY == CursorKey.NULL) {
+                cursor = swapCursor ? CursorTypes.RESIZE_NS : CursorTypes.CROSSHAIR;
+                graphics.requestCursor(cursor);
+            } else {
+                if (CURSOR_KEY == CursorKey.MOVE || canScrollMoveAndHasScrollModifierDown()) {
+                    graphics.requestCursor(CursorTypes.RESIZE_NS);
+                }
+                if (CURSOR_KEY == CursorKey.CROSSHAIR || hasDropOnlyOneItemModifierDown() || hasAllQuickDropModifiersDown()) {
+                    graphics.requestCursor(CursorTypes.CROSSHAIR);
+                }
+            }
+        }
+
+        if (isContainerScreen(holder().screen()) && hasAllQuickDropModifiersDown() && !shouldButtonBeActive(false, null)) {
+            graphics.requestCursor(CursorTypes.NOT_ALLOWED);
+        }
+    }
+
+    /**
      * Removes any widgets after rendering, to ensure they are actually placed in the right spot for clicking.
      */
     private void removeDynamicButtonWidget(@Nullable GuiEventListener widget) {
@@ -266,7 +285,7 @@ public class ExtractingEvents extends ManagementEvents {
     /**
      * Removes previously registered dynamic button widgets to prevent stale click hitboxes.
      */
-    public void clearToRefreshWidgets() {
+    private void clearToRefreshWidgets() {
         for (GuiEventListener listener : new ArrayList<>(holder().dynamicButtons())) {
             removeDynamicButtonWidget(listener);
         }
@@ -277,7 +296,7 @@ public class ExtractingEvents extends ManagementEvents {
     /**
      * Renders and extracts all search fields.
      */
-    public void extractSearchFields(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+    private void extractSearchFields(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
         // Render the search field
         if (holder().searchFields().container() != null) {
             holder().searchFields().container().extractWidgetRenderState(graphics, mouseX, mouseY, a);
@@ -296,7 +315,7 @@ public class ExtractingEvents extends ManagementEvents {
     /**
      * @return whether a slot should be grayed out.
      */
-    public boolean shouldGrayout(Slot slot) {
+    private boolean shouldGrayout(Slot slot) {
         boolean inventoryScreen = isInventoryScreen(holder().screen());
         boolean shortcutKeyReady = inventoryScreen
                 ? client().sorting().sorting.any() ? hasAnyManagementModifierDown() : hasAllQuickDropModifiersDown()
@@ -326,7 +345,7 @@ public class ExtractingEvents extends ManagementEvents {
     /**
      * Renders and extracts all buttons, including management buttons and layouts.
      */
-    public void extractButtons(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+    private void extractButtons(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
         widgetEvents().initTransferContainer();
 
         widgetEvents().initTransferInventory();

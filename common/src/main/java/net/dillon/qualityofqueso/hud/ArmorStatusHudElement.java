@@ -171,7 +171,7 @@ public class ArmorStatusHudElement extends ModHudElement {
                         slotHighlightAlpha = Mth.clamp(1.0F - ((float) elapsedTicks / animationTimeTicks), 0.0F, 1.0F);
                     }
                     if ((canEverRenderArmorHotbar && client().hud().highlightArmor) || timerActive || animating || fadeAnimating) {
-                        renderHighlightedArmorSlot(HOTBAR_SELECTION_SPRITE, graphics, equipmentSlots()[i], false, armorYOffset, slotHighlightAlpha);
+                        renderHighlightedSlot(graphics, equipmentSlots()[i], false, armorYOffset, slotHighlightAlpha);
                     }
                     if (shouldRenderSlot && getItemHealthPercentage(getItemBySlot(minecraft, slot)) < 0.11F) {
                         renderWarningIndicator(graphics, 0, 0, slot, armorYOffset + client().hud().armorStatusPosition[1]);
@@ -181,7 +181,7 @@ public class ArmorStatusHudElement extends ModHudElement {
 
             if (slot == EquipmentSlot.CHEST && elytraWarning) {
                 drawItem(graphics, new ItemStack(Items.ELYTRA), getEquipmentSlotX(EquipmentSlot.CHEST), client().hud().armorStatusPosition[1], true);
-                renderHighlightedArmorSlot(HOTBAR_SELECTION_SPRITE, graphics, slot, true, 0, 1.0F);
+                renderHighlightedSlot(graphics, slot, true, 0, 1.0F);
                 renderWarningIndicator(graphics, 0, 0, slot, client().hud().armorStatusPosition[1]);
             }
             i++;

@@ -403,6 +403,10 @@ public class WidgetEvents extends ManagementEvents {
      * @return if the {@link IncludeHotbarButton} can be {@code initialized}.
      */
     private boolean canInitIncludeHotbarButton() {
+        if (!isValidScreen(getScreen())) {
+            return false;
+        }
+
         if (isContainerScreen(getScreen()) && client().management().transferring.any() || client().management().quickDrop.any()) {
             return client().buttonDisplayOptions().displayIncludeHotbar != IncludeHotbar.OFF
                     && (!isInventoryScreen(getScreen()) || !client().buttonDisplayOptions().displayIncludeHotbar.containerScreensOnly());

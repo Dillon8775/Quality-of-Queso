@@ -15,6 +15,7 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 import static net.dillon.dillonlib.task.ClientTasks.drawSprite;
+import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
 import static net.dillon.qualityofqueso.helper.ModHelper.saveAndApplyConfigs;
 
 /**
@@ -65,11 +66,11 @@ public class ConfigurationScreen {
     /**
      * @return a custom image renderer for certain options.
      */
-    protected static ImageRenderer fixedSizeImage(Identifier texture, int width, int height) {
+    protected static ImageRenderer fixedSizeImage(String texture, int width, int height) {
         return new ImageRenderer() {
             @Override
             public int render(GuiGraphicsExtractor graphics, int x, int y, int renderWidth, float tickDelta) {
-                drawSprite(graphics, texture, x, y, width, height);
+                drawSprite(graphics, qoqIdentifier("config_images/" + texture), x, y, width, height);
                 return height;
             }
 

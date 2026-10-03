@@ -33,7 +33,7 @@ import static net.dillon.qualityofqueso.option.OptionInstances.client;
 import static net.dillon.qualityofqueso.util.EnchantingHelper.isEnchantmentInGroup;
 
 /**
- * Handles tooltip rendering for this mod.
+ * Handles tooltips rendering for this mod.
  */
 public class TooltipEvents extends ManagementEvents {
 
@@ -42,7 +42,16 @@ public class TooltipEvents extends ManagementEvents {
     }
 
     /**
-     * @return the original tooltip that is being displayed.
+     * All tooltips events.
+     */
+    public void handle(GuiGraphicsExtractor graphics, Font font, int mouseX, int mouseY, CallbackInfo ci) {
+        displaySingleMovingTooltips(graphics, font, mouseX, mouseY, ci);
+        displayEnchantmentHelperTooltips(graphics, font, mouseX, mouseY, ci);
+        displayTagsOnItems(graphics, font, mouseX, mouseY, ci);
+    }
+
+    /**
+     * @return the original tooltips that is being displayed.
      */
     private List<Component> getOriginalTooltip() {
         return holder().screensHoveredSlot() == null ? null : holder().screensHoveredSlot().getItem().getTooltipLines(Item.TooltipContext.EMPTY, holder().mc().player, Minecraft.getInstance().options.advancedItemTooltips ? TooltipFlag.ADVANCED : TooltipFlag.NORMAL);
@@ -51,7 +60,7 @@ public class TooltipEvents extends ManagementEvents {
     /**
      * Displays all item tags on the hovered item.
      */
-    public void displayTagsOnItems(GuiGraphicsExtractor graphics, Font font, int mouseX, int mouseY, CallbackInfo ci) {
+    private void displayTagsOnItems(GuiGraphicsExtractor graphics, Font font, int mouseX, int mouseY, CallbackInfo ci) {
         if (!hoveredSlotHasItem(holder().screensHoveredSlot())) {
             return;
         }
@@ -75,7 +84,7 @@ public class TooltipEvents extends ManagementEvents {
                 originalTooltip.add(1, Component.literal(tagString).withStyle(ChatFormatting.DARK_PURPLE));
             }
 
-            // If tags were found in the query add it to the tooltip and render
+            // If tags were found in the query add it to the tooltips and render
             // cancel out original method to prevent overlapping tooltips
             if (stack.tags().toList().isEmpty()) {
                 originalTooltip.add(1, Component.translatable("qualityofqueso.gui.no_tags_found").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
@@ -88,7 +97,7 @@ public class TooltipEvents extends ManagementEvents {
     /**
      * Displays tooltips for singular moving or dropping.
      */
-    public void displaySingleMovingTooltips(GuiGraphicsExtractor graphics, Font font, int mouseX, int mouseY, CallbackInfo ci) {
+    private void displaySingleMovingTooltips(GuiGraphicsExtractor graphics, Font font, int mouseX, int mouseY, CallbackInfo ci) {
         // If the user is attempting to lock slots or drag sort (and as long as they don't have "CTRL"/management modifier down, to prevent redundant removal of tooltips)...
         // ...then remove all tooltips, so the user can clearly read and see slots
         if (isExcludingOrLockingSlots() && !hasAnyManagementModifierDown()) {
@@ -117,14 +126,14 @@ public class TooltipEvents extends ManagementEvents {
         holder().setCanMoveOne(bl);
         boolean onlySingleMoveModifierDown = canScrollMoveAndHasScrollModifierDown() && !hasAllQuickDropModifiersDown() && !hasDropOnlyOneItemModifierDown();
 
-        // Create a new tooltip to render
+        // Create a new tooltips to render
         List<Component> tooltipToRender = new ArrayList<>();
 
         // If bl is true, and the hovered slot's count is more than 1 (because if you are moving 1 singular, the count must be more than 1), OR if the user isn't hovering over a slot at all, begin modifying tooltips
         if (!isCreativeInventoryScreen(holder().screen()) && bl && !onlySingleMoveModifierDown && (hoveredSlot == null || hoveredSlot.getItem().count() > 1)) {
-            // Create the new tooltip variable
+            // Create the new tooltips variable
             List<Component> moveAmountTooltip = new ArrayList<>();
-            // Determine the translation for the tooltip
+            // Determine the translation for the tooltips
             // If the button is hovered, render "Move *count* of each". Otherwise, render "Move *count*"
             String translation = "qualityofqueso.gui.move_amount_each";
 
@@ -172,7 +181,7 @@ public class TooltipEvents extends ManagementEvents {
                 }
             }
 
-            // Cancel out if we cannot render tooltip
+            // Cancel out if we cannot render tooltips
             if (!canRender && (!lockedSlotEvents().isLockedSlot(hoveredSlot.index) || !lockedSlotEvents().droppingEntireLockedSlotStack())) {
                 return;
             }
@@ -181,7 +190,7 @@ public class TooltipEvents extends ManagementEvents {
             Component scroll = Component.translatable("qualityofqueso.gui.scroll_to_change_amount");
             Component reset = Component.translatable("qualityofqueso.gui.move_amount.reset");
 
-            // Add those helper tooltips to the rendered tooltip if we can
+            // Add those helper tooltips to the rendered tooltips if we can
             if (client().general().tooltips.enabled() && canContinueToAddTooltips && !skip) {
                 if (!(holder().screensHoveredSlot() != null && holder().screensHoveredSlot().hasItem() && (canScrollMoveAndHasScrollModifierDown() && !hasDropOnlyOneItemModifierDown()))) {
                     moveAmountTooltip.add(scroll);
@@ -190,19 +199,19 @@ public class TooltipEvents extends ManagementEvents {
                 }
             }
 
-            // As long as there was never an original tooltip to render, render the tooltip and return true
+            // As long as there was never an original tooltips to render, render the tooltips and return true
             tooltipToRender.addAll(moveAmountTooltip);
 
-            // Create wrapped tooltip
+            // Create wrapped tooltips
             List<FormattedCharSequence> wrappedTooltip = new ArrayList<>();
             int maxWidth = 200;
 
-            // Wrap the tooltip
+            // Wrap the tooltips
             for (Component component : tooltipToRender) {
                 wrappedTooltip.addAll(font.split(component, maxWidth));
             }
 
-            // Set the tooltip
+            // Set the tooltips
             graphics.setTooltipForNextFrame(font, wrappedTooltip, mouseX, mouseY);
             ci.cancel();
         }
@@ -211,7 +220,7 @@ public class TooltipEvents extends ManagementEvents {
     /**
      * Displays all enchantment helper tooltips.
      */
-    public void displayEnchantmentHelperTooltips(GuiGraphicsExtractor graphics, Font font, int mouseX, int mouseY, CallbackInfo ci) {
+    private void displayEnchantmentHelperTooltips(GuiGraphicsExtractor graphics, Font font, int mouseX, int mouseY, CallbackInfo ci) {
         // Any further injection here will not be applied if the hovered slot is null or doesn't have an item
         if (!hoveredSlotHasItem(holder().screensHoveredSlot())) {
             return;
@@ -269,7 +278,7 @@ public class TooltipEvents extends ManagementEvents {
 
             // Determine the index to render the tooltips (if advanced tooltips are on, we need to go back 2)
             int index = holder().mc().options.advancedItemTooltips ? originalTooltip.size() - 2 : originalTooltip.size();
-            // Add the enchantment applicables to the original tooltip
+            // Add the enchantment applicables to the original tooltips
             for (Component c : enchantmentApplicables) {
                 originalTooltip.add(index, c);
             }
@@ -278,7 +287,7 @@ public class TooltipEvents extends ManagementEvents {
                 originalTooltip.add(index, Component.translatable("qualityofqueso.gui.applicable_on"));
             }
 
-            // Render the tooltip and return true
+            // Render the tooltips and return true
             graphics.setTooltipForNextFrame(font, originalTooltip, Optional.empty(), mouseX, mouseY);
             ci.cancel();
         }

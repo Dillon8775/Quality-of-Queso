@@ -1,9 +1,9 @@
-package net.dillon.qualityofqueso.hud;
+package net.dillon.qualityofqueso.hud.counter;
 
 import net.dillon.qualityofqueso.helper.EnderChestHelper;
+import net.dillon.qualityofqueso.hud.ModHudElement;
 import net.dillon.qualityofqueso.option.ContainerData;
 import net.dillon.qualityofqueso.option.eum.hud.ItemCounter;
-import net.dillon.qualityofqueso.util.ItemHudTracker;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.player.LocalPlayer;
@@ -31,85 +31,11 @@ import static net.dillon.qualityofqueso.option.OptionInstances.client;
 /**
  * Holds the {@code item counter} to extract.
  */
-public class ItemCounterHudElement extends ModHudElement {
+public class CounterHudElement extends ModHudElement implements CounterHelper {
 
-    /**
-     * Holds the result of counting an item.
-     */
-    private record ItemCount(
-            ItemStack stack,
-            int count,
-            boolean shouldRender,
-            boolean arrowCounter,
-            boolean projectileWeapon,
-            int animationYOffset
-    ) {
-
-        /**
-         * Determines if the count rendered is an even stack.
-         */
-        private boolean evenStack() {
-            return count != 0
-                    && count != 64
-                    && count % stack.getMaxStackSize() == 0;
-        }
-    }
-
-    /**
-     * Holds the final state used to render the item counter.
-     */
-    private record CounterRenderState(
-            ItemStack renderStack,
-            int count,
-            String text,
-            int textColor,
-            boolean renderOverlay,
-            boolean renderWarningIndicator,
-            boolean renderMiniCrossbow,
-            boolean renderMiniBow,
-            boolean infinity,
-            boolean evenStack,
-            int animationYOffset
-    ) {
-    }
-
-    /**
-     * Extracts a fake arrow under certain conditions.
-     */
-    private void extractFakeArrow(GuiGraphicsExtractor graphics) {
-        extractItem(
-                graphics,
-                fakeArrow(),
-                false
-        );
-    }
-
-    /**
-     * @return if stack is a projectile weapon.
-     */
-    private boolean isProjectileWeapon(Item item) {
-        return item instanceof BowItem || item instanceof CrossbowItem;
-    }
-
-    /**
-     * @return if an item and item components equal an item.
-     */
-    private boolean itemMatchesInventoryItem(ItemStack mainStack, ItemStack otherStack) {
-        return client().itemCounter().onlyCountMatchingItems ? ItemStack.isSameItemSameComponents(mainStack, otherStack) : otherStack.is(mainStack.getItem());
-    }
-
-    /**
-     * @return if the stack is an arrow.
-     */
-    private boolean isStackArrow(ItemStack stack) {
-        return stack.is(ItemTags.ARROWS);
-    }
-
-    /**
-     * @return a fake arrow stack.
-     */
-    private ItemStack fakeArrow() {
-        return new ItemStack(Items.ARROW);
+    @Override
+    public CounterHudElement counter() {
+        return this;
     }
 
     /**
@@ -125,7 +51,8 @@ public class ItemCounterHudElement extends ModHudElement {
 
         ItemStack mainHand = minecraft.player.getMainHandItem();
         ItemStack offHand = minecraft.player.getOffhandItem();
-        ItemStack activeStack = ItemHudTracker.getActiveStack();
+        ItemStack activeStack = ItemTracker.getActiveStack();
+        ItemStack shotStack = ItemTracker.getShotStack();
 
         // Try render main hand item
         if (extractItem(graphics, mainHand, false)) {
@@ -156,16 +83,13 @@ public class ItemCounterHudElement extends ModHudElement {
     /**
      * @return if an item can be extracted, and if so, extracts the item with the counter.
      */
-    private boolean extractItem(
+    protected boolean extractItem(
             GuiGraphicsExtractor graphics,
             ItemStack trackedOrHeldStack,
             boolean trackedItem
     ) {
         // Create the stack to count
-        ItemStack actualStack = isOnlyShowArrowCounterEnabled()
-                ? fakeArrow()
-                : trackedOrHeldStack;
-        ItemStack countStack = getItemToCount(actualStack);
+        ItemStack countStack = getItemToCount(getCountStack(trackedOrHeldStack));
 
         // Create the count
         ItemCount count = countItem(
@@ -218,7 +142,7 @@ public class ItemCounterHudElement extends ModHudElement {
                 infinity
         );
 
-        boolean renderOutline = shouldRenderOutline(
+        boolean renderOverlay = shouldRenderOverlay(
                 count,
                 infinity
         );
@@ -228,14 +152,20 @@ public class ItemCounterHudElement extends ModHudElement {
                 infinity
         );
 
-        boolean renderCrossbowProjectile = shouldRenderMiniCrossbow(
+        boolean renderCrossbowProjectile = shouldRenderCrossbowIndicator(
                 trackedOrHeldStack,
                 renderStack
         );
 
-        boolean renderBowProjectile = shouldRenderMiniBow(
+        boolean renderBowProjectile = shouldRenderBowIndicator(
                 trackedOrHeldStack,
                 renderStack
+        );
+
+        boolean renderBundle = shouldRenderBundleIndicator(
+                trackedOrHeldStack,
+                renderStack,
+                count
         );
 
         return new CounterRenderState(
@@ -243,10 +173,11 @@ public class ItemCounterHudElement extends ModHudElement {
                 count.count(),
                 text,
                 textColor,
-                renderOutline,
+                renderOverlay,
                 renderWarning,
                 renderCrossbowProjectile,
                 renderBowProjectile,
+                renderBundle,
                 infinity,
                 count.evenStack(),
                 count.animationYOffset()
@@ -273,8 +204,9 @@ public class ItemCounterHudElement extends ModHudElement {
         }
 
         // Render the counter for a crossbow projectile
-        if (state.renderMiniCrossbow()) {
-            renderMiniCrossbow(
+        boolean renderMiniCrossbow = state.renderMiniCrossbow();
+        if (renderMiniCrossbow) {
+            extractCrossbow(
                     graphics,
                     state.renderStack(),
                     itemX,
@@ -283,8 +215,19 @@ public class ItemCounterHudElement extends ModHudElement {
         }
 
         // Render the counter for a bow projectile
-        if (state.renderMiniBow()) {
-            renderMiniBow(
+        boolean renderMiniBow = state.renderMiniBow();
+        if (renderMiniBow) {
+            extractBow(
+                    graphics,
+                    itemX,
+                    animationYOffset
+            );
+        }
+
+        // Render the counter for a inTransportable item
+        boolean renderBundle = state.renderBundle();
+        if (state.renderBundle()) {
+            drawBundleSprite(
                     graphics,
                     itemX,
                     animationYOffset
@@ -335,6 +278,9 @@ public class ItemCounterHudElement extends ModHudElement {
 
         // Draw total with stacks text if desired
         if (client().itemCounter().displayTotalWithStacks
+                && !renderMiniBow
+                && !renderMiniCrossbow
+                && !renderBundle
                 && state.count() > 64
                 &&
                 (
@@ -355,20 +301,20 @@ public class ItemCounterHudElement extends ModHudElement {
         }
 
         // Draw infinity symbol if bow has infinity but next projectile isn't normal arrow
-        int infinityXModifier = 110;
+        int infinityXModifier = 107;
         if (!getOffHandStack(minecraft.player).isEmpty() && client().itemCounter().moveItemCounterOver) {
             infinityXModifier += 29;
         }
-        if (!client().itemCounter().displayTotalWithStacks && mainOrOffHandHasInfinity() && !nextAvailableProjectile().is(Items.ARROW)) {
+        if (!client().itemCounter().displayTotalWithStacks && mainOrOffHandHasInfinity() && !getNextProjectile().is(Items.ARROW)) {
             graphics.text(
                     minecraft.font,
-                    Component.literal("(" + INFINITY_SYMBOL + ")")
+                    Component.literal(INFINITY_SYMBOL)
                             .withStyle(ChatFormatting.ITALIC),
                     (graphics.guiWidth() / 2)
                             - infinityXModifier
                             + client().itemCounter().itemCounterPosition[0],
                     graphics.guiHeight()
-                            - 24
+                            - 23
                             + animationYOffset,
                     CommonColors.WHITE,
                     true
@@ -420,28 +366,6 @@ public class ItemCounterHudElement extends ModHudElement {
     }
 
     /**
-     * @return the item that should be counted.
-     */
-    private ItemStack getItemToCount(ItemStack playerHeldItem) {
-        if (playerHeldItem.getItem() instanceof CrossbowItem) {
-            // Count crossbow projectile
-            return nextCrossbowProjectile(playerHeldItem);
-        }
-
-        if (shouldBeCountProjectiles(playerHeldItem)) {
-            // Count projectile from active hand
-            ItemStack projectile = nextAvailableProjectile();
-
-            return projectile.isEmpty()
-                    ? fakeArrow()
-                    : projectile;
-        }
-
-        // Count held stack
-        return playerHeldItem;
-    }
-
-    /**
      * @return the result of counting the specified item.
      */
     private ItemCount countItem(
@@ -454,10 +378,11 @@ public class ItemCounterHudElement extends ModHudElement {
         List<Integer> items = new ArrayList<>();
 
         // If we cannot count the item, return a count of 0
-        if (!canCountItem(trackedOrHeldStack)) {
+        if (!isOnlyShowArrowCounterEnabled() && !canCountItem(trackedOrHeldStack)) {
             return new ItemCount(
                     countStack,
                     0,
+                    false,
                     false,
                     false,
                     false,
@@ -479,15 +404,16 @@ public class ItemCounterHudElement extends ModHudElement {
         }
 
         // Determine if we are counting projectiles
-        boolean projectile = shouldBeCountProjectiles(trackedOrHeldStack);
+        boolean projectile = shouldBeCountingProjectiles(trackedOrHeldStack);
 
         // Count all items in player inventory, which will include transportables
-        count += amountInInventory(
+        Amount amount = amountInInventory(
                 inventory,
                 countStack,
                 projectile,
                 items
         );
+        count += amount.count();
 
         // Count items in ender chest
         if (client().itemCounter().countEnderChest) {
@@ -503,7 +429,7 @@ public class ItemCounterHudElement extends ModHudElement {
                         && isStackArrow(countStack)
                         &&
                         (
-                                projectile || isStackArrow(ItemHudTracker.getShotStack())
+                                projectile || isStackArrow(ItemTracker.getShotStack())
                         );
 
         // Create fixed count for positioning hud elements
@@ -521,11 +447,11 @@ public class ItemCounterHudElement extends ModHudElement {
 
         // Create animation for the item counter once display time has expired
         int animationYOffset = 0;
-        if (trackedItem && !ItemHudTracker.isWithinDisplayWindow() && !getOffHandStack(player).isStackable()) {
+        if (trackedItem && !ItemTracker.isWithinDisplayWindow() && !getOffHandStack(player).isStackable()) {
             animationYOffset = getSpectatorAnimationYOffsetFromTicks(
                     player.tickCount,
-                    ItemHudTracker.getDisplayExpireTick(),
-                    ItemHudTracker.getAnimationTimeTicks()
+                    ItemTracker.getDisplayExpireTick(),
+                    ItemTracker.getAnimationTimeTicks()
             );
         }
 
@@ -536,10 +462,11 @@ public class ItemCounterHudElement extends ModHudElement {
                 shouldRender,
                 // Arrow counter can be valid if counting stack is an arrow, user is holding a projectile, or should always show arrow counter
                 (
-                        (isStackArrow(countStack) && isStackArrow(ItemHudTracker.getShotStack()))
-                                || (countStack.is(Items.FIREWORK_ROCKET) && ItemHudTracker.getShotStack().is(Items.FIREWORK_ROCKET))
-                ) || shouldBeCountProjectiles(getOffHandStack(player)) || projectile || alwaysShowArrowFallback,
+                        (isStackArrow(countStack) && isStackArrow(ItemTracker.getShotStack()))
+                                || (countStack.is(Items.FIREWORK_ROCKET) && ItemTracker.getShotStack().is(Items.FIREWORK_ROCKET))
+                ) || shouldBeCountingProjectiles(getOffHandStack(player)) || projectile || alwaysShowArrowFallback,
                 projectile,
+                amount.inTransportable(),
                 animationYOffset
         );
     }
@@ -547,7 +474,7 @@ public class ItemCounterHudElement extends ModHudElement {
     /**
      * Adds the matching items in the inventory to the count.
      */
-    private int amountInInventory(
+    private Amount amountInInventory(
             NonNullList<ItemStack> inventory,
             ItemStack countStack,
             boolean holdingProjectileWeapon,
@@ -555,10 +482,11 @@ public class ItemCounterHudElement extends ModHudElement {
     ) {
         int count = 0;
 
-        // Count all arrows if desired when holding a projectile weapon, or always show arrow counter enabled
-        boolean countingAllArrows = (holdingProjectileWeapon || isAlwaysShowArrowCounterEnabled() || isStackArrow(ItemHudTracker.getShotStack()))
-                && client().itemCounter().countAllArrows
-                && isStackArrow(countStack);
+        // Determine if we should count all arrows
+        boolean countingAllArrows = shouldCountAllArrows(holdingProjectileWeapon, countStack);
+
+        // Track whether bundle should be rendered
+        boolean renderBundle = false;
 
         // Iterate through the inventory to count
         for (ItemStack invStack : inventory) {
@@ -567,12 +495,21 @@ public class ItemCounterHudElement extends ModHudElement {
                             invStack.is(ItemTags.SHULKER_BOXES) || invStack.is(ItemTags.BUNDLES)
                     )
             ) {
-                // Begin searching inside the transportables and increment count if desired
-                count += amountInTransportable(
+                Amount transportableCount = amountInTransportable(
                         invStack,
                         countStack,
-                        items
+                        items,
+                        countingAllArrows
                 );
+                // Render bundle if inTransportable count is greater than 0
+                if (!renderBundle) {
+                    renderBundle = !mainOrOffHandHasInfinity() && (transportableCount.count() > 0 || transportableCount.inTransportable());
+                }
+
+                // Begin searching inside the transportables and increment count if desired
+                if (!holdingProjectileWeapon && !shotArrow()) {
+                    count += transportableCount.count();
+                }
 
                 continue;
             }
@@ -603,18 +540,20 @@ public class ItemCounterHudElement extends ModHudElement {
             items.add(invStack.getCount());
         }
 
-        return count;
+        return new Amount(count, renderBundle);
     }
 
     /**
-     * Adds matching items stored inside a transportable container to the count.
+     * Adds matching items stored inside a inTransportable container to the count.
      */
-    private int amountInTransportable(
+    private Amount amountInTransportable(
             ItemStack transportable,
             ItemStack countStack,
-            List<Integer> items
+            List<Integer> items,
+            boolean countAllArrows
     ) {
         int count = 0;
+        boolean arrowInBundle = false;
 
         ItemContainerContents container = transportable.get(DataComponents.CONTAINER);
         BundleContents bundleContents = transportable.get(DataComponents.BUNDLE_CONTENTS);
@@ -627,6 +566,10 @@ public class ItemCounterHudElement extends ModHudElement {
                     count += containerStack.count();
                     items.add(containerStack.count());
                 }
+
+                if (isStackArrow(stack)) {
+                    arrowInBundle = true;
+                }
             }
         }
 
@@ -638,10 +581,14 @@ public class ItemCounterHudElement extends ModHudElement {
                     count += bundleStack.count();
                     items.add(bundleStack.count());
                 }
+
+                if (isStackArrow(stack)) {
+                    arrowInBundle = true;
+                }
             }
         }
 
-        return count;
+        return new Amount(count, arrowInBundle && countAllArrows);
     }
 
     /**
@@ -737,186 +684,9 @@ public class ItemCounterHudElement extends ModHudElement {
     }
 
     /**
-     * @return if the specified item can be counted.
-     */
-    private boolean canCountItem(ItemStack playerHeldItem) {
-        if (!client().itemCounter().itemCounter.enabled()) {
-            return playerHeldItem.is(ItemTags.SHULKER_BOXES) || playerHeldItem.is(ItemTags.BUNDLES);
-        }
-
-        if (playerHeldItem.isStackable()) {
-            return true;
-        }
-
-        return shouldBeCountProjectiles(playerHeldItem)
-                || playerHeldItem.is(ItemTags.SHULKER_BOXES)
-                || playerHeldItem.is(ItemTags.BUNDLES);
-    }
-
-    /**
-     * @return the stack that should actually be drawn.
-     */
-    private ItemStack getRenderStack(ItemCount count, ItemStack trackedOrHeldStack) {
-        // Get the tracker stack (from picked up and/or dropped items)
-        ItemStack trackerStack = ItemHudTracker.getActiveStack();
-
-        // Determine if the counter is an arrow counter but count is 0
-        boolean arrowAndZero = count.count() == 0
-                && count.arrowCounter()
-                && isStackArrow(count.stack());
-
-        // Return fake arrow if held bow has infinity and the next projectile is certainly a normal arrow
-        if (mainOrOffHandHasInfinity() && nextAvailableProjectile().is(Items.ARROW)) {
-            return fakeArrow();
-        }
-
-        if (arrowAndZero) {
-            // If the tracked stack isn't an arrow but holding a projectile weapon, return a fake arrow
-            if (count.projectileWeapon() && !isStackArrow(trackerStack)) {
-                return fakeArrow();
-            }
-
-            if (isAlwaysShowArrowCounterEnabled() && isStackArrow(trackedOrHeldStack)) {
-                return fakeArrow();
-            }
-
-            if (!trackerStack.isEmpty()) {
-                return trackerStack.copy();
-            }
-
-            return fakeArrow();
-        }
-
-        ItemStack renderStack = new ItemStack(count.stack().getItem(), Math.max(1, count.count()));
-        renderStack.applyComponents(count.stack().getComponents());
-        return renderStack;
-    }
-
-    /**
-     * @return the text displayed by the counter.
-     */
-    private String getCounterText(ItemCount count, boolean infinity) {
-        if (isPositioningElements()) {
-            return "3";
-        }
-
-        if (infinity) {
-            return INFINITY_SYMBOL;
-        }
-
-        int amount = count.count();
-        int maxCount = count.stack().getMaxStackSize();
-
-        if (amount == 0) {
-            return "0";
-        }
-
-        if (amount > maxCount) {
-            if (client().itemCounter().itemCounter != ItemCounter.TOTAL
-                    && count.evenStack()) {
-                return amount / maxCount + "x " + maxCount;
-            }
-
-            if (client().itemCounter().itemCounter == ItemCounter.STACKS) {
-                int fullStacks = amount / maxCount;
-                int remainder = amount % maxCount;
-
-                String additional =
-                        remainder > 0
-                                ? " & " + remainder
-                                : "";
-
-                return fullStacks
-                        + "x"
-                        + (remainder == 0 ? " " : "")
-                        + maxCount
-                        + additional;
-            }
-        }
-
-        return String.valueOf(amount);
-    }
-
-    /**
-     * @return the text color for the counter.
-     */
-    private int getTextColor(ItemCount count, boolean infinity) {
-        // If it's not an arrow counter, always return white
-        if (!count.arrowCounter()) {
-            return CommonColors.WHITE;
-        }
-
-        // Get count
-        int amount = count.count();
-
-        // If colored highlighting is off, or stack count is greater than a 2-length number, return white
-        if (!client().hud().coloredHighlighting
-                || amount > (
-                client().itemCounter().itemCounter == ItemCounter.STACKS
-                        ? 64
-                        : 99
-        )) {
-            return CommonColors.WHITE;
-        }
-
-        // White for infinity
-        if (infinity) {
-            return CommonColors.WHITE;
-        }
-
-        // Red for 5 or under
-        if (amount < 6) {
-            return CommonColors.RED;
-        }
-
-        // Soft-red for 10 or under
-        if (amount < 11) {
-            return CommonColors.SOFT_RED;
-        }
-
-        // Yellow for 20 or under
-        if (amount < 21) {
-            return CommonColors.YELLOW;
-        }
-
-        // Soft-green for 30 or under
-        if (amount < 31) {
-            return SOFT_GREEN;
-        }
-
-        // Otherwise just return green
-        return CommonColors.GREEN;
-    }
-
-    /**
-     * @return the X position of the counter.
-     */
-    private int getItemCounterX(String text) {
-        // Calculate fixed item x
-        int itemX = !isLeftHanded() ? -117 : 101;
-
-        // Increase if offhand is filled
-        if (client().itemCounter().moveItemCounterOver
-                && !minecraft.player.getOffhandItem().isEmpty()) {
-            itemX += increasedBasedOnHand(-29, false);
-        }
-
-        // Increased based on text length, manually
-        if (text.length() > 4) {
-            itemX += increasedBasedOnHand(
-                    -3 * (text.length() - 4),
-                    false
-            );
-        }
-
-        // Return item x with desired position
-        return itemX + client().itemCounter().itemCounterPosition[0];
-    }
-
-    /**
      * @return the projectile loaded into a crossbow.
      */
-    private ItemStack nextCrossbowProjectile(ItemStack crossbow) {
+    protected ItemStack getCrossbowProjectile(ItemStack crossbow) {
         // Get projectile from charged crossbow
         if (CrossbowItem.isCharged(crossbow)) {
             ChargedProjectiles projectiles = crossbow.get(DataComponents.CHARGED_PROJECTILES);
@@ -943,7 +713,7 @@ public class ItemCounterHudElement extends ModHudElement {
         }
 
         // Otherwise, get the projectile from active hand and return it
-        ItemStack projectile = nextAvailableProjectile();
+        ItemStack projectile = getNextProjectile();
         return projectile.isEmpty()
                 ? fakeArrow()
                 : projectile.copy();
@@ -952,7 +722,7 @@ public class ItemCounterHudElement extends ModHudElement {
     /**
      * @return the projectile currently selected by the player.
      */
-    private ItemStack nextAvailableProjectile() {
+    protected ItemStack getNextProjectile() {
         LocalPlayer player = minecraft.player;
         ItemStack offHandItem = player.getOffhandItem();
 
@@ -970,7 +740,7 @@ public class ItemCounterHudElement extends ModHudElement {
     /**
      * @return if the arrow count can be displayed at all.
      */
-    private boolean shouldBeCountProjectiles(ItemStack stack) {
+    protected boolean shouldBeCountingProjectiles(ItemStack stack) {
         return client().itemCounter().arrowCounter
                 && !minecraft.player.isCreative()
                 &&
@@ -984,7 +754,7 @@ public class ItemCounterHudElement extends ModHudElement {
     /**
      * @return if the counter outline should be rendered.
      */
-    private boolean shouldRenderOutline(ItemCount count, boolean infinity) {
+    private boolean shouldRenderOverlay(ItemCount count, boolean infinity) {
         // Always render outlines if positioning elements
         if (isPositioningElements()) {
             return true;
@@ -993,7 +763,8 @@ public class ItemCounterHudElement extends ModHudElement {
         // Must be valid arrow counter to render an outline for item counter
         if (!client().itemCounter().arrowCounter
                 || infinity
-                || !count.arrowCounter()) {
+                || !count.arrowCounter()
+                || mainHandHasArrow()) {
             return false;
         }
 
@@ -1030,15 +801,16 @@ public class ItemCounterHudElement extends ModHudElement {
         return isStackArrow(count.stack())
                 && count.projectileWeapon()
                 && hasInfinity(heldStack)
-                && nextAvailableProjectile().is(Items.ARROW);
+                && getNextProjectile().is(Items.ARROW);
     }
 
     /**
      * @return if the crossbow projectile indicator should be rendered.
      */
-    private boolean shouldRenderMiniCrossbow(ItemStack heldStack, ItemStack renderStack) {
+    private boolean shouldRenderCrossbowIndicator(ItemStack heldStack, ItemStack renderStack) {
         // Current render stack must be empty in order to render crossbow projectile
-        return heldStack.getItem() instanceof CrossbowItem
+        return client().itemCounter().indicators
+                && heldStack.getItem() instanceof CrossbowItem
                 && CrossbowItem.isCharged(heldStack)
                 && !renderStack.isEmpty();
     }
@@ -1046,64 +818,25 @@ public class ItemCounterHudElement extends ModHudElement {
     /**
      * @return if the bow projectile indicator should be rendered.
      */
-    private boolean shouldRenderMiniBow(ItemStack heldStack, ItemStack renderStack) {
+    private boolean shouldRenderBowIndicator(ItemStack heldStack, ItemStack renderStack) {
         // Current render stack must be empty in order to render bow projectile
-        return heldStack.getItem() instanceof BowItem
+        return client().itemCounter().indicators
+                && heldStack.getItem() instanceof BowItem
                 && BowItem.getPowerForTime(minecraft.player.getTicksUsingItem()) > 0.1F
                 && !renderStack.isEmpty();
     }
 
     /**
-     * Renders the mini crossbow overlay when charged.
+     * @return if the bundle indicator should be rendered.
      */
-    private void renderMiniCrossbow(GuiGraphicsExtractor graphics, ItemStack renderStack, int itemX, int animationYOffset) {
-        // Don't render if mini-bows are disabled
-        if (!client().itemCounter().miniBows) {
-            return;
-        }
+    private boolean shouldRenderBundleIndicator(ItemStack heldStack, ItemStack renderStack, ItemCount count) {
+        boolean overrideArrowCount = count.arrowCounter() && count.count() == 0;
 
-        // Get the correct sprite
-        Identifier sprite = isStackArrow(renderStack)
-                ? MINI_CROSSBOW
-                : MINI_CROSSBOW_FIREWORK;
-
-        // Then draw the sprite
-        drawSprite(
-                graphics,
-                sprite,
-                (getGuiWidth(graphics) + itemX) - 8,
-                getGuiHeight(graphics) - 3
-                        + animationYOffset
-                        + client().itemCounter().itemCounterPosition[1],
-                13,
-                13
-        );
-    }
-
-    /**
-     * Renders the mini bow overlay when charging up.
-     */
-    private void renderMiniBow(GuiGraphicsExtractor graphics, int itemX, int animationYOffset) {
-        // Don't render if mini-bows are disabled
-        if (!client().itemCounter().miniBows) {
-            return;
-        }
-
-        // Get the correct sprite
-        Identifier sprite = BowItem.getPowerForTime(minecraft.player.getTicksUsingItem()) == 1.0F
-                ? MINI_BOW_READY
-                : MINI_BOW;
-
-        // Then draw the sprite
-        drawSprite(
-                graphics,
-                sprite,
-                (getGuiWidth(graphics) + itemX) - 8,
-                getGuiHeight(graphics) - 3
-                        + animationYOffset
-                        + client().itemCounter().itemCounterPosition[1],
-                14,
-                13
-        );
+        // Current render stack must be empty in order to render bundle, and count contains transportables, not currently rendering bow or crossbow indicator
+        return client().itemCounter().indicators
+                && count.renderBundle()
+                && (overrideArrowCount || !shouldRenderBowIndicator(heldStack, renderStack))
+                && !shouldRenderCrossbowIndicator(heldStack, renderStack)
+                && !renderStack.isEmpty();
     }
 }

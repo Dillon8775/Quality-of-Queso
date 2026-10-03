@@ -1,4 +1,4 @@
-package net.dillon.qualityofqueso.util;
+package net.dillon.qualityofqueso.hud.counter;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.item.ItemStack;
@@ -9,8 +9,10 @@ import static net.dillon.qualityofqueso.hud.ModHudElement.getDisplayTimeInTicks;
 /**
  * Utility class, for handling the item counter.
  */
-public class ItemHudTracker {
+public class ItemTracker {
     private static int expireTick;
+    private static int baseStackTick;
+    private static int shotArrowStackTick;
     private static ItemStack baseStack = ItemStack.EMPTY;
     private static ItemStack shotArrowStack = ItemStack.EMPTY;
 
@@ -21,6 +23,8 @@ public class ItemHudTracker {
         baseStack = pickedUpOrThrown == null
                 ? ItemStack.EMPTY
                 : pickedUpOrThrown.copy();
+
+        baseStackTick = getCurrentTick();
         calculateTick();
     }
 
@@ -31,6 +35,8 @@ public class ItemHudTracker {
         shotArrowStack = shot == null
                 ? ItemStack.EMPTY
                 : shot.copy();
+
+        shotArrowStackTick = getCurrentTick();
         calculateTick();
     }
 
@@ -41,8 +47,16 @@ public class ItemHudTracker {
         ItemStack baseStack = getBaseStack();
         ItemStack shotArrowStack = getShotStack();
 
-        // Return the active stack
-        return !baseStack.isEmpty()
+        if (baseStack.isEmpty()) {
+            return shotArrowStack;
+        }
+
+        if (shotArrowStack.isEmpty()) {
+            return baseStack;
+        }
+
+        // Return whichever event happened most recently
+        return baseStackTick > shotArrowStackTick
                 ? baseStack
                 : shotArrowStack;
     }

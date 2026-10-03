@@ -15,7 +15,6 @@ import net.minecraft.network.chat.Component;
 import java.awt.*;
 
 import static net.dillon.qualityofqueso.config.ConfigurationScreen.fixedSizeImage;
-import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 import static net.dillon.qualityofqueso.option.OptionInstances.common;
 
@@ -117,8 +116,8 @@ public class SearchingCategory {
                                                             .text(Component.translatable("qualityofqueso.options.search_bar_position.description"));
 
                                                     return switch (value) {
-                                                        case OVERLAY -> builder.customImage(fixedSizeImage(qoqIdentifier("options/searching/overlay"), 160, 90)).build();
-                                                        case TOP -> builder.customImage(fixedSizeImage(qoqIdentifier("options/searching/top"), 160, 90)).build();
+                                                        case OVERLAY -> builder.customImage(fixedSizeImage("search_bar_overlay", 160, 90)).build();
+                                                        case TOP -> builder.customImage(fixedSizeImage("search_bar_top", 160, 90)).build();
                                                     };
                                                 })
                                                 .binding(SearchBarPosition.OVERLAY, () -> client().searching().searchBarPosition, v -> client().searching().searchBarPosition = v)
@@ -135,9 +134,9 @@ public class SearchingCategory {
                                                             .text(Component.translatable("qualityofqueso.options.search_bar_color.description"));
 
                                                     return switch (value) {
-                                                        case DEFAULT -> builder.customImage(fixedSizeImage(qoqIdentifier("options/searching/default"), 117, 111)).build();
-                                                        case VANILLA -> builder.customImage(fixedSizeImage(qoqIdentifier("options/searching/vanilla"), 117, 111)).build();
-                                                        case BLACK -> builder.customImage(fixedSizeImage(qoqIdentifier("options/searching/black"), 117, 111)).build();
+                                                        case DEFAULT -> builder.customImage(fixedSizeImage("search_bar_default", 117, 111)).build();
+                                                        case VANILLA -> builder.customImage(fixedSizeImage("search_bar_vanilla", 117, 111)).build();
+                                                        case BLACK -> builder.customImage(fixedSizeImage("search_bar_black", 117, 111)).build();
                                                     };
                                                 })
                                                 .binding(SearchBarColor.DEFAULT, () -> client().searching().searchBarColor, v -> client().searching().searchBarColor = v)

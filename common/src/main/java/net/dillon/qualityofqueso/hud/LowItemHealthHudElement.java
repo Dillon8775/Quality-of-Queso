@@ -24,7 +24,7 @@ public class LowItemHealthHudElement extends ModHudElement {
         ItemStack offHandItem = minecraft.player.getOffhandItem();
         if (!offHandItem.isEmpty()) {
             if (client().hud().coloredHighlighting && getItemHealthPercentage(offHandItem) < 0.41F) {
-                renderHighlightedArmorSlot(HOTBAR_SELECTION_SPRITE, graphics, EquipmentSlot.OFFHAND, false, 0, 1.0F);
+                renderHighlightedSlot(graphics, EquipmentSlot.OFFHAND, false, 0, 1.0F);
             }
             if (client().hud().warningIndicators && getItemHealthPercentage(offHandItem) < 0.11F) {
                 renderWarningIndicator(graphics, 0, 0, EquipmentSlot.OFFHAND, client().hud().otherElementsY);

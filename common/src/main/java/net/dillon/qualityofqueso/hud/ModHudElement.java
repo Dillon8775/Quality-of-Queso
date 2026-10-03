@@ -10,12 +10,12 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 
 import java.util.Set;
 
 import static net.dillon.dillonlib.task.ClientTasks.*;
-import static net.dillon.qualityofqueso.helper.GuiHelper.*;
+import static net.dillon.qualityofqueso.helper.GuiHelper.getItemHealthPercentage;
+import static net.dillon.qualityofqueso.helper.GuiHelper.getMainHandStack;
 import static net.dillon.qualityofqueso.helper.ModConstants.*;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
@@ -23,7 +23,7 @@ import static net.dillon.qualityofqueso.option.OptionInstances.client;
  * Holds common methods for hud elements.
  */
 public abstract class ModHudElement {
-    protected static final Minecraft minecraft = getMinecraft();
+    public static final Minecraft minecraft = getMinecraft();
     public static final Identifier HOTBAR_SELECTION_SPRITE = Identifier.withDefaultNamespace("hud/hotbar_selection");
     public static final Identifier HOTBAR_OFFHAND_SPRITE = Identifier.withDefaultNamespace("hud/hotbar_offhand_right");
 
@@ -35,7 +35,7 @@ public abstract class ModHudElement {
     /**
      * @return if the player is left-handed.
      */
-    protected boolean isLeftHanded() {
+    public boolean isLeftHanded() {
         return getMinecraft().player.getMainArm().getOpposite() == HumanoidArm.RIGHT;
     }
 
@@ -49,29 +49,15 @@ public abstract class ModHudElement {
     /**
      * @return if the only show arrow counter is enabled.
      */
-    protected static boolean isOnlyShowArrowCounterEnabled() {
+    public static boolean isOnlyShowArrowCounterEnabled() {
         return isArrowCounterEnabled() && client().itemCounter().onlyShowArrowCounter && !getMinecraft().player.isCreative();
     }
 
     /**
      * @return if the always show arrow counter is enabled.
      */
-    protected static boolean isAlwaysShowArrowCounterEnabled() {
+    public static boolean isAlwaysShowArrowCounterEnabled() {
         return isArrowCounterEnabled() && client().itemCounter().alwaysShowArrowCounter && !getMinecraft().player.isCreative();
-    }
-
-    /**
-     * @return if the main or offhand has infinity.
-     */
-    public static boolean mainOrOffHandHasInfinity() {
-        // Automatically does not have infinity if player doesn't have normal arrow in inventory
-        if (!minecraft.player.getInventory().contains(stack -> stack.is(Items.ARROW))) {
-            return false;
-        }
-
-        ItemStack mainHand = getMainHandStack(minecraft.player);
-        ItemStack offHand = getOffHandStack(minecraft.player);
-        return hasInfinity(mainHand) || hasInfinity(offHand);
     }
 
     /**
@@ -128,7 +114,7 @@ public abstract class ModHudElement {
     /**
      * @return an increased X-value, based on the user's main hand.
      */
-    protected int increasedBasedOnHand(int negIncrease, boolean reverse) {
+    public int increasedBasedOnHand(int negIncrease, boolean reverse) {
         if (reverse) {
             return isLeftHanded() ? negIncrease : Math.abs(negIncrease);
         } else {
@@ -209,7 +195,7 @@ public abstract class ModHudElement {
     /**
      * Renders the highlighted texture around a slot.
      */
-    protected void renderHighlightedArmorSlot(Identifier defaultSprite, GuiGraphicsExtractor graphics, EquipmentSlot slot, boolean warning, int yOffset, float alpha) {
+    protected void renderHighlightedSlot(GuiGraphicsExtractor graphics, EquipmentSlot slot, boolean warning, int yOffset, float alpha) {
         if (alpha <= 0.0F || !(client().hud().highlightArmor)) {
             return;
         }
@@ -217,7 +203,7 @@ public abstract class ModHudElement {
         int yModifier = slot != EquipmentSlot.OFFHAND ? client().hud().armorStatusPosition[1] : client().hud().otherElementsY;
         drawSprite(
                 graphics,
-                warning ? SLOT_CRITICAL : getHighlightedSlotTexture(defaultSprite, getItemBySlot(minecraft, slot), slot),
+                warning ? SLOT_CRITICAL : getHighlightedSlotTexture(ModHudElement.HOTBAR_SELECTION_SPRITE, getItemBySlot(minecraft, slot), slot),
                 getHighlightedSlotX(graphics, slot),
                 (getGuiHeight(graphics) - 3 + yOffset) + yModifier,
                 24,

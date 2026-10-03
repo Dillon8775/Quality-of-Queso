@@ -28,9 +28,18 @@ public class MouseScrolledEvents extends ManagementEvents {
     }
 
     /**
+     * All mouse scrolled events.
+     */
+    public void handle(double scrollY, CallbackInfoReturnable<Boolean> cir) {
+        changeSortMode(scrollY);
+        changeFilterType(scrollY);
+        moveHoveredItem(scrollY, cir);
+    }
+
+    /**
      * Changes the sort mode when scrolling on the sort button.
      */
-    public void changeSortMode(double scrollY) {
+    private void changeSortMode(double scrollY) {
         if (buttonHoveredAndActive(holder().managementButtons().getSort())) {
             CurrentSortingMode nextMode = client().sorting().currentSortingMode.next(scrollY > 0);
             updateClient(client -> {
@@ -58,7 +67,7 @@ public class MouseScrolledEvents extends ManagementEvents {
     /**
      * Changes filter type (item/tag) when scrolling on the filtering button.
      */
-    public void changeFilterType(double scrollY) {
+    private void changeFilterType(double scrollY) {
         if (scrollY == 0) {
             return;
         }
@@ -76,7 +85,7 @@ public class MouseScrolledEvents extends ManagementEvents {
     /**
      * Sets the move amount when scrolling.
      */
-    public void setMoveAmount(Slot hoveredSlot, double scrollY) {
+    private void setMoveAmount(Slot hoveredSlot, double scrollY) {
         if (!client().management().scrollMoving) {
             return;
         }
@@ -117,7 +126,7 @@ public class MouseScrolledEvents extends ManagementEvents {
     /**
      * Moves one hovered item by scrolling.
      */
-    public void moveHoveredItem(double scrollY, CallbackInfoReturnable<Boolean> cir) {
+    private void moveHoveredItem(double scrollY, CallbackInfoReturnable<Boolean> cir) {
         if (!isCreativeInventoryScreen(holder().screen())
                 && client().management().scrollMoving
                 && canScrollMoveAndHasScrollModifierDown()

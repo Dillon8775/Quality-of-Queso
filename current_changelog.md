@@ -3,6 +3,7 @@
 ## Changes
 - All hud elements (including armor status, item counter, locked hotbar slots, visual clcok, etc.) are now rendered separately. Please report any issues you may find on the [GitHub Bug Tracker](https://github.com/Dillon8775/Quality-of-Queso/issues).
 - New option category called "GUI". Some previous Miscellaneous options have been moved to this category.
+  - Also moved Highlight Matching Items and Matching Items Color to this new category.
 - Moving highlighted items now plays the management sort sound.
 - New names for Quality of Queso sounds:
     - "Management Succeeds" → "Item(s) moved"
@@ -14,8 +15,7 @@
 - Added a warning message to the Lock Inventory button if the mod is not installed server-side.
 - Added "ItemStackMixin" option.
 - Renamed "Generic Fov Percent Change" option → "Generic Fov Modifier".
-- Tweaks to lang.
-- Optimizations.
+- Moved some textures around, tweaks to lang, and other optimizations.
 
 ## Enhanced Durability Tooltips
 - A new feature located under the GUI tab, where you can configure how durability tooltips look.
@@ -26,11 +26,16 @@
 - Unfortunately, due to NeoForge's limitations, this feature is only available on Fabric.
 
 ## Item/Arrow Counter Changes
+- Overall improved the item/arrow counter's functionality.
 - Thrown and picked up items are now prioritized over the player's offhand item.
 - The color for the arrow counter text when a held bow has infinity is now white instead of green.
-- Pulling back a normal bow now displays a mini-bow next to the arrow counter, similar to the crossbow.
-  - If the bow is fully charged, you will see a "ready-to-shoot" mini-bow texture instead of the normal mini-bow.
-- Added new option called "Mini-Bows" to toggle the mini bow and crossbow from displaying.
+- Pulling back a normal bow now displays a bow indicator next to the arrow counter, similar to the crossbow indicator introduced in a previous version.
+  - If the bow is fully charged, you will see a ready-to-shoot bow texture instead of the normal bow.
+- Added new option called Indicators to toggle the mini bow and crossbow from displaying.
+- Bow and crossbow indicators render respectively to the arrow the player is using.
+- A bundle now appears next to the counter if the count contains items inside transportable containers (toggleable with Indicators option).
+- The arrow counter no longer counts arrows toward the counter that are inside transportable containers, but instead displays the bundle indicator to indicate that there are extra arrows in a transportable container.
+- Display Total With Stacks no longer renders if a mini bow or mini bundle is currently displaying.
 - Holding a bow with Infinity no longer counts normal arrows toward the arrow counter when using a special type of arrow.
   - In addition to this, a small infinity symbol in italic text will appear above the counter to indicate that the player still has Infinity to use after their special arrows.
 - Holding a bow with Infinity does no longer displays colored highlighting or warning indicators when using a special type of arrow.

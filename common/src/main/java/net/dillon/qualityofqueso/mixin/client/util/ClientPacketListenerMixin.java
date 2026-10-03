@@ -1,6 +1,6 @@
 package net.dillon.qualityofqueso.mixin.client.util;
 
-import net.dillon.qualityofqueso.util.ItemHudTracker;
+import net.dillon.qualityofqueso.hud.counter.ItemTracker;
 import net.dillon.qualityofqueso.util.MobHitDingTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -77,7 +77,7 @@ public class ClientPacketListenerMixin {
         if (!stack.isStackable()) {
             return;
         }
-        ItemHudTracker.setBaseStack(stack);
+        ItemTracker.setBaseStack(stack);
     }
 
     /**

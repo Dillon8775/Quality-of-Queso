@@ -273,7 +273,7 @@ public class HudPositionsScreen extends BasicDillonLibScreen {
         builder().textCenterAndGraphicsHeightDown(graphics, Component.translatable("qualityofqueso.gui.hud_positions.warning")).apply();
 
         if (this.moveItemCounterOver instanceof Button button) {
-            drawSmallSprite(graphics, client().itemCounter().moveItemCounterOver ? qoqIdentifier(ENABLED_TEXTURE) : qoqIdentifier(DISABLED_TEXTURE), button);
+            drawSmallSprite(graphics, client().itemCounter().moveItemCounterOver ? ENABLED_TEXTURE : DISABLED_TEXTURE, button);
         }
 
         builder().graphicsWidth(xPosArmorStatus).apply();
@@ -289,7 +289,7 @@ public class HudPositionsScreen extends BasicDillonLibScreen {
 
         drawSprite(
                 graphics,
-                qoqIdentifier("hud/hud_positions/item_counter"),
+                qoqIdentifier("config_images/item_counter"),
                 builder().captureGraphicsWidth() + 74,
                 builder().graphicsHeight(xPosItemCounter).pop() - 32,
                 58,

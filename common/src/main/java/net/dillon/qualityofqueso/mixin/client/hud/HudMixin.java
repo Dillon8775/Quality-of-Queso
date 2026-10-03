@@ -2,6 +2,7 @@ package net.dillon.qualityofqueso.mixin.client.hud;
 
 import net.dillon.qualityofqueso.helper.EnderChestHelper;
 import net.dillon.qualityofqueso.hud.*;
+import net.dillon.qualityofqueso.hud.counter.CounterHudElement;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -28,7 +29,7 @@ public class HudMixin {
     @Unique
     private final VisualClockHudElement visualClockHudElement = new VisualClockHudElement();
     @Unique
-    private final ItemCounterHudElement itemCounterHudElement = new ItemCounterHudElement();
+    private final CounterHudElement counterHudElement = new CounterHudElement();
     @Unique
     private final LowItemHealthHudElement lowItemHealthHudElement = new LowItemHealthHudElement();
     @Unique
@@ -44,7 +45,7 @@ public class HudMixin {
         }
 
         this.armorStatusHudElement.extractRenderState(graphics);
-        this.itemCounterHudElement.extractRenderState(graphics);
+        this.counterHudElement.extractRenderState(graphics);
         this.visualClockHudElement.extractRenderState(graphics);
 
         EnderChestHelper.persistEnderChestContentsIfOpen(minecraft.player);

@@ -83,7 +83,7 @@ public class LockedSlotEvents extends ManagementEvents {
         int xy = 10;
         blitTexture(
                 graphics,
-                qoqIdentifier("textures/gui/sprites/slot/" + (isSlotLocked ? "slot_key" : "unlock_slot") + ".png"),
+                qoqIdentifier("textures/gui/sprites/slot_overlays/" + (isSlotLocked ? "slot_key" : "unlock_slot") + ".png"),
                 mouseX - 8,
                 mouseY + 1,
                 xy,

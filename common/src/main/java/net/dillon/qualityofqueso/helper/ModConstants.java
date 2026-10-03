@@ -34,13 +34,12 @@ public class ModConstants {
     );
     public static final Logger LOGGER = LoggerFactory.getLogger("Quality of Queso");
 
+    // Links
     public static final String WIKI_LINK = "https://quality-of-queso.fandom.com/wiki/Quality_of_Queso_Wiki";
     public static final String SHOWCASE_VIDEO_LINK = "https://youtu.be/02wfcgHkPmQ";
     public static final String RESOURCE_PACK_TEMPLATE = "https://1drv.ms/f/c/dde4bd527f59679e/IgAnwmEFKQchQ727NndBW9D9AbeVC4Jl8CuXTXMQ_CWUorw?e=Q5gEW0";
-    public static final String INFINITY_SYMBOL = "∞";
-    public static boolean SHOWN_BETA_TOAST = false;
 
-    // Static variables for management
+    // Static variables
     public static int RENDERED_BUTTONS = 0;
     public static int MOVE_AMOUNT = 1;
     public static Container CURRENT_CONTAINER = null;
@@ -54,6 +53,8 @@ public class ModConstants {
     public static final String DESCENDING_SERIALIZED_NAME = "§cDescending";
     public static final String ASCENDING_SERIALIZED_NAME = "§2Ascending";
     public static final String CREATIVE_MENU_SERIALIZED_NAME = "§aC§br§5e§6a§7t§di§ev§9e§r§f Menu";
+    public static final String INFINITY_SYMBOL = "∞";
+    public static boolean SHOWN_BETA_TOAST = false;
 
     // Static variables for management button layout lists
     public static final String TRANSFER_CONTAINER_BUTTON_SERIALIZED_NAME = "Transfer Container Button";
@@ -98,33 +99,56 @@ public class ModConstants {
     public static Map<Integer, Set<Integer>> SAVED_EXCLUDED_SLOTS = new HashMap<>();
     public static CurrentSortingMode GLOBAL_SORTING_MODE = client().sorting().currentSortingMode;
 
-    // Texture constants (sprites as strings)
-    public static final String CHEESE_WHEEL_TEXTURE = "widget/logo";
-    public static final String ENABLED_TEXTURE = "widget/enabled";
-    public static final String DISABLED_TEXTURE = "widget/disabled";
-    public static final String OPEN_SCREENSHOTS_DIRECTORY_TEXTURE = "widget/screenshots";
-    public static final String OPEN_WORLD_DIRECTORY_TEXTURE = "widget/world_folder";
-    public static final String OPEN_CONFIG_DIRECTORY_TEXTURE = "widget/config_folder";
-    public static final String ENDER_CHEST = "widget/ender_chest";
-    public static final String DISCORD_TEXTURE = "widget/discord";
-    public static final String YOUTUBE_TEXTURE = "widget/youtube";
-    public static final String WIKI_TEXTURE = "widget/wiki";
-    public static final String MULTI_CONFIG_TEXTURE = "widget/multi_config";
-    public static final String LOCKED_SLOT_TEXTURE = "slot/locked_slot";
-
-    // Texture constants (sprites as Identifiers)
+    // Default Minecraft sprites
     public static final Identifier SEARCH_TEXTURE = Identifier.withDefaultNamespace("icon/search");
-    public static final Identifier SLOT_CRITICAL = qoqIdentifier("hud/colored_slot/slot_critical");
-    public static final Identifier SLOT_LOW = qoqIdentifier("hud/colored_slot/slot_low");
-    public static final Identifier SLOT_AVERAGE = qoqIdentifier("hud/colored_slot/slot_average");
-    public static final Identifier SLOT_DECENT = qoqIdentifier("hud/colored_slot/slot_decent");
-    public static final Identifier SLOT_GOOD = qoqIdentifier("hud/colored_slot/slot_good");
-    public static final Identifier SLOT_LOCKED = qoqIdentifier("hud/colored_slot/slot_locked");
-    public static final Identifier MINI_BOW = qoqIdentifier("hud/mini_bow");
-    public static final Identifier MINI_BOW_READY = qoqIdentifier("hud/mini_bow_ready");
-    public static final Identifier MINI_CROSSBOW = qoqIdentifier("hud/mini_crossbow");
-    public static final Identifier MINI_CROSSBOW_FIREWORK = qoqIdentifier("hud/mini_crossbow_firework");
-    public static final Identifier SELECTED_RECIPE = qoqIdentifier("slot/selected_recipe");
+
+    // Armor status sprites
+    public static final Identifier ARMOR_HOTBAR = qoqIdentifier("armor_status/armor_hotbar");
+    public static final Identifier ARMOR_HOTBAR_TRUE_DARK = qoqIdentifier("armor_status/armor_hotbar_true_dark");
+
+    // Indicator sprites
+    public static final Identifier BUNDLE = qoqIdentifier("indicator/bundle");
+    public static final Identifier BOW = qoqIdentifier("indicator/bow");
+    public static final Identifier BOW_1 = qoqIdentifier("indicator/bow_1");
+    public static final Identifier BOW_2 = qoqIdentifier("indicator/bow_2");
+    public static final Identifier BOW_ARROW = qoqIdentifier("indicator/bow_arrow");
+    public static final Identifier BOW_ARROW_1 = qoqIdentifier("indicator/bow_arrow_1");
+    public static final Identifier BOW_ARROW_2 = qoqIdentifier("indicator/bow_arrow_2");
+    public static final Identifier BOW_SPECTRAL_ARROW = qoqIdentifier("indicator/bow_spectral_arrow");
+    public static final Identifier BOW_SPECTRAL_ARROW_1 = qoqIdentifier("indicator/bow_spectral_arrow_1");
+    public static final Identifier BOW_SPECTRAL_ARROW_2 = qoqIdentifier("indicator/bow_spectral_arrow_2");
+    public static final Identifier BOW_TIPPED_ARROW = qoqIdentifier("indicator/bow_tipped_arrow");
+    public static final Identifier BOW_TIPPED_ARROW_1 = qoqIdentifier("indicator/bow_tipped_arrow_1");
+    public static final Identifier BOW_TIPPED_ARROW_2 = qoqIdentifier("indicator/bow_tipped_arrow_2");
+    public static final Identifier BOW_TIPPED_ARROW_OVERLAY = qoqIdentifier("indicator/bow_tipped_arrow_overlay");
+    public static final Identifier CROSSBOW = qoqIdentifier("indicator/crossbow");
+    public static final Identifier CROSSBOW_ARROW = qoqIdentifier("indicator/crossbow_arrow");
+    public static final Identifier CROSSBOW_SPECTRAL_ARROW = qoqIdentifier("indicator/crossbow_spectral_arrow");
+    public static final Identifier CROSSBOW_TIPPED_ARROW = qoqIdentifier("indicator/crossbow_tipped_arrow");
+    public static final Identifier CROSSBOW_FIREWORK = qoqIdentifier("indicator/crossbow_firework");
+
+    // Slot overlay sprites
+    public static final String LOCKED_SLOT_TEXTURE = "slot_overlays/locked_slot";
+    public static final Identifier SELECTED_RECIPE = qoqIdentifier("slot_overlays/selected_recipe");
+    public static final Identifier SLOT_CRITICAL = qoqIdentifier("slot_overlays/slot_critical");
+    public static final Identifier SLOT_LOW = qoqIdentifier("slot_overlays/slot_low");
+    public static final Identifier SLOT_AVERAGE = qoqIdentifier("slot_overlays/slot_average");
+    public static final Identifier SLOT_DECENT = qoqIdentifier("slot_overlays/slot_decent");
+    public static final Identifier SLOT_GOOD = qoqIdentifier("slot_overlays/slot_good");
+    public static final Identifier SLOT_LOCKED = qoqIdentifier("slot_overlays/slot_locked");
+
+    // Widget sprites
+    public static final Identifier CHEESE_WHEEL_TEXTURE = qoqIdentifier("widget/logo");
+    public static final Identifier ENABLED_TEXTURE = qoqIdentifier("widget/enabled");
+    public static final Identifier DISABLED_TEXTURE = qoqIdentifier("widget/disabled");
+    public static final Identifier OPEN_SCREENSHOTS_DIRECTORY_TEXTURE = qoqIdentifier("widget/screenshots");
+    public static final Identifier OPEN_WORLD_DIRECTORY_TEXTURE = qoqIdentifier("widget/world_folder");
+    public static final Identifier OPEN_CONFIG_DIRECTORY_TEXTURE = qoqIdentifier("widget/config_folder");
+    public static final Identifier ENDER_CHEST = qoqIdentifier("widget/ender_chest");
+    public static final Identifier DISCORD_TEXTURE = qoqIdentifier("widget/discord");
+    public static final Identifier YOUTUBE_TEXTURE = qoqIdentifier("widget/youtube");
+    public static final Identifier WIKI_TEXTURE = qoqIdentifier("widget/wiki");
+    public static final Identifier MULTI_CONFIG_TEXTURE = qoqIdentifier("widget/multi_config");
 
     // Colors
     public static final int SOFT_GREEN = new Color(0x94FF97).getRGB();

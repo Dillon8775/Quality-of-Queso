@@ -50,7 +50,7 @@ public class ButtonHelper {
     public static UpdatableSpriteButton createMenuButton(Button.OnPress onPress, boolean tooltip) {
         return ClientTasks.createMenuButton(
                 "Quality of Queso Main Menu",
-                qoqIdentifier(CHEESE_WHEEL_TEXTURE),
+                CHEESE_WHEEL_TEXTURE,
                 onPress,
                 Map.of(
                         ModConstants.HAS_UPDATE,
@@ -86,7 +86,7 @@ public class ButtonHelper {
      * Creates a {@code YouTube} button.
      */
     public static SpriteIconButton createYouTubeButton(Screen parent, String link) {
-        return UpdatableSpriteButton.ofDefault("YouTube Button", qoqIdentifier(YOUTUBE_TEXTURE), (button) -> openLink(parent, link, false),
+        return UpdatableSpriteButton.ofDefault("YouTube Button", YOUTUBE_TEXTURE, (button) -> openLink(parent, link, false),
                 Component.translatable("qualityofqueso.menu.showcase_video.tooltip"), false);
     }
 

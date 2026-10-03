@@ -39,7 +39,7 @@ public abstract class FabricItemStackMixin {
     }
 
     /**
-     * Adds the colored dot tooltip next to the item name.
+     * Adds the colored dot tooltips next to the item name.
      */
     @Redirect(method = "getTooltipLines", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z"))
     private <E> boolean addDot(List<Component> lines, E e) {

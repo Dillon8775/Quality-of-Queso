@@ -8,7 +8,6 @@ import net.dillon.qualityofqueso.option.eum.hud.ItemCounter;
 import net.minecraft.network.chat.Component;
 
 import static net.dillon.qualityofqueso.config.ConfigurationScreen.fixedSizeImage;
-import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 /**
@@ -57,7 +56,7 @@ public class ItemCounterCategory {
                 .description(
                         OptionDescription.createBuilder()
                                 .text(Component.translatable("qualityofqueso.options.display_total_with_stacks.description"))
-                                .customImage(fixedSizeImage(qoqIdentifier("options/item_counter/total_with_stacks"), 75, 32))
+                                .customImage(fixedSizeImage("item_counter_total_with_stacks", 75, 32))
                                 .build()
                 )
                 .binding(false, () -> client().itemCounter().displayTotalWithStacks, v -> client().itemCounter().displayTotalWithStacks = v)
@@ -86,14 +85,14 @@ public class ItemCounterCategory {
                 .build();
 
         Option<Boolean> miniBows = Option.<Boolean>createBuilder()
-                .name(Component.translatable("qualityofqueso.options.mini_bows"))
+                .name(Component.translatable("qualityofqueso.options.indicators"))
                 .description(
                         OptionDescription.createBuilder()
-                                .text(Component.translatable("qualityofqueso.options.mini_bows.description"))
-                                .customImage(fixedSizeImage(qoqIdentifier("options/hud/mini_bows"), 165, 106))
+                                .text(Component.translatable("qualityofqueso.options.indicators.description"))
+                                .customImage(fixedSizeImage("item_counter_indicators", 165, 106))
                                 .build()
                 )
-                .binding(true, () -> client().itemCounter().miniBows, v -> client().itemCounter().miniBows = v)
+                .binding(true, () -> client().itemCounter().indicators, v -> client().itemCounter().indicators = v)
                 .controller(TickBoxControllerBuilder::create)
                 .build();
 
@@ -128,8 +127,8 @@ public class ItemCounterCategory {
                                                             .text(Component.translatable("qualityofqueso.options.item_counter.description"));
 
                                                     return switch (value) {
-                                                        case TOTAL -> builder.customImage(fixedSizeImage(qoqIdentifier("options/item_counter/total"), 75, 27)).build();
-                                                        case STACKS -> builder.customImage(fixedSizeImage(qoqIdentifier("options/item_counter/stacks"), 75, 27)).build();
+                                                        case TOTAL -> builder.customImage(fixedSizeImage("item_counter_total", 75, 27)).build();
+                                                        case STACKS -> builder.customImage(fixedSizeImage("item_counter_stacks", 75, 27)).build();
                                                         default -> builder.build();
                                                     };
                                                 })

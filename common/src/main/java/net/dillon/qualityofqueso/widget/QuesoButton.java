@@ -91,14 +91,14 @@ public class QuesoButton extends Button {
     }
 
     /**
-     * @return the appended tooltip to use to draw.
+     * @return the appended tooltips to use to draw.
      */
     protected Component getTooltipToRender() {
         return Component.translatable("qualityofqueso.gui." + this.buttonName + "_button" + this.getAppendedTooltip());
     }
 
     /**
-     * @return the appended tooltip to use to render.
+     * @return the appended tooltips to use to render.
      */
     protected String getAppendedTooltip() {
         return "";
@@ -269,7 +269,7 @@ public class QuesoButton extends Button {
     }
 
     /**
-     * The tooltip to display for single-move items.
+     * The tooltips to display for single-move items.
      */
     protected final void extractMoveAmountTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         Component tooltip = Component.translatable(this.buttonName.equals(QUICK_DROP_BUTTON_NAME)
@@ -286,7 +286,7 @@ public class QuesoButton extends Button {
     }
 
     /**
-     * @return an appended tooltip for moving single stack items.
+     * @return an appended tooltips for moving single stack items.
      */
     protected final Component appendedSingleTooltip(Component original) {
         return original.copy().append("\n").append(Component.translatable("qualityofqueso.gui.scroll_to_change_amount")).copy().append("\n").append(Component.translatable("qualityofqueso.gui.move_amount.reset"));

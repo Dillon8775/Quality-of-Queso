@@ -2,7 +2,7 @@ package net.dillon.qualityofqueso.mixin.client.util;
 
 import net.dillon.qualityofqueso.helper.ContainerHelper;
 import net.dillon.qualityofqueso.helper.ModConstants;
-import net.dillon.qualityofqueso.util.ItemHudTracker;
+import net.dillon.qualityofqueso.hud.counter.ItemTracker;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
@@ -86,7 +86,7 @@ public class MultiPlayerGameModeMixin {
                 return;
             }
 
-            ItemHudTracker.setBaseStack(stack.copy());
+            ItemTracker.setBaseStack(stack.copy());
         } catch (IndexOutOfBoundsException e) {
         }
     }
@@ -110,7 +110,7 @@ public class MultiPlayerGameModeMixin {
         }
 
         ChargedProjectiles chargedProjectiles = player.getItemInHand(hand).get(DataComponents.CHARGED_PROJECTILES);
-        ItemHudTracker.setShotStack(chargedProjectiles.isEmpty() ? new ItemStack(Items.ARROW) : chargedProjectiles.itemCopies().toList().getFirst());
+        ItemTracker.setShotStack(chargedProjectiles.isEmpty() ? new ItemStack(Items.ARROW) : chargedProjectiles.itemCopies().toList().getFirst());
     }
 
     /**
@@ -137,7 +137,7 @@ public class MultiPlayerGameModeMixin {
             return;
         }
 
-        ItemHudTracker.setBaseStack(itemStack.copy());
+        ItemTracker.setBaseStack(itemStack.copy());
     }
 
     /**

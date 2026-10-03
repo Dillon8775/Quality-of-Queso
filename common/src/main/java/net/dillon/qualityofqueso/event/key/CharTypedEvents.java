@@ -10,6 +10,7 @@ import java.util.function.BooleanSupplier;
 
 import static net.dillon.qualityofqueso.helper.ManagementHelper.isInventoryScreen;
 import static net.dillon.qualityofqueso.helper.MethodHelper.getRecipeBookComponent;
+import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 /**
@@ -25,6 +26,10 @@ public class CharTypedEvents extends ManagementEvents {
      * Ensures variables and stored values aren't lost during resizing of window.
      */
     public boolean handleCharTyped(CharacterEvent event, BooleanSupplier superCharTyped) {
+        if (!modEnabled()) {
+            return superCharTyped.getAsBoolean();
+        }
+
         if (client().searching().containerSearching && holder().searchFields().container() != null && holder().searchFields().container().isFocused()) {
             return holder().searchFields().container().charTyped(event);
         }

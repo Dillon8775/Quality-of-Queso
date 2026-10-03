@@ -2,13 +2,18 @@ package net.dillon.qualityofqueso.config;
 
 import dev.isxander.yacl3.api.*;
 import dev.isxander.yacl3.api.controller.BooleanControllerBuilder;
+import dev.isxander.yacl3.api.controller.ColorControllerBuilder;
+import dev.isxander.yacl3.api.controller.EnumControllerBuilder;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
 import dev.isxander.yacl3.impl.controller.TickBoxControllerBuilderImpl;
+import net.dillon.qualityofqueso.helper.ModConstants;
+import net.dillon.qualityofqueso.option.eum.management.HighlightMatchingItems;
 import net.dillon.qualityofqueso.platform.QualityOfQuesoPlatforms;
 import net.minecraft.network.chat.Component;
 
+import java.awt.*;
+
 import static net.dillon.qualityofqueso.config.ConfigurationScreen.fixedSizeImage;
-import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 import static net.dillon.qualityofqueso.option.OptionInstances.mixins;
 import static net.dillon.qualityofqueso.util.ModOptionUtil.fabricOption;
@@ -33,7 +38,7 @@ public class GuiCategory {
                 .description(
                         OptionDescription.createBuilder()
                                 .text(fabricOption(Component.translatable("qualityofqueso.options.show_damage_value.description")))
-                                .customImage(fixedSizeImage(qoqIdentifier("options/enhanced_durability_tooltips/value"), 152, 56))
+                                .customImage(fixedSizeImage("durability_value", 152, 56))
                                 .build()
                 )
                 .binding(true, () -> client().enhancedDurabilityTooltips().showDamageValue, v -> client().enhancedDurabilityTooltips().showDamageValue = v)
@@ -46,7 +51,7 @@ public class GuiCategory {
                 .description(
                         OptionDescription.createBuilder()
                                 .text(fabricOption(Component.translatable("qualityofqueso.options.show_percentage.description")))
-                                .customImage(fixedSizeImage(qoqIdentifier("options/enhanced_durability_tooltips/percentage"), 104, 56))
+                                .customImage(fixedSizeImage("durability_percentage", 104, 56))
                                 .build()
                 )
                 .binding(false, () -> client().enhancedDurabilityTooltips().showPercentage, v -> client().enhancedDurabilityTooltips().showPercentage = v)
@@ -59,12 +64,24 @@ public class GuiCategory {
                 .description(
                         OptionDescription.createBuilder()
                                 .text(fabricOption(Component.translatable("qualityofqueso.options.show_dot.description")))
-                                .customImage(fixedSizeImage(qoqIdentifier("options/enhanced_durability_tooltips/dot"), 102, 34))
+                                .customImage(fixedSizeImage("durability_dot", 102, 34))
                                 .build()
                 )
                 .binding(false, () -> client().enhancedDurabilityTooltips().showDot, v -> client().enhancedDurabilityTooltips().showDot = v)
                 .controller(TickBoxControllerBuilderImpl::new)
                 .available(canUseEnhancedTooltips)
+                .build();
+
+        Option<Color> matchingItemsColorOption = Option.<Color>createBuilder()
+                .name(Component.translatable("qualityofqueso.options.matching_items_color"))
+                .description(OptionDescription.of(Component.translatable("qualityofqueso.options.matching_items_color.description")))
+                .binding(
+                        new Color(ModConstants.DEFAULT_MATCHING_ITEMS_COLOR, true),
+                        () -> new Color(client().management().matchingItemsColor, true),
+                        v -> client().management().matchingItemsColor = v.getRGB()
+                )
+                .controller(o -> ColorControllerBuilder.create(o)
+                        .allowAlpha(true))
                 .build();
 
         return ConfigCategory.createBuilder()
@@ -81,7 +98,7 @@ public class GuiCategory {
                                                 .description(
                                                         OptionDescription.createBuilder()
                                                                 .text(Component.translatable("qualityofqueso.options.enchantment_helper.description"))
-                                                                .customImage(fixedSizeImage(qoqIdentifier("options/gui/enchantment_helper"), 116, 88))
+                                                                .customImage(fixedSizeImage("enchantment_helper", 116, 88))
                                                                 .build()
                                                 )
                                                 .binding(true, () -> client().misc().enchantmentHelper, v -> client().misc().enchantmentHelper = v)
@@ -108,8 +125,36 @@ public class GuiCategory {
                 )
                 .group(
                         OptionGroup.createBuilder()
-                                .name(Component.translatable("qualityofqueso.options.misc.recipe_book"))
-                                .description(OptionDescription.of(Component.translatable("qualityofqueso.options.misc.recipe_book.description")))
+                                .name(Component.translatable("qualityofqueso.options.gui.matching_items"))
+                                .description(OptionDescription.of(Component.translatable("qualityofqueso.options.gui.matching_items.description")))
+                                .option(
+                                        Option.<HighlightMatchingItems>createBuilder()
+                                                .name(Component.translatable("qualityofqueso.options.highlight_matching_items"))
+                                                .description(
+                                                        OptionDescription.createBuilder()
+                                                                .text(Component.translatable("qualityofqueso.options.highlight_matching_items.description"))
+                                                                .customImage(fixedSizeImage("highlight_matching_items", 117, 111))
+                                                                .build()
+                                                )
+                                                .binding(HighlightMatchingItems.ON_CTRL, () -> client().management().highlightMatchingItems, v -> client().management().highlightMatchingItems = v)
+                                                .controller(o -> EnumControllerBuilder.create(o)
+                                                        .enumClass(HighlightMatchingItems.class)
+                                                        .formatValue(v -> Component.literal(v.getSerializedName())))
+                                                .addListener((option, event) -> {
+                                                    HighlightMatchingItems opt = option.pendingValue();
+                                                    matchingItemsColorOption.setAvailable(opt != HighlightMatchingItems.OFF);
+                                                })
+                                                .build()
+                                )
+                                .option(
+                                        matchingItemsColorOption
+                                )
+                                .build()
+                )
+                .group(
+                        OptionGroup.createBuilder()
+                                .name(Component.translatable("qualityofqueso.options.gui.recipe_book"))
+                                .description(OptionDescription.of(Component.translatable("qualityofqueso.options.gui.recipe_book.description")))
                                 .option(
                                         Option.<Boolean>createBuilder()
                                                 .name(Component.translatable("qualityofqueso.options.no_recipe_book_shift"))
@@ -130,8 +175,8 @@ public class GuiCategory {
                 )
                 .group(
                         OptionGroup.createBuilder()
-                                .name(Component.translatable("qualityofqueso.options.misc.anti_rage"))
-                                .description(OptionDescription.of(Component.translatable("qualityofqueso.options.misc.anti_rage.description")))
+                                .name(Component.translatable("qualityofqueso.options.gui.anti_rage"))
+                                .description(OptionDescription.of(Component.translatable("qualityofqueso.options.gui.anti_rage.description")))
                                 .option(
                                         Option.<Boolean>createBuilder()
                                                 .name(Component.translatable("qualityofqueso.options.anti_rage_quit"))
@@ -152,8 +197,8 @@ public class GuiCategory {
                 )
                 .group(
                         OptionGroup.createBuilder()
-                                .name(Component.translatable("qualityofqueso.options.misc.durability_tooltips"))
-                                .description(OptionDescription.of(Component.translatable("qualityofqueso.options.misc.durability_tooltips.description")))
+                                .name(Component.translatable("qualityofqueso.options.gui.durability_tooltips"))
+                                .description(OptionDescription.of(Component.translatable("qualityofqueso.options.gui.durability_tooltips.description")))
                                 .collapsed(!canUseEnhancedTooltips)
                                 .option(
                                         Option.<Boolean>createBuilder()
@@ -163,7 +208,7 @@ public class GuiCategory {
                                                 .controller(BooleanControllerBuilder::create)
                                                 .addListener((opt, event) -> {
                                                     if (event == OptionEventListener.Event.STATE_CHANGE || event == OptionEventListener.Event.INITIAL) {
-                                                        boolean bl = !mixins().itemStackMixin && opt.pendingValue();
+                                                        boolean bl = mixins().itemStackMixin && opt.pendingValue();
                                                         showDamageValue.setAvailable(bl);
                                                         showPercentage.setAvailable(bl);
                                                         showDot.setAvailable(bl);

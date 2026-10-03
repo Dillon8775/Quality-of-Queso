@@ -21,9 +21,16 @@ public class MouseDraggedEvents extends ManagementEvents {
     }
 
     /**
+     * All mouse dragged events.
+     */
+    public void handle(MouseButtonEvent event, CallbackInfoReturnable<Boolean> cir) {
+        handleSingularMovingAndLockingOrSelectingSlots(event, cir);
+    }
+
+    /**
      * Handles drag-sorting, and selecting/locking slots when dragging the mouse.
      */
-    public void handleSingularMovingAndLockingOrSelectingSlots(MouseButtonEvent event, CallbackInfoReturnable<Boolean> cir) {
+    private void handleSingularMovingAndLockingOrSelectingSlots(MouseButtonEvent event, CallbackInfoReturnable<Boolean> cir) {
         if (isExcludingOrLockingSlots() && hasAttemptedToLockSelectOrDeselect(event)) {
             lockedSlotEvents().selectOrLockSlot(event, cir);
         }

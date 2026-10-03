@@ -16,8 +16,6 @@ import net.minecraft.network.chat.Component;
 import java.awt.*;
 import java.util.ArrayList;
 
-import static net.dillon.qualityofqueso.config.ConfigurationScreen.fixedSizeImage;
-import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 import static net.dillon.qualityofqueso.option.OptionInstances.common;
 import static net.dillon.qualityofqueso.util.ModOptionUtil.fullKumaKeyMappingAsString;
@@ -97,18 +95,6 @@ public class ManagementCategory {
                         new Color(ModConstants.DEFAULT_LOCKED_SLOT_COLOR, true),
                         () -> new Color(client().lockedSlots().lockedSlotColor, true),
                         v -> client().lockedSlots().lockedSlotColor = v.getRGB()
-                )
-                .controller(o -> ColorControllerBuilder.create(o)
-                        .allowAlpha(true))
-                .build();
-
-        Option<Color> matchingItemsColorOption = Option.<Color>createBuilder()
-                .name(Component.translatable("qualityofqueso.options.matching_items_color"))
-                .description(OptionDescription.of(Component.translatable("qualityofqueso.options.matching_items_color.description")))
-                .binding(
-                        new Color(ModConstants.DEFAULT_MATCHING_ITEMS_COLOR, true),
-                        () -> new Color(client().management().matchingItemsColor, true),
-                        v -> client().management().matchingItemsColor = v.getRGB()
                 )
                 .controller(o -> ColorControllerBuilder.create(o)
                         .allowAlpha(true))
@@ -296,28 +282,6 @@ public class ManagementCategory {
                                                 .binding(true, () -> client().management().ctrlMoving, v -> client().management().ctrlMoving = v)
                                                 .controller(BooleanControllerBuilder::create)
                                                 .build()
-                                )
-                                .option(
-                                        Option.<HighlightMatchingItems>createBuilder()
-                                                .name(Component.translatable("qualityofqueso.options.highlight_matching_items"))
-                                                .description(
-                                                        OptionDescription.createBuilder()
-                                                                .text(Component.translatable("qualityofqueso.options.highlight_matching_items.description"))
-                                                                .customImage(fixedSizeImage(qoqIdentifier("options/management/highlight_matching_items"), 117, 111))
-                                                                .build()
-                                                )
-                                                .binding(HighlightMatchingItems.ON_CTRL, () -> client().management().highlightMatchingItems, v -> client().management().highlightMatchingItems = v)
-                                                .controller(o -> EnumControllerBuilder.create(o)
-                                                        .enumClass(HighlightMatchingItems.class)
-                                                        .formatValue(v -> Component.literal(v.getSerializedName())))
-                                                .addListener((option, event) -> {
-                                                    HighlightMatchingItems opt = option.pendingValue();
-                                                    matchingItemsColorOption.setAvailable(opt != HighlightMatchingItems.OFF);
-                                                })
-                                                .build()
-                                )
-                                .option(
-                                        matchingItemsColorOption
                                 )
                                 .option(
                                         Option.<Boolean>createBuilder()

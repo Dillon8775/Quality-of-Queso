@@ -1,8 +1,8 @@
 package net.dillon.qualityofqueso.mixin.client.util;
 
 import com.mojang.authlib.GameProfile;
+import net.dillon.qualityofqueso.hud.counter.ItemTracker;
 import net.dillon.qualityofqueso.main.ClientEvents;
-import net.dillon.qualityofqueso.util.ItemHudTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -76,7 +76,7 @@ public class LocalPlayerMixin extends AbstractClientPlayer {
         ItemStack projectile = player.getProjectile(useItem);
 
         if (!hasInfinity(useItem)) {
-            ItemHudTracker.setShotStack(projectile.isEmpty() ? new ItemStack(Items.ARROW) : projectile.copyWithCount(1));
+            ItemTracker.setShotStack(projectile.isEmpty() ? new ItemStack(Items.ARROW) : projectile.copyWithCount(1));
         }
     }
 

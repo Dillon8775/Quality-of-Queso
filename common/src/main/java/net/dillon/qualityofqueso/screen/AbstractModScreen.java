@@ -46,7 +46,7 @@ public class AbstractModScreen extends DillonLibMenuScreen {
                 graphics,
                 this,
                 VERSION,
-                qoqIdentifier(CHEESE_WHEEL_TEXTURE),
+                CHEESE_WHEEL_TEXTURE,
                 HAS_UPDATE
         );
     }
@@ -94,7 +94,7 @@ public class AbstractModScreen extends DillonLibMenuScreen {
                 this.createWidget(
                         UpdatableSpriteButton.ofDefault(
                                 "Open Screenshots Button",
-                                qoqIdentifier(OPEN_SCREENSHOTS_DIRECTORY_TEXTURE),
+                                OPEN_SCREENSHOTS_DIRECTORY_TEXTURE,
                                 (button) -> {
                                     File screenshots = new File(Minecraft.getInstance().gameDirectory, "screenshots");
                                     if (!screenshots.exists()) {
@@ -117,7 +117,7 @@ public class AbstractModScreen extends DillonLibMenuScreen {
                         this.createWidget(
                                 UpdatableSpriteButton.ofDefault(
                                         "Open World Directory Button",
-                                        qoqIdentifier(OPEN_WORLD_DIRECTORY_TEXTURE),
+                                        OPEN_WORLD_DIRECTORY_TEXTURE,
                                         (button) -> {
                                             Path worldPath = this.minecraft.getSingleplayerServer().getWorldPath(LevelResource.ROOT);
                                             Blaze3D.openPath(worldPath);
@@ -139,7 +139,7 @@ public class AbstractModScreen extends DillonLibMenuScreen {
                             this.createWidget(
                                     UpdatableSpriteButton.ofDefault(
                                             "View Last Known Ender Chest Button",
-                                            qoqIdentifier(ENDER_CHEST),
+                                            ENDER_CHEST,
                                             (button) -> {
                                                 openScreen(new EnderChestPreviewScreen());
                                             },
@@ -159,7 +159,7 @@ public class AbstractModScreen extends DillonLibMenuScreen {
                     this.createWidget(
                             UpdatableSpriteButton.ofDefault(
                                     "Open Config Directory Button",
-                                    qoqIdentifier(OPEN_CONFIG_DIRECTORY_TEXTURE),
+                                    OPEN_CONFIG_DIRECTORY_TEXTURE,
                                     (button) -> {
                                         this.openConfigDirectory();
                                     },
@@ -176,7 +176,7 @@ public class AbstractModScreen extends DillonLibMenuScreen {
                 this.createWidget(
                         UpdatableSpriteButton.ofDefault(
                                 "Wiki Button",
-                                qoqIdentifier(WIKI_TEXTURE),
+                                WIKI_TEXTURE,
                                 (button) -> openLink(this, WIKI_LINK, false),
                                 Component.translatable("qualityofqueso.wiki"),
                                 false
@@ -190,7 +190,7 @@ public class AbstractModScreen extends DillonLibMenuScreen {
                 this.createWidget(
                         UpdatableSpriteButton.ofDefault(
                                 "Discord Button",
-                                qoqIdentifier(DISCORD_TEXTURE),
+                                DISCORD_TEXTURE,
                                 (button) -> openLink(this, Links.DILLONS_DISCORD, false),
                                 Component.translatable("qualityofqueso.discord"),
                                 false

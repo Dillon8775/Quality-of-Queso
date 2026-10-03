@@ -25,9 +25,27 @@ public class ScreenInitializedEvents extends ManagementEvents {
     }
 
     /**
+     * All screen initialized events.
+     */
+    public void handle() {
+        initializeContainer();
+        handleTrackedContainers();
+        initializeSearchFields();
+        setCurrentContainer();
+        reAddExcludedSlots();
+    }
+
+    /**
+     * Resets the "current container" variable.
+     */
+    private void setCurrentContainer() {
+        CURRENT_CONTAINER = holder().getCachedContainer();
+    }
+
+    /**
      * Handles tracked containers upon screen creation.
      */
-    public void handleTrackedContainers() {
+    private void handleTrackedContainers() {
         if (isContainerScreen(holder().screen())) {
             // Handle tracked containers
             if (ContainerHelper.RETURNING_FROM_PLACEHOLDER_SCREEN) {
@@ -57,7 +75,7 @@ public class ScreenInitializedEvents extends ManagementEvents {
     /**
      * Initializes search fields for the screen.
      */
-    public void initializeSearchFields() {
+    private void initializeSearchFields() {
         if (isContainerScreen(holder().screen()) && client().searching().containerSearching) {
             // Initialize the container search field, if it should be initialized
             holder().setContainerSearchField(searchEvents().initializeSearchField(false));
@@ -75,7 +93,7 @@ public class ScreenInitializedEvents extends ManagementEvents {
     /**
      * Re-adds all excluded slots to the screen.
      */
-    public void readdExcludedSlots() {
+    private void reAddExcludedSlots() {
         if (isValidScreen(holder().screen()) && ModConstants.SAVING_EXCLUDED_SLOTS && holder().getCachedContainer() != null) {
             // Do not re-add excluded slots if the recipe book is open, because it breaks things
             if (holder().screen() instanceof AbstractRecipeBookScreen<?> recipeScreen && getRecipeBookComponent(recipeScreen).isVisible()) {
@@ -93,7 +111,7 @@ public class ScreenInitializedEvents extends ManagementEvents {
     /**
      * Initializes the container in a screen.
      */
-    public void initializeContainer() {
+    private void initializeContainer() {
         // Figure out what the appropriate "container" should be for this instance of a screen
         // Check brewing stands, furnaces, dispeners/droppers, and hoppers first
         if (holder().screen() instanceof BrewingStandScreen brewingStandScreen) {
@@ -120,12 +138,5 @@ public class ScreenInitializedEvents extends ManagementEvents {
                 holder().setCachedContainer(null);
             }
         }
-    }
-
-    /**
-     * Resets the "current container" variable.
-     */
-    public void setCurrentContainer() {
-        CURRENT_CONTAINER = holder().getCachedContainer();
     }
 }

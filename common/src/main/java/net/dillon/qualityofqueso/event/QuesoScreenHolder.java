@@ -2,6 +2,18 @@ package net.dillon.qualityofqueso.event;
 
 import net.dillon.qualityofqueso.event.context.ManagementButtons;
 import net.dillon.qualityofqueso.event.context.SearchFields;
+import net.dillon.qualityofqueso.event.key.CharTypedEvents;
+import net.dillon.qualityofqueso.event.key.KeyPressedEvents;
+import net.dillon.qualityofqueso.event.management.ExtractingEvents;
+import net.dillon.qualityofqueso.event.management.SlotClickedEvents;
+import net.dillon.qualityofqueso.event.mouse.MouseClickedEvents;
+import net.dillon.qualityofqueso.event.mouse.MouseDraggedEvents;
+import net.dillon.qualityofqueso.event.mouse.MouseReleasedEvents;
+import net.dillon.qualityofqueso.event.mouse.MouseScrolledEvents;
+import net.dillon.qualityofqueso.event.screen.ScreenClosedEvents;
+import net.dillon.qualityofqueso.event.screen.ScreenInitializedEvents;
+import net.dillon.qualityofqueso.event.screen.ScreenResizedEvents;
+import net.dillon.qualityofqueso.event.screen.TooltipEvents;
 import net.dillon.qualityofqueso.mixin.client.screen.AbstractContainerScreenMixin;
 import net.dillon.qualityofqueso.widget.WidgetLayout;
 import net.minecraft.client.Minecraft;
@@ -52,7 +64,6 @@ public interface QuesoScreenHolder {
 
     /**
      * @return all present search fields.
-
      */
     SearchFields searchFields();
 
@@ -60,6 +71,33 @@ public interface QuesoScreenHolder {
      * @return all present management buttons.
      */
     ManagementButtons managementButtons();
+
+    /**
+     * @return this {@code screen} as the {@link QuesoScreenHolder}.
+     */
+    default QuesoScreenHolder screenAsHolder() {
+        return (QuesoScreenHolder) screen();
+    }
+
+    /**
+     * @return the set of all events to use.
+     */
+    default Events events() {
+        return new Events(
+                new CharTypedEvents(screenAsHolder()),
+                new KeyPressedEvents(screenAsHolder()),
+                new ExtractingEvents(screenAsHolder()),
+                new SlotClickedEvents(screenAsHolder()),
+                new MouseClickedEvents(screenAsHolder()),
+                new MouseDraggedEvents(screenAsHolder()),
+                new MouseReleasedEvents(screenAsHolder()),
+                new MouseScrolledEvents(screenAsHolder()),
+                new ScreenClosedEvents(screenAsHolder()),
+                new ScreenInitializedEvents(screenAsHolder()),
+                new ScreenResizedEvents(screenAsHolder()),
+                new TooltipEvents(screenAsHolder())
+        );
+    }
 
     /**
      * Sets the cached container for a screen.

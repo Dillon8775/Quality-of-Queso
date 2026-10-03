@@ -35,7 +35,7 @@ public abstract class ToggleableButton extends QuesoButton {
     protected abstract boolean option();
 
     /**
-     * @return the base tooltip to render.
+     * @return the base tooltips to render.
      */
     @Override
     protected abstract Component getTooltipToRender();

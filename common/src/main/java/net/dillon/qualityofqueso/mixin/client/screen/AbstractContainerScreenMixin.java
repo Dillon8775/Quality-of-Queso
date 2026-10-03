@@ -3,14 +3,10 @@ package net.dillon.qualityofqueso.mixin.client.screen;
 import net.dillon.qualityofqueso.event.QuesoScreenHolder;
 import net.dillon.qualityofqueso.event.context.ManagementButtons;
 import net.dillon.qualityofqueso.event.context.SearchFields;
-import net.dillon.qualityofqueso.event.key.CharTypedEvents;
-import net.dillon.qualityofqueso.event.key.KeyPressedEvents;
-import net.dillon.qualityofqueso.event.management.ExtractingEvents;
 import net.dillon.qualityofqueso.event.management.SlotClickedEvents;
-import net.dillon.qualityofqueso.event.mouse.*;
-import net.dillon.qualityofqueso.event.screen.ScreenClosedEvents;
-import net.dillon.qualityofqueso.event.screen.ScreenInitializedEvents;
-import net.dillon.qualityofqueso.event.screen.ScreenResizedEvents;
+import net.dillon.qualityofqueso.event.mouse.MouseClickedEvents;
+import net.dillon.qualityofqueso.event.mouse.MouseReleasedEvents;
+import net.dillon.qualityofqueso.event.mouse.MouseScrolledEvents;
 import net.dillon.qualityofqueso.event.screen.TooltipEvents;
 import net.dillon.qualityofqueso.widget.WidgetLayout;
 import net.minecraft.client.Minecraft;
@@ -235,14 +231,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             return;
         }
 
-        ScreenInitializedEvents screenInitInstance = new ScreenInitializedEvents(
-                (QuesoScreenHolder) this.screen
-        );
-        screenInitInstance.initializeContainer();
-        screenInitInstance.handleTrackedContainers();
-        screenInitInstance.initializeSearchFields();
-        screenInitInstance.setCurrentContainer();
-        screenInitInstance.readdExcludedSlots();
+        events().screenInitialized().handle();
     }
 
     /**
@@ -254,30 +243,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             return;
         }
 
-        ExtractingEvents extractingInstance = new ExtractingEvents(
-                (QuesoScreenHolder) this.screen
-        );
-        extractingInstance.extractLockedSlotColor(graphics);
-        extractingInstance.extractHighlightedSlots(graphics);
-    }
-
-    /**
-     * Renders widgets, including management buttons, search fields, and the {@link WidgetLayout}.
-     */
-    @Inject(method = "extractContents", at = @At("TAIL"))
-    private void renderAndInitializeWidgets(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a, CallbackInfo ci) {
-        if (!modEnabled()) {
-            return;
-        }
-
-        ExtractingEvents extractingInstance = new ExtractingEvents(
-                (QuesoScreenHolder) this.screen
-        );
-        extractingInstance.extractEnhancedCursor(graphics);
-        extractingInstance.clearToRefreshWidgets();
-        extractingInstance.extractSearchFields(graphics, mouseX, mouseY, a);
-        extractingInstance.extractButtons(graphics, mouseX, mouseY, a);
-        extractingInstance.extractLockingUnlockingSlots(graphics, mouseX, mouseY);
+        events().extracting().handleSlotExtraction(graphics);
     }
 
     /**
@@ -289,10 +255,19 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             return;
         }
 
-        ExtractingEvents extractingInstance = new ExtractingEvents(
-                (QuesoScreenHolder) this.screen
-        );
-        extractingInstance.grayoutSlotsAndExtractLockedIcon(graphics);
+        events().extracting().grayoutSlotsAndExtractLockedIcon(graphics);
+    }
+
+    /**
+     * Renders widgets, including management buttons, search fields, and the {@link WidgetLayout}.
+     */
+    @Inject(method = "extractContents", at = @At("TAIL"))
+    private void renderAndInitializeWidgets(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a, CallbackInfo ci) {
+        if (!modEnabled()) {
+            return;
+        }
+
+        events().extracting().handle(graphics, mouseX, mouseY, a);
     }
 
     /**
@@ -304,35 +279,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             return;
         }
 
-        TooltipEvents modTooltips = new TooltipEvents(
-                (QuesoScreenHolder) this.screen
-        );
-        modTooltips.displaySingleMovingTooltips(graphics, this.font, mouseX, mouseY, ci);
-        modTooltips.displayEnchantmentHelperTooltips(graphics, this.font, mouseX, mouseY, ci);
-        modTooltips.displayTagsOnItems(graphics, this.font, mouseX, mouseY, ci);
-    }
-
-    /**
-     * Handles clicking outside the GUI screen, for the {@link WidgetLayout}.
-     */
-    @Inject(method = "hasClickedOutside", at = @At("HEAD"), cancellable = true)
-    private void handleHasClickedOutside(double mx, double my, int xo, int yo, CallbackInfoReturnable<Boolean> cir) {
-        if (!modEnabled()) {
-            return;
-        }
-
-
-        WidgetBoxClickedEvents widgetBoxBoundsInstance = new WidgetBoxClickedEvents(
-                (QuesoScreenHolder) this.screen
-        );
-        widgetBoxBoundsInstance.handleClickingOnBox(mx, my, this.widgetLayout, cir);
-
-        SearchBarClickedEvents searchBarBoundsInstance = new SearchBarClickedEvents(
-                (QuesoScreenHolder) this.screen
-        );
-        searchBarBoundsInstance.handleClickingOnBox(mx, my,
-                this.searchFields().inventory() != null ? this.searchFields().inventory() : this.searchFields().container(),
-                cir);
+        events().tooltips().handle(graphics, this.font, mouseX, mouseY, ci);
     }
 
     /**
@@ -344,28 +291,32 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             return;
         }
 
-        SlotClickedEvents clickSlotInstance = new SlotClickedEvents(
-                (QuesoScreenHolder) this.screen
-        );
-        clickSlotInstance.quickGuiClose(slot, buttonNum);
-        clickSlotInstance.handleHardLockedSlots(slot, ci);
-        clickSlotInstance.tradeAllForSelectedOffer(slotId, containerInput, ci);
-        clickSlotInstance.bulkCraftForSelectedRecipe(slotId, containerInput, ci);
+        events().slotClicked().handle(slot, slotId, buttonNum, containerInput, ci);
     }
 
     /**
-     * Handles mouse-releasing events with the help of the {@link MouseReleasedEvents} record.
+     * Handles clicking outside the GUI screen, for the {@link WidgetLayout}.
      */
-    @Inject(method = "mouseReleased", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;slotClicked(Lnet/minecraft/world/inventory/Slot;ILnet/minecraft/client/input/MouseButtonEvent;Lnet/minecraft/world/inventory/ContainerInput;)V", ordinal = 0), cancellable = true, locals = LocalCapture.CAPTURE_FAILEXCEPTION)
-    private void handleMouseReleased(MouseButtonEvent event, CallbackInfoReturnable<Boolean> cir, Slot slot, int xo, int yo, boolean clickedOutside, int slotId, Iterator var7, Slot target) {
+    @Inject(method = "hasClickedOutside", at = @At("HEAD"), cancellable = true)
+    private void handleHasClickedOutside(double mx, double my, int xo, int yo, CallbackInfoReturnable<Boolean> cir) {
         if (!modEnabled()) {
             return;
         }
 
-        MouseReleasedEvents mouseReleasedInstance = new MouseReleasedEvents(
-                (QuesoScreenHolder) this.screen
+        events().mouseClicked().handleSearchBar(
+                mx,
+                my,
+                this.searchFields().inventory() != null
+                        ? this.searchFields().inventory()
+                        : this.searchFields().container(),
+                cir
         );
-        mouseReleasedInstance.disableHardLockedSlotsOnDoubleClick(slot, target, cir);
+        events().mouseClicked().handleWidgetLayout(
+                mx,
+                my,
+                this.widgetLayout,
+                cir
+        );
     }
 
     /**
@@ -377,15 +328,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             return;
         }
 
-        MouseClickedEvents mouseClickInstance = new MouseClickedEvents(
-                (QuesoScreenHolder) this.screen
-        );
-        mouseClickInstance.trySelectingOrLockingSlot(event, cir);
-        mouseClickInstance.tryQuickMoveHighlightedItems(event, cir);
-        mouseClickInstance.moveOnlyOne(event, cir);
-        mouseClickInstance.quickEquipItem(event, cir);
-        mouseClickInstance.handleInventorySearchFieldClicking(event, doubleClick);
-        mouseClickInstance.handleButtonInactiveSounds();
+        events().mouseClicked().handle(event, doubleClick, cir);
     }
 
     /**
@@ -397,12 +340,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             return;
         }
 
-        MouseScrolledEvents mouseScrollInstance = new MouseScrolledEvents(
-                (QuesoScreenHolder) this
-        );
-        mouseScrollInstance.changeSortMode(scrollY);
-        mouseScrollInstance.changeFilterType(scrollY);
-        mouseScrollInstance.moveHoveredItem(scrollY, cir);
+        events().mouseScrolled().handle(scrollY, cir);
     }
 
     /**
@@ -414,10 +352,19 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             return;
         }
 
-        MouseReleasedEvents mouseReleaseInstance = new MouseReleasedEvents(
-                (QuesoScreenHolder) this.screen
-        );
-        mouseReleaseInstance.trackSlotAndLockOrSelect(event, cir);
+        events().mouseReleased().trackSlotAndLockOrSelect(event, cir);
+    }
+
+    /**
+     * Handles mouse-releasing events with the help of the {@link MouseReleasedEvents} record.
+     */
+    @Inject(method = "mouseReleased", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;slotClicked(Lnet/minecraft/world/inventory/Slot;ILnet/minecraft/client/input/MouseButtonEvent;Lnet/minecraft/world/inventory/ContainerInput;)V", ordinal = 0), cancellable = true, locals = LocalCapture.CAPTURE_FAILEXCEPTION)
+    private void handleMouseReleased(MouseButtonEvent event, CallbackInfoReturnable<Boolean> cir, Slot slot, int xo, int yo, boolean clickedOutside, int slotId, Iterator var7, Slot target) {
+        if (!modEnabled()) {
+            return;
+        }
+
+        events().mouseReleased().disableHardLockedSlotsOnDoubleClick(slot, target, cir);
     }
 
     /**
@@ -429,10 +376,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             return;
         }
 
-        MouseDraggedEvents mouseDragInstance = new MouseDraggedEvents(
-                (QuesoScreenHolder) this.screen
-        );
-        mouseDragInstance.handleSingularMovingAndLockingOrSelectingSlots(event, cir);
+        events().mouseDragged().handle(event, cir);
     }
 
     /**
@@ -444,10 +388,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             return;
         }
 
-        KeyPressedEvents keyPressInstance = new KeyPressedEvents(
-                (QuesoScreenHolder) this.screen
-        );
-        keyPressInstance.handleKeyPressing(event, cir);
+        events().keyPressed().handleKeyPressing(event, cir);
     }
 
     /**
@@ -455,10 +396,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
      */
     @Override
     public boolean charTyped(CharacterEvent event) {
-        CharTypedEvents charTypedInstance = new CharTypedEvents(
-                (QuesoScreenHolder) this.screen
-        );
-        return charTypedInstance.handleCharTyped(event, () -> super.charTyped(event));
+        return events().charTyped().handleCharTyped(event, () -> super.charTyped(event));
     }
 
     /**
@@ -471,10 +409,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             return;
         }
 
-        ScreenResizedEvents resizeInstance = new ScreenResizedEvents(
-                (QuesoScreenHolder) this.screen
-        );
-        resizeInstance.handleResizing(width, height, this.excludedSlots);
+        events().screenResized().handleResizing(width, height, this.excludedSlots);
     }
 
     /**
@@ -486,13 +421,6 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             return;
         }
 
-        ScreenClosedEvents closeScreenInstance = new ScreenClosedEvents(
-                (QuesoScreenHolder) this.screen
-        );
-        closeScreenInstance.putExcludedSlots();
-        closeScreenInstance.saveSearchText();
-        closeScreenInstance.disableFeatures();
-        closeScreenInstance.autoCloseRecipeBook();
-        closeScreenInstance.handleTrackedContainers();
+        events().screenClosed().handle();
     }
 }

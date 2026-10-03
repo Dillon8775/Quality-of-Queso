@@ -4,6 +4,9 @@ import com.mojang.blaze3d.platform.InputConstants;
 import net.dillon.qualityofqueso.event.QuesoScreenHolder;
 import net.dillon.qualityofqueso.event.management.CursorKey;
 import net.dillon.qualityofqueso.event.management.ManagementEvents;
+import net.dillon.qualityofqueso.widget.SearchBar;
+import net.dillon.qualityofqueso.widget.WidgetLayout;
+import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerInput;
@@ -28,9 +31,35 @@ public class MouseClickedEvents extends ManagementEvents {
     }
 
     /**
+     * All mouse clicking events.
+     */
+    public void handle(MouseButtonEvent event, boolean doubleClick, CallbackInfoReturnable<Boolean> cir) {
+        trySelectingOrLockingSlot(event, cir);
+        tryQuickMoveHighlightedItems(event, cir);
+        moveOnlyOne(event, cir);
+        quickEquipItem(event, cir);
+        handleInventorySearchFieldClicking(event, doubleClick);
+        handleButtonInactiveSounds();
+    }
+
+    /**
+     * Determines if the widget box was clicked on.
+     */
+    public void handleSearchBar(double mouseX, double mouseY, EditBox searchField, CallbackInfoReturnable<Boolean> cir) {
+        SearchBar.hasClickedOnBox(mouseX, mouseY, searchField, cir);
+    }
+
+    /**
+     * Determines if the widget box was clicked on.
+     */
+    public void handleWidgetLayout(double mouseX, double mouseY, WidgetLayout widgetLayout, CallbackInfoReturnable<Boolean> cir) {
+        WidgetLayout.hasClickedOnBox(mouseX, mouseY, widgetLayout, cir);
+    }
+
+    /**
      * Attempts to lock or select a slot when clicking.
      */
-    public void trySelectingOrLockingSlot(MouseButtonEvent event, CallbackInfoReturnable<Boolean> cir) {
+    private void trySelectingOrLockingSlot(MouseButtonEvent event, CallbackInfoReturnable<Boolean> cir) {
         if (isExcludingOrLockingSlots() && hasAttemptedToLockSelectOrDeselect(event)) {
             lockedSlotEvents().selectOrLockSlot(event, cir);
         }
@@ -39,7 +68,7 @@ public class MouseClickedEvents extends ManagementEvents {
     /**
      * Quickly equips an item.
      */
-    public void quickEquipItem(MouseButtonEvent event, CallbackInfoReturnable<Boolean> cir) {
+    private void quickEquipItem(MouseButtonEvent event, CallbackInfoReturnable<Boolean> cir) {
         if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT && holder().screensHoveredSlot() != null && quickEquipEvents().isQuicklyEquippable(holder().screensHoveredSlot().getItem())) {
             quickEquipEvents().quickEquipItem();
             cir.setReturnValue(true);
@@ -49,7 +78,7 @@ public class MouseClickedEvents extends ManagementEvents {
     /**
      * Refocus fromInventory search field if clicked.
      */
-    public void handleInventorySearchFieldClicking(MouseButtonEvent event, boolean doubleClick) {
+    private void handleInventorySearchFieldClicking(MouseButtonEvent event, boolean doubleClick) {
         if (holder().searchFields().inventory() != null && holder().searchFields().inventory().mouseClicked(event, doubleClick)) {
             holder().searchFields().inventory().setFocused(true);
         }
@@ -58,7 +87,7 @@ public class MouseClickedEvents extends ManagementEvents {
     /**
      * Handles clicking inactive buttons.
      */
-    public void handleButtonInactiveSounds() {
+    private void handleButtonInactiveSounds() {
         if (buttonHoveredButInactive(holder().managementButtons().getTransferContainer())
                 || buttonHoveredButInactive(holder().managementButtons().getTransferInventory())
                 || buttonHoveredButInactive(holder().managementButtons().getQuickDrop())
@@ -72,7 +101,7 @@ public class MouseClickedEvents extends ManagementEvents {
     /**
      * Handles moving only one or dropping one item in a stack.
      */
-    public void moveOnlyOne(MouseButtonEvent event, CallbackInfoReturnable<Boolean> cir) {
+    private void moveOnlyOne(MouseButtonEvent event, CallbackInfoReturnable<Boolean> cir) {
         if (client().management().scrollMoving) {
             boolean dropOnlyOne = hasDropOnlyOneItemModifierDown();
             boolean hasSingleModifierDown = canScrollMoveAndHasScrollModifierDown();
@@ -95,7 +124,7 @@ public class MouseClickedEvents extends ManagementEvents {
     /**
      * Attempts to quick move any highlighted or similar items related to the cursor/hovered stack.
      */
-    public void tryQuickMoveHighlightedItems(MouseButtonEvent event, CallbackInfoReturnable<Boolean> cir) {
+    private void tryQuickMoveHighlightedItems(MouseButtonEvent event, CallbackInfoReturnable<Boolean> cir) {
         if (!(isContainerScreen(holder().screen()) || isDropperDispenserOrHopperScreen(holder().screen())) || !event.hasControlDown() || event.button() != InputConstants.MOUSE_BUTTON_LEFT) {
             return;
         }

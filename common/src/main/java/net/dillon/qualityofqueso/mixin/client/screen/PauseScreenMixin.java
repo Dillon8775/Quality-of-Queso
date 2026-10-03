@@ -30,8 +30,8 @@ import static net.dillon.qualityofqueso.helper.ButtonHelper.getConfigButtonX;
 import static net.dillon.qualityofqueso.helper.ButtonHelper.getConfigButtonY;
 import static net.dillon.qualityofqueso.helper.GuiHelper.drawTooltip;
 import static net.dillon.qualityofqueso.helper.ModConstants.*;
-import static net.dillon.qualityofqueso.helper.ModHelper.*;
 import static net.dillon.qualityofqueso.helper.ModHelper.isOnServer;
+import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 import static net.dillon.qualityofqueso.option.OptionInstances.universal;
 
@@ -53,7 +53,7 @@ public class PauseScreenMixin extends Screen {
     }
 
     /**
-     * Appends the {@code Quality of Queso} prefix to a tooltip.
+     * Appends the {@code Quality of Queso} prefix to a tooltips.
      */
     @Unique
     private Component tooltipWithPrefix(Component text) {
@@ -114,7 +114,7 @@ public class PauseScreenMixin extends Screen {
         if (client().accessibility().eChestButton.pauseScreen()) {
             SpriteIconButton viewLastKnownEnderChestButton = UpdatableSpriteButton.ofDefault(
                     "View Last Known Ender Chest Button",
-                    qoqIdentifier(ENDER_CHEST),
+                    ENDER_CHEST,
                     (b) -> {
                         openScreen(new EnderChestPreviewScreen());
                     },
@@ -152,9 +152,9 @@ public class PauseScreenMixin extends Screen {
                 String address = this.getServerAddress();
 
                 if (universal().multiServerConfigs) {
-                    drawSprite(graphics, qoqIdentifier(MULTI_CONFIG_TEXTURE), this.blacklistServerButton.getX() - 2, this.blacklistServerButton.getY() - 1, 16, 16);
+                    drawSprite(graphics, MULTI_CONFIG_TEXTURE, this.blacklistServerButton.getX() - 2, this.blacklistServerButton.getY() - 1, 16, 16);
                 }
-                drawSmallSprite(graphics, this.isServerBlacklisted(address) ? qoqIdentifier(DISABLED_TEXTURE) : qoqIdentifier(ENABLED_TEXTURE), this.blacklistServerButton);
+                drawSmallSprite(graphics, this.isServerBlacklisted(address) ? DISABLED_TEXTURE : ENABLED_TEXTURE, this.blacklistServerButton);
 
                 Component tooltip = this.isServerBlacklisted(address) ?
                         Component.translatable("qualityofqueso.gui.remove_blacklisted_server") :

@@ -298,7 +298,7 @@ public class ModClientOptions {
         public boolean countAllArrows = true;
         public boolean onlyShowArrowCounter = false;
         public boolean alwaysShowArrowCounter = false;
-        public boolean miniBows = true;
+        public boolean indicators = true;
 
         public boolean displayOnThrow = true;
         public boolean displayOnPickup = true;

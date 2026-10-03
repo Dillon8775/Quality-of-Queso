@@ -40,7 +40,6 @@ import static net.dillon.dillonlib.util.Arithmetics.roundToHundredths;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
 import static net.dillon.qualityofqueso.helper.MethodHelper.*;
 import static net.dillon.qualityofqueso.helper.ModConstants.*;
-import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 /**
@@ -49,14 +48,14 @@ import static net.dillon.qualityofqueso.option.OptionInstances.client;
 public class GuiHelper {
 
     /**
-     * Draws a tooltip on a screen for anything other than a search bar.
+     * Draws a tooltips on a screen for anything other than a search bar.
      */
     public static void drawTooltip(Component tooltip, GuiGraphicsExtractor graphics, Font font, int mouseX, int mouseY) {
         drawTooltip(tooltip, graphics, font, mouseX, mouseY, false);
     }
 
     /**
-     * Draws a tooltip in a screen.
+     * Draws a tooltips in a screen.
      */
     public static void drawTooltip(Component tooltip, GuiGraphicsExtractor graphics, Font font, int mouseX, int mouseY, boolean searchBar) {
         Screen screen = getScreen();
@@ -120,7 +119,7 @@ public class GuiHelper {
     }
 
     /**
-     * @return the dot tooltip for enhanced durability tooltips.
+     * @return the dot tooltips for enhanced durability tooltips.
      */
     private static Component dotTooltip(ItemStack stack) {
         return Component.literal("•")
@@ -128,7 +127,7 @@ public class GuiHelper {
     }
 
     /**
-     * @return the better durability tooltip with colors.
+     * @return the better durability tooltips with colors.
      */
     private static Component enhancedDurabilityTooltip(ItemStack stack) {
         int color = getDurabilityTooltipColor(stack);
@@ -174,7 +173,7 @@ public class GuiHelper {
     }
 
     /**
-     * Accepts the dot durability tooltip.
+     * Accepts the dot durability tooltips.
      */
     public static void acceptDotTooltip(List<Component> lines, ItemStack stack) {
         Component styledHoverName = stack.getStyledHoverName();
@@ -213,7 +212,7 @@ public class GuiHelper {
     }
 
     /**
-     * @return a bracketed tooltip.
+     * @return a bracketed tooltips.
      */
     private static Component bracketTooltip(Component entry) {
         int gray = CommonColors.LIGHT_GRAY;
@@ -234,7 +233,7 @@ public class GuiHelper {
     }
 
     /**
-     * @return the correct tooltip color to use for durability based on item health.
+     * @return the correct tooltips color to use for durability based on item health.
      */
     private static int getDurabilityTooltipColor(ItemStack stack) {
         float healthPercentage = getItemHealthPercentage(stack);
@@ -311,7 +310,9 @@ public class GuiHelper {
      * @return the armor hotbar texture.
      */
     public static Identifier getArmorHotbarTexture() {
-        return client().general().theme == Theme.TRUE_DARK ? qoqIdentifier("hud/armor_hotbar_true_dark") : qoqIdentifier("hud/armor_hotbar");
+        return client().general().theme == Theme.TRUE_DARK
+                ? ARMOR_HOTBAR_TRUE_DARK
+                : ARMOR_HOTBAR;
     }
 
     /**

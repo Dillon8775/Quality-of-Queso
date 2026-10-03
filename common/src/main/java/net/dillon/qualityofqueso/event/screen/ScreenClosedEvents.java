@@ -28,9 +28,20 @@ public class ScreenClosedEvents extends ManagementEvents {
     }
 
     /**
+     * All screen closed events.
+     */
+    public void handle() {
+        putExcludedSlots();
+        saveSearchText();
+        disableFeatures();
+        autoCloseRecipeBook();
+        handleTrackedContainers();
+    }
+
+    /**
      * Adds excluded slots to store when closing the screen.
      */
-    public void putExcludedSlots() {
+    private void putExcludedSlots() {
         if (SAVING_EXCLUDED_SLOTS) {
             SAVED_EXCLUDED_SLOTS.put(getTotalSlots(), new HashSet<>(holder().excludedSlots()));
         }
@@ -39,7 +50,7 @@ public class ScreenClosedEvents extends ManagementEvents {
     /**
      * Saves the search text for search fields.
      */
-    public void saveSearchText() {
+    private void saveSearchText() {
         if (client().searching().saveSearchText) {
             if (isInventoryScreen(holder().screen()) && holder().searchFields().inventory() != null) {
                 updateClient(client -> client.searching().savedSearchText = holder().searchFields().inventory().getValue());
@@ -52,7 +63,7 @@ public class ScreenClosedEvents extends ManagementEvents {
     /**
      * Disables certain features, like craft all and trade all.
      */
-    public void disableFeatures() {
+    private void disableFeatures() {
         setCursor(CursorKey.NULL);
 
         if (!client().buttonDisplayOptions().safeBulk) {
@@ -68,7 +79,7 @@ public class ScreenClosedEvents extends ManagementEvents {
     /**
      * Automatically closes the recipe book when closing a screen.
      */
-    public void autoCloseRecipeBook() {
+    private void autoCloseRecipeBook() {
         if (client().misc().autoCloseRecipeBook
                 && holder().screen() instanceof AbstractRecipeBookScreen<?> recipeBookScreen
                 && getRecipeBookComponent(recipeBookScreen).isVisible()) {
@@ -80,7 +91,7 @@ public class ScreenClosedEvents extends ManagementEvents {
     /**
      * Handles tracked containers when closing a screen.
      */
-    public void handleTrackedContainers() {
+    private void handleTrackedContainers() {
         if (holder().getDisableFilteringOnClose()) {
             updateClient(client -> {
                 client.management().filteringMode = FilteringMode.NONE;

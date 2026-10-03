@@ -40,9 +40,19 @@ public class SlotClickedEvents extends ManagementEvents {
     }
 
     /**
-     * Quickly closes the GUI screen by clicking anywhere outside the screen.
+     * All slot clicked events.
      */
-    public void quickGuiClose(Slot slot, int buttonNum) {
+    public void handle(Slot slot, int slotId, int buttonNum, ContainerInput containerInput, CallbackInfo ci) {
+        outOfBoundsClick(slot, buttonNum);
+        handleHardLockedSlots(slot, ci);
+        tradeAllForSelectedOffer(slotId, containerInput, ci);
+        bulkCraftForSelectedRecipe(slotId, containerInput, ci);
+    }
+
+    /**
+     * Handles clicking out of bounds in a screen.
+     */
+    private void outOfBoundsClick(Slot slot, int buttonNum) {
         if (client().misc().quickGuiExit && getCursorStack().isEmpty() && buttonNum == 0 && slot == null) {
             holder().screen().onClose();
         }
@@ -51,7 +61,7 @@ public class SlotClickedEvents extends ManagementEvents {
     /**
      * Hard-locks slots and prevents any interaction on them.
      */
-    public void handleHardLockedSlots(Slot slot, CallbackInfo ci) {
+    private void handleHardLockedSlots(Slot slot, CallbackInfo ci) {
         // Skip further injection if hard lock slots are disabled, but continue if always quick move is enabled (they are by default)
         if (slot == null || !client().lockedSlots().lockedSlots || (!client().lockedSlots().hardLockSlots && !client().isAlwaysQuickMove())) {
             return;
@@ -66,7 +76,7 @@ public class SlotClickedEvents extends ManagementEvents {
     /**
      * Trades with all resources for the selected trade.
      */
-    public void tradeAllForSelectedOffer(int slotId, ContainerInput containerInput, CallbackInfo ci) {
+    private void tradeAllForSelectedOffer(int slotId, ContainerInput containerInput, CallbackInfo ci) {
         if (processingQueuedTradeAllClick) {
             return;
         }
@@ -105,7 +115,7 @@ public class SlotClickedEvents extends ManagementEvents {
     /**
      * Crafts all resources for the selected recipe.
      */
-    public void bulkCraftForSelectedRecipe(int slotId, ContainerInput containerInput, CallbackInfo ci) {
+    private void bulkCraftForSelectedRecipe(int slotId, ContainerInput containerInput, CallbackInfo ci) {
         if (processingQueuedBulkCraftClick) {
             return;
         }

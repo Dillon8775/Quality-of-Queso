@@ -7,7 +7,6 @@ import dev.isxander.yacl3.api.controller.EnumControllerBuilder;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
 import net.dillon.qualityofqueso.option.eum.hud.ArmorStatus;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
 
 import static net.dillon.dillonlib.util.Arithmetics.roundToHundredths;
 import static net.dillon.dillonlib.util.Arithmetics.roundToTenths;
@@ -28,7 +27,7 @@ public class HudCategory {
                     var builder = OptionDescription.createBuilder()
                             .text(Component.translatable("qualityofqueso.options.armor_hotbar.description"));
 
-                    Identifier location = value ? qoqIdentifier("options/hud/armor_hotbar") : qoqIdentifier("options/hud/no_armor_hotbar");
+                    String location = value ? "armor_hotbar" : "no_armor_hotbar";
                     return builder.customImage(fixedSizeImage(location, 82, 21)).build();
                 })
                 .binding(true, () -> client().hud().armorHotbar, v -> client().hud().armorHotbar = v)
@@ -41,7 +40,7 @@ public class HudCategory {
                     var builder = OptionDescription.createBuilder()
                             .text(Component.translatable("qualityofqueso.options.highlight_armor.description"));
 
-                    Identifier location = value ? qoqIdentifier("options/hud/highlight_armor") : qoqIdentifier("options/hud/armor_hotbar");
+                    String location = value ? "highlight_armor" : "armor_hotbar";
                     return builder.customImage(fixedSizeImage(location, 82, 21)).build();
                 })
                 .binding(true, () -> client().hud().highlightArmor, v -> client().hud().highlightArmor = v)
@@ -54,7 +53,7 @@ public class HudCategory {
                     var builder = OptionDescription.createBuilder()
                             .text(Component.translatable("qualityofqueso.options.empty_slots.description"));
 
-                    Identifier location = value ? qoqIdentifier("options/hud/empty_slots") : qoqIdentifier("options/hud/no_empty_slots");
+                    String location = value ? "empty_slots" : "no_empty_slots";
                     return builder.customImage(fixedSizeImage(location, 82, 21)).build();
                 })
                 .binding(true, () -> client().hud().emptySlots, v -> client().hud().emptySlots = v)
@@ -85,7 +84,7 @@ public class HudCategory {
                                                 .description(
                                                         OptionDescription.createBuilder()
                                                                 .text(Component.translatable("qualityofqueso.options.armor_status.description"))
-                                                                .customImage(fixedSizeWebpImage(qoqIdentifier("textures/gui/sprites/options/hud/armor_status.webp"), 142))
+                                                                .customImage(fixedSizeWebpImage(qoqIdentifier("textures/gui/sprites/config_images/armor_status.webp"), 142))
                                                                 .build()
                                                 )
                                                 .binding(ArmorStatus.ALWAYS, () -> client().hud().armorStatus, v -> client().hud().armorStatus = v)
@@ -145,7 +144,7 @@ public class HudCategory {
                                                 .description(
                                                         OptionDescription.createBuilder()
                                                                 .text(Component.translatable("qualityofqueso.options.colored_highlighting.description"))
-                                                                .customImage(fixedSizeImage(qoqIdentifier("options/hud/colored_highlighting"), 29, 28))
+                                                                .customImage(fixedSizeImage("colored_highlighting", 29, 28))
                                                                 .build())
                                                 .binding(true, () -> client().hud().coloredHighlighting, v -> client().hud().coloredHighlighting = v)
                                                 .controller(BooleanControllerBuilder::create)
@@ -156,7 +155,7 @@ public class HudCategory {
                                                 .name(Component.translatable("qualityofqueso.options.warning_indicators"))
                                                 .description(OptionDescription.createBuilder()
                                                         .text(Component.translatable("qualityofqueso.options.warning_indicators.description"))
-                                                        .customImage(fixedSizeImage(qoqIdentifier("options/hud/warning_indicators"), 29, 28))
+                                                        .customImage(fixedSizeImage("warning_indicators", 29, 28))
                                                         .build())
                                                 .binding(true, () -> client().hud().warningIndicators, v -> client().hud().warningIndicators = v)
                                                 .controller(BooleanControllerBuilder::create)
