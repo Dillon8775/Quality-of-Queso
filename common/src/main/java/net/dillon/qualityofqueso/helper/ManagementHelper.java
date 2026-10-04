@@ -247,7 +247,7 @@ public class ManagementHelper {
     }
 
     /**
-     * Plays the bundle sounds when sorting
+     * Plays the bundle sounds when sorting.
      */
     public static void playSortSound() {
         if (!client().management().playSounds) {
@@ -255,6 +255,16 @@ public class ManagementHelper {
         }
 
         getMinecraft().getSoundManager().play(SimpleSoundInstance.forUI(getSound(ModSoundEvents.ITEMS_SORTED), 1.0F, 5.0F));
+    }
+
+    /**
+     * Plays the safe sort sound.
+     */
+    public static void playSafeSortSound() {
+        if (SORT_SOUND_COOLDOWN == 0) {
+            SORT_SOUND_COOLDOWN = DEFAULT_SORT_SOUND_COOLDOWN;
+            playSortSound();
+        }
     }
 
     /**

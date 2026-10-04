@@ -551,9 +551,6 @@ public class TransferEvents extends ManagementEvents {
         if (client().lockedSlots().lockedSlots && client().lockedSlots().hardLockSlots && lockedSlotEvents().isLockedSlot(sourceSlot.index)) {
             return false;
         }
-        if (toContainer && !client().management().includingHotbar && isHotbarSlot(totalSlots, sourceSlot.index)) {
-            return false;
-        }
         return !searchEvents().isFilteredBySearch(sourceSlot, false);
     }
 

@@ -318,7 +318,7 @@ public class ExtractingEvents extends ManagementEvents {
     private boolean shouldGrayout(Slot slot) {
         boolean inventoryScreen = isInventoryScreen(holder().screen());
         boolean shortcutKeyReady = inventoryScreen
-                ? client().sorting().sorting.any() ? hasAnyManagementModifierDown() : hasAllQuickDropModifiersDown()
+                ? hasAllQuickDropModifiersDown()
                 : hasAnyManagementModifierDown();
         return shortcutKeyReady
                 || (!inventoryScreen && shiftHeld(false))

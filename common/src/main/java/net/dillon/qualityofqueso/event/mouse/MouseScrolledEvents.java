@@ -3,7 +3,6 @@ package net.dillon.qualityofqueso.event.mouse;
 import net.dillon.qualityofqueso.event.QuesoScreenHolder;
 import net.dillon.qualityofqueso.event.management.CursorKey;
 import net.dillon.qualityofqueso.event.management.ManagementEvents;
-import net.dillon.qualityofqueso.event.management.TransferEvents;
 import net.dillon.qualityofqueso.helper.ContainerHelper;
 import net.dillon.qualityofqueso.option.eum.management.sorting.CurrentSortingMode;
 import net.dillon.qualityofqueso.option.eum.management.sorting.GlobalSortingMode;
@@ -12,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import static net.dillon.qualityofqueso.event.management.ExtractingEvents.setCursor;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
-import static net.dillon.qualityofqueso.helper.ModConstants.*;
+import static net.dillon.qualityofqueso.helper.ModConstants.MOVE_AMOUNT;
 import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.canScrollMoveAndHasScrollModifierDown;
 import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.hasDropOnlyOneItemModifierDown;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
@@ -57,10 +56,7 @@ public class MouseScrolledEvents extends ManagementEvents {
                 }
             });
             ContainerHelper.storeActiveSortMode(nextMode);
-            if (SORT_SOUND_COOLDOWN == 0) {
-                SORT_SOUND_COOLDOWN = DEFAULT_SORT_SOUND_COOLDOWN;
-                playSortSound();
-            }
+            playSafeSortSound();
         }
     }
 
@@ -131,8 +127,9 @@ public class MouseScrolledEvents extends ManagementEvents {
                 && client().management().scrollMoving
                 && canScrollMoveAndHasScrollModifierDown()
                 && !hasDropOnlyOneItemModifierDown()
-                && new TransferEvents(holder()).tryMoveSingleFromScroll(holder().screensHoveredSlot(), scrollY)) {
+                && transferEvents().tryMoveSingleFromScroll(holder().screensHoveredSlot(), scrollY)) {
             setCursor(CursorKey.MOVE);
+            playSafeSortSound();
             cir.setReturnValue(true);
         } else {
             setMoveAmount(holder().screensHoveredSlot(), scrollY);

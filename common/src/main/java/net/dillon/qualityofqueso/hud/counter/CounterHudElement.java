@@ -52,7 +52,12 @@ public class CounterHudElement extends ModHudElement implements CounterHelper {
         ItemStack mainHand = minecraft.player.getMainHandItem();
         ItemStack offHand = minecraft.player.getOffhandItem();
         ItemStack activeStack = ItemTracker.getActiveStack();
-        ItemStack shotStack = ItemTracker.getShotStack();
+
+        // Only show arrow counter if desired
+        if (isOnlyShowArrowCounterEnabled()) {
+            extractItem(graphics, isProjectileWeapon(mainHand.getItem()) ? mainHand : offHand, false);
+            return;
+        }
 
         // Try render main hand item
         if (extractItem(graphics, mainHand, false)) {
@@ -203,6 +208,16 @@ public class CounterHudElement extends ModHudElement implements CounterHelper {
             );
         }
 
+        // Draw the item at the desired position
+        drawItem(
+                graphics,
+                state.renderStack(),
+                itemX,
+                client().itemCounter().itemCounterPosition[1],
+                false,
+                animationYOffset
+        );
+
         // Render the counter for a crossbow projectile
         boolean renderMiniCrossbow = state.renderMiniCrossbow();
         if (renderMiniCrossbow) {
@@ -233,16 +248,6 @@ public class CounterHudElement extends ModHudElement implements CounterHelper {
                     animationYOffset
             );
         }
-
-        // Draw the item at the desired position
-        drawItem(
-                graphics,
-                state.renderStack(),
-                itemX,
-                client().itemCounter().itemCounterPosition[1],
-                false,
-                animationYOffset
-        );
 
         // Render the warning indicator if needed
         if (state.renderWarningIndicator()) {
@@ -443,7 +448,8 @@ public class CounterHudElement extends ModHudElement implements CounterHelper {
         // Can only render if count is valid
         boolean shouldRender = count > 0
                 || trackedArrow
-                || alwaysShowArrowFallback;
+                || alwaysShowArrowFallback
+                || isOnlyShowArrowCounterEnabled();
 
         // Create animation for the item counter once display time has expired
         int animationYOffset = 0;
@@ -464,7 +470,7 @@ public class CounterHudElement extends ModHudElement implements CounterHelper {
                 (
                         (isStackArrow(countStack) && isStackArrow(ItemTracker.getShotStack()))
                                 || (countStack.is(Items.FIREWORK_ROCKET) && ItemTracker.getShotStack().is(Items.FIREWORK_ROCKET))
-                ) || shouldBeCountingProjectiles(getOffHandStack(player)) || projectile || alwaysShowArrowFallback,
+                ) || shouldBeCountingProjectiles(getOffHandStack(player)) || projectile || alwaysShowArrowFallback || isOnlyShowArrowCounterEnabled(),
                 projectile,
                 amount.inTransportable(),
                 animationYOffset
@@ -507,7 +513,7 @@ public class CounterHudElement extends ModHudElement implements CounterHelper {
                 }
 
                 // Begin searching inside the transportables and increment count if desired
-                if (!holdingProjectileWeapon && !shotArrow()) {
+                if (shouldCountAmountInTransportable(holdingProjectileWeapon, countStack)) {
                     count += transportableCount.count();
                 }
 
@@ -785,7 +791,7 @@ public class CounterHudElement extends ModHudElement implements CounterHelper {
         }
 
         // Must be valid arrow counter to render
-        if (!client().hud().warningIndicators || infinity || mainOrOffHandHasInfinity() || !count.arrowCounter()) {
+        if (!client().hud().warningIndicators || infinity || mainOrOffHandHasInfinity() || mainHandHasArrow() || !count.arrowCounter()) {
             return false;
         }
 

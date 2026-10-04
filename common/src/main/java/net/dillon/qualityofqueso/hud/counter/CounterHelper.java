@@ -61,6 +61,20 @@ public interface CounterHelper {
     }
 
     /**
+     * @return if the count should be incremented from the amount in a transportable container.
+     */
+    default boolean shouldCountAmountInTransportable(boolean holdingProjectileWeapon, ItemStack countStack) {
+        return !holdingProjectileWeapon
+                && !shotArrow()
+                &&
+                !(
+                        isStackArrow(countStack)
+                                && (isOnlyShowArrowCounterEnabled() || isAlwaysShowArrowCounterEnabled())
+                                && !mainHandHasArrow()
+                );
+    }
+
+    /**
      * @return if the main or offhand has infinity.
      */
     default boolean mainOrOffHandHasInfinity() {
@@ -79,7 +93,7 @@ public interface CounterHelper {
      */
     default boolean mainHandHasArrow() {
         ItemStack mainHand = getMainHandStack(minecraft.player);
-        return isStackArrow(mainHand);
+        return isStackArrow(mainHand) && !isOnlyShowArrowCounterEnabled();
     }
 
     /**
@@ -124,13 +138,19 @@ public interface CounterHelper {
      * @return the stack the count and display.
      */
     default ItemStack getCountStack(ItemStack trackedOrHeldStack) {
-        ItemStack nextProjectile = counter().getNextProjectile();
-
         if (isOnlyShowArrowCounterEnabled()) {
-            return nextProjectile.isEmpty() ? fakeArrow() : nextProjectile;
+            return nextProjectileOrFakeArrow();
         }
 
         return trackedOrHeldStack;
+    }
+
+    /**
+     * @return the next arrow projectile or an empty stack if there is none.
+     */
+    default ItemStack nextProjectileOrFakeArrow() {
+        ItemStack nextProjectile = counter().getNextProjectile();
+        return nextProjectile.isEmpty() ? fakeArrow() : nextProjectile;
     }
 
     /**
@@ -166,6 +186,11 @@ public interface CounterHelper {
         boolean arrowAndZero = count.count() == 0
                 && count.arrowCounter()
                 && isStackArrow(count.stack());
+
+        // If only showing the arrow counter, never render the tracked item
+        if (isOnlyShowArrowCounterEnabled()) {
+            return nextProjectileOrFakeArrow();
+        }
 
         // Return fake arrow if held bow has infinity and the next projectile is certainly a normal arrow
         if (mainOrOffHandHasInfinity() && counter().getNextProjectile().is(Items.ARROW)) {

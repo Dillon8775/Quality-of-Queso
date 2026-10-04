@@ -1,10 +1,21 @@
 # Version 1.7.18
 
+## Enhanced Durability Tooltips
+- A new feature located under the GUI tab, where you can configure how durability tooltips look.
+- You can choose to display a small dot with a color to represent item durability, and/or the following:
+  - The exact damage value (ex. 46/500)
+  - The percentage (ex. 95%)
+- By default, the damage value is the only one enabled. You can configure it to however you'd like.
+- Unfortunately, due to NeoForge's limitations, this feature is only available on Fabric.
+
 ## Changes
 - All hud elements (including armor status, item counter, locked hotbar slots, visual clcok, etc.) are now rendered separately. Please report any issues you may find on the [GitHub Bug Tracker](https://github.com/Dillon8775/Quality-of-Queso/issues).
 - New option category called "GUI". Some previous Miscellaneous options have been moved to this category.
   - Also moved Highlight Matching Items and Matching Items Color to this new category.
+- Users can now scroll-move on hotbar slots even when excluding hotbar.
+- Excluded hotbar slots now only grayout if the user is attempting to quick drop.
 - Moving highlighted items now plays the management sort sound.
+- Scroll moving now plays the management sort sound.
 - New names for Quality of Queso sounds:
     - "Management Succeeds" → "Item(s) moved"
     - "Management Rejects" → "Item move(s) rejected"
@@ -16,14 +27,6 @@
 - Added "ItemStackMixin" option.
 - Renamed "Generic Fov Percent Change" option → "Generic Fov Modifier".
 - Moved some textures around, tweaks to lang, and other optimizations.
-
-## Enhanced Durability Tooltips
-- A new feature located under the GUI tab, where you can configure how durability tooltips look.
-- You can choose to display a small dot with a color to represent item durability, and/or the following:
-  - The exact damage value (ex. 46/500)
-  - The percentage (ex. 95%)
-- By default, the damage value is the only one enabled. You can configure it to however you'd like.
-- Unfortunately, due to NeoForge's limitations, this feature is only available on Fabric.
 
 ## Item/Arrow Counter Changes
 - Overall improved the item/arrow counter's functionality.
