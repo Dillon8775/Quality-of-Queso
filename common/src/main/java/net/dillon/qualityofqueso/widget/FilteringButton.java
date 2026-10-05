@@ -13,7 +13,6 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 
-import static net.dillon.dillonlib.task.ClientTasks.getScreen;
 import static net.dillon.dillonlib.task.ClientTasks.openScreen;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.isDropperDispenserOrHopperScreen;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
@@ -93,7 +92,7 @@ public class FilteringButton extends ToggleableButton {
             default -> original = Component.translatable("qualityofqueso.gui.move_anything");
         }
         boolean trackedFilteringEnabled = ContainerHelper.isTrackedFilteringActive();
-        if (isDropperDispenserOrHopperScreen(getScreen())) {
+        if (isDropperDispenserOrHopperScreen()) {
             return original;
         } else if (trackedFilteringEnabled) { // For filtered containers
             String filterType = ContainerHelper.CURRENT_FILTER_TYPE.tag()

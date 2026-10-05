@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BooleanSupplier;
 
-import static net.dillon.dillonlib.task.ClientTasks.getScreen;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
 import static net.dillon.qualityofqueso.helper.MethodHelper.getTitleLabelY;
 import static net.dillon.qualityofqueso.helper.MethodHelper.getTopPos;
@@ -39,9 +38,9 @@ public class WidgetEvents extends ManagementEvents {
     }
 
     /**
-     * @return a safely initialized {@link QuesoButton}.
      * @param booleanSupplier if the button can be initialized or added
-     * @param newButton the desired button to create
+     * @param newButton       the desired button to create
+     * @return a safely initialized {@link QuesoButton}.
      */
     private QuesoButton initButton(BooleanSupplier booleanSupplier, QuesoButton newButton) {
         if (!booleanSupplier.getAsBoolean()) {
@@ -131,7 +130,7 @@ public class WidgetEvents extends ManagementEvents {
     }
 
     public void initLayout(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
-        if (!(isValidScreen(getScreen()) || isOtherValidScreen(holder().screen()) || isMerchantScreen(getScreen()) || isCraftingScreen(getScreen()))) {
+        if (!(isValidScreen() || isOtherValidScreen() || isMerchantScreen() || isCraftingScreen())) {
             return;
         }
 
@@ -143,7 +142,7 @@ public class WidgetEvents extends ManagementEvents {
 
         // Construct the final layout
         AbstractList<AbstractWidget> finalLayout = client().management().layout.horizontal() ? horizontalLayout : verticalLayout;
-        if (isMerchantScreen(getScreen())) {
+        if (isMerchantScreen()) {
             finalLayout = NonNullList.of(null, holder().managementButtons().getBulkTrade());
         }
 
@@ -162,17 +161,24 @@ public class WidgetEvents extends ManagementEvents {
 
         for (String s : layoutList) {
             switch (s) {
-                case TRANSFER_CONTAINER_BUTTON_SERIALIZED_NAME -> finalLayout.add(holder().managementButtons().getTransferContainer());
-                case TRANSFER_INVENTORY_BUTTON_SERIALIZED_NAME -> finalLayout.add(holder().managementButtons().getTransferInventory());
-                case LOCK_INVENTORY_BUTTON_SERIALIZED_NAME -> finalLayout.add(holder().managementButtons().getLockInventory());
-                case INCLUDE_HOTBAR_BUTTON_SERIALIZED_NAME -> finalLayout.add(holder().managementButtons().getIncludeHotbar());
-                case ALWAYS_QUICK_MOVE_BUTTON_SERIALIZED_NAME -> finalLayout.add(holder().managementButtons().getAlwaysQuickMove());
+                case TRANSFER_CONTAINER_BUTTON_SERIALIZED_NAME ->
+                        finalLayout.add(holder().managementButtons().getTransferContainer());
+                case TRANSFER_INVENTORY_BUTTON_SERIALIZED_NAME ->
+                        finalLayout.add(holder().managementButtons().getTransferInventory());
+                case LOCK_INVENTORY_BUTTON_SERIALIZED_NAME ->
+                        finalLayout.add(holder().managementButtons().getLockInventory());
+                case INCLUDE_HOTBAR_BUTTON_SERIALIZED_NAME ->
+                        finalLayout.add(holder().managementButtons().getIncludeHotbar());
+                case ALWAYS_QUICK_MOVE_BUTTON_SERIALIZED_NAME ->
+                        finalLayout.add(holder().managementButtons().getAlwaysQuickMove());
                 case FILTERING_BUTTON_SERIALIZED_NAME -> finalLayout.add(holder().managementButtons().getFiltering());
                 case BULK_CRAFT_BUTTON_SERIALIZED_NAME -> finalLayout.add(holder().managementButtons().getBulkCraft());
                 case QUICK_DROP_BUTTON_SERIALIZED_NAME -> finalLayout.add(holder().managementButtons().getQuickDrop());
                 case SWAP_BUTTON_SERIALIZED_NAME -> finalLayout.add(holder().managementButtons().getSwap());
-                case SEARCH_TRANSPORTABLES_BUTTON_SERIALIZED_NAME -> finalLayout.add(holder().managementButtons().getSearchTransportables());
-                case CLEAR_EXCLUDED_SLOTS_BUTTON_SERIALIZED_NAME -> finalLayout.add(holder().managementButtons().getClearExcludedSlots());
+                case SEARCH_TRANSPORTABLES_BUTTON_SERIALIZED_NAME ->
+                        finalLayout.add(holder().managementButtons().getSearchTransportables());
+                case CLEAR_EXCLUDED_SLOTS_BUTTON_SERIALIZED_NAME ->
+                        finalLayout.add(holder().managementButtons().getClearExcludedSlots());
                 default -> finalLayout.add(holder().managementButtons().getSort());
             }
         }
@@ -243,14 +249,15 @@ public class WidgetEvents extends ManagementEvents {
                     }
                 },
                 holder().mc(),
-                holder().screen());
+                holder().screen()
+                );
     }
 
     /**
      * @return the {@code quick drop} button.
      */
     private QuesoButton createQuickDrop() {
-        boolean containerScreen = isContainerScreen(holder().screen());
+        boolean containerScreen = isContainerScreen();
         return new QuickDropButton(
                 holder().menu(),
                 holder().mc().font,
@@ -258,7 +265,7 @@ public class WidgetEvents extends ManagementEvents {
                 "quick_drop/",
                 "quick_drop",
                 b -> transferEvents().dropItems(!containerScreen),
-                () -> (isInventoryScreen(holder().screen()) ?
+                () -> (isInventoryScreen() ?
                         isAnySlotFilled(true, 9, 36) :
                         isAnySlotFilled(false, 0, getContainerSize()))
                         && getCursorStack().isEmpty()
@@ -389,27 +396,27 @@ public class WidgetEvents extends ManagementEvents {
      */
     private boolean canInitTransferButton() {
         return client().management().transferring.buttonOrKey()
-                && (isContainerScreen(getScreen()) || isDropperDispenserOrHopperScreen(getScreen()) || isBrewingOrFurnaceScreen(getScreen()));
+                && (isContainerScreen() || isDropperDispenserOrHopperScreen() || isBrewingOrFurnaceScreen());
     }
 
     /**
      * @return if the {@code Transfer inventory} button can be {@code initialized}.
      */
     private boolean canInitTransferInventoryButton() {
-        return canInitTransferButton() && !isBrewingOrFurnaceScreen(getScreen());
+        return canInitTransferButton() && !isBrewingOrFurnaceScreen();
     }
 
     /**
      * @return if the {@link IncludeHotbarButton} can be {@code initialized}.
      */
     private boolean canInitIncludeHotbarButton() {
-        if (!isValidScreen(getScreen())) {
+        if (!isValidScreen()) {
             return false;
         }
 
-        if (isContainerScreen(getScreen()) && client().management().transferring.any() || client().management().quickDrop.any()) {
+        if (isContainerScreen() && client().management().transferring.any() || client().management().quickDrop.any()) {
             return client().buttonDisplayOptions().displayIncludeHotbar != IncludeHotbar.OFF
-                    && (!isInventoryScreen(getScreen()) || !client().buttonDisplayOptions().displayIncludeHotbar.containerScreensOnly());
+                    && (!isInventoryScreen() || !client().buttonDisplayOptions().displayIncludeHotbar.containerScreensOnly());
         }
 
         return false;
@@ -419,11 +426,11 @@ public class WidgetEvents extends ManagementEvents {
      * @return if the {@link FilteringButton} can be {@code initialized}.
      */
     private boolean canInitFilteringButton() {
-        return !isInventoryScreen(getScreen())
+        return !isInventoryScreen()
                 && (
                 ContainerHelper.isTrackedFilteringActive() || !client().buttonDisplayOptions().displayFiltering.filteredContainersOnly()
                         && (
-                        (isContainerScreen(getScreen()) || isDropperDispenserOrHopperScreen(getScreen())) && client().management().transferring.any()
+                        (isContainerScreen() || isDropperDispenserOrHopperScreen()) && client().management().transferring.any()
                 )
         );
     }
@@ -432,7 +439,7 @@ public class WidgetEvents extends ManagementEvents {
      * @return if the {@link QuickDropButton} can be {@code initialized}.
      */
     private boolean canInitQuickDropButton() {
-        return isValidScreen(getScreen())
+        return isValidScreen()
                 && (client().management().quickDrop.buttonOrKey() || (client().management().quickDrop.any() && hasAllQuickDropModifiersDown()));
     }
 
@@ -440,7 +447,7 @@ public class WidgetEvents extends ManagementEvents {
      * @return if the {@link SwapButton} can be {@code initialized}.
      */
     private boolean canInitSwapButton() {
-        return client().management().swapping.buttonOrKey() && isContainerScreen(getScreen());
+        return client().management().swapping.buttonOrKey() && isContainerScreen();
     }
 
     /**
@@ -448,26 +455,34 @@ public class WidgetEvents extends ManagementEvents {
      */
     private boolean canInitSortButton() {
         return client().sorting().sorting.buttonOrKey()
-                && (isValidScreen(getScreen()) || isDropperDispenserOrHopperScreen(getScreen()));
+                && (isValidScreen() || isDropperDispenserOrHopperScreen());
     }
 
     /**
      * @return if the {@link AlwaysQuickMoveButton} can be {@code initialized}.
      */
     private boolean canInitAlwaysQuickMoveButton() {
-        return client().buttonDisplayOptions().displayAlwaysQuickMove && isValidScreenForSingularMoving(getScreen(), true);
+        return client().buttonDisplayOptions().displayAlwaysQuickMove && isValidScreenForSingularMoving(true);
     }
 
     /**
      * @return if the {@link SearchTransportablesButton} can be {@code initialized}.
      */
     private boolean canInitSearchTransportablesButton() {
+        if (!isValidScreen()) {
+            return false;
+        }
+
         if (
                 (
                         (holder().searchFields().inventory() != null && !holder().searchFields().inventory().getValue().isEmpty())
                                 || (holder().searchFields().container() != null && !holder().searchFields().container().getValue().isEmpty())
                 ) && client().buttonDisplayOptions().displaySearchTransportables
-                        && ((client().searching().containerSearching && isContainerScreen(getScreen())) || (client().searching().inventorySearching && isInventoryScreen(getScreen())))
+                        &&
+                        (
+                                (client().searching().containerSearching && isContainerScreen())
+                                        || (client().searching().inventorySearching && isInventoryScreen())
+                        )
         ) {
             for (int i = 0; i < searchEvents().getSearchSlotCount(); i++) {
                 ItemStack stack = holder().menu().getSlot(i).getItem();
@@ -484,28 +499,28 @@ public class WidgetEvents extends ManagementEvents {
      * @return if the {@link ClearExcludedSlotsButton} can be {@code initialized}.
      */
     private boolean canInitClearExcludedSlotsButton() {
-        return client().management().dragSorting && !holder().excludedSlots().isEmpty();
+        return isValidScreen() && client().management().dragSorting && !holder().excludedSlots().isEmpty();
     }
 
     /**
      * @return if the {@link BulkTradeButton} can be {@code initialized}.
      */
     private boolean canInitBulkTradeButton() {
-        return client().buttonDisplayOptions().displayBulkTrade && isMerchantScreen(getScreen());
+        return client().buttonDisplayOptions().displayBulkTrade && isMerchantScreen();
     }
 
     /**
      * @return if the {@link BulkCraftButton} can be {@code initialized}.
      */
     private boolean canInitBulkCraftButton() {
-        return client().buttonDisplayOptions().displayBulkCraft && (isCraftingScreen(getScreen()) || isInventoryScreen(getScreen()));
+        return client().buttonDisplayOptions().displayBulkCraft && (isCraftingScreen() || isInventoryScreen());
     }
 
     /**
      * @return if the {@link LockInventoryButton} can be {@code initialized}.
      */
     private boolean canInitLockInventoryButton() {
-        return client().buttonDisplayOptions().displayLockInventory && isInventoryScreen(getScreen());
+        return client().buttonDisplayOptions().displayLockInventory && isInventoryScreen();
     }
 
     /**

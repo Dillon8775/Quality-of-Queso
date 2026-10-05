@@ -59,7 +59,7 @@ public class GuiHelper {
      */
     public static void drawTooltip(Component tooltip, GuiGraphicsExtractor graphics, Font font, int mouseX, int mouseY, boolean searchBar) {
         Screen screen = getScreen();
-        boolean validScreen = isValidScreen(screen) || isOtherValidScreen(screen);
+        boolean validScreen = isValidScreen() || isOtherValidScreen();
         int x = validScreen ? getTooltipX(graphics, screen, mouseX) : mouseX;
         int y = validScreen ? getTooltipY(CURRENT_CONTAINER, screen, mouseY, searchBar) : mouseY;
         graphics.setTooltipForNextFrame(font, font.split(tooltip, 200), x, y);
@@ -112,7 +112,7 @@ public class GuiHelper {
             y -= 64;
         }
 
-        if (isOtherValidScreen(screen)) {
+        if (isOtherValidScreen()) {
             y += 22;
         }
         return y;

@@ -5,7 +5,6 @@ import net.dillon.qualityofqueso.sound.ModSoundEvents;
 import net.dillon.qualityofqueso.widget.QuesoButton;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.*;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
@@ -18,6 +17,7 @@ import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.Slot;
 
 import static net.dillon.dillonlib.task.ClientTasks.getMinecraft;
+import static net.dillon.dillonlib.task.ClientTasks.getScreen;
 import static net.dillon.qualityofqueso.helper.MethodHelper.getRecipeBookComponent;
 import static net.dillon.qualityofqueso.helper.ModConstants.*;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
@@ -31,127 +31,127 @@ public class ManagementHelper {
     /**
      * @return if the screen is a {@link ContainerScreen} or {@link InventoryScreen}.
      */
-    public static boolean isValidScreen(Screen screen) {
-        return isContainerScreen(screen) || isInventoryScreen(screen);
+    public static boolean isValidScreen() {
+        return isContainerScreen() || isInventoryScreen();
     }
 
     /**
      * @return if the screen is a {@link InventoryScreen}.
      */
-    public static boolean isInventoryScreen(Screen screen) {
-        return screen instanceof InventoryScreen;
+    public static boolean isInventoryScreen() {
+        return getScreen() instanceof InventoryScreen;
     }
 
     /**
      * @return if the screen is a {@link ContainerScreen} or {@link ShulkerBoxScreen}.
      */
-    public static boolean isContainerScreen(Screen screen) {
-        return screen instanceof ContainerScreen || isShulkerBoxScreen(screen);
+    public static boolean isContainerScreen() {
+        return getScreen() instanceof ContainerScreen || isShulkerBoxScreen();
     }
 
     /**
-     * @return valid shulkerBoxScreen.
+     * @return if the screen is a {@link ShulkerBoxScreen}.
      */
-    public static boolean isShulkerBoxScreen(Screen screen) {
-        return screen instanceof ShulkerBoxScreen;
+    public static boolean isShulkerBoxScreen() {
+        return getScreen() instanceof ShulkerBoxScreen;
     }
 
     /**
      * @return if the screen is a {@link HopperScreen} or {@link DispenserScreen}.
      */
-    public static boolean isDropperDispenserOrHopperScreen(Screen screen) {
-        return isHopperScreen(screen) || isDropperOrDispenserScreen(screen);
+    public static boolean isDropperDispenserOrHopperScreen() {
+        return isHopperScreen() || isDropperOrDispenserScreen();
     }
 
     /**
      * @return if the screen is a {@link BrewingStandScreen} or {@link AbstractFurnaceScreen}.
      */
-    public static boolean isBrewingOrFurnaceScreen(Screen screen) {
-        return isBrewingStandScreen(screen) || isFurnaceScreen(screen);
+    public static boolean isBrewingOrFurnaceScreen() {
+        return isBrewingStandScreen() || isFurnaceScreen();
     }
 
     /**
      * @return if the screen is either a {@link BrewingStandScreen}, {@link DispenserScreen}, {@link HopperScreen} or {@link AbstractFurnaceScreen}.
      */
-    public static boolean isOtherValidScreen(Screen screen) {
-        return isBrewingOrFurnaceScreen(screen) || isDropperDispenserOrHopperScreen(screen);
+    public static boolean isOtherValidScreen() {
+        return isBrewingOrFurnaceScreen() || isDropperDispenserOrHopperScreen();
     }
 
     /**
      * @return if the screen is a {@link BrewingStandScreen}.
      */
-    public static boolean isBrewingStandScreen(Screen screen) {
-        return screen instanceof BrewingStandScreen;
+    public static boolean isBrewingStandScreen() {
+        return getScreen() instanceof BrewingStandScreen;
     }
 
     /**
      * @return if the screen is a {@link AbstractFurnaceScreen}.
      */
-    public static boolean isFurnaceScreen(Screen screen) {
-        return screen instanceof AbstractFurnaceScreen<?>;
+    public static boolean isFurnaceScreen() {
+        return getScreen() instanceof AbstractFurnaceScreen<?>;
     }
 
     /**
      * @return if the screen is a {@link DispenserScreen}.
      */
-    public static boolean isDropperOrDispenserScreen(Screen screen) {
-        return screen instanceof DispenserScreen;
+    public static boolean isDropperOrDispenserScreen() {
+        return getScreen() instanceof DispenserScreen;
     }
 
     /**
      * @return if the screen is a {@link HopperScreen}.
      */
-    public static boolean isHopperScreen(Screen screen) {
-        return screen instanceof HopperScreen;
+    public static boolean isHopperScreen() {
+        return getScreen() instanceof HopperScreen;
     }
 
     /**
      * @return if the screen is a {@link MerchantScreen}.
      */
-    public static boolean isMerchantScreen(Screen screen) {
-        return screen instanceof MerchantScreen;
+    public static boolean isMerchantScreen() {
+        return getScreen() instanceof MerchantScreen;
     }
 
     /**
      * @return if the screen is a {@link CraftingScreen}.
      */
-    public static boolean isCraftingScreen(Screen screen) {
-        return screen instanceof CraftingScreen;
+    public static boolean isCraftingScreen() {
+        return getScreen() instanceof CraftingScreen;
     }
 
     /**
      * @return if the screen is a {@link CreativeModeInventoryScreen}.
      */
-    public static boolean isCreativeInventoryScreen(Screen screen) {
-        return screen instanceof CreativeModeInventoryScreen;
+    public static boolean isCreativeInventoryScreen() {
+        return getScreen() instanceof CreativeModeInventoryScreen;
     }
 
     /**
      * @return valid screens for singular moving, including {@link ContainerScreen}s, {@link DispenserScreen}s, {@link HopperScreen}s, and {@code optional} {@link InventoryScreen}.
      */
-    public static boolean isValidScreenForSingularMoving(Screen screen, boolean includeInventory) {
-        return isContainerScreen(screen) || isDropperDispenserOrHopperScreen(screen) || (includeInventory && isInventoryScreen(screen));
+    public static boolean isValidScreenForSingularMoving(boolean includeInventory) {
+        return isContainerScreen() || isDropperDispenserOrHopperScreen() || (includeInventory && isInventoryScreen());
     }
 
     /**
      * @return if the screen is a valid screen for rendering slot overlays (locked slot and highlighted items)
      */
-    public static boolean isValidScreenForRenderingSlotOverlays(AbstractContainerScreen<?> screen) {
+    public static boolean isValidScreenForRenderingSlotOverlays() {
         return (
-                isValidScreen(screen)
-                        || isOtherValidScreen(screen)
-                        || isMerchantScreen(screen)
-                        || screen instanceof AnvilScreen
-                        || screen instanceof BeaconScreen
-                        || screen instanceof CartographyTableScreen
-                        || screen instanceof CraftingScreen
-                        || screen instanceof EnchantmentScreen
-                        || screen instanceof GrindstoneScreen
-                        || screen instanceof SmithingScreen
-                        || screen instanceof StonecutterScreen
+                isValidScreen()
+                        || isOtherValidScreen()
+                        || isMerchantScreen()
+                        || getScreen() instanceof AnvilScreen
+                        || getScreen() instanceof BeaconScreen
+                        || getScreen() instanceof CartographyTableScreen
+                        || getScreen() instanceof CraftingScreen
+                        || getScreen() instanceof EnchantmentScreen
+                        || getScreen() instanceof GrindstoneScreen
+                        || getScreen() instanceof SmithingScreen
+                        || getScreen() instanceof StonecutterScreen
         )
-                && !isCreativeInventoryScreen(screen)
-                && !(screen instanceof CrafterScreen);
+                && !isCreativeInventoryScreen()
+                && !(getScreen() instanceof CrafterScreen);
     }
 
     /**
@@ -314,9 +314,9 @@ public class ManagementHelper {
     /**
      * @return the modifier to use for recipe books.
      */
-    public static int getRecipeBookModifier(Screen screen) {
+    public static int getRecipeBookModifier() {
         return !client().misc().noRecipeBookShift
-                && screen instanceof AbstractRecipeBookScreen<?> recipeBookScreen && getRecipeBookComponent(recipeBookScreen).isVisible() ? 77 : 0;
+                && getScreen() instanceof AbstractRecipeBookScreen<?> recipeBookScreen && getRecipeBookComponent(recipeBookScreen).isVisible() ? 77 : 0;
     }
 
     /**
@@ -336,21 +336,21 @@ public class ManagementHelper {
     /**
      * @return the {@code X} value for transferring query buttons.
      */
-    public static int getManagementButtonX(Screen screen, int backgroundWidth, int width, int button) {
+    public static int getManagementButtonX(int backgroundWidth, int width, int button) {
         int barWidth = getBarWidth(backgroundWidth);
         int modifier = 18;
-        if (isBrewingStandScreen(screen)) {
+        if (isBrewingStandScreen()) {
             modifier -= 36;
-        } else if (isDropperOrDispenserScreen(screen)) {
+        } else if (isDropperOrDispenserScreen()) {
             modifier -= 38;
-        } else if (isHopperScreen(screen)) {
+        } else if (isHopperScreen()) {
             modifier -= 20;
-        } else if (isFurnaceScreen(screen)) {
+        } else if (isFurnaceScreen()) {
             modifier -= 16;
         }
 
-        if (screen instanceof AbstractRecipeBookScreen<?> recipeBookScreen && getRecipeBookComponent(recipeBookScreen).isVisible()) {
-            modifier += getRecipeBookModifier(screen);
+        if (getScreen() instanceof AbstractRecipeBookScreen<?> recipeBookScreen && getRecipeBookComponent(recipeBookScreen).isVisible()) {
+            modifier += getRecipeBookModifier();
         }
         return (width / 2 + barWidth / 2 + modifier) - (button * 12);
     }
@@ -358,17 +358,17 @@ public class ManagementHelper {
     /**
      * @return the {@code y-value} for container management buttons.
      */
-    public static int getManagementButtonY(Screen screen, Container container, int screenY, int titleY) {
+    public static int getManagementButtonY(Container container, int screenY, int titleY) {
         int y = getContainerY(container);
-        if (isBrewingStandScreen(screen)) {
+        if (isBrewingStandScreen()) {
             y += 30;
-        } else if (isFurnaceScreen(screen)) {
+        } else if (isFurnaceScreen()) {
             y += 14;
-        } else if (isDropperOrDispenserScreen(screen)) {
+        } else if (isDropperOrDispenserScreen()) {
             y += 24;
-        } else if (isHopperScreen(screen)) {
+        } else if (isHopperScreen()) {
             y -= 1;
         }
-        return screenY + titleY + (screen instanceof InventoryScreen ? 64 : y);
+        return screenY + titleY + (getScreen() instanceof InventoryScreen ? 64 : y);
     }
 }

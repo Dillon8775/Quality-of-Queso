@@ -42,7 +42,7 @@ public class TransferEvents extends ManagementEvents {
      * Helper method to drop all selected items in the respective inventory/container.
      */
     public void dropItems(boolean fromInventory) {
-        boolean dropFromInventory = isInventoryScreen(holder().screen());
+        boolean dropFromInventory = isInventoryScreen();
         moveItems(true, true, dropFromInventory, false);
     }
 
@@ -110,12 +110,12 @@ public class TransferEvents extends ManagementEvents {
             fromEnd = effectivePlayerEnd;
         }
 
-        if (isBrewingStandScreen(holder().screen())) {
+        if (isBrewingStandScreen()) {
             fromStart = 0;
             fromEnd = 3;
         }
 
-        if (isFurnaceScreen(holder().screen())) {
+        if (isFurnaceScreen()) {
             fromStart = 2;
             fromEnd = 3;
         }
@@ -139,7 +139,7 @@ public class TransferEvents extends ManagementEvents {
                 continue; // Then skip container slot if query not found via search
             } else if (!client().management().includingHotbar) {
                 if (drop) {
-                    if (isExcludedInventorySlot(fromSlot.index) || isInventoryHotbarSlot(isInventoryScreen(holder().screen()), fromSlot.index)) {
+                    if (isExcludedInventorySlot(fromSlot.index) || isInventoryHotbarSlot(isInventoryScreen(), fromSlot.index)) {
                         continue; // If dropping from InventoryScreen, and it's an excluded slot AND fromInventory hotbar slot, skip slot and continue
                     }
                 } else if (!toInventory && isHotbarSlot(fromEnd, fromSlot.index)) {
@@ -237,7 +237,7 @@ public class TransferEvents extends ManagementEvents {
             return false;
         }
 
-        if (hoveredSlot.index == 0 && (isCraftingScreen(holder().screen()) || isInventoryScreen(holder().screen()))) {
+        if (hoveredSlot.index == 0 && (isCraftingScreen() || isInventoryScreen())) {
             return moveSingleCraftingResult(hoveredSlot);
         }
 
@@ -249,7 +249,7 @@ public class TransferEvents extends ManagementEvents {
         int toStart;
         int toEnd;
 
-        if (isInventoryScreen(holder().screen())) {
+        if (isInventoryScreen()) {
             // Inventory screen layout:
             // 0 result, 1-4 crafting input, 5-8 armor, 9-35 inventory, 36-44 hotbar, 45 offhand.
             int playerStorageStart = 9;
@@ -402,7 +402,7 @@ public class TransferEvents extends ManagementEvents {
         int playerStart;
         int playerEnd;
 
-        if (isInventoryScreen(holder().screen())) {
+        if (isInventoryScreen()) {
             playerStart = 9;
             playerEnd = Math.min(totalSlots, 45);
         } else {
@@ -507,7 +507,7 @@ public class TransferEvents extends ManagementEvents {
             return playerStorageStart;
         }
 
-        return isCraftingScreen(holder().screen()) ? 5 : 0;
+        return isCraftingScreen() ? 5 : 0;
     }
 
     /**

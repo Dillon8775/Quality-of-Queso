@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static net.dillon.dillonlib.task.ClientTasks.hasShiftDown;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
 import static net.dillon.qualityofqueso.helper.MethodHelper.*;
 import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
@@ -189,7 +190,7 @@ public class ManagementEvents implements ModEvent {
             Slot slot = holder().menu().getSlot(i);
             ItemStack stack = isPlayerInventory ? playerInventory.getItem(i) : slot.getItem();
             ItemStack cursorStack = getCursorStack();
-            boolean isShulkerScreen = isShulkerBoxScreen(holder().screen());
+            boolean isShulkerScreen = isShulkerBoxScreen();
             boolean isCursorShulker = isShulkerScreen && holder().menu().getCarried().is(ItemTags.SHULKER_BOXES);
             boolean isStackShulker = isShulkerScreen && stack.is(ItemTags.SHULKER_BOXES);
 
@@ -260,7 +261,7 @@ public class ManagementEvents implements ModEvent {
                 }
 
                 if (searchEvents().search(holder().searchFields().searchText(), slot, false)) {
-                    if (!lockedSlotEvents().isLockedSlot(slot.index) && !(isShulkerBoxScreen(holder().screen()) && slot.getItem().is(ItemTags.SHULKER_BOXES))) {
+                    if (!lockedSlotEvents().isLockedSlot(slot.index) && !(isShulkerBoxScreen() && slot.getItem().is(ItemTags.SHULKER_BOXES))) {
                         if (!applyFillWhatsPresentFilter || !shouldApplyMatchingFilter() || isPresent(toInventory, slot.getItem())) {
                             foundQueries++;
                         }
@@ -292,7 +293,7 @@ public class ManagementEvents implements ModEvent {
      * @return if the user is attempting to exclude or lock slots.
      */
     public boolean isExcludingOrLockingSlots() {
-        return isValidScreen(holder().screen())
+        return isValidScreen()
                 && (hasSelectSlotsModifierDown() || hasExcludeSlotsModifierDown())
                 && getHoveredSlot(holder().screen()) != null
                 && holder().menu().getCarried().isEmpty();
@@ -319,7 +320,7 @@ public class ManagementEvents implements ModEvent {
      */
     public boolean isExcludedInventorySlot(int slotIndex) {
         // Index 5-8 are armor slots. Index 45 is offhand slot. NEVER drop those items.
-        return isInventoryScreen(holder().screen()) && (slotIndex <= 8 && slotIndex >= 5 || slotIndex == 45);
+        return isInventoryScreen() && (slotIndex <= 8 && slotIndex >= 5 || slotIndex == 45);
     }
 
     /**
@@ -374,7 +375,7 @@ public class ManagementEvents implements ModEvent {
         }
 
         ItemStack fromStack = fromSlot.getItem();
-        if (Minecraft.getInstance().hasShiftDown() && !ignoreComponents) {
+        if (hasShiftDown() && !ignoreComponents) {
             return ItemStack.isSameItemSameComponents(fromStack.copy(), getCursorStack());
         }
         return ItemStack.isSameItem(fromStack.copy(), getCursorStack());
@@ -402,9 +403,9 @@ public class ManagementEvents implements ModEvent {
      * @return true if the item is present in the opposing inventory/container.
      */
     public boolean isPresent(boolean toInventory, ItemStack sourceStack) {
-        if (!isContainerScreen(holder().screen())
-                && !isShulkerBoxScreen(holder().screen())
-                && !isDropperDispenserOrHopperScreen(holder().screen())) {
+        if (!isContainerScreen()
+                && !isShulkerBoxScreen()
+                && !isDropperDispenserOrHopperScreen()) {
             return true;
         }
 
@@ -534,9 +535,9 @@ public class ManagementEvents implements ModEvent {
         int toStart = toInventory ? containerSize : 0;
         int toEnd = toInventory ? totalSlots : containerSize;
 
-        if (!isContainerScreen(holder().screen())
-                && !isShulkerBoxScreen(holder().screen())
-                && !isDropperDispenserOrHopperScreen(holder().screen())) {
+        if (!isContainerScreen()
+                && !isShulkerBoxScreen()
+                && !isDropperDispenserOrHopperScreen()) {
             return true;
         }
 
@@ -559,7 +560,7 @@ public class ManagementEvents implements ModEvent {
             if (lockedSlotEvents().isLockedSlot(sourceSlot.index)) {
                 continue;
             }
-            if (isShulkerBoxScreen(holder().screen()) && sourceSlot.getItem().is(ItemTags.SHULKER_BOXES)) {
+            if (isShulkerBoxScreen() && sourceSlot.getItem().is(ItemTags.SHULKER_BOXES)) {
                 continue;
             }
             if (applyFillWhatsPresentFilter

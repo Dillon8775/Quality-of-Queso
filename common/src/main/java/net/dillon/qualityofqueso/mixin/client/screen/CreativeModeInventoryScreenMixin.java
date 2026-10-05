@@ -26,6 +26,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import static net.dillon.dillonlib.task.ClientTasks.hasShiftDown;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.hoveredSlotHasItem;
 import static net.dillon.qualityofqueso.helper.MethodHelper.key;
 import static net.dillon.qualityofqueso.helper.ModHelper.*;
@@ -127,7 +128,7 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
             return;
         }
 
-        if (!Minecraft.getInstance().hasShiftDown() && selectedTab.getType() == CreativeModeTab.Type.SEARCH && hoveredSlotHasItem(this.hoveredSlot) && this.searchBox != null) {
+        if (!hasShiftDown() && selectedTab.getType() == CreativeModeTab.Type.SEARCH && hoveredSlotHasItem(this.hoveredSlot) && this.searchBox != null) {
             for (int i = 0; i < 9; i++) {
                 if (Minecraft.getInstance().options.keyHotbarSlots[i].matches(event)) {
                     this.ignoreTextInput = true;

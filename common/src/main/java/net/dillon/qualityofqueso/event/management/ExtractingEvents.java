@@ -5,7 +5,6 @@ import com.mojang.blaze3d.platform.cursor.CursorType;
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import net.dillon.qualityofqueso.event.QuesoScreenHolder;
 import net.dillon.qualityofqueso.option.eum.general.Theme;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.inventory.AbstractRecipeBookScreen;
@@ -15,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 
-import static net.dillon.dillonlib.task.ClientTasks.drawSprite;
+import static net.dillon.dillonlib.task.ClientTasks.*;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
 import static net.dillon.qualityofqueso.helper.MethodHelper.*;
 import static net.dillon.qualityofqueso.helper.ModConstants.*;
@@ -56,7 +55,7 @@ public class ExtractingEvents extends ManagementEvents {
     public void grayoutSlotsAndExtractLockedIcon(GuiGraphicsExtractor graphics) {
         // Begin iterating slots to gray out
         boolean inventorySearchFieldPresent = holder().searchFields().inventory() != null;
-        boolean validScreen = isValidScreen(holder().screen());
+        boolean validScreen = isValidScreen();
         for (int i = 0; i < searchEvents().getSearchSlotCount(); i++) {
             Slot slot = holder().menu().getSlot(i);
 
@@ -70,7 +69,7 @@ public class ExtractingEvents extends ManagementEvents {
                 }
                 // Otherwise, gray out slots that don't match the search
                 else if (!client().management().includingHotbar
-                        && (isInventoryScreen(holder().screen()) ? isInventoryHotbarSlot(true, slot.index) : isHotbarSlot(holder().menu().slots.size(), slot.index))
+                        && (isInventoryScreen() ? isInventoryHotbarSlot(true, slot.index) : isHotbarSlot(holder().menu().slots.size(), slot.index))
                         && (client().management().transferring.any() || client().management().scrollMoving)) {
                     if (shouldGrayout(slot)) {
                         renderGrayedSlot(graphics, slot, slot.hasItem());
@@ -79,7 +78,7 @@ public class ExtractingEvents extends ManagementEvents {
                 }
             }
             // Renders the lock texture on locked slots (yes, the lock icon itself, not the color)
-            if (isValidScreenForRenderingSlotOverlays(holder().screen()) && client().lockedSlots().showLock.inScreens() && client().lockedSlots().lockedSlots && holder().searchFields().searchText().isEmpty() && holder().excludedSlots().isEmpty()) {
+            if (isValidScreenForRenderingSlotOverlays() && client().lockedSlots().showLock.inScreens() && client().lockedSlots().lockedSlots && holder().searchFields().searchText().isEmpty() && holder().excludedSlots().isEmpty()) {
                 lockedSlotEvents().renderLockedSlot(graphics, slot, true);
             }
 
@@ -94,7 +93,7 @@ public class ExtractingEvents extends ManagementEvents {
                     if (slot.index == id) {
                         boolean renderUnavailable = true;
 
-                        if (isContainerScreen(holder().screen())) {
+                        if (isContainerScreen()) {
                             // Don't grayout if CTRL is pressed and transfer keys are bounded
                             if (client().management().transferring.any()
                                     && (kumaAnyModifierDown(MOVE_TO_INVENTORY) || kumaAnyModifierDown(MOVE_TO_CONTAINER))
@@ -154,7 +153,7 @@ public class ExtractingEvents extends ManagementEvents {
      * Renders the blue "locked" overlay for locked slots (not the lock icon, the color itself)
      */
     private void extractLockedSlotColor(GuiGraphicsExtractor graphics) {
-        if (!client().lockedSlots().lockedSlots || !isValidScreenForRenderingSlotOverlays(holder().screen())) {
+        if (!client().lockedSlots().lockedSlots || !isValidScreenForRenderingSlotOverlays()) {
             return;
         }
 
@@ -168,7 +167,7 @@ public class ExtractingEvents extends ManagementEvents {
      * Highlight matching items based on the cursor held item or hovered item
      */
     private void extractHighlightedSlots(GuiGraphicsExtractor graphics) {
-        if (!isValidScreenForRenderingSlotOverlays(holder().screen()) || !(client().management().highlightMatchingItems.always() || (client().management().highlightMatchingItems.onCtrl() && Minecraft.getInstance().hasControlDown()))) {
+        if (!isValidScreenForRenderingSlotOverlays() || !(client().management().highlightMatchingItems.always() || (client().management().highlightMatchingItems.onCtrl() && hasCtrlDown()))) {
             return;
         }
 
@@ -215,17 +214,17 @@ public class ExtractingEvents extends ManagementEvents {
      */
     private void extractLockingUnlockingSlots(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         // Only render other locked slot textures on valid screens
-        if (isValidScreen(holder().screen())) {
+        if (isValidScreen()) {
             // Renders the key, or unlocked slot texture beside the mouse, indicating that the user is attempting to lock/unlock slots
             if (client().lockedSlots().lockedSlots && client().lockedSlots().showLock.inScreens() && holder().screensHoveredSlot() != null && holder().excludedSlots().isEmpty()
-                    && hasLockSlotModifierDown() && !hasAnyManagementModifierDown() && !Minecraft.getInstance().hasControlDown() && !Minecraft.getInstance().hasShiftDown()) {
+                    && hasLockSlotModifierDown() && !hasAnyManagementModifierDown() && !hasCtrlDown() && !hasShiftDown()) {
                 lockedSlotEvents().renderUnlockedSlot(graphics, lockedSlotEvents().isLockedSlot(holder().screensHoveredSlot().index), mouseX, mouseY);
             }
             // For drag sorting and/or locking slots, set the cursor to "pointing hand", like the user is grabbing onto slots to lock/select them
             if (client().misc().enhancedCursor && (client().management().dragSorting || client().lockedSlots().lockedSlots)
                     && holder().screensHoveredSlot() != null
-                    && !Minecraft.getInstance().hasControlDown()
-                    && Minecraft.getInstance().hasAltDown()) {
+                    && !hasCtrlDown()
+                    && hasAltDown()) {
                 graphics.requestCursor(CursorTypes.POINTING_HAND);
             }
         }
@@ -248,7 +247,7 @@ public class ExtractingEvents extends ManagementEvents {
             return;
         }
 
-        if (Minecraft.getInstance().hasControlDown()) {
+        if (hasCtrlDown()) {
             if (ENHANCED_COOLDOWN_SWAP == 0) {
                 swapCursor = !swapCursor;
                 ENHANCED_COOLDOWN_SWAP = DEFAULT_ENHANCED_COOLDOWN_SWAP;
@@ -267,7 +266,7 @@ public class ExtractingEvents extends ManagementEvents {
             }
         }
 
-        if (isContainerScreen(holder().screen()) && hasAllQuickDropModifiersDown() && !shouldButtonBeActive(false, null)) {
+        if (isContainerScreen() && hasAllQuickDropModifiersDown() && !shouldButtonBeActive(false, null)) {
             graphics.requestCursor(CursorTypes.NOT_ALLOWED);
         }
     }
@@ -316,7 +315,7 @@ public class ExtractingEvents extends ManagementEvents {
      * @return whether a slot should be grayed out.
      */
     private boolean shouldGrayout(Slot slot) {
-        boolean inventoryScreen = isInventoryScreen(holder().screen());
+        boolean inventoryScreen = isInventoryScreen();
         boolean shortcutKeyReady = inventoryScreen
                 ? hasAllQuickDropModifiersDown()
                 : hasAnyManagementModifierDown();
@@ -335,7 +334,7 @@ public class ExtractingEvents extends ManagementEvents {
     public boolean shiftHeld(boolean inventory) {
         int totalSlots = getTotalSlots();
         Slot hoveredSlot = getHoveredSlot(holder().screen());
-        return Minecraft.getInstance().hasShiftDown()
+        return hasShiftDown()
                 && (!client().management().dragSorting || !hasSelectSlotsModifierDown())
                 && hoveredSlot != null
                 && hoveredSlot.hasItem()

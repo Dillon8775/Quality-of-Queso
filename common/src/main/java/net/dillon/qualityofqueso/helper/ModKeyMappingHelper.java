@@ -6,6 +6,7 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.input.MouseButtonEvent;
 
+import static net.dillon.dillonlib.task.ClientTasks.*;
 import static net.dillon.qualityofqueso.helper.MethodHelper.kumaAnyModifierDown;
 import static net.dillon.qualityofqueso.helper.MethodHelper.kumaMousePressed;
 import static net.dillon.qualityofqueso.keybind.ModKeyMappings.*;
@@ -45,7 +46,7 @@ public class ModKeyMappingHelper {
      * @return if the user has the shift key down, to only drop one of each item via quick dropping.
      */
     public static boolean hasDropOnlyOneItemModifierDown() {
-        return Minecraft.getInstance().hasShiftDown();
+        return hasShiftDown();
     }
 
     /**
@@ -62,7 +63,7 @@ public class ModKeyMappingHelper {
      * @return if the user has the {@code scroll move modifier} key down.
      */
     public static boolean canScrollMoveAndHasScrollModifierDown() {
-        return client().management().scrollMoving && Minecraft.getInstance().hasControlDown();
+        return client().management().scrollMoving && hasCtrlDown();
     }
 
     /**
@@ -86,13 +87,13 @@ public class ModKeyMappingHelper {
      * @return if the user has the keybind to {@code select} slots down, via drag sorting.
      */
     public static boolean hasSelectSlotsModifierDown() {
-        return Minecraft.getInstance().hasAltDown();
+        return hasAltDown();
     }
 
     /**
      * @return if the user has the keybind to {@code exclude slots} down, via drag sorting.
      */
     public static boolean hasExcludeSlotsModifierDown() {
-        return Minecraft.getInstance().hasAltDown() && Minecraft.getInstance().hasShiftDown();
+        return hasAltDown() && hasShiftDown();
     }
 }

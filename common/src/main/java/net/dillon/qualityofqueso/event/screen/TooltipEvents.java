@@ -130,7 +130,7 @@ public class TooltipEvents extends ManagementEvents {
         List<Component> tooltipToRender = new ArrayList<>();
 
         // If bl is true, and the hovered slot's count is more than 1 (because if you are moving 1 singular, the count must be more than 1), OR if the user isn't hovering over a slot at all, begin modifying tooltips
-        if (!isCreativeInventoryScreen(holder().screen()) && bl && !onlySingleMoveModifierDown && (hoveredSlot == null || hoveredSlot.getItem().count() > 1)) {
+        if (!isCreativeInventoryScreen() && bl && !onlySingleMoveModifierDown && (hoveredSlot == null || hoveredSlot.getItem().count() > 1)) {
             // Create the new tooltips variable
             List<Component> moveAmountTooltip = new ArrayList<>();
             // Determine the translation for the tooltips
@@ -155,7 +155,7 @@ public class TooltipEvents extends ManagementEvents {
             Component ignoresLockedSlots = Component.translatable("qualityofqueso.gui.move_amount.ignores_locked_slots").withColor(client().lockedSlots().lockedSlotColor);
             // If the quick drop keys are down and the hovered slot has an item, continue through this statement
             if (hasAllQuickDropModifiersDown() && hoveredSlotHasItem(hoveredSlot)) {
-                boolean containerScreen = isContainerScreen(holder().screen());
+                boolean containerScreen = isContainerScreen();
                 // If no respective item was found in the container for quick dropping, tell the user "none of this item was found", therefor cannot drop.
                 if (containerScreen && !shouldButtonBeActive(false, null)) {
                     moveAmountTooltip.add(Component.translatable("qualityofqueso.gui.quick_drop_button.no_items_found", hoveredSlot.getItem().getItemName()).copy()

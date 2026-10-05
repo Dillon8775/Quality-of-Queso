@@ -52,9 +52,9 @@ public class ScreenClosedEvents extends ManagementEvents {
      */
     private void saveSearchText() {
         if (client().searching().saveSearchText) {
-            if (isInventoryScreen(holder().screen()) && holder().searchFields().inventory() != null) {
+            if (isInventoryScreen() && holder().searchFields().inventory() != null) {
                 updateClient(client -> client.searching().savedSearchText = holder().searchFields().inventory().getValue());
-            } else if (isContainerScreen(holder().screen()) && holder().searchFields().container() != null) {
+            } else if (isContainerScreen() && holder().searchFields().container() != null) {
                 updateClient(client -> client.searching().savedSearchText = holder().searchFields().container().getValue());
             }
         }
@@ -98,7 +98,7 @@ public class ScreenClosedEvents extends ManagementEvents {
             });
         }
 
-        if (isContainerScreen(holder().screen())) {
+        if (isContainerScreen()) {
             if (ContainerHelper.OPENING_PLACEHOLDER_SCREEN) {
                 ContainerHelper.OPENING_PLACEHOLDER_SCREEN = false;
                 return;

@@ -125,7 +125,7 @@ public class MouseClickedEvents extends ManagementEvents {
      * Attempts to quick move any highlighted or similar items related to the cursor/hovered stack.
      */
     private void tryQuickMoveHighlightedItems(MouseButtonEvent event, CallbackInfoReturnable<Boolean> cir) {
-        if (!(isContainerScreen(holder().screen()) || isDropperDispenserOrHopperScreen(holder().screen())) || !event.hasControlDown() || event.button() != InputConstants.MOUSE_BUTTON_LEFT) {
+        if (!(isContainerScreen() || isDropperDispenserOrHopperScreen()) || !event.hasControlDown() || event.button() != InputConstants.MOUSE_BUTTON_LEFT) {
             return;
         }
 

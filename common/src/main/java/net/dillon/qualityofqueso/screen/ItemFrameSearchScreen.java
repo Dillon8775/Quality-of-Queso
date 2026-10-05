@@ -17,6 +17,7 @@ import net.minecraft.client.input.KeyEvent;
 import net.minecraft.network.chat.Component;
 import org.jspecify.annotations.Nullable;
 
+import static net.dillon.dillonlib.task.ClientTasks.hasCtrlDown;
 import static net.dillon.dillonlib.task.ClientTasks.openScreen;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 import static net.dillon.qualityofqueso.option.OptionInstances.updateClient;
@@ -95,7 +96,7 @@ public class ItemFrameSearchScreen extends BasicDillonLibScreen {
             this.sendPacket(false, client().misc().itemFrameSearchGlowDuration != 0 ? client().misc().itemFrameSearchGlowDuration : 0, client().misc().itemFrameSearchRadius);
         }
 
-        if (Minecraft.getInstance().hasControlDown() && input.key() == InputConstants.KEY_C) {
+        if (hasCtrlDown() && input.key() == InputConstants.KEY_C) {
             this.clear();
         }
 

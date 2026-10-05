@@ -76,7 +76,7 @@ public class SearchEvents extends ManagementEvents {
      * @return the slot count that should be considered for searching/highlighting on the current screen.
      */
     public int getSearchSlotCount() {
-        if (isInventoryScreen(holder().screen())) {
+        if (isInventoryScreen()) {
             return holder().menu().slots.size();
         }
         int searchSize = getInventorySize();
@@ -104,8 +104,8 @@ public class SearchEvents extends ManagementEvents {
         // InventoryScreen should always keep its own hotbar/include behavior.
         if (!client().management().includingHotbar
                 && isHotbarSlot(holder().menu().slots.size(), dropping ? slot.index + 1 : slot.index)
-                && (!dropping || !isInventoryScreen(holder().screen()) || slot.index != 45)) {
-            boolean applyHotbarFilter = client().accessibility().searchInventory || isInventoryScreen(holder().screen());
+                && (!dropping || !isInventoryScreen() || slot.index != 45)) {
+            boolean applyHotbarFilter = client().accessibility().searchInventory || isInventoryScreen();
             if (applyHotbarFilter) {
                 return false;
             }

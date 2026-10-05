@@ -30,7 +30,7 @@ public class QuickDropButton extends QuesoButton {
 
     @Override
     protected String getAppendedTooltip() {
-        return isInventoryScreen(getScreen()) ? ".inventory" : super.getAppendedTooltip();
+        return isInventoryScreen() ? ".inventory" : super.getAppendedTooltip();
     }
 
     /**

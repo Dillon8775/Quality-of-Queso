@@ -1,5 +1,7 @@
 # Version 1.7.18
 
+### Now requires [DillonLib](https://modrinth.com/mod/dillon-lib) version 1.2.3 or greater.
+
 ## Enhanced Durability Tooltips
 - A new feature located under the GUI tab, where you can configure how durability tooltips look.
 - You can choose to display a small dot with a color to represent item durability, and/or the following:
@@ -24,6 +26,7 @@
 - Added a "banned servers" option to warn the user which servers the mod shouldn't be used on. You can only configure this via the config file under the "accessibility" options.
   - The only banned server by default right now is hypixel. You can remove or add more if you'd like.
 - Added a warning message to the Lock Inventory button if the mod is not installed server-side.
+- Holding or pressing ALT no longer auto focuses the recipe book search bar.
 - Added "ItemStackMixin" option.
 - Renamed "Generic Fov Percent Change" option → "Generic Fov Modifier".
 - Moved some textures around, tweaks to lang, and other optimizations.

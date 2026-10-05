@@ -32,7 +32,7 @@ public class SortEvents extends ManagementEvents {
      * @return if a container can be sorted.
      */
     public boolean canSort() {
-        boolean inventory = isInventoryScreen(holder().screen());
+        boolean inventory = isInventoryScreen();
         int sortStart = inventory ? 9 : 0;
         int sortEnd = inventory
                 ? (client().management().includingHotbar ? 45 : 36)
@@ -113,7 +113,7 @@ public class SortEvents extends ManagementEvents {
             return;
         }
 
-        boolean inventoryScreen = isInventoryScreen(holder().screen());
+        boolean inventoryScreen = isInventoryScreen();
         List<Integer> sortableSlots = new ArrayList<>();
 
         if (inventoryScreen) {

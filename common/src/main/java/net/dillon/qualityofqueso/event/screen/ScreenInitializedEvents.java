@@ -46,7 +46,7 @@ public class ScreenInitializedEvents extends ManagementEvents {
      * Handles tracked containers upon screen creation.
      */
     private void handleTrackedContainers() {
-        if (isContainerScreen(holder().screen())) {
+        if (isContainerScreen()) {
             // Handle tracked containers
             if (ContainerHelper.RETURNING_FROM_PLACEHOLDER_SCREEN) {
                 // If the user is returning from a placeholder screen, then we should re-track the container as "filtered", to ensure no variables are lost
@@ -76,11 +76,11 @@ public class ScreenInitializedEvents extends ManagementEvents {
      * Initializes search fields for the screen.
      */
     private void initializeSearchFields() {
-        if (isContainerScreen(holder().screen()) && client().searching().containerSearching) {
+        if (isContainerScreen() && client().searching().containerSearching) {
             // Initialize the container search field, if it should be initialized
             holder().setContainerSearchField(searchEvents().initializeSearchField(false));
             MethodHelper.addRenderableModWidget(holder().screen(), holder().searchFields().container());
-        } else if (isInventoryScreen(holder().screen())) { // Initialize the inventory search field, if it should be initialized
+        } else if (isInventoryScreen()) { // Initialize the inventory search field, if it should be initialized
             // Also initialize the "container" variable to the player's inventory, if the container was never initialized from any of the other screens
             holder().setCachedContainer(holder().mc().player.getInventory());
             if (client().searching().inventorySearching) {
@@ -94,7 +94,7 @@ public class ScreenInitializedEvents extends ManagementEvents {
      * Re-adds all excluded slots to the screen.
      */
     private void reAddExcludedSlots() {
-        if (isValidScreen(holder().screen()) && ModConstants.SAVING_EXCLUDED_SLOTS && holder().getCachedContainer() != null) {
+        if (isValidScreen() && ModConstants.SAVING_EXCLUDED_SLOTS && holder().getCachedContainer() != null) {
             // Do not re-add excluded slots if the recipe book is open, because it breaks things
             if (holder().screen() instanceof AbstractRecipeBookScreen<?> recipeScreen && getRecipeBookComponent(recipeScreen).isVisible()) {
                 return;
@@ -124,7 +124,7 @@ public class ScreenInitializedEvents extends ManagementEvents {
             holder().setCachedContainer(hopper(hopperScreen));
         }
         // If screen isn't an instance of any of the above, then start checking for container/inventory screens
-        if (isContainerScreen(holder().screen())) {
+        if (isContainerScreen()) {
             // Determine fromInventory variable; if instance ShulkerBoxScreen, fromInventory is the shulker box's fromInventory
             if (holder().screen() instanceof ShulkerBoxScreen shulkerBoxScreen) {
                 holder().setCachedContainer(shulkerBox(shulkerBoxScreen));

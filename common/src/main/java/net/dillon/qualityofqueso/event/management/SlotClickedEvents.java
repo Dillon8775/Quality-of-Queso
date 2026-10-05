@@ -120,7 +120,7 @@ public class SlotClickedEvents extends ManagementEvents {
             return;
         }
 
-        if ((!client().management().bulkCraft || !client().buttonDisplayOptions().displayBulkCraft) || !(isCraftingScreen(holder().screen()) || isInventoryScreen(holder().screen()))) {
+        if ((!client().management().bulkCraft || !client().buttonDisplayOptions().displayBulkCraft) || !(isCraftingScreen() || isInventoryScreen())) {
             return;
         }
 
@@ -218,7 +218,7 @@ public class SlotClickedEvents extends ManagementEvents {
             return;
         }
 
-        if (!isCraftingScreen(getScreen()) && !isInventoryScreen(getScreen())) {
+        if (!isCraftingScreen() && !isInventoryScreen()) {
             activeBulkCraftTask = null;
             return;
         }

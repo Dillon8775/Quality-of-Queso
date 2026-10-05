@@ -34,7 +34,7 @@ public class CharTypedEvents extends ManagementEvents {
             return holder().searchFields().container().charTyped(event);
         }
 
-        if (isInventoryScreen(holder().screen())) {
+        if (isInventoryScreen()) {
             if (holder().screen() instanceof AbstractRecipeBookScreen<?> recipeScreen
                     && getRecipeBookComponent(recipeScreen).isVisible()
                     && holder().searchFields().inventory() != null

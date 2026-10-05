@@ -66,7 +66,7 @@ public class WidgetLayout extends AbstractWidget {
      * @return if the player has more than 2 effects, determining if the buttons should be rendered in a different place.
      */
     public boolean hasTooManyEffects(LocalPlayer player) {
-        return isInventoryScreen(this.screen) && player != null && player.getActiveEffects().size() > 2;
+        return isInventoryScreen() && player != null && player.getActiveEffects().size() > 2;
     }
 
     /**
@@ -104,8 +104,8 @@ public class WidgetLayout extends AbstractWidget {
      * @return the panel X for the box.
      */
     private int getPanelX(LocalPlayer player) {
-        int x = this.screen.width / 2 + (this.hasTooManyEffects(player) ? 44 : 92) + getRecipeBookModifier(this.screen);
-        if (isMerchantScreen(this.screen)) {
+        int x = this.screen.width / 2 + (this.hasTooManyEffects(player) ? 44 : 92) + getRecipeBookModifier();
+        if (isMerchantScreen()) {
             x += 52;
         }
         return x;
@@ -115,11 +115,11 @@ public class WidgetLayout extends AbstractWidget {
      * @return the panel Y for the box.
      */
     private int getPanelY(LocalPlayer player) {
-        boolean inventoryScreen = isInventoryScreen(this.screen);
-        int y = this.getContainerY() - (inventoryScreen ? (this.hasTooManyEffects(player) ? -65 : 37) : (isOtherValidScreen(this.screen) ? -8 : 38));
-        if (isMerchantScreen(this.screen)) {
+        boolean inventoryScreen = isInventoryScreen();
+        int y = this.getContainerY() - (inventoryScreen ? (this.hasTooManyEffects(player) ? -65 : 37) : (isOtherValidScreen() ? -8 : 38));
+        if (isMerchantScreen()) {
             y += 56;
-        } else if (isCraftingScreen(this.screen)) {
+        } else if (isCraftingScreen()) {
             y += 54;
         }
         return y;
@@ -130,7 +130,7 @@ public class WidgetLayout extends AbstractWidget {
      */
     private int getContainerY() {
         return this.topPos + this.titleLabelY + 2 * (this.container == null ? 0 : this.container.getContainerSize()) + (
-                this.screen instanceof InventoryScreen || isOtherValidScreen(this.screen) ? 12
+                this.screen instanceof InventoryScreen || isOtherValidScreen() ? 12
                         : 34);
     }
 
@@ -184,11 +184,11 @@ public class WidgetLayout extends AbstractWidget {
         this.setWidth(this.getPanelWidth());
         this.setHeight(this.getPanelHeight());
 
-        boolean inventoryScreen = isInventoryScreen(this.screen);
-        boolean craftingScreen = isCraftingScreen(this.screen);
-        boolean merchantScreen = isMerchantScreen(this.screen);
-        boolean hopperDropperOrDispenser = isDropperDispenserOrHopperScreen(this.screen);
-        boolean dropperOrDispenser = isDropperOrDispenserScreen(this.screen);
+        boolean inventoryScreen = isInventoryScreen();
+        boolean craftingScreen = isCraftingScreen();
+        boolean merchantScreen = isMerchantScreen();
+        boolean hopperDropperOrDispenser = isDropperDispenserOrHopperScreen();
+        boolean dropperOrDispenser = isDropperOrDispenserScreen();
 
         if (RENDERED_BUTTONS > 0 && !client().management().layout.horizontal()) {
             this.extractPanel(graphics, player);
@@ -197,7 +197,7 @@ public class WidgetLayout extends AbstractWidget {
         int buttons = 0;
         int finalX = 8;
 
-        int recipeBookModifier = getRecipeBookModifier(this.screen);
+        int recipeBookModifier = getRecipeBookModifier();
         int x = finalX + recipeBookModifier;
         int inventoryBaseY = -33;
         int y = inventoryScreen ? inventoryBaseY : -34;
@@ -209,7 +209,7 @@ public class WidgetLayout extends AbstractWidget {
             alreadyAddedModifier = true;
             x = newX;
             y = 69;
-        } else if (isOtherValidScreen(this.screen)) {
+        } else if (isOtherValidScreen()) {
             y = 12;
         }
 
@@ -223,8 +223,8 @@ public class WidgetLayout extends AbstractWidget {
 
             boolean bulkCraft = client().management().layout.horizontal() && widget instanceof BulkCraftButton;
             if (client().management().layout.horizontal()) {
-                widget.setX(getManagementButtonX(this.screen, getImageWidth(this.screen), this.screen.width, buttons));
-                widget.setY(getManagementButtonY(this.screen, this.container, this.topPos, this.titleLabelY));
+                widget.setX(getManagementButtonX(getImageWidth(this.screen), this.screen.width, buttons));
+                widget.setY(getManagementButtonY(this.container, this.topPos, this.titleLabelY));
                 if (inventoryScreen) {
                     if (buttons == 0) {
                         originalX = widget.getX();

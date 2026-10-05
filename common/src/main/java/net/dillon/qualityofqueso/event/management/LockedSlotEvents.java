@@ -3,7 +3,6 @@ package net.dillon.qualityofqueso.event.management;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.dillon.qualityofqueso.event.QuesoScreenHolder;
 import net.dillon.qualityofqueso.helper.ContainerHelper;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.world.inventory.Slot;
@@ -12,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.Collections;
 import java.util.Set;
 
-import static net.dillon.dillonlib.task.ClientTasks.blitTexture;
+import static net.dillon.dillonlib.task.ClientTasks.*;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
 import static net.dillon.qualityofqueso.helper.MethodHelper.kumaMousePressed;
 import static net.dillon.qualityofqueso.helper.ModConstants.LOCKED_SLOT_TEXTURE;
@@ -48,7 +47,7 @@ public class LockedSlotEvents extends ManagementEvents {
      * @return if the slot passed in is "locked".
      */
     public boolean isLockedSlot(int slotIndex) {
-        boolean containerSlot = isContainerScreen(holder().screen()) && slotIndex < getContainerSize();
+        boolean containerSlot = isContainerScreen() && slotIndex < getContainerSize();
         if (containerSlot) {
             return getLockedContainerSlots().contains(slotIndex);
         } else {
@@ -61,7 +60,7 @@ public class LockedSlotEvents extends ManagementEvents {
      * @return if the user is attempting to drop an entire locked slot stack.
      */
     public boolean droppingEntireLockedSlotStack() {
-        return Minecraft.getInstance().hasControlDown() && hasDropOnlyOneItemModifierDown() && holder().screensHoveredSlot() != null && lockedSlotEvents().isLockedSlot(holder().screensHoveredSlot().index);
+        return hasCtrlDown() && hasDropOnlyOneItemModifierDown() && holder().screensHoveredSlot() != null && lockedSlotEvents().isLockedSlot(holder().screensHoveredSlot().index);
     }
 
     /**
@@ -71,7 +70,7 @@ public class LockedSlotEvents extends ManagementEvents {
         if (lockedSlotEvents().droppingEntireLockedSlotStack()
                 ? lockedSlotEvents().droppingEntireLockedSlotStack() && canScrollMoveAndHasScrollModifierDown()
                 : canScrollMoveAndHasScrollModifierDown() && !hasDropOnlyOneItemModifierDown()) {
-            return !(canScrollMoveAndHasScrollModifierDown() && hasDropOnlyOneItemModifierDown() && Minecraft.getInstance().hasAltDown());
+            return !(canScrollMoveAndHasScrollModifierDown() && hasDropOnlyOneItemModifierDown() && hasAltDown());
         }
         return false;
     }
@@ -95,7 +94,7 @@ public class LockedSlotEvents extends ManagementEvents {
      * Renders a slot as "locked".
      */
     public void renderLockedSlot(GuiGraphicsExtractor graphics, Slot slot, boolean lockOnly) {
-        boolean containerSlot = isContainerScreen(holder().screen()) && slot.index < getContainerSize();
+        boolean containerSlot = isContainerScreen() && slot.index < getContainerSize();
         boolean locked;
         if (containerSlot) {
             locked = getLockedContainerSlots().contains(slot.index);
@@ -128,7 +127,7 @@ public class LockedSlotEvents extends ManagementEvents {
      * @return -1 for non-player-storage slots (armor/crafting/offhand/etc).
      */
     public int toPlayerLockSlotId(int slotIndex) {
-        if (isInventoryScreen(holder().screen())) {
+        if (isInventoryScreen()) {
             if (slotIndex >= 36 && slotIndex <= 44) {
                 return slotIndex - 36;
             }
@@ -156,14 +155,14 @@ public class LockedSlotEvents extends ManagementEvents {
     public void selectOrLockSlot(MouseButtonEvent event, CallbackInfoReturnable<Boolean> cir) {
         Slot slot = holder().screensHoveredSlot();
 
-        boolean notExcluding = Minecraft.getInstance().hasAltDown() && !Minecraft.getInstance().hasShiftDown();
+        boolean notExcluding = hasAltDown() && !hasShiftDown();
         boolean lockingSlot = kumaMousePressed(LOCK_SLOT, event);
 
         if (slot == null) {
             return;
         }
 
-        if (isValidScreen(holder().screen()) && client().lockedSlots().lockedSlots && notExcluding && hasLockSlotModifierDown() && lockingSlot) {
+        if (isValidScreen() && client().lockedSlots().lockedSlots && notExcluding && hasLockSlotModifierDown() && lockingSlot) {
             if (holder().getLastLockedSlotIndex() != slot.index) {
                 if (holder().getLockDragAction() == 0) {
                     holder().setLockDragAction(isLockedSlot(slot.index) ? -1 : 1);
@@ -171,7 +170,7 @@ public class LockedSlotEvents extends ManagementEvents {
 
                 boolean shouldLock = holder().getLockDragAction() == 1;
                 boolean slotLocked = isLockedSlot(slot.index);
-                boolean containerSlot = isContainerScreen(holder().screen()) && slot.index < getContainerSize();
+                boolean containerSlot = isContainerScreen() && slot.index < getContainerSize();
                 boolean shouldToggle = shouldLock != slotLocked;
 
                 if (shouldToggle) {

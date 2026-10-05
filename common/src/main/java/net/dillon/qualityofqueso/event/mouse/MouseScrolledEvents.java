@@ -98,7 +98,7 @@ public class MouseScrolledEvents extends ManagementEvents {
         }
 
         boolean validHoveredSlot = hoveredSlotHasItem(hoveredSlot) && hoveredSlot.getItem().count() > 1;
-        if (!isCreativeInventoryScreen(holder().screen()) && holder().getCanMoveOne() && (validHoveredSlot && hasDropOnlyOneItemModifierDown())
+        if (!isCreativeInventoryScreen() && holder().getCanMoveOne() && (validHoveredSlot && hasDropOnlyOneItemModifierDown())
                 || buttonHoveredAndActive(holder().managementButtons().getQuickDrop()) ? hasDropOnlyOneItemModifierDown()
                 : ((validHoveredSlot || buttonHoveredAndActive(holder().managementButtons().getTransferContainer()) || buttonHoveredAndActive(holder().managementButtons().getTransferInventory())) && canScrollMoveAndHasScrollModifierDown())) {
             changeMountAmount(hoveredSlot, scrollY);
@@ -123,7 +123,7 @@ public class MouseScrolledEvents extends ManagementEvents {
      * Moves one hovered item by scrolling.
      */
     private void moveHoveredItem(double scrollY, CallbackInfoReturnable<Boolean> cir) {
-        if (!isCreativeInventoryScreen(holder().screen())
+        if (!isCreativeInventoryScreen()
                 && client().management().scrollMoving
                 && canScrollMoveAndHasScrollModifierDown()
                 && !hasDropOnlyOneItemModifierDown()

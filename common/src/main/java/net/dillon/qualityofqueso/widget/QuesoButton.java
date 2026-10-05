@@ -1,7 +1,6 @@
 package net.dillon.qualityofqueso.widget;
 
 import net.dillon.dillonlib.util.Texts;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -17,8 +16,7 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.function.Supplier;
 
-import static net.dillon.dillonlib.task.ClientTasks.blitTexture;
-import static net.dillon.dillonlib.task.ClientTasks.getScreen;
+import static net.dillon.dillonlib.task.ClientTasks.*;
 import static net.dillon.qualityofqueso.helper.ButtonHelper.drawButtonTexture;
 import static net.dillon.qualityofqueso.helper.ButtonHelper.getWidgetPath;
 import static net.dillon.qualityofqueso.helper.GuiHelper.drawTooltip;
@@ -115,7 +113,7 @@ public class QuesoButton extends Button {
         }
 
         Screen screen = getScreen();
-        if (canScrollMoveAndHasScrollModifierDown() && client().management().scrollMoving && (isValidScreenForSingularMoving(screen, true))) {
+        if (canScrollMoveAndHasScrollModifierDown() && client().management().scrollMoving && (isValidScreenForSingularMoving(true))) {
             if (this.isHovered()) {
                 drawButtonTexture(graphics, MOVE_ONE_PATH, this);
             }
@@ -137,7 +135,7 @@ public class QuesoButton extends Button {
 
         Screen screen = getScreen();
         if (screen != null) {
-            if (isBrewingStandScreen(screen)) {
+            if (isBrewingStandScreen()) {
                 drawTooltip(Component.translatable("qualityofqueso.gui." + this.buttonName + "_button.brewing_stand"), graphics, this.font, mouseX, mouseY);
                 return;
             } else if (screen instanceof AbstractFurnaceScreen<?> abstractFurnaceScreen) {
@@ -153,7 +151,7 @@ public class QuesoButton extends Button {
         if (this.transferrableButton && !cursorStack.isEmpty()) {
             drawTooltip(Component.translatable(newButtonName + ".with_cursor_stack",
                             cursorStack.getItemName(),
-                            Minecraft.getInstance().hasShiftDown()
+                            hasShiftDown()
                                     ? Component.translatable("qualityofqueso.gui.transfer_button.matching_cursor_stack")
                                     : Component.translatable("qualityofqueso.gui.transfer_button.match_cursor_stack")),
                     graphics, this.font, mouseX, mouseY);
@@ -244,7 +242,7 @@ public class QuesoButton extends Button {
             return appended;
         }
 
-        if (isBrewingOrFurnaceScreen(screen)) {
+        if (isBrewingOrFurnaceScreen()) {
             appended = ".png";
         }
         return appended;
