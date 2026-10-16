@@ -49,34 +49,8 @@
 ---
 
 <div align="center">
-  <h1>What is <i>Quality of Queso❔</i></h1>
-    <ul>
-      <li>📦 <b>Quality of Queso</b> is a mod designed <i>specifically</i> for <b>vanilla gameplay</b> by adding <b>various quality-of-life features,</b> including <a href="https://quality-of-queso.fandom.com/wiki/Category:Inventory_Management">precise inventory management</a>, <a href="https://quality-of-queso.fandom.com/wiki/Colored_Highlighting">various HUD features</a>, <a href="https://quality-of-queso.fandom.com/wiki/Search_Bar">container searching</a>, and so much more!</li>
-      <li>💭 The idea <b>originated</b> from a <b><a href="https://youtu.be/Q7vhqWwDElg">video</a></b> featuring <a href="https://www.youtube.com/@dillon8775">me (Dillon)</a> and my friend, <a href="https://www.youtube.com/@mannyqueso">MannyQUESO</a>, released to celebrate the new year of <b>2025</b> (a pretty big year for us, as it was our graduation 🎓 year).</li>
-      <li>🛠️ We came up with idea to <b>create a client-side "quality of life" mod</b>, that should add various quality of life features to the game to improve our <b>vanilla experience</b>, and that's exactly what we did!</li>
-      <li>📈 Starting off with very small, <b>unnoticeable features</b>, quickly branched off into a huge project to further enhance the game when it comes to actual gameplay and managing items, as it can be difficult and annoying sometimes.</li>
-      <li>✅ <b>That's why this mod was created!</b> To further enhance your <b>Minecraft experience</b> by easily sorting and managing items, adding cool visual effects, remove fog, and so much more! <b>We hope that this mod suits you! :)</b></li>
-      <li>❗Please note how I <i>constantly</i> mentioned <b>"vanilla experience"</b>. This mod was <i><b>specifically designed for modern, vanilla Minecraft</b></i>, not for <b>big modpacks</b> or <b>older Minecraft</b>. You <i>can</i> use this mod in modpacks, but please be aware that <b>not all features</b> (<i>especially inventory management</i>) may work with modded containers, blocks or items.</li>
-    </ul>
-</div>
-
----
-
-<div align="center">
     <a href="https://quality-of-queso.fandom.com/wiki/Quality_of_Queso_Wiki">
         <img alt = "Official Wiki" width = 300 src="https://img.shields.io/badge/Visit_The-Wiki-FFC500?style=for-the-badge&logo=data%3Aimage%2Fpng%3Bbase64%2CiVBORw0KGgoAAAANSUhEUgAAAIAAAACACAMAAAD04JH5AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAkUExURdDN4MC90qWiuoN%2FnP%2FdLuuyAP%2FiAP%2FIAP%2FMEfLEBm9rigAAANLtqQEAAAAMdFJOU%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FABLfzs4AAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAZdEVYdFNvZnR3YXJlAFBhaW50Lk5FVCA1LjEuMTITAUd0AAAAuGVYSWZJSSoACAAAAAUAGgEFAAEAAABKAAAAGwEFAAEAAABSAAAAKAEDAAEAAAACAAAAMQECABEAAABaAAAAaYcEAAEAAABsAAAAAAAAAGAAAAABAAAAYAAAAAEAAABQYWludC5ORVQgNS4xLjEyAAADAACQBwAEAAAAMDIzMAGgAwABAAAAAQAAAAWgBAABAAAAlgAAAAAAAAACAAEAAgAEAAAAUjk4AAIABwAEAAAAMDEwMAAAAADZp5qVybcLXwAAASdJREFUeF7t18FOQjEQRmEUUdH3f182%2FbnpIZNbCIFZnLPDtjPfiuDh%2F8EOiOerPf5QgAABzwbcOzD3PkY8Z%2FP0bb4AAQL6ATKQg%2Fn3vap3AgQI6AtInyM%2BTDmv4v2Uc%2B4TIEBAP0CqBhx3qiCcnwQIENAPwIdczPtf6DRahQgQIKAvoFqcRd9FP6MKMm8TIEBABwAj4HeUwVw0r986jwjgvpsECBDwckAu8GI%2B7y1KvFcBrotGAgQIeD%2BAPxB4MYOq8sOD5TxzMpf7BAgQ0BeQMoD%2FoFTlHhcn3hcgQEA%2FQOJDQqpWFycBAgT0A%2FAhy4Iq3mfcJ0CAgD6AfJHkYj7nfB6z3%2BpcAQIE9APwQtW87vYLhlXzBQgQ0Adwb3%2BI56sJECDg7YAL7xZ30DhcdMIAAAAASUVORK5CYII%3D">
-    </a>
-</div>
-<br>
-<div align="center">
-    <a href="https://discord.gg/vfqEAn4YFy">
-    <img alt="Discord Server" src="https://img.shields.io/badge/Discord-5669C6?style=for-the-badge&logo=data%3Aimage%2Fpng%3Bbase64%2CiVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8%2F9hAAAABGdBTUEAALGPC%2FxhBQAACklpQ0NQc1JHQiBJRUM2MTk2Ni0yLjEAAEiJnVN3WJP3Fj7f92UPVkLY8LGXbIEAIiOsCMgQWaIQkgBhhBASQMWFiApWFBURnEhVxILVCkidiOKgKLhnQYqIWotVXDjuH9yntX167%2B3t%2B9f7vOec5%2FzOec8PgBESJpHmomoAOVKFPDrYH49PSMTJvYACFUjgBCAQ5svCZwXFAADwA3l4fnSwP%2FwBr28AAgBw1S4kEsfh%2F4O6UCZXACCRAOAiEucLAZBSAMguVMgUAMgYALBTs2QKAJQAAGx5fEIiAKoNAOz0ST4FANipk9wXANiiHKkIAI0BAJkoRyQCQLsAYFWBUiwCwMIAoKxAIi4EwK4BgFm2MkcCgL0FAHaOWJAPQGAAgJlCLMwAIDgCAEMeE80DIEwDoDDSv%2BCpX3CFuEgBAMDLlc2XS9IzFLiV0Bp38vDg4iHiwmyxQmEXKRBmCeQinJebIxNI5wNMzgwAABr50cH%2BOD%2BQ5%2Bbk4eZm52zv9MWi%2FmvwbyI%2BIfHf%2FryMAgQAEE7P79pf5eXWA3DHAbB1v2upWwDaVgBo3%2FldM9sJoFoK0Hr5i3k4%2FEAenqFQyDwdHAoLC%2B0lYqG9MOOLPv8z4W%2Fgi372%2FEAe%2Ftt68ABxmkCZrcCjg%2F1xYW52rlKO58sEQjFu9%2Bcj%2FseFf%2F2OKdHiNLFcLBWK8ViJuFAiTcd5uVKRRCHJleIS6X8y8R%2BW%2FQmTdw0ArIZPwE62B7XLbMB%2B7gECiw5Y0nYAQH7zLYwaC5EAEGc0Mnn3AACTv%2FmPQCsBAM2XpOMAALzoGFyolBdMxggAAESggSqwQQcMwRSswA6cwR28wBcCYQZEQAwkwDwQQgbkgBwKoRiWQRlUwDrYBLWwAxqgEZrhELTBMTgN5%2BASXIHrcBcGYBiewhi8hgkEQcgIE2EhOogRYo7YIs4IF5mOBCJhSDSSgKQg6YgUUSLFyHKkAqlCapFdSCPyLXIUOY1cQPqQ28ggMor8irxHMZSBslED1AJ1QLmoHxqKxqBz0XQ0D12AlqJr0Rq0Hj2AtqKn0UvodXQAfYqOY4DRMQ5mjNlhXIyHRWCJWBomxxZj5Vg1Vo81Yx1YN3YVG8CeYe8IJAKLgBPsCF6EEMJsgpCQR1hMWEOoJewjtBK6CFcJg4Qxwicik6hPtCV6EvnEeGI6sZBYRqwm7iEeIZ4lXicOE1%2BTSCQOyZLkTgohJZAySQtJa0jbSC2kU6Q%2B0hBpnEwm65Btyd7kCLKArCCXkbeQD5BPkvvJw%2BS3FDrFiOJMCaIkUqSUEko1ZT%2FlBKWfMkKZoKpRzame1AiqiDqfWkltoHZQL1OHqRM0dZolzZsWQ8ukLaPV0JppZ2n3aC%2FpdLoJ3YMeRZfQl9Jr6Afp5%2BmD9HcMDYYNg8dIYigZaxl7GacYtxkvmUymBdOXmchUMNcyG5lnmA%2BYb1VYKvYqfBWRyhKVOpVWlX6V56pUVXNVP9V5qgtUq1UPq15WfaZGVbNQ46kJ1Bar1akdVbupNq7OUndSj1DPUV%2Bjvl%2F9gvpjDbKGhUaghkijVGO3xhmNIRbGMmXxWELWclYD6yxrmE1iW7L57Ex2Bfsbdi97TFNDc6pmrGaRZp3mcc0BDsax4PA52ZxKziHODc57LQMtPy2x1mqtZq1%2BrTfaetq%2B2mLtcu0W7eva73VwnUCdLJ31Om0693UJuja6UbqFutt1z%2Bo%2B02PreekJ9cr1Dund0Uf1bfSj9Rfq79bv0R83MDQINpAZbDE4Y%2FDMkGPoa5hpuNHwhOGoEctoupHEaKPRSaMnuCbuh2fjNXgXPmasbxxirDTeZdxrPGFiaTLbpMSkxeS%2BKc2Ua5pmutG003TMzMgs3KzYrMnsjjnVnGueYb7ZvNv8jYWlRZzFSos2i8eW2pZ8ywWWTZb3rJhWPlZ5VvVW16xJ1lzrLOtt1ldsUBtXmwybOpvLtqitm63Edptt3xTiFI8p0in1U27aMez87ArsmuwG7Tn2YfYl9m32zx3MHBId1jt0O3xydHXMdmxwvOuk4TTDqcSpw%2BlXZxtnoXOd8zUXpkuQyxKXdpcXU22niqdun3rLleUa7rrStdP1o5u7m9yt2W3U3cw9xX2r%2B00umxvJXcM970H08PdY4nHM452nm6fC85DnL152Xlle%2B70eT7OcJp7WMG3I28Rb4L3Le2A6Pj1l%2Bs7pAz7GPgKfep%2BHvqa%2BIt89viN%2B1n6Zfgf8nvs7%2Bsv9j%2Fi%2F4XnyFvFOBWABwQHlAb2BGoGzA2sDHwSZBKUHNQWNBbsGLww%2BFUIMCQ1ZH3KTb8AX8hv5YzPcZyya0RXKCJ0VWhv6MMwmTB7WEY6GzwjfEH5vpvlM6cy2CIjgR2yIuB9pGZkX%2BX0UKSoyqi7qUbRTdHF09yzWrORZ%2B2e9jvGPqYy5O9tqtnJ2Z6xqbFJsY%2BybuIC4qriBeIf4RfGXEnQTJAntieTE2MQ9ieNzAudsmjOc5JpUlnRjruXcorkX5unOy553PFk1WZB8OIWYEpeyP%2BWDIEJQLxhP5aduTR0T8oSbhU9FvqKNolGxt7hKPJLmnVaV9jjdO31D%2BmiGT0Z1xjMJT1IreZEZkrkj801WRNberM%2FZcdktOZSclJyjUg1plrQr1zC3KLdPZisrkw3keeZtyhuTh8r35CP5c%2FPbFWyFTNGjtFKuUA4WTC%2BoK3hbGFt4uEi9SFrUM99m%2Fur5IwuCFny9kLBQuLCz2Lh4WfHgIr9FuxYji1MXdy4xXVK6ZHhp8NJ9y2jLspb9UOJYUlXyannc8o5Sg9KlpUMrglc0lamUycturvRauWMVYZVkVe9ql9VbVn8qF5VfrHCsqK74sEa45uJXTl%2FVfPV5bdra3kq3yu3rSOuk626s91m%2Fr0q9akHV0IbwDa0b8Y3lG19tSt50oXpq9Y7NtM3KzQM1YTXtW8y2rNvyoTaj9nqdf13LVv2tq7e%2B2Sba1r%2Fdd3vzDoMdFTve75TsvLUreFdrvUV99W7S7oLdjxpiG7q%2F5n7duEd3T8Wej3ulewf2Re%2FranRvbNyvv7%2ByCW1SNo0eSDpw5ZuAb9qb7Zp3tXBaKg7CQeXBJ9%2BmfHvjUOihzsPcw83fmX%2B39QjrSHkr0jq%2Fdawto22gPaG97%2BiMo50dXh1Hvrf%2Ffu8x42N1xzWPV56gnSg98fnkgpPjp2Snnp1OPz3Umdx590z8mWtdUV29Z0PPnj8XdO5Mt1%2F3yfPe549d8Lxw9CL3Ytslt0utPa49R35w%2FeFIr1tv62X3y%2B1XPK509E3rO9Hv03%2F6asDVc9f41y5dn3m978bsG7duJt0cuCW69fh29u0XdwruTNxdeo94r%2Fy%2B2v3qB%2FoP6n%2B0%2FrFlwG3g%2BGDAYM%2FDWQ%2FvDgmHnv6U%2F9OH4dJHzEfVI0YjjY%2BdHx8bDRq98mTOk%2BGnsqcTz8p%2BVv9563Or59%2F94vtLz1j82PAL%2BYvPv655qfNy76uprzrHI8cfvM55PfGm%2FK3O233vuO%2B638e9H5ko%2FED%2BUPPR%2BmPHp9BP9z7nfP78L%2FeE8%2FstRzjPAAAAIGNIUk0AAHomAACAhAAA%2BgAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAAJcEhZcwAACxMAAAsTAQCanBgAAAExSURBVDiNpZOxTgJBEIa%2F9a6gsVYKChJKXsDKWBlfwZLa5HgD5A2gsaSisaRCKoKWWBikJJqoyUk85ZKL0UQuY3HcsncXyCX8yWZndmdm55%2BZVSLCLrBjodvzdaT7h7c8vqrVqEYBuj1fcjppfHi%2BAMpOXzi1ipbbnRkArUZVn9Wb04T9npmyU6tQLhUolwp4iz9tNJ4EWj47KSZfFBGcy0d5evmRvLgZeXJ%2BcSciEmWQxngSMBi9b9QBlqG1ppDG1%2BJ7q24iU0SA0%2BPDrTqAbYWbM8iDDIV2Z8bz6y8QcTYrb%2BqD20%2F6Q1dnoESEenOqpzDuebrfcfv6QxcAdx5wfXWUHaS0Y4zYMY04gFqNpuZnW6HeDc4KkOLBvg5gFlGZaxlaiX21AJQ7X9dH7fqd%2FwH3u7NeZ8B1cgAAAA5lWElmTU0AKgAAAAgAAAAAAAAA0lOTAAAAAElFTkSuQmCC&logoColor=FFFFFF">
-    </a>
-    <a href="https://github.com/Dillon8775/Quality-of-Queso">
-        <img alt="Source Code" src="https://img.shields.io/badge/Source-0D1117?style=for-the-badge&logo=github&logoColor=FFFFFF">
-    </a>
-    <a href="https://github.com/Dillon8775/Quality-of-Queso/issues">
-        <img alt="Report a Bug" src="https://img.shields.io/badge/Report_a_Bug-783B15?style=for-the-badge&logo=buddy&logoColor=FFFFFF">
     </a>
 </div>
 
@@ -490,51 +464,11 @@
 
 ---
 
-<div align="center">
-    <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/02wfcgHkPmQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-    <br><br>
-    <iframe width="373" height="210" src="https://www.youtube-nocookie.com/embed/a5bD0hLx-Mw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-    <br><br>
-    <iframe width="280" height="157" src="https://www.youtube-nocookie.com/embed/dwcWn7q6Q20" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-</div>
-
----
-
 ## 🌐 This mod is *mostly client-side.* The only features that are server-dependent are:
 - [Item Frame Searching](https://quality-of-queso.fandom.com/wiki/Item_Frame_Searching)
 - [Locking Slots](https://quality-of-queso.fandom.com/wiki/Locked_Slots) in shulker boxes (locking slots in any other container is 100% client-side and stored per world, per server)
     - View more information about this [here.](https://quality-of-queso.fandom.com/wiki/Locked_Slots)
 - [Locking the player's inventory](https://modrinth.com/mod/quality-of-queso/version/LJpYSozL)
-
-## 📖 Please read through the [Wiki](https://quality-of-queso.fandom.com/wiki/Quality_of_Queso_Wiki) to fully understand all features, or watch the videos above. *:)*
-
----
-
-# ❓FAQ
-### ⛓️‍💥 Quality of Queso isn't working with *such and such* mod(s)! → **If you are getting a crash, join my [Discord server](https://discord.gg/vfqEAn4YFy) and send your crash report in the `#modding` channel, so I can help.**
-- Please be aware that some mods don't work with Quality of Queso.
-- **Confirmed** incompatible mods *currently* include:
-  - [Controlify](https://modrinth.com/mod/controlify)
-
-### ✅ Can you add *such and such*? → **If and when I feel like it.**
-- If you have a feature request *(or if you are asking for mod compatibility)*, your best option is to join my [Discord server](https://discord.gg/vfqEAn4YFy) and post your suggestion in the `#suggestions` channel.
-- **Please report any bugs you may find to the [GitHub Repository](https://github.com/Dillon8775/Quality-of-Queso/issues).**
-
-### 🔗 Does this mod work with mods like [sophisticated backpacks](https://modrinth.com/mod/sophisticated-backpacks), [iron chests](https://modrinth.com/mod/iron-chests), etc.? → **Not right now.**
-- Some features, like sorting and basic transferring, **work**, but not all. Don't keep asking for it!
-
-### 🏷️ What version(s) of **Minecraft** does this mod support? → **Quality of Queso is kept up-to-date on the latest version of Minecraft, and then (currently)** ***1.21.11, 1.21.1,*** **and** ***1.20.1***.
-  - Support for the **latest Minecraft version** always comes ***first.*** Then I backport to older versions.
-  - For version ***1.21.1*** and above, the mod works with **[Fabric](https://fabricmc.net/)** and **[NeoForged](https://neoforged.net/)**.
-  - For version ***1.20.1***, the mod works with [Fabric]() and **[Forge](https://files.minecraftforge.net/net/minecraftforge/forge/).**
-
-### ✨ Can I contribute to your mod, by making textures, giving ideas, etc.? → **Join my [Discord server](https://discord.gg/vfqEAn4YFy) to suggest ideas, report bugs, and further contribute to my community.**
-  - If and when the position is open, you can apply to become a **[Trialist](https://dyno.gg/form/b8e534)** in my [Discord server](https://discord.gg/vfqEAn4YFy), which means you will get access to versions of the mod *before they publicly release,* so that you will be able to find bugs, test new features, and suggest further ideas.
-  - You can also create your own resource pack by using the template provided in the mod, which can be found **[here.](https://onedrive.live.com/?cid=dde4bd527f59679e&id=DDE4BD527F59679E!s0561c22707294321bdbb3677415bd0fd&resid=DDE4BD527F59679E!s0561c22707294321bdbb3677415bd0fd&ithint=folder&e=Q5gEW0&migratedtospo=true&redeem=aHR0cHM6Ly8xZHJ2Lm1zL2YvYy9kZGU0YmQ1MjdmNTk2NzllL0lnQW53bUVGS1FjaFE3MjdObmRCVzlEOUFiZVZDNEpsOEN1WFRYTVFfQ1dVb3J3P2U9UTVnRVcw)**
-
-### ❌ I don't like *such and such* feature. Can I disable it? → **This mod is fully configurable, with the most intuitive configuration that I could create.** ***Most features are toggleable and configurable.***
-  - If you are having trouble configuring Quality of Queso, or don't know how to turn a certain setting off, join my [Discord server](https://discord.gg/vfqEAn4YFy) so I can help you.
-  - Also consider reading up on the mod's **[Wiki page](https://quality-of-queso.fandom.com/wiki/Quality_of_Queso_Wiki)**, which documents *just about everything* you would need.
 
 ---
 # ⚠️ Older Version Support
@@ -552,7 +486,7 @@
 
 ---
 
-Created and regularly maintained by: [Dillon8775](https://www.youtube.com/@dillon8775) and [MannyQUESO](https://www.youtube.com/@MannyQUESO).
+Created by Dillon8775 and [MannyQUESO](https://www.youtube.com/@MannyQUESO).
 
 #### All rights reserved unless explicitly stated.
 

@@ -10,17 +10,26 @@ import java.util.List;
  */
 @Dill(DillType.COMMON)
 public interface ShulkerStateHolder {
-    /**
-     * @return whether this shulker has QoQ filtering enabled.
-     */
-    boolean isFiltered();
 
     /**
-     * Sets whether this shulker has QoQ filtering enabled.
-     *
-     * @param filtered {@code true} to enable filtering.
+     * @return saved sorting mode name.
      */
-    void setFiltered(boolean filtered);
+    String getSortingMode();
+
+    /**
+     * Sets saved sorting mode name.
+     */
+    void setSortingMode(String sortingMode);
+
+    /**
+     * @return the filtering mode for a shulker box.
+     */
+    String getFilteringMode();
+
+    /**
+     * Sets the filtering mode for a shulker box.
+     */
+    void setFilteringMode(String filteringMode);
 
     /**
      * @return whether this shulker uses tag filtering mode.
@@ -28,9 +37,7 @@ public interface ShulkerStateHolder {
     boolean isTagFiltered();
 
     /**
-     * Sets the shulker filter mode.
-     *
-     * @param tagFiltered {@code true} for tag mode, {@code false} for item mode.
+     * Sets if the shulker box should use tag filtering.
      */
     void setTagFiltered(boolean tagFiltered);
 
@@ -57,16 +64,4 @@ public interface ShulkerStateHolder {
      * @param lockedSlots slot indices to persist.
      */
     void setLockedSlots(List<Integer> lockedSlots);
-
-    /**
-     * @return saved sorting mode name.
-     */
-    String getSortingMode();
-
-    /**
-     * Sets saved sorting mode name.
-     *
-     * @param sortingMode sorting mode enum name to persist.
-     */
-    void setSortingMode(String sortingMode);
 }

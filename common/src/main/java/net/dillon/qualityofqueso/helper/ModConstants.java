@@ -35,13 +35,12 @@ public class ModConstants {
     public static final Logger LOGGER = LoggerFactory.getLogger("Quality of Queso");
 
     // Links
-    public static final String WIKI_LINK = "https://quality-of-queso.fandom.com/wiki/Quality_of_Queso_Wiki";
-    public static final String SHOWCASE_VIDEO_LINK = "https://youtu.be/02wfcgHkPmQ";
     public static final String RESOURCE_PACK_TEMPLATE = "https://1drv.ms/f/c/dde4bd527f59679e/IgAnwmEFKQchQ727NndBW9D9AbeVC4Jl8CuXTXMQ_CWUorw?e=Q5gEW0";
 
     // Static variables
     public static int RENDERED_BUTTONS = 0;
     public static int MOVE_AMOUNT = 1;
+    public static boolean INTERACTED_WITH_MINECART_CONTAINER = false;
     public static Container CURRENT_CONTAINER = null;
     public static final String BUTTON_OR_KEY_SERIALIZED_NAME = "§bButton §r§oor §r§eKey";
     public static final String KEY_ONLY_SERIALIZED_NAME = "§eKey Only";
@@ -145,9 +144,6 @@ public class ModConstants {
     public static final Identifier OPEN_WORLD_DIRECTORY_TEXTURE = qoqIdentifier("widget/world_folder");
     public static final Identifier OPEN_CONFIG_DIRECTORY_TEXTURE = qoqIdentifier("widget/config_folder");
     public static final Identifier ENDER_CHEST = qoqIdentifier("widget/ender_chest");
-    public static final Identifier DISCORD_TEXTURE = qoqIdentifier("widget/discord");
-    public static final Identifier YOUTUBE_TEXTURE = qoqIdentifier("widget/youtube");
-    public static final Identifier WIKI_TEXTURE = qoqIdentifier("widget/wiki");
     public static final Identifier MULTI_CONFIG_TEXTURE = qoqIdentifier("widget/multi_config");
 
     // Colors
@@ -172,11 +168,11 @@ public class ModConstants {
     public static final ItemStack[] LAST_ARMOR_STACKS = new ItemStack[4];
 
     // Shulker state constants
-    public static final String FILTERED = "filtered";
+    public static final String SORTING_MODE = "sorting_mode";
+    public static final String FILTERING_MODE = "filtering_mode";
     public static final String TAG_FILTERED = "tag_filtered";
     public static final String FILTER_ITEMS = "filter_items";
     public static final String LOCKED_SLOTS = "locked_slots";
-    public static final String SORTING_MODE = "sorting_mode";
 
     // Default colors
     public static final int DEFAULT_TRANSPARENT_SEARCH_BAR_TEXT_COLOR = -12566464;

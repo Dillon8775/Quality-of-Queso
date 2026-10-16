@@ -27,4 +27,8 @@ public enum FilteringMode implements StringRepresentable {
     public String getSerializedName() {
         return this.name;
     }
+
+    public static String unfiltered() {
+        return NONE.name;
+    }
 }

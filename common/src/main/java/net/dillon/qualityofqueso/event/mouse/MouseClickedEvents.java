@@ -15,6 +15,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import static net.dillon.dillonlib.task.ClientTasks.getMinecraft;
 import static net.dillon.qualityofqueso.event.management.ExtractingEvents.setCursor;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
 import static net.dillon.qualityofqueso.helper.ModConstants.MOVE_AMOUNT;
@@ -173,12 +174,12 @@ public class MouseClickedEvents extends ManagementEvents {
             // Move items, as long as its not locked
             if (!lockedSlotEvents().isLockedSlot(slot.index)) {
                 int slotCount = getSlotCount(slot);
-                holder().mc().gameMode.handleContainerInput(
+                getMinecraft().gameMode.handleContainerInput(
                         menu.containerId,
                         slot.index,
                         0,
                         ContainerInput.QUICK_MOVE,
-                        holder().mc().player
+                        getMinecraft().player
                 );
 
                 // Item was moved if slot count is different

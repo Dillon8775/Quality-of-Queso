@@ -3,7 +3,6 @@ package net.dillon.qualityofqueso.event;
 import net.dillon.qualityofqueso.event.context.ManagementButtons;
 import net.dillon.qualityofqueso.event.context.SearchFields;
 import net.dillon.qualityofqueso.event.key.CharTypedEvents;
-import net.dillon.qualityofqueso.event.key.KeyPressedEvents;
 import net.dillon.qualityofqueso.event.management.ExtractingEvents;
 import net.dillon.qualityofqueso.event.management.SlotClickedEvents;
 import net.dillon.qualityofqueso.event.mouse.MouseClickedEvents;
@@ -16,7 +15,6 @@ import net.dillon.qualityofqueso.event.screen.ScreenResizedEvents;
 import net.dillon.qualityofqueso.event.screen.TooltipEvents;
 import net.dillon.qualityofqueso.mixin.client.screen.AbstractContainerScreenMixin;
 import net.dillon.qualityofqueso.widget.WidgetLayout;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -31,11 +29,6 @@ import java.util.Set;
  * Exposes basic methods and variables created in {@link AbstractContainerScreenMixin}.
  */
 public interface QuesoScreenHolder {
-
-    /**
-     * @return the current instance of {@link Minecraft} that is running.
-     */
-    Minecraft mc();
 
     /**
      * @return the current instance of {@link AbstractContainerScreen}.
@@ -85,7 +78,6 @@ public interface QuesoScreenHolder {
     default Events events() {
         return new Events(
                 new CharTypedEvents(screenAsHolder()),
-                new KeyPressedEvents(screenAsHolder()),
                 new ExtractingEvents(screenAsHolder()),
                 new SlotClickedEvents(screenAsHolder()),
                 new MouseClickedEvents(screenAsHolder()),

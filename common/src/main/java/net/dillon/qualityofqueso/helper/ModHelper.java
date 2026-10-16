@@ -575,27 +575,9 @@ public class ModHelper {
     }
 
     /**
-     * @return a list of some disallowed keys, when using certain features.
+     * @return a list of {@code all} disallowed keys when attempting to auto focus a search bar.
      */
-    @Deprecated
-    public static List<Integer> disallowedKeys() {
-        return List.of(
-                InputConstants.KEY_ESCAPE,
-                InputConstants.KEY_LSHIFT,
-                InputConstants.KEY_RSHIFT,
-                InputConstants.KEY_LCONTROL,
-                InputConstants.KEY_RCONTROL,
-                InputConstants.KEY_LALT,
-                InputConstants.KEY_RALT,
-                InputConstants.KEY_LGUI,
-                InputConstants.KEY_RGUI
-        );
-    }
-
-    /**
-     * @return a list of all disallowed keys when using search features.
-     */
-    public static List<Integer> allDisallowedKeys() {
+    public static List<Integer> allDisallowedAutoFocusKeys() {
         return List.of(
                 InputConstants.KEY_1,
                 InputConstants.KEY_2,
@@ -614,7 +596,8 @@ public class ModHelper {
                 InputConstants.KEY_LALT,
                 InputConstants.KEY_RALT,
                 InputConstants.KEY_LGUI,
-                InputConstants.KEY_RGUI
+                InputConstants.KEY_RGUI,
+                InputConstants.KEY_SPACE
         );
     }
 }

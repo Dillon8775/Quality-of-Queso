@@ -43,6 +43,7 @@ public class BlockItemMixin {
         ItemStack stack = context.getItemInHand();
 
         BlockItem self = (BlockItem) (Object) this;
+
         if (!(self.getBlock() instanceof ShulkerBoxBlock)) {
             return;
         }
@@ -55,15 +56,16 @@ public class BlockItemMixin {
             return;
         }
 
-        boolean filtered = false;
+        String sortingMode = "";
+        String filteringMode = "";
         boolean tagMode = false;
         List<String> filterItems = new ArrayList<>();
         List<Integer> lockedSlots = new ArrayList<>();
-        String sortingMode = "";
 
         CustomData customData = stack.get(DataComponents.CUSTOM_DATA);
         if (customData != null) {
-            filtered = customData.copyTag().getBooleanOr(FILTERED, false);
+            sortingMode = customData.copyTag().getStringOr(SORTING_MODE, "");
+            filteringMode = customData.copyTag().getStringOr(FILTERING_MODE, "");
             tagMode = customData.copyTag().getBooleanOr(TAG_FILTERED, false);
 
             String rawItems = customData.copyTag().getStringOr(FILTER_ITEMS, "");
@@ -81,10 +83,9 @@ public class BlockItemMixin {
                     .distinct()
                     .sorted()
                     .collect(Collectors.toCollection(ArrayList::new));
-            sortingMode = customData.copyTag().getStringOr(SORTING_MODE, "");
         }
 
-        stateHolder.setFiltered(filtered);
+        stateHolder.setFilteringMode(filteringMode);
         stateHolder.setTagFiltered(tagMode);
         stateHolder.setFilterItems(filterItems);
         stateHolder.setLockedSlots(lockedSlots);

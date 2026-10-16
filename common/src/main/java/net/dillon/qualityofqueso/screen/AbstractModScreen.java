@@ -8,8 +8,8 @@ import net.dillon.dillonlib.screen.DillonLibMenuScreen;
 import net.dillon.dillonlib.screen.ScreenBuilder;
 import net.dillon.dillonlib.task.ClientTasks;
 import net.dillon.dillonlib.util.KeybindScrollHelper;
-import net.dillon.dillonlib.util.Links;
 import net.dillon.qualityofqueso.helper.ModConstants;
+import net.dillon.qualityofqueso.helper.ModHelper;
 import net.dillon.qualityofqueso.keybind.ModKeyMappings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -24,11 +24,12 @@ import net.minecraft.world.level.storage.LevelResource;
 import java.io.File;
 import java.nio.file.Path;
 
-import static net.dillon.dillonlib.task.ClientTasks.openLink;
 import static net.dillon.dillonlib.task.ClientTasks.openScreen;
-import static net.dillon.qualityofqueso.helper.ButtonHelper.*;
+import static net.dillon.qualityofqueso.helper.ButtonHelper.getLeftButtonPosition;
+import static net.dillon.qualityofqueso.helper.ButtonHelper.getRightButtonPosition;
 import static net.dillon.qualityofqueso.helper.ModConstants.*;
-import static net.dillon.qualityofqueso.helper.ModHelper.*;
+import static net.dillon.qualityofqueso.helper.ModHelper.saveAndApplyConfigs;
+import static net.dillon.qualityofqueso.helper.ModHelper.sendClientPreferencesToServer;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 /**
@@ -146,8 +147,8 @@ public class AbstractModScreen extends DillonLibMenuScreen {
                                             Component.translatable("qualityofqueso.gui.view_ender_chest.tooltip"),
                                             false
                                     ),
-                                    () -> modEnabled(),
-                                    () -> getLeftButtonPosition(this.width, 2),
+                                    ModHelper::modEnabled,
+                                    () -> getRightButtonPosition(this.width, 0),
                                     doneButton::getY
                             )
                     );
@@ -171,41 +172,5 @@ public class AbstractModScreen extends DillonLibMenuScreen {
                     )
             );
         }
-
-        this.addRenderableWidget(
-                this.createWidget(
-                        UpdatableSpriteButton.ofDefault(
-                                "Wiki Button",
-                                WIKI_TEXTURE,
-                                (button) -> openLink(this, WIKI_LINK, false),
-                                Component.translatable("qualityofqueso.wiki"),
-                                false
-                        ),
-                        () -> getRightButtonPosition(this.width, 0),
-                        doneButton::getY
-                )
-        );
-
-        this.addRenderableWidget(
-                this.createWidget(
-                        UpdatableSpriteButton.ofDefault(
-                                "Discord Button",
-                                DISCORD_TEXTURE,
-                                (button) -> openLink(this, Links.DILLONS_DISCORD, false),
-                                Component.translatable("qualityofqueso.discord"),
-                                false
-                        ),
-                        () -> getRightButtonPosition(this.width, 1),
-                        doneButton::getY
-                )
-        );
-
-        this.addRenderableWidget(
-                this.createWidget(
-                        createYouTubeButton(this, SHOWCASE_VIDEO_LINK),
-                        () -> getRightButtonPosition(this.width, 2),
-                        doneButton::getY
-                )
-        );
     }
 }

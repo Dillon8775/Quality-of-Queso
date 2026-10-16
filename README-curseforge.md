@@ -15,17 +15,6 @@
 
 ---
 
-<h1>What is <i>Quality of Queso?</i></h1>
-
-- 📦 <b>Quality of Queso</b> is a mod designed <i>specifically</i> for <b>vanilla gameplay</b> by adding <b>various quality-of-life features,</b> including <a href="https://quality-of-queso.fandom.com/wiki/Category:Inventory_Management">precise inventory management</a>, <a href="https://quality-of-queso.fandom.com/wiki/Colored_Highlighting">various HUD features</a>, <a href="https://quality-of-queso.fandom.com/wiki/Search_Bar">container searching</a>, and so much more!
-- 💭 The idea <b>originated</b> from a <b><a href="https://youtu.be/Q7vhqWwDElg">video</a></b> featuring <a href="https://www.youtube.com/@dillon8775">me (Dillon)</a> and my friend, <a href="https://www.youtube.com/@mannyqueso">MannyQUESO</a>, released to celebrate the new year of <b>2025</b> (a pretty big year for us, as it was our graduation 🎓 year).
-- 🛠️ We came up with idea to <b>create a client-side "quality of life" mod</b>, that should add various quality of life features to the game to improve our <b>vanilla experience</b>, and that's exactly what we did!
-- 📈 Starting off with very small, <b>unnoticeable features</b>, quickly branched off into a huge project to further enhance the game when it comes to actual gameplay and managing items, as it can be difficult and annoying sometimes.
-- ✅ <b>That's why this mod was created!</b> To further enhance your <b>Minecraft experience</b> by easily sorting and managing items, adding cool visual effects, remove fog, and so much more! <b>We hope that this mod suits you! :)</b>
-- ❗Please note how I <i>constantly</i> mentioned <b>"vanilla experience"</b>. This mod was <i><b>specifically designed for modern, vanilla Minecraft</b></i>, not for <b>big modpacks</b> or <b>older Minecraft</b>. You <i>can</i> use this mod in modpacks, but please be aware that <b>not all features</b> (<i>especially inventory management</i>) may work with modded containers, blocks or items.
-
----
-
 # 📃 Main Features 📜
 
 <img alt = "Search Bar" src="https://raw.githubusercontent.com/Dillon8775/ImageGIFs/refs/heads/qoq/Logos/search%20bar.png" width = 350>
@@ -308,36 +297,6 @@ Toggle sprinting, potion effects, flying, bow pulling, and submerged in fluid to
     - View more information about this [here.](https://quality-of-queso.fandom.com/wiki/Locked_Slots)
 - [Locking the player's inventory](https://modrinth.com/mod/quality-of-queso/version/LJpYSozL)
 
-## 📖 Please read through the [Wiki](https://quality-of-queso.fandom.com/wiki/Quality_of_Queso_Wiki) to fully understand all features. *;)*
-
----
-
-# ❓FAQ
-### ⛓️‍💥 Quality of Queso isn't working with *such and such* mod(s)! → **If you are getting a crash, join my [Discord server](https://discord.gg/vfqEAn4YFy) and send your crash report in the `#modding` channel, so I can help.**
-- Please be aware that some mods don't work with Quality of Queso.
-- **Confirmed** incompatible mods *currently* include:
-  - [Controlify](https://modrinth.com/mod/controlify)
-
-### ✅ Can you add *such and such*? → **If and when I feel like it.**
-- If you have a feature request *(or if you are asking for mod compatibility)*, your best option is to join my [Discord server](https://discord.gg/vfqEAn4YFy) and post your suggestion in the `#suggestions` channel.
-- **Please report any bugs you may find to the [GitHub Repository](https://github.com/Dillon8775/Quality-of-Queso/issues).**
-
-### 🔗 Does this mod work with mods like [sophisticated backpacks](https://modrinth.com/mod/sophisticated-backpacks), [iron chests](https://modrinth.com/mod/iron-chests), etc.? → **Not right now.**
-- I plan to add support for mods like these in the future. But please, don't keep asking for it!
-
-### 🏷️ What version(s) of **Minecraft** does this mod support? → **Quality of Queso is kept up-to-date on the latest version of Minecraft, and then (currently)** ***1.21.11, 1.21.1,*** **and** ***1.20.1***.
-- Support for the **latest Minecraft version** always comes ***first.*** Then I backport to older versions.
-- For version ***1.21.1*** and above, the mod works with **[Fabric](https://fabricmc.net/)** and **[NeoForged](https://neoforged.net/)**.
-- For version ***1.20.1***, the mod works with [Fabric](https://fabricmc.net/) and **[Forge](https://files.minecraftforge.net/net/minecraftforge/forge/).**
-
-### ✨ Can I contribute to your mod, by making textures, giving ideas, etc.? → **Join my [Discord server](https://discord.gg/vfqEAn4YFy) to suggest ideas, report bugs, and further contribute to my community.**
-- If and when the position is open, you can also apply to become a **[Trialist](https://dyno.gg/form/b8e534)** in my [Discord server](https://discord.gg/vfqEAn4YFy), which means you will get access to versions of the mod *before they publicly release,* so that you will be able to find bugs, test new features, and suggest further ideas.
-- You can also create your own resource pack by using the template provided in the mod, which can be found **[here.](https://onedrive.live.com/?cid=dde4bd527f59679e&id=DDE4BD527F59679E!s0561c22707294321bdbb3677415bd0fd&resid=DDE4BD527F59679E!s0561c22707294321bdbb3677415bd0fd&ithint=folder&e=Q5gEW0&migratedtospo=true&redeem=aHR0cHM6Ly8xZHJ2Lm1zL2YvYy9kZGU0YmQ1MjdmNTk2NzllL0lnQW53bUVGS1FjaFE3MjdObmRCVzlEOUFiZVZDNEpsOEN1WFRYTVFfQ1dVb3J3P2U9UTVnRVcw)**
-
-### ❌ I don't like *such and such* feature. Can I disable it? → **This mod is fully configurable, with the most intuitive configuration that I could create.** ***Most features are toggleable and configurable.***
-- If you are having trouble configuring Quality of Queso, or don't know how to turn a certain setting off, join my [Discord server](https://discord.gg/vfqEAn4YFy) so I can help.
-- Also consider reading up on the mod's **[Wiki page](https://quality-of-queso.fandom.com/wiki/Quality_of_Queso_Wiki)**, which documents *just about everything* you would need.
-
 ---
 # ⚠️ Older Version Support
 ➜ Currently, [Quality of Queso](https://modrinth.com/mod/quality-of-queso) ***does*** support older versions of Minecraft, however, certain features are ***currently unsupported.***
@@ -359,7 +318,7 @@ Toggle sprinting, potion effects, flying, bow pulling, and submerged in fluid to
 
 ---
 
-Created and regularly maintained by: [Dillon8775](https://www.youtube.com/@dillon8775) and [MannyQUESO](https://www.youtube.com/@MannyQUESO).
+Created by Dillon8775 and [MannyQUESO](https://www.youtube.com/@MannyQUESO).
 
 #### All rights reserved unless explicitly stated.
 

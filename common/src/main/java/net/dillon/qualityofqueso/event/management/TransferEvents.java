@@ -22,8 +22,9 @@ import net.minecraft.world.level.Level;
 
 import java.util.*;
 
+import static net.dillon.dillonlib.task.ClientTasks.getMinecraft;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
-import static net.dillon.qualityofqueso.helper.MethodHelper.key;
+import static net.dillon.qualityofqueso.helper.MethodHelper.inputKey;
 import static net.dillon.qualityofqueso.helper.MethodHelper.performClickSlot;
 import static net.dillon.qualityofqueso.helper.ModConstants.MOVE_AMOUNT;
 import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.*;
@@ -65,7 +66,7 @@ public class TransferEvents extends ManagementEvents {
      */
     public boolean canSingularQuickDrop(KeyEvent event) {
         return client().management().scrollMoving
-                && event.key() == key(getDropKey()).getValue()
+                && event.key() == inputKey(getDropKey()).getValue()
                 && hasDropOnlyOneItemModifierDown()
                 && hoveredSlotHasItem(holder().screensHoveredSlot());
     }
@@ -149,7 +150,7 @@ public class TransferEvents extends ManagementEvents {
 
             if (client().lockedSlots().lockedSlots && lockedSlotEvents().isLockedSlot(fromSlot.index)) { // Skip locked slots (always)
                 continue;
-            } else if (!drop && shouldApplyMatchingFilter() && !isPresent(toInventory, fromStack)) { // Skip items that aren't already present/filtered
+            } else if (!drop && shouldApplyMatchingFilter() && !isPresent(toInventory, fromStack)) { // Skip items that aren't already present/filteredMode
                 continue;
             } else if (drop && !hoveredDropFilter.isEmpty() && !fromSlot.getItem().is(hoveredDropFilter.getItem())) { // Only drop items matching the initially hovered item
                 continue;
@@ -514,11 +515,11 @@ public class TransferEvents extends ManagementEvents {
      * @return the first screen slot index that belongs to player storage (main inventory or hotbar).
      */
     private int findPlayerStorageStartIndex() {
-        if (holder().mc().player == null) {
+        if (getMinecraft().player == null) {
             return -1;
         }
 
-        Inventory playerInventory = holder().mc().player.getInventory();
+        Inventory playerInventory = getMinecraft().player.getInventory();
         int firstPlayerStorageSlot = Integer.MAX_VALUE;
 
         for (Slot slot : holder().menu().slots) {
@@ -597,7 +598,7 @@ public class TransferEvents extends ManagementEvents {
 
             Deque<Slot> emptySlots = new ArrayDeque<>();
             List<Slot> nonEmptySlots = new ArrayList<>();
-            LocalPlayer player = holder().mc().player;
+            LocalPlayer player = getMinecraft().player;
             boolean iterateBackwards = (!DedicatedServerStorage.PERPENDICULAR_QUICK_MOVING.get(player.getUUID())) && toInventory;
             int step = iterateBackwards ? -1 : 1;
             int start = iterateBackwards ? toEnd - 1 : toStart;
@@ -645,11 +646,11 @@ public class TransferEvents extends ManagementEvents {
      * @return the index after the last screen slot that belongs to player storage (main inventory or hotbar).
      */
     private int findPlayerStorageEndIndexExclusive() {
-        if (holder().mc().player == null) {
+        if (getMinecraft().player == null) {
             return -1;
         }
 
-        Inventory playerInventory = holder().mc().player.getInventory();
+        Inventory playerInventory = getMinecraft().player.getInventory();
         int lastPlayerStorageSlot = -1;
 
         for (Slot slot : holder().menu().slots) {
@@ -875,7 +876,7 @@ public class TransferEvents extends ManagementEvents {
      * @return if a container is able to swap items with the player inventory.
      */
     public boolean canSwap() {
-        Inventory playerInventory = holder().mc().player.getInventory();
+        Inventory playerInventory = getMinecraft().player.getInventory();
         return SwapButton.SWAP_COOLDOWN == 0 && (getContainerSize() != 27 || isAnySlotFilled(false, 27, 54))
                 && getCursorStack().isEmpty()
                 && holder().searchFields().searchText().isEmpty()

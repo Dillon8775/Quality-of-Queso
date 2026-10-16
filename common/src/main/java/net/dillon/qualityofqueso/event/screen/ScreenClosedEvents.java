@@ -66,6 +66,8 @@ public class ScreenClosedEvents extends ManagementEvents {
     private void disableFeatures() {
         setCursor(CursorKey.NULL);
 
+        INTERACTED_WITH_MINECART_CONTAINER = false;
+
         if (!client().buttonDisplayOptions().safeBulk) {
             return;
         }

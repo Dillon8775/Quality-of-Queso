@@ -3,13 +3,13 @@ package net.dillon.qualityofqueso.mixin.client.screen;
 import net.dillon.qualityofqueso.event.QuesoScreenHolder;
 import net.dillon.qualityofqueso.event.context.ManagementButtons;
 import net.dillon.qualityofqueso.event.context.SearchFields;
+import net.dillon.qualityofqueso.event.key.KeyPressedEvents;
 import net.dillon.qualityofqueso.event.management.SlotClickedEvents;
 import net.dillon.qualityofqueso.event.mouse.MouseClickedEvents;
 import net.dillon.qualityofqueso.event.mouse.MouseReleasedEvents;
 import net.dillon.qualityofqueso.event.mouse.MouseScrolledEvents;
 import net.dillon.qualityofqueso.event.screen.TooltipEvents;
 import net.dillon.qualityofqueso.widget.WidgetLayout;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -81,11 +81,6 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
 
     public AbstractContainerScreenMixin(Component title) {
         super(title);
-    }
-
-    @Override
-    public Minecraft mc() {
-        return this.minecraft;
     }
 
     @Override
@@ -388,7 +383,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
             return;
         }
 
-        events().keyPressed().handleKeyPressing(event, cir);
+        new KeyPressedEvents(screenAsHolder(), event, cir).handleKeyPressing();
     }
 
     /**

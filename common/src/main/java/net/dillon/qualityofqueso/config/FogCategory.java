@@ -46,7 +46,7 @@ public class FogCategory {
                 .controller(TickBoxControllerBuilder::create)
                 .addListener((opt, event) -> {
                     if (event == OptionEventListener.Event.STATE_CHANGE || event == OptionEventListener.Event.INITIAL) {
-                        boolean bl = !mixins().fogMixins && opt.pendingValue();
+                        boolean bl = mixins().fogMixins && opt.pendingValue();
                         overworldFogIntensity.setAvailable(bl);
                     }
                 })
@@ -60,7 +60,7 @@ public class FogCategory {
                 .controller(TickBoxControllerBuilder::create)
                 .addListener((opt, event) -> {
                     if (event == OptionEventListener.Event.STATE_CHANGE || event == OptionEventListener.Event.INITIAL) {
-                        boolean bl = !mixins().fogMixins && opt.pendingValue();
+                        boolean bl = mixins().fogMixins && opt.pendingValue();
                         netherFogIntensity.setAvailable(bl);
                     }
                 })

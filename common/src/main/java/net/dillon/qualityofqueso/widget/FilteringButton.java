@@ -92,9 +92,9 @@ public class FilteringButton extends ToggleableButton {
             default -> original = Component.translatable("qualityofqueso.gui.move_anything");
         }
         boolean trackedFilteringEnabled = ContainerHelper.isTrackedFilteringActive();
-        if (isDropperDispenserOrHopperScreen()) {
+        if (isDropperDispenserOrHopperScreen() || ModConstants.INTERACTED_WITH_MINECART_CONTAINER) {
             return original;
-        } else if (trackedFilteringEnabled) { // For filtered containers
+        } else if (trackedFilteringEnabled) { // For filteredMode containers
             String filterType = ContainerHelper.CURRENT_FILTER_TYPE.tag()
                     ? "qualityofqueso.gui.tag_filtered"
                     : "qualityofqueso.gui.item_filtered";

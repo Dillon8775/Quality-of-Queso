@@ -2,6 +2,7 @@ package net.dillon.qualityofqueso.screen;
 
 import net.dillon.dillonlib.task.ClientTasks;
 import net.dillon.qualityofqueso.config.ConfigurationScreen;
+import net.dillon.qualityofqueso.helper.ModConstants;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
@@ -51,7 +52,7 @@ public class MainMenuScreen extends AbstractModScreen {
                 ).tooltip(
                         Tooltip.create(Component.translatable("qualityofqueso.menu.visual_time.description"))
                 ).build(),
-                () -> modEnabled && mixins().clockManagerMixin
+                () -> modEnabled && mixins().clockManagerMixin && this.minecraft.level != null
         );
 
         AbstractWidget hudPositions = this.createWidget(
@@ -72,10 +73,10 @@ public class MainMenuScreen extends AbstractModScreen {
         );
 
         AbstractWidget resources = this.createWidget(
-                Button.builder(Component.translatable("qualityofqueso.menu.resources"), button -> {
-                    openScreen(new ResourcesScreen(this));
-                }).tooltip(
-                        Tooltip.create(Component.translatable("qualityofqueso.menu.resources.tooltip"))
+                Button.builder(Component.translatable("qualityofqueso.menu.resource_pack_template"),
+                        (button) -> openLink(this, ModConstants.RESOURCE_PACK_TEMPLATE, false)
+                ).tooltip(
+                        Tooltip.create(Component.translatable("qualityofqueso.menu.resource_pack_template.tooltip"))
                 ).build()
         );
 

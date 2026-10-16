@@ -50,7 +50,7 @@ public class ExtractingEvents extends ManagementEvents {
     }
 
     /**
-     * Grays out filtered slots (or hotbar slots), renders the locked slot texture, and highlights matching items according to the cursor.
+     * Grays out filteredMode slots (or hotbar slots), renders the locked slot texture, and highlights matching items according to the cursor.
      */
     public void grayoutSlotsAndExtractLockedIcon(GuiGraphicsExtractor graphics) {
         // Begin iterating slots to gray out

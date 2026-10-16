@@ -1,5 +1,7 @@
 package net.dillon.qualityofqueso.mixin.fabric;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -19,6 +21,7 @@ import java.util.function.Consumer;
 
 import static net.dillon.qualityofqueso.helper.GuiHelper.acceptDotTooltip;
 import static net.dillon.qualityofqueso.helper.GuiHelper.acceptEnhancedDurabilityTooltips;
+import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 @Mixin(ItemStack.class)
 public abstract class FabricItemStackMixin {
@@ -30,6 +33,10 @@ public abstract class FabricItemStackMixin {
      */
     @Inject(method = "addDetailsToTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;get(Lnet/minecraft/core/component/DataComponentType;)Ljava/lang/Object;", ordinal = 2))
     private void addDurabilityTooltips(Item.TooltipContext context, TooltipDisplay display, @Nullable Player player, TooltipFlag tooltipFlag, Consumer<Component> builder, CallbackInfo ci) {
+        if (!client().enhancedDurabilityTooltips().enableEnhancedDurabilityTooltips) {
+            return;
+        }
+
         ItemStack self = (ItemStack)(Object)this;
         if (tooltipFlag.isAdvanced() && this.isDamaged()) {
             return;
@@ -51,9 +58,14 @@ public abstract class FabricItemStackMixin {
     /**
      * Gives durability tooltips a nice color.
      */
-    @Redirect(method = "addDetailsToTooltip", at = @At(value = "INVOKE", target = "Ljava/util/function/Consumer;accept(Ljava/lang/Object;)V", ordinal = 4))
-    private <T> void advancedDurabilityTooltips(Consumer<Component> builder, T t) {
-        ItemStack self = (ItemStack)(Object)this;
+    @WrapOperation(method = "addDetailsToTooltip", at = @At(value = "INVOKE", target = "Ljava/util/function/Consumer;accept(Ljava/lang/Object;)V", ordinal = 4))
+    private <T> void advancedDurabilityTooltips(Consumer<Component> builder, T t, Operation<Void> original) {
+        if (!client().enhancedDurabilityTooltips().enableEnhancedDurabilityTooltips) {
+            // Call original if disabled
+            original.call(builder, t);
+        }
+
+        ItemStack self = (ItemStack) (Object) this;
         acceptEnhancedDurabilityTooltips(builder, self);
     }
 }

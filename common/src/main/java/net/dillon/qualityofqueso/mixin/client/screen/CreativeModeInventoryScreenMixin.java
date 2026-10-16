@@ -28,7 +28,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import static net.dillon.dillonlib.task.ClientTasks.hasShiftDown;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.hoveredSlotHasItem;
-import static net.dillon.qualityofqueso.helper.MethodHelper.key;
+import static net.dillon.qualityofqueso.helper.MethodHelper.inputKey;
 import static net.dillon.qualityofqueso.helper.ModHelper.*;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 import static net.dillon.qualityofqueso.option.OptionInstances.updateClient;
@@ -147,7 +147,7 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
                 return;
             }
 
-            if (client().accessibility().preventEFromTyping && event.key() == key(Minecraft.getInstance().options.keyInventory).getValue() && !this.searchBox.isFocused()) {
+            if (client().accessibility().preventEFromTyping && event.key() == inputKey(Minecraft.getInstance().options.keyInventory).getValue() && !this.searchBox.isFocused()) {
                 this.ignoreTextInput = true;
                 this.onClose();
                 cir.setReturnValue(true);
@@ -162,9 +162,12 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
                 }
             }
 
-            for (int i = 9; i < allDisallowedKeys().size(); i++) {
-                if (event.key() == allDisallowedKeys().get(i)) {
-                    if (event.key() != InputConstants.KEY_LCONTROL || this.searchBox == null || !this.searchBox.isFocused()) {
+            for (int i = 9; i < allDisallowedAutoFocusKeys().size(); i++) {
+                if (event.key() == allDisallowedAutoFocusKeys().get(i)) {
+                    if (
+                            (event.key() != InputConstants.KEY_SPACE && event.key() != InputConstants.KEY_LCONTROL)
+                                    || this.searchBox == null || !this.searchBox.isFocused()
+                    ) {
                         this.ignoreTextInput = true;
                         cir.setReturnValue(super.keyPressed(event));
                         return;

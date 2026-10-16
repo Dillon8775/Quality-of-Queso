@@ -37,9 +37,11 @@ public class ShulkerBoxBlockMixin {
     @Inject(method = "getDrops", at = @At("RETURN"))
     private void perserveIdentityInDroppedStack(BlockState state, LootParams.Builder builder, CallbackInfoReturnable<List<ItemStack>> cir) {
         BlockEntity blockEntity = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
+
         if (!(blockEntity instanceof ShulkerBoxBlockEntity shulkerBoxBlockEntity)) {
             return;
         }
+
         if (!(shulkerBoxBlockEntity instanceof ShulkerStateHolder stateHolder)) {
             return;
         }
@@ -63,15 +65,16 @@ public class ShulkerBoxBlockMixin {
             if (!drop.is(ItemTags.SHULKER_BOXES)) {
                 continue;
             }
+
             CustomData.update(DataComponents.CUSTOM_DATA, drop, tag -> {
-                tag.putBoolean(FILTERED, stateHolder.isFiltered());
+                tag.putString(SORTING_MODE, stateHolder.getSortingMode());
+                tag.putString(FILTERING_MODE, stateHolder.getFilteringMode());
                 tag.putBoolean(TAG_FILTERED, stateHolder.isTagFiltered());
                 tag.putString(FILTER_ITEMS, filterItems.stream()
                         .filter(s -> s != null && !s.isBlank())
                         .distinct()
                         .collect(Collectors.joining(",")));
                 tag.putIntArray(LOCKED_SLOTS, lockedSlots);
-                tag.putString(SORTING_MODE, stateHolder.getSortingMode());
             });
         }
     }

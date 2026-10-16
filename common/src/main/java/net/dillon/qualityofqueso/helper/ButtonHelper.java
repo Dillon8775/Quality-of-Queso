@@ -15,10 +15,10 @@ import net.minecraft.network.chat.Component;
 
 import java.util.Map;
 
-import static net.dillon.dillonlib.task.ClientTasks.*;
+import static net.dillon.dillonlib.task.ClientTasks.blitTexture;
+import static net.dillon.dillonlib.task.ClientTasks.openScreen;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.getTransferButtonXY;
 import static net.dillon.qualityofqueso.helper.ModConstants.CHEESE_WHEEL_TEXTURE;
-import static net.dillon.qualityofqueso.helper.ModConstants.YOUTUBE_TEXTURE;
 import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
 import static net.dillon.qualityofqueso.helper.ModHelper.saveAndApplyConfigs;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
@@ -80,14 +80,6 @@ public class ButtonHelper {
             }
             saveAndApplyConfigs(Minecraft.getInstance());
         }, false);
-    }
-
-    /**
-     * Creates a {@code YouTube} button.
-     */
-    public static SpriteIconButton createYouTubeButton(Screen parent, String link) {
-        return UpdatableSpriteButton.ofDefault("YouTube Button", YOUTUBE_TEXTURE, (button) -> openLink(parent, link, false),
-                Component.translatable("qualityofqueso.menu.showcase_video.tooltip"), false);
     }
 
     /**

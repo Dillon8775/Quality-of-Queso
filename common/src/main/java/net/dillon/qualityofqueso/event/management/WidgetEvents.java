@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BooleanSupplier;
 
+import static net.dillon.dillonlib.task.ClientTasks.getMinecraft;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
 import static net.dillon.qualityofqueso.helper.MethodHelper.getTitleLabelY;
 import static net.dillon.qualityofqueso.helper.MethodHelper.getTopPos;
@@ -192,7 +193,7 @@ public class WidgetEvents extends ManagementEvents {
     private QuesoButton createTransferContainer() {
         return new QuesoButton(
                 holder().menu(),
-                holder().mc().font,
+                getMinecraft().font,
                 searchEvents().getSearchFieldText(),
                 TRANSFER_CONTAINER_BUTTON_PATH,
                 TRANSFER_CONTAINER_BUTTON_NAME,
@@ -207,13 +208,13 @@ public class WidgetEvents extends ManagementEvents {
     private QuesoButton createTransferInventory() {
         return new QuesoButton(
                 holder().menu(),
-                holder().mc().font,
+                getMinecraft().font,
                 searchEvents().getSearchFieldText(),
                 TRANSFER_INVENTORY_BUTTON_PATH,
                 TRANSFER_INVENTORY_BUTTON_NAME,
                 true,
                 b -> transferEvents().transferItems(false, true),
-                () -> !isContainerFull(false) && shouldButtonBeActive(true, holder().mc().player.getInventory(), true, true)
+                () -> !isContainerFull(false) && shouldButtonBeActive(true, getMinecraft().player.getInventory(), true, true)
         );
     }
 
@@ -223,7 +224,7 @@ public class WidgetEvents extends ManagementEvents {
     private QuesoButton createIncludeHotbar() {
         return new IncludeHotbarButton(
                 holder().menu(),
-                holder().mc().font,
+                getMinecraft().font,
                 searchEvents().getSearchFieldText(),
                 "include_hotbar",
                 b -> {
@@ -240,7 +241,7 @@ public class WidgetEvents extends ManagementEvents {
     private QuesoButton createFiltering() {
         return new FilteringButton(
                 holder().menu(),
-                holder().mc().font,
+                getMinecraft().font,
                 searchEvents().getSearchFieldText(),
                 "fill_whats_present",
                 b -> {
@@ -248,7 +249,7 @@ public class WidgetEvents extends ManagementEvents {
                         updateClient(ModClientOptions::cycleFilteringMode);
                     }
                 },
-                holder().mc(),
+                getMinecraft(),
                 holder().screen()
                 );
     }
@@ -260,7 +261,7 @@ public class WidgetEvents extends ManagementEvents {
         boolean containerScreen = isContainerScreen();
         return new QuickDropButton(
                 holder().menu(),
-                holder().mc().font,
+                getMinecraft().font,
                 searchEvents().getSearchFieldText(),
                 "quick_drop/",
                 "quick_drop",
@@ -269,7 +270,7 @@ public class WidgetEvents extends ManagementEvents {
                         isAnySlotFilled(true, 9, 36) :
                         isAnySlotFilled(false, 0, getContainerSize()))
                         && getCursorStack().isEmpty()
-                        && shouldButtonBeActive(!containerScreen, containerScreen ? null : holder().mc().player.getInventory())
+                        && shouldButtonBeActive(!containerScreen, containerScreen ? null : getMinecraft().player.getInventory())
         );
     }
 
@@ -279,7 +280,7 @@ public class WidgetEvents extends ManagementEvents {
     private QuesoButton createSwap() {
         return new SwapButton(
                 holder().menu(),
-                holder().mc().font,
+                getMinecraft().font,
                 searchEvents().getSearchFieldText(),
                 "swap/",
                 "swap",
@@ -294,7 +295,7 @@ public class WidgetEvents extends ManagementEvents {
     private QuesoButton createSort() {
         return new SortButton(
                 holder().menu(),
-                holder().mc().font,
+                getMinecraft().font,
                 searchEvents().getSearchFieldText(),
                 "sort/",
                 "sort",
@@ -309,7 +310,7 @@ public class WidgetEvents extends ManagementEvents {
     private QuesoButton createSearchTransportables() {
         return new SearchTransportablesButton(
                 holder().menu(),
-                holder().mc().font,
+                getMinecraft().font,
                 searchEvents().getSearchFieldText(),
                 "search_transportables",
                 b -> SEARCHING_TRANSPORTABLES = !SEARCHING_TRANSPORTABLES
@@ -322,7 +323,7 @@ public class WidgetEvents extends ManagementEvents {
     private QuesoButton createAlwaysQuickMove() {
         return new AlwaysQuickMoveButton(
                 holder().menu(),
-                holder().mc().font,
+                getMinecraft().font,
                 searchEvents().getSearchFieldText(),
                 "always_quick_move",
                 b -> updateClient(ModClientOptions::toggleAlwaysQuickMove)
@@ -335,7 +336,7 @@ public class WidgetEvents extends ManagementEvents {
     private QuesoButton createClearExcludedSlots() {
         return new ClearExcludedSlotsButton(
                 holder().menu(),
-                holder().mc().font,
+                getMinecraft().font,
                 searchEvents().getSearchFieldText(),
                 "clear_excluded_slots",
                 b -> {
@@ -351,7 +352,7 @@ public class WidgetEvents extends ManagementEvents {
     private QuesoButton createBulkTrade() {
         return new BulkTradeButton(
                 holder().menu(),
-                holder().mc().font,
+                getMinecraft().font,
                 searchEvents().getSearchFieldText(),
                 "trade_all",
                 b -> updateClient(client -> {
@@ -366,7 +367,7 @@ public class WidgetEvents extends ManagementEvents {
     private QuesoButton createBulkCraft() {
         return new BulkCraftButton(
                 holder().menu(),
-                holder().mc().font,
+                getMinecraft().font,
                 searchEvents().getSearchFieldText(),
                 "craft_all",
                 b -> updateClient(client -> {
@@ -381,7 +382,7 @@ public class WidgetEvents extends ManagementEvents {
     private QuesoButton createLockInventory() {
         return new LockInventoryButton(
                 holder().menu(),
-                holder().mc().font,
+                getMinecraft().font,
                 searchEvents().getSearchFieldText(),
                 "lock_inventory",
                 b -> {

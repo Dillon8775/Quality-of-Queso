@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static net.dillon.qualityofqueso.helper.MethodHelper.key;
+import static net.dillon.qualityofqueso.helper.MethodHelper.inputKey;
 
 /**
  * Read-only preview of the persisted ender chest cache.
@@ -68,7 +68,7 @@ public class EnderChestPreviewScreen extends Screen {
 
     @Override
     public boolean keyPressed(KeyEvent input) {
-        if (input.key() == InputConstants.KEY_ESCAPE || input.key() == key(Minecraft.getInstance().options.keyInventory).getValue()) {
+        if (input.key() == InputConstants.KEY_ESCAPE || input.key() == inputKey(Minecraft.getInstance().options.keyInventory).getValue()) {
             this.onClose();
             return true;
         }

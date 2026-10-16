@@ -93,11 +93,11 @@ public class ServerPacketHandlers {
 
         Balm.networking().sendTo(player, new SyncShulkerStateS2CPacket(
                 packet.pos(),
-                holder.isFiltered(),
+                holder.getSortingMode(),
+                holder.getFilteringMode(),
                 holder.isTagFiltered(),
                 itemsToCsv(holder.getFilterItems()),
-                intsToCsv(holder.getLockedSlots()),
-                holder.getSortingMode()
+                intsToCsv(holder.getLockedSlots())
         ));
     }
 
@@ -117,7 +117,7 @@ public class ServerPacketHandlers {
             return;
         }
 
-        holder.setFiltered(packet.filtered());
+        holder.setFilteringMode(packet.filteringMode());
         holder.setTagFiltered(packet.tagMode());
         holder.setFilterItems(parseItemsCsv(packet.filterItemsCsv()));
         holder.setLockedSlots(parseIntsCsv(packet.lockedSlotsCsv()));
@@ -126,11 +126,11 @@ public class ServerPacketHandlers {
 
         Balm.networking().sendTo(player, new SyncShulkerStateS2CPacket(
                 packet.pos(),
-                holder.isFiltered(),
+                holder.getSortingMode(),
+                holder.getFilteringMode(),
                 holder.isTagFiltered(),
                 itemsToCsv(holder.getFilterItems()),
-                intsToCsv(holder.getLockedSlots()),
-                holder.getSortingMode()
+                intsToCsv(holder.getLockedSlots())
         ));
     }
 

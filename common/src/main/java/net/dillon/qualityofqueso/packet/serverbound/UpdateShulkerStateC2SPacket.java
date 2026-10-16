@@ -15,20 +15,20 @@ import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
  * Client-to-server packet updating QoQ state for a specific shulker.
  *
  * @param pos            the shulker block position.
- * @param filtered       whether filtering is enabled for this shulker.
+ * @param sortingMode    current sorting mode enum name.
+ * @param filteringMode       whether filtering is enabled for this shulker.
  * @param tagMode        whether the filter mode is tag-based.
  * @param filterItemsCsv comma-separated item identifiers for filter placeholders.
  * @param lockedSlotsCsv comma-separated locked slot indices.
- * @param sortingMode    current sorting mode enum name.
  */
 @Dill(DillType.COMMON)
 public record UpdateShulkerStateC2SPacket(
         BlockPos pos,
-        boolean filtered,
+        String sortingMode,
+        String filteringMode,
         boolean tagMode,
         String filterItemsCsv,
-        String lockedSlotsCsv,
-        String sortingMode
+        String lockedSlotsCsv
 ) implements CustomPacketPayload {
     private static final Identifier ID = qoqIdentifier("update_shulker_state");
     public static final Type<UpdateShulkerStateC2SPacket> PACKET_TYPE = new Type<>(ID);
@@ -36,16 +36,16 @@ public record UpdateShulkerStateC2SPacket(
             StreamCodec.composite(
                     BlockPos.STREAM_CODEC,
                     UpdateShulkerStateC2SPacket::pos,
-                    ByteBufCodecs.BOOL,
-                    UpdateShulkerStateC2SPacket::filtered,
+                    ByteBufCodecs.STRING_UTF8,
+                    UpdateShulkerStateC2SPacket::sortingMode,
+                    ByteBufCodecs.STRING_UTF8,
+                    UpdateShulkerStateC2SPacket::filteringMode,
                     ByteBufCodecs.BOOL,
                     UpdateShulkerStateC2SPacket::tagMode,
                     ByteBufCodecs.STRING_UTF8,
                     UpdateShulkerStateC2SPacket::filterItemsCsv,
                     ByteBufCodecs.STRING_UTF8,
                     UpdateShulkerStateC2SPacket::lockedSlotsCsv,
-                    ByteBufCodecs.STRING_UTF8,
-                    UpdateShulkerStateC2SPacket::sortingMode,
                     UpdateShulkerStateC2SPacket::new
             );
 

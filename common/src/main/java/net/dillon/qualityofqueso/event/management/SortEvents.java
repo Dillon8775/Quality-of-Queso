@@ -15,6 +15,7 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.*;
 
+import static net.dillon.dillonlib.task.ClientTasks.getMinecraft;
 import static net.dillon.dillonlib.task.ClientTasks.getScreen;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
@@ -106,7 +107,7 @@ public class SortEvents extends ManagementEvents {
      * Sorts all items in a container.
      */
     public void sortItems() {
-        if (holder().mc().player == null || holder().mc().getConnection() == null) {
+        if (getMinecraft().player == null || getMinecraft().getConnection() == null) {
             return;
         }
         if (!(getScreen() instanceof AbstractContainerScreen<?> || getScreen() instanceof InventoryScreen)) {
@@ -184,7 +185,7 @@ public class SortEvents extends ManagementEvents {
                     clickSlot(i);
 
                     // If cursor still has items, put them back
-                    if (!holder().mc().player.containerMenu.getCarried().isEmpty()) {
+                    if (!getMinecraft().player.containerMenu.getCarried().isEmpty()) {
                         clickSlot(j);
                     }
 
@@ -303,9 +304,9 @@ public class SortEvents extends ManagementEvents {
 
         // Prefer locating where the player's inventory section actually begins.
         // This avoids assuming a fixed 36-slot tail on modded menus that expose extra player slots.
-        if (holder().mc().player != null) {
+        if (getMinecraft().player != null) {
             AbstractContainerMenu menu = holder().menu();
-            Inventory playerInventory = holder().mc().player.getInventory();
+            Inventory playerInventory = getMinecraft().player.getInventory();
             for (int i = 0; i < totalSlots; i++) {
                 if (menu.getSlot(i).container == playerInventory) {
                     return i;

@@ -66,7 +66,7 @@ public class SearchEvents extends ManagementEvents {
     }
 
     /**
-     * @return if the slot searched is filtered (returns true if the slot does <b>not</b> match the current query).
+     * @return if the slot searched is filteredMode (returns true if the slot does <b>not</b> match the current query).
      */
     public boolean isFilteredBySearch(Slot slot, boolean dropping) {
         return this.hasSearchQuery() && !this.search(this.getSearchFieldText(), slot, dropping);

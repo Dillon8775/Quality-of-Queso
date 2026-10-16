@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static net.dillon.dillonlib.task.ClientTasks.getMinecraft;
 import static net.dillon.dillonlib.task.ClientTasks.hasShiftDown;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
 import static net.dillon.qualityofqueso.helper.MethodHelper.*;
@@ -128,7 +129,7 @@ public class ManagementEvents implements ModEvent {
      * @return if the slot is a player inventory slot.
      */
     public boolean isPlayerInventorySlot(Slot slot) {
-        return slot.container == holder().mc().player.getInventory();
+        return slot.container == getMinecraft().player.getInventory();
     }
 
     /**
@@ -460,12 +461,12 @@ public class ManagementEvents implements ModEvent {
      * Performs the {@code click action} to sort items.
      */
     public void clickSlot(int slotId) {
-        holder().mc().gameMode.handleContainerInput(
+        getMinecraft().gameMode.handleContainerInput(
                 holder().menu().containerId,
                 slotId,
                 0,
                 ContainerInput.PICKUP,
-                holder().mc().player
+                getMinecraft().player
         );
     }
 

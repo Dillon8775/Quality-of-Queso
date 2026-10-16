@@ -32,7 +32,7 @@ public class MethodHelper {
     /**
      * @return a bounded key.
      */
-    public static InputConstants.Key key(KeyMapping key) {
+    public static InputConstants.Key inputKey(KeyMapping key) {
         return ((KeyMappingAccessor)key).getBoundKey();
     }
 

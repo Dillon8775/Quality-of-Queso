@@ -25,6 +25,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.*;
 
+import static net.dillon.dillonlib.task.ClientTasks.getMinecraft;
 import static net.dillon.qualityofqueso.helper.GuiHelper.ofItalicAndGray;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
 import static net.dillon.qualityofqueso.helper.ModConstants.MOVE_AMOUNT;
@@ -54,7 +55,7 @@ public class TooltipEvents extends ManagementEvents {
      * @return the original tooltips that is being displayed.
      */
     private List<Component> getOriginalTooltip() {
-        return holder().screensHoveredSlot() == null ? null : holder().screensHoveredSlot().getItem().getTooltipLines(Item.TooltipContext.EMPTY, holder().mc().player, Minecraft.getInstance().options.advancedItemTooltips ? TooltipFlag.ADVANCED : TooltipFlag.NORMAL);
+        return holder().screensHoveredSlot() == null ? null : holder().screensHoveredSlot().getItem().getTooltipLines(Item.TooltipContext.EMPTY, getMinecraft().player, Minecraft.getInstance().options.advancedItemTooltips ? TooltipFlag.ADVANCED : TooltipFlag.NORMAL);
     }
 
     /**
@@ -277,7 +278,7 @@ public class TooltipEvents extends ManagementEvents {
             }
 
             // Determine the index to render the tooltips (if advanced tooltips are on, we need to go back 2)
-            int index = holder().mc().options.advancedItemTooltips ? originalTooltip.size() - 2 : originalTooltip.size();
+            int index = getMinecraft().options.advancedItemTooltips ? originalTooltip.size() - 2 : originalTooltip.size();
             // Add the enchantment applicables to the original tooltips
             for (Component c : enchantmentApplicables) {
                 originalTooltip.add(index, c);

@@ -16,6 +16,7 @@ import net.minecraft.world.item.crafting.display.RecipeDisplayId;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import static net.dillon.dillonlib.task.ClientTasks.getMinecraft;
 import static net.dillon.dillonlib.task.ClientTasks.getScreen;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.isCraftingScreen;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.isInventoryScreen;
@@ -103,7 +104,7 @@ public class SlotClickedEvents extends ManagementEvents {
             return;
         }
 
-        if (holder().mc().player == null || holder().mc().gameMode == null || !merchantMenu.getSlot(2).hasItem()) {
+        if (getMinecraft().player == null || getMinecraft().gameMode == null || !merchantMenu.getSlot(2).hasItem()) {
             return;
         }
 
@@ -135,7 +136,7 @@ public class SlotClickedEvents extends ManagementEvents {
         }
 
         AbstractContainerMenu menu = holder().menu();
-        if (holder().mc().player == null || holder().mc().gameMode == null || !menu.getSlot(0).hasItem()) {
+        if (getMinecraft().player == null || getMinecraft().gameMode == null || !menu.getSlot(0).hasItem()) {
             return;
         }
 

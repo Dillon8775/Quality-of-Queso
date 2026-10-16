@@ -1,7 +1,6 @@
 package net.dillon.qualityofqueso.event;
 
 import net.dillon.qualityofqueso.event.key.CharTypedEvents;
-import net.dillon.qualityofqueso.event.key.KeyPressedEvents;
 import net.dillon.qualityofqueso.event.management.ExtractingEvents;
 import net.dillon.qualityofqueso.event.management.SlotClickedEvents;
 import net.dillon.qualityofqueso.event.mouse.MouseClickedEvents;
@@ -18,7 +17,6 @@ import net.dillon.qualityofqueso.event.screen.TooltipEvents;
  */
 public record Events(
         CharTypedEvents charTyped,
-        KeyPressedEvents keyPressed,
         ExtractingEvents extracting,
         SlotClickedEvents slotClicked,
         MouseClickedEvents mouseClicked,

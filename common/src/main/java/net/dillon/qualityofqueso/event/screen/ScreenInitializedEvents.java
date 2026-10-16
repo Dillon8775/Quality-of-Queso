@@ -8,6 +8,7 @@ import net.dillon.qualityofqueso.helper.ModConstants;
 import net.dillon.qualityofqueso.option.eum.management.FilteringMode;
 import net.minecraft.client.gui.screens.inventory.*;
 
+import static net.dillon.dillonlib.task.ClientTasks.getMinecraft;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
 import static net.dillon.qualityofqueso.helper.MethodHelper.*;
 import static net.dillon.qualityofqueso.helper.ModConstants.CURRENT_CONTAINER;
@@ -49,7 +50,7 @@ public class ScreenInitializedEvents extends ManagementEvents {
         if (isContainerScreen()) {
             // Handle tracked containers
             if (ContainerHelper.RETURNING_FROM_PLACEHOLDER_SCREEN) {
-                // If the user is returning from a placeholder screen, then we should re-track the container as "filtered", to ensure no variables are lost
+                // If the user is returning from a placeholder screen, then we should re-track the container as "filteringMode", to ensure no variables are lost
                 ContainerHelper.RETURNING_FROM_PLACEHOLDER_SCREEN = false;
                 ContainerHelper.IS_TRACKED_CONTAINER = true;
             } else if (ContainerHelper.consumePendingOpenIsTracked()) { // Next, check if the container is tracked. Then temporarily set "fill what's present" to true, so that filtering works correctly. Once the screen closes, disable "fill what's present"
@@ -82,7 +83,7 @@ public class ScreenInitializedEvents extends ManagementEvents {
             MethodHelper.addRenderableModWidget(holder().screen(), holder().searchFields().container());
         } else if (isInventoryScreen()) { // Initialize the inventory search field, if it should be initialized
             // Also initialize the "container" variable to the player's inventory, if the container was never initialized from any of the other screens
-            holder().setCachedContainer(holder().mc().player.getInventory());
+            holder().setCachedContainer(getMinecraft().player.getInventory());
             if (client().searching().inventorySearching) {
                 holder().setInventorySearchField(searchEvents().initializeSearchField(true));
                 MethodHelper.addRenderableModWidget(holder().screen(), holder().searchFields().inventory());

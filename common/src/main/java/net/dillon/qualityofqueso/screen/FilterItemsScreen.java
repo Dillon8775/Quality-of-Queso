@@ -23,11 +23,11 @@ import java.util.Optional;
 
 import static net.dillon.dillonlib.task.ClientTasks.openScreen;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.playButtonSound;
-import static net.dillon.qualityofqueso.helper.MethodHelper.key;
+import static net.dillon.qualityofqueso.helper.MethodHelper.inputKey;
 import static net.dillon.qualityofqueso.helper.ModConstants.DEFAULT_MATCHING_ITEMS_COLOR;
 
 /**
- * Set filtered items in a container (fully 100% client-side).
+ * Set filteredMode items in a container (fully 100% client-side).
  */
 public class FilterItemsScreen extends Screen {
     private static final int SLOT_SIZE = 18;
@@ -114,7 +114,7 @@ public class FilterItemsScreen extends Screen {
     }
 
     /**
-     * @return a placeholder slot from the filtered items list.
+     * @return a placeholder slot from the filteredMode items list.
      */
     private int placeholderSlotAt(int mouseX, int mouseY) {
         int startX = this.panelX() + 8;
@@ -134,7 +134,7 @@ public class FilterItemsScreen extends Screen {
     }
 
     /**
-     * @return the maximum scroll Y for filtered items.
+     * @return the maximum scroll Y for filteredMode items.
      */
     private int maxScrollRow() {
         return Math.max(0, MAX_PLACEHOLDER_ROWS - PLACEHOLDER_ROWS);
@@ -162,7 +162,7 @@ public class FilterItemsScreen extends Screen {
     }
 
     /**
-     * @return {@code true} if the container already has stack in filtered list.
+     * @return {@code true} if the container already has stack in filteredMode list.
      */
     private boolean alreadyHasPlaceholderItem(ItemStack stack) {
         for (ItemStack placeholder : this.placeholders) {
@@ -190,7 +190,7 @@ public class FilterItemsScreen extends Screen {
      */
     @Override
     public boolean keyPressed(KeyEvent input) {
-        if (input.key() == InputConstants.KEY_ESCAPE || input.key() == key(Minecraft.getInstance().options.keyInventory).getValue()) {
+        if (input.key() == InputConstants.KEY_ESCAPE || input.key() == inputKey(Minecraft.getInstance().options.keyInventory).getValue()) {
             this.onClose();
             return true;
         }
@@ -298,7 +298,7 @@ public class FilterItemsScreen extends Screen {
     }
 
     /**
-     * Handles scrolling through the filtered items list.
+     * Handles scrolling through the filteredMode items list.
      */
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {

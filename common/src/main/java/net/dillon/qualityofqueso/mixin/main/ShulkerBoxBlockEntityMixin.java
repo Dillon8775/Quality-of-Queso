@@ -26,92 +26,22 @@ import static net.dillon.qualityofqueso.helper.ModConstants.*;
 @Mixin(ShulkerBoxBlockEntity.class)
 public class ShulkerBoxBlockEntityMixin implements ShulkerStateHolder {
     @Unique
-    private boolean filtered = false;
+    private String sortingMode = "";
+    @Unique
+    private String filteringMode = "";
     @Unique
     private boolean tagFiltered = false;
     @Unique
     private List<String> filterItems = new ArrayList<>();
     @Unique
     private List<Integer> lockedSlots = new ArrayList<>();
+
+    /**
+     * Marks a shulker box as changed.
+     */
     @Unique
-    private String sortingMode = "";
-
-    /**
-     * @return whether this shulker is filtered.
-     */
-    @Override
-    public boolean isFiltered() {
-        return this.filtered;
-    }
-
-    /**
-     * Sets whether this shulker is filtered.
-     */
-    @Override
-    public void setFiltered(boolean filtered) {
-        this.filtered = filtered;
-    }
-
-    /**
-     * @return whether this shulker uses tag filtering.
-     */
-    @Override
-    public boolean isTagFiltered() {
-        return this.tagFiltered;
-    }
-
-    /**
-     * Sets whether this shulker uses tag filtering.
-     */
-    @Override
-    public void setTagFiltered(boolean tagFiltered) {
-        this.tagFiltered = tagFiltered;
-    }
-
-    /**
-     * @return the filter placeholder item identifiers.
-     */
-    @Override
-    public List<String> getFilterItems() {
-        return new ArrayList<>(this.filterItems);
-    }
-
-    /**
-     * Replaces the filter placeholder item identifiers.
-     */
-    @Override
-    public void setFilterItems(List<String> filterItems) {
-        if (filterItems == null || filterItems.isEmpty()) {
-            this.filterItems = new ArrayList<>();
-            return;
-        }
-        this.filterItems = filterItems.stream()
-                .filter(s -> s != null && !s.isBlank())
-                .distinct()
-                .collect(Collectors.toCollection(ArrayList::new));
-    }
-
-    /**
-     * @return the locked slot indices.
-     */
-    @Override
-    public List<Integer> getLockedSlots() {
-        return new ArrayList<>(this.lockedSlots);
-    }
-
-    /**
-     * Replaces locked slot indices.
-     */
-    @Override
-    public void setLockedSlots(List<Integer> lockedSlots) {
-        if (lockedSlots == null || lockedSlots.isEmpty()) {
-            this.lockedSlots = new ArrayList<>();
-            return;
-        }
-        this.lockedSlots = lockedSlots.stream()
-                .distinct()
-                .sorted()
-                .collect(Collectors.toCollection(ArrayList::new));
+    private void markChanged() {
+        ((ShulkerBoxBlockEntity) (Object) this).setChanged();
     }
 
     /**
@@ -129,9 +59,100 @@ public class ShulkerBoxBlockEntityMixin implements ShulkerStateHolder {
     public void setSortingMode(String sortingMode) {
         if (sortingMode == null || sortingMode.isBlank()) {
             this.sortingMode = "";
+            this.markChanged();
             return;
         }
+
         this.sortingMode = sortingMode;
+        this.markChanged();
+    }
+
+    /**
+     * @return whether this shulker is filteringMode.
+     */
+    @Override
+    public String getFilteringMode() {
+        return this.filteringMode;
+    }
+
+    /**
+     * Sets whether this shulker is filteringMode.
+     */
+    @Override
+    public void setFilteringMode(String filteringMode) {
+        this.filteringMode = filteringMode;
+
+        this.markChanged();
+    }
+
+    /**
+     * @return whether this shulker uses tag filtering.
+     */
+    @Override
+    public boolean isTagFiltered() {
+        return this.tagFiltered;
+    }
+
+    /**
+     * Sets whether this shulker uses tag filtering.
+     */
+    @Override
+    public void setTagFiltered(boolean tagFiltered) {
+        this.tagFiltered = tagFiltered;
+
+        this.markChanged();
+    }
+
+    /**
+     * @return the filter placeholder item identifiers.
+     */
+    @Override
+    public List<String> getFilterItems() {
+        return new ArrayList<>(this.filterItems);
+    }
+
+    /**
+     * Replaces the filter placeholder item identifiers.
+     */
+    @Override
+    public void setFilterItems(List<String> filterItems) {
+        if (filterItems == null || filterItems.isEmpty()) {
+            this.filterItems = new ArrayList<>();
+            this.markChanged();
+            return;
+        }
+
+        this.filterItems = filterItems.stream()
+                .filter(s -> s != null && !s.isBlank())
+                .distinct()
+                .collect(Collectors.toCollection(ArrayList::new));
+        this.markChanged();
+    }
+
+    /**
+     * @return the locked slot indices.
+     */
+    @Override
+    public List<Integer> getLockedSlots() {
+        return new ArrayList<>(this.lockedSlots);
+    }
+
+    /**
+     * Replaces locked slot indices.
+     */
+    @Override
+    public void setLockedSlots(List<Integer> lockedSlots) {
+        if (lockedSlots == null || lockedSlots.isEmpty()) {
+            this.lockedSlots = new ArrayList<>();
+            this.markChanged();
+            return;
+        }
+
+        this.lockedSlots = lockedSlots.stream()
+                .distinct()
+                .sorted()
+                .collect(Collectors.toCollection(ArrayList::new));
+        this.markChanged();
     }
 
     /**
@@ -139,7 +160,8 @@ public class ShulkerBoxBlockEntityMixin implements ShulkerStateHolder {
      */
     @Inject(method = "loadAdditional", at = @At("TAIL"))
     private void loadShulkerIdentity(ValueInput input, CallbackInfo ci) {
-        this.filtered = input.getBooleanOr(FILTERED, false);
+        this.sortingMode = input.getStringOr(SORTING_MODE, "");
+        this.filteringMode = input.getStringOr(FILTERING_MODE, "");
         this.tagFiltered = input.getBooleanOr(TAG_FILTERED, false);
 
         String filterItemsRaw = input.getStringOr(FILTER_ITEMS, "");
@@ -159,7 +181,6 @@ public class ShulkerBoxBlockEntityMixin implements ShulkerStateHolder {
                 .distinct()
                 .sorted()
                 .collect(Collectors.toCollection(ArrayList::new));
-        this.sortingMode = input.getStringOr(SORTING_MODE, "");
     }
 
     /**
@@ -167,10 +188,10 @@ public class ShulkerBoxBlockEntityMixin implements ShulkerStateHolder {
      */
     @Inject(method = "saveAdditional", at = @At("TAIL"))
     private void saveShulkerIdentity(ValueOutput output, CallbackInfo ci) {
-        output.putBoolean(FILTERED, this.filtered);
+        output.putString(SORTING_MODE, this.sortingMode);
+        output.putString(FILTERING_MODE, this.filteringMode);
         output.putBoolean(TAG_FILTERED, this.tagFiltered);
         output.putString(FILTER_ITEMS, String.join(",", this.filterItems));
         output.putIntArray(LOCKED_SLOTS, this.lockedSlots.stream().mapToInt(Integer::intValue).toArray());
-        output.putString(SORTING_MODE, this.sortingMode);
     }
 }
