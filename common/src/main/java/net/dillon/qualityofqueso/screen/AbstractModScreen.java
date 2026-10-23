@@ -111,6 +111,22 @@ public class AbstractModScreen extends DillonLibMenuScreen {
                 )
         );
 
+        this.addRenderableWidget(
+                this.createWidget(
+                        UpdatableSpriteButton.ofDefault(
+                                "Manage Container Data",
+                                CHEST,
+                                (button) -> {
+                                    openScreen(new ManageContainerDataScreen(this));
+                                },
+                                Component.translatable("qualityofqueso.manage_container_data"),
+                                false
+                        ),
+                        () -> getRightButtonPosition(this.width, 0),
+                        doneButton::getY
+                )
+        );
+
         if (this.minecraft.level != null) {
             if (this.minecraft.getSingleplayerServer() != null) {
 
@@ -142,13 +158,13 @@ public class AbstractModScreen extends DillonLibMenuScreen {
                                             "View Last Known Ender Chest Button",
                                             ENDER_CHEST,
                                             (button) -> {
-                                                openScreen(new EnderChestPreviewScreen());
+                                                openScreen(new EnderChestPreviewScreen(this));
                                             },
-                                            Component.translatable("qualityofqueso.gui.view_ender_chest.tooltip"),
+                                            Component.translatable("qualityofqueso.view_ender_chest.tooltip"),
                                             false
                                     ),
                                     ModHelper::modEnabled,
-                                    () -> getRightButtonPosition(this.width, 0),
+                                    () -> getRightButtonPosition(this.width, 1),
                                     doneButton::getY
                             )
                     );

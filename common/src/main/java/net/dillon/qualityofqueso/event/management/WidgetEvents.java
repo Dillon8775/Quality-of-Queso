@@ -1,8 +1,8 @@
 package net.dillon.qualityofqueso.event.management;
 
 import net.dillon.dillonlib.mixin.accessor.ScreenInvoker;
+import net.dillon.qualityofqueso.container.ContainerSyncer;
 import net.dillon.qualityofqueso.event.QuesoScreenHolder;
-import net.dillon.qualityofqueso.helper.ContainerHelper;
 import net.dillon.qualityofqueso.option.ModClientOptions;
 import net.dillon.qualityofqueso.option.eum.management.IncludeHotbar;
 import net.dillon.qualityofqueso.widget.*;
@@ -245,7 +245,7 @@ public class WidgetEvents extends ManagementEvents {
                 searchEvents().getSearchFieldText(),
                 "fill_whats_present",
                 b -> {
-                    if (!ContainerHelper.isTrackedFilteringActive()) {
+                    if (!ContainerSyncer.isTrackedFilteringActive()) {
                         updateClient(ModClientOptions::cycleFilteringMode);
                     }
                 },
@@ -429,7 +429,7 @@ public class WidgetEvents extends ManagementEvents {
     private boolean canInitFilteringButton() {
         return !isInventoryScreen()
                 && (
-                ContainerHelper.isTrackedFilteringActive() || !client().buttonDisplayOptions().displayFiltering.filteredContainersOnly()
+                ContainerSyncer.isTrackedFilteringActive() || !client().buttonDisplayOptions().displayFiltering.filteredContainersOnly()
                         && (
                         (isContainerScreen() || isDropperDispenserOrHopperScreen()) && client().management().transferring.any()
                 )

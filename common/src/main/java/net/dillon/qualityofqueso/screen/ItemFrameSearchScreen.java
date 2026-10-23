@@ -3,7 +3,6 @@ package net.dillon.qualityofqueso.screen;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.blay09.mods.balm.Balm;
 import net.dillon.dillonlib.screen.BasicDillonLibScreen;
-import net.dillon.dillonlib.screen.ConditionalTooltip;
 import net.dillon.dillonlib.util.Texts;
 import net.dillon.qualityofqueso.packet.serverbound.GlowSearchC2SPacket;
 import net.dillon.qualityofqueso.util.ListOptions;
@@ -126,10 +125,13 @@ public class ItemFrameSearchScreen extends BasicDillonLibScreen {
                         .bounds(builder().captureWidth(), builder().captureHeight(), 100, 20)
                         .build(),
                 () -> !isSearchFieldTextEmpty(),
-                () -> ConditionalTooltip.of(
-                        Component.translatable("qualityofqueso.gui.search.tooltip", this.searchField.getValue()),
-                        Component.empty()
-                )
+                isActive -> {
+                    if (!isActive) {
+                        return Component.empty();
+                    }
+
+                    return Component.translatable("qualityofqueso.gui.search.tooltip", this.searchField.getValue());
+                }
         );
     }
 
@@ -211,11 +213,13 @@ public class ItemFrameSearchScreen extends BasicDillonLibScreen {
         this.addRenderableWidget(
                 this.createWidget(
                         this.searchField,
-                        () -> ConditionalTooltip.ofCondition(
-                                () -> client().general().tooltips.enabled(),
-                                Component.translatable("qualityofqueso.gui.search_item_frames.search_filtering"),
-                                Component.empty()
-                        )
+                        isActive -> {
+                            if (client().general().tooltips.enabled()) {
+                                return Component.translatable("qualityofqueso.gui.search_item_frames.search_filtering");
+                            } else {
+                                return Component.empty();
+                            }
+                        }
                 )
         );
         this.setInitialFocus(this.searchField);

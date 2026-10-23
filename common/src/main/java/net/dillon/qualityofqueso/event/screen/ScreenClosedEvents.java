@@ -1,9 +1,9 @@
 package net.dillon.qualityofqueso.event.screen;
 
+import net.dillon.qualityofqueso.container.ContainerSyncer;
 import net.dillon.qualityofqueso.event.QuesoScreenHolder;
 import net.dillon.qualityofqueso.event.management.CursorKey;
 import net.dillon.qualityofqueso.event.management.ManagementEvents;
-import net.dillon.qualityofqueso.helper.ContainerHelper;
 import net.dillon.qualityofqueso.helper.MethodHelper;
 import net.dillon.qualityofqueso.option.eum.management.FilteringMode;
 import net.minecraft.client.gui.screens.inventory.AbstractRecipeBookScreen;
@@ -101,12 +101,12 @@ public class ScreenClosedEvents extends ManagementEvents {
         }
 
         if (isContainerScreen()) {
-            if (ContainerHelper.OPENING_PLACEHOLDER_SCREEN) {
-                ContainerHelper.OPENING_PLACEHOLDER_SCREEN = false;
+            if (ContainerSyncer.OPENING_PLACEHOLDER_SCREEN) {
+                ContainerSyncer.OPENING_PLACEHOLDER_SCREEN = false;
                 return;
             }
-            ContainerHelper.clearActiveContainer();
-            ContainerHelper.IS_TRACKED_CONTAINER = false;
+            ContainerSyncer.clearActiveContainer();
+            ContainerSyncer.IS_TRACKED_CONTAINER = false;
             if (!client().sorting().useGlobalSortingMode) {
                 client().sorting().currentSortingMode = GLOBAL_SORTING_MODE;
             }

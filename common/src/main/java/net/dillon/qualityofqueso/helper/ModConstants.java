@@ -144,6 +144,7 @@ public class ModConstants {
     public static final Identifier OPEN_WORLD_DIRECTORY_TEXTURE = qoqIdentifier("widget/world_folder");
     public static final Identifier OPEN_CONFIG_DIRECTORY_TEXTURE = qoqIdentifier("widget/config_folder");
     public static final Identifier ENDER_CHEST = qoqIdentifier("widget/ender_chest");
+    public static final Identifier CHEST = qoqIdentifier("widget/chest");
     public static final Identifier MULTI_CONFIG_TEXTURE = qoqIdentifier("widget/multi_config");
 
     // Colors
@@ -151,6 +152,7 @@ public class ModConstants {
 
     // Config constants
     public static final String DEFAULT_CONFIG_DIR = "qualityofqueso/global";
+    public static final String BACKUP_CONFIG_DIR = "qualityofqueso/backups";
     public static final String DEFAULT_SERVER_CONFIG_DIR = "qualityofqueso/server-configs/";
     public static final String DEFAULT_CLIENT_CONFIG_FILE_NAME = "client.json";
     public static final String DEFAULT_COMMON_CONFIG_FILE_NAME = "common.json";
@@ -171,6 +173,7 @@ public class ModConstants {
     public static final String SORTING_MODE = "sorting_mode";
     public static final String FILTERING_MODE = "filtering_mode";
     public static final String TAG_FILTERED = "tag_filtered";
+    public static final String LOCKED = "locked";
     public static final String FILTER_ITEMS = "filter_items";
     public static final String LOCKED_SLOTS = "locked_slots";
 

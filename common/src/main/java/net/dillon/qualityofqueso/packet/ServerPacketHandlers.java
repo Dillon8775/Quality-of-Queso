@@ -3,6 +3,7 @@ package net.dillon.qualityofqueso.packet;
 import net.blay09.mods.balm.Balm;
 import net.dillon.dillonlib.annotation.Dill;
 import net.dillon.dillonlib.annotation.DillType;
+import net.dillon.qualityofqueso.container.ShulkerBlockEntityHolder;
 import net.dillon.qualityofqueso.option.ModCommonOptions;
 import net.dillon.qualityofqueso.packet.clientbound.SyncShulkerStateS2CPacket;
 import net.dillon.qualityofqueso.packet.serverbound.*;
@@ -10,7 +11,6 @@ import net.dillon.qualityofqueso.server.DedicatedServerStorage;
 import net.dillon.qualityofqueso.server.LockedInventoryStorage;
 import net.dillon.qualityofqueso.server.PendingManualPickup;
 import net.dillon.qualityofqueso.util.GlowCountdown;
-import net.dillon.qualityofqueso.util.ShulkerStateHolder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -26,10 +26,9 @@ import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static net.dillon.qualityofqueso.container.ShulkerSyncer.*;
 
 /**
  * Server-safe packet handlers used during common packet registration.
@@ -87,17 +86,18 @@ public class ServerPacketHandlers {
         if (!(blockEntity instanceof ShulkerBoxBlockEntity shulkerBoxBlockEntity)) {
             return;
         }
-        if (!(shulkerBoxBlockEntity instanceof ShulkerStateHolder holder)) {
+        if (!(shulkerBoxBlockEntity instanceof ShulkerBlockEntityHolder shulkerBlockEntityHolder)) {
             return;
         }
 
         Balm.networking().sendTo(player, new SyncShulkerStateS2CPacket(
                 packet.pos(),
-                holder.getSortingMode(),
-                holder.getFilteringMode(),
-                holder.isTagFiltered(),
-                itemsToCsv(holder.getFilterItems()),
-                intsToCsv(holder.getLockedSlots())
+                shulkerBlockEntityHolder.getSortingMode(),
+                shulkerBlockEntityHolder.getFilteringMode(),
+                shulkerBlockEntityHolder.isTagFiltered(),
+                shulkerBlockEntityHolder.isLocked(),
+                itemsToCsv(shulkerBlockEntityHolder.getFilterItems()),
+                intsToCsv(shulkerBlockEntityHolder.getLockedSlots())
         ));
     }
 
@@ -113,24 +113,29 @@ public class ServerPacketHandlers {
         if (!(blockEntity instanceof ShulkerBoxBlockEntity shulkerBoxBlockEntity)) {
             return;
         }
-        if (!(shulkerBoxBlockEntity instanceof ShulkerStateHolder holder)) {
+        if (!(shulkerBoxBlockEntity instanceof ShulkerBlockEntityHolder shulkerBlockEntityHolder)) {
             return;
         }
 
-        holder.setFilteringMode(packet.filteringMode());
-        holder.setTagFiltered(packet.tagMode());
-        holder.setFilterItems(parseItemsCsv(packet.filterItemsCsv()));
-        holder.setLockedSlots(parseIntsCsv(packet.lockedSlotsCsv()));
-        holder.setSortingMode(packet.sortingMode());
-        shulkerBoxBlockEntity.setChanged();
+        ShulkerBlockEntityHolder.writeShulkerBlockEntityHolder(
+                shulkerBlockEntityHolder,
+                shulkerBoxBlockEntity,
+                packet.sortingMode(),
+                packet.filteringMode(),
+                packet.tagMode(),
+                packet.locked(),
+                parseItemsCsv(packet.filterItemsCsv()),
+                parseIntsCsv(packet.lockedSlotsCsv())
+        );
 
         Balm.networking().sendTo(player, new SyncShulkerStateS2CPacket(
                 packet.pos(),
-                holder.getSortingMode(),
-                holder.getFilteringMode(),
-                holder.isTagFiltered(),
-                itemsToCsv(holder.getFilterItems()),
-                intsToCsv(holder.getLockedSlots())
+                shulkerBlockEntityHolder.getSortingMode(),
+                shulkerBlockEntityHolder.getFilteringMode(),
+                shulkerBlockEntityHolder.isTagFiltered(),
+                shulkerBlockEntityHolder.isLocked(),
+                itemsToCsv(shulkerBlockEntityHolder.getFilterItems()),
+                intsToCsv(shulkerBlockEntityHolder.getLockedSlots())
         ));
     }
 
@@ -228,65 +233,5 @@ public class ServerPacketHandlers {
                     Component.translatable("qualityofqueso.item_frame_searcher.executed.with_timer", searched, query, timer), false);
         }
         playSound(player, SoundEvents.ARROW_HIT_PLAYER, 1.0F);
-    }
-
-    /**
-     * Serializes item identifiers to comma-separated text.
-     */
-    private static String itemsToCsv(List<String> items) {
-        if (items == null || items.isEmpty()) {
-            return "";
-        }
-        return String.join(",", items);
-    }
-
-    /**
-     * Serializes integer values to comma-separated text.
-     */
-    private static String intsToCsv(List<Integer> values) {
-        if (values == null || values.isEmpty()) {
-            return "";
-        }
-        return values.stream().map(String::valueOf).collect(Collectors.joining(","));
-    }
-
-    /**
-     * Parses comma-separated item identifiers.
-     */
-    private static List<String> parseItemsCsv(String csv) {
-        if (csv == null || csv.isBlank()) {
-            return new ArrayList<>();
-        }
-        return Arrays.stream(csv.split(","))
-                .map(String::trim)
-                .filter(s -> !s.isBlank())
-                .distinct()
-                .collect(Collectors.toCollection(ArrayList::new));
-    }
-
-    /**
-     * Parses comma-separated integer values.
-     */
-    private static List<Integer> parseIntsCsv(String csv) {
-        if (csv == null || csv.isBlank()) {
-            return new ArrayList<>();
-        }
-
-        List<Integer> values = new ArrayList<>();
-        for (String part : csv.split(",")) {
-            String trimmed = part.trim();
-            if (trimmed.isBlank()) {
-                continue;
-            }
-            try {
-                values.add(Integer.parseInt(trimmed));
-            } catch (NumberFormatException ignored) {
-            }
-        }
-
-        return values.stream()
-                .distinct()
-                .sorted()
-                .collect(Collectors.toCollection(ArrayList::new));
     }
 }

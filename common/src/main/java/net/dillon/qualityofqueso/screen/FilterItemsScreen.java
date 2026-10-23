@@ -1,8 +1,9 @@
 package net.dillon.qualityofqueso.screen;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import net.dillon.qualityofqueso.helper.ContainerHelper;
+import net.dillon.qualityofqueso.container.ContainerSyncer;
 import net.dillon.qualityofqueso.helper.ModConstants;
+import net.dillon.qualityofqueso.sound.BundleInsertSoundEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
@@ -22,9 +23,9 @@ import java.util.List;
 import java.util.Optional;
 
 import static net.dillon.dillonlib.task.ClientTasks.openScreen;
-import static net.dillon.qualityofqueso.helper.ManagementHelper.playButtonSound;
 import static net.dillon.qualityofqueso.helper.MethodHelper.inputKey;
 import static net.dillon.qualityofqueso.helper.ModConstants.DEFAULT_MATCHING_ITEMS_COLOR;
+import static net.dillon.qualityofqueso.helper.SoundHelper.playBundleInsertSound;
 
 /**
  * Set filteredMode items in a container (fully 100% client-side).
@@ -178,10 +179,10 @@ public class FilterItemsScreen extends Screen {
      */
     @Override
     public void onClose() {
-        ContainerHelper.setCurrentPlaceholderStacks(this.placeholders);
-        ContainerHelper.RETURNING_FROM_PLACEHOLDER_SCREEN = true;
+        ContainerSyncer.setCurrentPlaceholderStacks(this.placeholders);
+        ContainerSyncer.RETURNING_FROM_PLACEHOLDER_SCREEN = true;
         openScreen(this.parentScreen);
-        playButtonSound();
+        playBundleInsertSound(BundleInsertSoundEvents.CLOSED_FILTER_SCREEN);
     }
 
     /**
@@ -202,7 +203,7 @@ public class FilterItemsScreen extends Screen {
      */
     @Override
     protected void init() {
-        playButtonSound();
+        playBundleInsertSound(BundleInsertSoundEvents.OPENED_FILTER_SCREEN);
         this.placeholders.clear();
         this.scrollRow = 0;
         int size = MAX_PLACEHOLDER_SLOTS;
@@ -210,7 +211,7 @@ public class FilterItemsScreen extends Screen {
             this.placeholders.add(ItemStack.EMPTY);
         }
 
-        List<ItemStack> saved = ContainerHelper.getCurrentPlaceholderStacks();
+        List<ItemStack> saved = ContainerSyncer.getCurrentPlaceholderStacks();
         for (int i = 0; i < Math.min(saved.size(), size); i++) {
             ItemStack stack = saved.get(i);
             if (!stack.isEmpty()) {
@@ -248,7 +249,7 @@ public class FilterItemsScreen extends Screen {
                         this.placeholders.set(placeholderSlot, copy);
                         this.selectedStack = ItemStack.EMPTY;
                         this.selectedSourceSlot = -1;
-                        playButtonSound();
+                        playBundleInsertSound(BundleInsertSoundEvents.PLACE_FILTER_ITEM);
                     }
                     return true;
                 }
@@ -257,7 +258,7 @@ public class FilterItemsScreen extends Screen {
                 copy.setCount(1);
                 this.selectedStack = copy;
                 this.selectedSourceSlot = sourceSlot;
-                playButtonSound();
+                playBundleInsertSound(BundleInsertSoundEvents.PICKUP_FILTER_ITEM);
             }
             return true;
         }
@@ -266,7 +267,7 @@ public class FilterItemsScreen extends Screen {
         if (placeholderSlot >= 0) {
             if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT && !this.placeholders.get(placeholderSlot).isEmpty()) {
                 this.placeholders.set(placeholderSlot, ItemStack.EMPTY);
-                playButtonSound();
+                playBundleInsertSound(BundleInsertSoundEvents.REMOVE_FILTER_ITEM);
                 return true;
             }
             if (event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
@@ -279,7 +280,7 @@ public class FilterItemsScreen extends Screen {
                     this.placeholders.set(placeholderSlot, copy);
                     this.selectedStack = ItemStack.EMPTY;
                     this.selectedSourceSlot = -1;
-                    playButtonSound();
+                    playBundleInsertSound(BundleInsertSoundEvents.PLACE_FILTER_ITEM);
                 }
                 return true;
             }
@@ -287,7 +288,7 @@ public class FilterItemsScreen extends Screen {
 
         if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT) {
             if (!this.selectedStack.isEmpty()) {
-                playButtonSound();
+                playBundleInsertSound(BundleInsertSoundEvents.REMOVE_FILTER_ITEM);
             }
             this.selectedStack = ItemStack.EMPTY;
             this.selectedSourceSlot = -1;

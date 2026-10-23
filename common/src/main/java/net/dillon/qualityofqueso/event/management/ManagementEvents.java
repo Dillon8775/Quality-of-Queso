@@ -2,9 +2,9 @@ package net.dillon.qualityofqueso.event.management;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import net.dillon.qualityofqueso.container.ContainerSyncer;
 import net.dillon.qualityofqueso.event.ModEvent;
 import net.dillon.qualityofqueso.event.QuesoScreenHolder;
-import net.dillon.qualityofqueso.helper.ContainerHelper;
 import net.dillon.qualityofqueso.option.eum.management.FilteringMode;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractFurnaceScreen;
@@ -394,7 +394,7 @@ public class ManagementEvents implements ModEvent {
      */
     public boolean matchesFillFilter(ItemStack fromStack, ItemStack toStack) {
         boolean areMatching = fromStack.getItem() == toStack.getItem();
-        if (ContainerHelper.IS_TRACKED_CONTAINER && client().management().containerFiltering && ContainerHelper.CURRENT_FILTER_TYPE.tag()) {
+        if (ContainerSyncer.IS_TRACKED_CONTAINER && client().management().containerFiltering && ContainerSyncer.CURRENT_FILTER_TYPE.tag()) {
             return areStacksInSameTag(fromStack, toStack) || areMatching;
         }
         return areMatching;
@@ -410,8 +410,8 @@ public class ManagementEvents implements ModEvent {
             return true;
         }
 
-        if (ContainerHelper.IS_TRACKED_CONTAINER && client().management().containerFiltering) {
-            if (ContainerHelper.CURRENT_FILTER_MODE == FilteringMode.CURRENT_STACKS) {
+        if (ContainerSyncer.IS_TRACKED_CONTAINER && client().management().containerFiltering) {
+            if (ContainerSyncer.CURRENT_FILTER_MODE == FilteringMode.CURRENT_STACKS) {
                 return true;
             }
             return toInventory || itemMatchesPlaceholder(sourceStack);
@@ -432,11 +432,11 @@ public class ManagementEvents implements ModEvent {
      * @return true if the stack matches any placeholder in the current tracked container.
      */
     public boolean itemMatchesPlaceholder(ItemStack sourceStack) {
-        if (!ContainerHelper.IS_TRACKED_CONTAINER || !client().management().containerFiltering) {
+        if (!ContainerSyncer.IS_TRACKED_CONTAINER || !client().management().containerFiltering) {
             return false;
         }
 
-        for (ItemStack placeholderStack : ContainerHelper.getCurrentPlaceholderStacks()) {
+        for (ItemStack placeholderStack : ContainerSyncer.getCurrentPlaceholderStacks()) {
             if (!placeholderStack.isEmpty() && matchesFillFilter(sourceStack, placeholderStack)) {
                 return true;
             }
@@ -584,8 +584,8 @@ public class ManagementEvents implements ModEvent {
      * @return true when matching-only filtering should be applied.
      */
     public boolean shouldApplyMatchingFilter() {
-        if (ContainerHelper.IS_TRACKED_CONTAINER && client().management().containerFiltering) {
-            return ContainerHelper.CURRENT_FILTER_MODE == FilteringMode.MATCHING;
+        if (ContainerSyncer.IS_TRACKED_CONTAINER && client().management().containerFiltering) {
+            return ContainerSyncer.CURRENT_FILTER_MODE == FilteringMode.MATCHING;
         }
         return client().isFiltering();
     }
@@ -594,8 +594,8 @@ public class ManagementEvents implements ModEvent {
      * @return true when fill-stacks-only behavior should be applied.
      */
     public boolean shouldFillStacksOnly() {
-        if (ContainerHelper.IS_TRACKED_CONTAINER && client().management().containerFiltering) {
-            return ContainerHelper.CURRENT_FILTER_MODE == FilteringMode.CURRENT_STACKS;
+        if (ContainerSyncer.IS_TRACKED_CONTAINER && client().management().containerFiltering) {
+            return ContainerSyncer.CURRENT_FILTER_MODE == FilteringMode.CURRENT_STACKS;
         }
         return client().isFillingCurrentStacks();
     }
@@ -611,9 +611,9 @@ public class ManagementEvents implements ModEvent {
             if (toStack.isEmpty()) {
                 continue;
             }
-            if (ContainerHelper.IS_TRACKED_CONTAINER
+            if (ContainerSyncer.IS_TRACKED_CONTAINER
                     && client().management().containerFiltering
-                    && ContainerHelper.CURRENT_FILTER_MODE == FilteringMode.CURRENT_STACKS
+                    && ContainerSyncer.CURRENT_FILTER_MODE == FilteringMode.CURRENT_STACKS
                     && !itemMatchesPlaceholder(toStack)) {
                 continue;
             }

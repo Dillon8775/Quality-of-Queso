@@ -1,7 +1,7 @@
 package net.dillon.qualityofqueso.widget;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import net.dillon.qualityofqueso.helper.ContainerHelper;
+import net.dillon.qualityofqueso.container.ContainerSyncer;
 import net.dillon.qualityofqueso.helper.ModConstants;
 import net.dillon.qualityofqueso.option.eum.management.FilteringMode;
 import net.dillon.qualityofqueso.screen.FilterItemsScreen;
@@ -39,7 +39,7 @@ public class FilteringButton extends ToggleableButton {
 
     @Override
     protected String onTextureId() {
-        boolean trackedFilteringEnabled = ContainerHelper.isTrackedFilteringActive();
+        boolean trackedFilteringEnabled = ContainerSyncer.isTrackedFilteringActive();
         if (!trackedFilteringEnabled) {
             return switch (client().management().filteringMode) {
                 case NONE -> of("move_anything");
@@ -47,8 +47,8 @@ public class FilteringButton extends ToggleableButton {
                 case CURRENT_STACKS -> of("current_stacks");
             };
         } else {
-            boolean tagFiltered = ContainerHelper.CURRENT_FILTER_TYPE.tag();
-            if (ContainerHelper.CURRENT_FILTER_MODE == FilteringMode.CURRENT_STACKS) {
+            boolean tagFiltered = ContainerSyncer.CURRENT_FILTER_TYPE.tag();
+            if (ContainerSyncer.CURRENT_FILTER_MODE == FilteringMode.CURRENT_STACKS) {
                 return of(tagFiltered ? "current_stacks_tag_filtered" : "current_stacks_alphabetical_filtered");
             } else {
                 return of(tagFiltered ? "matching_tag_filtered" : "matching_alphabetical_filtered");
@@ -63,19 +63,19 @@ public class FilteringButton extends ToggleableButton {
 
     @Override
     protected boolean option() {
-        boolean trackedFilteringEnabled = ContainerHelper.isTrackedFilteringActive();
+        boolean trackedFilteringEnabled = ContainerSyncer.isTrackedFilteringActive();
         return trackedFilteringEnabled || client().management().filteringMode.matchingOrCurrentStacks();
     }
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDouble) {
-        boolean trackedFilteringEnabled = ContainerHelper.isTrackedFilteringActive();
+        boolean trackedFilteringEnabled = ContainerSyncer.isTrackedFilteringActive();
         if (trackedFilteringEnabled) {
             if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT) {
-                ContainerHelper.OPENING_PLACEHOLDER_SCREEN = true;
+                ContainerSyncer.OPENING_PLACEHOLDER_SCREEN = true;
                 openScreen(new FilterItemsScreen(this.parent));
             } else {
-                ContainerHelper.cycleCurrentFilteringMode();
+                ContainerSyncer.cycleCurrentFilteringMode();
                 this.playDownSound(Minecraft.getInstance().getSoundManager());
             }
             return true;
@@ -91,14 +91,14 @@ public class FilteringButton extends ToggleableButton {
             case CURRENT_STACKS -> original = Component.translatable("qualityofqueso.gui.move_current_stacks");
             default -> original = Component.translatable("qualityofqueso.gui.move_anything");
         }
-        boolean trackedFilteringEnabled = ContainerHelper.isTrackedFilteringActive();
+        boolean trackedFilteringEnabled = ContainerSyncer.isTrackedFilteringActive();
         if (isDropperDispenserOrHopperScreen() || ModConstants.INTERACTED_WITH_MINECART_CONTAINER) {
             return original;
         } else if (trackedFilteringEnabled) { // For filteredMode containers
-            String filterType = ContainerHelper.CURRENT_FILTER_TYPE.tag()
+            String filterType = ContainerSyncer.CURRENT_FILTER_TYPE.tag()
                     ? "qualityofqueso.gui.tag_filtered"
                     : "qualityofqueso.gui.item_filtered";
-            String filterMode = ContainerHelper.CURRENT_FILTER_MODE == FilteringMode.CURRENT_STACKS
+            String filterMode = ContainerSyncer.CURRENT_FILTER_MODE == FilteringMode.CURRENT_STACKS
                     ? "qualityofqueso.gui.filter_mode.current_stacks"
                     : "qualityofqueso.gui.filter_mode.default";
             return Component.translatable(
@@ -111,7 +111,7 @@ public class FilteringButton extends ToggleableButton {
                     // filter type param
                     Component.translatable(filterType)
                             .copy()
-                            .withColor(ContainerHelper.CURRENT_FILTER_TYPE.tag() ? ModConstants.TAG_COLOR : ModConstants.ITEM_COLOR),
+                            .withColor(ContainerSyncer.CURRENT_FILTER_TYPE.tag() ? ModConstants.TAG_COLOR : ModConstants.ITEM_COLOR),
 
                     // appended param
                     Component.translatable("qualityofqueso.gui.right_click_switch")

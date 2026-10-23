@@ -1,8 +1,8 @@
 package net.dillon.qualityofqueso.hud.counter;
 
-import net.dillon.qualityofqueso.helper.EnderChestHelper;
+import net.dillon.qualityofqueso.container.EnderChestSyncer;
+import net.dillon.qualityofqueso.container.data.StoredEnderChestStack;
 import net.dillon.qualityofqueso.hud.ModHudElement;
-import net.dillon.qualityofqueso.option.ContainerData;
 import net.dillon.qualityofqueso.option.eum.hud.ItemCounter;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -163,8 +163,7 @@ public class CounterHudElement extends ModHudElement implements CounterHelper {
         );
 
         boolean renderBowProjectile = shouldRenderBowIndicator(
-                trackedOrHeldStack,
-                renderStack
+                trackedOrHeldStack
         );
 
         boolean renderBundle = shouldRenderBundleIndicator(
@@ -605,7 +604,7 @@ public class CounterHudElement extends ModHudElement implements CounterHelper {
             List<Integer> items
     ) {
         return amountInPersistedData(
-                EnderChestHelper.getPersistedEnderChestItemsForCurrentWorld(),
+                EnderChestSyncer.getPersistedEnderChestItemsForCurrentWorld(),
                 countStack,
                 items
         );
@@ -615,7 +614,7 @@ public class CounterHudElement extends ModHudElement implements CounterHelper {
      * Adds matching items inside persisted data to the count.
      */
     private int amountInPersistedData(
-            List<ContainerData.StoredEnderChestStack> entries,
+            List<StoredEnderChestStack> entries,
             ItemStack countStack,
             List<Integer> items
     ) {
@@ -625,11 +624,11 @@ public class CounterHudElement extends ModHudElement implements CounterHelper {
             return 0;
         }
 
-        for (ContainerData.StoredEnderChestStack stored : entries) {
+        for (StoredEnderChestStack stored : entries) {
             if (stored == null
-                    || stored.count <= 0
-                    || stored.itemId == null
-                    || stored.itemId.isBlank()
+                    || stored.amount <= 0
+                    || stored.item == null
+                    || stored.item.isBlank()
             ) {
                 continue;
             }
@@ -637,7 +636,7 @@ public class CounterHudElement extends ModHudElement implements CounterHelper {
             ItemStack invStack;
 
             try {
-                Identifier identifier = Identifier.parse(stored.itemId);
+                Identifier identifier = Identifier.parse(stored.item);
 
                 Optional<Item> item = BuiltInRegistries.ITEM.getOptional(identifier);
 
@@ -645,7 +644,7 @@ public class CounterHudElement extends ModHudElement implements CounterHelper {
                     continue;
                 }
 
-                invStack = new ItemStack(item.get(), stored.count);
+                invStack = new ItemStack(item.get(), stored.amount);
             } catch (Exception ignored) {
                 continue;
             }
@@ -668,22 +667,12 @@ public class CounterHudElement extends ModHudElement implements CounterHelper {
                 continue;
             }
 
-            boolean sameComponents = countStack.getComponents().toString().equals(
-                    stored.components == null
-                            ? ""
-                            : stored.components
-            );
-
-            boolean matches = client().itemCounter().onlyCountMatchingItems
-                    ? sameComponents
-                    : itemMatchesInventoryItem(countStack, invStack);
-
-            if (!matches) {
+            if (!itemMatchesInventoryItem(countStack, invStack)) {
                 continue;
             }
 
-            count += stored.count;
-            items.add(stored.count);
+            count += stored.amount;
+            items.add(stored.amount);
         }
 
         return count;
@@ -824,12 +813,12 @@ public class CounterHudElement extends ModHudElement implements CounterHelper {
     /**
      * @return if the bow projectile indicator should be rendered.
      */
-    private boolean shouldRenderBowIndicator(ItemStack heldStack, ItemStack renderStack) {
+    private boolean shouldRenderBowIndicator(ItemStack heldStack) {
         // Current render stack must be empty in order to render bow projectile
         return client().itemCounter().indicators
                 && heldStack.getItem() instanceof BowItem
                 && BowItem.getPowerForTime(minecraft.player.getTicksUsingItem()) > 0.1F
-                && !renderStack.isEmpty();
+                && !counter().getNextProjectile().isEmpty();
     }
 
     /**
@@ -841,7 +830,7 @@ public class CounterHudElement extends ModHudElement implements CounterHelper {
         // Current render stack must be empty in order to render bundle, and count contains transportables, not currently rendering bow or crossbow indicator
         return client().itemCounter().indicators
                 && count.renderBundle()
-                && (overrideArrowCount || !shouldRenderBowIndicator(heldStack, renderStack))
+                && (overrideArrowCount || !shouldRenderBowIndicator(heldStack))
                 && !shouldRenderCrossbowIndicator(heldStack, renderStack)
                 && !renderStack.isEmpty();
     }

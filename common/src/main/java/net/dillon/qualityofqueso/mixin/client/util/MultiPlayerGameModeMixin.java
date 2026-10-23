@@ -1,8 +1,10 @@
 package net.dillon.qualityofqueso.mixin.client.util;
 
-import net.dillon.qualityofqueso.helper.ContainerHelper;
+import net.dillon.qualityofqueso.container.ContainerSyncer;
 import net.dillon.qualityofqueso.helper.ModConstants;
 import net.dillon.qualityofqueso.hud.counter.ItemTracker;
+import net.dillon.qualityofqueso.sound.BundleInsertFailSoundEvents;
+import net.dillon.qualityofqueso.sound.BundleInsertSoundEvents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
@@ -36,13 +38,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-import static net.dillon.qualityofqueso.helper.ContainerHelper.isValidBlockEntity;
+import static net.dillon.qualityofqueso.container.ContainerSyncer.isValidBlockEntity;
 import static net.dillon.qualityofqueso.helper.GuiHelper.isHoldingItem;
-import static net.dillon.qualityofqueso.helper.ManagementHelper.playButtonInactiveSound;
-import static net.dillon.qualityofqueso.helper.ManagementHelper.playButtonSound;
 import static net.dillon.qualityofqueso.helper.ModConstants.DEFAULT_TRACKED_CONTAINER_COOLDOWN;
 import static net.dillon.qualityofqueso.helper.ModConstants.TRACKED_CONTAINER_COOLDOWN;
 import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
+import static net.dillon.qualityofqueso.helper.SoundHelper.playBundleInsertSound;
+import static net.dillon.qualityofqueso.helper.SoundHelper.playButtonInactiveSound;
 import static net.dillon.qualityofqueso.hud.ModHudElement.isLockedHotbarSlot;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
@@ -126,7 +128,7 @@ public class MultiPlayerGameModeMixin {
         }
 
         if (isLockedHotbarSlot(true)) {
-            playButtonInactiveSound();
+            playButtonInactiveSound(BundleInsertFailSoundEvents.DROP_REJECTED);
             ci.cancel();
         }
     }
@@ -171,7 +173,7 @@ public class MultiPlayerGameModeMixin {
             return;
         }
 
-        boolean tracked = ContainerHelper.toggleTracked(minecraft.level, pos);
+        boolean tracked = ContainerSyncer.toggleTracked(minecraft.level, pos);
         boolean isEnderChest = blockEntity instanceof EnderChestBlockEntity;
         boolean isShulkerBox = blockEntity instanceof ShulkerBoxBlockEntity;
         Component container = blockEntity instanceof ShulkerBoxBlockEntity ? Component.translatable("qualityofqueso.gui.shulker_box").withStyle(ChatFormatting.LIGHT_PURPLE)
@@ -205,7 +207,7 @@ public class MultiPlayerGameModeMixin {
                 pos.getZ(),
                 filteredContainer
         ));
-        playButtonSound(false);
+        playBundleInsertSound(tracked ? BundleInsertSoundEvents.CONTAINER_FILTERED : BundleInsertSoundEvents.CONTAINER_UNFILTERED);
         TRACKED_CONTAINER_COOLDOWN = DEFAULT_TRACKED_CONTAINER_COOLDOWN;
     }
 
@@ -244,9 +246,9 @@ public class MultiPlayerGameModeMixin {
 
         BlockEntity blockEntity = player.level().getBlockEntity(hitResult.getBlockPos());
         if (isValidBlockEntity(blockEntity)) {
-            ContainerHelper.rememberOpened(player.level(), hitResult.getBlockPos());
+            ContainerSyncer.rememberOpened(player.level(), hitResult.getBlockPos());
         } else {
-            ContainerHelper.clearPendingOpened();
+            ContainerSyncer.clearPendingOpened();
         }
     }
 

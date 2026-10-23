@@ -1,6 +1,6 @@
 package net.dillon.qualityofqueso.hud;
 
-import net.dillon.qualityofqueso.helper.ContainerHelper;
+import net.dillon.qualityofqueso.container.ContainerSyncer;
 import net.minecraft.client.AttackIndicatorStatus;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -178,7 +178,7 @@ public abstract class ModHudElement {
             return false;
         }
 
-        Set<Integer> lockedPlayerSlots = ContainerHelper.getLockedSlots(false);
+        Set<Integer> lockedPlayerSlots = ContainerSyncer.getLockedSlots(false);
         if (checkForEmpty && lockedPlayerSlots.isEmpty()) {
             return false;
         }

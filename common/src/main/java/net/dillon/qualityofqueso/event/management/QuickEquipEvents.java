@@ -9,8 +9,10 @@ import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
-import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
+import static net.dillon.qualityofqueso.helper.ManagementHelper.isMountingMenu;
+import static net.dillon.qualityofqueso.helper.ManagementHelper.isValidMenuForQuickEquipping;
 import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.hasSelectSlotsModifierDown;
+import static net.dillon.qualityofqueso.helper.SoundHelper.playQuickEquipSound;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 /**

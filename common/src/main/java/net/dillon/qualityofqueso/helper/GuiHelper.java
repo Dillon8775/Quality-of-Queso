@@ -1,6 +1,7 @@
 package net.dillon.qualityofqueso.helper;
 
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import net.dillon.qualityofqueso.event.management.LockType;
 import net.dillon.qualityofqueso.option.eum.general.Theme;
 import net.dillon.qualityofqueso.screen.HudPositionsScreen;
 import net.dillon.qualityofqueso.util.VisualTimeTracker;
@@ -40,6 +41,7 @@ import static net.dillon.dillonlib.util.Arithmetics.roundToHundredths;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
 import static net.dillon.qualityofqueso.helper.MethodHelper.*;
 import static net.dillon.qualityofqueso.helper.ModConstants.*;
+import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 /**
@@ -354,6 +356,27 @@ public class GuiHelper {
                 y,
                 size,
                 size
+        );
+    }
+
+    /**
+     * Draws the locked slot texture at a specified position.
+     */
+    public static void blitLockOverlay(GuiGraphicsExtractor graphics, int x, int y) {
+        blitLockOverlay(graphics, LockType.LOCK, x, y);
+    }
+
+    /**
+     * Draws the lock overlay at a specified position.
+     */
+    public static void blitLockOverlay(GuiGraphicsExtractor graphics, LockType lockType, int x, int y) {
+        blitTexture(
+                graphics,
+                qoqIdentifier("textures/gui/sprites/slot_overlays/" + lockType.getName() + ".png"),
+                x,
+                y,
+                10,
+                10
         );
     }
 

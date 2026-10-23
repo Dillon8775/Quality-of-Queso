@@ -1,9 +1,9 @@
 package net.dillon.qualityofqueso.screen;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import net.dillon.qualityofqueso.helper.EnderChestHelper;
+import net.dillon.qualityofqueso.container.EnderChestSyncer;
+import net.dillon.qualityofqueso.container.data.StoredEnderChestStack;
 import net.dillon.qualityofqueso.helper.ModConstants;
-import net.dillon.qualityofqueso.option.ContainerData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static net.dillon.dillonlib.task.ClientTasks.openScreen;
 import static net.dillon.qualityofqueso.helper.MethodHelper.inputKey;
 
 /**
@@ -37,11 +38,22 @@ public class EnderChestPreviewScreen extends Screen {
     private static final int BOTTOM_CAP_V = 126 + 96 - BOTTOM_CAP_HEIGHT;
     private static final int GUI_HEIGHT = TOP_BACKGROUND_HEIGHT + BOTTOM_CAP_HEIGHT;
     private static final Identifier CHEST_TEXTURE = Identifier.parse("minecraft:textures/gui/container/generic_54.png");
+    private final Screen parent;
 
     private final List<ItemStack> slots = new ArrayList<>();
 
-    public EnderChestPreviewScreen() {
-        super(Component.translatable("qualityofqueso.gui.your_ender_chest"));
+    public EnderChestPreviewScreen(Screen parent) {
+        super(Component.translatable("qualityofqueso.your_ender_chest"));
+        this.parent = parent;
+    }
+
+    @Override
+    public void onClose() {
+        if (this.parent != null) {
+            openScreen(this.parent);
+        } else {
+            super.onClose();
+        }
     }
 
     @Override
@@ -51,9 +63,9 @@ public class EnderChestPreviewScreen extends Screen {
             this.slots.add(ItemStack.EMPTY);
         }
 
-        List<ContainerData.StoredEnderChestStack> persisted = EnderChestHelper.getPersistedEnderChestItemsForCurrentWorld();
+        List<StoredEnderChestStack> persisted = EnderChestSyncer.getPersistedEnderChestItemsForCurrentWorld();
         int writeIndex = 0;
-        for (ContainerData.StoredEnderChestStack stored : persisted) {
+        for (StoredEnderChestStack stored : persisted) {
             if (writeIndex >= this.slots.size()) {
                 break;
             }
@@ -165,18 +177,18 @@ public class EnderChestPreviewScreen extends Screen {
         return -1;
     }
 
-    private static ItemStack toItemStack(ContainerData.StoredEnderChestStack stored) {
-        if (stored == null || stored.itemId == null || stored.itemId.isBlank() || stored.count <= 0) {
+    private static ItemStack toItemStack(StoredEnderChestStack stored) {
+        if (stored == null || stored.item == null || stored.item.isBlank() || stored.amount <= 0) {
             return ItemStack.EMPTY;
         }
 
         try {
-            Identifier id = Identifier.parse(stored.itemId);
+            Identifier id = Identifier.parse(stored.item);
             Optional<Item> item = BuiltInRegistries.ITEM.getOptional(id);
             if (item.isEmpty()) {
                 return ItemStack.EMPTY;
             }
-            return new ItemStack(item.get(), stored.count);
+            return new ItemStack(item.get(), stored.amount);
         } catch (Exception ignored) {
             return ItemStack.EMPTY;
         }

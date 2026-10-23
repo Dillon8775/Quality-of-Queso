@@ -2,7 +2,7 @@ package net.dillon.qualityofqueso.mixin.main;
 
 import net.dillon.dillonlib.annotation.Dill;
 import net.dillon.dillonlib.annotation.DillType;
-import net.dillon.qualityofqueso.util.ShulkerStateHolder;
+import net.dillon.qualityofqueso.container.ShulkerBlockEntityHolder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.ItemStack;
@@ -42,14 +42,14 @@ public class ShulkerBoxBlockMixin {
             return;
         }
 
-        if (!(shulkerBoxBlockEntity instanceof ShulkerStateHolder stateHolder)) {
+        if (!(shulkerBoxBlockEntity instanceof ShulkerBlockEntityHolder shulkerBlockEntityHolder)) {
             return;
         }
 
-        List<String> filterItems = stateHolder.getFilterItems() == null
+        List<String> filterItems = shulkerBlockEntityHolder.getFilterItems() == null
                 ? new ArrayList<>()
-                : stateHolder.getFilterItems();
-        int[] lockedSlots = (stateHolder.getLockedSlots() == null ? new ArrayList<Integer>() : stateHolder.getLockedSlots())
+                : shulkerBlockEntityHolder.getFilterItems();
+        int[] lockedSlots = (shulkerBlockEntityHolder.getLockedSlots() == null ? new ArrayList<Integer>() : shulkerBlockEntityHolder.getLockedSlots())
                 .stream()
                 .distinct()
                 .sorted()
@@ -67,9 +67,10 @@ public class ShulkerBoxBlockMixin {
             }
 
             CustomData.update(DataComponents.CUSTOM_DATA, drop, tag -> {
-                tag.putString(SORTING_MODE, stateHolder.getSortingMode());
-                tag.putString(FILTERING_MODE, stateHolder.getFilteringMode());
-                tag.putBoolean(TAG_FILTERED, stateHolder.isTagFiltered());
+                tag.putString(SORTING_MODE, shulkerBlockEntityHolder.getSortingMode());
+                tag.putString(FILTERING_MODE, shulkerBlockEntityHolder.getFilteringMode());
+                tag.putBoolean(TAG_FILTERED, shulkerBlockEntityHolder.isTagFiltered());
+                tag.putBoolean(LOCKED, shulkerBlockEntityHolder.isLocked());
                 tag.putString(FILTER_ITEMS, filterItems.stream()
                         .filter(s -> s != null && !s.isBlank())
                         .distinct()

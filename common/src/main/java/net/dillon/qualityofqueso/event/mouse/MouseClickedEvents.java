@@ -1,9 +1,13 @@
 package net.dillon.qualityofqueso.event.mouse;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import net.dillon.qualityofqueso.container.ContainerSyncer;
 import net.dillon.qualityofqueso.event.QuesoScreenHolder;
 import net.dillon.qualityofqueso.event.management.CursorKey;
 import net.dillon.qualityofqueso.event.management.ManagementEvents;
+import net.dillon.qualityofqueso.sound.BundleInsertFailSoundEvents;
+import net.dillon.qualityofqueso.sound.BundleRemoveOneSoundEvents;
+import net.dillon.qualityofqueso.widget.QuesoButton;
 import net.dillon.qualityofqueso.widget.SearchBar;
 import net.dillon.qualityofqueso.widget.WidgetLayout;
 import net.minecraft.client.gui.components.EditBox;
@@ -20,6 +24,8 @@ import static net.dillon.qualityofqueso.event.management.ExtractingEvents.setCur
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
 import static net.dillon.qualityofqueso.helper.ModConstants.MOVE_AMOUNT;
 import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.*;
+import static net.dillon.qualityofqueso.helper.SoundHelper.playButtonInactiveSound;
+import static net.dillon.qualityofqueso.helper.SoundHelper.playSafeSortSound;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 /**
@@ -35,6 +41,7 @@ public class MouseClickedEvents extends ManagementEvents {
      * All mouse clicking events.
      */
     public void handle(MouseButtonEvent event, boolean doubleClick, CallbackInfoReturnable<Boolean> cir) {
+        lockContainer(event, cir);
         trySelectingOrLockingSlot(event, cir);
         tryQuickMoveHighlightedItems(event, cir);
         moveOnlyOne(event, cir);
@@ -55,6 +62,18 @@ public class MouseClickedEvents extends ManagementEvents {
      */
     public void handleWidgetLayout(double mouseX, double mouseY, WidgetLayout widgetLayout, CallbackInfoReturnable<Boolean> cir) {
         WidgetLayout.hasClickedOnBox(mouseX, mouseY, widgetLayout, cir);
+    }
+
+    /**
+     * Locks a container by middle-clicking.
+     */
+    private void lockContainer(MouseButtonEvent event, CallbackInfoReturnable<Boolean> cir) {
+        QuesoButton sort = holder().managementButtons().getSort();
+
+        if (isContainerScreen() && event.button() == InputConstants.MOUSE_BUTTON_MIDDLE && sortingEvents().shouldSortButtonBeActive() && buttonHovered(sort)) {
+            ContainerSyncer.lockContainer();
+            cir.setReturnValue(true);
+        }
     }
 
     /**
@@ -89,13 +108,14 @@ public class MouseClickedEvents extends ManagementEvents {
      * Handles clicking inactive buttons.
      */
     private void handleButtonInactiveSounds() {
-        if (buttonHoveredButInactive(holder().managementButtons().getTransferContainer())
-                || buttonHoveredButInactive(holder().managementButtons().getTransferInventory())
-                || buttonHoveredButInactive(holder().managementButtons().getQuickDrop())
-                || buttonHoveredButInactive(holder().managementButtons().getSort())
-                || buttonHoveredButInactive(holder().managementButtons().getSwap())
-        ) {
-            playButtonInactiveSound();
+        if (buttonHoveredButInactive(holder().managementButtons().getTransferContainer()) || buttonHoveredButInactive(holder().managementButtons().getTransferInventory())) {
+            playButtonInactiveSound(BundleInsertFailSoundEvents.MOVE_REJECTED);
+        } else if (buttonHoveredButInactive(holder().managementButtons().getQuickDrop())) {
+            playButtonInactiveSound(BundleInsertFailSoundEvents.DROP_REJECTED);
+        } else if (buttonHoveredButInactive(holder().managementButtons().getSort())) {
+            playButtonInactiveSound(BundleInsertFailSoundEvents.SORT_REJECTED);
+        } else if (buttonHoveredButInactive(holder().managementButtons().getSwap())) {
+            playButtonInactiveSound(BundleInsertFailSoundEvents.SWAP_REJECTED);
         }
     }
 
@@ -106,7 +126,12 @@ public class MouseClickedEvents extends ManagementEvents {
         if (client().management().scrollMoving) {
             boolean dropOnlyOne = hasDropOnlyOneItemModifierDown();
             boolean hasSingleModifierDown = canScrollMoveAndHasScrollModifierDown();
-            if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT && ((((dropOnlyOne || hasSingleModifierDown) && hoveredSlotHasItem(holder().screensHoveredSlot())))
+            if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT && (
+                    (
+                            (
+                                    (dropOnlyOne || hasSingleModifierDown) && hoveredSlotHasItem(holder().screensHoveredSlot())
+                            )
+                    )
                     || buttonHoveredAndActive(holder().managementButtons().getTransferInventory())
                     || buttonHoveredAndActive(holder().managementButtons().getTransferContainer()))) {
                 MOVE_AMOUNT = 1;
@@ -194,7 +219,7 @@ public class MouseClickedEvents extends ManagementEvents {
 
         // Play sound if moved
         if (moved) {
-            playSortSound();
+            playSafeSortSound(BundleRemoveOneSoundEvents.ITEMS_MOVED);
         }
 
         cir.setReturnValue(true);

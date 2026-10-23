@@ -3,7 +3,9 @@ package net.dillon.qualityofqueso.helper;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.blay09.mods.balm.Balm;
 import net.dillon.dillonlib.platform.Platforms;
-import net.dillon.qualityofqueso.option.*;
+import net.dillon.qualityofqueso.option.ModClientOptions;
+import net.dillon.qualityofqueso.option.ModCommonOptions;
+import net.dillon.qualityofqueso.option.UniversalOptions;
 import net.dillon.qualityofqueso.packet.serverbound.ClientPreferencesC2SPacket;
 import net.dillon.qualityofqueso.packet.serverbound.ManualItemPickupC2SPacket;
 import net.dillon.qualityofqueso.util.GlowCountdown;
@@ -464,9 +466,6 @@ public class ModHelper {
         // Get the cached instances
         ModClientOptions cachedClientInstance = ModClientOptions.INSTANCE.getInstance();
         ModCommonOptions cachedCommonInstance = ModCommonOptions.INSTANCE.getInstance();
-        ContainerData cachedContainerData = ContainerData.INSTANCE.getInstance();
-        LockedContainerSlots cachedLockedContainerSlots = LockedContainerSlots.INSTANCE.getInstance();
-        LockedPlayerSlots cachedLockedPlayerSlots = LockedPlayerSlots.INSTANCE.getInstance();
 
         // Determine if all config files exists
         final boolean configExists = clientServerFile.exists()
@@ -482,15 +481,6 @@ public class ModHelper {
         ModCommonOptions.INSTANCE.setCustomDirectory(serverDir);
         ModCommonOptions.INSTANCE.setFileName(commonServerConfig);
 
-        ContainerData.INSTANCE.setCustomDirectory(serverDir);
-        ContainerData.INSTANCE.setFileName(containerDataServerConfig);
-
-        LockedContainerSlots.INSTANCE.setCustomDirectory(serverDir);
-        LockedContainerSlots.INSTANCE.setFileName(lockedContainerSlotsServerConfig);
-
-        LockedPlayerSlots.INSTANCE.setCustomDirectory(serverDir);
-        LockedPlayerSlots.INSTANCE.setFileName(lockedPlayerSlotsServerConfig);
-
         // If the config wasn't present, send created message, and set the instance
         if (!configExists) {
             LOGGER.info("Creating new Quality of Queso server config instance for \"{}\".", address);
@@ -500,24 +490,11 @@ public class ModHelper {
 
             ModCommonOptions.INSTANCE.setInstance(cachedCommonInstance);
             ModCommonOptions.INSTANCE.save();
-
-            ContainerData.INSTANCE.setInstance(cachedContainerData);
-            ContainerData.INSTANCE.save();
-
-            LockedContainerSlots.INSTANCE.setInstance(cachedLockedContainerSlots);
-            LockedContainerSlots.INSTANCE.save();
-
-            LockedPlayerSlots.INSTANCE.setInstance(cachedLockedPlayerSlots);
-            LockedPlayerSlots.INSTANCE.save();
         }
 
         // Load all instances for new multi-server config
         ModClientOptions.INSTANCE.load();
         ModCommonOptions.INSTANCE.load();
-
-        ContainerData.INSTANCE.load();
-        LockedContainerSlots.INSTANCE.load();
-        LockedPlayerSlots.INSTANCE.load();
 
         // Send appropriate message
         String message = !configExists ? "qualityofqueso.created_server_config" : "qualityofqueso.loaded_server_config";
@@ -541,18 +518,6 @@ public class ModHelper {
         ModCommonOptions.INSTANCE.clearCustomDirectory();
         ModCommonOptions.INSTANCE.setFileName(DEFAULT_COMMON_CONFIG_FILE_NAME);
         ModCommonOptions.INSTANCE.load();
-
-        ContainerData.INSTANCE.clearCustomDirectory();
-        ContainerData.INSTANCE.setFileName(DEFAULT_CONTAINER_DATA_FILE_NAME);
-        ContainerData.INSTANCE.load();
-
-        LockedContainerSlots.INSTANCE.clearCustomDirectory();
-        LockedContainerSlots.INSTANCE.setFileName(DEFAULT_LOCKED_CONTAINER_SLOTS_FILE_NAME);
-        LockedContainerSlots.INSTANCE.load();
-
-        LockedPlayerSlots.INSTANCE.clearCustomDirectory();
-        LockedPlayerSlots.INSTANCE.setFileName(DEFAULT_LOCKED_PLAYER_SLOTS_FILE_NAME);
-        LockedPlayerSlots.INSTANCE.load();
 
         // Send reset message
         Minecraft instance = Minecraft.getInstance();

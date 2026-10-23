@@ -1,6 +1,6 @@
 package net.dillon.qualityofqueso.mixin.client.hud;
 
-import net.dillon.qualityofqueso.helper.EnderChestHelper;
+import net.dillon.qualityofqueso.container.EnderChestSyncer;
 import net.dillon.qualityofqueso.hud.*;
 import net.dillon.qualityofqueso.hud.counter.CounterHudElement;
 import net.minecraft.client.DeltaTracker;
@@ -48,7 +48,7 @@ public class HudMixin {
         this.counterHudElement.extractRenderState(graphics);
         this.visualClockHudElement.extractRenderState(graphics);
 
-        EnderChestHelper.persistEnderChestContentsIfOpen(minecraft.player);
+        EnderChestSyncer.persistEnderChestContentsIfOpen(minecraft.player);
     }
 
     /**

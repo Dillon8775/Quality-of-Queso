@@ -1,6 +1,6 @@
 {
-  "qualityofqueso.management.items_moved": {
-    "subtitle": "qualityofqueso.sound.items_moved",
+  "qualityofqueso.bundle_insert.pickup_filter_item": {
+    "subtitle": "qualityofqueso.sound.bundle_insert.pickup_filter_item",
     "sounds": [
       {
         "name": "minecraft:item.bundle.insert",
@@ -8,17 +8,89 @@
       }
     ]
   },
-  "qualityofqueso.management.item_moves_rejected": {
-    "subtitle": "qualityofqueso.sound.item_moves_rejected",
+  "qualityofqueso.bundle_insert.place_filter_item": {
+    "subtitle": "qualityofqueso.sound.bundle_insert.place_filter_item",
     "sounds": [
       {
-        "name": "minecraft:item.bundle.insert_fail",
+        "name": "minecraft:item.bundle.insert",
         "type": "event"
       }
     ]
   },
-  "qualityofqueso.management.items_dropped": {
-    "subtitle": "qualityofqueso.sound.items_dropped",
+  "qualityofqueso.bundle_insert.remove_filter_item": {
+    "subtitle": "qualityofqueso.sound.bundle_insert.remove_filter_item",
+    "sounds": [
+      {
+        "name": "minecraft:item.bundle.insert",
+        "type": "event"
+      }
+    ]
+  },
+  "qualityofqueso.bundle_insert.opened_filter_screen": {
+    "subtitle": "qualityofqueso.sound.bundle_insert.opened_filter_screen",
+    "sounds": [
+      {
+        "name": "minecraft:item.bundle.insert",
+        "type": "event"
+      }
+    ]
+  },
+  "qualityofqueso.bundle_insert.closed_filter_screen": {
+    "subtitle": "qualityofqueso.sound.bundle_insert.closed_filter_screen",
+    "sounds": [
+      {
+        "name": "minecraft:item.bundle.insert",
+        "type": "event"
+      }
+    ]
+  },
+  "qualityofqueso.bundle_insert.container_filtered": {
+    "subtitle": "qualityofqueso.sound.bundle_insert.container_filtered",
+    "sounds": [
+      {
+        "name": "minecraft:item.bundle.insert",
+        "type": "event"
+      }
+    ]
+  },
+  "qualityofqueso.bundle_insert.container_unfiltered": {
+    "subtitle": "qualityofqueso.sound.bundle_insert.container_unfiltered",
+    "sounds": [
+      {
+        "name": "minecraft:item.bundle.insert",
+        "type": "event"
+      }
+    ]
+  },
+  "qualityofqueso.bundle_insert.items_swapped": {
+    "subtitle": "qualityofqueso.sound.bundle_insert.items_swapped",
+    "sounds": [
+      {
+        "name": "minecraft:item.bundle.insert",
+        "type": "event"
+      }
+    ]
+  },
+  "qualityofqueso.bundle_insert.items_sorted": {
+    "subtitle": "qualityofqueso.sound.bundle_insert.items_sorted",
+    "sounds": [
+      {
+        "name": "minecraft:item.bundle.insert",
+        "type": "event"
+      }
+    ]
+  },
+  "qualityofqueso.bundle_insert.items_moved": {
+    "subtitle": "qualityofqueso.sound.bundle_insert.items_moved",
+    "sounds": [
+      {
+        "name": "minecraft:item.bundle.insert",
+        "type": "event"
+      }
+    ]
+  },
+  "qualityofqueso.bundle_drop_contents.items_dropped": {
+    "subtitle": "qualityofqueso.sound.bundle_drop_contents.items_dropped",
     "sounds": [
       {
         "name": "minecraft:item.bundle.drop_contents",
@@ -26,8 +98,71 @@
       }
     ]
   },
-  "qualityofqueso.management.items_sorted": {
-    "subtitle": "qualityofqueso.sound.items_sorted",
+  "qualityofqueso.bundle_insert_fail.move_rejected": {
+    "subtitle": "qualityofqueso.sound.bundle_insert_fail.move_rejected",
+    "sounds": [
+      {
+        "name": "minecraft:item.bundle.insert_fail",
+        "type": "event"
+      }
+    ]
+  },
+  "qualityofqueso.bundle_insert_fail.swap_rejected": {
+    "subtitle": "qualityofqueso.sound.bundle_insert_fail.swap_rejected",
+    "sounds": [
+      {
+        "name": "minecraft:item.bundle.insert_fail",
+        "type": "event"
+      }
+    ]
+  },
+  "qualityofqueso.bundle_insert_fail.sort_rejected": {
+    "subtitle": "qualityofqueso.sound.bundle_insert_fail.sort_rejected",
+    "sounds": [
+      {
+        "name": "minecraft:item.bundle.insert_fail",
+        "type": "event"
+      }
+    ]
+  },
+  "qualityofqueso.bundle_insert_fail.drop_rejected": {
+    "subtitle": "qualityofqueso.sound.bundle_insert_fail.drop_rejected",
+    "sounds": [
+      {
+        "name": "minecraft:item.bundle.insert_fail",
+        "type": "event"
+      }
+    ]
+  },
+  "qualityofqueso.bundle_remove_one.single_move": {
+    "subtitle": "qualityofqueso.sound.bundle_remove_one.single_move",
+    "sounds": [
+      {
+        "name": "minecraft:item.bundle.remove_one",
+        "type": "event"
+      }
+    ]
+  },
+  "qualityofqueso.bundle_remove_one.sort_mode_changed": {
+    "subtitle": "qualityofqueso.sound.bundle_remove_one.sort_mode_changed",
+    "sounds": [
+      {
+        "name": "minecraft:item.bundle.remove_one",
+        "type": "event"
+      }
+    ]
+  },
+  "qualityofqueso.bundle_remove_one.filter_mode_changed": {
+    "subtitle": "qualityofqueso.sound.bundle_remove_one.filter_mode_changed",
+    "sounds": [
+      {
+        "name": "minecraft:item.bundle.remove_one",
+        "type": "event"
+      }
+    ]
+  },
+  "qualityofqueso.bundle_remove_one.items_moved": {
+    "subtitle": "qualityofqueso.sound.bundle_remove_one.items_moved",
     "sounds": [
       {
         "name": "minecraft:item.bundle.remove_one",

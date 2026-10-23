@@ -36,22 +36,14 @@
 <div align="center">
     <h2>Features include:</h2>
         <ul>
-          <li>An easy-to-use <a href="https://quality-of-queso.fandom.com/wiki/Search_Bar">search bar</a> for your inventory and chests</li>
-          <li>Precise <a href="https://quality-of-queso.fandom.com/wiki/Category:Inventory_Management">Inventory Management</a>, building upon other inventory management mods</li>
-          <li><a href="https://quality-of-queso.fandom.com/wiki/Container_Filtering">Container Filtering </a>and <a href="https://quality-of-queso.fandom.com/wiki/Container_Sorting">Sorting</a></li>
-          <li><a href="https://quality-of-queso.fandom.com/wiki/Locked_Slots">Locked Slots</a></li>
-          <li><a href="https://quality-of-queso.fandom.com/wiki/Item_Count">Item Counter</a> and <a href="https://quality-of-queso.fandom.com/wiki/Armor_Status">Armor Status</a></li>
-          <li><a href="https://quality-of-queso.fandom.com/wiki/Remove_Fog">Remove fog</a></li>
+          <li>An easy-to-use search bar for your inventory and chests</li>
+          <li>Precise Inventory Management, building upon other inventory management mods</li>
+          <li>Container Filtering and Sorting</li>
+          <li>Locked Slots</li>
+          <li>Item Counter and Armor Status</li>
+          <li>Remove fog</li>
           <li>And more!</li>
         </ul>
-</div>
-
----
-
-<div align="center">
-    <a href="https://quality-of-queso.fandom.com/wiki/Quality_of_Queso_Wiki">
-        <img alt = "Official Wiki" width = 300 src="https://img.shields.io/badge/Visit_The-Wiki-FFC500?style=for-the-badge&logo=data%3Aimage%2Fpng%3Bbase64%2CiVBORw0KGgoAAAANSUhEUgAAAIAAAACACAMAAAD04JH5AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAkUExURdDN4MC90qWiuoN%2FnP%2FdLuuyAP%2FiAP%2FIAP%2FMEfLEBm9rigAAANLtqQEAAAAMdFJOU%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FABLfzs4AAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAZdEVYdFNvZnR3YXJlAFBhaW50Lk5FVCA1LjEuMTITAUd0AAAAuGVYSWZJSSoACAAAAAUAGgEFAAEAAABKAAAAGwEFAAEAAABSAAAAKAEDAAEAAAACAAAAMQECABEAAABaAAAAaYcEAAEAAABsAAAAAAAAAGAAAAABAAAAYAAAAAEAAABQYWludC5ORVQgNS4xLjEyAAADAACQBwAEAAAAMDIzMAGgAwABAAAAAQAAAAWgBAABAAAAlgAAAAAAAAACAAEAAgAEAAAAUjk4AAIABwAEAAAAMDEwMAAAAADZp5qVybcLXwAAASdJREFUeF7t18FOQjEQRmEUUdH3f182%2FbnpIZNbCIFZnLPDtjPfiuDh%2F8EOiOerPf5QgAABzwbcOzD3PkY8Z%2FP0bb4AAQL6ATKQg%2Fn3vap3AgQI6AtInyM%2BTDmv4v2Uc%2B4TIEBAP0CqBhx3qiCcnwQIENAPwIdczPtf6DRahQgQIKAvoFqcRd9FP6MKMm8TIEBABwAj4HeUwVw0r986jwjgvpsECBDwckAu8GI%2B7y1KvFcBrotGAgQIeD%2BAPxB4MYOq8sOD5TxzMpf7BAgQ0BeQMoD%2FoFTlHhcn3hcgQEA%2FQOJDQqpWFycBAgT0A%2FAhy4Iq3mfcJ0CAgD6AfJHkYj7nfB6z3%2BpcAQIE9APwQtW87vYLhlXzBQgQ0Adwb3%2BI56sJECDg7YAL7xZ30DhcdMIAAAAASUVORK5CYII%3D">
-    </a>
 </div>
 
 ---
@@ -465,21 +457,20 @@
 ---
 
 ## 🌐 This mod is *mostly client-side.* The only features that are server-dependent are:
-- [Item Frame Searching](https://quality-of-queso.fandom.com/wiki/Item_Frame_Searching)
-- [Locking Slots](https://quality-of-queso.fandom.com/wiki/Locked_Slots) in shulker boxes (locking slots in any other container is 100% client-side and stored per world, per server)
-    - View more information about this [here.](https://quality-of-queso.fandom.com/wiki/Locked_Slots)
+- Item Frame Searching
+- Locking Slots in shulker boxes (locking slots in any other container is 100% client-side and stored per world, per server)
 - [Locking the player's inventory](https://modrinth.com/mod/quality-of-queso/version/LJpYSozL)
 
 ---
 # ⚠️ Older Version Support
 ➜ Currently, [Quality of Queso](https://modrinth.com/mod/quality-of-queso) ***does*** support older versions of Minecraft, however, certain features are ***currently unsupported.***
 ### ❌ MC 1.21.11 *(and below)* Unsupported Features
-- [Fluid FOV Effect](https://quality-of-queso.fandom.com/wiki/FOV_Modifiers)
+- Fluid FOV Effect
 ### ❌ MC 1.21.1 *(and below)* Unsupported Features
-- [Red Armor Tint](https://quality-of-queso.fandom.com/wiki/Red_Armor_Tint)
-- [Transparent Search Bar](https://quality-of-queso.fandom.com/wiki/Search_Bar#Customizable_Search_Bar)
-- [Overworld Fog Intensity](https://quality-of-queso.fandom.com/wiki/Remove_Fog#Fog_Intensity)
-- [Enhanced Cursor](https://quality-of-queso.fandom.com/wiki/Enhanced_Cursor)
+- Red Armor Tint
+- Transparent Search Bar
+- Overworld Fog Intensity
+- Enhanced Cursor
 - Darker Overlay setting
 - Fading Animations with the armor status
 - `Keybind Modifiers`

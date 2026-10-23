@@ -1,27 +1,21 @@
 package net.dillon.qualityofqueso.helper;
 
 import net.dillon.qualityofqueso.event.management.ExtractingEvents;
-import net.dillon.qualityofqueso.sound.ModSoundEvents;
 import net.dillon.qualityofqueso.widget.QuesoButton;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.*;
-import net.minecraft.client.resources.sounds.SimpleSoundInstance;
-import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.AbstractMountInventoryMenu;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.Slot;
 
-import static net.dillon.dillonlib.task.ClientTasks.getMinecraft;
 import static net.dillon.dillonlib.task.ClientTasks.getScreen;
 import static net.dillon.qualityofqueso.helper.MethodHelper.getRecipeBookComponent;
-import static net.dillon.qualityofqueso.helper.ModConstants.*;
+import static net.dillon.qualityofqueso.helper.ModConstants.MOVE_AMOUNT;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
-import static net.dillon.qualityofqueso.sound.ModSoundEvents.getSound;
 
 /**
  * Utility and handler class for management features.
@@ -215,86 +209,6 @@ public class ManagementHelper {
      */
     public static boolean hoveredSlotHasItem(Slot hoveredSlot) {
         return hoveredSlot != null && !hoveredSlot.getItem().isEmpty();
-    }
-
-    /**
-     * Plays the default button press sound.
-     */
-    public static void playDefaultSound(SoundManager manager) {
-        if (!client().management().playSounds) {
-            return;
-        }
-
-        manager.play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-    }
-
-    /**
-     * Plays the bundle sounds without the drop when using buttons.
-     */
-    public static void playButtonSound() {
-        playButtonSound(false);
-    }
-
-    /**
-     * Plays the bundle sounds when using buttons.
-     */
-    public static void playButtonSound(boolean drop) {
-        if (!client().management().playSounds) {
-            return;
-        }
-
-        getMinecraft().getSoundManager().play(SimpleSoundInstance.forUI(drop ? getSound(ModSoundEvents.ITEMS_DROPPED) : getSound(ModSoundEvents.ITEMS_MOVED), 1.0F, 5.0F));
-    }
-
-    /**
-     * Plays the bundle sounds when sorting.
-     */
-    public static void playSortSound() {
-        if (!client().management().playSounds) {
-            return;
-        }
-
-        getMinecraft().getSoundManager().play(SimpleSoundInstance.forUI(getSound(ModSoundEvents.ITEMS_SORTED), 1.0F, 5.0F));
-    }
-
-    /**
-     * Plays the safe sort sound.
-     */
-    public static void playSafeSortSound() {
-        if (SORT_SOUND_COOLDOWN == 0) {
-            SORT_SOUND_COOLDOWN = DEFAULT_SORT_SOUND_COOLDOWN;
-            playSortSound();
-        }
-    }
-
-    /**
-     * Plays the inactive bundle sound.
-     */
-    public static void playButtonInactiveSound() {
-        if (!client().management().playSounds) {
-            return;
-        }
-
-        getMinecraft().getSoundManager().play(SimpleSoundInstance.forUI(getSound(ModSoundEvents.ITEM_MOVES_REJECTED), 1.0F, 0.6F));
-    }
-
-    /**
-     * Plays the lock slot sound.
-     */
-    public static void playLockSlotSound(boolean lock) {
-        if (!client().lockedSlots().lockedSlots || !client().lockedSlots().lockSound || LOCKED_SLOT_SOUND_COOLDOWN > 0) {
-            return;
-        }
-
-        getMinecraft().getSoundManager().play(SimpleSoundInstance.forUI(lock ? getSound(ModSoundEvents.SLOT_LOCKED) : getSound(ModSoundEvents.SLOT_UNLOCKED), 1.0F, 0.10F));
-        LOCKED_SLOT_SOUND_COOLDOWN = DEFAULT_LOCKED_SLOT_SOUND_COOLDOWN;
-    }
-
-    /**
-     * Plays the quick equip sound.
-     */
-    public static void playQuickEquipSound() {
-        getMinecraft().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.ARMOR_EQUIP_GENERIC.value(), 1.0F, 0.45F));
     }
 
     /**

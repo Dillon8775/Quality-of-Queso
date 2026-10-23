@@ -2,7 +2,7 @@ package net.dillon.qualityofqueso.mixin.main;
 
 import net.dillon.dillonlib.annotation.Dill;
 import net.dillon.dillonlib.annotation.DillType;
-import net.dillon.qualityofqueso.util.ShulkerStateHolder;
+import net.dillon.qualityofqueso.container.ShulkerBlockEntityHolder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.InteractionResult;
@@ -52,13 +52,14 @@ public class BlockItemMixin {
         if (!(blockEntity instanceof ShulkerBoxBlockEntity shulkerBoxBlockEntity)) {
             return;
         }
-        if (!(shulkerBoxBlockEntity instanceof ShulkerStateHolder stateHolder)) {
+        if (!(shulkerBoxBlockEntity instanceof ShulkerBlockEntityHolder shulkerBlockEntityHolder)) {
             return;
         }
 
         String sortingMode = "";
         String filteringMode = "";
         boolean tagMode = false;
+        boolean locked = false;
         List<String> filterItems = new ArrayList<>();
         List<Integer> lockedSlots = new ArrayList<>();
 
@@ -67,6 +68,7 @@ public class BlockItemMixin {
             sortingMode = customData.copyTag().getStringOr(SORTING_MODE, "");
             filteringMode = customData.copyTag().getStringOr(FILTERING_MODE, "");
             tagMode = customData.copyTag().getBooleanOr(TAG_FILTERED, false);
+            locked = customData.copyTag().getBooleanOr(LOCKED, false);
 
             String rawItems = customData.copyTag().getStringOr(FILTER_ITEMS, "");
             if (!rawItems.isBlank()) {
@@ -85,11 +87,15 @@ public class BlockItemMixin {
                     .collect(Collectors.toCollection(ArrayList::new));
         }
 
-        stateHolder.setFilteringMode(filteringMode);
-        stateHolder.setTagFiltered(tagMode);
-        stateHolder.setFilterItems(filterItems);
-        stateHolder.setLockedSlots(lockedSlots);
-        stateHolder.setSortingMode(sortingMode);
-        shulkerBoxBlockEntity.setChanged();
+        ShulkerBlockEntityHolder.writeShulkerBlockEntityHolder(
+                shulkerBlockEntityHolder,
+                shulkerBoxBlockEntity,
+                sortingMode,
+                filteringMode,
+                tagMode,
+                locked,
+                filterItems,
+                lockedSlots
+        );
     }
 }

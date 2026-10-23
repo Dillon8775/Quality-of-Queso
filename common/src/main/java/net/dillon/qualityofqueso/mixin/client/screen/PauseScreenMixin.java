@@ -116,9 +116,9 @@ public class PauseScreenMixin extends Screen {
                     "View Last Known Ender Chest Button",
                     ENDER_CHEST,
                     (b) -> {
-                        openScreen(new EnderChestPreviewScreen());
+                        openScreen(new EnderChestPreviewScreen(this));
                     },
-                    Component.translatable("qualityofqueso.gui.view_ender_chest.tooltip"),
+                    Component.translatable("qualityofqueso.view_ender_chest.tooltip"),
                     false
             );
             if (everywhere) {
@@ -173,7 +173,7 @@ public class PauseScreenMixin extends Screen {
         if (this.viewLastKnownEnderChestButton != null) {
             this.viewLastKnownEnderChestButton.active = modEnabled();
             if (client().general().tooltips.enabled() && this.viewLastKnownEnderChestButton.isHovered()) {
-                drawTooltip(Component.translatable("qualityofqueso.gui.view_ender_chest.tooltip"), graphics, this.font, mouseX, mouseY);
+                drawTooltip(Component.translatable("qualityofqueso.view_ender_chest.tooltip"), graphics, this.font, mouseX, mouseY);
             }
         }
 

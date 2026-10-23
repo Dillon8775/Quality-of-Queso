@@ -1,11 +1,12 @@
 package net.dillon.qualityofqueso.event.mouse;
 
+import net.dillon.qualityofqueso.container.ContainerSyncer;
 import net.dillon.qualityofqueso.event.QuesoScreenHolder;
 import net.dillon.qualityofqueso.event.management.CursorKey;
 import net.dillon.qualityofqueso.event.management.ManagementEvents;
-import net.dillon.qualityofqueso.helper.ContainerHelper;
 import net.dillon.qualityofqueso.option.eum.management.sorting.CurrentSortingMode;
 import net.dillon.qualityofqueso.option.eum.management.sorting.GlobalSortingMode;
+import net.dillon.qualityofqueso.sound.BundleRemoveOneSoundEvents;
 import net.minecraft.world.inventory.Slot;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -14,6 +15,7 @@ import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
 import static net.dillon.qualityofqueso.helper.ModConstants.MOVE_AMOUNT;
 import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.canScrollMoveAndHasScrollModifierDown;
 import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.hasDropOnlyOneItemModifierDown;
+import static net.dillon.qualityofqueso.helper.SoundHelper.playSafeSortSound;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 import static net.dillon.qualityofqueso.option.OptionInstances.updateClient;
 
@@ -55,8 +57,8 @@ public class MouseScrolledEvents extends ManagementEvents {
                     client.sorting().globalSortingMode = GlobalSortingMode.CREATIVE_MENU;
                 }
             });
-            ContainerHelper.storeActiveSortMode(nextMode);
-            playSafeSortSound();
+            ContainerSyncer.storeActiveSortMode(nextMode);
+            playSafeSortSound(BundleRemoveOneSoundEvents.SORT_MODE_CHANGED);
         }
     }
 
@@ -67,15 +69,15 @@ public class MouseScrolledEvents extends ManagementEvents {
         if (scrollY == 0) {
             return;
         }
-        if (!ContainerHelper.isTrackedFilteringActive()) {
+        if (!ContainerSyncer.isTrackedFilteringActive()) {
             return;
         }
         if (!buttonHoveredAndActive(holder().managementButtons().getFiltering())) {
             return;
         }
 
-        ContainerHelper.toggleCurrentFilterMode();
-        playSortSound();
+        ContainerSyncer.toggleCurrentFilterMode();
+        playSafeSortSound(BundleRemoveOneSoundEvents.FILTER_MODE_CHANGED);
     }
 
     /**
@@ -129,7 +131,7 @@ public class MouseScrolledEvents extends ManagementEvents {
                 && !hasDropOnlyOneItemModifierDown()
                 && transferEvents().tryMoveSingleFromScroll(holder().screensHoveredSlot(), scrollY)) {
             setCursor(CursorKey.MOVE);
-            playSafeSortSound();
+            playSafeSortSound(BundleRemoveOneSoundEvents.SINGLE_MOVE);
             cir.setReturnValue(true);
         } else {
             setMoveAmount(holder().screensHoveredSlot(), scrollY);

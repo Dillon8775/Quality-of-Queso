@@ -85,14 +85,8 @@ public class QuesoButton extends Button {
         if (!this.canBeActive.get()) {
             return false;
         }
-        return super.mouseClicked(event, isDouble);
-    }
 
-    /**
-     * @return the appended tooltips to use to draw.
-     */
-    protected Component getTooltipToRender() {
-        return Component.translatable("qualityofqueso.gui." + this.buttonName + "_button" + this.getAppendedTooltip());
+        return super.mouseClicked(event, isDouble);
     }
 
     /**
@@ -103,21 +97,67 @@ public class QuesoButton extends Button {
     }
 
     /**
-     * Renders a transfer button texture.
+     * @return the appended tooltips to use to draw.
      */
-    protected void renderBaseButtonTexture(String id, AbstractWidget buttonReference, GuiGraphicsExtractor graphics) {
-        this.renderButtonTexture(id, buttonReference, graphics);
+    protected Component getTooltipToRender() {
+        return Component.translatable("qualityofqueso.gui." + this.buttonName + "_button" + this.getAppendedTooltip());
+    }
 
-        if (!hasAnyManagementModifierDown() || !this.isValidButtonName(false)) {
-            return;
+    /**
+     * @return the tooltip to display for the cursor stack.
+     */
+    private Component getCursorTooltip() {
+        return hasShiftDown()
+                ? Component.translatable("qualityofqueso.gui.transfer_button.matching_cursor_stack")
+                : Component.translatable("qualityofqueso.gui.transfer_button.match_cursor_stack");
+    }
+
+    /**
+     * @return the query tooltip to display.
+     */
+    private Component getQueryTooltip(String newButtonName) {
+        if (searchFieldText.startsWith("#")) {
+            return this.queryComponent(newButtonName + ".with_search_query.tag" + this.getAppendedTooltip(), this.searchFieldText.substring(1));
+        } else if (searchFieldText.startsWith("!")) {
+            return this.queryComponent(newButtonName + ".with_search_query.exclude" + this.getAppendedTooltip(), this.searchFieldText.substring(1));
+        } else if (searchFieldText.startsWith(":")) {
+            return this.queryComponent(newButtonName + ".with_search_query.match" + this.getAppendedTooltip(), this.searchFieldText.substring(1));
         }
 
-        Screen screen = getScreen();
-        if (canScrollMoveAndHasScrollModifierDown() && client().management().scrollMoving && (isValidScreenForSingularMoving(true))) {
-            if (this.isHovered()) {
-                drawButtonTexture(graphics, MOVE_ONE_PATH, this);
-            }
+        return this.queryComponent(newButtonName + ".with_search_query" + this.getAppendedTooltip(), this.searchFieldText);
+    }
+
+    /**
+     * The tooltips to display for single-move items.
+     */
+    private void extractMoveAmountTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+        Component tooltip = Component.translatable(this.buttonName.equals(QUICK_DROP_BUTTON_NAME)
+                        ? "qualityofqueso.gui.quick_drop_button.move_amount"
+                        : "qualityofqueso.gui.move_amount_each",
+                getActualMoveAmount());
+        if (client().general().tooltips.enabled()) {
+            tooltip = appendedSingleTooltip(tooltip);
         }
+        drawTooltip(
+                tooltip,
+                graphics, this.font, mouseX, mouseY
+        );
+    }
+
+    /**
+     * @return the correct component for a query.
+     */
+    private Component queryComponent(String translation, String query) {
+        return this.movingOrDroppingOne()
+                ? Component.translatable(translation, getActualMoveAmount(), query)
+                : Component.translatable(translation, query);
+    }
+
+    /**
+     * @return an appended tooltips for moving single stack items.
+     */
+    private Component appendedSingleTooltip(Component original) {
+        return original.copy().append("\n").append(Component.translatable("qualityofqueso.gui.scroll_to_change_amount")).copy().append("\n").append(Component.translatable("qualityofqueso.gui.move_amount.reset"));
     }
 
     /**
@@ -143,26 +183,19 @@ public class QuesoButton extends Button {
                 return;
             }
         }
+
         ItemStack cursorStack = this.menu.getCarried();
         boolean singleQuickMoving = this.isValidButtonName(true) && this.movingOrDroppingOne();
         String newButtonName = singleQuickMoving
                 ? "qualityofqueso.gui." + this.buttonName + "_button" + ".move_amount"
                 : "qualityofqueso.gui." + this.buttonName + "_button";
+
         if (this.transferrableButton && !cursorStack.isEmpty()) {
             drawTooltip(Component.translatable(newButtonName + ".with_cursor_stack",
-                            cursorStack.getItemName(),
-                            hasShiftDown()
-                                    ? Component.translatable("qualityofqueso.gui.transfer_button.matching_cursor_stack")
-                                    : Component.translatable("qualityofqueso.gui.transfer_button.match_cursor_stack")),
+                            cursorStack.getItemName(), getCursorTooltip()),
                     graphics, this.font, mouseX, mouseY);
         } else if (this.transferrableButton && !this.searchFieldText.isEmpty()) {
-            drawTooltip(this.searchFieldText.startsWith("#") ?
-                    this.queryComponent(newButtonName + ".with_search_query.tag" + this.getAppendedTooltip(), this.searchFieldText.substring(1)) :
-                    this.searchFieldText.startsWith("!") ?
-                            this.queryComponent(newButtonName + ".with_search_query.exclude" + this.getAppendedTooltip(), this.searchFieldText.substring(1)) :
-                    this.searchFieldText.startsWith(":") ?
-                            this.queryComponent(newButtonName + ".with_search_query.match" + this.getAppendedTooltip(), this.searchFieldText.substring(1)) :
-                            this.queryComponent(newButtonName + ".with_search_query" + this.getAppendedTooltip(), this.searchFieldText), graphics, this.font, mouseX, mouseY);
+            drawTooltip(getQueryTooltip(newButtonName), graphics, this.font, mouseX, mouseY);
         } else {
             if (singleQuickMoving) {
                 this.extractMoveAmountTooltip(graphics, mouseX, mouseY);
@@ -178,6 +211,23 @@ public class QuesoButton extends Button {
     protected final void renderBaseTexture(GuiGraphicsExtractor graphics) {
         String name = BASE_BUTTON_NAME;
         drawButtonTexture(graphics, "base/" + getWidgetPath(false) + (!this.canBeActive.get() ? name + "_inactive" : name), this);
+    }
+
+    /**
+     * Renders a transfer button texture.
+     */
+    protected void renderBaseButtonTexture(String id, AbstractWidget buttonReference, GuiGraphicsExtractor graphics) {
+        this.renderButtonTexture(id, buttonReference, graphics);
+
+        if (!hasAnyManagementModifierDown() || !this.isValidButtonName(false)) {
+            return;
+        }
+
+        if (canScrollMoveAndHasScrollModifierDown() && client().management().scrollMoving && (isValidScreenForSingularMoving(true))) {
+            if (this.isHovered()) {
+                drawButtonTexture(graphics, MOVE_ONE_PATH, this);
+            }
+        }
     }
 
     /**
@@ -202,7 +252,7 @@ public class QuesoButton extends Button {
     /**
      * Renders the button texture.
      */
-    protected final void renderButtonTexture(String id, AbstractWidget buttonReference, GuiGraphicsExtractor graphics) {
+    private void renderButtonTexture(String id, AbstractWidget buttonReference, GuiGraphicsExtractor graphics) {
         int xy = getTransferButtonXY(this);
         this.renderBaseTexture(graphics);
         blitTexture(
@@ -217,24 +267,14 @@ public class QuesoButton extends Button {
     }
 
     /**
-     * @return valid button names for different functions.
-     */
-    protected final boolean isValidButtonName(boolean includeDrop) {
-        boolean inventoryButton = this.buttonName.equals(TRANSFER_INVENTORY_BUTTON_NAME);
-        boolean containerButton = this.buttonName.equals(TRANSFER_CONTAINER_BUTTON_NAME);
-        boolean quickDropButton = this.buttonName.equals(QUICK_DROP_BUTTON_NAME);
-        return inventoryButton || containerButton || (includeDrop && quickDropButton);
-    }
-
-    /**
      * @return the appended texture ID to use for the button.
      */
-    protected final String getAppendedTexture() {
+    private String getAppendedTexture() {
         String transferableString = !this.menu.getCarried().isEmpty() ?
                 "_cursor_stack.png" : this.searchFieldText.startsWith("!") ?
-                                      "_excluding.png" : this.searchFieldText.startsWith("#") ?
-                                                         "_tag.png" : this.searchFieldText.startsWith(":") ?
-                                                                      "_matching.png" : ".png";
+                "_excluding.png" : this.searchFieldText.startsWith("#") ?
+                "_tag.png" : this.searchFieldText.startsWith(":") ?
+                "_matching.png" : ".png";
         String appended = this.transferrableButton && this.canBeActive.get() ? transferableString : ".png";
         Screen screen = getScreen();
 
@@ -249,44 +289,21 @@ public class QuesoButton extends Button {
     }
 
     /**
-     * @return the correct component for a query.
+     * @return valid button names for different functions.
      */
-    protected final Component queryComponent(String translation, String query) {
-        return this.movingOrDroppingOne()
-                ? Component.translatable(translation, getActualMoveAmount(), query)
-                : Component.translatable(translation, query);
+    private boolean isValidButtonName(boolean includeDrop) {
+        boolean inventoryButton = this.buttonName.equals(TRANSFER_INVENTORY_BUTTON_NAME);
+        boolean containerButton = this.buttonName.equals(TRANSFER_CONTAINER_BUTTON_NAME);
+        boolean quickDropButton = this.buttonName.equals(QUICK_DROP_BUTTON_NAME);
+        return inventoryButton || containerButton || (includeDrop && quickDropButton);
     }
 
     /**
      * @return if the user is dropping or moving one of an item.
      */
-    protected final boolean movingOrDroppingOne() {
+    private boolean movingOrDroppingOne() {
         return client().management().scrollMoving && (this.buttonName.equals(QUICK_DROP_BUTTON_NAME)
                 ? hasDropOnlyOneItemModifierDown()
                 : getScreen() instanceof AbstractContainerScreen<?> && canScrollMoveAndHasScrollModifierDown());
-    }
-
-    /**
-     * The tooltips to display for single-move items.
-     */
-    protected final void extractMoveAmountTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-        Component tooltip = Component.translatable(this.buttonName.equals(QUICK_DROP_BUTTON_NAME)
-                        ? "qualityofqueso.gui.quick_drop_button.move_amount"
-                        : "qualityofqueso.gui.move_amount_each",
-                getActualMoveAmount());
-        if (client().general().tooltips.enabled()) {
-            tooltip = appendedSingleTooltip(tooltip);
-        }
-        drawTooltip(
-                tooltip,
-                graphics, this.font, mouseX, mouseY
-        );
-    }
-
-    /**
-     * @return an appended tooltips for moving single stack items.
-     */
-    protected final Component appendedSingleTooltip(Component original) {
-        return original.copy().append("\n").append(Component.translatable("qualityofqueso.gui.scroll_to_change_amount")).copy().append("\n").append(Component.translatable("qualityofqueso.gui.move_amount.reset"));
     }
 }

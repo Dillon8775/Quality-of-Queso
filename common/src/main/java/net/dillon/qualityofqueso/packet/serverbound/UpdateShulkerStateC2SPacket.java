@@ -14,10 +14,11 @@ import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
 /**
  * Client-to-server packet updating QoQ state for a specific shulker.
  *
- * @param pos            the shulker block position.
- * @param sortingMode    current sorting mode enum name.
- * @param filteringMode       whether filtering is enabled for this shulker.
- * @param tagMode        whether the filter mode is tag-based.
+ * @param pos the shulker block position.
+ * @param sortingMode current sorting mode enum name.
+ * @param filteringMode whether filtering is enabled for this shulker.
+ * @param tagMode whether the filter mode is tag-based.
+ * @param locked if the shulker can use the sort function.
  * @param filterItemsCsv comma-separated item identifiers for filter placeholders.
  * @param lockedSlotsCsv comma-separated locked slot indices.
  */
@@ -27,6 +28,7 @@ public record UpdateShulkerStateC2SPacket(
         String sortingMode,
         String filteringMode,
         boolean tagMode,
+        boolean locked,
         String filterItemsCsv,
         String lockedSlotsCsv
 ) implements CustomPacketPayload {
@@ -42,6 +44,8 @@ public record UpdateShulkerStateC2SPacket(
                     UpdateShulkerStateC2SPacket::filteringMode,
                     ByteBufCodecs.BOOL,
                     UpdateShulkerStateC2SPacket::tagMode,
+                    ByteBufCodecs.BOOL,
+                    UpdateShulkerStateC2SPacket::locked,
                     ByteBufCodecs.STRING_UTF8,
                     UpdateShulkerStateC2SPacket::filterItemsCsv,
                     ByteBufCodecs.STRING_UTF8,

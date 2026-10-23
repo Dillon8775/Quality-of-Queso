@@ -1,7 +1,10 @@
 package net.dillon.qualityofqueso.event.management;
 
+import net.dillon.qualityofqueso.container.ContainerSyncer;
 import net.dillon.qualityofqueso.event.QuesoScreenHolder;
 import net.dillon.qualityofqueso.option.eum.management.sorting.CurrentSortingMode;
+import net.dillon.qualityofqueso.sound.BundleInsertFailSoundEvents;
+import net.dillon.qualityofqueso.sound.BundleInsertSoundEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
@@ -17,7 +20,9 @@ import java.util.*;
 
 import static net.dillon.dillonlib.task.ClientTasks.getMinecraft;
 import static net.dillon.dillonlib.task.ClientTasks.getScreen;
-import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
+import static net.dillon.qualityofqueso.helper.ManagementHelper.isInventoryScreen;
+import static net.dillon.qualityofqueso.helper.SoundHelper.playBundleInsertSound;
+import static net.dillon.qualityofqueso.helper.SoundHelper.playButtonInactiveSound;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 /**
@@ -33,6 +38,17 @@ public class SortEvents extends ManagementEvents {
      * @return if a container can be sorted.
      */
     public boolean canSort() {
+        if (!isInventoryScreen() && ContainerSyncer.isActiveContainerLocked()) {
+            return false;
+        }
+
+        return shouldSortButtonBeActive();
+    }
+
+    /**
+     * @return if the sort button should be active.
+     */
+    public boolean shouldSortButtonBeActive() {
         boolean inventory = isInventoryScreen();
         int sortStart = inventory ? 9 : 0;
         int sortEnd = inventory
@@ -61,9 +77,9 @@ public class SortEvents extends ManagementEvents {
     public void trySort() {
         if (canSort()) {
             sortItems();
-            playButtonSound();
+            playBundleInsertSound(BundleInsertSoundEvents.ITEMS_SORTED);
         } else {
-            playButtonInactiveSound();
+            playButtonInactiveSound(BundleInsertFailSoundEvents.SORT_REJECTED);
         }
     }
 

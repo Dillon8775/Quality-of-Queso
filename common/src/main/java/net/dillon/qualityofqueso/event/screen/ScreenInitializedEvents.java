@@ -1,8 +1,8 @@
 package net.dillon.qualityofqueso.event.screen;
 
+import net.dillon.qualityofqueso.container.ContainerSyncer;
 import net.dillon.qualityofqueso.event.QuesoScreenHolder;
 import net.dillon.qualityofqueso.event.management.ManagementEvents;
-import net.dillon.qualityofqueso.helper.ContainerHelper;
 import net.dillon.qualityofqueso.helper.MethodHelper;
 import net.dillon.qualityofqueso.helper.ModConstants;
 import net.dillon.qualityofqueso.option.eum.management.FilteringMode;
@@ -49,12 +49,12 @@ public class ScreenInitializedEvents extends ManagementEvents {
     private void handleTrackedContainers() {
         if (isContainerScreen()) {
             // Handle tracked containers
-            if (ContainerHelper.RETURNING_FROM_PLACEHOLDER_SCREEN) {
+            if (ContainerSyncer.RETURNING_FROM_PLACEHOLDER_SCREEN) {
                 // If the user is returning from a placeholder screen, then we should re-track the container as "filteringMode", to ensure no variables are lost
-                ContainerHelper.RETURNING_FROM_PLACEHOLDER_SCREEN = false;
-                ContainerHelper.IS_TRACKED_CONTAINER = true;
-            } else if (ContainerHelper.consumePendingOpenIsTracked()) { // Next, check if the container is tracked. Then temporarily set "fill what's present" to true, so that filtering works correctly. Once the screen closes, disable "fill what's present"
-                ContainerHelper.IS_TRACKED_CONTAINER = true;
+                ContainerSyncer.RETURNING_FROM_PLACEHOLDER_SCREEN = false;
+                ContainerSyncer.IS_TRACKED_CONTAINER = true;
+            } else if (ContainerSyncer.consumePendingOpenIsTracked()) { // Next, check if the container is tracked. Then temporarily set "fill what's present" to true, so that filtering works correctly. Once the screen closes, disable "fill what's present"
+                ContainerSyncer.IS_TRACKED_CONTAINER = true;
                 if (client().management().containerFiltering) {
                     updateClient(client -> {
                         if (!client.isFiltering()) {
@@ -64,13 +64,13 @@ public class ScreenInitializedEvents extends ManagementEvents {
                     });
                 }
             } else { // Otherwise, the container isn't tracked, so mark it as "not tracked"
-                ContainerHelper.IS_TRACKED_CONTAINER = false;
+                ContainerSyncer.IS_TRACKED_CONTAINER = false;
             }
             return;
         }
 
         // Prevent stale tracked state from leaking into non-container screens (e.g., inventory).
-        ContainerHelper.IS_TRACKED_CONTAINER = false;
+        ContainerSyncer.IS_TRACKED_CONTAINER = false;
     }
 
     /**

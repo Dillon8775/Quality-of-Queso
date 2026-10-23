@@ -7,7 +7,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 
 import static net.dillon.qualityofqueso.helper.GuiHelper.drawTooltip;
-import static net.dillon.qualityofqueso.helper.ManagementHelper.playDefaultSound;
+import static net.dillon.qualityofqueso.helper.SoundHelper.playDefaultSound;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 /**
@@ -46,7 +46,7 @@ public abstract class ToggleableButton extends QuesoButton {
             return;
         }
 
-        playDefaultSound(manager);
+        playDefaultSound();
     }
 
     /**

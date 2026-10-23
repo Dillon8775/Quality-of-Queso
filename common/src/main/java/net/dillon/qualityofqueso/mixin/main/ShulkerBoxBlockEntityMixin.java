@@ -2,7 +2,7 @@ package net.dillon.qualityofqueso.mixin.main;
 
 import net.dillon.dillonlib.annotation.Dill;
 import net.dillon.dillonlib.annotation.DillType;
-import net.dillon.qualityofqueso.util.ShulkerStateHolder;
+import net.dillon.qualityofqueso.container.ShulkerBlockEntityHolder;
 import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
@@ -24,13 +24,15 @@ import static net.dillon.qualityofqueso.helper.ModConstants.*;
  */
 @Dill(DillType.COMMON)
 @Mixin(ShulkerBoxBlockEntity.class)
-public class ShulkerBoxBlockEntityMixin implements ShulkerStateHolder {
+public class ShulkerBoxBlockEntityMixin implements ShulkerBlockEntityHolder {
     @Unique
     private String sortingMode = "";
     @Unique
     private String filteringMode = "";
     @Unique
     private boolean tagFiltered = false;
+    @Unique
+    private boolean locked = false;
     @Unique
     private List<String> filterItems = new ArrayList<>();
     @Unique
@@ -103,6 +105,18 @@ public class ShulkerBoxBlockEntityMixin implements ShulkerStateHolder {
         this.markChanged();
     }
 
+    @Override
+    public boolean isLocked() {
+        return this.locked;
+    }
+
+    @Override
+    public void setLocked(boolean locked) {
+        this.locked = locked;
+
+        this.markChanged();
+    }
+
     /**
      * @return the filter placeholder item identifiers.
      */
@@ -163,6 +177,7 @@ public class ShulkerBoxBlockEntityMixin implements ShulkerStateHolder {
         this.sortingMode = input.getStringOr(SORTING_MODE, "");
         this.filteringMode = input.getStringOr(FILTERING_MODE, "");
         this.tagFiltered = input.getBooleanOr(TAG_FILTERED, false);
+        this.locked = input.getBooleanOr(LOCKED, false);
 
         String filterItemsRaw = input.getStringOr(FILTER_ITEMS, "");
         if (filterItemsRaw.isBlank()) {
@@ -191,6 +206,7 @@ public class ShulkerBoxBlockEntityMixin implements ShulkerStateHolder {
         output.putString(SORTING_MODE, this.sortingMode);
         output.putString(FILTERING_MODE, this.filteringMode);
         output.putBoolean(TAG_FILTERED, this.tagFiltered);
+        output.putBoolean(LOCKED, this.locked);
         output.putString(FILTER_ITEMS, String.join(",", this.filterItems));
         output.putIntArray(LOCKED_SLOTS, this.lockedSlots.stream().mapToInt(Integer::intValue).toArray());
     }

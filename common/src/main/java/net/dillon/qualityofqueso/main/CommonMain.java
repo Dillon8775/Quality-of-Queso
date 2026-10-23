@@ -4,6 +4,7 @@ import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.core.BalmRegistrars;
 import net.dillon.dillonlib.annotation.Dill;
 import net.dillon.dillonlib.annotation.DillType;
+import net.dillon.dillonlib.platform.Platforms;
 import net.dillon.dillonlib.platform.info.Release;
 import net.dillon.qualityofqueso.helper.ModConstants;
 import net.dillon.qualityofqueso.option.ModCommonOptions;
@@ -33,6 +34,7 @@ public class CommonMain {
         loadCommonConfigs();
 
         QualityOfQuesoPlatforms.getPlatform().addModIds();
+        System.out.println(Platforms.getCommonPlatform().commonModVersion("qualityofqueso"));
 
         ModConstants.LOGGER.info("Quality of Queso version {} (for {}) loaded successfully!", QualityOfQuesoPlatforms.getPlatform().modVersion(), Balm.platform().name());
 

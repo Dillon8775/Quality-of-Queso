@@ -1,8 +1,8 @@
 package net.dillon.qualityofqueso.event.screen;
 
+import net.dillon.qualityofqueso.container.ContainerSyncer;
 import net.dillon.qualityofqueso.event.QuesoScreenHolder;
 import net.dillon.qualityofqueso.event.management.ManagementEvents;
-import net.dillon.qualityofqueso.helper.ContainerHelper;
 import net.minecraft.client.gui.screens.inventory.AbstractRecipeBookScreen;
 
 import java.util.HashSet;
@@ -25,7 +25,7 @@ public class ScreenResizedEvents extends ManagementEvents {
         boolean refocusContainerField = holder().searchFields().container() != null && holder().searchFields().container().isFocused();
         boolean refocusInventoryField = holder().searchFields().inventory() != null && holder().searchFields().inventory().isFocused();
         // Gets current tracked container
-        boolean trackedContainer = ContainerHelper.IS_TRACKED_CONTAINER;
+        boolean trackedContainer = ContainerSyncer.IS_TRACKED_CONTAINER;
         // Prevents ConcurrentModificationException
         Set<Integer> temp = new HashSet<>(excludedSlots);
         excludedSlots.clear();
@@ -50,6 +50,6 @@ public class ScreenResizedEvents extends ManagementEvents {
             }
         }
         // Reset tracked container
-        ContainerHelper.IS_TRACKED_CONTAINER = trackedContainer;
+        ContainerSyncer.IS_TRACKED_CONTAINER = trackedContainer;
     }
 }

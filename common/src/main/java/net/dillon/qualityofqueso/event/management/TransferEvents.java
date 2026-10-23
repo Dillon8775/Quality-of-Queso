@@ -1,9 +1,12 @@
 package net.dillon.qualityofqueso.event.management;
 
+import net.dillon.qualityofqueso.container.ContainerSyncer;
 import net.dillon.qualityofqueso.event.QuesoScreenHolder;
-import net.dillon.qualityofqueso.helper.ContainerHelper;
 import net.dillon.qualityofqueso.option.eum.management.FilteringMode;
 import net.dillon.qualityofqueso.server.DedicatedServerStorage;
+import net.dillon.qualityofqueso.sound.BundleDropContentsSoundEvents;
+import net.dillon.qualityofqueso.sound.BundleInsertFailSoundEvents;
+import net.dillon.qualityofqueso.sound.BundleInsertSoundEvents;
 import net.dillon.qualityofqueso.widget.SwapButton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractFurnaceScreen;
@@ -28,6 +31,7 @@ import static net.dillon.qualityofqueso.helper.MethodHelper.inputKey;
 import static net.dillon.qualityofqueso.helper.MethodHelper.performClickSlot;
 import static net.dillon.qualityofqueso.helper.ModConstants.MOVE_AMOUNT;
 import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.*;
+import static net.dillon.qualityofqueso.helper.SoundHelper.*;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 /**
@@ -216,9 +220,17 @@ public class TransferEvents extends ManagementEvents {
         }
 
         if (movedItem) {
-            playButtonSound(drop);
+            if (drop) {
+                playBundleDropContentsSound(BundleDropContentsSoundEvents.ITEMS_DROPPED);
+            } else {
+                playBundleInsertSound(BundleInsertSoundEvents.ITEMS_MOVED);
+            }
         } else {
-            playButtonInactiveSound();
+            if (drop) {
+                playButtonInactiveSound(BundleInsertFailSoundEvents.DROP_REJECTED);
+            } else {
+                playButtonInactiveSound(BundleInsertFailSoundEvents.MOVE_REJECTED);
+            }
         }
     }
 
@@ -707,9 +719,9 @@ public class TransferEvents extends ManagementEvents {
             }
 
             if (!ignoreContainerFiltering
-                    && ContainerHelper.IS_TRACKED_CONTAINER
+                    && ContainerSyncer.IS_TRACKED_CONTAINER
                     && client().management().containerFiltering
-                    && ContainerHelper.CURRENT_FILTER_MODE == FilteringMode.CURRENT_STACKS
+                    && ContainerSyncer.CURRENT_FILTER_MODE == FilteringMode.CURRENT_STACKS
                     && !itemMatchesPlaceholder(target.getItem())) {
                 continue;
             }
@@ -866,9 +878,9 @@ public class TransferEvents extends ManagementEvents {
         }
 
         if (swappedItem) {
-            playButtonSound(false);
+            playBundleInsertSound(BundleInsertSoundEvents.ITEMS_SWAPPED);
         } else {
-            playButtonInactiveSound();
+            playButtonInactiveSound(BundleInsertFailSoundEvents.SWAP_REJECTED);
         }
     }
 
@@ -890,10 +902,9 @@ public class TransferEvents extends ManagementEvents {
     public void trySwap() {
         if (SwapButton.SWAP_COOLDOWN == 0 && canSwap()) {
             swapItems();
-            playButtonSound(false);
             SwapButton.resetCooldown();
         } else {
-            playButtonInactiveSound();
+            playButtonInactiveSound(BundleInsertFailSoundEvents.SWAP_REJECTED);
         }
     }
 }

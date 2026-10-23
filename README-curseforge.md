@@ -5,12 +5,12 @@
 <h2>Chest searching, precise inventory management, and more!</h2>
 
 <h2>Features include:</h2>
-- An easy-to-use <a href="https://quality-of-queso.fandom.com/wiki/Search_Bar">search bar</a> for your inventory and chests</li>
-- Precise <a href="https://quality-of-queso.fandom.com/wiki/Category:Inventory_Management">Inventory Management</a>, building upon other inventory management mods</li>
-- <a href="https://quality-of-queso.fandom.com/wiki/Container_Filtering">Container Filtering </a>and <a href="https://quality-of-queso.fandom.com/wiki/Container_Sorting">Sorting</a></li>
+- An easy-to-use search bar for your inventory and chests</li>
+- Precise Inventory Management, building upon other inventory management mods</li>
+- Container Filtering and Sorting</a></li>
 - Locked slots</li>
-- <a href="https://quality-of-queso.fandom.com/wiki/Item_Count">Item Counter</a> and <a href="https://quality-of-queso.fandom.com/wiki/Armor_Status">Armor Status</a></li>
-- <a href="https://quality-of-queso.fandom.com/wiki/Remove_Fog">Remove fog</a></li>
+- Item Counter and Armor Status</li>
+- Remove fog</li>
 - And more!
 
 ---
@@ -292,28 +292,27 @@ Toggle sprinting, potion effects, flying, bow pulling, and submerged in fluid to
 ---
 
 ## 🌐 This mod is *mostly client-side.* The only features that are server-dependent are:
-- [Item Frame Searching](https://quality-of-queso.fandom.com/wiki/Item_Frame_Searching)
-- [Locking Slots](https://quality-of-queso.fandom.com/wiki/Locked_Slots) in shulker boxes (locking slots in any other container is 100% client-side and stored per world, per server)
-    - View more information about this [here.](https://quality-of-queso.fandom.com/wiki/Locked_Slots)
+- Item Frame Searching
+- Locking Slots in shulker boxes (locking slots in any other container is 100% client-side and stored per world, per server)
 - [Locking the player's inventory](https://modrinth.com/mod/quality-of-queso/version/LJpYSozL)
 
 ---
 # ⚠️ Older Version Support
 ➜ Currently, [Quality of Queso](https://modrinth.com/mod/quality-of-queso) ***does*** support older versions of Minecraft, however, certain features are ***currently unsupported.***
 ### ❌ MC 1.21.11 *(and below)* Unsupported Features
-- [Fluid FOV Effect](https://quality-of-queso.fandom.com/wiki/FOV_Modifiers)
+- Fluid FOV Effect
 ### ❌ MC 1.21.1 *(and below)* Unsupported Features
-- [Craft All (aka. bulk crafting)](https://quality-of-queso.fandom.com/wiki/Craft_All)
-- [Red Armor Tint](https://quality-of-queso.fandom.com/wiki/Red_Armor_Tint)
-- [Transparent Search Bar](https://quality-of-queso.fandom.com/wiki/Search_Bar#Customizable_Search_Bar)
-- [Overworld Fog Intensity](https://quality-of-queso.fandom.com/wiki/Remove_Fog#Fog_Intensity)
-- [Enhanced Cursor](https://quality-of-queso.fandom.com/wiki/Enhanced_Cursor)
+- Craft All (aka. bulk crafting)
+- Red Armor Tint
+- Transparent Search Bar
+- Overworld Fog Intensity
+- Enhanced Cursor
 - Darker Overlay setting
 - Fading Animations with the armor status
 - `Keybind Modifiers`
 ### ❌ MC 1.20.1 *(and below)* Unsupported Features
-- [Colored Highlighting](https://quality-of-queso.fandom.com/wiki/Colored_Highlighting)
-- [Warning Indicators](https://quality-of-queso.fandom.com/wiki/Warning_Indicators)
+- Colored Highlighting
+- Warning Indicators
 - Slot Highlighting on Armor Status (outline when armor piece gets updated)
 
 ---

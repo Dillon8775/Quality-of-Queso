@@ -5,6 +5,7 @@ import com.mojang.blaze3d.platform.cursor.CursorType;
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import net.dillon.qualityofqueso.event.QuesoScreenHolder;
 import net.dillon.qualityofqueso.option.eum.general.Theme;
+import net.dillon.qualityofqueso.widget.SortButton;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.inventory.AbstractRecipeBookScreen;
@@ -56,6 +57,7 @@ public class ExtractingEvents extends ManagementEvents {
         // Begin iterating slots to gray out
         boolean inventorySearchFieldPresent = holder().searchFields().inventory() != null;
         boolean validScreen = isValidScreen();
+
         for (int i = 0; i < searchEvents().getSearchSlotCount(); i++) {
             Slot slot = holder().menu().getSlot(i);
 
@@ -218,8 +220,25 @@ public class ExtractingEvents extends ManagementEvents {
             // Renders the key, or unlocked slot texture beside the mouse, indicating that the user is attempting to lock/unlock slots
             if (client().lockedSlots().lockedSlots && client().lockedSlots().showLock.inScreens() && holder().screensHoveredSlot() != null && holder().excludedSlots().isEmpty()
                     && hasLockSlotModifierDown() && !hasAnyManagementModifierDown() && !hasCtrlDown() && !hasShiftDown()) {
-                lockedSlotEvents().renderUnlockedSlot(graphics, lockedSlotEvents().isLockedSlot(holder().screensHoveredSlot().index), mouseX, mouseY);
+                lockedSlotEvents().renderLockOverlayNearCursor(
+                        graphics,
+                        lockedSlotEvents().isLockedSlot(holder().screensHoveredSlot().index)
+                                ? LockType.KEY
+                                : LockType.UNLOCK,
+                        mouseX, mouseY
+                );
             }
+
+            // Render locked if active container is locked
+            if (SortButton.canRenderLockOverlayAndHovered(holder().managementButtons().getSort())) {
+                lockedSlotEvents().renderLockOverlayNearCursor(
+                        graphics,
+                        LockType.KEY,
+                        mouseX,
+                        mouseY
+                );
+            }
+
             // For drag sorting and/or locking slots, set the cursor to "pointing hand", like the user is grabbing onto slots to lock/select them
             if (client().misc().enhancedCursor && (client().management().dragSorting || client().lockedSlots().lockedSlots)
                     && holder().screensHoveredSlot() != null

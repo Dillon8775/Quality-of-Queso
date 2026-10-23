@@ -1,8 +1,9 @@
 package net.dillon.qualityofqueso.event.management;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import net.dillon.qualityofqueso.container.ContainerSyncer;
 import net.dillon.qualityofqueso.event.QuesoScreenHolder;
-import net.dillon.qualityofqueso.helper.ContainerHelper;
+import net.dillon.qualityofqueso.helper.GuiHelper;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.world.inventory.Slot;
@@ -12,10 +13,9 @@ import java.util.Collections;
 import java.util.Set;
 
 import static net.dillon.dillonlib.task.ClientTasks.*;
+import static net.dillon.qualityofqueso.helper.GuiHelper.blitLockOverlay;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
 import static net.dillon.qualityofqueso.helper.MethodHelper.kumaMousePressed;
-import static net.dillon.qualityofqueso.helper.ModConstants.LOCKED_SLOT_TEXTURE;
-import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
 import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.*;
 import static net.dillon.qualityofqueso.keybind.ModKeyMappings.LOCK_SLOT;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
@@ -33,14 +33,14 @@ public class LockedSlotEvents extends ManagementEvents {
      * @return the set of locked container slots.
      */
     public Set<Integer> getLockedContainerSlots() {
-        return client().lockedSlots().lockedSlots ? ContainerHelper.getLockedSlots(true) : Collections.emptySet();
+        return client().lockedSlots().lockedSlots ? ContainerSyncer.getLockedSlots(true) : Collections.emptySet();
     }
 
     /**
      * @return the set of locked player slots.
      */
     public Set<Integer> getLockedPlayerSlots() {
-        return client().lockedSlots().lockedSlots ? ContainerHelper.getLockedSlots(false) : Collections.emptySet();
+        return client().lockedSlots().lockedSlots ? ContainerSyncer.getLockedSlots(false) : Collections.emptySet();
     }
 
     /**
@@ -76,22 +76,14 @@ public class LockedSlotEvents extends ManagementEvents {
     }
 
     /**
-     * Renders the unlocked slot texture over slots.
+     * Renders a lock overlay near the cursor.
      */
-    public void renderUnlockedSlot(GuiGraphicsExtractor graphics, boolean isSlotLocked, int mouseX, int mouseY) {
-        int xy = 10;
-        blitTexture(
-                graphics,
-                qoqIdentifier("textures/gui/sprites/slot_overlays/" + (isSlotLocked ? "slot_key" : "unlock_slot") + ".png"),
-                mouseX - 8,
-                mouseY + 1,
-                xy,
-                xy
-        );
+    public void renderLockOverlayNearCursor(GuiGraphicsExtractor graphics, LockType lockType, int mouseX, int mouseY) {
+        blitLockOverlay(graphics, lockType, mouseX - 8, mouseY + 1);
     }
 
     /**
-     * Renders a slot as "locked".
+     * Renders a slot as locked.
      */
     public void renderLockedSlot(GuiGraphicsExtractor graphics, Slot slot, boolean lockOnly) {
         boolean containerSlot = isContainerScreen() && slot.index < getContainerSize();
@@ -105,14 +97,7 @@ public class LockedSlotEvents extends ManagementEvents {
         if (locked) {
             if (lockOnly) {
                 if (slot.hasItem()) {
-                    int xy = 10;
-                    blitTexture(
-                            graphics,
-                            qoqIdentifier("textures/gui/sprites/" + LOCKED_SLOT_TEXTURE + ".png"),
-                            slot.x - 3,
-                            slot.y + 9,
-                            xy, xy
-                    );
+                    GuiHelper.blitLockOverlay(graphics, slot.x - 3, slot.y + 9);
                 }
             } else {
                 graphics.fill(slot.x - 1, slot.y - 1, slot.x + 17, slot.y + 17, client().lockedSlots().lockedSlotColor);
@@ -175,11 +160,11 @@ public class LockedSlotEvents extends ManagementEvents {
 
                 if (shouldToggle) {
                     if (containerSlot) {
-                        ContainerHelper.toggleLockedSlot(true, slot.index);
+                        ContainerSyncer.toggleLockedSlot(true, slot.index);
                     } else {
                         int playerSlotId = toPlayerLockSlotId(slot.index);
                         if (playerSlotId != -1) {
-                            ContainerHelper.toggleLockedSlot(false, playerSlotId);
+                            ContainerSyncer.toggleLockedSlot(false, playerSlotId);
                         }
                     }
                 }

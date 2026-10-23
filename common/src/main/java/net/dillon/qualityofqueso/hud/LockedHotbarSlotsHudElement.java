@@ -1,6 +1,6 @@
 package net.dillon.qualityofqueso.hud;
 
-import net.dillon.qualityofqueso.helper.ContainerHelper;
+import net.dillon.qualityofqueso.container.ContainerSyncer;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 import java.util.Set;
@@ -25,7 +25,7 @@ public class LockedHotbarSlotsHudElement extends ModHudElement {
             return;
         }
 
-        Set<Integer> lockedPlayerSlots = ContainerHelper.getLockedSlots(false);
+        Set<Integer> lockedPlayerSlots = ContainerSyncer.getLockedSlots(false);
         boolean positioningElements = isPositioningElements();
         if (!positioningElements && lockedPlayerSlots.isEmpty()) {
             return;
