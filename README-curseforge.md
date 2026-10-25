@@ -168,11 +168,19 @@ Toggle sprinting, potion effects, flying, bow pulling, and submerged in fluid to
 <br><br>
   <img alt = "Enchantment Helper" src="https://raw.githubusercontent.com/Dillon8775/ImageGIFs/refs/heads/qoq/Wiki/2026-05-01_16.11.27.png" width = 600>
 
+## 🛡️️Enhanced Durability Tooltips
+
+- Colors durability tooltips with different display settings
+  <br><br>
+- Configurable in the mod's <code>GUI</code> tab
+<br><br>
+  <img alt = "Enhanced Durability Tooltips" src="https://raw.githubusercontent.com/Dillon8775/ImageGIFs/refs/heads/qoq/durability_value.png" width = 200>
+
 ## 🖱️Enhanced Cursor
 
 - Enhances the cursor by relating it to things you are doing
 <br><br>
-- Configurable in the mod's <code>Miscellaneous</code> tab
+- Configurable in the mod's <code>GUI (or Miscellaneous)</code> tab
 
 ## 🌙 Visual Time
 
@@ -197,7 +205,7 @@ Toggle sprinting, potion effects, flying, bow pulling, and submerged in fluid to
 
 - Brings back Minecraft's old red armor tint when the player takes damage
   <br><br>
-- Configurable in the mod's <code>Misc</code> tab
+- Configurable in the mod's <code>Miscellaneous</code> tab
   <br><br>
   <img alt = "Red Armor Tint" src="https://raw.githubusercontent.com/Dillon8775/ImageGIFs/refs/heads/qoq/Wiki/2026-04-27_15.25.20.png" width = 600>
 
@@ -221,13 +229,13 @@ Toggle sprinting, potion effects, flying, bow pulling, and submerged in fluid to
 
 - Prevents the recipe book from shifting the inventory screen over
 <br<br>
-- Configurable in the mod's <code>Miscellaneous</code> tab
+- Configurable in the mod's <code>GUI (or Miscellaneous)</code> tab
 
 ## 🔄 Auto-Close Recipe Book
 
 - Automatically close the annoying recipe book when closing your inventory
   <br><br>
-- Configurable in the mod's <code>Miscellaneous</code> tab
+- Configurable in the mod's <code>GUI (or Miscellaneous)</code> tab
 
 ## 🔎 Quick Searching
 
@@ -240,7 +248,7 @@ Toggle sprinting, potion effects, flying, bow pulling, and submerged in fluid to
 
 - Right-click an armor item to swap it out with whatever you're wearing
 <br><br>
-- Configurable in the mod's <code>Miscellaneous</code> tab
+- Configurable in the mod's <code>Management (or Miscellaneous)</code> tab
 <br><br>
   <img alt = "Quick Equip" src="https://raw.githubusercontent.com/Dillon8775/ImageGIFs/refs/heads/qoq/NEW%20GIFS/Quick%20Equip.gif" width = 300>
 
@@ -248,13 +256,13 @@ Toggle sprinting, potion effects, flying, bow pulling, and submerged in fluid to
 
 - Click anywhere out-of-bounds of a GUI to close it
 <br><br>
-- Configurable in the mod's <code>Miscellaneous</code> tab
+- Configurable in the mod's <code>GUI (or Miscellaneous)</code> tab
 
 ## 😡 Anti-Rage Quit
 
 - Prevents the player from quickly pressing the disconnect button!
 <br><br>
-- Configurable in the mod's <code>Miscellaneous</code> tab
+- Configurable in the mod's <code>GUI (or Miscellaneous)</code> tab
 <br><br>
   <img alt = "Anti-Rage Quit" src="https://github.com/Dillon8775/ImageGIFs/blob/qoq/Prevent%20rage%20quitting.gif?raw=true" width = 600>
 

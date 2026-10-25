@@ -241,10 +241,24 @@
         <ul>
             <li>Displays what items enchanted books can be applied to</li>
             <br>
-            <li>Configurable in the mod's <code>Miscellaneous</code> tab</li>
+            <li>Configurable in the mod's <code>GUI (or Miscellaneous)</code> tab</li>
         </ul>
         <p>
             <img alt = "Enchantment Helper" src="https://raw.githubusercontent.com/Dillon8775/ImageGIFs/refs/heads/qoq/Wiki/2026-05-01_16.11.27.png" width = 600>
+        </p>
+</details>
+
+<details>
+    <summary>
+        <h3>🛡️️Enhanced Durability Tooltips</h3>
+    </summary>
+        <ul>
+            <li>Colors durability tooltips with different display settings</li>
+            <br>
+            <li>Configurable in the mod's <code>GUI</code> tab</li>
+        </ul>
+        <p>
+            <img alt = "Enhanced Durability Tooltips" src="https://raw.githubusercontent.com/Dillon8775/ImageGIFs/refs/heads/qoq/durability_value.png" width = 200>
         </p>
 </details>
 
@@ -255,7 +269,7 @@
         <ul>
             <li>Enhances the cursor by relating it to things you are doing</li>
             <br>
-            <li>Configurable in the mod's <code>Miscellaneous</code> tab</li>
+            <li>Configurable in the mod's <code>GUI (or Miscellaneous)</code> tab</li>
         </ul>
 </details>
 
@@ -297,7 +311,7 @@
         <ul>
             <li>Brings back Minecraft's old red armor tint when the player takes damage</li>
             <br>
-            <li>Configurable in the mod's <code>Misc</code> tab</li>
+            <li>Configurable in the mod's <code>Miscellaneous</code> tab</li>
         </ul>
         <p>
             <img alt = "Red Armor Tint" src="https://raw.githubusercontent.com/Dillon8775/ImageGIFs/refs/heads/qoq/Wiki/2026-04-27_15.25.20.png" width = 600>
@@ -338,7 +352,7 @@
         <ul>
             <li>Prevents the recipe book from shifting the inventory screen over</li>
             <br>
-            <li>Configurable in the mod's <code>Miscellaneous</code> tab</li>
+            <li>Configurable in the mod's <code>GUI (or Miscellaneous)</code> tab</li>
         </ul>
 </details>
 
@@ -349,7 +363,7 @@
         <ul>
             <li>Automatically close the annoying recipe book when closing your inventory</li>
             <br>
-            <li>Configurable in the mod's <code>Miscellaneous</code> tab</li>
+            <li>Configurable in the mod's <code>GUI (or Miscellaneous)</code> tab</li>
         </ul>
 </details>
 
@@ -373,7 +387,7 @@
         <ul>
             <li>Right-click an armor item to swap it out with whatever you're wearing</li>
             <br>
-            <li>Configurable in the mod's <code>Miscellaneous</code> tab</li>
+            <li>Configurable in the mod's <code>Management (or Miscellaneous)</code> tab</li>
         </ul>
         <p>
             <img alt = "Quick Equip" src="https://raw.githubusercontent.com/Dillon8775/ImageGIFs/refs/heads/qoq/NEW%20GIFS/Quick%20Equip.gif" width = 300>
@@ -387,7 +401,7 @@
         <ul>
             <li>Click anywhere out-of-bounds of a GUI to close it</li>
             <br>
-            <li>Configurable in the mod's <code>Miscellaneous</code> tab</li>
+            <li>Configurable in the mod's <code>GUI (or Miscellaneous)</code> tab</li>
         </ul>
 </details>
 
@@ -396,9 +410,9 @@
         <h3>😡 Anti-Rage Quit</h3>
     </summary>
         <ul>
-            <li>Prevents the player from quickly pressing the disconnect button</li>
+            <li>Prevents the player from quickly pressing leaving a world or server</li>
             <br>
-            <li>Configurable in the mod's <code>Miscellaneous</code> tab</li>
+            <li>Configurable in the mod's <code>GUI (or Miscellaneous)</code> tab</li>
         </ul>
         <p>
             <img alt = "Anti-Rage Quit" src="https://github.com/Dillon8775/ImageGIFs/blob/qoq/Prevent%20rage%20quitting.gif?raw=true" width = 600>
@@ -410,7 +424,7 @@
         <h3>📊 View Last Known Ender Chest</h3>
     </summary>
         <ul>
-            <li>Adds a button to the Quality of Queso main menu, which lets you view your last known ender chest</li>
+            <li>Adds a button to the mod's main menu, which lets you view your last known ender chest</li>
             <br>
             <li>Configurable via the mod's <code>Accessibility</code> tab</li>
         </ul>
@@ -436,6 +450,7 @@
     </summary>
         <ul>
             <li>Adds a button to open your world directory folder for singleplayer worlds</li>
+            <li><i>You can also press F4 to open the mod's configuration directory in any of the mod's menu screens</i></li>
             <br>
             <li>Found in the mod's <code>main menu</code></li>
         </ul>
@@ -459,6 +474,7 @@
 ## 🌐 This mod is *mostly client-side.* The only features that are server-dependent are:
 - Item Frame Searching
 - Locking Slots in shulker boxes (locking slots in any other container is 100% client-side and stored per world, per server)
+- Filtered shulker boxes
 - [Locking the player's inventory](https://modrinth.com/mod/quality-of-queso/version/LJpYSozL)
 
 ---
