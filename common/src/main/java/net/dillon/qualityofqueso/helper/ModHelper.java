@@ -452,16 +452,10 @@ public class ModHelper {
         // Get config file names
         String clientServerConfig = safeAndUnderscore + DEFAULT_CLIENT_CONFIG_FILE_NAME;
         String commonServerConfig = safeAndUnderscore + DEFAULT_COMMON_CONFIG_FILE_NAME;
-        String containerDataServerConfig = safeAndUnderscore + DEFAULT_CONTAINER_DATA_FILE_NAME;
-        String lockedContainerSlotsServerConfig = safeAndUnderscore + DEFAULT_LOCKED_CONTAINER_SLOTS_FILE_NAME;
-        String lockedPlayerSlotsServerConfig = safeAndUnderscore + DEFAULT_LOCKED_PLAYER_SLOTS_FILE_NAME;
 
         // Get config files
         File clientServerFile = new File(serverDir, clientServerConfig);
         File commonServerFile = new File(serverDir, commonServerConfig);
-        File containerDataServerFile = new File(serverDir, containerDataServerConfig);
-        File lockedContainerSlotsServerFile = new File(serverDir, lockedContainerSlotsServerConfig);
-        File lockedPlayerSlotsServerFile = new File(serverDir, lockedPlayerSlotsServerConfig);
 
         // Get the cached instances
         ModClientOptions cachedClientInstance = ModClientOptions.INSTANCE.getInstance();
@@ -469,10 +463,7 @@ public class ModHelper {
 
         // Determine if all config files exists
         final boolean configExists = clientServerFile.exists()
-                && containerDataServerFile.exists()
-                && commonServerFile.exists()
-                && lockedContainerSlotsServerFile.exists()
-                && lockedPlayerSlotsServerFile.exists();
+                && commonServerFile.exists();
 
         // Update config instances for the multi-server config
         ModClientOptions.INSTANCE.setCustomDirectory(serverDir);
