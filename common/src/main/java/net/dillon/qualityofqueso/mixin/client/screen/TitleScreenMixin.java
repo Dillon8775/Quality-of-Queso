@@ -4,7 +4,6 @@ import net.dillon.dillonlib.mixinplugin.Predicated;
 import net.dillon.dillonlib.platform.info.Release;
 import net.dillon.qualityofqueso.helper.ModConstants;
 import net.dillon.qualityofqueso.platform.QualityOfQuesoPlatforms;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.SpriteIconButton;
 import net.minecraft.client.gui.components.toasts.SystemToast;
 import net.minecraft.client.gui.screens.Screen;
@@ -16,6 +15,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
+import static net.dillon.dillonlib.task.ClientTasks.getMinecraft;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 @Predicated
@@ -32,7 +32,7 @@ public abstract class TitleScreenMixin extends Screen {
     @Inject(method = "init", at = @At("TAIL"), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
     private void sendWarning(CallbackInfo ci, int copyrightWidth, int copyrightX, int spacing, int topPos, int numberOfButtons, int currentButton, SpriteIconButton language, SpriteIconButton accessibility) {
         if (!ModConstants.SHOWN_BETA_TOAST && client().accessibility().betaWarning && QualityOfQuesoPlatforms.getPlatform().release() != Release.STABLE) {
-            Minecraft.getInstance().gui.toastManager().addToast(new SystemToast(
+            getMinecraft().gui.toastManager().addToast(new SystemToast(
                             SystemToast.SystemToastId.PERIODIC_NOTIFICATION,
                             Component.translatable("qualityofqueso.toast.title.beta_or_alpha"),
                             Component.translatable("qualityofqueso.toast.beta_or_alpha")));

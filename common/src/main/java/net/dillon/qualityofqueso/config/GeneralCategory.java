@@ -7,7 +7,6 @@ import dev.isxander.yacl3.api.OptionGroup;
 import dev.isxander.yacl3.api.controller.BooleanControllerBuilder;
 import dev.isxander.yacl3.api.controller.EnumControllerBuilder;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
-import net.dillon.qualityofqueso.option.eum.general.MenuButton;
 import net.dillon.qualityofqueso.option.eum.general.Theme;
 import net.dillon.qualityofqueso.option.eum.general.Tooltips;
 import net.minecraft.network.chat.Component;
@@ -54,16 +53,6 @@ public class GeneralCategory {
                                                 .binding(Theme.VANILLA, () -> client().general().theme, v -> client().general().theme = v)
                                                 .controller(o -> EnumControllerBuilder.create(o)
                                                         .enumClass(Theme.class)
-                                                        .formatValue(v -> Component.literal(v.getSerializedName())))
-                                                .build()
-                                )
-                                .option(
-                                        Option.<MenuButton>createBuilder()
-                                                .name(Component.translatable("qualityofqueso.options.menu_button"))
-                                                .description(OptionDescription.of(Component.translatable("qualityofqueso.options.menu_button.description")))
-                                                .binding(MenuButton.EVERYWHERE, () -> universal().menuButton, v -> universal().menuButton = v)
-                                                .controller(o -> EnumControllerBuilder.create(o)
-                                                        .enumClass(MenuButton.class)
                                                         .formatValue(v -> Component.literal(v.getSerializedName())))
                                                 .build()
                                 )

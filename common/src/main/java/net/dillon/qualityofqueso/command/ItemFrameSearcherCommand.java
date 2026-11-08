@@ -4,7 +4,7 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.dillon.dillonlib.annotation.Dill;
-import net.dillon.dillonlib.annotation.DillType;
+import net.dillon.dillonlib.annotation.DillEnv;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -17,7 +17,7 @@ import static net.dillon.qualityofqueso.option.OptionInstances.common;
 /**
  * The command to search item frames, separate from the GUI screen.
  */
-@Dill(DillType.COMMON)
+@Dill(env = DillEnv.COMMON)
 public class ItemFrameSearcherCommand {
     private static final String ITEM = "item (string)";
     private static final String RADIUS = "radius (1-300)";

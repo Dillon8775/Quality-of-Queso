@@ -70,7 +70,7 @@ public class ContainerSyncer {
     protected static Set<FilteredContainer> activeContainerKeys = null;
 
     /**
-     * @return {@code true} when tracked-container filtering behavior should be active.
+     * @return {@code true} when tracked-container filtering behavior should be enabled.
      */
     public static boolean isTrackedFilteringActive() {
         return IS_TRACKED_CONTAINER && client().management().containerFiltering;
@@ -94,7 +94,7 @@ public class ContainerSyncer {
     }
 
     /**
-     * Clears active container state when closing a container screen.
+     * Clears enabled container state when closing a container screen.
      */
     public static void clearActiveContainer() {
         activeContainerKeys = null;
@@ -442,7 +442,7 @@ public class ContainerSyncer {
     }
 
     /**
-     * @return if the box has an active sorting mode.
+     * @return if the box has an enabled sorting mode.
      */
     private static boolean hasActiveSortContext() {
         return activeShulkerPos != null
@@ -450,7 +450,7 @@ public class ContainerSyncer {
     }
 
     /**
-     * Applies saved sort mode for the active context.
+     * Applies saved sort mode for the enabled context.
      * If no mode is stored, resolves from current default and persists it.
      */
     protected static void applyActiveTrackedSortMode() {
@@ -503,7 +503,7 @@ public class ContainerSyncer {
     }
 
     /**
-     * Persists current sort mode for active context.
+     * Persists current sort mode for enabled context.
      */
     public static void storeActiveSortMode(CurrentSortingMode mode) {
         if (mode == null || !hasActiveSortContext()) {
@@ -519,7 +519,7 @@ public class ContainerSyncer {
     }
 
     /**
-     * Applies saved filtering mode for the active tracked context.
+     * Applies saved filtering mode for the enabled tracked context.
      */
     protected static void applyActiveFilteringMode() {
         if (!IS_TRACKED_CONTAINER) {
@@ -557,7 +557,7 @@ public class ContainerSyncer {
     }
 
     /**
-     * Persists current filtering mode for the active tracked context.
+     * Persists current filtering mode for the enabled tracked context.
      */
     private static void storeActiveFilteringMode(FilteringMode mode) {
         if (mode == null || !IS_TRACKED_CONTAINER) {
@@ -911,7 +911,7 @@ public class ContainerSyncer {
     }
 
     /**
-     * @return if the active container is locked.
+     * @return if the enabled container is locked.
      */
     public static boolean isActiveContainerLocked() {
         if (client().sorting().sorting != Sorting.BUTTON_OR_KEY) {

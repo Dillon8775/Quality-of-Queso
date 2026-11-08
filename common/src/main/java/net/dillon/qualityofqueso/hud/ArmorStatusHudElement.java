@@ -1,5 +1,6 @@
 package net.dillon.qualityofqueso.hud;
 
+import net.dillon.dillonlib.client.component.TextureBuilder;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
@@ -7,7 +8,6 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
-import static net.dillon.dillonlib.task.ClientTasks.drawSprite;
 import static net.dillon.dillonlib.task.ClientTasks.getGuiHeight;
 import static net.dillon.qualityofqueso.helper.GuiHelper.*;
 import static net.dillon.qualityofqueso.helper.ModConstants.*;
@@ -108,14 +108,14 @@ public class ArmorStatusHudElement extends ModHudElement {
         boolean canEverRenderArmorHotbar = isPositioningElements() && !client().hud().armorStatus.off();
         boolean renderingTheHotbar = armorStatusAlways || anyArmorTimerActive || syncArmorAnimating;
         if ((canEverRenderArmorHotbar && client().hud().armorHotbar) || (canRenderArmorHotbar && renderingTheHotbar)) {
-            drawSprite(
+            TextureBuilder.create(
                     graphics,
                     getArmorHotbarTexture(),
                     getArmorBarX(graphics),
                     (getGuiHeight(graphics) - 2 + syncArmorAnimationYOffset) + client().hud().armorStatusPosition[1],
                     82,
                     22
-            );
+            ).buildAndBlit(true);
         }
 
         i = 0;
@@ -150,14 +150,14 @@ public class ArmorStatusHudElement extends ModHudElement {
                                 case FEET -> "boots";
                                 default -> "helmet";
                             };
-                            drawSprite(
+                            TextureBuilder.create(
                                     graphics,
                                     Identifier.withDefaultNamespace("container/slot/" + name),
                                     getHighlightedSlotX(graphics, slot) + 4,
                                     (getGuiHeight(graphics) + armorYOffset + 1) + client().hud().armorStatusPosition[1],
                                     16,
                                     16
-                            );
+                            ).buildAndBlit(true);
                         }
 
                         drawItem(graphics, getItemBySlot(minecraft, slot), getEquipmentSlotX(slot), client().hud().armorStatusPosition[1], true, armorYOffset);

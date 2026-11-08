@@ -42,7 +42,7 @@
     "fix.AbstractContainerScreenFix"
   ],
   "mixins": [
-    "main.AbstractContainerMenuAccessor",
+    "main.AbstractContainerMenuInvoker",
     "main.BlockItemMixin",
     "main.ContainerMenusMixin",
     "main.ItemArgumentMixin",

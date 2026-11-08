@@ -2,13 +2,13 @@ package net.dillon.qualityofqueso.keybind;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.blay09.mods.kuma.api.*;
-import net.dillon.qualityofqueso.screen.EnderChestPreviewScreen;
+import net.dillon.qualityofqueso.helper.SoundHelper;
+import net.dillon.qualityofqueso.screen.LastKnownEnderChestScreen;
 import net.dillon.qualityofqueso.screen.MainMenuScreen;
 import net.dillon.qualityofqueso.screen.VisualTimeScreen;
 import net.minecraft.client.KeyMapping;
-import net.minecraft.client.Minecraft;
 
-import static net.dillon.dillonlib.task.ClientTasks.openScreen;
+import static net.dillon.dillonlib.task.ClientTasks.*;
 import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
 import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
 import static net.dillon.qualityofqueso.option.OptionInstances.mixins;
@@ -93,9 +93,9 @@ public class ModKeyMappings {
             .overrideCategory(QOQ_KEY_CATEGORY)
             .withDefault(InputBinding.key(InputConstants.KEY_N, KeyModifiers.of(KeyModifier.CONTROL)))
             .handleWorldInput(event -> {
-                Minecraft minecraft =  Minecraft.getInstance();
-                if (modEnabled() && minecraft.level != null && minecraft.player != null) {
-                    openScreen(new EnderChestPreviewScreen(null));
+                if (modEnabled() && !isCurrentLevelNull() && getLocalPlayer() != null) {
+                    SoundHelper.playEnderChestOpenSound();
+                    openScreen(new LastKnownEnderChestScreen(null));
                     return true;
                 }
                 return false;

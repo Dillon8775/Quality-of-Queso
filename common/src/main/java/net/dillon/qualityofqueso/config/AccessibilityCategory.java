@@ -5,12 +5,10 @@ import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.OptionGroup;
 import dev.isxander.yacl3.api.controller.BooleanControllerBuilder;
-import dev.isxander.yacl3.api.controller.EnumControllerBuilder;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
 import net.blay09.mods.balm.Balm;
 import net.dillon.dillonlib.platform.info.Release;
 import net.dillon.qualityofqueso.option.eum.general.Theme;
-import net.dillon.qualityofqueso.option.eum.misc.ViewLastKnownEnderChestButton;
 import net.dillon.qualityofqueso.platform.QualityOfQuesoPlatforms;
 import net.dillon.qualityofqueso.util.ModOptionUtil;
 import net.minecraft.network.chat.Component;
@@ -34,6 +32,14 @@ public class AccessibilityCategory {
                                                 .name(Component.translatable("qualityofqueso.options.use_legacy_textures"))
                                                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.use_legacy_textures.description")))
                                                 .binding(false, () -> client().accessibility().useLegacyTextures, v -> client().accessibility().useLegacyTextures = v)
+                                                .controller(TickBoxControllerBuilder::create)
+                                                .build()
+                                )
+                                .option(
+                                        Option.<Boolean>createBuilder()
+                                                .name(Component.translatable("qualityofqueso.options.reposition_bulk_craft_button"))
+                                                .description(OptionDescription.of(Component.translatable("qualityofqueso.options.reposition_bulk_craft_button.description")))
+                                                .binding(true, () -> client().accessibility().repositionBulkCraftButton, v -> client().accessibility().repositionBulkCraftButton = v)
                                                 .controller(TickBoxControllerBuilder::create)
                                                 .build()
                                 )
@@ -117,16 +123,6 @@ public class AccessibilityCategory {
                 .group(
                         OptionGroup.createBuilder()
                                 .name(Component.translatable("qualityofqueso.options.accessibility.appearance"))
-                                .option(
-                                        Option.<ViewLastKnownEnderChestButton>createBuilder()
-                                                .name(Component.translatable("qualityofqueso.options.echest_button"))
-                                                .description(OptionDescription.of(Component.translatable("qualityofqueso.options.echest_button.description")))
-                                                .binding(ViewLastKnownEnderChestButton.QOQ_MENU, () -> client().accessibility().eChestButton, v -> client().accessibility().eChestButton = v)
-                                                .controller(o -> EnumControllerBuilder.create(o)
-                                                        .enumClass(ViewLastKnownEnderChestButton.class)
-                                                        .formatValue(v -> Component.literal(v.getSerializedName())))
-                                                .build()
-                                )
                                 .option(
                                         Option.<Boolean>createBuilder()
                                                 .name(Component.translatable("qualityofqueso.options.darker_overlay"))

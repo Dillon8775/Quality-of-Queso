@@ -1,7 +1,7 @@
 package net.dillon.qualityofqueso.mixin.main;
 
 import net.dillon.dillonlib.annotation.Dill;
-import net.dillon.dillonlib.annotation.DillType;
+import net.dillon.dillonlib.annotation.DillEnv;
 import net.dillon.qualityofqueso.container.ShulkerBlockEntityHolder;
 import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
 import net.minecraft.world.level.storage.ValueInput;
@@ -22,7 +22,7 @@ import static net.dillon.qualityofqueso.helper.ModConstants.*;
 /**
  * Persists shulker filtering state directly on each shulker block entity.
  */
-@Dill(DillType.COMMON)
+@Dill(env = DillEnv.COMMON)
 @Mixin(ShulkerBoxBlockEntity.class)
 public class ShulkerBoxBlockEntityMixin implements ShulkerBlockEntityHolder {
     @Unique

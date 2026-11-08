@@ -1,7 +1,7 @@
 package net.dillon.qualityofqueso.mixin.client.hud;
 
 import net.dillon.qualityofqueso.event.QuesoScreenHolder;
-import net.dillon.qualityofqueso.widget.WidgetLayout;
+import net.dillon.qualityofqueso.widget.management.WidgetLayout;
 import net.minecraft.client.gui.screens.inventory.AbstractRecipeBookScreen;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

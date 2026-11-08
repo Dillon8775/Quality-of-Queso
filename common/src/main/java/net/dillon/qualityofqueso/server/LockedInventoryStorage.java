@@ -1,7 +1,7 @@
 package net.dillon.qualityofqueso.server;
 
 import net.dillon.dillonlib.annotation.Dill;
-import net.dillon.dillonlib.annotation.DillType;
+import net.dillon.dillonlib.annotation.DillEnv;
 import net.dillon.dillonlib.util.PlayerStorage;
 
 import java.util.UUID;
@@ -9,7 +9,7 @@ import java.util.UUID;
 /**
  * Stores player data for their locked inventory.
  */
-@Dill(DillType.COMMON)
+@Dill(env = DillEnv.COMMON)
 public class LockedInventoryStorage extends PlayerStorage<String> {
 
     public LockedInventoryStorage(String defaultValue) {

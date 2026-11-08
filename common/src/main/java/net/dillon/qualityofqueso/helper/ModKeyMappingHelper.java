@@ -3,7 +3,6 @@ package net.dillon.qualityofqueso.helper;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.blay09.mods.kuma.api.Kuma;
 import net.minecraft.client.KeyMapping;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.input.MouseButtonEvent;
 
 import static net.dillon.dillonlib.task.ClientTasks.*;
@@ -21,7 +20,7 @@ public class ModKeyMappingHelper {
      * @return the user's current drop keybinding.
      */
     public static KeyMapping getDropKey() {
-        return Minecraft.getInstance().options.keyDrop;
+        return getMinecraft().options.keyDrop;
     }
 
     /**

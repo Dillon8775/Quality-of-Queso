@@ -1,6 +1,7 @@
 package net.dillon.qualityofqueso.helper;
 
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import net.dillon.dillonlib.client.component.TextureBuilder;
 import net.dillon.qualityofqueso.event.management.LockType;
 import net.dillon.qualityofqueso.option.eum.general.Theme;
 import net.dillon.qualityofqueso.screen.HudPositionsScreen;
@@ -52,18 +53,19 @@ public class GuiHelper {
     /**
      * Draws a tooltips on a screen for anything other than a search bar.
      */
-    public static void drawTooltip(Component tooltip, GuiGraphicsExtractor graphics, Font font, int mouseX, int mouseY) {
-        drawTooltip(tooltip, graphics, font, mouseX, mouseY, false);
+    public static void drawTooltip(Component tooltip, GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+        drawTooltip(tooltip, graphics, mouseX, mouseY, false);
     }
 
     /**
      * Draws a tooltips in a screen.
      */
-    public static void drawTooltip(Component tooltip, GuiGraphicsExtractor graphics, Font font, int mouseX, int mouseY, boolean searchBar) {
+    public static void drawTooltip(Component tooltip, GuiGraphicsExtractor graphics, int mouseX, int mouseY, boolean searchBar) {
         Screen screen = getScreen();
         boolean validScreen = isValidScreen() || isOtherValidScreen();
         int x = validScreen ? getTooltipX(graphics, screen, mouseX) : mouseX;
         int y = validScreen ? getTooltipY(CURRENT_CONTAINER, screen, mouseY, searchBar) : mouseY;
+        Font font = getFont();
         graphics.setTooltipForNextFrame(font, font.split(tooltip, 200), x, y);
     }
 
@@ -100,6 +102,7 @@ public class GuiHelper {
             if (!client().management().layout.horizontal()) {
                 if (RENDERED_BUTTONS > 8) {
                     l += l / 3 + (RENDERED_BUTTONS > 10 ? 12 : 0);
+                    System.out.println("returning true");
                 } else if (RENDERED_BUTTONS > 4) {
                     l += 12;
                     if (RENDERED_BUTTONS > 6) {
@@ -338,7 +341,7 @@ public class GuiHelper {
      */
     public static void drawVisualTimeClock(GuiGraphicsExtractor graphics, int x, int y, int size, boolean screen) {
         Minecraft minecraft = getMinecraft();
-        boolean notOverworld = minecraft.level != null && minecraft.level.dimension() != Level.OVERWORLD;
+        boolean notOverworld = !isCurrentLevelNull() && minecraft.level.dimension() != Level.OVERWORLD;
         if (!isPositioningElements() && !screen && notOverworld) {
             return;
         }
@@ -349,14 +352,14 @@ public class GuiHelper {
             clockFrame = Math.floorMod((int) ((minecraft.level.getGameTime() * 64L) / 20L), 64);
         }
         Identifier clockTexture = Identifier.withDefaultNamespace("textures/item/clock_" + String.format(Locale.ROOT, "%02d", clockFrame) + ".png");
-        blitTexture(
+        TextureBuilder.create(
                 graphics,
                 clockTexture,
                 x,
                 y,
                 size,
                 size
-        );
+        ).buildAndBlit(false);
     }
 
     /**
@@ -370,14 +373,14 @@ public class GuiHelper {
      * Draws the lock overlay at a specified position.
      */
     public static void blitLockOverlay(GuiGraphicsExtractor graphics, LockType lockType, int x, int y) {
-        blitTexture(
+        TextureBuilder.create(
                 graphics,
                 qoqIdentifier("textures/gui/sprites/slot_overlays/" + lockType.getName() + ".png"),
                 x,
                 y,
                 10,
                 10
-        );
+        ).buildAndBlit(false);
     }
 
     /**

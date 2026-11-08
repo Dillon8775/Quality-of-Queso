@@ -5,7 +5,6 @@ import net.dillon.qualityofqueso.event.QuesoScreenHolder;
 import net.dillon.qualityofqueso.event.management.ManagementEvents;
 import net.dillon.qualityofqueso.util.EnchantingHelper;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.Holder;
@@ -25,10 +24,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.*;
 
+import static net.dillon.dillonlib.task.ClientTasks.getLocalPlayer;
 import static net.dillon.dillonlib.task.ClientTasks.getMinecraft;
 import static net.dillon.qualityofqueso.helper.GuiHelper.ofItalicAndGray;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
-import static net.dillon.qualityofqueso.helper.ModConstants.MOVE_AMOUNT;
 import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.*;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 import static net.dillon.qualityofqueso.util.EnchantingHelper.isEnchantmentInGroup;
@@ -55,7 +54,7 @@ public class TooltipEvents extends ManagementEvents {
      * @return the original tooltips that is being displayed.
      */
     private List<Component> getOriginalTooltip() {
-        return holder().screensHoveredSlot() == null ? null : holder().screensHoveredSlot().getItem().getTooltipLines(Item.TooltipContext.EMPTY, getMinecraft().player, Minecraft.getInstance().options.advancedItemTooltips ? TooltipFlag.ADVANCED : TooltipFlag.NORMAL);
+        return holder().screensHoveredSlot() == null ? null : holder().screensHoveredSlot().getItem().getTooltipLines(Item.TooltipContext.EMPTY, getLocalPlayer(), getMinecraft().options.advancedItemTooltips ? TooltipFlag.ADVANCED : TooltipFlag.NORMAL);
     }
 
     /**
@@ -134,68 +133,68 @@ public class TooltipEvents extends ManagementEvents {
         if (!isCreativeInventoryScreen() && bl && !onlySingleMoveModifierDown && (hoveredSlot == null || hoveredSlot.getItem().count() > 1)) {
             // Create the new tooltips variable
             List<Component> moveAmountTooltip = new ArrayList<>();
+
             // Determine the translation for the tooltips
             // If the button is hovered, render "Move *count* of each". Otherwise, render "Move *count*"
-            String translation = "qualityofqueso.gui.move_amount_each";
+            Component translation = Component.translatable("qualityofqueso.gui.move_amount_each", getActualMoveAmount());
 
-            boolean canRender = true;
             // If the quick drop button is hovered, render the drop amount of each stack
             if (quickDropHovered) {
-                translation = "qualityofqueso.gui.quick_drop_button.move_amount";
+                translation = Component.translatable("qualityofqueso.gui.quick_drop_button.throw_amount", getActualMoveAmount());
             } else if (droppingOne) { // Otherwise, if we are dropping one, render the drop amount for the singular hovered item
-                translation = "qualityofqueso.gui.quick_drop_button.move_amount.single";
-                if (MOVE_AMOUNT == 1) {
-                    canRender = false;
-                }
+                translation = Component.translatable("qualityofqueso.gui.quick_drop_button.throw_amount.single", getActualMoveAmount());
             }
 
             // Create temp boolean to determine if we can continue adding tooltips after the fact, if the hovered item is found in the container (for quick dropping only)
-            boolean canContinueToAddTooltips = true;
-            boolean skip = false;
+            boolean skipInstructions = false;
             // Create ignores locked slots variable
             Component ignoresLockedSlots = Component.translatable("qualityofqueso.gui.move_amount.ignores_locked_slots").withColor(client().lockedSlots().lockedSlotColor);
+
             // If the quick drop keys are down and the hovered slot has an item, continue through this statement
             if (hasAllQuickDropModifiersDown() && hoveredSlotHasItem(hoveredSlot)) {
+                // Get current container screen
                 boolean containerScreen = isContainerScreen();
+
+                // Determine if quick drop button is inactive
+                boolean quickDropInactive = !holder().managementButtons().getQuickDrop().active;
+
                 // If no respective item was found in the container for quick dropping, tell the user "none of this item was found", therefor cannot drop.
-                if (containerScreen && !shouldButtonBeActive(false, null)) {
+                if (containerScreen && quickDropInactive) {
                     moveAmountTooltip.add(Component.translatable("qualityofqueso.gui.quick_drop_button.no_items_found", hoveredSlot.getItem().getItemName()).copy()
                             .withStyle(ChatFormatting.RED));
-                    canContinueToAddTooltips = false;
-                } else { // Then check if we are attempting to drop only one of each item
+                    skipInstructions = true;
+                }
+
+                // Then check if we are attempting to drop only one of each item
+                else {
                     if (hasDropOnlyOneItemModifierDown()) { // Display that item name w/ the move amount
-                        moveAmountTooltip.add(Component.translatable("qualityofqueso.gui.quick_drop_button.move_amount.type",
+                        moveAmountTooltip.add(Component.translatable("qualityofqueso.gui.quick_drop_button.throw_amount.type",
                                 getActualMoveAmount(), hoveredSlot.getItem().getItemName()));
                     } else { // Otherwise display that item name, no move amount because we are dropping full stacks
-                        moveAmountTooltip.add(Component.translatable("qualityofqueso.gui.quick_drop_button.move_amount.type.all", hoveredSlot.getItem().getItemName()));
-                        canContinueToAddTooltips = false;
+                        moveAmountTooltip.add(Component.translatable("qualityofqueso.gui.quick_drop_button.throw_amount.type_all", hoveredSlot.getItem().getItemName()));
+                        skipInstructions = true;
                     }
                 }
-            } else { // Otherwise just add the raw translation for a singular move amount for a single item
+            }
+
+            // Otherwise just add the raw translation for a singular move amount for a single item
+            else {
                 if (lockedSlotEvents().droppingEntireLockedSlotStack()) {
-                    translation = "qualityofqueso.gui.quick_drop_button.move_amount.full";
-                    skip = true;
+                    translation = Component.translatable("qualityofqueso.gui.quick_drop_button.throw_amount.full", getActualMoveAmount());
+                    skipInstructions = true;
                 }
-                moveAmountTooltip.add(Component.translatable(translation, getActualMoveAmount()));
+
+                moveAmountTooltip.add(translation);
                 if (lockedSlotEvents().droppingEntireLockedSlotStack()) {
                     moveAmountTooltip.add(ignoresLockedSlots);
                 }
             }
 
-            // Cancel out if we cannot render tooltips
-            if (!canRender && (!lockedSlotEvents().isLockedSlot(hoveredSlot.index) || !lockedSlotEvents().droppingEntireLockedSlotStack())) {
-                return;
-            }
-
-            // Create helper tooltips for the user to use singular moving
-            Component scroll = Component.translatable("qualityofqueso.gui.scroll_to_change_amount");
-            Component reset = Component.translatable("qualityofqueso.gui.move_amount.reset");
-
             // Add those helper tooltips to the rendered tooltips if we can
-            if (client().general().tooltips.enabled() && canContinueToAddTooltips && !skip) {
+            if (client().general().tooltips.enabled() && !skipInstructions) {
                 if (!(holder().screensHoveredSlot() != null && holder().screensHoveredSlot().hasItem() && (canScrollMoveAndHasScrollModifierDown() && !hasDropOnlyOneItemModifierDown()))) {
-                    moveAmountTooltip.add(scroll);
-                    moveAmountTooltip.add(reset);
+                    moveAmountTooltip.add(Component.translatable("qualityofqueso.gui.scroll_to_change_amount"));
+                    moveAmountTooltip.add(Component.translatable("qualityofqueso.gui.move_amount.reset"));
                     moveAmountTooltip.add(ignoresLockedSlots);
                 }
             }

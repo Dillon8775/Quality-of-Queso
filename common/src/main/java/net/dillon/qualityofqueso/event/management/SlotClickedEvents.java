@@ -16,8 +16,7 @@ import net.minecraft.world.item.crafting.display.RecipeDisplayId;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static net.dillon.dillonlib.task.ClientTasks.getMinecraft;
-import static net.dillon.dillonlib.task.ClientTasks.getScreen;
+import static net.dillon.dillonlib.task.ClientTasks.*;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.isCraftingScreen;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.isInventoryScreen;
 import static net.dillon.qualityofqueso.helper.MethodHelper.getRecipeBookComponent;
@@ -104,7 +103,7 @@ public class SlotClickedEvents extends ManagementEvents {
             return;
         }
 
-        if (getMinecraft().player == null || getMinecraft().gameMode == null || !merchantMenu.getSlot(2).hasItem()) {
+        if (getLocalPlayer() == null || getMinecraft().gameMode == null || !merchantMenu.getSlot(2).hasItem()) {
             return;
         }
 
@@ -136,7 +135,7 @@ public class SlotClickedEvents extends ManagementEvents {
         }
 
         AbstractContainerMenu menu = holder().menu();
-        if (getMinecraft().player == null || getMinecraft().gameMode == null || !menu.getSlot(0).hasItem()) {
+        if (getLocalPlayer() == null || getMinecraft().gameMode == null || !menu.getSlot(0).hasItem()) {
             return;
         }
 
@@ -156,12 +155,12 @@ public class SlotClickedEvents extends ManagementEvents {
     }
 
     /**
-     * Ticks any active "trade all" task.
+     * Ticks any enabled "trade all" task.
      */
     public static void tickTradeAllTask() {
-        Minecraft client = Minecraft.getInstance();
+        Minecraft minecraft = getMinecraft();
 
-        if (activeTradeAllTask == null || client.player == null || client.gameMode == null) {
+        if (activeTradeAllTask == null || minecraft.player == null || minecraft.gameMode == null) {
             return;
         }
 
@@ -185,8 +184,8 @@ public class SlotClickedEvents extends ManagementEvents {
         if (!merchantMenu.getSlot(2).hasItem()) {
             // Ask the server to (re)apply selected offer and refill payment slots from inventory.
             merchantMenu.setSelectionHint(selected);
-            if (client.getConnection() != null) {
-                client.getConnection().send(new ServerboundSelectTradePacket(selected));
+            if (minecraft.getConnection() != null) {
+                minecraft.getConnection().send(new ServerboundSelectTradePacket(selected));
             }
 
             int emptyResultTicks = activeTradeAllTask.emptyResultTicks() + 1;
@@ -210,12 +209,12 @@ public class SlotClickedEvents extends ManagementEvents {
     }
 
     /**
-     * Ticks any active "bulk craft" task.
+     * Ticks any enabled "bulk craft" task.
      */
     public static void tickBulkCraftTask() {
-        Minecraft client = Minecraft.getInstance();
+        Minecraft minecraft = getMinecraft();
 
-        if (activeBulkCraftTask == null || client.player == null || client.gameMode == null) {
+        if (activeBulkCraftTask == null || minecraft.player == null || minecraft.gameMode == null) {
             return;
         }
 
@@ -237,7 +236,7 @@ public class SlotClickedEvents extends ManagementEvents {
 
         if (!menu.getSlot(0).hasItem()) {
             if (activeBulkCraftTask.recipeId() != null) {
-                client.gameMode.handlePlaceRecipe(menu.containerId, activeBulkCraftTask.recipeId(), true);
+                minecraft.gameMode.handlePlaceRecipe(menu.containerId, activeBulkCraftTask.recipeId(), true);
             }
 
             int emptyResultTicks = activeBulkCraftTask.emptyResultTicks() + 1;

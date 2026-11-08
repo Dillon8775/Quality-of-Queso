@@ -1,31 +1,38 @@
 package net.dillon.qualityofqueso.screen;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import net.dillon.dillonlib.screen.BasicDillonLibScreen;
-import net.dillon.dillonlib.util.Texts;
+import net.dillon.dillonlib.client.component.DoneButtonBuilder;
+import net.dillon.dillonlib.client.component.GridBuilder;
+import net.dillon.dillonlib.client.component.TextureBuilder;
+import net.dillon.dillonlib.client.screen.DillonLibScreen;
+import net.dillon.dillonlib.widespread.DillonsTexts;
 import net.dillon.qualityofqueso.util.ListOptions;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.components.Checkbox;
+import net.minecraft.client.gui.components.MultiLineTextWidget;
+import net.minecraft.client.gui.layouts.LinearLayout;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
-import static net.dillon.dillonlib.task.ClientTasks.*;
+import static net.dillon.dillonlib.client.component.GridBuilder.createColumn;
+import static net.dillon.dillonlib.client.component.GridBuilder.createRow;
+import static net.dillon.dillonlib.task.ClientTasks.isCurrentLevelNull;
+import static net.dillon.dillonlib.task.ClientTasks.openScreen;
+import static net.dillon.dillonlib.widespread.DillonsWidgets.*;
+import static net.dillon.qualityofqueso.helper.GuiHelper.drawVisualTimeClock;
 import static net.dillon.qualityofqueso.helper.GuiHelper.getArmorHotbarTexture;
-import static net.dillon.qualityofqueso.helper.ModConstants.DISABLED_TEXTURE;
-import static net.dillon.qualityofqueso.helper.ModConstants.ENABLED_TEXTURE;
 import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
-import static net.dillon.qualityofqueso.helper.ModHelper.saveAndApplyConfigs;
+import static net.dillon.qualityofqueso.helper.ModHelper.saveAndApplyChanges;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 import static net.dillon.qualityofqueso.option.OptionInstances.updateClient;
 
 /**
  * A screen used to configure the position of elements.
  */
-public class HudPositionsScreen extends BasicDillonLibScreen {
+public class HudPositionsScreen extends DillonLibScreen {
     private AbstractWidget xPosArmorStatus, yPosArmorStatus, xPosItemCounter, yPosItemCounter, moveItemCounterOver, yPosOther, xPosVisualClock, yPosVisualClock;
     private final Screen parent;
 
@@ -36,14 +43,14 @@ public class HudPositionsScreen extends BasicDillonLibScreen {
 
     @Override
     public void onClose() {
-        saveAndApplyConfigs(this.minecraft);
-        openScreen(this.parent);
+        saveAndApplyChanges();
+        openScreen(parent);
     }
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
         if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT && this.resetSpecifiedValue()) {
-            saveAndApplyConfigs(this.minecraft);
+            saveAndApplyChanges();
             this.widgets();
         }
         return super.mouseClicked(event, doubleClick);
@@ -104,11 +111,9 @@ public class HudPositionsScreen extends BasicDillonLibScreen {
      * @return the armor status x-pos config button.
      */
     private AbstractWidget xPosArmorStatusButton() {
-        return this.createWidget(
-                ListOptions.armorStatusXPosition().createButton(
-                        Minecraft.getInstance().options,
-                        builder().captureWidth(),
-                        builder().captureHeight(),
+        return createWidget(
+                createOption(
+                        ListOptions.armorStatusXPosition(),
                         200
                 ),
                 this::isArmorStatusEnabled
@@ -119,11 +124,9 @@ public class HudPositionsScreen extends BasicDillonLibScreen {
      * @return the armor status y-pos config button.
      */
     private AbstractWidget yPosArmorStatusButton() {
-        return this.createWidget(
-                ListOptions.armorStatusYPosition().createButton(
-                        Minecraft.getInstance().options,
-                        builder().captureWidth(),
-                        builder().captureHeight(),
+        return createWidget(
+                createOption(
+                        ListOptions.armorStatusYPosition(),
                         200
                 ),
                 this::isArmorStatusEnabled
@@ -134,12 +137,10 @@ public class HudPositionsScreen extends BasicDillonLibScreen {
      * @return the item counter x-pos config button.
      */
     private AbstractWidget xPosItemCounterButton() {
-        return this.createWidget(
-                ListOptions.itemCounterXPosition().createButton(
-                        Minecraft.getInstance().options,
-                        builder().captureWidth(),
-                        builder().captureHeight(),
-                        200
+        return createWidget(
+                createOption(
+                        ListOptions.itemCounterXPosition(),
+                        175
                 ),
                 this::isItemCounterEnabled
         );
@@ -149,15 +150,70 @@ public class HudPositionsScreen extends BasicDillonLibScreen {
      * @return the item counter y-pos config button.
      */
     private AbstractWidget yPosItemCounterButton() {
-        return this.createWidget(
-                ListOptions.itemCounterYPosition().createButton(
-                        Minecraft.getInstance().options,
-                        builder().captureWidth(),
-                        builder().captureHeight(),
+        return createWidget(
+                createOption(
+                        ListOptions.itemCounterYPosition(),
                         200
                 ),
                 this::isItemCounterEnabled
         );
+    }
+
+    /**
+     * @return the move item counter over config button.
+     */
+    private AbstractWidget moveItemCounterOverButton() {
+        return createWidget(
+                Checkbox.builder(DillonsTexts.BLANK, getFont())
+                        .onValueChange((checkbox, value) -> updateClient(client -> {
+                            client.itemCounter().moveItemCounterOver = value;
+                        }))
+                        .maxWidth(20)
+                        .selected(client().itemCounter().moveItemCounterOver)
+                        .build(),
+                this::isItemCounterEnabled,
+                isActive -> Component.translatable("qualityofqueso.options.move_item_counter_over.tooltip")
+        );
+    }
+
+    /**
+     * @return the y-pos for other elements config button.
+     */
+    private AbstractWidget yPosOtherButton() {
+        return createOption(
+                ListOptions.otherElementsYPosition(),
+                150
+        );
+    }
+
+    /**
+     * @return the x-pos visual clock config button.
+     */
+    private AbstractWidget xPosVisualClockButton() {
+        return createOption(
+                ListOptions.visualClockXPosition(),
+                200
+        );
+    }
+
+    /**
+     * @return the y-pos visual clock config button.
+     */
+    private AbstractWidget yPosVisualClockButton() {
+        return createOption(
+                ListOptions.visualClockYPosition(),
+                200
+        );
+    }
+
+    /**
+     * @return the button to save changes.
+     */
+    private AbstractWidget saveChangesButton() {
+        return DoneButtonBuilder.builder(this)
+                .text(Component.translatable("qualityofqueso.gui.save_changes"))
+                .width(100)
+                .build();
     }
 
     /**
@@ -176,130 +232,111 @@ public class HudPositionsScreen extends BasicDillonLibScreen {
                 client.visualTime().visualClockPosition[1] = 0;
             });
             this.widgets();
-        }).bounds(builder().captureWidth(), builder().captureHeight(), 100, 20).build();
+        }).width(100).build();
     }
 
     @Override
     public void widgets() {
         this.clearWidgets();
 
-        builder().heightCenter().apply();
-        builder().widthCenter().apply();
+        addTitleToHeader(this);
 
-        builder().widthLeft(100).apply();
-        builder().heightUp(64).apply();
+        GridBuilder builder = GridBuilder.create(this)
+                .setRowSpacing(8)
+                .setColumnSpacing(24);
 
-        this.xPosArmorStatus = this.addRenderableWidget(xPosArmorStatusButton());
+        xPosArmorStatus = xPosArmorStatusButton();
+        yPosArmorStatus = yPosArmorStatusButton();
+        xPosItemCounter = xPosItemCounterButton();
+        yPosItemCounter = yPosItemCounterButton();
+        moveItemCounterOver = moveItemCounterOverButton();
+        yPosOther = yPosOtherButton();
+        xPosVisualClock = xPosVisualClockButton();
+        yPosVisualClock = yPosVisualClockButton();
 
-        builder().heightDown().apply();
+        LinearLayout controls = createColumn();
 
-        this.yPosArmorStatus = this.addRenderableWidget(yPosArmorStatusButton());
-
-        builder().heightDown(64).apply();
-
-        this.xPosItemCounter = this.addRenderableWidget(xPosItemCounterButton());
-
-        builder().heightDown().apply();
-
-        this.yPosItemCounter = this.addRenderableWidget(yPosItemCounterButton());
-
-        this.moveItemCounterOver = this.addRenderableWidget(
-                this.createWidget(
-                        Button.builder(Texts.BLANK, button -> {
-                            updateClient(client -> {
-                                client.itemCounter().moveItemCounterOver = !client.itemCounter().moveItemCounterOver;
-                            });
-                        }).tooltip(
-                                Tooltip.create(Component.translatable("qualityofqueso.options.move_item_counter_over.tooltip"))
-                        ).bounds(builder().widthLeft().pop(), builder().heightUp().pop(), 20, 20).build(),
-                        this::isItemCounterEnabled
-                )
+        controls.addChild(xPosArmorStatus);
+        controls.addChild(
+                yPosArmorStatus,
+                builder.getGrid().newCellSettings().paddingBottom(20)
         );
 
-        builder().widthRight(50).apply();
-        builder().heightDown(28).apply();
-
-        this.addRenderableWidget(resetButton());
-
-        this.yPosOther = this.addRenderableWidget(
-                ListOptions.otherElementsYPosition().createButton(
-                        Minecraft.getInstance().options,
-                        builder().widthLeft(132).pop(),
-                        builder().captureHeight(),
-                        125
-                )
+        LinearLayout itemCounterXControls = createRow();
+        itemCounterXControls.addChild(xPosItemCounter);
+        itemCounterXControls.addChild(moveItemCounterOver);
+        controls.addChild(itemCounterXControls);
+        controls.addChild(
+                yPosItemCounter,
+                builder.getGrid().newCellSettings().paddingBottom(20)
         );
 
-        this.xPosVisualClock = this.addRenderableWidget(
-                this.createWidget(
-                        ListOptions.visualClockXPosition().createButton(
-                                Minecraft.getInstance().options,
-                                builder().widthRight(106).pop(),
-                                builder().captureHeight(),
-                                125
-                        ),
-                        this::isVisualClockEnabled
-                )
+        controls.addChild(xPosVisualClock);
+        controls.addChild(yPosVisualClock);
+
+        builder.getCurrentRow().addChild(controls);
+
+        GridBuilder offsetBuilder = GridBuilder.create(this);
+
+        LinearLayout additionalControls = createRow();
+        additionalControls.addChild(yPosOther);
+
+        LinearLayout writeControls = createRow();
+        writeControls.addChild(resetButton());
+        writeControls.addChild(saveChangesButton());
+
+        LinearLayout rightColumn = createColumn();
+        rightColumn.defaultCellSetting().alignHorizontallyCenter();
+
+        MultiLineTextWidget warningLabel = createMultiLineText(Component.translatable("qualityofqueso.gui.hud_positions.warning"));
+        rightColumn.addChild(
+                warningLabel,
+                builder.getGrid().newCellSettings().paddingBottom(32)
         );
 
-        this.yPosVisualClock = this.addRenderableWidget(
-                this.createWidget(
-                        ListOptions.visualClockYPosition().createButton(
-                                Minecraft.getInstance().options,
-                                builder().widthRight(106).pop(),
-                                builder().heightDown().pop(),
-                                125
-                        ),
-                        this::isVisualClockEnabled
-                )
-        );
+        rightColumn.addChild(additionalControls);
+        rightColumn.addChild(writeControls);
+        offsetBuilder.getCurrentRow().addChild(rightColumn);
 
-        builder().heightDown().apply();
-
-        this.addRenderableWidget(Button.builder(Component.translatable("qualityofqueso.gui.save_changes"), button -> {
-            this.onClose();
-        }).bounds(builder().captureWidth(), builder().captureHeight(), 100, 20).build());
+        builder.setHorizontalAlignment(0.2F).buildAndAlign();
+        offsetBuilder.setHorizontalAlignment(0.8F).buildAndAlign();
     }
 
     @Override
     protected void drawGraphics(GuiGraphicsExtractor graphics) {
-        builder().textTitleGraphicsHeight(graphics);
+        int xAlignment = 210;
+        int yAlignment = 12;
 
-        builder().graphicsHeightTop().apply();
-        builder().graphicsWidthCenter().apply();
-
-        builder().graphicsHeightDown(44).apply();
-
-        builder().textCenterAndGraphicsHeightDown(graphics, Component.translatable("qualityofqueso.gui.hud_positions.warning")).apply();
-
-        if (this.moveItemCounterOver instanceof Button button) {
-            drawSmallSprite(graphics, client().itemCounter().moveItemCounterOver ? ENABLED_TEXTURE : DISABLED_TEXTURE, button);
-        }
-
-        builder().graphicsWidth(xPosArmorStatus).apply();
-
-        drawSprite(
+        TextureBuilder.create(
                 graphics,
                 getArmorHotbarTexture(),
-                builder().captureGraphicsWidth() + 60,
-                builder().graphicsHeight(xPosArmorStatus).pop() - 28,
+                xPosArmorStatus.getX() + xAlignment,
+                xPosArmorStatus.getY() + yAlignment,
                 82,
                 22
-        );
+        ).buildAndBlit(true);
 
-        drawSprite(
+        TextureBuilder.create(
                 graphics,
                 qoqIdentifier("config_images/item_counter"),
-                builder().captureGraphicsWidth() + 74,
-                builder().graphicsHeight(xPosItemCounter).pop() - 32,
+                xPosItemCounter.getX() + xAlignment - 10,
+                xPosItemCounter.getY() + yAlignment,
                 58,
                 30
+        ).buildAndBlit(true);
+
+        drawVisualTimeClock(
+                graphics,
+                xPosVisualClock.getX() + xAlignment,
+                xPosVisualClock.getY() + yAlignment,
+                24,
+                true
         );
     }
 
     @Override
     public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks) {
-        if (this.minecraft.level == null) {
+        if (isCurrentLevelNull()) {
             this.extractPanorama(graphics, deltaTicks);
         }
 

@@ -2,7 +2,7 @@ package net.dillon.qualityofqueso.packet;
 
 import net.blay09.mods.balm.Balm;
 import net.dillon.dillonlib.annotation.Dill;
-import net.dillon.dillonlib.annotation.DillType;
+import net.dillon.dillonlib.annotation.DillEnv;
 import net.dillon.qualityofqueso.container.ShulkerBlockEntityHolder;
 import net.dillon.qualityofqueso.option.ModCommonOptions;
 import net.dillon.qualityofqueso.packet.clientbound.SyncShulkerStateS2CPacket;
@@ -34,7 +34,7 @@ import static net.dillon.qualityofqueso.container.ShulkerSyncer.*;
  * Server-safe packet handlers used during common packet registration.
  * This class must remain free of client-only Minecraft imports.
  */
-@Dill(DillType.COMMON)
+@Dill(env = DillEnv.DEDICATED_SERVER)
 public class ServerPacketHandlers {
 
     /**

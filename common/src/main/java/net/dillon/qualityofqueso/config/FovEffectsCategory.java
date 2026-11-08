@@ -7,9 +7,9 @@ import dev.isxander.yacl3.api.OptionGroup;
 import dev.isxander.yacl3.api.controller.*;
 import net.dillon.qualityofqueso.option.eum.fov_effects.Bows;
 import net.dillon.qualityofqueso.option.eum.fov_effects.PotionEffects;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 
+import static net.dillon.dillonlib.task.ClientTasks.getMinecraft;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 import static net.dillon.qualityofqueso.option.OptionInstances.mixins;
 
@@ -30,9 +30,9 @@ public class FovEffectsCategory {
                                         Option.<Double>createBuilder()
                                                 .name(Component.translatable("qualityofqueso.options.fov_effects.generic_fov_modifier"))
                                                 .description(OptionDescription.of(Component.translatable("options.fovEffectScale.tooltip")))
-                                                .binding(1.0D, () -> Minecraft.getInstance().options.fovEffectScale().get(), v -> {
-                                                    Minecraft.getInstance().options.fovEffectScale().set(v);
-                                                    Minecraft.getInstance().options.save();
+                                                .binding(1.0D, () -> getMinecraft().options.fovEffectScale().get(), v -> {
+                                                    getMinecraft().options.fovEffectScale().set(v);
+                                                    getMinecraft().options.save();
                                                 })
                                                 .controller(o -> DoubleSliderControllerBuilder.create(o)
                                                         .range(0.0D, 1.0D)

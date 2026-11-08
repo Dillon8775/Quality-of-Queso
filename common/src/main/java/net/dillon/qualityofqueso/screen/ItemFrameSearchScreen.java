@@ -2,34 +2,38 @@ package net.dillon.qualityofqueso.screen;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.blay09.mods.balm.Balm;
-import net.dillon.dillonlib.screen.BasicDillonLibScreen;
-import net.dillon.dillonlib.util.Texts;
+import net.dillon.dillonlib.client.component.GridBuilder;
+import net.dillon.dillonlib.client.screen.DillonLibScreen;
+import net.dillon.dillonlib.widespread.DillonsTexts;
 import net.dillon.qualityofqueso.packet.serverbound.GlowSearchC2SPacket;
 import net.dillon.qualityofqueso.util.ListOptions;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.MultiLineTextWidget;
+import net.minecraft.client.gui.layouts.LinearLayout;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.network.chat.Component;
 import org.jspecify.annotations.Nullable;
 
-import static net.dillon.dillonlib.task.ClientTasks.hasCtrlDown;
-import static net.dillon.dillonlib.task.ClientTasks.openScreen;
+import static net.dillon.dillonlib.client.component.GridBuilder.createRow;
+import static net.dillon.dillonlib.task.ClientTasks.*;
+import static net.dillon.dillonlib.widespread.DillonsWidgets.createMultiLineText;
+import static net.dillon.dillonlib.widespread.DillonsWidgets.createOption;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 import static net.dillon.qualityofqueso.option.OptionInstances.updateClient;
 
 /**
  * A utility screen to search for all nearby item frames. If an item frame is found, it glows.
  */
-public class ItemFrameSearchScreen extends BasicDillonLibScreen {
+public class ItemFrameSearchScreen extends DillonLibScreen {
     private EditBox searchField;
     private final Screen parent;
 
     public ItemFrameSearchScreen(@Nullable Screen parent) {
-        super(Texts.BLANK);
+        super(DillonsTexts.BLANK);
         this.parent = parent;
     }
 
@@ -82,7 +86,7 @@ public class ItemFrameSearchScreen extends BasicDillonLibScreen {
 
     @Override
     public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks) {
-        if (this.minecraft.level == null) {
+        if (isCurrentLevelNull()) {
             this.extractPanorama(graphics, deltaTicks);
         }
 
@@ -106,10 +110,11 @@ public class ItemFrameSearchScreen extends BasicDillonLibScreen {
      * @return the search field.
      */
     private EditBox searchField() {
-        EditBox searchField = new EditBox(this.font, builder().captureWidth(), builder().captureHeight(), 200, 20, Component.empty());
+        EditBox searchField = new EditBox(this.font, 200, 20, Component.empty());
         if (client().searching().saveSearchText) {
             searchField.setValue(client().searching().savedItemFrameSearchText);
         }
+
         searchField.setMaxLength(50);
         return searchField;
     }
@@ -118,11 +123,11 @@ public class ItemFrameSearchScreen extends BasicDillonLibScreen {
      * @return the search button.
      */
     private AbstractWidget searchButton() {
-        return this.createWidget(
+        return createWidget(
                 Button.builder(Component.translatable("qualityofqueso.gui.search"), button -> {
                             this.sendPacket(false, client().misc().itemFrameSearchGlowDuration != 0 ? client().misc().itemFrameSearchGlowDuration : 0, client().misc().itemFrameSearchRadius);
                         })
-                        .bounds(builder().captureWidth(), builder().captureHeight(), 100, 20)
+                        .size(100, 20)
                         .build(),
                 () -> !isSearchFieldTextEmpty(),
                 isActive -> {
@@ -139,11 +144,11 @@ public class ItemFrameSearchScreen extends BasicDillonLibScreen {
      * @return the clear button.
      */
     private AbstractWidget clearButton() {
-        return this.createWidget(
+        return createWidget(
                 Button.builder(Component.translatable("qualityofqueso.gui.clear"), button -> {
                             this.clear();
                         })
-                        .bounds(builder().captureWidth(), builder().captureHeight(), 100, 20)
+                        .size(100, 20)
                         .build(),
                 Component.translatable("qualityofqueso.gui.clear.tooltip")
         );
@@ -153,65 +158,27 @@ public class ItemFrameSearchScreen extends BasicDillonLibScreen {
      * @return the close button.
      */
     private AbstractWidget closeButton() {
-        return this.createWidget(
+        return createWidget(
                 Button.builder(Component.translatable("qualityofqueso.gui.close"), button -> {
                             this.close(true);
                         })
-                        .bounds(builder().captureWidth(), builder().captureHeight(), 100, 20)
+                        .size(100, 20)
                         .build()
         );
     }
 
     @Override
     public void widgets() {
-        builder().widthCenter().apply();
-        builder().heightCenter().apply();
+        GridBuilder builder = GridBuilder.create(this)
+                .setRowSpacing(16)
+                .setColumnSpacing(16);
 
-        builder().heightUp(10).apply();
-        builder().widthLeft(100).apply();
+        MultiLineTextWidget text = createMultiLineText(Component.translatable("qualityofqueso.gui.search_item_frames"));
+        builder.fillRowAndCenter(text);
 
         this.searchField = searchField();
-
-        builder().heightDown(36).apply();
-        builder().widthCenter().apply();
-        builder().widthRight(115).apply();
-
-        this.addRenderableWidget(searchButton());
-
-        builder().widthLeft(110).apply();
-
-        this.addRenderableWidget(
-                ListOptions.itemFrameSearchRadius().createButton(
-                        Minecraft.getInstance().options,
-                        builder().captureWidth(),
-                        builder().captureHeight(),
-                        100
-                )
-        );
-
-        builder().widthLeft(110).apply();
-
-        this.addRenderableWidget(clearButton());
-
-        builder().widthLeft(110).apply();
-
-        this.addRenderableWidget(closeButton());
-
-        builder().heightDown(32).apply();
-        builder().widthCenter().apply();
-        builder().widthLeft(75).apply();
-
-        this.addRenderableWidget(
-                ListOptions.itemFrameSearchGlowDuration().createButton(
-                        Minecraft.getInstance().options,
-                        builder().captureWidth(),
-                        builder().captureHeight(),
-                        150
-                )
-        );
-
-        this.addRenderableWidget(
-                this.createWidget(
+        builder.fillRowAndCenter(
+                createWidget(
                         this.searchField,
                         isActive -> {
                             if (client().general().tooltips.enabled()) {
@@ -222,24 +189,33 @@ public class ItemFrameSearchScreen extends BasicDillonLibScreen {
                         }
                 )
         );
+
+        LinearLayout controls = createRow();
+        controls.addChild(closeButton());
+        controls.addChild(clearButton());
+        controls.addChild(
+                createOption(
+                        ListOptions.itemFrameSearchRadius(),
+                        100
+                )
+        );
+        controls.addChild(searchButton());
+        builder.fillRowAndCenter(controls);
+
+        builder.fillRowAndCenter(
+                createOption(
+                        ListOptions.itemFrameSearchGlowDuration(),
+                        150
+                )
+        );
+
+        builder.setVerticalAlignment(0.45F).buildAndAlign();
         this.setInitialFocus(this.searchField);
-    }
-
-    @Override
-    protected void drawGraphics(GuiGraphicsExtractor graphics) {
-        builder().graphicsHeightCenter().apply();
-        builder().graphicsHeightUp(96).apply();
-
-        builder().textCenterAndGraphicsHeightDown(graphics, Component.translatable("qualityofqueso.gui.search_item_frames.line1")).apply();
-        builder().textCenterAndGraphicsHeightDown(graphics, Component.translatable("qualityofqueso.gui.search_item_frames.warning.line1")).apply();
-        builder().textCenterAndGraphicsHeightDown(graphics, Component.translatable("qualityofqueso.gui.search_item_frames.warning.line2")).apply();
-        builder().textCenterAndGraphicsHeightDown(graphics, Component.translatable("qualityofqueso.gui.search_item_frames.line2")).apply();
     }
 
     @Override
     public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks) {
         super.extractRenderState(graphics, mouseX, mouseY, deltaTicks);
-
         this.extractBlurredBackground(graphics);
     }
 }

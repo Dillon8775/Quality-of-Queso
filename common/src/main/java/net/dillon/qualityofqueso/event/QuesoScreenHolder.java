@@ -14,7 +14,7 @@ import net.dillon.qualityofqueso.event.screen.ScreenInitializedEvents;
 import net.dillon.qualityofqueso.event.screen.ScreenResizedEvents;
 import net.dillon.qualityofqueso.event.screen.TooltipEvents;
 import net.dillon.qualityofqueso.mixin.client.screen.AbstractContainerScreenMixin;
-import net.dillon.qualityofqueso.widget.WidgetLayout;
+import net.dillon.qualityofqueso.widget.management.WidgetLayout;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;

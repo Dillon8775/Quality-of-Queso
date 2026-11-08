@@ -1,5 +1,6 @@
 package net.dillon.qualityofqueso.hud.counter;
 
+import net.dillon.dillonlib.client.component.TextureBuilder;
 import net.dillon.qualityofqueso.hud.ModHudElement;
 import net.dillon.qualityofqueso.option.eum.hud.ItemCounter;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -8,7 +9,8 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.util.CommonColors;
 import net.minecraft.world.item.*;
 
-import static net.dillon.dillonlib.task.ClientTasks.*;
+import static net.dillon.dillonlib.task.ClientTasks.getGuiHeight;
+import static net.dillon.dillonlib.task.ClientTasks.getGuiWidth;
 import static net.dillon.qualityofqueso.helper.GuiHelper.*;
 import static net.dillon.qualityofqueso.helper.ModConstants.*;
 import static net.dillon.qualityofqueso.hud.ModHudElement.*;
@@ -163,7 +165,7 @@ public interface CounterHelper {
         }
 
         if (counter().shouldBeCountingProjectiles(playerHeldItem)) {
-            // Count projectile from active hand
+            // Count projectile from enabled hand
             ItemStack projectile = counter().getNextProjectile();
 
             return projectile.isEmpty()
@@ -408,7 +410,7 @@ public interface CounterHelper {
      * Draws a indicator sprite.
      */
     default void drawIndicatorSprite(GuiGraphicsExtractor graphics, Identifier sprite, int itemX, int animationYOffset, int x, int up, int size) {
-        drawSprite(
+        TextureBuilder.create(
                 graphics,
                 sprite,
                 (getGuiWidth(graphics) + itemX) - x,
@@ -417,7 +419,7 @@ public interface CounterHelper {
                         + client().itemCounter().itemCounterPosition[1],
                 size,
                 size
-        );
+        ).buildAndBlit(true);
     }
 
     /**

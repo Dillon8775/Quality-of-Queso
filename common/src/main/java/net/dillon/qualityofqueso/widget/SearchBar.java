@@ -1,9 +1,9 @@
 package net.dillon.qualityofqueso.widget;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import net.dillon.dillonlib.client.component.TextureBuilder;
 import net.dillon.qualityofqueso.option.eum.general.Theme;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.WidgetSprites;
@@ -16,7 +16,7 @@ import net.minecraft.util.FormattedCharSequence;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.CancellationException;
 
-import static net.dillon.dillonlib.task.ClientTasks.drawSprite;
+import static net.dillon.dillonlib.task.ClientTasks.getFont;
 import static net.dillon.dillonlib.task.ClientTasks.getScreen;
 import static net.dillon.qualityofqueso.helper.ButtonHelper.getWidgetPath;
 import static net.dillon.qualityofqueso.helper.GuiHelper.drawTooltip;
@@ -32,11 +32,9 @@ import static net.dillon.qualityofqueso.option.OptionInstances.updateClient;
 public class SearchBar extends EditBox {
     private static final int OVERLAY_WIDTH = 96;
     private static final int OVERLAY_HEIGHT = 18;
-    private final Font font;
 
-    public SearchBar(Font font, int x, int y) {
-        super(font, x, y, 90, 12, Component.empty());
-        this.font = font;
+    public SearchBar(int x, int y) {
+        super(getFont(), x, y, 90, 12, Component.empty());
         if (client().searching().saveSearchText) {
             this.setValue(client().searching().savedSearchText);
         }
@@ -64,7 +62,8 @@ public class SearchBar extends EditBox {
      */
     public static WidgetSprites getSprites() {
         return new WidgetSprites(
-                qoqIdentifier("widget/search/" + getWidgetPath(true) + "search_bar"), qoqIdentifier("widget/search/" + getWidgetPath(true) + "search_bar_highlighted")
+                qoqIdentifier("widget/search/" + getWidgetPath(true) + "search_bar"),
+                qoqIdentifier("widget/search/" + getWidgetPath(true) + "search_bar_highlighted")
         );
     }
 
@@ -126,27 +125,29 @@ public class SearchBar extends EditBox {
     public void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks) {
         if (!client().searching().searchBarColor.black()) {
             if ((this.isFocused() || !client().searching().searchBarColor.transparent()) && client().searching().searchBarPosition.top()) {
-                drawSprite(
+                TextureBuilder.create(
                         graphics,
                         qoqIdentifier("widget/search/" + getWidgetPath(true) + "search_bar_overlay"),
                         this.getX() - 3,
                         this.getY() - 3,
                         OVERLAY_WIDTH,
                         OVERLAY_HEIGHT
-                );
+                ).buildAndBlit(true);
             }
             if (!this.isFocused() && this.getValue().isEmpty() && client().general().theme.searchBarTransparent()) {
-                drawSprite(
+                TextureBuilder.create(
                         graphics,
                         SEARCH_TEXTURE,
                         this.getX() + (getScreen() instanceof InventoryScreen ? 78 : 80),
                         this.getY(),
                         12,
                         12
-                );
+                ).buildAndBlit(true);
             }
         }
+
         super.extractWidgetRenderState(graphics, mouseX, mouseY, deltaTicks);
+
         if (client().general().tooltips.enabled() && this.isHovered() && this.getValue().isEmpty()) {
             Component matchCase = Component.literal(":").withStyle(ChatFormatting.BOLD).withColor(0xC4FFD7);
             Component multiple = Component.literal(",").withStyle(ChatFormatting.ITALIC);
@@ -155,7 +156,7 @@ public class SearchBar extends EditBox {
             Component mod = Component.literal("@").withStyle(ChatFormatting.ITALIC);
             drawTooltip(Component.translatable("qualityofqueso.gui.chest_search.search_filtering",
                     matchCase.copy(), multiple.copy(), tag.copy(), exclude.copy(), mod.copy()
-            ), graphics, this.font, mouseX, mouseY, true);
+            ), graphics, mouseX, mouseY, true);
         }
     }
 }

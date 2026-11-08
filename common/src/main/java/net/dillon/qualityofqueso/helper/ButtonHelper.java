@@ -1,28 +1,30 @@
 package net.dillon.qualityofqueso.helper;
 
-import net.dillon.dillonlib.platform.info.UpdatableSpriteButton;
-import net.dillon.dillonlib.task.ClientTasks;
-import net.dillon.qualityofqueso.platform.QualityOfQuesoPlatforms;
-import net.dillon.qualityofqueso.screen.AbstractModScreen;
+import com.mojang.blaze3d.Blaze3D;
+import net.dillon.dillonlib.client.component.BasicSpriteIconButtonBuilder;
+import net.dillon.dillonlib.client.component.SoundBuilder;
+import net.dillon.dillonlib.client.component.SpriteIconButtonWithSound;
+import net.dillon.dillonlib.client.component.UpdatableSpriteButton;
+import net.dillon.dillonlib.core.DillonLibModReferences;
+import net.dillon.dillonlib.platform.info.ModReference;
+import net.dillon.qualityofqueso.screen.LastKnownEnderChestScreen;
 import net.dillon.qualityofqueso.screen.MainMenuScreen;
-import net.dillon.qualityofqueso.widget.QuesoButton;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.gui.components.Button;
+import net.dillon.qualityofqueso.screen.ManageContainerDataScreen;
+import net.dillon.qualityofqueso.widget.ManageLevelButton;
 import net.minecraft.client.gui.components.SpriteIconButton;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.level.storage.LevelResource;
 
-import java.util.Map;
+import java.io.File;
+import java.nio.file.Path;
 
-import static net.dillon.dillonlib.task.ClientTasks.blitTexture;
-import static net.dillon.dillonlib.task.ClientTasks.openScreen;
-import static net.dillon.qualityofqueso.helper.ManagementHelper.getTransferButtonXY;
-import static net.dillon.qualityofqueso.helper.ModConstants.CHEESE_WHEEL_TEXTURE;
-import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
-import static net.dillon.qualityofqueso.helper.ModHelper.saveAndApplyConfigs;
+import static net.dillon.dillonlib.task.ClientTasks.*;
+import static net.dillon.qualityofqueso.helper.ModConstants.*;
+import static net.dillon.qualityofqueso.helper.ModHelper.saveAndApplyChanges;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 import static net.dillon.qualityofqueso.option.OptionInstances.universal;
+import static net.minecraft.client.gui.components.AbstractWidget.playButtonClickSound;
 
 /**
  * Utility and helper class for buttons.
@@ -30,94 +32,95 @@ import static net.dillon.qualityofqueso.option.OptionInstances.universal;
 public class ButtonHelper {
 
     /**
-     * Draws the texture for a {@code inventory management button.}
+     * Creates the main Quality of Queso menu button.
      */
-    public static void drawButtonTexture(GuiGraphicsExtractor graphics, String name, QuesoButton button) {
-        int xy = getTransferButtonXY(button);
-        blitTexture(
-                graphics,
-                qoqIdentifier("textures/gui/sprites/button/" + name + ".png"),
-                button.getX() - 1,
-                button.getY() - 1,
-                xy,
-                xy
+    public static UpdatableSpriteButton createMainMenuButton() {
+        return UpdatableSpriteButton.builder(
+                        "Quality of Queso Main Menu Button",
+                        Component.translatable("qualityofqueso"),
+                        CHEESE_WHEEL_TEXTURE,
+                        b -> openScreen(new MainMenuScreen(getScreen()))
+                )
+                .updateSupplier(MOD_INFO::hasUpdate)
+                .tooltip(Component.translatable("qualityofqueso.title"))
+                .build();
+    }
+
+    /**
+     * Creates the manage level button.
+     */
+    public static SpriteIconButtonWithSound createManageLevelButton() {
+        String address = ManageLevelButton.getCurrentServerAddress();
+
+        return new ManageLevelButton(
+                b -> {
+                    if (isCurrentLevelNull()) {
+                        ManageLevelButton.openConfigDirectory();
+                    } else if (isOnServer()) {
+                        if (universal().blacklistedServers.contains(address)) {
+                            universal().blacklistedServers.remove(address);
+                        } else {
+                            universal().blacklistedServers.add(address);
+                        }
+                        saveAndApplyChanges();
+                    } else {
+                        Path worldPath = getMinecraft().getSingleplayerServer().getWorldPath(LevelResource.ROOT);
+                        Blaze3D.openPath(worldPath);
+                    }
+                }
         );
     }
 
     /**
-     * Creates the main Quality of Queso menu button.
+     * Creates the open screenshots button.
      */
-    public static UpdatableSpriteButton createMenuButton(Button.OnPress onPress, boolean tooltip) {
-        return ClientTasks.createMenuButton(
-                "Quality of Queso Main Menu",
-                CHEESE_WHEEL_TEXTURE,
-                onPress,
-                Map.of(
-                        ModConstants.HAS_UPDATE,
-                        Component.translatable("qualityofqueso.update_available")
-                ),
-                Component.translatable("qualityofqueso.title"),
-                tooltip
-        );
+    public static SpriteIconButtonWithSound createScreenshotsButton() {
+        return SpriteIconButtonWithSound.builder(
+                        OPEN_SCREENSHOTS_DIRECTORY,
+                        manager -> {
+                            String essential = "essential";
+
+                            if (DillonLibModReferences.isModLoaded(ModReference.of(essential))) {
+                                SoundBuilder.create(Identifier.fromNamespaceAndPath(essential, "screenshot")).buildAndPlay();
+                            } else {
+                                playButtonClickSound(manager);
+                            }
+                        },
+                        b -> {
+                            File screenshots = new File(getMinecraft().gameDirectory, "screenshots");
+                            if (!screenshots.exists()) {
+                                screenshots.mkdirs();
+                            }
+                            Blaze3D.openPath(screenshots.toPath());
+                        }
+                )
+                .tooltip(Component.translatable("qualityofqueso.open_screenshots_folder"))
+                .build();
     }
 
     /**
-     * Creates the main Quality of Queso menu button.
+     * @return the manage container data button.
      */
-    public static UpdatableSpriteButton createMainMenuButton(Screen parent) {
-        return createMenuButton(onPress -> openScreen(new MainMenuScreen(parent)), true);
+    public static SpriteIconButton createManageContainerDataButton() {
+        return BasicSpriteIconButtonBuilder.builder(
+                        CHEST,
+                        b -> openScreen(new ManageContainerDataScreen(getScreen()))
+                )
+                .tooltip(Component.translatable("qualityofqueso.manage_container_data"))
+                .build();
     }
 
     /**
-     * Creates the blacklist server button.
+     * @return the view last known ender chest button.
      */
-    public static SpriteIconButton createBlacklistServerButton(String address) {
-        return createMenuButton(onPress -> {
-            if (universal().blacklistedServers.contains(address)) {
-                universal().blacklistedServers.remove(address);
-            } else {
-                universal().blacklistedServers.add(address);
-            }
-            saveAndApplyConfigs(Minecraft.getInstance());
-        }, false);
-    }
-
-    /**
-     * @return the {@code width} for a {@link AbstractModScreen} button, on the {@code left-side} of the screen.
-     */
-    public static int getLeftButtonPosition(int width, int leftButtonIndex) {
-        return width / 2 - 113 - (leftButtonIndex * 24);
-    }
-
-    /**
-     * @return the {@code width} for a {@link AbstractModScreen} button, on the {@code right-side} of the screen.
-     */
-    public static int getRightButtonPosition(int width, int rightButtonIndex) {
-        return width / 2 + 92 + (rightButtonIndex * 24);
-    }
-
-    /**
-     * @return the configuration button X position.
-     */
-    public static int getConfigButtonX(int width, int button) {
-        if (universal().menuButton.left()) {
-            return 8 + (button * 24);
-        } else if (universal().menuButton.right()) {
-            return width - 28 - (button * 24);
-        } else {
-            return width / 2 + 106;
-        }
-    }
-
-    /**
-     * @return the configuration button Y position.
-     */
-    public static int getConfigButtonY(int height, int button) {
-        if (universal().menuButton.left() || universal().menuButton.right()) {
-            return height - 29;
-        } else {
-            return height / 4 + 72 + (button * 24) - 16 + (QualityOfQuesoPlatforms.getPlatform().platform().neoforge() ? -6 : 0);
-        }
+    public static SpriteIconButtonWithSound createViewLastKnownEnderChestButton() {
+        return SpriteIconButtonWithSound.builder(
+                        ENDER_CHEST,
+                        manager -> SoundHelper.playEnderChestOpenSound(),
+                        b -> openScreen(new LastKnownEnderChestScreen(getScreen()))
+                )
+                .tooltip(Component.translatable("qualityofqueso.view_ender_chest.tooltip"))
+                .build();
     }
 
     /**

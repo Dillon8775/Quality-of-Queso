@@ -1,16 +1,11 @@
 package net.dillon.qualityofqueso.platform.client;
 
-import com.mojang.blaze3d.platform.InputConstants;
+import net.dillon.dillonlib.client.component.PlatformMenuButton;
 import net.dillon.dillonlib.platform.client.ClientModPlatform;
-import net.dillon.dillonlib.platform.info.PlatformMenuButton;
 import net.dillon.qualityofqueso.helper.ButtonHelper;
 import net.dillon.qualityofqueso.helper.ModConstants;
-import net.minecraft.client.KeyMapping;
 
 import java.util.List;
-
-import static net.dillon.dillonlib.task.ClientTasks.getScreen;
-import static net.dillon.qualityofqueso.option.OptionInstances.universal;
 
 public abstract class ClientQualityOfQuesoPlatform extends ClientModPlatform {
 
@@ -22,15 +17,8 @@ public abstract class ClientQualityOfQuesoPlatform extends ClientModPlatform {
     @Override
     public List<PlatformMenuButton> menuButtons() {
         return List.of(
-                PlatformMenuButton.titleOnlyEmpty(
-                        universal().menuButton.enabled(),
-                        ButtonHelper.createMainMenuButton(getScreen()))
+                PlatformMenuButton.builder(ButtonHelper.createMainMenuButton())
+                        .build()
         );
-    }
-
-    // Unused
-    @Override
-    public KeyMapping registerKeyMapping(String name, InputConstants.Type type, KeyMapping.Category category, int value) {
-        return null;
     }
 }

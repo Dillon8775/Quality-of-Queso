@@ -38,6 +38,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
+import static net.dillon.dillonlib.task.ClientTasks.*;
 import static net.dillon.qualityofqueso.container.ContainerSyncer.isValidBlockEntity;
 import static net.dillon.qualityofqueso.helper.GuiHelper.isHoldingItem;
 import static net.dillon.qualityofqueso.helper.ModConstants.DEFAULT_TRACKED_CONTAINER_COOLDOWN;
@@ -127,7 +128,7 @@ public class MultiPlayerGameModeMixin {
             return;
         }
 
-        if (isLockedHotbarSlot(true)) {
+        if (isLockedHotbarSlot(true) && !hasAltDown()) {
             playButtonInactiveSound(BundleInsertFailSoundEvents.DROP_REJECTED);
             ci.cancel();
         }
@@ -158,7 +159,7 @@ public class MultiPlayerGameModeMixin {
      */
     @Inject(method = "startDestroyBlock", at = @At("HEAD"), cancellable = true)
     private void filterContainer(BlockPos pos, Direction direction, CallbackInfoReturnable<Boolean> cir) {
-        Minecraft minecraft = Minecraft.getInstance();
+        Minecraft minecraft = getMinecraft();
         if (!shouldCancelForContainerFilter(minecraft, pos)) {
             return;
         }
@@ -216,7 +217,7 @@ public class MultiPlayerGameModeMixin {
      */
     @Inject(method = "continueDestroyBlock", at = @At("HEAD"), cancellable = true)
     private void preventFilterBreakOnContinue(BlockPos pos, Direction direction, CallbackInfoReturnable<Boolean> cir) {
-        if (!shouldCancelForContainerFilter(Minecraft.getInstance(), pos)) {
+        if (!shouldCancelForContainerFilter(getMinecraft(), pos)) {
             return;
         }
         cir.cancel();
@@ -228,7 +229,7 @@ public class MultiPlayerGameModeMixin {
      */
     @Inject(method = "destroyBlock", at = @At("HEAD"), cancellable = true)
     private void preventFilterBreakOnDestroy(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
-        if (!shouldCancelForContainerFilter(Minecraft.getInstance(), pos)) {
+        if (!shouldCancelForContainerFilter(getMinecraft(), pos)) {
             return;
         }
         cir.cancel();
@@ -257,7 +258,7 @@ public class MultiPlayerGameModeMixin {
      */
     @Unique
     private static boolean shouldCancelForContainerFilter(Minecraft minecraft, BlockPos pos) {
-        if (!modEnabled() || !client().management().containerFiltering || minecraft.player == null || minecraft.level == null
+        if (!modEnabled() || !client().management().containerFiltering || minecraft.player == null || isCurrentLevelNull()
                 || !minecraft.player.isShiftKeyDown() || isHoldingItem(minecraft.player, DataComponents.TOOL)) {
             return false;
         }

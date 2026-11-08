@@ -1,8 +1,8 @@
 package net.dillon.qualityofqueso.mixin.client.hud;
 
+import net.dillon.dillonlib.client.component.TextureBuilder;
 import net.dillon.qualityofqueso.helper.ModConstants;
 import net.dillon.qualityofqueso.mixin.client.accessor.RecipeBookComponentAccessor;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -16,7 +16,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static net.dillon.dillonlib.task.ClientTasks.drawSprite;
 import static net.dillon.dillonlib.task.ClientTasks.getScreen;
 import static net.dillon.qualityofqueso.helper.MethodHelper.getRecipeBookComponent;
 import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
@@ -36,7 +35,6 @@ public abstract class RecipeButtonMixin extends AbstractWidget {
      */
     @Inject(method = "extractWidgetRenderState", at = @At("TAIL"))
     private void extractSelectedRecipe(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a, CallbackInfo ci) {
-        Minecraft minecraft = Minecraft.getInstance();
         if (!modEnabled() || !client().management().bulkCraft || !client().buttonDisplayOptions().displayBulkCraft) {
             return;
         }
@@ -54,6 +52,7 @@ public abstract class RecipeButtonMixin extends AbstractWidget {
             return;
         }
 
-        drawSprite(graphics, ModConstants.SELECTED_RECIPE, this.getX(), this.getY(), this.width, this.height);
+        TextureBuilder.create(graphics, ModConstants.SELECTED_RECIPE, this.getX(), this.getY(), this.width, this.height)
+                .buildAndBlit(true);
     }
 }

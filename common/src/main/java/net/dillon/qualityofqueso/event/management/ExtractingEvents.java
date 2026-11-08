@@ -3,9 +3,10 @@ package net.dillon.qualityofqueso.event.management;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.cursor.CursorType;
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
+import net.dillon.dillonlib.client.component.TextureBuilder;
 import net.dillon.qualityofqueso.event.QuesoScreenHolder;
 import net.dillon.qualityofqueso.option.eum.general.Theme;
-import net.dillon.qualityofqueso.widget.SortButton;
+import net.dillon.qualityofqueso.widget.management.SortButton;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.inventory.AbstractRecipeBookScreen;
@@ -141,7 +142,14 @@ public class ExtractingEvents extends ManagementEvents {
         } else if (client().accessibility().darkerOverlay || client().general().theme != Theme.VANILLA) {
             id = "grayed_dark";
         }
-        drawSprite(graphics, qoqIdentifier("slot_overlays/" + id), slot.x, slot.y, 16, 16);
+        TextureBuilder.create(
+                graphics,
+                qoqIdentifier("slot_overlays/" + id),
+                slot.x,
+                slot.y,
+                16,
+                16
+        ).buildAndBlit(true);
     }
 
     /**
@@ -229,7 +237,7 @@ public class ExtractingEvents extends ManagementEvents {
                 );
             }
 
-            // Render locked if active container is locked
+            // Render locked if enabled container is locked
             if (SortButton.canRenderLockOverlayAndHovered(holder().managementButtons().getSort())) {
                 lockedSlotEvents().renderLockOverlayNearCursor(
                         graphics,

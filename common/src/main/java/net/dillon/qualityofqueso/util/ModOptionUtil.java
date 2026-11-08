@@ -13,8 +13,8 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 
-import static net.dillon.dillonlib.client.ModernWidgetOptions.createSimpleBooleanOption;
-import static net.dillon.dillonlib.client.ModernWidgetOptions.createSimpleIntegerOption;
+import static net.dillon.dillonlib.client.util.ModernWidgetOptions.createSimpleBooleanOption;
+import static net.dillon.dillonlib.client.util.ModernWidgetOptions.createSimpleIntegerOption;
 import static net.dillon.qualityofqueso.helper.MethodHelper.kumaKey;
 
 /**

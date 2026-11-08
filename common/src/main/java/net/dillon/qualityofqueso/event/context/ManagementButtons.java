@@ -1,126 +1,126 @@
 package net.dillon.qualityofqueso.event.context;
 
-import net.dillon.qualityofqueso.widget.QuesoButton;
+import net.dillon.qualityofqueso.widget.management.ManagementButton;
 
 /**
  * Holds all management buttons.
  */
 public class ManagementButtons {
-    private QuesoButton transferContainer;
-    private QuesoButton transferInventory;
-    private QuesoButton includeHotbar;
-    private QuesoButton filtering;
-    private QuesoButton quickDrop;
-    private QuesoButton swap;
-    private QuesoButton sort;
-    private QuesoButton searchTransportables;
-    private QuesoButton alwaysQuickMove;
-    private QuesoButton clearExcludedSlots;
-    private QuesoButton bulkTrade;
-    private QuesoButton bulkCraft;
-    private QuesoButton lockInventory;
+    private ManagementButton transferContainer;
+    private ManagementButton transferInventory;
+    private ManagementButton includeHotbar;
+    private ManagementButton filtering;
+    private ManagementButton quickDrop;
+    private ManagementButton swap;
+    private ManagementButton sort;
+    private ManagementButton searchTransportables;
+    private ManagementButton alwaysQuickMove;
+    private ManagementButton clearExcludedSlots;
+    private ManagementButton bulkTrade;
+    private ManagementButton bulkCraft;
+    private ManagementButton lockInventory;
 
-    public QuesoButton getTransferContainer() {
+    public ManagementButton getTransferContainer() {
         return transferContainer;
     }
 
-    public QuesoButton getTransferInventory() {
+    public ManagementButton getTransferInventory() {
         return transferInventory;
     }
 
-    public QuesoButton getIncludeHotbar() {
+    public ManagementButton getIncludeHotbar() {
         return includeHotbar;
     }
 
-    public QuesoButton getFiltering() {
+    public ManagementButton getFiltering() {
         return filtering;
     }
 
-    public QuesoButton getQuickDrop() {
+    public ManagementButton getQuickDrop() {
         return quickDrop;
     }
 
-    public QuesoButton getSwap() {
+    public ManagementButton getSwap() {
         return swap;
     }
 
-    public QuesoButton getSort() {
+    public ManagementButton getSort() {
         return sort;
     }
 
-    public QuesoButton getSearchTransportables() {
+    public ManagementButton getSearchTransportables() {
         return searchTransportables;
     }
 
-    public QuesoButton getAlwaysQuickMove() {
+    public ManagementButton getAlwaysQuickMove() {
         return alwaysQuickMove;
     }
 
-    public QuesoButton getClearExcludedSlots() {
+    public ManagementButton getClearExcludedSlots() {
         return clearExcludedSlots;
     }
 
-    public QuesoButton getBulkTrade() {
+    public ManagementButton getBulkTrade() {
         return bulkTrade;
     }
 
-    public QuesoButton getBulkCraft() {
+    public ManagementButton getBulkCraft() {
         return bulkCraft;
     }
 
-    public QuesoButton getLockInventory() {
+    public ManagementButton getLockInventory() {
         return lockInventory;
     }
 
-    public void setTransferContainer(QuesoButton button) {
+    public void setTransferContainer(ManagementButton button) {
         transferContainer = button;
     }
 
-    public void setTransferInventory(QuesoButton button) {
+    public void setTransferInventory(ManagementButton button) {
         transferInventory = button;
     }
 
-    public void setIncludeHotbar(QuesoButton button) {
+    public void setIncludeHotbar(ManagementButton button) {
         includeHotbar = button;
     }
 
-    public void setFiltering(QuesoButton button) {
+    public void setFiltering(ManagementButton button) {
         filtering = button;
     }
 
-    public void setQuickDrop(QuesoButton button) {
+    public void setQuickDrop(ManagementButton button) {
         quickDrop = button;
     }
 
-    public void setSwap(QuesoButton button) {
+    public void setSwap(ManagementButton button) {
         swap = button;
     }
 
-    public void setSort(QuesoButton button) {
+    public void setSort(ManagementButton button) {
         sort = button;
     }
 
-    public void setSearchTransportables(QuesoButton button) {
+    public void setSearchTransportables(ManagementButton button) {
         searchTransportables = button;
     }
 
-    public void setAlwaysQuickMove(QuesoButton button) {
+    public void setAlwaysQuickMove(ManagementButton button) {
         alwaysQuickMove = button;
     }
 
-    public void setClearExcludedSlots(QuesoButton button) {
+    public void setClearExcludedSlots(ManagementButton button) {
         clearExcludedSlots = button;
     }
 
-    public void setBulkTrade(QuesoButton button) {
+    public void setBulkTrade(ManagementButton button) {
         bulkTrade = button;
     }
 
-    public void setBulkCraft(QuesoButton button) {
+    public void setBulkCraft(ManagementButton button) {
         bulkCraft = button;
     }
 
-    public void setLockInventory(QuesoButton button) {
+    public void setLockInventory(ManagementButton button) {
         lockInventory = button;
     }
 }

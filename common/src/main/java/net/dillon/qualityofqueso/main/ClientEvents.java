@@ -1,7 +1,5 @@
 package net.dillon.qualityofqueso.main;
 
-import net.dillon.dillonlib.task.CommonTasks;
-import net.dillon.qualityofqueso.helper.ModConstants;
 import net.dillon.qualityofqueso.helper.ModHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -9,6 +7,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextColor;
 
 import static net.dillon.dillonlib.task.ClientTasks.executeIfClientPlayer;
+import static net.dillon.qualityofqueso.helper.ModConstants.MOD_INFO;
 import static net.dillon.qualityofqueso.helper.ModHelper.*;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 import static net.dillon.qualityofqueso.option.OptionInstances.universal;
@@ -28,7 +27,7 @@ public class ClientEvents {
         }
         if (isOnServer() && client().misc().forceAntiRageQuit) {
             client().misc().antiRageQuit = true;
-            saveAndApplyConfigs(minecraft);
+            saveAndApplyChanges();
         }
 
         executeIfClientPlayer(localPlayer -> {
@@ -44,12 +43,7 @@ public class ClientEvents {
                 }
             }
 
-            if (ModConstants.HAS_UPDATE) {
-                CommonTasks.sendUpdateMessage(localPlayer,
-                        Component.translatable("qualityofqueso").withStyle(ChatFormatting.GOLD),
-                        "https://modrinth.com/mod/quality-of-queso/versions",
-                        TextColor.GOLD.getValue());
-            }
+            MOD_INFO.sendUpdateMessage(localPlayer, TextColor.GOLD.getValue());
         });
         sendClientPreferencesToServer();
     }

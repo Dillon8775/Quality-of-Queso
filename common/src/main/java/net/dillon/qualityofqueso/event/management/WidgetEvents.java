@@ -3,9 +3,9 @@ package net.dillon.qualityofqueso.event.management;
 import net.dillon.dillonlib.mixin.accessor.ScreenInvoker;
 import net.dillon.qualityofqueso.container.ContainerSyncer;
 import net.dillon.qualityofqueso.event.QuesoScreenHolder;
-import net.dillon.qualityofqueso.option.ModClientOptions;
 import net.dillon.qualityofqueso.option.eum.management.IncludeHotbar;
-import net.dillon.qualityofqueso.widget.*;
+import net.dillon.qualityofqueso.widget.management.*;
+import net.dillon.qualityofqueso.widget.management.toggleable.*;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -18,16 +18,14 @@ import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BooleanSupplier;
+import java.util.function.Function;
 
-import static net.dillon.dillonlib.task.ClientTasks.getMinecraft;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
 import static net.dillon.qualityofqueso.helper.MethodHelper.getTitleLabelY;
 import static net.dillon.qualityofqueso.helper.MethodHelper.getTopPos;
 import static net.dillon.qualityofqueso.helper.ModConstants.*;
-import static net.dillon.qualityofqueso.helper.ModHelper.sendClientPreferencesToServer;
 import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.hasAllQuickDropModifiersDown;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
-import static net.dillon.qualityofqueso.option.OptionInstances.updateClient;
 
 /**
  * Handles all widget events.
@@ -41,9 +39,9 @@ public class WidgetEvents extends ManagementEvents {
     /**
      * @param booleanSupplier if the button can be initialized or added
      * @param newButton       the desired button to create
-     * @return a safely initialized {@link QuesoButton}.
+     * @return a safely initialized {@link ManagementButton}.
      */
-    private QuesoButton initButton(BooleanSupplier booleanSupplier, QuesoButton newButton) {
+    private ManagementButton initButton(BooleanSupplier booleanSupplier, ManagementButton newButton) {
         if (!booleanSupplier.getAsBoolean()) {
             return null;
         }
@@ -188,208 +186,111 @@ public class WidgetEvents extends ManagementEvents {
     }
 
     /**
+     * @return new {@link ManagementParams}.
+     */
+    private ManagementParams defaultManagementParams() {
+        return new ManagementParams(holder().menu(), this);
+    }
+
+    /**
+     * Creates a new button using {@link ManagementParams}.
+     */
+    private ManagementButton createButton(Function<ManagementParams, ManagementButton> factory) {
+        return factory.apply(defaultManagementParams());
+    }
+
+    /**
      * @return the {@code transfer container} button.
      */
-    private QuesoButton createTransferContainer() {
-        return new QuesoButton(
-                holder().menu(),
-                getMinecraft().font,
-                searchEvents().getSearchFieldText(),
-                TRANSFER_CONTAINER_BUTTON_PATH,
-                TRANSFER_CONTAINER_BUTTON_NAME,
-                true,
-                b -> transferEvents().transferItems(true, true),
-                () -> !isContainerFull(true) && shouldButtonBeActive(false, null, true, true));
+    private ManagementButton createTransferContainer() {
+        return createButton(TransferContainerButton::new);
     }
 
     /**
      * @return the {@code transfer inventory} button.
      */
-    private QuesoButton createTransferInventory() {
-        return new QuesoButton(
-                holder().menu(),
-                getMinecraft().font,
-                searchEvents().getSearchFieldText(),
-                TRANSFER_INVENTORY_BUTTON_PATH,
-                TRANSFER_INVENTORY_BUTTON_NAME,
-                true,
-                b -> transferEvents().transferItems(false, true),
-                () -> !isContainerFull(false) && shouldButtonBeActive(true, getMinecraft().player.getInventory(), true, true)
-        );
+    private ManagementButton createTransferInventory() {
+        return createButton(TransferInventoryButton::new);
     }
 
     /**
      * @return the {@code include hotbar} button.
      */
-    private QuesoButton createIncludeHotbar() {
-        return new IncludeHotbarButton(
-                holder().menu(),
-                getMinecraft().font,
-                searchEvents().getSearchFieldText(),
-                "include_hotbar",
-                b -> {
-                    updateClient(client -> {
-                        client.management().includingHotbar = !client.management().includingHotbar;
-                    });
-                    sendClientPreferencesToServer();
-                });
+    private ManagementButton createIncludeHotbar() {
+        return createButton(IncludeHotbarButton::new);
     }
 
     /**
      * @return the move matching items button.
      */
-    private QuesoButton createFiltering() {
-        return new FilteringButton(
-                holder().menu(),
-                getMinecraft().font,
-                searchEvents().getSearchFieldText(),
-                "fill_whats_present",
-                b -> {
-                    if (!ContainerSyncer.isTrackedFilteringActive()) {
-                        updateClient(ModClientOptions::cycleFilteringMode);
-                    }
-                },
-                getMinecraft(),
-                holder().screen()
-                );
+    private ManagementButton createFiltering() {
+        return createButton(FilteringButton::new);
     }
 
     /**
      * @return the {@code quick drop} button.
      */
-    private QuesoButton createQuickDrop() {
-        boolean containerScreen = isContainerScreen();
-        return new QuickDropButton(
-                holder().menu(),
-                getMinecraft().font,
-                searchEvents().getSearchFieldText(),
-                "quick_drop/",
-                "quick_drop",
-                b -> transferEvents().dropItems(!containerScreen),
-                () -> (isInventoryScreen() ?
-                        isAnySlotFilled(true, 9, 36) :
-                        isAnySlotFilled(false, 0, getContainerSize()))
-                        && getCursorStack().isEmpty()
-                        && shouldButtonBeActive(!containerScreen, containerScreen ? null : getMinecraft().player.getInventory())
-        );
+    private ManagementButton createQuickDrop() {
+        return createButton(QuickDropButton::new);
     }
 
     /**
      * @return the {@code swap} button.
      */
-    private QuesoButton createSwap() {
-        return new SwapButton(
-                holder().menu(),
-                getMinecraft().font,
-                searchEvents().getSearchFieldText(),
-                "swap/",
-                "swap",
-                b -> transferEvents().trySwap(),
-                transferEvents()::canSwap
-        );
+    private ManagementButton createSwap() {
+        return createButton(SwapButton::new);
     }
 
     /**
      * @return the {@code sort} button.
      */
-    private QuesoButton createSort() {
-        return new SortButton(
-                holder().menu(),
-                getMinecraft().font,
-                searchEvents().getSearchFieldText(),
-                "sort/",
-                "sort",
-                b -> sortingEvents().trySort(),
-                sortingEvents()::canSort
-        );
+    private ManagementButton createSort() {
+        return createButton(SortButton::new);
     }
 
     /**
      * @return the {@code search transportables} button.
      */
-    private QuesoButton createSearchTransportables() {
-        return new SearchTransportablesButton(
-                holder().menu(),
-                getMinecraft().font,
-                searchEvents().getSearchFieldText(),
-                "search_transportables",
-                b -> SEARCHING_TRANSPORTABLES = !SEARCHING_TRANSPORTABLES
-        );
+    private ManagementButton createSearchTransportables() {
+        return createButton(SearchTransportablesButton::new);
     }
 
     /**
      * @return the {@code always quick move} button.
      */
-    private QuesoButton createAlwaysQuickMove() {
-        return new AlwaysQuickMoveButton(
-                holder().menu(),
-                getMinecraft().font,
-                searchEvents().getSearchFieldText(),
-                "always_quick_move",
-                b -> updateClient(ModClientOptions::toggleAlwaysQuickMove)
-        );
+    private ManagementButton createAlwaysQuickMove() {
+        return createButton(AlwaysQuickMoveButton::new);
     }
 
     /**
      * @return the {@code clear excluded slots} button.
      */
-    private QuesoButton createClearExcludedSlots() {
-        return new ClearExcludedSlotsButton(
-                holder().menu(),
-                getMinecraft().font,
-                searchEvents().getSearchFieldText(),
-                "clear_excluded_slots",
-                b -> {
-                    holder().excludedSlots().clear();
-                    holder().setExcludedAll(false);
-                }
-        );
+    private ManagementButton createClearExcludedSlots() {
+        return createButton(managementParams -> new ClearExcludedSlotsButton(managementParams, b -> {
+            holder().excludedSlots().clear();
+            holder().setExcludedAll(false);
+        }));
     }
 
     /**
      * @return the {@code bulk trade} button.
      */
-    private QuesoButton createBulkTrade() {
-        return new BulkTradeButton(
-                holder().menu(),
-                getMinecraft().font,
-                searchEvents().getSearchFieldText(),
-                "trade_all",
-                b -> updateClient(client -> {
-                    client.management().bulkTrade = !client.management().bulkTrade;
-                })
-        );
+    private ManagementButton createBulkTrade() {
+        return createButton(BulkTradeButton::new);
     }
 
     /**
      * @return the {@code bulk craft} button.
      */
-    private QuesoButton createBulkCraft() {
-        return new BulkCraftButton(
-                holder().menu(),
-                getMinecraft().font,
-                searchEvents().getSearchFieldText(),
-                "craft_all",
-                b -> updateClient(client -> {
-                    client.management().bulkCraft = !client.management().bulkCraft;
-                })
-        );
+    private ManagementButton createBulkCraft() {
+        return createButton(BulkCraftButton::new);
     }
 
     /**
      * @return the {@code lock inventory} button.
      */
-    private QuesoButton createLockInventory() {
-        return new LockInventoryButton(
-                holder().menu(),
-                getMinecraft().font,
-                searchEvents().getSearchFieldText(),
-                "lock_inventory",
-                b -> {
-                    updateClient(ModClientOptions::cycleLockedInventoryMode);
-                    sendClientPreferencesToServer();
-                }
-        );
+    private ManagementButton createLockInventory() {
+        return createButton(LockInventoryButton::new);
     }
 
     /**

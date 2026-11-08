@@ -8,7 +8,7 @@ import net.dillon.qualityofqueso.helper.ModConstants;
 import net.dillon.qualityofqueso.option.eum.management.FilteringMode;
 import net.minecraft.client.gui.screens.inventory.*;
 
-import static net.dillon.dillonlib.task.ClientTasks.getMinecraft;
+import static net.dillon.dillonlib.task.ClientTasks.getLocalPlayer;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
 import static net.dillon.qualityofqueso.helper.MethodHelper.*;
 import static net.dillon.qualityofqueso.helper.ModConstants.CURRENT_CONTAINER;
@@ -83,7 +83,7 @@ public class ScreenInitializedEvents extends ManagementEvents {
             MethodHelper.addRenderableModWidget(holder().screen(), holder().searchFields().container());
         } else if (isInventoryScreen()) { // Initialize the inventory search field, if it should be initialized
             // Also initialize the "container" variable to the player's inventory, if the container was never initialized from any of the other screens
-            holder().setCachedContainer(getMinecraft().player.getInventory());
+            holder().setCachedContainer(getLocalPlayer().getInventory());
             if (client().searching().inventorySearching) {
                 holder().setInventorySearchField(searchEvents().initializeSearchField(true));
                 MethodHelper.addRenderableModWidget(holder().screen(), holder().searchFields().inventory());

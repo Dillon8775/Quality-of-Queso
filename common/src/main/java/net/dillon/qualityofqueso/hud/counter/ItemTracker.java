@@ -1,8 +1,9 @@
 package net.dillon.qualityofqueso.hud.counter;
 
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.item.ItemStack;
 
+import static net.dillon.dillonlib.task.ClientTasks.getLocalPlayer;
 import static net.dillon.qualityofqueso.hud.ModHudElement.getAnimationTimeInTicks;
 import static net.dillon.qualityofqueso.hud.ModHudElement.getDisplayTimeInTicks;
 
@@ -41,7 +42,7 @@ public class ItemTracker {
     }
 
     /**
-     * @return the {@code active stack} that should display.
+     * @return the {@code enabled stack} that should display.
      */
     public static ItemStack getActiveStack() {
         ItemStack baseStack = getBaseStack();
@@ -103,7 +104,7 @@ public class ItemTracker {
     }
 
     /**
-     * Calculates the new active tick.
+     * Calculates the new enabled tick.
      */
     private static void calculateTick() {
         int currentTick = getCurrentTick();
@@ -142,10 +143,10 @@ public class ItemTracker {
      * @return current client tick.
      */
     private static int getCurrentTick() {
-        Minecraft minecraft = Minecraft.getInstance();
-        if (minecraft == null || minecraft.player == null) {
+        LocalPlayer player = getLocalPlayer();
+        if (player == null) {
             return 0;
         }
-        return minecraft.player.tickCount;
+        return player.tickCount;
     }
 }

@@ -3,8 +3,7 @@ package net.dillon.qualityofqueso.main;
 import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.core.BalmRegistrars;
 import net.dillon.dillonlib.annotation.Dill;
-import net.dillon.dillonlib.annotation.DillType;
-import net.dillon.dillonlib.platform.Platforms;
+import net.dillon.dillonlib.annotation.DillEnv;
 import net.dillon.dillonlib.platform.info.Release;
 import net.dillon.qualityofqueso.helper.ModConstants;
 import net.dillon.qualityofqueso.option.ModCommonOptions;
@@ -14,13 +13,14 @@ import net.dillon.qualityofqueso.platform.QualityOfQuesoPlatforms;
 import java.util.Set;
 import java.util.TreeSet;
 
+import static net.dillon.qualityofqueso.helper.ModConstants.MOD_INFO;
 import static net.dillon.qualityofqueso.helper.ModHelper.stop;
 import static net.dillon.qualityofqueso.main.CommonEvents.registerPackets;
 
 /**
  * The main entrypoint for Quality of Queso.
  */
-@Dill(DillType.COMMON)
+@Dill(env = DillEnv.COMMON)
 public class CommonMain {
     public static Set<String> MOD_IDS = new TreeSet<>();
 
@@ -34,7 +34,6 @@ public class CommonMain {
         loadCommonConfigs();
 
         QualityOfQuesoPlatforms.getPlatform().addModIds();
-        System.out.println(Platforms.getCommonPlatform().commonModVersion("qualityofqueso"));
 
         ModConstants.LOGGER.info("Quality of Queso version {} (for {}) loaded successfully!", QualityOfQuesoPlatforms.getPlatform().modVersion(), Balm.platform().name());
 
@@ -44,7 +43,7 @@ public class CommonMain {
             ModConstants.LOGGER.error("Please note that this version of Quality of Queso is in the alpha state, so there will be unknown bugs. Use at your own risk!");
         }
 
-        if (ModConstants.HAS_UPDATE) {
+        if (MOD_INFO.hasUpdate()) {
             ModConstants.LOGGER.warn("A newer version of Quality of Queso is available. Download it here: https://modrinth.com/mod/quality-of-queso/versions");
         }
     }

@@ -7,7 +7,7 @@ import net.blay09.mods.kuma.api.Kuma;
 import net.blay09.mods.kuma.api.ManagedKeyMapping;
 import net.dillon.dillonlib.mixin.accessor.ScreenInvoker;
 import net.dillon.qualityofqueso.mixin.client.accessor.*;
-import net.dillon.qualityofqueso.mixin.main.AbstractContainerMenuAccessor;
+import net.dillon.qualityofqueso.mixin.main.AbstractContainerMenuInvoker;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Renderable;
@@ -161,7 +161,7 @@ public class MethodHelper {
      * Moves an item stack using the new quick move functionality.
      */
     public static boolean moveItemStack(AbstractContainerMenu menu, ItemStack itemStack, int startSlot, int endSlot, boolean backwards) {
-        return ((AbstractContainerMenuAccessor) menu).invokeMoveItemStackTo(itemStack, startSlot, endSlot, backwards);
+        return ((AbstractContainerMenuInvoker) menu).invokeMoveItemStackTo(itemStack, startSlot, endSlot, backwards);
     }
 
     public static void performClickSlot(AbstractContainerScreen<?> screen, Slot slot, int slotId, int buttonNum, ContainerInput containerInput) {

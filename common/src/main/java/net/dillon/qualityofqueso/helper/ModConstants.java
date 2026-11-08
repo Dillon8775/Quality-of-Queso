@@ -1,9 +1,8 @@
 package net.dillon.qualityofqueso.helper;
 
-import net.dillon.dillonlib.util.UpdateChecker;
+import net.dillon.dillonlib.platform.info.ModInfo;
 import net.dillon.qualityofqueso.event.management.CursorKey;
 import net.dillon.qualityofqueso.option.eum.management.sorting.CurrentSortingMode;
-import net.dillon.qualityofqueso.platform.QualityOfQuesoPlatforms;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -25,12 +24,13 @@ import static net.dillon.qualityofqueso.option.OptionInstances.client;
  * Constant values for Quality of Queso.
  */
 public class ModConstants {
-    // Common constants
     public static final String MOD_ID = "qualityofqueso";
-    public static final Component VERSION = Component.literal(QualityOfQuesoPlatforms.getPlatform().modVersion()).withStyle(ChatFormatting.GOLD);
-    public static boolean HAS_UPDATE = UpdateChecker.hasUpdate(UpdateChecker.checkForUpdate(
+    // Common constants
+    public static final ModInfo MOD_INFO = ModInfo.create(
+            MOD_ID,
             "quality-of-queso",
-            VERSION.getString())
+            Component.translatable("qualityofqueso"),
+            ChatFormatting.GOLD
     );
     public static final Logger LOGGER = LoggerFactory.getLogger("Quality of Queso");
 
@@ -75,13 +75,9 @@ public class ModConstants {
 
     // Button names and paths
     public static final String TRANSFER_INVENTORY_BUTTON_NAME = "transfer_inventory";
-    public static final String TRANSFER_INVENTORY_BUTTON_PATH = "transfer/inventory/";
     public static final String TRANSFER_CONTAINER_BUTTON_NAME = "transfer_container";
-    public static final String TRANSFER_CONTAINER_BUTTON_PATH = "transfer/container/";
     public static final String QUICK_DROP_BUTTON_NAME = "quick_drop";
     public static final String MOVE_ONE_PATH = "singular_moving/move_one";
-    public static final String BASE_BUTTON_NAME = "button";
-    public static final String BASE_BUTTON_HOVERED_PATH = "base/hovered/basic_hovered";
 
     // Cooldowns
     public static final int DEFAULT_LOCKED_SLOT_SOUND_COOLDOWN = 3;
@@ -140,11 +136,12 @@ public class ModConstants {
     public static final Identifier CHEESE_WHEEL_TEXTURE = qoqIdentifier("widget/logo");
     public static final Identifier ENABLED_TEXTURE = qoqIdentifier("widget/enabled");
     public static final Identifier DISABLED_TEXTURE = qoqIdentifier("widget/disabled");
-    public static final Identifier OPEN_SCREENSHOTS_DIRECTORY_TEXTURE = qoqIdentifier("widget/screenshots");
-    public static final Identifier OPEN_WORLD_DIRECTORY_TEXTURE = qoqIdentifier("widget/world_folder");
-    public static final Identifier OPEN_CONFIG_DIRECTORY_TEXTURE = qoqIdentifier("widget/config_folder");
+    public static final Identifier OPEN_SCREENSHOTS_DIRECTORY = qoqIdentifier("widget/screenshots");
+    public static final Identifier OPEN_WORLD_DIRECTORY = qoqIdentifier("widget/world_folder");
+    public static final Identifier OPEN_CONFIG_DIRECTORY = qoqIdentifier("widget/config_folder");
     public static final Identifier ENDER_CHEST = qoqIdentifier("widget/ender_chest");
     public static final Identifier CHEST = qoqIdentifier("widget/chest");
+    public static final Identifier ITEM_FRAME_SEARCH = qoqIdentifier("widget/item_frame_search");
     public static final Identifier MULTI_CONFIG_TEXTURE = qoqIdentifier("widget/multi_config");
 
     // Colors

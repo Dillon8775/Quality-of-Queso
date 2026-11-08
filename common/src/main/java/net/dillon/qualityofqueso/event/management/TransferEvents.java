@@ -7,8 +7,7 @@ import net.dillon.qualityofqueso.server.DedicatedServerStorage;
 import net.dillon.qualityofqueso.sound.BundleDropContentsSoundEvents;
 import net.dillon.qualityofqueso.sound.BundleInsertFailSoundEvents;
 import net.dillon.qualityofqueso.sound.BundleInsertSoundEvents;
-import net.dillon.qualityofqueso.widget.SwapButton;
-import net.minecraft.client.Minecraft;
+import net.dillon.qualityofqueso.widget.management.SwapButton;
 import net.minecraft.client.gui.screens.inventory.AbstractFurnaceScreen;
 import net.minecraft.client.gui.screens.inventory.BrewingStandScreen;
 import net.minecraft.client.gui.screens.inventory.EnchantmentScreen;
@@ -21,11 +20,11 @@ import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.Level;
 
 import java.util.*;
 
-import static net.dillon.dillonlib.task.ClientTasks.getMinecraft;
+import static net.dillon.dillonlib.task.ClientTasks.getLocalPlayer;
+import static net.dillon.dillonlib.task.ClientTasks.isCurrentLevelNull;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
 import static net.dillon.qualityofqueso.helper.MethodHelper.inputKey;
 import static net.dillon.qualityofqueso.helper.MethodHelper.performClickSlot;
@@ -350,8 +349,7 @@ public class TransferEvents extends ManagementEvents {
             return false;
         }
 
-        Level level = Minecraft.getInstance().level;
-        if (level == null) {
+        if (isCurrentLevelNull()) {
             return false;
         }
 
@@ -527,11 +525,11 @@ public class TransferEvents extends ManagementEvents {
      * @return the first screen slot index that belongs to player storage (main inventory or hotbar).
      */
     private int findPlayerStorageStartIndex() {
-        if (getMinecraft().player == null) {
+        if (getLocalPlayer() == null) {
             return -1;
         }
 
-        Inventory playerInventory = getMinecraft().player.getInventory();
+        Inventory playerInventory = getLocalPlayer().getInventory();
         int firstPlayerStorageSlot = Integer.MAX_VALUE;
 
         for (Slot slot : holder().menu().slots) {
@@ -610,7 +608,7 @@ public class TransferEvents extends ManagementEvents {
 
             Deque<Slot> emptySlots = new ArrayDeque<>();
             List<Slot> nonEmptySlots = new ArrayList<>();
-            LocalPlayer player = getMinecraft().player;
+            LocalPlayer player = getLocalPlayer();
             boolean iterateBackwards = (!DedicatedServerStorage.PERPENDICULAR_QUICK_MOVING.get(player.getUUID())) && toInventory;
             int step = iterateBackwards ? -1 : 1;
             int start = iterateBackwards ? toEnd - 1 : toStart;
@@ -658,11 +656,12 @@ public class TransferEvents extends ManagementEvents {
      * @return the index after the last screen slot that belongs to player storage (main inventory or hotbar).
      */
     private int findPlayerStorageEndIndexExclusive() {
-        if (getMinecraft().player == null) {
+        LocalPlayer player = getLocalPlayer();
+        if (player == null) {
             return -1;
         }
 
-        Inventory playerInventory = getMinecraft().player.getInventory();
+        Inventory playerInventory = player.getInventory();
         int lastPlayerStorageSlot = -1;
 
         for (Slot slot : holder().menu().slots) {
@@ -888,7 +887,7 @@ public class TransferEvents extends ManagementEvents {
      * @return if a container is able to swap items with the player inventory.
      */
     public boolean canSwap() {
-        Inventory playerInventory = getMinecraft().player.getInventory();
+        Inventory playerInventory = getLocalPlayer().getInventory();
         return SwapButton.SWAP_COOLDOWN == 0 && (getContainerSize() != 27 || isAnySlotFilled(false, 27, 54))
                 && getCursorStack().isEmpty()
                 && holder().searchFields().searchText().isEmpty()

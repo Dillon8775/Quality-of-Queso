@@ -1,5 +1,6 @@
 package net.dillon.qualityofqueso.hud;
 
+import net.dillon.dillonlib.client.component.TextureBuilder;
 import net.dillon.qualityofqueso.container.ContainerSyncer;
 import net.minecraft.client.AttackIndicatorStatus;
 import net.minecraft.client.Minecraft;
@@ -36,7 +37,7 @@ public abstract class ModHudElement {
      * @return if the player is left-handed.
      */
     public boolean isLeftHanded() {
-        return getMinecraft().player.getMainArm().getOpposite() == HumanoidArm.RIGHT;
+        return getLocalPlayer().getMainArm().getOpposite() == HumanoidArm.RIGHT;
     }
 
     /**
@@ -50,14 +51,21 @@ public abstract class ModHudElement {
      * @return if the only show arrow counter is enabled.
      */
     public static boolean isOnlyShowArrowCounterEnabled() {
-        return isArrowCounterEnabled() && client().itemCounter().onlyShowArrowCounter && !getMinecraft().player.isCreative();
+        return canShowArrowCounter() && client().itemCounter().onlyShowArrowCounter;
     }
 
     /**
      * @return if the always show arrow counter is enabled.
      */
     public static boolean isAlwaysShowArrowCounterEnabled() {
-        return isArrowCounterEnabled() && client().itemCounter().alwaysShowArrowCounter && !getMinecraft().player.isCreative();
+        return canShowArrowCounter() && client().itemCounter().alwaysShowArrowCounter;
+    }
+
+    /**
+     * @return if the arrow counter can display.
+     */
+    private static boolean canShowArrowCounter() {
+        return isArrowCounterEnabled() && !getLocalPlayer().isCreative();
     }
 
     /**
@@ -183,7 +191,7 @@ public abstract class ModHudElement {
             return false;
         }
 
-        LocalPlayer player = Minecraft.getInstance().player;
+        LocalPlayer player = getLocalPlayer();
         if (player == null || (checkForEmpty && getMainHandStack(player).isEmpty())) {
             return false;
         }
@@ -201,15 +209,16 @@ public abstract class ModHudElement {
         }
 
         int yModifier = slot != EquipmentSlot.OFFHAND ? client().hud().armorStatusPosition[1] : client().hud().otherElementsY;
-        drawSprite(
+        TextureBuilder.create(
                 graphics,
                 warning ? SLOT_CRITICAL : getHighlightedSlotTexture(ModHudElement.HOTBAR_SELECTION_SPRITE, getItemBySlot(minecraft, slot), slot),
                 getHighlightedSlotX(graphics, slot),
                 (getGuiHeight(graphics) - 3 + yOffset) + yModifier,
                 24,
-                23,
-                alpha
-        );
+                23
+        )
+                .setAlpha(alpha)
+                .buildAndBlit(true);
     }
 
     /**
@@ -220,14 +229,14 @@ public abstract class ModHudElement {
             return;
         }
 
-        drawSprite(
+        TextureBuilder.create(
                 graphics,
                 Identifier.withDefaultNamespace("world_list/error_highlighted"),
                 getGuiWidth(graphics) + (itemX != 0 ? itemX : equipmentSlot == null ? -78 + (slot * 20) : getEquipmentSlotX(equipmentSlot) + 10),
                 getGuiHeight(graphics) + 4 + yOffset,
                 16,
                 16
-        );
+        ).buildAndBlit(true);
     }
 
     /**

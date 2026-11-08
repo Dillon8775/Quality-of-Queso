@@ -1,7 +1,7 @@
 package net.dillon.qualityofqueso.container;
 
 import net.dillon.dillonlib.annotation.Dill;
-import net.dillon.dillonlib.annotation.DillType;
+import net.dillon.dillonlib.annotation.DillEnv;
 import net.dillon.qualityofqueso.container.data.ShulkerState;
 import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
 
@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Stores per-shulker state on the shulker block entity itself.
  */
-@Dill(DillType.COMMON)
+@Dill(env = DillEnv.COMMON)
 public interface ShulkerBlockEntityHolder {
 
     /**

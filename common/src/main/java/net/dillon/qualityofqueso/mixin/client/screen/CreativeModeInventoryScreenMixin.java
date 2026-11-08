@@ -3,7 +3,6 @@ package net.dillon.qualityofqueso.mixin.client.screen;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.dillon.qualityofqueso.helper.GuiHelper;
 import net.dillon.qualityofqueso.widget.SearchBar;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
@@ -68,7 +67,7 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
      */
     @Redirect(method = "<init>", at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/screens/inventory/CreativeModeInventoryScreen;displayOperatorCreativeTab:Z"))
     private void enableOperatorTabByDefault(CreativeModeInventoryScreen instance, boolean value) {
-        this.displayOperatorCreativeTab = client().accessibility().operatorItemsTab || Minecraft.getInstance().options.operatorItemsTab().get();
+        this.displayOperatorCreativeTab = client().accessibility().operatorItemsTab || minecraft.options.operatorItemsTab().get();
     }
 
     /**
@@ -130,7 +129,7 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
 
         if (!hasShiftDown() && selectedTab.getType() == CreativeModeTab.Type.SEARCH && hoveredSlotHasItem(this.hoveredSlot) && this.searchBox != null) {
             for (int i = 0; i < 9; i++) {
-                if (Minecraft.getInstance().options.keyHotbarSlots[i].matches(event)) {
+                if (minecraft.options.keyHotbarSlots[i].matches(event)) {
                     this.ignoreTextInput = true;
                     boolean handled = super.keyPressed(event);
                     this.searchBox.setFocused(false);
@@ -147,7 +146,7 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
                 return;
             }
 
-            if (client().accessibility().preventEFromTyping && event.key() == inputKey(Minecraft.getInstance().options.keyInventory).getValue() && !this.searchBox.isFocused()) {
+            if (client().accessibility().preventEFromTyping && event.key() == inputKey(minecraft.options.keyInventory).getValue() && !this.searchBox.isFocused()) {
                 this.ignoreTextInput = true;
                 this.onClose();
                 cir.setReturnValue(true);
@@ -181,7 +180,7 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
             }
 
             for (int i = 0; i < 9; i++) {
-                if (this.hoveredSlot != null && Minecraft.getInstance().options.keyHotbarSlots[i].matches(event)) {
+                if (this.hoveredSlot != null && minecraft.options.keyHotbarSlots[i].matches(event)) {
                     Inventory inventory = this.minecraft.player.getInventory();
                     ItemStack stack = inventory.getItem(i);
 

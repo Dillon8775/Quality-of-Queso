@@ -1,7 +1,6 @@
 package net.dillon.qualityofqueso.event.management;
 
 import net.dillon.qualityofqueso.event.QuesoScreenHolder;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -9,6 +8,7 @@ import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
+import static net.dillon.dillonlib.task.ClientTasks.getLocalPlayer;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.isMountingMenu;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.isValidMenuForQuickEquipping;
 import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.hasSelectSlotsModifierDown;
@@ -81,7 +81,6 @@ public class QuickEquipEvents extends ManagementEvents {
      * Quickly equips the hovered item, based on the current menu.
      */
     public void quickEquipItem() {
-        Minecraft minecraft = Minecraft.getInstance();
         AbstractContainerMenu menu = holder().menu();
         if (!client().management().quickEquip || holder().screensHoveredSlot() == null || !isValidMenuForQuickEquipping(menu) || (client().management().dragSorting && hasSelectSlotsModifierDown())) {
             return;
@@ -98,7 +97,7 @@ public class QuickEquipEvents extends ManagementEvents {
         EquipmentSlot targetEquipmentSlot = notEquippable ? EquipmentSlot.OFFHAND : stack.get(DataComponents.EQUIPPABLE).slot();
 
         // Get the player's currently equipped stack, based on hovered item
-        ItemStack equippedStack = minecraft.player.getItemBySlot(targetEquipmentSlot);
+        ItemStack equippedStack = getLocalPlayer().getItemBySlot(targetEquipmentSlot);
 
         if (equippedStack.isEmpty() && !notEquippable && !isMountableSlot(targetEquipmentSlot) && !isMountingMenu(menu)) {
             // Default to quick move if slot is empty, only do this if valid equipment slot for player (excluding body and saddle), and excluding death protection items

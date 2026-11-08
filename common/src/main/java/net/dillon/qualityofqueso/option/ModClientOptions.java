@@ -13,7 +13,6 @@ import net.dillon.qualityofqueso.option.eum.management.sorting.DefaultSortingMod
 import net.dillon.qualityofqueso.option.eum.management.sorting.GlobalSortingMode;
 import net.dillon.qualityofqueso.option.eum.management.sorting.Sorting;
 import net.dillon.qualityofqueso.option.eum.misc.ElytraAlarm;
-import net.dillon.qualityofqueso.option.eum.misc.ViewLastKnownEnderChestButton;
 import net.dillon.qualityofqueso.option.eum.searching.QuickSearch;
 import net.dillon.qualityofqueso.option.eum.searching.SearchBarColor;
 import net.dillon.qualityofqueso.option.eum.searching.SearchBarPosition;
@@ -28,30 +27,30 @@ import static net.dillon.qualityofqueso.helper.ModConstants.*;
  */
 public class ModClientOptions {
     public static final List<String> DEFAULT_HORIZONTAL_BUTTON_LAYOUT = List.of(
-            TRANSFER_CONTAINER_BUTTON_SERIALIZED_NAME,
-            TRANSFER_INVENTORY_BUTTON_SERIALIZED_NAME,
             LOCK_INVENTORY_BUTTON_SERIALIZED_NAME,
+            SORT_BUTTON_SERIALIZED_NAME,
             INCLUDE_HOTBAR_BUTTON_SERIALIZED_NAME,
             ALWAYS_QUICK_MOVE_BUTTON_SERIALIZED_NAME,
-            FILTERING_BUTTON_SERIALIZED_NAME,
-            SORT_BUTTON_SERIALIZED_NAME,
-            BULK_CRAFT_BUTTON_SERIALIZED_NAME,
-            QUICK_DROP_BUTTON_SERIALIZED_NAME,
             SWAP_BUTTON_SERIALIZED_NAME,
+            TRANSFER_CONTAINER_BUTTON_SERIALIZED_NAME,
+            TRANSFER_INVENTORY_BUTTON_SERIALIZED_NAME,
+            FILTERING_BUTTON_SERIALIZED_NAME,
+            QUICK_DROP_BUTTON_SERIALIZED_NAME,
+            BULK_CRAFT_BUTTON_SERIALIZED_NAME,
             SEARCH_TRANSPORTABLES_BUTTON_SERIALIZED_NAME,
             CLEAR_EXCLUDED_SLOTS_BUTTON_SERIALIZED_NAME
     );
     public static final List<String> DEFAULT_VERTICAL_BUTTON_LAYOUT = List.of(
+            LOCK_INVENTORY_BUTTON_SERIALIZED_NAME,
             TRANSFER_INVENTORY_BUTTON_SERIALIZED_NAME,
             TRANSFER_CONTAINER_BUTTON_SERIALIZED_NAME,
             SORT_BUTTON_SERIALIZED_NAME,
             INCLUDE_HOTBAR_BUTTON_SERIALIZED_NAME,
-            LOCK_INVENTORY_BUTTON_SERIALIZED_NAME,
-            ALWAYS_QUICK_MOVE_BUTTON_SERIALIZED_NAME,
-            BULK_CRAFT_BUTTON_SERIALIZED_NAME,
             FILTERING_BUTTON_SERIALIZED_NAME,
+            ALWAYS_QUICK_MOVE_BUTTON_SERIALIZED_NAME,
             QUICK_DROP_BUTTON_SERIALIZED_NAME,
             SWAP_BUTTON_SERIALIZED_NAME,
+            BULK_CRAFT_BUTTON_SERIALIZED_NAME,
             SEARCH_TRANSPORTABLES_BUTTON_SERIALIZED_NAME,
             CLEAR_EXCLUDED_SLOTS_BUTTON_SERIALIZED_NAME
     );
@@ -377,6 +376,7 @@ public class ModClientOptions {
 
     public static class AccessibilityOptions {
         public boolean useLegacyTextures = false;
+        public boolean repositionBulkCraftButton = true;
         public boolean perpendicularQuickMoving = false;
         public boolean preventEFromTyping = true;
         public boolean searchInventory = true;
@@ -387,8 +387,6 @@ public class ModClientOptions {
 
         public boolean darkerOverlay = false;
         public boolean darkDisc = true;
-
-        public ViewLastKnownEnderChestButton eChestButton = ViewLastKnownEnderChestButton.QOQ_MENU;
 
         public String[] bannedServers = new String[]{
                 "hypixel"

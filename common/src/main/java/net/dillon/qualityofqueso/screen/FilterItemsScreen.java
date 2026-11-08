@@ -4,7 +4,6 @@ import com.mojang.blaze3d.platform.InputConstants;
 import net.dillon.qualityofqueso.container.ContainerSyncer;
 import net.dillon.qualityofqueso.helper.ModConstants;
 import net.dillon.qualityofqueso.sound.BundleInsertSoundEvents;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -191,7 +190,7 @@ public class FilterItemsScreen extends Screen {
      */
     @Override
     public boolean keyPressed(KeyEvent input) {
-        if (input.key() == InputConstants.KEY_ESCAPE || input.key() == inputKey(Minecraft.getInstance().options.keyInventory).getValue()) {
+        if (input.key() == InputConstants.KEY_ESCAPE || input.key() == inputKey(minecraft.options.keyInventory).getValue()) {
             this.onClose();
             return true;
         }
@@ -374,7 +373,7 @@ public class FilterItemsScreen extends Screen {
             if (!stack.isEmpty()) {
                 graphics.setTooltipForNextFrame(
                         this.font,
-                        stack.getTooltipLines(Item.TooltipContext.EMPTY, this.minecraft.player, Minecraft.getInstance().options.advancedItemTooltips ? TooltipFlag.ADVANCED : TooltipFlag.NORMAL),
+                        stack.getTooltipLines(Item.TooltipContext.EMPTY, this.minecraft.player, minecraft.options.advancedItemTooltips ? TooltipFlag.ADVANCED : TooltipFlag.NORMAL),
                         Optional.empty(),
                         mouseX,
                         mouseY
@@ -387,7 +386,7 @@ public class FilterItemsScreen extends Screen {
                 if (!stack.isEmpty()) {
                     graphics.setTooltipForNextFrame(
                             this.font,
-                            stack.getTooltipLines(Item.TooltipContext.EMPTY, this.minecraft.player, Minecraft.getInstance().options.advancedItemTooltips ? TooltipFlag.ADVANCED : TooltipFlag.NORMAL),
+                            stack.getTooltipLines(Item.TooltipContext.EMPTY, this.minecraft.player, minecraft.options.advancedItemTooltips ? TooltipFlag.ADVANCED : TooltipFlag.NORMAL),
                             Optional.empty(),
                             mouseX,
                             mouseY

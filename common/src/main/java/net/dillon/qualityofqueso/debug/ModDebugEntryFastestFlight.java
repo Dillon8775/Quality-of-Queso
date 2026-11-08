@@ -1,6 +1,5 @@
 package net.dillon.qualityofqueso.debug;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.debug.DebugScreenDisplayer;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.util.Mth;
@@ -11,6 +10,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.LevelChunk;
 import org.jspecify.annotations.Nullable;
 
+import static net.dillon.dillonlib.task.ClientTasks.getMinecraft;
 import static net.dillon.dillonlib.util.Arithmetics.roundToTenths;
 
 
@@ -21,8 +21,7 @@ public class ModDebugEntryFastestFlight extends ModDebugEntry {
 
     @Override
     public void display(DebugScreenDisplayer displayer, @Nullable Level serverOrClientLevel, @Nullable LevelChunk clientChunk, @Nullable LevelChunk serverChunk) {
-        Minecraft minecraft = Minecraft.getInstance();
-        Entity entity = minecraft.getCameraEntity();
+        Entity entity = getMinecraft().getCameraEntity();
 
         // Ensure our entity is a player
         if (!(entity instanceof LocalPlayer player)) {

@@ -1,7 +1,7 @@
 package net.dillon.qualityofqueso.packet.serverbound;
 
 import net.dillon.dillonlib.annotation.Dill;
-import net.dillon.dillonlib.annotation.DillType;
+import net.dillon.dillonlib.annotation.DillEnv;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -13,7 +13,7 @@ import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
 /**
  * Sends the player's client-side options to the server.
  */
-@Dill(DillType.COMMON)
+@Dill(env = DillEnv.COMMON)
 public record ClientPreferencesC2SPacket(
         boolean includeHotbar,
         boolean perpendicularQuickMoving,

@@ -1,8 +1,8 @@
 package net.dillon.qualityofqueso.helper;
 
 import net.dillon.qualityofqueso.event.management.ExtractingEvents;
-import net.dillon.qualityofqueso.widget.QuesoButton;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.*;
 import net.minecraft.network.chat.Component;
@@ -13,8 +13,12 @@ import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.Slot;
 
 import static net.dillon.dillonlib.task.ClientTasks.getScreen;
+import static net.dillon.dillonlib.task.ClientTasks.hasShiftDown;
+import static net.dillon.qualityofqueso.helper.GuiHelper.drawTooltip;
 import static net.dillon.qualityofqueso.helper.MethodHelper.getRecipeBookComponent;
-import static net.dillon.qualityofqueso.helper.ModConstants.MOVE_AMOUNT;
+import static net.dillon.qualityofqueso.helper.ModConstants.*;
+import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.canScrollMoveAndHasScrollModifierDown;
+import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.hasDropOnlyOneItemModifierDown;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 /**
@@ -163,14 +167,14 @@ public class ManagementHelper {
     }
 
     /**
-     * @return if a button is active and present.
+     * @return if a button is enabled and present.
      */
     public static boolean buttonActive(Button button) {
         return button != null && button.active;
     }
 
     /**
-     * @return if a button is inactive, but present.
+     * @return if a button is disabled, but present.
      */
     public static boolean buttonInactive(Button button) {
         return button != null && !button.active;
@@ -184,21 +188,21 @@ public class ManagementHelper {
     }
 
     /**
-     * @return if a button is currently hovered, but not active.
+     * @return if a button is currently hovered, but not enabled.
      */
     public static boolean buttonHoveredButInactive(Button button) {
         return buttonInactive(button) && buttonHovered(button);
     }
 
     /**
-     * @return if a button is hovered and active.
+     * @return if a button is hovered and enabled.
      */
     public static boolean buttonHoveredAndActive(Button button) {
         return buttonActive(button) && buttonHovered(button);
     }
 
     /**
-     * @return if a button is hovered and active and shift is held.
+     * @return if a button is hovered and enabled and shift is held.
      */
     public static boolean buttonHoveredActiveOrShiftHeld(ExtractingEvents extractingInstance, Button button, boolean inventory) {
         return buttonHoveredAndActive(button) || extractingInstance.shiftHeld(inventory);
@@ -214,7 +218,7 @@ public class ManagementHelper {
     /**
      * @return the width and height for a {@code transfer button.}
      */
-    public static int getTransferButtonXY(QuesoButton button) {
+    public static int getManagementButtonSize() {
         return 12;
     }
 
@@ -241,10 +245,122 @@ public class ManagementHelper {
     }
 
     /**
+     * @return if the user is {@code carrying} a stack.
+     */
+    public static boolean isCarrying(AbstractContainerMenu menu) {
+        return !menu.getCarried().isEmpty();
+    }
+
+    /**
+     * @return if the user is {@code excluding} query.
+     */
+    public static boolean isExcluding(String searchFieldText) {
+        return searchFieldText.startsWith("!");
+    }
+
+    /**
+     * @return if the user is querying by {@code tag}.
+     */
+    public static boolean isTagFiltering(String searchFieldText) {
+        return searchFieldText.startsWith("#");
+    }
+
+    /**
+     * @return if the user is querying by {@code match case}.
+     */
+    public static boolean isMatchCase(String searchFieldText) {
+        return searchFieldText.startsWith(":");
+    }
+
+    /**
+     * @return if the user is dropping or moving one of an item.
+     */
+    public static boolean movingOrDroppingOne(String buttonName) {
+        return client().management().scrollMoving && (buttonName.equals(QUICK_DROP_BUTTON_NAME)
+                ? hasDropOnlyOneItemModifierDown()
+                : getScreen() instanceof AbstractContainerScreen<?> && canScrollMoveAndHasScrollModifierDown()
+        );
+    }
+
+    /**
+     * @return valid button names for different functions.
+     */
+    public static boolean isValidButtonName(String buttonName, boolean includeDrop) {
+        boolean inventoryButton = buttonName.equals(TRANSFER_INVENTORY_BUTTON_NAME);
+        boolean containerButton = buttonName.equals(TRANSFER_CONTAINER_BUTTON_NAME);
+        boolean quickDropButton = buttonName.equals(QUICK_DROP_BUTTON_NAME);
+        return inventoryButton || containerButton || (includeDrop && quickDropButton);
+    }
+
+    /**
+     * The tooltips to display for single-move items.
+     */
+    public static void extractMoveAmountTooltip(String buttonName, GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+        Component tooltip = Component.translatable(buttonName.equals(QUICK_DROP_BUTTON_NAME)
+                        ? "qualityofqueso.gui.quick_drop_button.move_amount"
+                        : "qualityofqueso.gui.move_amount_each",
+                getActualMoveAmount());
+        if (client().general().tooltips.enabled()) {
+            tooltip = appendedSingleTooltip(tooltip);
+        }
+
+        drawTooltip(
+                tooltip,
+                graphics, mouseX, mouseY
+        );
+    }
+
+    /**
      * @return the single-move amount for stacks.
      */
     public static Component getActualMoveAmount() {
         return Component.literal(String.valueOf(MOVE_AMOUNT)).copy().withStyle(ChatFormatting.BOLD);
+    }
+
+    /**
+     * @return the cursor tooltip for a management button.
+     */
+    public static Component getCursorTooltip() {
+        return hasShiftDown()
+                ? Component.translatable("qualityofqueso.gui.transfer_button.matching_cursor_stack")
+                : Component.translatable("qualityofqueso.gui.transfer_button.match_cursor_stack");
+    }
+
+    /**
+     * @return the correct component for a query.
+     */
+    public static Component queryComponent(String translation, String query) {
+        return movingOrDroppingOne(translation)
+                ? Component.translatable(translation, getActualMoveAmount(), query)
+                : Component.translatable(translation, query);
+    }
+
+    /**
+     * @return the query tooltip to display.
+     */
+    public static Component getQueryTooltip(String newButtonName, String searchFieldText, String appendedTooltip) {
+        String query = newButtonName + ".with_search_query";
+        String querySubbed = searchFieldText.substring(1);
+
+        if (isTagFiltering(searchFieldText)) {
+            return queryComponent(query + ".tag" + appendedTooltip, querySubbed);
+        } else if (isExcluding(searchFieldText)) {
+            return queryComponent(query + ".excluding" + appendedTooltip, querySubbed);
+        } else if (isMatchCase(searchFieldText)) {
+            return queryComponent(query + ".matching" + appendedTooltip, querySubbed);
+        }
+
+        return queryComponent(
+                query + appendedTooltip,
+                searchFieldText
+        );
+    }
+
+    /**
+     * @return an appended tooltips for moving single stack items.
+     */
+    public static Component appendedSingleTooltip(Component original) {
+        return original.copy().append("\n").append(Component.translatable("qualityofqueso.gui.scroll_to_change_amount")).copy().append("\n").append(Component.translatable("qualityofqueso.gui.move_amount.reset"));
     }
 
     /**

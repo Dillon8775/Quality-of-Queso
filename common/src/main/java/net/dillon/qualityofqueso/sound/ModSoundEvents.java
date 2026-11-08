@@ -4,7 +4,7 @@ import net.blay09.mods.balm.core.BalmHolderRegistration;
 import net.blay09.mods.balm.core.BalmRegistrar;
 import net.blay09.mods.balm.core.BalmRegistrars;
 import net.dillon.dillonlib.annotation.Dill;
-import net.dillon.dillonlib.annotation.DillType;
+import net.dillon.dillonlib.annotation.DillEnv;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -12,7 +12,7 @@ import net.minecraft.sounds.SoundEvents;
 /**
  * All sounds for {@code Quality of Queso.}
  */
-@Dill(DillType.CLIENT)
+@Dill(env = DillEnv.CLIENT)
 public class ModSoundEvents {
     private static BalmRegistrar.Scoped<SoundEvent> registrar;
 

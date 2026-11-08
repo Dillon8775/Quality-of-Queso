@@ -15,6 +15,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import static net.dillon.dillonlib.task.ClientTasks.getMinecraft;
 import static net.dillon.dillonlib.task.ClientTasks.openScreen;
 import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
 import static net.dillon.qualityofqueso.keybind.ModKeyMappings.OPEN_ITEM_FRAME_SEARCH_GUI;
@@ -33,8 +34,6 @@ public abstract class MinecraftMixin {
      */
     @Inject(method = "handleKeybinds", at = @At("TAIL"))
     private void handleSpecialKeyPressing(CallbackInfo ci) {
-        Minecraft minecraft = Minecraft.getInstance();
-
         if (!modEnabled()) {
             return;
         }
@@ -51,7 +50,7 @@ public abstract class MinecraftMixin {
      */
     @Inject(method = "tick", at = @At("TAIL"))
     private void tickModEvents(CallbackInfo ci) {
-        Minecraft minecraft = Minecraft.getInstance();
+        Minecraft minecraft = getMinecraft();
 
         if (!modEnabled()) {
             return;

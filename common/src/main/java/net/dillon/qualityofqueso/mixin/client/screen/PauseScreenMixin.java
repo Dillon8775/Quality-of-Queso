@@ -1,39 +1,20 @@
 package net.dillon.qualityofqueso.mixin.client.screen;
 
-import com.llamalad7.mixinextras.expression.Definition;
-import com.llamalad7.mixinextras.expression.Expression;
-import com.llamalad7.mixinextras.sugar.Local;
 import net.dillon.dillonlib.mixinplugin.Predicated;
-import net.dillon.dillonlib.platform.info.UpdatableSpriteButton;
-import net.dillon.dillonlib.task.ClientTasks;
-import net.dillon.qualityofqueso.helper.ButtonHelper;
-import net.dillon.qualityofqueso.option.eum.general.MenuButton;
-import net.dillon.qualityofqueso.screen.EnderChestPreviewScreen;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.SpriteIconButton;
-import net.minecraft.client.gui.layouts.LinearLayout;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.server.IntegratedServer;
 import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static net.dillon.dillonlib.task.ClientTasks.*;
-import static net.dillon.qualityofqueso.helper.ButtonHelper.getConfigButtonX;
-import static net.dillon.qualityofqueso.helper.ButtonHelper.getConfigButtonY;
 import static net.dillon.qualityofqueso.helper.GuiHelper.drawTooltip;
-import static net.dillon.qualityofqueso.helper.ModConstants.*;
-import static net.dillon.qualityofqueso.helper.ModHelper.isOnServer;
-import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
-import static net.dillon.qualityofqueso.option.OptionInstances.universal;
 
 @Predicated
 @Mixin(value = PauseScreen.class, priority = 1010)
@@ -43,91 +24,9 @@ public class PauseScreenMixin extends Screen {
     private boolean showPauseMenu;
     @Shadow
     private Button disconnectButton;
-    @Unique
-    private UpdatableSpriteButton menuButton;
-    @Unique
-    private Button blacklistServerButton, viewLastKnownEnderChestButton;
 
     public PauseScreenMixin(Component pTitle) {
         super(pTitle);
-    }
-
-    /**
-     * Appends the {@code Quality of Queso} prefix to a tooltips.
-     */
-    @Unique
-    private Component tooltipWithPrefix(Component text) {
-        return Component.translatable("qualityofqueso.gui.blacklisted_server_button_prefix").append("\n").append(text);
-    }
-
-    /**
-     * @return the current server address.
-     */
-    @Unique
-    private String getServerAddress() {
-        return this.minecraft.getCurrentServer().ip;
-    }
-
-    /**
-     * Checks if a server is blacklisted or not.
-     */
-    @Unique
-    private boolean isServerBlacklisted(String serverAddress) {
-        return universal().blacklistedServers.contains(serverAddress);
-    }
-
-    /**
-     * Adds menu buttons to the pause screen.
-     */
-    @Definition(id = "integratedServer", local = @Local(type = IntegratedServer.class, name = "integratedServer"))
-    @Expression("integratedServer = ?")
-    @Inject(method = "createPauseMenu", at = @At("MIXINEXTRAS:EXPRESSION"))
-    private void addQualityOfQuesoButtons(CallbackInfo ci, @Local(name = "iconButtonRow") LinearLayout iconButtonRow) {
-        if (!universal().menuButton.everywhere()) {
-            return;
-        }
-
-        boolean everywhere = universal().menuButton == MenuButton.EVERYWHERE;
-
-        int button = 0;
-        this.menuButton = ButtonHelper.createMainMenuButton(this);
-        if (everywhere) {
-            iconButtonRow.addChild(this.menuButton);
-        } else {
-            this.addRenderableWidget(this.menuButton);
-            this.menuButton.setPosition(getConfigButtonX(this.width, button), getConfigButtonY(this.height, button));
-            button++;
-        }
-
-        if (!(this.minecraft.getCurrentServer() == null)) {
-            String address = this.getServerAddress();
-            SpriteIconButton blacklistServerButton = ButtonHelper.createBlacklistServerButton(address);
-            if (everywhere) {
-                this.blacklistServerButton = iconButtonRow.addChild(blacklistServerButton);
-            } else {
-                this.blacklistServerButton = this.addRenderableWidget(blacklistServerButton);
-                this.blacklistServerButton.setPosition(getConfigButtonX(this.width, button), getConfigButtonY(this.height, button));
-            }
-            button++;
-        }
-
-        if (client().accessibility().eChestButton.pauseScreen()) {
-            SpriteIconButton viewLastKnownEnderChestButton = UpdatableSpriteButton.ofDefault(
-                    "View Last Known Ender Chest Button",
-                    ENDER_CHEST,
-                    (b) -> {
-                        openScreen(new EnderChestPreviewScreen(this));
-                    },
-                    Component.translatable("qualityofqueso.view_ender_chest.tooltip"),
-                    false
-            );
-            if (everywhere) {
-                this.viewLastKnownEnderChestButton = iconButtonRow.addChild(viewLastKnownEnderChestButton);
-            } else {
-                this.viewLastKnownEnderChestButton = this.addRenderableWidget(viewLastKnownEnderChestButton);
-                this.viewLastKnownEnderChestButton.setPosition(getConfigButtonX(this.width, button), getConfigButtonY(this.height, button));
-            }
-        }
     }
 
     /**
@@ -142,41 +41,8 @@ public class PauseScreenMixin extends Screen {
         if (client().misc().antiRageQuit && this.disconnectButton != null) {
             this.disconnectButton.active = false;
             if (client().general().tooltips.enabled() && this.disconnectButton.isHovered()) {
-                drawTooltip(Component.translatable("qualityofqueso.gui.disconnect"), graphics, this.font, mouseX, mouseY);
+                drawTooltip(Component.translatable("qualityofqueso.gui.disconnect"), graphics, mouseX, mouseY);
             }
         }
-
-        if (universal().menuButton.everywhere() && !(this.minecraft.getCurrentServer() == null)) {
-            if (this.blacklistServerButton != null) {
-                this.blacklistServerButton.active = isOnServer();
-                String address = this.getServerAddress();
-
-                if (universal().multiServerConfigs) {
-                    drawSprite(graphics, MULTI_CONFIG_TEXTURE, this.blacklistServerButton.getX() - 2, this.blacklistServerButton.getY() - 1, 16, 16);
-                }
-                drawSmallSprite(graphics, this.isServerBlacklisted(address) ? DISABLED_TEXTURE : ENABLED_TEXTURE, this.blacklistServerButton);
-
-                Component tooltip = this.isServerBlacklisted(address) ?
-                        Component.translatable("qualityofqueso.gui.remove_blacklisted_server") :
-                        Component.translatable("qualityofqueso.gui.add_blacklisted_server");
-                Component finalTooltip = tooltip;
-                if (universal().multiServerConfigs) {
-                    finalTooltip = tooltip.copy().append(Component.translatable("qualityofqueso.gui.multi_server_configs_enabled"));
-                }
-                if (this.blacklistServerButton.isHovered()) {
-                    drawTooltip(this.tooltipWithPrefix(finalTooltip),
-                            graphics, this.font, mouseX, mouseY);
-                }
-            }
-        }
-
-        if (this.viewLastKnownEnderChestButton != null) {
-            this.viewLastKnownEnderChestButton.active = modEnabled();
-            if (client().general().tooltips.enabled() && this.viewLastKnownEnderChestButton.isHovered()) {
-                drawTooltip(Component.translatable("qualityofqueso.view_ender_chest.tooltip"), graphics, this.font, mouseX, mouseY);
-            }
-        }
-
-        ClientTasks.renderUpdateIconOnButton(graphics, this.menuButton);
     }
 }

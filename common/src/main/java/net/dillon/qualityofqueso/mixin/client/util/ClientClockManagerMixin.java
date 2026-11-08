@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import static net.dillon.dillonlib.task.ClientTasks.getMinecraft;
 import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
@@ -21,7 +22,7 @@ public class ClientClockManagerMixin {
      */
     @Inject(method = "totalTicks", at = @At("HEAD"), cancellable = true)
     private void overrideOverworldClockTime(CallbackInfoReturnable<Long> cir) {
-        Minecraft minecraft = Minecraft.getInstance();
+        Minecraft minecraft = getMinecraft();
         if (!modEnabled() || !client().visualTime().overrideClientTime) {
             return;
         }

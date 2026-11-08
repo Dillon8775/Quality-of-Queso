@@ -28,8 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static net.dillon.dillonlib.task.ClientTasks.getMinecraft;
-import static net.dillon.dillonlib.task.ClientTasks.hasShiftDown;
+import static net.dillon.dillonlib.task.ClientTasks.*;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
 import static net.dillon.qualityofqueso.helper.MethodHelper.*;
 import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
@@ -129,7 +128,7 @@ public class ManagementEvents implements ModEvent {
      * @return if the slot is a player inventory slot.
      */
     public boolean isPlayerInventorySlot(Slot slot) {
-        return slot.container == getMinecraft().player.getInventory();
+        return slot.container == getLocalPlayer().getInventory();
     }
 
     /**
@@ -153,7 +152,7 @@ public class ManagementEvents implements ModEvent {
     }
 
     /**
-     * @return {@code true} if a slot is found from the query, indicating if a button should be active or not.
+     * @return {@code true} if a slot is found from the query, indicating if a button should be enabled or not.
      */
     public boolean shouldButtonBeActive(boolean isPlayerInventory, @Nullable Inventory playerInventory) {
         return shouldButtonBeActive(isPlayerInventory, playerInventory, true, false);
@@ -161,7 +160,7 @@ public class ManagementEvents implements ModEvent {
 
     /**
      * @param isPlayerInventory means button status is directed towards the transfer inventory button
-     * @return if the button should be active.
+     * @return if the button should be enabled.
      */
     public boolean shouldButtonBeActive(boolean isPlayerInventory, @Nullable Inventory playerInventory, boolean applyFillWhatsPresentFilter, boolean applyFillStacksFilter) {
         if (holder().container() == null || (isPlayerInventory && playerInventory == null)) {
@@ -466,7 +465,7 @@ public class ManagementEvents implements ModEvent {
                 slotId,
                 0,
                 ContainerInput.PICKUP,
-                getMinecraft().player
+                getLocalPlayer()
         );
     }
 
@@ -483,21 +482,21 @@ public class ManagementEvents implements ModEvent {
      * Sends a click slot packet.
      */
     public void sendClickSlotPacket(int slotIndex, ContainerInput containerInput) {
-        Minecraft client = Minecraft.getInstance();
-        ClientPacketListener packetListener = client.getConnection();
+        Minecraft minecraft = getMinecraft();
+        ClientPacketListener packetListener = minecraft.getConnection();
 
-        if (client.player == null || packetListener == null || client.player.containerMenu == null) {
+        if (minecraft.player == null || packetListener == null || minecraft.player.containerMenu == null) {
             return;
         }
 
-        var handler = client.player.containerMenu;
+        var handler = minecraft.player.containerMenu;
         int syncId = handler.containerId;
         int stateId = handler.getStateId();
 
         if (containerInput == ContainerInput.THROW) {
             ItemStack clickedStack = handler.getSlot(slotIndex).getItem();
             if (!clickedStack.isEmpty()) {
-                client.gameMode.handleContainerInput(syncId, slotIndex, hasDropOnlyOneItemModifierDown() ? 0 : 1, containerInput, client.player);
+                minecraft.gameMode.handleContainerInput(syncId, slotIndex, hasDropOnlyOneItemModifierDown() ? 0 : 1, containerInput, minecraft.player);
             }
             return;
         }

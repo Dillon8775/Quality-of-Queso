@@ -1,12 +1,12 @@
 package net.dillon.qualityofqueso.debug;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.debug.DebugScreenDisplayer;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.LevelChunk;
 import org.jspecify.annotations.Nullable;
 
+import static net.dillon.dillonlib.task.ClientTasks.getLocalPlayer;
 import static net.dillon.dillonlib.util.Arithmetics.roundToTenths;
 
 /**
@@ -20,7 +20,7 @@ public class ModDebugEntrySimpleCoordinates extends ModDebugEntry {
         if (level == null) {
             return;
         }
-        LocalPlayer localPlayer = Minecraft.getInstance().player;
+        LocalPlayer localPlayer = getLocalPlayer();
         if (localPlayer == null) {
             return;
         }

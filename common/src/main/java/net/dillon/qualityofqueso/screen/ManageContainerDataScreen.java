@@ -1,11 +1,12 @@
 package net.dillon.qualityofqueso.screen;
 
+import net.dillon.dillonlib.client.component.GridBuilder;
+import net.dillon.dillonlib.client.screen.DillonLibScreen;
 import net.dillon.dillonlib.platform.Platforms;
-import net.dillon.dillonlib.screen.BasicDillonLibScreen;
 import net.dillon.dillonlib.util.Arithmetics;
 import net.dillon.qualityofqueso.helper.ModConstants;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.MultiLineTextWidget;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.CommonColors;
@@ -15,13 +16,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import static net.dillon.dillonlib.task.ClientTasks.openScreen;
+import static net.dillon.dillonlib.widespread.DillonsWidgets.addTitleToHeader;
+import static net.dillon.dillonlib.widespread.DillonsWidgets.createMultiLineText;
 import static net.dillon.qualityofqueso.screen.ManageContainerDataScreen.KbAndMb.bytesToKb;
 import static net.dillon.qualityofqueso.screen.ManageContainerDataScreen.KbAndMb.kbToMb;
 
 /**
  * A simple way to manage container data.
  */
-public class ManageContainerDataScreen extends BasicDillonLibScreen {
+public class ManageContainerDataScreen extends DillonLibScreen {
     private final Screen parent;
     protected final KbAndMb containerDataMemory = KbAndMb.init();
     protected final KbAndMb lockedSlotContainerMemory = KbAndMb.init();
@@ -56,32 +59,79 @@ public class ManageContainerDataScreen extends BasicDillonLibScreen {
     public void widgets() {
         calculateFileSizes();
 
-        builder().heightCenter().apply();
-        builder().heightDown(64).apply();
-        builder().widthCenter().apply();
-        builder().widthLeft(150).apply();
+        addTitleToHeader(this);
 
-        this.addRenderableWidget(
+        GridBuilder builder = GridBuilder.create(this)
+                .setRowSpacing(8)
+                .setColumnSpacing(8);
+
+        MultiLineTextWidget containerDataMemoryLabel = createMultiLineText(
+                Component.translatable(
+                        "qualityofqueso.gui.container_data_memory",
+                        coloredSize(containerDataMemory.kb),
+                        coloredSize(containerDataMemory.mb, true)
+                )
+        );
+        builder.fillRowAndCenter(containerDataMemoryLabel);
+
+        MultiLineTextWidget lockedContainerSlotMemoryLabel = createMultiLineText(
+                Component.translatable(
+                        "qualityofqueso.gui.locked_slot_container_memory",
+                        coloredSize(lockedSlotContainerMemory.kb),
+                        coloredSize(lockedSlotContainerMemory.mb, true)
+                )
+        );
+        builder.fillRowAndCenter(lockedContainerSlotMemoryLabel);
+
+        MultiLineTextWidget lockedPlayerSlotMemoryLabel = createMultiLineText(
+                Component.translatable(
+                        "qualityofqueso.gui.locked_slot_player_memory",
+                        coloredSize(lockedSlotPlayerMemory.kb),
+                        coloredSize(lockedSlotPlayerMemory.mb, true)
+                )
+        );
+        builder.fillRowAndCenter(lockedPlayerSlotMemoryLabel);
+
+        MultiLineTextWidget totalMemoryLabel = createMultiLineText(
+                Component.translatable(
+                        "qualityofqueso.gui.total_memory",
+                        coloredSize(totalMemory.kb),
+                        coloredSize(totalMemory.mb, true)
+                )
+        );
+        builder.fillRowAndCenter(totalMemoryLabel);
+
+        MultiLineTextWidget memoryHealthLabel = createMultiLineText(
+                Component.translatable("qualityofqueso.gui.memory_good").withColor(CommonColors.GREEN)
+        );
+        if (this.totalMemory.mb > 5) {
+            memoryHealthLabel = createMultiLineText(Component.translatable("qualityofqueso.gui.monitor_memory").withColor(ModConstants.DEFAULT_LOCKED_SLOT_COLOR));
+        }
+        builder.fillRow(
+                memoryHealthLabel,
+                builder.alignHorizontallyCenter().padding(8, 8)
+        );
+
+        builder.getCurrentRow().addChild(
                 Button.builder(Component.translatable("qualityofqueso.gui.clear_data"), b -> openScreen(new ConfirmClearContainerDataScreen(this)))
-                        .bounds(builder().captureWidth(), builder().captureHeight(), 150, 20)
+                        .size(150, 20)
                         .build()
         );
 
-        builder().widthCenter().apply();
-        builder().widthRight(5).apply();
-
-        this.addRenderableWidget(
+        builder.getCurrentRow().addChild(
                 Button.builder(Component.translatable("gui.done"), b -> openScreen(this.parent))
-                        .bounds(builder().captureWidth(), builder().captureHeight(), 150, 20)
+                        .size(150, 20)
                         .build()
         );
+
+        builder.buildAndCenter();
     }
 
     /**
      * Calculates file sizes to display on the screen.
      */
     protected void calculateFileSizes() {
-        Path configDir = Platforms.getCommonPlatform()
+        Path configDir = Platforms.getUniversalPlatform()
                 .configDir()
                 .resolve(ModConstants.DEFAULT_CONFIG_DIR);
 
@@ -105,58 +155,6 @@ public class ManageContainerDataScreen extends BasicDillonLibScreen {
             totalMemory.mb = Arithmetics.roundToTenths(containerDataMemory.mb + lockedSlotContainerMemory.mb + lockedSlotPlayerMemory.mb);
         } catch (IOException o) {
             o.printStackTrace();
-        }
-    }
-
-    @Override
-    protected void drawGraphics(GuiGraphicsExtractor graphics) {
-        builder().graphicsHeightTop().apply();
-        builder().textTitleGraphicsHeight(graphics).apply();
-
-        builder().graphicsHeightCenter().apply();
-        builder().graphicsHeightUp(84).apply();
-
-        builder().textCenterAndGraphicsHeightDown(
-                graphics,
-                Component.translatable(
-                        "qualityofqueso.gui.container_data_memory",
-                        coloredSize(containerDataMemory.kb),
-                        coloredSize(containerDataMemory.mb, true)
-                )
-        ).apply();
-
-        builder().textCenterAndGraphicsHeightDown(
-                graphics,
-                Component.translatable(
-                        "qualityofqueso.gui.locked_slot_container_memory",
-                        coloredSize(lockedSlotContainerMemory.kb),
-                        coloredSize(lockedSlotContainerMemory.mb, true)
-                )
-        ).apply();
-
-        builder().textCenterAndGraphicsHeightDown(
-                graphics,
-                Component.translatable(
-                        "qualityofqueso.gui.locked_slot_player_memory",
-                        coloredSize(lockedSlotPlayerMemory.kb),
-                        coloredSize(lockedSlotPlayerMemory.mb, true)
-                )
-        ).apply();
-
-        builder().textCenterAndGraphicsHeightDown(
-                graphics,
-                Component.translatable(
-                        "qualityofqueso.gui.total_memory",
-                        coloredSize(totalMemory.kb),
-                        coloredSize(totalMemory.mb, true)
-                )
-        ).apply();
-        builder().graphicsHeightDown(12).apply();
-
-        if (this.totalMemory.mb < 5) {
-            builder().textCenterAndGraphicsHeightDownWrapped(graphics, Component.translatable("qualityofqueso.gui.memory_good").withColor(CommonColors.GREEN)).apply();
-        } else {
-            builder().textCenterAndGraphicsHeightDownWrapped(graphics, Component.translatable("qualityofqueso.gui.monitor_memory").withColor(ModConstants.DEFAULT_LOCKED_SLOT_COLOR)).apply();
         }
     }
 

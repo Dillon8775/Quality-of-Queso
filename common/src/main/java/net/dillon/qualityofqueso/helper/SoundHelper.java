@@ -1,12 +1,11 @@
 package net.dillon.qualityofqueso.helper;
 
+import net.dillon.dillonlib.client.component.SoundBuilder;
 import net.dillon.qualityofqueso.container.ContainerSyncer;
 import net.dillon.qualityofqueso.sound.*;
-import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 
-import static net.dillon.dillonlib.task.ClientTasks.getMinecraft;
 import static net.dillon.qualityofqueso.helper.ModConstants.*;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 import static net.dillon.qualityofqueso.sound.ModSoundEvents.getSoundFromRegistration;
@@ -24,32 +23,35 @@ public class SoundHelper {
             return;
         }
 
-        getMinecraft().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+        SoundBuilder.create(SoundEvents.UI_BUTTON_CLICK.value())
+                .buildAndPlay();
     }
 
     /**
-     * Plays a sound at a specified volume.
+     * Plays a bundle sound.
      */
-    private static void playSound(SoundEvent sound) {
+    private static void playBundleSound(SoundEvent sound) {
         if (!client().management().playSounds) {
             return;
         }
 
-        getMinecraft().getSoundManager().play(SimpleSoundInstance.forUI(sound, 1.0F, 5.0F));
+        SoundBuilder.create(sound)
+                .volume(5.0F)
+                .buildAndPlay();
     }
 
     /**
      * Plays the {@link SoundEvents#BUNDLE_INSERT} sound.
      */
     public static void playBundleInsertSound(BundleInsertSoundEvents bundleInsertSound) {
-        playSound(getSoundFromRegistration(bundleInsertSound.sound()));
+        playBundleSound(getSoundFromRegistration(bundleInsertSound.sound()));
     }
 
     /**
      * Plays the {@link SoundEvents#BUNDLE_DROP_CONTENTS} sound.
      */
     public static void playBundleDropContentsSound(BundleDropContentsSoundEvents bundleDropContentsSound) {
-        playSound(getSoundFromRegistration(bundleDropContentsSound.sound()));
+        playBundleSound(getSoundFromRegistration(bundleDropContentsSound.sound()));
     }
 
     /**
@@ -58,12 +60,12 @@ public class SoundHelper {
     public static void playSafeSortSound(BundleRemoveOneSoundEvents bundleRemoveOneSound) {
         if (SORT_SOUND_COOLDOWN == 0) {
             SORT_SOUND_COOLDOWN = DEFAULT_SORT_SOUND_COOLDOWN;
-            playSound(getSoundFromRegistration(bundleRemoveOneSound.sound()));
+            playBundleSound(getSoundFromRegistration(bundleRemoveOneSound.sound()));
         }
     }
 
     /**
-     * Plays the inactive bundle sound.
+     * Plays the disabled bundle sound.
      */
     public static void playButtonInactiveSound(BundleInsertFailSoundEvents bundleInsertFailSound) {
         if (!client().management().playSounds || !ContainerSyncer.CAN_PLAY_INACTIVE_SOUND) {
@@ -71,7 +73,9 @@ public class SoundHelper {
             return;
         }
 
-        getMinecraft().getSoundManager().play(SimpleSoundInstance.forUI(getSoundFromRegistration(bundleInsertFailSound.sound()), 1.0F, 0.6F));
+        SoundBuilder.create(getSoundFromRegistration(bundleInsertFailSound.sound()))
+                .volume(0.6F)
+                .buildAndPlay();
     }
 
     /**
@@ -82,7 +86,9 @@ public class SoundHelper {
             return;
         }
 
-        getMinecraft().getSoundManager().play(SimpleSoundInstance.forUI(lock ? getSoundFromRegistration(ModSoundEvents.SLOT_LOCKED) : getSoundFromRegistration(ModSoundEvents.SLOT_UNLOCKED), 1.0F, 0.10F));
+        SoundBuilder.create(lock ? getSoundFromRegistration(ModSoundEvents.SLOT_LOCKED) : getSoundFromRegistration(ModSoundEvents.SLOT_UNLOCKED))
+                .volume(0.10F)
+                .buildAndPlay();
         LOCKED_SLOT_SOUND_COOLDOWN = DEFAULT_LOCKED_SLOT_SOUND_COOLDOWN;
     }
 
@@ -90,6 +96,22 @@ public class SoundHelper {
      * Plays the quick equip sound.
      */
     public static void playQuickEquipSound() {
-        getMinecraft().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.ARMOR_EQUIP_GENERIC.value(), 1.0F, 0.45F));
+        SoundBuilder.create(SoundEvents.ARMOR_EQUIP_GENERIC.value())
+                .volume(0.45F)
+                .buildAndPlay();
+    }
+
+    /**
+     * Plays the open sound for this button.
+     */
+    public static void playEnderChestOpenSound() {
+        SoundBuilder.create(SoundEvents.ENDER_CHEST_OPEN).buildAndPlay();
+    }
+
+    /**
+     * Plays the close sound for this button.
+     */
+    public static void playEnderChestCloseSound() {
+        SoundBuilder.create(SoundEvents.ENDER_CHEST_CLOSE).buildAndPlay();
     }
 }

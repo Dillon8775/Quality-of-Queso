@@ -1,7 +1,7 @@
 package net.dillon.qualityofqueso.server;
 
 import net.dillon.dillonlib.annotation.Dill;
-import net.dillon.dillonlib.annotation.DillType;
+import net.dillon.dillonlib.annotation.DillEnv;
 import net.dillon.dillonlib.util.PlayerStorage;
 
 import java.util.UUID;
@@ -9,7 +9,7 @@ import java.util.UUID;
 /**
  * Stores server-synced client options and cached values.
  */
-@Dill(DillType.COMMON)
+@Dill(env = DillEnv.COMMON)
 public class DedicatedServerStorage {
     public static final PlayerStorage<Boolean> INCLUDE_HOTBAR = new PlayerStorage<>(false);
     public static final PlayerStorage<Boolean> PERPENDICULAR_QUICK_MOVING = new PlayerStorage<>(false);

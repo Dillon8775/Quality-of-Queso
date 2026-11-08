@@ -18,8 +18,7 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.*;
 
-import static net.dillon.dillonlib.task.ClientTasks.getMinecraft;
-import static net.dillon.dillonlib.task.ClientTasks.getScreen;
+import static net.dillon.dillonlib.task.ClientTasks.*;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.isInventoryScreen;
 import static net.dillon.qualityofqueso.helper.SoundHelper.playBundleInsertSound;
 import static net.dillon.qualityofqueso.helper.SoundHelper.playButtonInactiveSound;
@@ -46,7 +45,7 @@ public class SortEvents extends ManagementEvents {
     }
 
     /**
-     * @return if the sort button should be active.
+     * @return if the sort button should be enabled.
      */
     public boolean shouldSortButtonBeActive() {
         boolean inventory = isInventoryScreen();
@@ -92,11 +91,11 @@ public class SortEvents extends ManagementEvents {
 
         // Mirror CreativeModeInventoryScreen initialization so search-tab order
         // exists even if creative inventory was never opened in this session.
-        Minecraft client = Minecraft.getInstance();
-        ClientPacketListener connection = client.getConnection();
+        Minecraft minecraft = getMinecraft();
+        ClientPacketListener connection = minecraft.getConnection();
         if (connection != null) {
-            var lookupProvider = client.level != null ? client.level.registryAccess() : connection.registryAccess();
-            boolean hasOpPerms = client.player != null && client.player.canUseGameMasterBlocks();
+            var lookupProvider = minecraft.level != null ? minecraft.level.registryAccess() : connection.registryAccess();
+            boolean hasOpPerms = minecraft.player != null && minecraft.player.canUseGameMasterBlocks();
 
             if (CreativeModeTabs.tryRebuildTabContents(connection.enabledFeatures(), hasOpPerms, lookupProvider)) {
                 List<ItemStack> searchItems = List.copyOf(CreativeModeTabs.searchTab().getDisplayItems());
@@ -123,7 +122,7 @@ public class SortEvents extends ManagementEvents {
      * Sorts all items in a container.
      */
     public void sortItems() {
-        if (getMinecraft().player == null || getMinecraft().getConnection() == null) {
+        if (getLocalPlayer() == null || getMinecraft().getConnection() == null) {
             return;
         }
         if (!(getScreen() instanceof AbstractContainerScreen<?> || getScreen() instanceof InventoryScreen)) {
@@ -201,7 +200,7 @@ public class SortEvents extends ManagementEvents {
                     clickSlot(i);
 
                     // If cursor still has items, put them back
-                    if (!getMinecraft().player.containerMenu.getCarried().isEmpty()) {
+                    if (!getLocalPlayer().containerMenu.getCarried().isEmpty()) {
                         clickSlot(j);
                     }
 
@@ -320,9 +319,9 @@ public class SortEvents extends ManagementEvents {
 
         // Prefer locating where the player's inventory section actually begins.
         // This avoids assuming a fixed 36-slot tail on modded menus that expose extra player slots.
-        if (getMinecraft().player != null) {
+        if (getLocalPlayer() != null) {
             AbstractContainerMenu menu = holder().menu();
-            Inventory playerInventory = getMinecraft().player.getInventory();
+            Inventory playerInventory = getLocalPlayer().getInventory();
             for (int i = 0; i < totalSlots; i++) {
                 if (menu.getSlot(i).container == playerInventory) {
                     return i;

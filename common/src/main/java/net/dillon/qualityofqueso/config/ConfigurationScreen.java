@@ -4,62 +4,39 @@ import dev.isxander.yacl3.api.YetAnotherConfigLib;
 import dev.isxander.yacl3.gui.image.ImageRenderer;
 import dev.isxander.yacl3.gui.image.ImageRendererManager;
 import dev.isxander.yacl3.gui.image.impl.AnimatedDynamicTextureImage;
-import net.dillon.dillonlib.annotation.Dill;
-import net.dillon.dillonlib.annotation.DillType;
-import net.minecraft.client.Minecraft;
+import net.dillon.dillonlib.client.component.TextureBuilder;
+import net.dillon.qualityofqueso.helper.ModHelper;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
-import static net.dillon.dillonlib.task.ClientTasks.drawSprite;
 import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
-import static net.dillon.qualityofqueso.helper.ModHelper.saveAndApplyConfigs;
 
 /**
  * The main configuration screen for Quality of queso.
  */
-@Dill(DillType.CLIENT)
 public class ConfigurationScreen {
 
     public static YetAnotherConfigLib configScreen() {
         return YetAnotherConfigLib.createBuilder()
                 .title(Component.translatable("qualityofqueso"))
-                .category(
-                        GeneralCategory.create()
-                )
-                .category(
-                        SearchingCategory.create()
-                )
-                .category(
-                        ManagementCategory.create()
-                )
-                .category(
-                        HudCategory.create()
-                )
-                .category(
-                        ItemCounterCategory.create()
-                )
-                .category(
-                        GuiCategory.create()
-                )
-                .category(
-                        FovEffectsCategory.create()
-                )
-                .category(
-                        FogCategory.create()
-                )
-                .category(
-                        MiscellaneousCategory.create()
-                )
-                .category(
+                .categories(List.of(
+                        GeneralCategory.create(),
+                        SearchingCategory.create(),
+                        ManagementCategory.create(),
+                        HudCategory.create(),
+                        ItemCounterCategory.create(),
+                        GuiCategory.create(),
+                        FovEffectsCategory.create(),
+                        FogCategory.create(),
+                        MiscellaneousCategory.create(),
                         AccessibilityCategory.create()
-                )
-                .save(() -> {
-                    saveAndApplyConfigs(Minecraft.getInstance());
-                })
+                ))
+                .save(ModHelper::saveAndApplyChanges)
                 .build();
     }
 
@@ -70,7 +47,7 @@ public class ConfigurationScreen {
         return new ImageRenderer() {
             @Override
             public int render(GuiGraphicsExtractor graphics, int x, int y, int renderWidth, float tickDelta) {
-                drawSprite(graphics, qoqIdentifier("config_images/" + texture), x, y, width, height);
+                TextureBuilder.create(graphics, qoqIdentifier("config_images/" + texture), x, y, width, height).buildAndBlit(true);
                 return height;
             }
 

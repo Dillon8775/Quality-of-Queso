@@ -3,7 +3,6 @@ package net.dillon.qualityofqueso.event.management;
 import net.dillon.qualityofqueso.event.QuesoScreenHolder;
 import net.dillon.qualityofqueso.helper.ModConstants;
 import net.dillon.qualityofqueso.widget.SearchBar;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
@@ -37,7 +36,7 @@ public class SearchEvents extends ManagementEvents {
      * Base method for initializing the {@link SearchBar}.
      */
     public SearchBar initializeSearchField(boolean inventory) {
-        return new SearchBar(Minecraft.getInstance().font,
+        return new SearchBar(
                 holder().screen().width / 2 +  getBarWidth(getImageWidth(holder().screen())) / 2 - (inventory ? 60 : 64),
                 getTopPos(holder().screen()) + getTitleLabelY(holder().screen()) - 2 + (client().searching().searchBarPosition.top() ? (client().searching().searchBarColor.black() ? -19 : -21) : 0));
     }

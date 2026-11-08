@@ -1,15 +1,18 @@
 package net.dillon.qualityofqueso.screen;
 
+import net.dillon.dillonlib.client.component.DoneButtonBuilder;
+import net.dillon.dillonlib.client.component.GridBuilder;
+import net.dillon.dillonlib.client.screen.LevelSelectorScreen;
 import net.dillon.dillonlib.platform.Platforms;
-import net.dillon.dillonlib.screen.LevelSelectorScreen;
 import net.dillon.qualityofqueso.helper.ModConstants;
 import net.dillon.qualityofqueso.option.ContainerData;
 import net.dillon.qualityofqueso.option.LockedContainerSlots;
 import net.dillon.qualityofqueso.option.LockedPlayerSlots;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Checkbox;
+import net.minecraft.client.gui.components.MultiLineTextWidget;
 import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.layouts.LinearLayout;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.CommonColors;
@@ -23,7 +26,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static net.dillon.dillonlib.client.component.GridBuilder.createColumn;
 import static net.dillon.dillonlib.task.ClientTasks.openScreen;
+import static net.dillon.dillonlib.widespread.DillonsWidgets.addTitleToHeader;
+import static net.dillon.dillonlib.widespread.DillonsWidgets.createMultiLineText;
 import static net.dillon.qualityofqueso.option.OptionInstances.*;
 
 /**
@@ -158,11 +164,11 @@ public class ConfirmClearContainerDataScreen extends ManageContainerDataScreen {
      */
     private void clearData() {
         try {
-            Path configDir = Platforms.getCommonPlatform()
+            Path configDir = Platforms.getUniversalPlatform()
                     .configDir()
                     .resolve(ModConstants.DEFAULT_CONFIG_DIR);
 
-            Path backupDir = Platforms.getCommonPlatform()
+            Path backupDir = Platforms.getUniversalPlatform()
                     .configDir()
                     .resolve(ModConstants.BACKUP_CONFIG_DIR);
 
@@ -233,15 +239,50 @@ public class ConfirmClearContainerDataScreen extends ManageContainerDataScreen {
     public void widgets() {
         calculateFileSizes();
 
-        builder().heightCenter().apply();
-        builder().heightDown(12).apply();
-        builder().widthCenter().apply();
-        builder().widthLeft(225).apply();
+        addTitleToHeader(this);
 
-        this.addRenderableWidget(
-                this.createWidget(
+        GridBuilder builder = GridBuilder.create(this, 3)
+                .setRowSpacing(8)
+                .setColumnSpacing(8);
+
+        double totalKb = 0;
+        double totalMb = 0;
+        if (clearMarkedContainerData) {
+            totalKb += this.containerDataMemory.kb;
+            totalMb += this.containerDataMemory.mb;
+        }
+        if (clearLockedContainerSlots) {
+            totalKb += this.lockedSlotContainerMemory.kb;
+            totalMb += this.lockedSlotContainerMemory.mb;
+        }
+        if (clearLockedPlayerSlots) {
+            totalKb += this.lockedSlotPlayerMemory.kb;
+            totalMb += this.lockedSlotPlayerMemory.mb;
+        }
+
+        if (!selectedLevel.isEmpty()) {
+            MultiLineTextWidget selectedWorldLabel = createMultiLineText(
+                    Component.translatable("qualityofqueso.gui.selected_world", selectedLevel).withColor(CommonColors.GREEN)
+            );
+            builder.fillRowAndCenter(selectedWorldLabel);
+        }
+
+        Component freesUp = Component.translatable("qualityofqueso.gui.frees_up", coloredSize(totalKb), coloredSize(totalMb, true));
+        MultiLineTextWidget warningLabel = createMultiLineText(
+                Component.translatable(
+                        "qualityofqueso.gui.clear_cached_data", selectedLevel.isEmpty()
+                                ? Component.literal("\n").copy().append(freesUp)
+                                : ""
+                )
+        );
+        builder.fillRow(
+                warningLabel,
+                builder.alignHorizontallyCenter().paddingBottom(4)
+        );
+
+        builder.getCurrentRow().addChild(
+                createWidget(
                         Button.builder(Component.translatable("dillonlib.confirm"), b -> clearData())
-                                .bounds(builder().captureWidth(), builder().captureHeight(), 150, 20)
                                 .build(),
                         () -> !this.isDataEmpty(),
                         isActive -> {
@@ -253,9 +294,7 @@ public class ConfirmClearContainerDataScreen extends ManageContainerDataScreen {
                         })
         );
 
-        builder().widthRight(160).apply();
-
-        this.addRenderableWidget(
+        builder.getCurrentRow().addChild(
                 Button.builder(Component.translatable("qualityofqueso.gui.select_world_or_server"), b ->
                                 openScreen(
                                         new LevelSelectorScreen(
@@ -277,83 +316,41 @@ public class ConfirmClearContainerDataScreen extends ManageContainerDataScreen {
                                         )
                                 )
                         )
-                        .bounds(builder().captureWidth(), builder().captureHeight(), 150, 20)
                         .tooltip(
                                 Tooltip.create(Component.translatable("qualityofqueso.gui.select_world_or_server.tooltip"))
                         )
                         .build()
         );
 
-        builder().widthRight(160).apply();
-
-        this.addRenderableWidget(
-                Button.builder(Component.translatable("gui.cancel"), b -> openScreen(this.parent))
-                        .bounds(builder().captureWidth(), builder().captureHeight(), 150, 20)
+        builder.getCurrentRow().addChild(
+                DoneButtonBuilder.builder(this)
+                        .text(Component.translatable("gui.cancel"))
+                        .width(150)
                         .build()
         );
 
-        builder().heightCenter().apply();
-        builder().heightDown(42).apply();
-        builder().widthCenter().apply();
-        builder().widthLeft(142).apply();
-
-        this.addRenderableWidget(
+        LinearLayout options = createColumn();
+        options.addChild(
                 Checkbox.builder(Component.translatable("qualityofqueso.gui.clear_marked_container_data").withColor(CommonColors.LIGHTER_GRAY), getFont())
-                        .pos(builder().captureWidth(), builder().captureHeight())
                         .selected(true)
                         .onValueChange((checkbox, value) -> clearMarkedContainerData = value)
                         .build()
         );
-
-        builder().heightDown().apply();
-
-        this.addRenderableWidget(
+        options.addChild(
                 Checkbox.builder(Component.translatable("qualityofqueso.gui.clear_locked_container_slots").withColor(CommonColors.LIGHTER_GRAY), getFont())
-                        .pos(builder().captureWidth(), builder().captureHeight())
                         .onValueChange((checkbox, value) -> clearLockedContainerSlots = value)
                         .build()
         );
-
-        builder().heightDown().apply();
-
-        this.addRenderableWidget(
+        options.addChild(
                 Checkbox.builder(Component.translatable("qualityofqueso.gui.clear_locked_player_slots").withColor(CommonColors.LIGHTER_GRAY), getFont())
-                        .pos(builder().captureWidth(), builder().captureHeight())
                         .onValueChange((checkbox, value) -> clearLockedPlayerSlots = value)
                         .build()
         );
-    }
+        builder.fillRow(
+                options,
+                builder.alignHorizontallyCenter().paddingLeft(24)
+        );
 
-    @Override
-    protected void drawGraphics(GuiGraphicsExtractor graphics) {
-        builder().graphicsHeightTop().apply();
-        builder().textTitleGraphicsHeight(graphics).apply();
-
-        builder().graphicsHeightCenter().apply();
-        builder().graphicsHeightUp(72).apply();
-
-        double totalKb = 0;
-        double totalMb = 0;
-        if (clearMarkedContainerData) {
-            totalKb += this.containerDataMemory.kb;
-            totalMb += this.containerDataMemory.mb;
-        }
-        if (clearLockedContainerSlots) {
-            totalKb += this.lockedSlotContainerMemory.kb;
-            totalMb += this.lockedSlotContainerMemory.mb;
-        }
-        if (clearLockedPlayerSlots) {
-            totalKb += this.lockedSlotPlayerMemory.kb;
-            totalMb += this.lockedSlotPlayerMemory.mb;
-        }
-
-        Component freesUp = Component.translatable("qualityofqueso.gui.frees_up", coloredSize(totalKb), coloredSize(totalMb, true));
-        builder().textCenterAndGraphicsHeightDownWrapped(graphics, Component.translatable("qualityofqueso.gui.clear_cached_data", selectedLevel.isEmpty() ? freesUp : "")).apply();
-
-        if (!selectedLevel.isEmpty()) {
-            builder().graphicsHeightCenter().apply();
-            builder().graphicsHeightUp(90).apply();
-            builder().textCenterAndGraphicsHeightDown(graphics, Component.translatable("qualityofqueso.gui.selected_world", selectedLevel).withColor(CommonColors.GREEN));
-        }
+        builder.buildAndCenter();
     }
 }

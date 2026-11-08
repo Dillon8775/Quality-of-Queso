@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 
 import java.time.LocalTime;
 
+import static net.dillon.dillonlib.task.ClientTasks.isCurrentLevelNull;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 import static net.dillon.qualityofqueso.util.ModOptionUtil.visualTimeStepToTicks;
 
@@ -27,7 +28,7 @@ public class VisualTimeTracker {
         int configBaseTime = visualTimeStepToTicks(client().visualTime().visualTime);
         int speed = client().visualTime().visualTimeSpeed;
 
-        if (minecraft.level == null) {
+        if (isCurrentLevelNull()) {
             return configBaseTime;
         }
 

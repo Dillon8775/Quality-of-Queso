@@ -21,6 +21,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import static net.dillon.dillonlib.task.ClientTasks.getLocalPlayer;
 import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
@@ -48,7 +49,7 @@ public class ClientPacketListenerMixin {
 
         Entity entity = this.level.getEntity(packet.getItemId());
 
-        LocalPlayer player = Minecraft.getInstance().player;
+        LocalPlayer player = getLocalPlayer();
         if (player == null) {
             return;
         }

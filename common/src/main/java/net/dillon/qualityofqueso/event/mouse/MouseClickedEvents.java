@@ -7,9 +7,9 @@ import net.dillon.qualityofqueso.event.management.CursorKey;
 import net.dillon.qualityofqueso.event.management.ManagementEvents;
 import net.dillon.qualityofqueso.sound.BundleInsertFailSoundEvents;
 import net.dillon.qualityofqueso.sound.BundleRemoveOneSoundEvents;
-import net.dillon.qualityofqueso.widget.QuesoButton;
 import net.dillon.qualityofqueso.widget.SearchBar;
-import net.dillon.qualityofqueso.widget.WidgetLayout;
+import net.dillon.qualityofqueso.widget.management.ManagementButton;
+import net.dillon.qualityofqueso.widget.management.WidgetLayout;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -19,6 +19,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import static net.dillon.dillonlib.task.ClientTasks.getLocalPlayer;
 import static net.dillon.dillonlib.task.ClientTasks.getMinecraft;
 import static net.dillon.qualityofqueso.event.management.ExtractingEvents.setCursor;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
@@ -68,7 +69,7 @@ public class MouseClickedEvents extends ManagementEvents {
      * Locks a container by middle-clicking.
      */
     private void lockContainer(MouseButtonEvent event, CallbackInfoReturnable<Boolean> cir) {
-        QuesoButton sort = holder().managementButtons().getSort();
+        ManagementButton sort = holder().managementButtons().getSort();
 
         if (isContainerScreen() && event.button() == InputConstants.MOUSE_BUTTON_MIDDLE && sortingEvents().shouldSortButtonBeActive() && buttonHovered(sort)) {
             ContainerSyncer.lockContainer();
@@ -105,7 +106,7 @@ public class MouseClickedEvents extends ManagementEvents {
     }
 
     /**
-     * Handles clicking inactive buttons.
+     * Handles clicking disabled buttons.
      */
     private void handleButtonInactiveSounds() {
         if (buttonHoveredButInactive(holder().managementButtons().getTransferContainer()) || buttonHoveredButInactive(holder().managementButtons().getTransferInventory())) {
@@ -204,7 +205,7 @@ public class MouseClickedEvents extends ManagementEvents {
                         slot.index,
                         0,
                         ContainerInput.QUICK_MOVE,
-                        getMinecraft().player
+                        getLocalPlayer()
                 );
 
                 // Item was moved if slot count is different

@@ -1,7 +1,7 @@
 package net.dillon.qualityofqueso.mixin.main;
 
 import net.dillon.dillonlib.annotation.Dill;
-import net.dillon.dillonlib.annotation.DillType;
+import net.dillon.dillonlib.annotation.DillEnv;
 import net.dillon.qualityofqueso.container.ShulkerBlockEntityHolder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
@@ -29,7 +29,7 @@ import static net.dillon.qualityofqueso.helper.ModConstants.*;
 /**
  * Restores shulker state from shulker item custom data into the placed block entity.
  */
-@Dill(DillType.COMMON)
+@Dill(env = DillEnv.COMMON)
 @Mixin(BlockItem.class)
 public class BlockItemMixin {
 

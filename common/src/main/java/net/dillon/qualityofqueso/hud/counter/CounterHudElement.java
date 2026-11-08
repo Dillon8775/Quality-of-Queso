@@ -1,5 +1,6 @@
 package net.dillon.qualityofqueso.hud.counter;
 
+import net.dillon.dillonlib.client.component.TextureBuilder;
 import net.dillon.qualityofqueso.container.EnderChestSyncer;
 import net.dillon.qualityofqueso.container.data.StoredEnderChestStack;
 import net.dillon.qualityofqueso.hud.ModHudElement;
@@ -23,7 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static net.dillon.dillonlib.task.ClientTasks.*;
+import static net.dillon.dillonlib.task.ClientTasks.getGuiHeight;
+import static net.dillon.dillonlib.task.ClientTasks.getGuiWidth;
 import static net.dillon.qualityofqueso.helper.GuiHelper.*;
 import static net.dillon.qualityofqueso.helper.ModConstants.*;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
@@ -64,7 +66,7 @@ public class CounterHudElement extends ModHudElement implements CounterHelper {
             return;
         }
 
-        // Try render active stack, if prioritized first
+        // Try render enabled stack, if prioritized first
         if (!activeStack.isEmpty()) {
             extractItem(
                     graphics,
@@ -333,7 +335,7 @@ public class CounterHudElement extends ModHudElement implements CounterHelper {
         int x = getGuiWidth(graphics) + itemX;
 
         // Render the background sprite (the base box)
-        drawSprite(
+        TextureBuilder.create(
                 graphics,
                 ModHudElement.HOTBAR_OFFHAND_SPRITE,
                 x - 10,
@@ -342,7 +344,7 @@ public class CounterHudElement extends ModHudElement implements CounterHelper {
                         + client().itemCounter().itemCounterPosition[1],
                 29,
                 24
-        );
+        ).buildAndBlit(true);
 
         // Get the highlighted color (if any)
         Identifier sprite = HOTBAR_SELECTION_SPRITE;
@@ -357,7 +359,7 @@ public class CounterHudElement extends ModHudElement implements CounterHelper {
         }
 
         // Then render the outline sprite
-        drawSprite(
+        TextureBuilder.create(
                 graphics,
                 sprite,
                 x - 4,
@@ -366,7 +368,7 @@ public class CounterHudElement extends ModHudElement implements CounterHelper {
                         + client().itemCounter().itemCounterPosition[1],
                 24,
                 23
-        );
+        ).buildAndBlit(true);
     }
 
     /**
@@ -427,7 +429,7 @@ public class CounterHudElement extends ModHudElement implements CounterHelper {
             );
         }
 
-        // See if the active stack is an arrow
+        // See if the enabled stack is an arrow
         boolean trackedArrow =
                 client().itemCounter().arrowCounter
                         && isStackArrow(countStack)
@@ -707,7 +709,7 @@ public class CounterHudElement extends ModHudElement implements CounterHelper {
             return offHand.copy();
         }
 
-        // Otherwise, get the projectile from active hand and return it
+        // Otherwise, get the projectile from enabled hand and return it
         ItemStack projectile = getNextProjectile();
         return projectile.isEmpty()
                 ? fakeArrow()

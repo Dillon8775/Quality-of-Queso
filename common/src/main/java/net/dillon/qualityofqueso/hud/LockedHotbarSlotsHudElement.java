@@ -1,11 +1,13 @@
 package net.dillon.qualityofqueso.hud;
 
+import net.dillon.dillonlib.client.component.TextureBuilder;
 import net.dillon.qualityofqueso.container.ContainerSyncer;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 import java.util.Set;
 
-import static net.dillon.dillonlib.task.ClientTasks.*;
+import static net.dillon.dillonlib.task.ClientTasks.getGuiHeight;
+import static net.dillon.dillonlib.task.ClientTasks.getGuiWidth;
 import static net.dillon.qualityofqueso.helper.GuiHelper.isPositioningElements;
 import static net.dillon.qualityofqueso.helper.ModConstants.LOCKED_SLOT_TEXTURE;
 import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
@@ -43,14 +45,14 @@ public class LockedHotbarSlotsHudElement extends ModHudElement {
                 continue;
             }
 
-            drawSprite(
+            TextureBuilder.create(
                     graphics,
                     qoqIdentifier(LOCKED_SLOT_TEXTURE),
                     getGuiWidth(graphics) - 91 + (slot * 20),
                     (getGuiHeight(graphics) + 11) + client().hud().otherElementsY,
                     10,
                     10
-            );
+            ).buildAndBlit(true);
         }
     }
 }

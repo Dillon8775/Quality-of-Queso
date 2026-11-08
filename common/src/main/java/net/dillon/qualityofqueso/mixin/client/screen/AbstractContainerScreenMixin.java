@@ -9,7 +9,7 @@ import net.dillon.qualityofqueso.event.mouse.MouseClickedEvents;
 import net.dillon.qualityofqueso.event.mouse.MouseReleasedEvents;
 import net.dillon.qualityofqueso.event.mouse.MouseScrolledEvents;
 import net.dillon.qualityofqueso.event.screen.TooltipEvents;
-import net.dillon.qualityofqueso.widget.WidgetLayout;
+import net.dillon.qualityofqueso.widget.management.WidgetLayout;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.events.GuiEventListener;

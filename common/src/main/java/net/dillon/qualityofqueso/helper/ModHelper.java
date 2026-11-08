@@ -2,6 +2,7 @@ package net.dillon.qualityofqueso.helper;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.blay09.mods.balm.Balm;
+import net.dillon.dillonlib.client.component.SoundBuilder;
 import net.dillon.dillonlib.platform.Platforms;
 import net.dillon.qualityofqueso.option.ModClientOptions;
 import net.dillon.qualityofqueso.option.ModCommonOptions;
@@ -9,9 +10,10 @@ import net.dillon.qualityofqueso.option.UniversalOptions;
 import net.dillon.qualityofqueso.packet.serverbound.ClientPreferencesC2SPacket;
 import net.dillon.qualityofqueso.packet.serverbound.ManualItemPickupC2SPacket;
 import net.dillon.qualityofqueso.util.GlowCountdown;
-import net.dillon.qualityofqueso.widget.SwapButton;
+import net.dillon.qualityofqueso.widget.management.SwapButton;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.fog.FogData;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -100,7 +102,10 @@ public class ModHelper {
      * Plays a generic ding sound.
      */
     public static void playDingSound() {
-        playLocalSound(SoundEvents.ARROW_HIT_PLAYER, 0.72F, 0.2F);
+        SoundBuilder.create(SoundEvents.ARROW_HIT_PLAYER)
+                .volume(0.72F)
+                .pitch(0.2F)
+                .buildAndPlay();
     }
 
     /**
@@ -152,7 +157,7 @@ public class ModHelper {
     public static void stop(boolean shouldStop, String configName) {
         if (shouldStop) {
             try {
-                Minecraft.getInstance().stop();
+                getMinecraft().stop();
             } catch (NullPointerException e) {
                 throw new NullPointerException("Quality of Queso's \"" + configName + "\" configuration file is null. Not sure what happened! Please delete this config file (located in your \".minecraft/config\" directory), and then you can relaunch your game.");
             }
@@ -232,7 +237,7 @@ public class ModHelper {
      * @return the most accurate raycasted {@link ItemEntity} to use to manually pickup an item.
      */
     private static ItemEntity raycastItemEntity(Minecraft minecraft) {
-        if (minecraft.player == null || minecraft.level == null) {
+        if (minecraft.player == null || isCurrentLevelNull()) {
             return null;
         }
 
@@ -387,12 +392,13 @@ public class ModHelper {
     /**
      * Saves all configurations.
      */
-    public static void saveAndApplyConfigs(Minecraft instance) {
+    public static void saveAndApplyChanges() {
         UniversalOptions.INSTANCE.save();
         // Continue if multi-server configs are enabled
         if (universal().multiServerConfigs) {
             CONTINUE = true;
         }
+        Minecraft instance = getMinecraft();
         if (instance.getCurrentServer() != null && instance.getCurrentServer().ip != null) {
             // If the server is blacklisted, and multi-server configs are off, the config hasn't already been unloaded, unload it
             if (isServerBlacklisted() && !universal().multiServerConfigs && !UNLOADED) {
@@ -431,37 +437,31 @@ public class ModHelper {
             return;
         }
 
-        Minecraft instance = Minecraft.getInstance();
+        Minecraft minecraft = getMinecraft();
         // Ensure server is valid
-        if (instance.getCurrentServer() == null) {
+        if (minecraft.getCurrentServer() == null) {
             return;
-        } else if (instance.getCurrentServer().ip == null) {
+        } else if (minecraft.getCurrentServer().ip == null) {
             return;
         }
 
         // Get safe address for the server's IP
-        String address = instance.getCurrentServer().ip;
+        String address = minecraft.getCurrentServer().ip;
         String safe = address.replace(":", "_").replace(".", "-");
         String safeAndUnderscore = safe + "_";
 
         // Resolve the multi-server config directory, located in .minecraft/config/qualityofqueso/server-configs/*server-name*
-        File serverDir = Platforms.getCommonPlatform().configDir()
+        File serverDir = Platforms.getUniversalPlatform().configDir()
                 .resolve(DEFAULT_SERVER_CONFIG_DIR + safe)
                 .toFile();
 
         // Get config file names
         String clientServerConfig = safeAndUnderscore + DEFAULT_CLIENT_CONFIG_FILE_NAME;
         String commonServerConfig = safeAndUnderscore + DEFAULT_COMMON_CONFIG_FILE_NAME;
-        String containerDataServerConfig = safeAndUnderscore + DEFAULT_CONTAINER_DATA_FILE_NAME;
-        String lockedContainerSlotsServerConfig = safeAndUnderscore + DEFAULT_LOCKED_CONTAINER_SLOTS_FILE_NAME;
-        String lockedPlayerSlotsServerConfig = safeAndUnderscore + DEFAULT_LOCKED_PLAYER_SLOTS_FILE_NAME;
 
         // Get config files
         File clientServerFile = new File(serverDir, clientServerConfig);
         File commonServerFile = new File(serverDir, commonServerConfig);
-        File containerDataServerFile = new File(serverDir, containerDataServerConfig);
-        File lockedContainerSlotsServerFile = new File(serverDir, lockedContainerSlotsServerConfig);
-        File lockedPlayerSlotsServerFile = new File(serverDir, lockedPlayerSlotsServerConfig);
 
         // Get the cached instances
         ModClientOptions cachedClientInstance = ModClientOptions.INSTANCE.getInstance();
@@ -469,10 +469,7 @@ public class ModHelper {
 
         // Determine if all config files exists
         final boolean configExists = clientServerFile.exists()
-                && containerDataServerFile.exists()
-                && commonServerFile.exists()
-                && lockedContainerSlotsServerFile.exists()
-                && lockedPlayerSlotsServerFile.exists();
+                && commonServerFile.exists();
 
         // Update config instances for the multi-server config
         ModClientOptions.INSTANCE.setCustomDirectory(serverDir);
@@ -481,9 +478,9 @@ public class ModHelper {
         ModCommonOptions.INSTANCE.setCustomDirectory(serverDir);
         ModCommonOptions.INSTANCE.setFileName(commonServerConfig);
 
-        // If the config wasn't present, send created message, and set the instance
+        // If the config wasn't present, send created message, and set the minecraft
         if (!configExists) {
-            LOGGER.info("Creating new Quality of Queso server config instance for \"{}\".", address);
+            LOGGER.info("Creating new Quality of Queso server config minecraft for \"{}\".", address);
 
             ModClientOptions.INSTANCE.setInstance(cachedClientInstance);
             ModClientOptions.INSTANCE.save();
@@ -498,8 +495,8 @@ public class ModHelper {
 
         // Send appropriate message
         String message = !configExists ? "qualityofqueso.created_server_config" : "qualityofqueso.loaded_server_config";
-        if (instance.player != null) {
-            instance.player.sendSystemMessage(Component.translatable(message).withStyle(ChatFormatting.GOLD));
+        if (minecraft.player != null) {
+            minecraft.player.sendSystemMessage(Component.translatable(message).withStyle(ChatFormatting.GOLD));
         }
 
         // Log the multi-server config
@@ -520,9 +517,9 @@ public class ModHelper {
         ModCommonOptions.INSTANCE.load();
 
         // Send reset message
-        Minecraft instance = Minecraft.getInstance();
-        if (instance.player != null) {
-            instance.player.sendSystemMessage(Component.translatable("qualityofqueso.unloaded_server_config").withStyle(ChatFormatting.GOLD));
+        LocalPlayer player = getLocalPlayer();
+        if (player != null) {
+            player.sendSystemMessage(Component.translatable("qualityofqueso.unloaded_server_config").withStyle(ChatFormatting.GOLD));
         }
         // Log the message
         if (universal().multiServerConfigs) {

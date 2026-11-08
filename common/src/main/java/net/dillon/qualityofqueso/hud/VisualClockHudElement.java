@@ -4,6 +4,7 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 import static net.dillon.dillonlib.task.ClientTasks.getGuiHeight;
 import static net.dillon.qualityofqueso.helper.GuiHelper.drawVisualTimeClock;
+import static net.dillon.qualityofqueso.helper.GuiHelper.isPositioningElements;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 /**
@@ -16,7 +17,7 @@ public class VisualClockHudElement extends ModHudElement {
      */
     @Override
     public void extractRenderState(GuiGraphicsExtractor graphics) {
-        if (!client().visualTime().overrideClientTime || !client().visualTime().displayVisualClock) {
+        if (!isPositioningElements() && (!client().visualTime().overrideClientTime || !client().visualTime().displayVisualClock)) {
             return;
         }
 

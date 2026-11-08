@@ -51,7 +51,7 @@ public class ShulkerSyncer {
     }
 
     /**
-     * Applies the active sort mode for a shulker.
+     * Applies the enabled sort mode for a shulker.
      */
     protected static void applyActiveSortModeForActiveShulker() {
         ShulkerState state = shulkerStateCache.get(activeShulkerPos);
@@ -72,7 +72,7 @@ public class ShulkerSyncer {
     }
 
     /**
-     * Applies the active filtering mode for a shulker.
+     * Applies the enabled filtering mode for a shulker.
      */
     protected static void applyActiveFilteringModeForActiveShulker() {
         ShulkerState state = shulkerStateCache.get(activeShulkerPos);
@@ -89,7 +89,7 @@ public class ShulkerSyncer {
     }
 
     /**
-     * Stores the active sort mode for a shulker.
+     * Stores the enabled sort mode for a shulker.
      */
     protected static void storeActiveSortModeForActiveShulker(CurrentSortingMode mode) {
         ShulkerState state = shulkerState(activeShulkerPos);
@@ -98,7 +98,7 @@ public class ShulkerSyncer {
     }
 
     /**
-     * Stores the active filtering mode for a shulker.
+     * Stores the enabled filtering mode for a shulker.
      */
     protected static void storeActiveFilteringModeForActiveShulker(FilteringMode mode) {
         ShulkerState state = shulkerState(activeShulkerPos);
@@ -202,7 +202,7 @@ public class ShulkerSyncer {
     }
 
     /**
-     * @return if the active shulker pos is locked.
+     * @return if the enabled shulker pos is locked.
      */
     protected static boolean isActiveShulkerLocked() {
         if (activeShulkerPos != null) {
@@ -266,7 +266,7 @@ public class ShulkerSyncer {
     }
 
     /**
-     * Pushes the current active shulker cache state to the server.
+     * Pushes the current enabled shulker cache state to the server.
      */
     protected static void pushActiveShulkerStateToServer() {
         if (activeShulkerPos == null || !activeShulkerStateSynced) {

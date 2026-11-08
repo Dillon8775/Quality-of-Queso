@@ -1,7 +1,7 @@
 package net.dillon.qualityofqueso.packet.clientbound;
 
 import net.dillon.dillonlib.annotation.Dill;
-import net.dillon.dillonlib.annotation.DillType;
+import net.dillon.dillonlib.annotation.DillEnv;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -12,7 +12,7 @@ import net.minecraft.resources.Identifier;
 import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
 
 /**
- * Server-to-client packet with authoritative QoQ state for a specific shulker.
+ * Server-to-client packet with authoritative state for a specific shulker.
  *
  * @param pos the shulker block position.
  * @param sortingMode current sorting mode enum name.
@@ -22,7 +22,7 @@ import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
  * @param filterItemsCsv comma-separated item identifiers for placeholders.
  * @param lockedSlotsCsv comma-separated locked slot indices.
  */
-@Dill(DillType.COMMON)
+@Dill(env = DillEnv.COMMON)
 public record SyncShulkerStateS2CPacket(
         BlockPos pos,
         String sortingMode,

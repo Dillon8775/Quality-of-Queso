@@ -1,7 +1,7 @@
 package net.dillon.qualityofqueso.util;
 
+import net.dillon.dillonlib.client.component.SoundBuilder;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -10,6 +10,8 @@ import net.minecraft.world.entity.player.Player;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
+import static net.dillon.dillonlib.task.ClientTasks.isCurrentLevelNull;
 
 /**
  * Tracks the mob hit ding, to play the correct sound upon hitting an entity.
@@ -32,7 +34,7 @@ public class MobHitDingTracker {
      * Ticks the {@code mob, hit, ding!} sound effect, and plays the correct sound upon the entity dying or just being hit.
      */
     public static void tick(Minecraft minecraft) {
-        if (pendingHitChecks.isEmpty() || minecraft.level == null || minecraft.player == null) {
+        if (pendingHitChecks.isEmpty() || isCurrentLevelNull() || minecraft.player == null) {
             pendingHitChecks.clear();
             return;
         }
@@ -56,10 +58,14 @@ public class MobHitDingTracker {
 
             boolean isPlayer = pendingHit.wasPlayer() || entity instanceof Player;
             if (!isPlayer) {
-                minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.ARROW_HIT_PLAYER, 1.0F, 0.18F));
+                SoundBuilder.create(SoundEvents.ARROW_HIT_PLAYER)
+                        .volume(0.18F)
+                        .buildAndPlay();
             }
             if (deadOrRemoved) {
-                minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.PLAYER_LEVELUP, 1.0F, 0.32F));
+                SoundBuilder.create(SoundEvents.PLAYER_LEVELUP)
+                        .volume(0.32F)
+                        .buildAndPlay();
             } else if (isPlayer && currentTime < pendingHit.expireAtGameTime()) {
                 continue;
             }
