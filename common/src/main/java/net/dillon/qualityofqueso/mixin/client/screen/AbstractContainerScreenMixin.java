@@ -410,7 +410,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
     /**
      * Handles closing events when closing the screen.
      */
-    @Inject(method = "onClose", at = @At("TAIL"))
+    @Inject(method = "onClose", at = @At("HEAD"))
     private void handleOnClose(CallbackInfo ci) {
         if (!modEnabled()) {
             return;

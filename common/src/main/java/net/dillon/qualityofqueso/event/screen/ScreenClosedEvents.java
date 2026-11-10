@@ -55,6 +55,7 @@ public class ScreenClosedEvents extends ManagementEvents {
             if (isInventoryScreen() && holder().searchFields().inventory() != null) {
                 updateClient(client -> client.searching().savedSearchText = holder().searchFields().inventory().getValue());
             } else if (isContainerScreen() && holder().searchFields().container() != null) {
+
                 updateClient(client -> client.searching().savedSearchText = holder().searchFields().container().getValue());
             }
         }

@@ -63,8 +63,13 @@ public class GuiHelper {
     public static void drawTooltip(Component tooltip, GuiGraphicsExtractor graphics, int mouseX, int mouseY, boolean searchBar) {
         Screen screen = getScreen();
         boolean validScreen = isValidScreen() || isOtherValidScreen();
-        int x = validScreen ? getTooltipX(graphics, screen, mouseX) : mouseX;
-        int y = validScreen ? getTooltipY(CURRENT_CONTAINER, screen, mouseY, searchBar) : mouseY;
+
+        int x = validScreen
+                ? getTooltipX(graphics, screen, mouseX)
+                : mouseX;
+        int y = validScreen
+                ? getTooltipY(CURRENT_CONTAINER, screen, mouseY, searchBar)
+                : mouseY;
         Font font = getFont();
         graphics.setTooltipForNextFrame(font, font.split(tooltip, 200), x, y);
     }
@@ -76,7 +81,10 @@ public class GuiHelper {
         if (!client().general().tooltips.ddefault()) {
             return mouseX;
         }
-        int x = !client().misc().noRecipeBookShift && screen instanceof AbstractRecipeBookScreen<?> recipeBookScreen && getRecipeBookComponent(recipeBookScreen).isVisible() ? 161 : 84;
+
+        int x = !client().misc().noRecipeBookShift
+                && screen instanceof AbstractRecipeBookScreen<?> recipeBookScreen
+                && getRecipeBookComponent(recipeBookScreen).isVisible() ? 161 : 84;
         return graphics.guiWidth() / 2 + x;
     }
 
@@ -98,11 +106,13 @@ public class GuiHelper {
             }
             y = getTopPos(inventoryScreen) + getTitleLabelY(inventoryScreen) + containerY + l;
         } else if (screen instanceof AbstractContainerScreen<?> abstractContainerScreen) {
-            l = client().management().layout.horizontal() && abstractContainerScreen instanceof ContainerScreen ? 14 : 36;
+            l = client().management().layout.horizontal()
+                    && abstractContainerScreen instanceof ContainerScreen
+                    ? 14
+                    : 36;
             if (!client().management().layout.horizontal()) {
                 if (RENDERED_BUTTONS > 8) {
-                    l += l / 3 + (RENDERED_BUTTONS > 10 ? 12 : 0);
-                    System.out.println("returning true");
+                    l += 34 + (RENDERED_BUTTONS > 10 ? 12 : 0);
                 } else if (RENDERED_BUTTONS > 4) {
                     l += 12;
                     if (RENDERED_BUTTONS > 6) {

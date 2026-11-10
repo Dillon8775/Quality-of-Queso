@@ -16,3 +16,6 @@
 - Removed the option to determine where the View Last Known Ender Chest button should appear. It now only appears in the Quality of Queso main menu.
 - Optimized tooltips.
 - Backend optimizations to screens.
+
+## Bugs Fixed
+- [Bug #45:](https://github.com/Dillon8775/Quality-of-Queso/issues/45) Save search text doesn't work following *unknown* update.
