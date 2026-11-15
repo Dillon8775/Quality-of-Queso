@@ -6,6 +6,7 @@ import net.dillon.dillonlib.client.component.GridBuilder;
 import net.dillon.dillonlib.client.screen.DillonLibScreen;
 import net.dillon.dillonlib.client.util.KeybindScrollHelper;
 import net.dillon.dillonlib.task.ClientTasks;
+import net.dillon.dillonlib.widespread.DillonsWidgets;
 import net.dillon.qualityofqueso.config.ConfigurationScreen;
 import net.dillon.qualityofqueso.helper.ButtonHelper;
 import net.dillon.qualityofqueso.helper.ModConstants;
@@ -133,7 +134,7 @@ public class MainMenuScreen extends DillonLibScreen {
         builder.getCurrentRow().addChild(packTemplate);
 
         builder.fillRow(
-                MOD_INFO.createVersionLabel(this),
+                DillonsWidgets.createVersionLabel(MOD_INFO, this),
                 builder.alignHorizontallyCenter().paddingTop(8)
         );
 

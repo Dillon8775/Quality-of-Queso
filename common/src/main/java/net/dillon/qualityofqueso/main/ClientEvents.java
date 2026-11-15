@@ -1,5 +1,6 @@
 package net.dillon.qualityofqueso.main;
 
+import net.dillon.dillonlib.task.CommonTasks;
 import net.dillon.qualityofqueso.helper.ModHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -16,6 +17,7 @@ import static net.dillon.qualityofqueso.option.OptionInstances.universal;
  * Client events for Quality of Queso.
  */
 public class ClientEvents {
+
     public static void afterLevelChangeOrRespawn() {
         resetArmorHudState();
     }
@@ -43,7 +45,7 @@ public class ClientEvents {
                 }
             }
 
-            MOD_INFO.sendUpdateMessage(localPlayer, TextColor.GOLD.getValue());
+            CommonTasks.sendUpdateMessage(MOD_INFO, localPlayer, TextColor.GOLD.getValue());
         });
         sendClientPreferencesToServer();
     }
