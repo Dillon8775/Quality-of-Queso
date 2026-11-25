@@ -1,12 +1,11 @@
 package net.dillon.qualityofqueso.config;
 
-import dev.isxander.yacl3.api.ConfigCategory;
-import dev.isxander.yacl3.api.Option;
-import dev.isxander.yacl3.api.OptionDescription;
-import dev.isxander.yacl3.api.OptionGroup;
+import dev.isxander.yacl3.api.*;
 import dev.isxander.yacl3.api.controller.BooleanControllerBuilder;
+import dev.isxander.yacl3.api.controller.EnumControllerBuilder;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
 import net.blay09.mods.balm.Balm;
+import net.dillon.dillonlib.client.util.DebugTextAlignment;
 import net.dillon.dillonlib.platform.info.Release;
 import net.dillon.qualityofqueso.option.eum.general.Theme;
 import net.dillon.qualityofqueso.platform.QualityOfQuesoPlatforms;
@@ -98,7 +97,7 @@ public class AccessibilityCategory {
                                                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.beta_warning.description")))
                                                 .binding(true, () -> client().accessibility().betaWarning, v -> client().accessibility().betaWarning = v)
                                                 .controller(BooleanControllerBuilder::create)
-                                                .available(mixins().titleScreenMixin && QualityOfQuesoPlatforms.getPlatform().release() != Release.STABLE)
+                                                .available(QualityOfQuesoPlatforms.getPlatform().release() != Release.STABLE)
                                                 .build()
                                 )
                                 .option(
@@ -107,6 +106,17 @@ public class AccessibilityCategory {
                                                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.server_warnings.description")))
                                                 .binding(true, () -> client().accessibility().serverWarnings, v -> client().accessibility().serverWarnings = v)
                                                 .controller(BooleanControllerBuilder::create)
+                                                .build()
+                                )
+                                .option(
+                                        Option.<DebugTextAlignment>createBuilder()
+                                                .name(Component.translatable("dillonlib.option.debug_text_alignment"))
+                                                .description(OptionDescription.of(Component.translatable("dillonlib.option.debug_text_alignment.description")))
+                                                .binding(DebugTextAlignment.AUTO, () -> client().accessibility().debugTextAlignment, v -> client().accessibility().debugTextAlignment = v)
+                                                .controller(o -> EnumControllerBuilder.create(o)
+                                                        .enumClass(DebugTextAlignment.class)
+                                                        .formatValue(v -> Component.translatable(v.getSerializedName())))
+                                                .flag(OptionFlag.GAME_RESTART)
                                                 .build()
                                 )
                                 .option(
@@ -130,14 +140,6 @@ public class AccessibilityCategory {
                                                 .binding(false, () -> client().accessibility().darkerOverlay, v -> client().accessibility().darkerOverlay = v)
                                                 .controller(BooleanControllerBuilder::create)
                                                 .available(client().general().theme == Theme.VANILLA)
-                                                .build()
-                                )
-                                .option(
-                                        Option.<Boolean>createBuilder()
-                                                .name(Component.translatable("qualityofqueso.options.dark_disc"))
-                                                .description(OptionDescription.of(Component.translatable("qualityofqueso.options.dark_disc.description")))
-                                                .binding(true, () -> client().accessibility().darkDisc, v -> client().accessibility().darkDisc = v)
-                                                .controller(BooleanControllerBuilder::create)
                                                 .build()
                                 )
                                 .build()

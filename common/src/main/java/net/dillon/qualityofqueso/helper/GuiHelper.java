@@ -53,23 +53,23 @@ public class GuiHelper {
     /**
      * Draws a tooltips on a screen for anything other than a search bar.
      */
-    public static void drawTooltip(Component tooltip, GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-        drawTooltip(tooltip, graphics, mouseX, mouseY, false);
+    public static void drawTooltip(Component tooltip, GuiGraphicsExtractor graphics) {
+        drawTooltip(tooltip, graphics, false);
     }
 
     /**
      * Draws a tooltips in a screen.
      */
-    public static void drawTooltip(Component tooltip, GuiGraphicsExtractor graphics, int mouseX, int mouseY, boolean searchBar) {
+    public static void drawTooltip(Component tooltip, GuiGraphicsExtractor graphics, boolean searchBar) {
         Screen screen = getScreen();
         boolean validScreen = isValidScreen() || isOtherValidScreen();
 
         int x = validScreen
-                ? getTooltipX(graphics, screen, mouseX)
-                : mouseX;
+                ? getTooltipX(graphics, screen)
+                : graphics.mouseX();
         int y = validScreen
-                ? getTooltipY(CURRENT_CONTAINER, screen, mouseY, searchBar)
-                : mouseY;
+                ? getTooltipY(graphics, CURRENT_CONTAINER, screen, searchBar)
+                : graphics.mouseY();
         Font font = getFont();
         graphics.setTooltipForNextFrame(font, font.split(tooltip, 200), x, y);
     }
@@ -77,12 +77,12 @@ public class GuiHelper {
     /**
      * @return the {@code X-position} for tooltips. Only counts for {@link AbstractContainerScreen}s and {@link InventoryScreen}s.
      */
-    public static int getTooltipX(GuiGraphicsExtractor graphics, Screen screen, int mouseX) {
+    public static int getTooltipX(GuiGraphicsExtractor graphics, Screen screen) {
         if (!client().general().tooltips.ddefault()) {
-            return mouseX;
+            return graphics.mouseX();
         }
 
-        int x = !client().misc().noRecipeBookShift
+        int x = !client().gui().noRecipeBookShift
                 && screen instanceof AbstractRecipeBookScreen<?> recipeBookScreen
                 && getRecipeBookComponent(recipeBookScreen).isVisible() ? 161 : 84;
         return graphics.guiWidth() / 2 + x;
@@ -91,9 +91,9 @@ public class GuiHelper {
     /**
      * @return the {@code Y-position} for tooltips. Only counts for {@link AbstractContainerScreen}s, {@link InventoryScreen}s, and secondary screens.
      */
-    public static int getTooltipY(Container container, Screen screen, int mouseY, boolean searchBar) {
+    public static int getTooltipY(GuiGraphicsExtractor graphics, Container container, Screen screen, boolean searchBar) {
         if (!client().general().tooltips.ddefault() || (!(screen instanceof AbstractContainerScreen<?>))) {
-            return mouseY;
+            return graphics.mouseY();
         }
 
         int containerY = getContainerY(container);

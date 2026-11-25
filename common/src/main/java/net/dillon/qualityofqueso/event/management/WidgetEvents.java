@@ -110,15 +110,9 @@ public class WidgetEvents extends ManagementEvents {
         );
     }
 
-    public void initBulkTrade() {
-        holder().managementButtons().setBulkTrade(
-                initButton(this::canInitBulkTradeButton, createBulkTrade())
-        );
-    }
-
     public void initBulkCraft() {
-        holder().managementButtons().setBulkCraft(
-                initButton(this::canInitBulkCraftButton, createBulkCraft())
+        holder().managementButtons().setBulkSelect(
+                initButton(this::canInitBulkSelectButton, createBulkSelect())
         );
     }
 
@@ -128,7 +122,7 @@ public class WidgetEvents extends ManagementEvents {
         );
     }
 
-    public void initLayout(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+    public void initLayout(GuiGraphicsExtractor graphics) {
         if (!(isValidScreen() || isOtherValidScreen() || isMerchantScreen() || isCraftingScreen())) {
             return;
         }
@@ -142,14 +136,14 @@ public class WidgetEvents extends ManagementEvents {
         // Construct the final layout
         AbstractList<AbstractWidget> finalLayout = client().management().layout.horizontal() ? horizontalLayout : verticalLayout;
         if (isMerchantScreen()) {
-            finalLayout = NonNullList.of(null, holder().managementButtons().getBulkTrade());
+            finalLayout = NonNullList.of(null, holder().managementButtons().getBulkSelect());
         }
 
         // Set and initialize the widget layout
         holder().setWidgetLayout(WidgetLayout.initializeLayout(holder().screen(),
                 holder().getCachedContainer(), getTopPos(holder().screen()), getTitleLabelY(holder().screen()), finalLayout
         ));
-        holder().getWidgetLayout().extractRenderState(graphics, mouseX, mouseY, a);
+        holder().getWidgetLayout().extractRenderState(graphics);
     }
 
     /**
@@ -171,7 +165,7 @@ public class WidgetEvents extends ManagementEvents {
                 case ALWAYS_QUICK_MOVE_BUTTON_SERIALIZED_NAME ->
                         finalLayout.add(holder().managementButtons().getAlwaysQuickMove());
                 case FILTERING_BUTTON_SERIALIZED_NAME -> finalLayout.add(holder().managementButtons().getFiltering());
-                case BULK_CRAFT_BUTTON_SERIALIZED_NAME -> finalLayout.add(holder().managementButtons().getBulkCraft());
+                case BULK_CRAFT_BUTTON_SERIALIZED_NAME -> finalLayout.add(holder().managementButtons().getBulkSelect());
                 case QUICK_DROP_BUTTON_SERIALIZED_NAME -> finalLayout.add(holder().managementButtons().getQuickDrop());
                 case SWAP_BUTTON_SERIALIZED_NAME -> finalLayout.add(holder().managementButtons().getSwap());
                 case SEARCH_TRANSPORTABLES_BUTTON_SERIALIZED_NAME ->
@@ -273,17 +267,10 @@ public class WidgetEvents extends ManagementEvents {
     }
 
     /**
-     * @return the {@code bulk trade} button.
-     */
-    private ManagementButton createBulkTrade() {
-        return createButton(BulkTradeButton::new);
-    }
-
-    /**
      * @return the {@code bulk craft} button.
      */
-    private ManagementButton createBulkCraft() {
-        return createButton(BulkCraftButton::new);
+    private ManagementButton createBulkSelect() {
+        return createButton(BulkSelectButton::new);
     }
 
     /**
@@ -297,7 +284,7 @@ public class WidgetEvents extends ManagementEvents {
      * @return if the {@code Transfer Container button} can be {@code initialized}.
      */
     private boolean canInitTransferButton() {
-        return client().management().transferring.buttonOrKey()
+        return client().management().transferring.buttonOrShortcutKey()
                 && (isContainerScreen() || isDropperDispenserOrHopperScreen() || isBrewingOrFurnaceScreen());
     }
 
@@ -316,9 +303,9 @@ public class WidgetEvents extends ManagementEvents {
             return false;
         }
 
-        if (isContainerScreen() && client().management().transferring.any() || client().management().quickDrop.any()) {
-            return client().buttonDisplayOptions().displayIncludeHotbar != IncludeHotbar.OFF
-                    && (!isInventoryScreen() || !client().buttonDisplayOptions().displayIncludeHotbar.containerScreensOnly());
+        if (isContainerScreen() && client().management().transferring.enabled() || client().management().quickDrop.enabled()) {
+            return client().display().displayIncludeHotbar != IncludeHotbar.OFF
+                    && (!isInventoryScreen() || !client().display().displayIncludeHotbar.containerScreensOnly());
         }
 
         return false;
@@ -330,9 +317,9 @@ public class WidgetEvents extends ManagementEvents {
     private boolean canInitFilteringButton() {
         return !isInventoryScreen()
                 && (
-                ContainerSyncer.isTrackedFilteringActive() || !client().buttonDisplayOptions().displayFiltering.filteredContainersOnly()
+                ContainerSyncer.isTrackedFilteringActive() || !client().display().displayFiltering.filteredContainersOnly()
                         && (
-                        (isContainerScreen() || isDropperDispenserOrHopperScreen()) && client().management().transferring.any()
+                        (isContainerScreen() || isDropperDispenserOrHopperScreen()) && client().management().transferring.enabled()
                 )
         );
     }
@@ -342,21 +329,21 @@ public class WidgetEvents extends ManagementEvents {
      */
     private boolean canInitQuickDropButton() {
         return isValidScreen()
-                && (client().management().quickDrop.buttonOrKey() || (client().management().quickDrop.any() && hasAllQuickDropModifiersDown()));
+                && (client().management().quickDrop.buttonOrShortcutKey() || (client().management().quickDrop.enabled() && hasAllQuickDropModifiersDown()));
     }
 
     /**
      * @return if the {@link SwapButton} can be {@code initialized}.
      */
     private boolean canInitSwapButton() {
-        return client().management().swapping.buttonOrKey() && isContainerScreen();
+        return client().management().swapping.buttonOrShortcutKey() && isContainerScreen();
     }
 
     /**
      * @return if the {@link SortButton} can be {@code initialized}.
      */
     private boolean canInitSortButton() {
-        return client().sorting().sorting.buttonOrKey()
+        return client().sorting().sorting.buttonOrShortcutKey()
                 && (isValidScreen() || isDropperDispenserOrHopperScreen());
     }
 
@@ -364,7 +351,7 @@ public class WidgetEvents extends ManagementEvents {
      * @return if the {@link AlwaysQuickMoveButton} can be {@code initialized}.
      */
     private boolean canInitAlwaysQuickMoveButton() {
-        return client().buttonDisplayOptions().displayAlwaysQuickMove && isValidScreenForSingularMoving(true);
+        return !client().display().hideAlwaysQuickMove && isValidScreenForSingularMoving(true);
     }
 
     /**
@@ -379,7 +366,7 @@ public class WidgetEvents extends ManagementEvents {
                 (
                         (holder().searchFields().inventory() != null && !holder().searchFields().inventory().getValue().isEmpty())
                                 || (holder().searchFields().container() != null && !holder().searchFields().container().getValue().isEmpty())
-                ) && client().buttonDisplayOptions().displaySearchTransportables
+                ) && !client().display().hideSearchTransportables
                         &&
                         (
                                 (client().searching().containerSearching && isContainerScreen())
@@ -405,24 +392,21 @@ public class WidgetEvents extends ManagementEvents {
     }
 
     /**
-     * @return if the {@link BulkTradeButton} can be {@code initialized}.
+     * @return if the {@link BulkSelectButton} can be {@code initialized}.
      */
-    private boolean canInitBulkTradeButton() {
-        return client().buttonDisplayOptions().displayBulkTrade && isMerchantScreen();
-    }
-
-    /**
-     * @return if the {@link BulkCraftButton} can be {@code initialized}.
-     */
-    private boolean canInitBulkCraftButton() {
-        return client().buttonDisplayOptions().displayBulkCraft && (isCraftingScreen() || isInventoryScreen());
+    private boolean canInitBulkSelectButton() {
+        if (isMerchantScreen()) {
+            return !client().display().hideBulkTrade;
+        } else {
+            return !client().display().hideBulkCraft && (isCraftingScreen() || isInventoryScreen());
+        }
     }
 
     /**
      * @return if the {@link LockInventoryButton} can be {@code initialized}.
      */
     private boolean canInitLockInventoryButton() {
-        return client().buttonDisplayOptions().displayLockInventory && isInventoryScreen();
+        return !client().display().hideLockInventory && isInventoryScreen();
     }
 
     /**

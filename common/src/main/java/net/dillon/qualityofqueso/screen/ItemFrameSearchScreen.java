@@ -22,6 +22,7 @@ import static net.dillon.dillonlib.client.component.GridBuilder.createRow;
 import static net.dillon.dillonlib.task.ClientTasks.*;
 import static net.dillon.dillonlib.widespread.DillonsWidgets.createMultiLineText;
 import static net.dillon.dillonlib.widespread.DillonsWidgets.createOption;
+import static net.dillon.qualityofqueso.option.ModClientOptions.getGlowDuration;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 import static net.dillon.qualityofqueso.option.OptionInstances.updateClient;
 
@@ -64,7 +65,7 @@ public class ItemFrameSearchScreen extends DillonLibScreen {
      */
     private void clear() {
         this.searchField.setValue("");
-        this.sendPacket(true, 0, client().misc().itemFrameSearchRadius);
+        this.sendPacket(true, 0, client().searching().itemFrameSearchRadius);
     }
 
     /**
@@ -85,9 +86,9 @@ public class ItemFrameSearchScreen extends DillonLibScreen {
     }
 
     @Override
-    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks) {
+    public void extractBackground(GuiGraphicsExtractor graphics) {
         if (isCurrentLevelNull()) {
-            this.extractPanorama(graphics, deltaTicks);
+            this.extractPanorama(graphics);
         }
 
         this.extractMenuBackground(graphics);
@@ -96,7 +97,7 @@ public class ItemFrameSearchScreen extends DillonLibScreen {
     @Override
     public boolean keyPressed(KeyEvent input) {
         if (input.key() == InputConstants.KEY_RETURN && !isSearchFieldTextEmpty()) {
-            this.sendPacket(false, client().misc().itemFrameSearchGlowDuration != 0 ? client().misc().itemFrameSearchGlowDuration : 0, client().misc().itemFrameSearchRadius);
+            this.sendPacket(false, getGlowDuration().valueInt(), client().searching().itemFrameSearchRadius);
         }
 
         if (hasCtrlDown() && input.key() == InputConstants.KEY_C) {
@@ -125,7 +126,7 @@ public class ItemFrameSearchScreen extends DillonLibScreen {
     private AbstractWidget searchButton() {
         return createWidget(
                 Button.builder(Component.translatable("qualityofqueso.gui.search"), button -> {
-                            this.sendPacket(false, client().misc().itemFrameSearchGlowDuration != 0 ? client().misc().itemFrameSearchGlowDuration : 0, client().misc().itemFrameSearchRadius);
+                            this.sendPacket(false, getGlowDuration().valueInt(), client().searching().itemFrameSearchRadius);
                         })
                         .size(100, 20)
                         .build(),
@@ -214,8 +215,8 @@ public class ItemFrameSearchScreen extends DillonLibScreen {
     }
 
     @Override
-    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks) {
-        super.extractRenderState(graphics, mouseX, mouseY, deltaTicks);
+    public void extractRenderState(GuiGraphicsExtractor graphics) {
+        super.extractRenderState(graphics);
         this.extractBlurredBackground(graphics);
     }
 }

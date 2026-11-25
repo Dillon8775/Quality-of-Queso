@@ -12,7 +12,6 @@ import net.dillon.qualityofqueso.option.eum.management.FilteringMode;
 import net.dillon.qualityofqueso.option.eum.management.sorting.CurrentSortingMode;
 import net.dillon.qualityofqueso.option.eum.management.sorting.DefaultSortingMode;
 import net.dillon.qualityofqueso.option.eum.management.sorting.Sorting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -26,11 +25,10 @@ import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.entity.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.ChestType;
-import net.minecraft.world.level.storage.LevelResource;
 
 import java.util.*;
 
-import static net.dillon.dillonlib.task.ClientTasks.getMinecraft;
+import static net.dillon.dillonlib.task.ClientTasks.*;
 import static net.dillon.qualityofqueso.container.ShulkerSyncer.*;
 import static net.dillon.qualityofqueso.helper.SoundHelper.playLockSlotSound;
 import static net.dillon.qualityofqueso.option.OptionInstances.*;
@@ -232,7 +230,7 @@ public class ContainerSyncer {
      * Saves the container data.
      */
     private static void saveContainerData() {
-        ContainerData.INSTANCE.save();
+        ContainerData.getInstance().save();
     }
 
     /**
@@ -907,14 +905,14 @@ public class ContainerSyncer {
 
         CAN_PLAY_INACTIVE_SOUND = data.locked;
         playLockSlotSound(data.locked);
-        ContainerData.INSTANCE.save();
+        ContainerData.getInstance().save();
     }
 
     /**
      * @return if the enabled container is locked.
      */
     public static boolean isActiveContainerLocked() {
-        if (client().sorting().sorting != Sorting.BUTTON_OR_KEY) {
+        if (client().sorting().sorting != Sorting.BUTTON_OR_SHORTCUT_KEY) {
             return false;
         }
 
@@ -983,7 +981,7 @@ public class ContainerSyncer {
             }
 
             playLockSlotSound(locked);
-            LockedContainerSlots.INSTANCE.save();
+            LockedContainerSlots.getInstance().save();
             return;
         }
 
@@ -1007,7 +1005,7 @@ public class ContainerSyncer {
         }
 
         playLockSlotSound(locked);
-        LockedPlayerSlots.INSTANCE.save();
+        LockedPlayerSlots.getInstance().save();
     }
 
     /**
@@ -1170,21 +1168,13 @@ public class ContainerSyncer {
      * @return a world/session key so container tracking does not collide across saves/servers.
      */
     public static String worldKey() {
-        Minecraft minecraft = getMinecraft();
-
-        if (minecraft.getSingleplayerServer() != null) {
+        if (isSingleplayer()) {
             return "singleplayer:"
-                    + minecraft.getSingleplayerServer()
-                    .getWorldPath(LevelResource.ROOT)
-                    .getParent()
-                    .getFileName()
-                    .toString();
+                    + getLocalWorldDirName();
         }
 
-        if (minecraft.getCurrentServer() != null
-                && !minecraft.getCurrentServer().ip.isBlank()) {
-            return "server:"
-                    + minecraft.getCurrentServer().ip.toLowerCase(Locale.ROOT);
+        if (isOnServer()) {
+            return "server:" + getCurrentServerIp();
         }
 
         return "unknown_world";

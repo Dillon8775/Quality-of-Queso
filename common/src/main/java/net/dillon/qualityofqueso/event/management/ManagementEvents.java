@@ -7,6 +7,7 @@ import net.dillon.qualityofqueso.event.ModEvent;
 import net.dillon.qualityofqueso.event.QuesoScreenHolder;
 import net.dillon.qualityofqueso.option.eum.management.FilteringMode;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.inventory.SlotWidget;
 import net.minecraft.client.gui.screens.inventory.AbstractFurnaceScreen;
 import net.minecraft.client.gui.screens.inventory.BrewingStandScreen;
 import net.minecraft.client.gui.screens.inventory.DispenserScreen;
@@ -195,7 +196,8 @@ public class ManagementEvents implements ModEvent {
             boolean isStackShulker = isShulkerScreen && stack.is(ItemTags.SHULKER_BOXES);
 
             // Skip stacks that are not what the user is attempting to drop
-            if (hoveredSlotHasItem(holder().screensHoveredSlot()) && hasAllQuickDropModifiersDown() && !stack.is(holder().screensHoveredSlot().getItem().getItem())) {
+            SlotWidget hoveredSlotWidget = holder().getHoveredSlotWidget();
+            if (hoveredSlotHasItem(hoveredSlotWidget) && hasAllQuickDropModifiersDown() && !stack.is(hoveredSlotWidget.slot().getItem().getItem())) {
                 continue;
             }
 
@@ -485,7 +487,7 @@ public class ManagementEvents implements ModEvent {
         Minecraft minecraft = getMinecraft();
         ClientPacketListener packetListener = minecraft.getConnection();
 
-        if (minecraft.player == null || packetListener == null || minecraft.player.containerMenu == null) {
+        if (minecraft.player == null || packetListener == null) {
             return;
         }
 

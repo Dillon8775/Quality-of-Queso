@@ -7,12 +7,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static net.dillon.dillonlib.util.BaseOptions.guardedInstance;
+
 /**
  * Stores locked container slots for each container in a world.
  */
 public class LockedContainerSlots {
-    public static final LockedContainerSlotsHandler INSTANCE = new LockedContainerSlotsHandler();
+    private static final LockedContainerSlotsHandler INSTANCE = new LockedContainerSlotsHandler();
     public Map<String, List<LockedContainerSlotData>> lockedContainerSlots = new HashMap<>();
+
+    public static LockedContainerSlotsHandler getInstance() {
+        return guardedInstance(INSTANCE);
+    }
 
     public static class LockedContainerSlotsHandler extends ModBaseOptionsHandler<LockedContainerSlots> {
 

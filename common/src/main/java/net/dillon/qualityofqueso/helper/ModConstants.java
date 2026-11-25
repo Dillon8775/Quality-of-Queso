@@ -1,8 +1,12 @@
 package net.dillon.qualityofqueso.helper;
 
 import net.dillon.dillonlib.platform.info.ModInfo;
+import net.dillon.dillonlib.util.TickValue;
 import net.dillon.qualityofqueso.event.management.CursorKey;
 import net.dillon.qualityofqueso.option.eum.management.sorting.CurrentSortingMode;
+import net.dillon.qualityofqueso.timer.Alarm;
+import net.dillon.qualityofqueso.timer.Stopwatch;
+import net.dillon.qualityofqueso.timer.Timer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -12,11 +16,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.*;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.List;
 
-import static net.dillon.dillonlib.util.Arithmetics.S_asTick;
 import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
@@ -42,9 +44,10 @@ public class ModConstants {
     public static int MOVE_AMOUNT = 1;
     public static boolean INTERACTED_WITH_MINECART_CONTAINER = false;
     public static Container CURRENT_CONTAINER = null;
-    public static final String BUTTON_OR_KEY_SERIALIZED_NAME = "§bButton §r§oor §r§eKey";
-    public static final String KEY_ONLY_SERIALIZED_NAME = "§eKey Only";
+    public static final String BUTTON_OR_SHORTCUT_KEY_SERIALIZED_NAME = "§bButton §r§oor §r§eShortcut Key";
+    public static final String SHORTCUT_KEY_ONLY_SERIALIZED_NAME = "§eShortcut Key Only";
     public static final String ALWAYS_SERIALIZED_NAME = "§aAlways";
+    public static final String EVERYWHERE_SERIALiZED_NAME = "§aEverywhere";
     public static final String ENABLED_SERIALiZED_NAME = "§aEnabled";
     public static final String OFF_SERIALIZED_NAME = "§7OFF";
     public static final String ALPHABETICALLY_SERIALIZED_NAME = "§aAlphabetically";
@@ -54,6 +57,10 @@ public class ModConstants {
     public static final String CREATIVE_MENU_SERIALIZED_NAME = "§aC§br§5e§6a§7t§di§ev§9e§r§f Menu";
     public static final String INFINITY_SYMBOL = "∞";
     public static boolean SHOWN_BETA_TOAST = false;
+    public static boolean ALARM_TRIGGERED;
+    public static List<Timer> TIMERS = new ArrayList<>();
+    public static List<Stopwatch> STOPWATCHES = new ArrayList<>();
+    public static List<Alarm> ALARMS = new ArrayList<>();
 
     // Static variables for management button layout lists
     public static final String TRANSFER_CONTAINER_BUTTON_SERIALIZED_NAME = "Transfer Container Button";
@@ -86,13 +93,17 @@ public class ModConstants {
     public static int SORT_SOUND_COOLDOWN = DEFAULT_SORT_SOUND_COOLDOWN;
     public static final int DEFAULT_TRACKED_CONTAINER_COOLDOWN = 2;
     public static int TRACKED_CONTAINER_COOLDOWN = DEFAULT_TRACKED_CONTAINER_COOLDOWN;
-    public static final int DEFAULT_ENHANCED_COOLDOWN_SWAP = S_asTick(2);
+    public static final int DEFAULT_ENHANCED_COOLDOWN_SWAP = new TickValue(2).toTicksSeconds();
     public static int ENHANCED_COOLDOWN_SWAP = DEFAULT_ENHANCED_COOLDOWN_SWAP;
-    public static CursorKey CURSOR_KEY = CursorKey.NULL;
+    public static final int DEFAULT_ALARM_TRIGGERED_COOLDOWN = 5;
+    public static int ALARM_TRIGGERED_COOLDOWN = DEFAULT_ALARM_TRIGGERED_COOLDOWN;
+    public static final int DEFAULT_ONE_SECOND_PASSED_COOLDOWN = 20;
+    public static int ONE_SECOND_PASSED = DEFAULT_ONE_SECOND_PASSED_COOLDOWN;
 
     // Other global variables
     public static Map<Integer, Set<Integer>> SAVED_EXCLUDED_SLOTS = new HashMap<>();
     public static CurrentSortingMode GLOBAL_SORTING_MODE = client().sorting().currentSortingMode;
+    public static CursorKey CURSOR_KEY = CursorKey.NULL;
 
     // Default Minecraft sprites
     public static final Identifier SEARCH_TEXTURE = Identifier.withDefaultNamespace("icon/search");
@@ -142,15 +153,13 @@ public class ModConstants {
     public static final Identifier ENDER_CHEST = qoqIdentifier("widget/ender_chest");
     public static final Identifier CHEST = qoqIdentifier("widget/chest");
     public static final Identifier ITEM_FRAME_SEARCH = qoqIdentifier("widget/item_frame_search");
-    public static final Identifier MULTI_CONFIG_TEXTURE = qoqIdentifier("widget/multi_config");
 
     // Colors
     public static final int SOFT_GREEN = new Color(0x94FF97).getRGB();
 
     // Config constants
-    public static final String DEFAULT_CONFIG_DIR = "qualityofqueso/global";
-    public static final String BACKUP_CONFIG_DIR = "qualityofqueso/backups";
-    public static final String DEFAULT_SERVER_CONFIG_DIR = "qualityofqueso/server-configs/";
+    public static final String DEFAULT_CONFIG_DIR = "qualityofqueso";
+    public static final String BACKUP_CONFIG_DIR = DEFAULT_CONFIG_DIR + "/backups";
     public static final String DEFAULT_CLIENT_CONFIG_FILE_NAME = "client.json";
     public static final String DEFAULT_COMMON_CONFIG_FILE_NAME = "common.json";
     public static final String DEFAULT_UNIVERSAL_CONFIG_FILE_NAME = "universal.json";

@@ -455,18 +455,6 @@
             <li>Found in the mod's <code>main menu</code></li>
         </ul>
 </details>
-
-<details>
-    <summary>
-        <h3>💾 Multi-Server Configs and Blacklisted Servers</h3>
-    </summary>
-        <ul>
-            <li>Create separate Quality of Queso configurations for each server that you play on</li>
-            <li>Additionally, you can block the mod from working on certain servers</li>
-            <br>
-            <li>Configurable in the mod's <code>General</code> tab</li>
-        </ul>
-</details>
 </div>
 
 ---

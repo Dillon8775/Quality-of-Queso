@@ -9,17 +9,17 @@ import org.jspecify.annotations.Nullable;
 /**
  * A debug hud to display Minecraft's in-game time.
  */
-public class ModDebugEntryInGameTime extends ModDebugEntry {
+public class InGameTimeDebugEntry extends ModDebugEntry {
 
     @Override
-    public void display(@NonNull DebugScreenDisplayer lines, @Nullable Level level, @Nullable LevelChunk clientChunk, @Nullable LevelChunk chunk) {
+    public void display(@NonNull DebugScreenDisplayer lines, @Nullable Level serverOrClientLevel, @Nullable LevelChunk clientChunk, @Nullable LevelChunk chunk) {
         // Return out of the mod isn't enabled, or the player is not in a world
-        if (level == null) {
+        if (serverOrClientLevel == null) {
             return;
         }
 
         // Calculate the time
-        long time = level.getOverworldClockTime() % 24000;
+        long time = serverOrClientLevel.getOverworldClockTime() % 24000;
 
         time = (time + 6000) % 24000;
 
@@ -64,14 +64,14 @@ public class ModDebugEntryInGameTime extends ModDebugEntry {
         String formatted = String.format("%d:%02d %s", hours, minutes, amPm);
 
         // Create the final string and add
-        String finalString = level.dimension() == Level.OVERWORLD
+        String finalString = serverOrClientLevel.dimension() == Level.OVERWORLD
                 ? description + " (" + formatted + ", in-game)"
                 : "Unknown Time (in-game)";
-        lines.addToGroup(ModDebugScreenEntries.WORLD_TIME, finalString);
-    }
 
-    @Override
-    public boolean isAllowed(boolean reducedDebugInfo) {
-        return true;
+        // Add the in-game time line
+        lines.addToGroup(
+                ModDebugScreenEntries.DATE_AND_TIME_GROUP,
+                finalString
+        );
     }
 }

@@ -11,6 +11,7 @@ import net.dillon.qualityofqueso.widget.SearchBar;
 import net.dillon.qualityofqueso.widget.management.ManagementButton;
 import net.dillon.qualityofqueso.widget.management.WidgetLayout;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.inventory.SlotWidget;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerInput;
@@ -90,7 +91,8 @@ public class MouseClickedEvents extends ManagementEvents {
      * Quickly equips an item.
      */
     private void quickEquipItem(MouseButtonEvent event, CallbackInfoReturnable<Boolean> cir) {
-        if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT && holder().screensHoveredSlot() != null && quickEquipEvents().isQuicklyEquippable(holder().screensHoveredSlot().getItem())) {
+        SlotWidget hoveredSlotWidget = holder().getHoveredSlotWidget();
+        if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT && hoveredSlotWidget != null && quickEquipEvents().isQuicklyEquippable(hoveredSlotWidget.slot().getItem())) {
             quickEquipEvents().quickEquipItem();
             cir.setReturnValue(true);
         }
@@ -130,7 +132,7 @@ public class MouseClickedEvents extends ManagementEvents {
             if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT && (
                     (
                             (
-                                    (dropOnlyOne || hasSingleModifierDown) && hoveredSlotHasItem(holder().screensHoveredSlot())
+                                    (dropOnlyOne || hasSingleModifierDown) && hoveredSlotHasItem(holder().getHoveredSlotWidget())
                             )
                     )
                     || buttonHoveredAndActive(holder().managementButtons().getTransferInventory())
@@ -158,12 +160,15 @@ public class MouseClickedEvents extends ManagementEvents {
 
         // Get common variables
         AbstractContainerMenu menu = holder().menu();
-        Slot hoveredSlot = holder().screensHoveredSlot();
 
         // Ensure hovered slot isn't null
-        if (hoveredSlot == null) {
+        SlotWidget hoveredSlotWidget = holder().getHoveredSlotWidget();
+        if (hoveredSlotWidget == null) {
             return;
         }
+
+        // Get slot
+        Slot hoveredSlot = hoveredSlotWidget.slot();
 
         // Ctrl-clicking while holding something on the cursor does nothing
         if (!getCursorStack().isEmpty()) {

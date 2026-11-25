@@ -52,10 +52,10 @@ public class ModKeyMappingHelper {
      * @return if the management modifier key is held down.
      */
     public static boolean hasAnyManagementModifierDown() {
-        return (client().management().transferring.any() && (kumaAnyModifierDown(MOVE_TO_CONTAINER) || kumaAnyModifierDown(MOVE_TO_INVENTORY)))
-                || (client().sorting().sorting.any() && kumaAnyModifierDown(SORT))
-                || (client().management().quickDrop.any() && hasAllQuickDropModifiersDown())
-                || (client().management().swapping.any() && kumaAnyModifierDown(SWAP_ITEMS));
+        return (client().management().transferring.enabled() && (kumaAnyModifierDown(MOVE_TO_CONTAINER) || kumaAnyModifierDown(MOVE_TO_INVENTORY)))
+                || (client().sorting().sorting.enabled() && kumaAnyModifierDown(SORT))
+                || (client().management().quickDrop.enabled() && hasAllQuickDropModifiersDown())
+                || (client().management().swapping.enabled() && kumaAnyModifierDown(SWAP_ITEMS));
     }
 
     /**

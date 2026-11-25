@@ -25,8 +25,8 @@ public abstract class ItemFrameMixin extends HangingEntity implements GlowCountd
     @Unique
     private int glowTicksRemaining = -1;
 
-    public ItemFrameMixin(EntityType<? extends HangingEntity> p_31703_, Level p_31704_) {
-        super(p_31703_, p_31704_);
+    public ItemFrameMixin(EntityType<? extends HangingEntity> type, Level level) {
+        super(type, level);
     }
 
     /**
@@ -61,7 +61,12 @@ public abstract class ItemFrameMixin extends HangingEntity implements GlowCountd
 
             // Once timer reaches 0, turn off glow effect
             if (this.glowTicksRemaining == 0) {
-                ((ItemFrame) (Object) this).setGlowingTag(false);
+                this.setGlowingTag(false);
+            }
+
+            // Remove if not glowing
+            if (!this.hasGlowingTag()) {
+                this.glowTicksRemaining = -1;
             }
         }
         super.tick();

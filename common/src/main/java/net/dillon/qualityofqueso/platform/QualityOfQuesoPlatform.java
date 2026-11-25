@@ -5,7 +5,7 @@ import net.blay09.mods.balm.Balm;
 import net.dillon.dillonlib.platform.ModPlatform;
 import net.dillon.dillonlib.platform.info.Platform;
 import net.dillon.dillonlib.platform.info.Release;
-import net.dillon.qualityofqueso.command.ItemFrameSearcherCommand;
+import net.dillon.qualityofqueso.command.QuesoItemFrameSearcherCommand;
 import net.dillon.qualityofqueso.helper.ModConstants;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
@@ -19,7 +19,7 @@ public abstract class QualityOfQuesoPlatform extends ModPlatform {
 
     @Override
     public void registerCommonCommands(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext commandRegistryAccess) {
-        dispatcher.register(ItemFrameSearcherCommand.itemFrameSearcherCommand(commandRegistryAccess));
+        QuesoItemFrameSearcherCommand.register(dispatcher);
     }
 
     @Override

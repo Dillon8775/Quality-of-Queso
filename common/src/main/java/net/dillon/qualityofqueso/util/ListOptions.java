@@ -1,5 +1,6 @@
 package net.dillon.qualityofqueso.util;
 
+import net.dillon.dillonlib.util.TickValue;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.Options;
@@ -138,22 +139,14 @@ public class ListOptions {
                 (optionText, value) -> {
                     if (value == 0) {
                         return Options.genericValueLabel(optionText, Component.literal("Indefinite").withStyle(ChatFormatting.RED));
-                    } else if (value < 60) {
-                        return Options.genericValueLabel(optionText, Component.literal(value + "s"));
-                    } else {
-                        int minutes = value / 60;
-                        int seconds = value % 60;
-                        if (seconds == 0) {
-                            return Options.genericValueLabel(optionText, Component.literal(minutes + "m"));
-                        } else {
-                            return Options.genericValueLabel(optionText, Component.literal(minutes + "m " + seconds + "s"));
-                        }
                     }
+
+                    return Options.genericValueLabel(optionText, Component.literal(new TickValue(value).formattedFromTick()));
                 },
                 0,
-                180,
-                client().misc().itemFrameSearchGlowDuration,
-                (options, value) -> options.misc().itemFrameSearchGlowDuration = value
+                new TickValue(3).toTicksMinutes(),
+                client().searching().itemFrameSearchGlowDuration,
+                (options, value) -> options.searching().itemFrameSearchGlowDuration = value
         );
     }
 
@@ -161,6 +154,6 @@ public class ListOptions {
         return new OptionInstance<>("qualityofqueso.options.item_frame_search_radius",
                 OptionInstance.cachedConstantTooltip(Component.translatable("qualityofqueso.options.item_frame_search_radius.tooltip")),
                 (optionText, value) -> Options.genericValueLabel(optionText, Component.literal(value + " blocks")),
-                new OptionInstance.IntRange(10, 256).xmap(value -> value * 2, value -> value / 2, true), client().misc().itemFrameSearchRadius, value -> client().misc().itemFrameSearchRadius = value);
+                new OptionInstance.IntRange(10, 256).xmap(value -> value * 2, value -> value / 2, true), client().searching().itemFrameSearchRadius, value -> client().searching().itemFrameSearchRadius = value);
     }
 }

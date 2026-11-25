@@ -1,7 +1,7 @@
 package net.dillon.qualityofqueso.main;
 
 import net.dillon.dillonlib.task.CommonTasks;
-import net.dillon.qualityofqueso.helper.ModHelper;
+import net.dillon.qualityofqueso.option.ModClientOptions;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
@@ -11,7 +11,6 @@ import static net.dillon.dillonlib.task.ClientTasks.executeIfClientPlayer;
 import static net.dillon.qualityofqueso.helper.ModConstants.MOD_INFO;
 import static net.dillon.qualityofqueso.helper.ModHelper.*;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
-import static net.dillon.qualityofqueso.option.OptionInstances.universal;
 
 /**
  * Client events for Quality of Queso.
@@ -23,10 +22,6 @@ public class ClientEvents {
     }
 
     public static void onPlayerJoin(Minecraft minecraft) {
-        if (universal().multiServerConfigs) {
-            ModHelper.LOADED = true;
-            loadServerConfig();
-        }
         if (isOnServer() && client().misc().forceAntiRageQuit) {
             client().misc().antiRageQuit = true;
             saveAndApplyChanges();
@@ -40,22 +35,18 @@ public class ClientEvents {
                                 Component.literal(minecraft.getCurrentServer().ip).withStyle(ChatFormatting.DARK_RED)));
                     }
                 }
-                if (!universal().multiServerConfigs) {
-                    localPlayer.sendSystemMessage(Component.translatable("qualityofqueso.gui.enable_multi_server_configs"));
-                }
             }
 
             CommonTasks.sendUpdateMessage(MOD_INFO, localPlayer, TextColor.GOLD.getValue());
         });
+
         sendClientPreferencesToServer();
     }
 
     public static void onPlayerDisconnect(Minecraft minecraft) {
         resetArmorHudState();
 
-        if (isOnServer()) {
-            unloadServerConfig();
-        }
+        ModClientOptions.getInstance().save();
     }
 
     /**

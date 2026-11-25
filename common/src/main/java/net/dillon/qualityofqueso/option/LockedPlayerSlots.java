@@ -6,12 +6,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static net.dillon.dillonlib.util.BaseOptions.guardedInstance;
+
 /**
  * Stores locked player slots, respective to the client-side player.
  */
 public class LockedPlayerSlots {
-    public static final LockedPlayerSlotsHandler INSTANCE = new LockedPlayerSlotsHandler();
+    private static final LockedPlayerSlotsHandler INSTANCE = new LockedPlayerSlotsHandler();
     public Map<String, List<Integer>> lockedPlayerSlots = new HashMap<>();
+
+    public static LockedPlayerSlotsHandler getInstance() {
+        return guardedInstance(INSTANCE);
+    }
 
     public static class LockedPlayerSlotsHandler extends ModBaseOptionsHandler<LockedPlayerSlots> {
 

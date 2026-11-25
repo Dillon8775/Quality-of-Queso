@@ -5,6 +5,7 @@ import net.dillon.qualityofqueso.container.ContainerSyncer;
 import net.dillon.qualityofqueso.event.QuesoScreenHolder;
 import net.dillon.qualityofqueso.helper.GuiHelper;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.components.inventory.SlotWidget;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.world.inventory.Slot;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -59,16 +60,23 @@ public class LockedSlotEvents extends ManagementEvents {
     /**
      * @return if the user is attempting to drop an entire locked slot stack.
      */
-    public boolean droppingEntireLockedSlotStack() {
-        return hasCtrlDown() && hasDropOnlyOneItemModifierDown() && holder().screensHoveredSlot() != null && lockedSlotEvents().isLockedSlot(holder().screensHoveredSlot().index);
+    public boolean droppingEntireLockedSlotStack(SlotWidget hoveredSlotWidget) {
+        return hasCtrlDown() && droppingLockedSlotStack(hoveredSlotWidget);
+    }
+
+    /**
+     * @return if the user is attempting to drop a locked slot stack.
+     */
+    public boolean droppingLockedSlotStack(SlotWidget hoveredSlotWidget) {
+        return hoveredSlotWidget != null && hasDropOnlyOneItemModifierDown() && lockedSlotEvents().isLockedSlot(hoveredSlotWidget.slot().index);
     }
 
     /**
      * @return if a locked slot drop full stack is valid.
      */
-    public boolean shouldCancelDrop() {
-        if (lockedSlotEvents().droppingEntireLockedSlotStack()
-                ? lockedSlotEvents().droppingEntireLockedSlotStack() && canScrollMoveAndHasScrollModifierDown()
+    public boolean shouldCancelDrop(SlotWidget hoveredSlotWidget) {
+        if (lockedSlotEvents().droppingEntireLockedSlotStack(hoveredSlotWidget)
+                ? lockedSlotEvents().droppingEntireLockedSlotStack(hoveredSlotWidget) && canScrollMoveAndHasScrollModifierDown()
                 : canScrollMoveAndHasScrollModifierDown() && !hasDropOnlyOneItemModifierDown()) {
             return !(canScrollMoveAndHasScrollModifierDown() && hasDropOnlyOneItemModifierDown() && hasAltDown());
         }
@@ -78,8 +86,8 @@ public class LockedSlotEvents extends ManagementEvents {
     /**
      * Renders a lock overlay near the cursor.
      */
-    public void renderLockOverlayNearCursor(GuiGraphicsExtractor graphics, LockType lockType, int mouseX, int mouseY) {
-        blitLockOverlay(graphics, lockType, mouseX - 8, mouseY + 1);
+    public void renderLockOverlayNearCursor(GuiGraphicsExtractor graphics, LockType lockType) {
+        blitLockOverlay(graphics, lockType, graphics.mouseX() - 8, graphics.mouseY() + 1);
     }
 
     /**
@@ -138,14 +146,16 @@ public class LockedSlotEvents extends ManagementEvents {
      * Selects and/or locks slots in a container or player inventory.
      */
     public void selectOrLockSlot(MouseButtonEvent event, CallbackInfoReturnable<Boolean> cir) {
-        Slot slot = holder().screensHoveredSlot();
+        SlotWidget hoveredSlotWidget = holder().getHoveredSlotWidget();
+
+        if (hoveredSlotWidget == null) {
+            return;
+        }
+
+        Slot slot = hoveredSlotWidget.slot();
 
         boolean notExcluding = hasAltDown() && !hasShiftDown();
         boolean lockingSlot = kumaMousePressed(LOCK_SLOT, event);
-
-        if (slot == null) {
-            return;
-        }
 
         if (isValidScreen() && client().lockedSlots().lockedSlots && notExcluding && hasLockSlotModifierDown() && lockingSlot) {
             if (holder().getLastLockedSlotIndex() != slot.index) {

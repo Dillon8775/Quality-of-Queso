@@ -144,20 +144,20 @@ public abstract class ManagementButton extends Button {
      * Renders the textures and tooltips for the button.
      */
     @Override
-    protected void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks) {
+    protected void extractContents(GuiGraphicsExtractor graphics) {
         activateButton();
 
         renderButton(graphics);
 
-        if (isHoveredOrFocused() && active && client().general().tooltips.enabled()) {
+        if (isHovered() && active && client().general().tooltips.enabled()) {
             Screen screen = getScreen();
 
             if (screen != null) {
                 if (isBrewingStandScreen()) {
-                    drawTooltip(Component.translatable("qualityofqueso.gui." + buttonName + "_button.brewing_stand"), graphics, mouseX, mouseY);
+                    drawTooltip(Component.translatable("qualityofqueso.gui." + buttonName + "_button.brewing_stand"), graphics);
                     return;
                 } else if (screen instanceof AbstractFurnaceScreen<?> abstractFurnaceScreen) {
-                    drawTooltip(Component.translatable("qualityofqueso.gui." + buttonName + "_button.furnace", abstractFurnaceScreen.getMenu().getResultSlot().getItem().getHoverName()), graphics, mouseX, mouseY);
+                    drawTooltip(Component.translatable("qualityofqueso.gui." + buttonName + "_button.furnace", abstractFurnaceScreen.getMenu().getResultSlot().getItem().getHoverName()), graphics);
                     return;
                 }
             }
@@ -171,15 +171,15 @@ public abstract class ManagementButton extends Button {
             if (transferable && isCarrying(menu)) {
                 drawTooltip(
                         Component.translatable(newButtonName + ".with_cursor_stack", cursorStack.getItemName(), getCursorTooltip()),
-                        graphics, mouseX, mouseY
+                        graphics
                 );
             } else if (transferable && !searchFieldText.isEmpty()) {
-                drawTooltip(getQueryTooltip(newButtonName, searchFieldText, appendedTooltip), graphics, mouseX, mouseY);
+                drawTooltip(getQueryTooltip(newButtonName, searchFieldText, appendedTooltip), graphics);
             } else {
                 if (singleQuickMoving) {
-                    extractMoveAmountTooltip(buttonName, graphics, mouseX, mouseY);
+                    extractMoveAmountTooltip(buttonName, graphics);
                 } else {
-                    drawTooltip(getDefaultTooltip(), graphics, mouseX, mouseY);
+                    drawTooltip(getDefaultTooltip(), graphics);
                 }
             }
         }
@@ -224,7 +224,7 @@ public abstract class ManagementButton extends Button {
      * Extracts the base button texture.
      */
     protected final void extractButton(GuiGraphicsExtractor graphics) {
-        this.drawButtonTexture(graphics, this.getBaseSprites().get(active, isHoveredOrFocused()));
+        this.drawButtonTexture(graphics, this.getBaseSprites().get(active, isHovered()));
         this.extractManagementSprite(graphics);
     }
 

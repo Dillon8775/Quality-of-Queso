@@ -1,13 +1,9 @@
 package net.dillon.qualityofqueso.mixin.client.util;
 
-import net.dillon.qualityofqueso.event.management.SlotClickedEvents;
-import net.dillon.qualityofqueso.helper.ModHelper;
 import net.dillon.qualityofqueso.keybind.ModKeyMappings;
 import net.dillon.qualityofqueso.screen.ItemFrameSearchScreen;
-import net.dillon.qualityofqueso.util.MobHitDingTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
-import net.minecraft.client.sounds.SoundManager;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -15,7 +11,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import static net.dillon.dillonlib.task.ClientTasks.getMinecraft;
 import static net.dillon.dillonlib.task.ClientTasks.openScreen;
 import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
 import static net.dillon.qualityofqueso.keybind.ModKeyMappings.OPEN_ITEM_FRAME_SEARCH_GUI;
@@ -26,8 +21,6 @@ public abstract class MinecraftMixin {
     @Shadow
     @Final
     public Options options;
-    @Shadow
-    public abstract SoundManager getSoundManager();
 
     /**
      * Makes the {@link ModKeyMappings#OPEN_ITEM_FRAME_SEARCH_GUI} open {@link ItemFrameSearchScreen}.
@@ -43,24 +36,5 @@ public abstract class MinecraftMixin {
                 openScreen(new ItemFrameSearchScreen(null));
             }
         }
-    }
-
-    /**
-     * Ticks cooldown and other utilities.
-     */
-    @Inject(method = "tick", at = @At("TAIL"))
-    private void tickModEvents(CallbackInfo ci) {
-        Minecraft minecraft = getMinecraft();
-
-        if (!modEnabled()) {
-            return;
-        }
-
-        ModHelper.tickCooldowns();
-        ModHelper.tickManualItemPickup(minecraft);
-
-        SlotClickedEvents.tickTradeAllTask();
-        SlotClickedEvents.tickBulkCraftTask();
-        MobHitDingTracker.tick(minecraft);
     }
 }

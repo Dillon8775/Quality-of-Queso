@@ -69,13 +69,13 @@ public class ScreenClosedEvents extends ManagementEvents {
 
         INTERACTED_WITH_MINECART_CONTAINER = false;
 
-        if (!client().buttonDisplayOptions().safeBulk) {
+        if (!client().display().safeBulk) {
             return;
         }
 
         updateClient(client -> {
-            client.management().bulkCraft = false;
-            client.management().bulkTrade = false;
+            client.management().bulkCrafting = false;
+            client.management().bulkTrading = false;
         });
     }
 
@@ -83,7 +83,7 @@ public class ScreenClosedEvents extends ManagementEvents {
      * Automatically closes the recipe book when closing a screen.
      */
     private void autoCloseRecipeBook() {
-        if (client().misc().autoCloseRecipeBook
+        if (client().gui().autoCloseRecipeBook
                 && holder().screen() instanceof AbstractRecipeBookScreen<?> recipeBookScreen
                 && getRecipeBookComponent(recipeBookScreen).isVisible()) {
             getRecipeBookComponent(recipeBookScreen).toggleVisibility();

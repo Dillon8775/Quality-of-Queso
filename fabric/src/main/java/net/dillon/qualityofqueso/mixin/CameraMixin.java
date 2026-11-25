@@ -15,13 +15,13 @@ import static net.dillon.qualityofqueso.helper.ModHelper.cancelFluidFov;
 @Mixin(Camera.class)
 public abstract class CameraMixin {
     @Shadow
-    public abstract FogType getFluidInCamera();
+    public abstract FogType getFogType();
 
     /**
      * Removes FOV modification from lava and water.
      */
-    @Inject(method = "modifyFovBasedOnDeathOrFluid(FF)F", at = @At("HEAD"), cancellable = true, require = 0)
+    @Inject(method = "modifyFovBasedOnDeathOrFluid(FF)F", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Camera;getFogType()Lnet/minecraft/world/level/material/FogType;"), cancellable = true, require = 0)
     private void cancelFluidFOVLegacy(float partialTicks, float fov, CallbackInfoReturnable<Float> cir) {
-        cancelFluidFov(this.getFluidInCamera(), fov, cir);
+        cancelFluidFov(this.getFogType(), fov, cir);
     }
 }

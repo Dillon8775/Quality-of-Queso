@@ -7,14 +7,13 @@ import net.dillon.dillonlib.annotation.DillEnv;
 import net.dillon.dillonlib.platform.info.Release;
 import net.dillon.qualityofqueso.helper.ModConstants;
 import net.dillon.qualityofqueso.option.ModCommonOptions;
-import net.dillon.qualityofqueso.option.UniversalOptions;
 import net.dillon.qualityofqueso.platform.QualityOfQuesoPlatforms;
+import net.dillon.qualityofqueso.sound.ModSoundEvents;
 
 import java.util.Set;
 import java.util.TreeSet;
 
 import static net.dillon.qualityofqueso.helper.ModConstants.MOD_INFO;
-import static net.dillon.qualityofqueso.helper.ModHelper.stop;
 import static net.dillon.qualityofqueso.main.CommonEvents.registerPackets;
 
 /**
@@ -27,10 +26,10 @@ public class CommonMain {
     /**
      * Initializes common (or server)-side features.
      */
-    public static void initialize(BalmRegistrars balmRegistrars) {
-        registerPackets();
+    public static void initialize(BalmRegistrars registrars) {
+        ModSoundEvents.registerCommonSounds(registrars);
 
-        checkCommonConfigs();
+        registerPackets();
         loadCommonConfigs();
 
         QualityOfQuesoPlatforms.getPlatform().addModIds();
@@ -52,27 +51,6 @@ public class CommonMain {
      * Loads all common configs.
      */
     private static void loadCommonConfigs() {
-        UniversalOptions.INSTANCE.load();
-        ModCommonOptions.INSTANCE.load();
-    }
-
-    /**
-     * Ensures common (or server-side) configs are valid configs, and handles invalid configs if necessary.
-     */
-    private static void checkCommonConfigs() {
-        boolean shouldStop = false;
-        String configName = "";
-        if (UniversalOptions.INSTANCE.getInstance() == null) {
-            ModConstants.LOGGER.error("Quality of Queso's universal config is null! Please delete it and relaunch your game.");
-            shouldStop = true;
-            configName = "universal config";
-        }
-        if (ModCommonOptions.INSTANCE.getInstance() == null) {
-            ModConstants.LOGGER.error("Quality of Queso's common config is null! Please delete it and relaunch your game.");
-            shouldStop = true;
-            configName = ModConstants.DEFAULT_COMMON_CONFIG_FILE_NAME;
-        }
-
-        stop(shouldStop, configName);
+        ModCommonOptions.getInstance().load();
     }
 }

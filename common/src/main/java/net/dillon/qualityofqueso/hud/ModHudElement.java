@@ -87,7 +87,7 @@ public abstract class ModHudElement {
         }
 
         int animationEndTick = timerEndTick + animationTicks;
-        float alpha = Mth.clamp((float) (animationEndTick - currentTick) / animationTicks, 0.0F, 1.0F);
+        float alpha = Mth.clampedLerp((float) (animationEndTick - currentTick) / animationTicks, 0.0F, 1.0F);
         return Mth.floor(22.0F * (1.0F - alpha));
     }
 

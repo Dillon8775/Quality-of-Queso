@@ -9,6 +9,7 @@ import net.dillon.qualityofqueso.option.eum.general.Theme;
 import net.dillon.qualityofqueso.widget.management.SortButton;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.components.inventory.SlotWidget;
 import net.minecraft.client.gui.screens.inventory.AbstractRecipeBookScreen;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -55,6 +56,10 @@ public class ExtractingEvents extends ManagementEvents {
      * Grays out filteredMode slots (or hotbar slots), renders the locked slot texture, and highlights matching items according to the cursor.
      */
     public void grayoutSlotsAndExtractLockedIcon(GuiGraphicsExtractor graphics) {
+        // Push matrix for screen
+        graphics.pose().pushMatrix();
+        graphics.pose().translate(getLeftPos(holder().screen()), getTopPos(holder().screen()));
+
         // Begin iterating slots to gray out
         boolean inventorySearchFieldPresent = holder().searchFields().inventory() != null;
         boolean validScreen = isValidScreen();
@@ -73,7 +78,7 @@ public class ExtractingEvents extends ManagementEvents {
                 // Otherwise, gray out slots that don't match the search
                 else if (!client().management().includingHotbar
                         && (isInventoryScreen() ? isInventoryHotbarSlot(true, slot.index) : isHotbarSlot(holder().menu().slots.size(), slot.index))
-                        && (client().management().transferring.any() || client().management().scrollMoving)) {
+                        && (client().management().transferring.enabled() || client().management().scrollMoving)) {
                     if (shouldGrayout(slot)) {
                         renderGrayedSlot(graphics, slot, slot.hasItem());
                         alreadyExcluded = true;
@@ -98,7 +103,7 @@ public class ExtractingEvents extends ManagementEvents {
 
                         if (isContainerScreen()) {
                             // Don't grayout if CTRL is pressed and transfer keys are bounded
-                            if (client().management().transferring.any()
+                            if (client().management().transferring.enabled()
                                     && (kumaAnyModifierDown(MOVE_TO_INVENTORY) || kumaAnyModifierDown(MOVE_TO_CONTAINER))
                                     && MOVE_TO_INVENTORY.getBinding().key().getValue() != InputConstants.UNKNOWN.getValue()
                                     && MOVE_TO_CONTAINER.getBinding().key().getValue() != InputConstants.UNKNOWN.getValue()) {
@@ -119,17 +124,20 @@ public class ExtractingEvents extends ManagementEvents {
                 }
             }
         }
+
+        // Finally pop
+        graphics.pose().popMatrix();
     }
 
     /**
      * Handles all main extracting events.
      */
-    public void handle(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+    public void handle(GuiGraphicsExtractor graphics) {
         extractEnhancedCursor(graphics);
         clearToRefreshWidgets();
-        extractSearchFields(graphics, mouseX, mouseY, a);
-        extractButtons(graphics, mouseX, mouseY, a);
-        extractLockingUnlockingSlots(graphics, mouseX, mouseY);
+        extractSearchFields(graphics);
+        extractButtons(graphics);
+        extractLockingUnlockingSlots(graphics);
     }
 
     /**
@@ -181,39 +189,52 @@ public class ExtractingEvents extends ManagementEvents {
             return;
         }
 
-        Slot hoveredSlot = holder().screensHoveredSlot();
+        SlotWidget hoveredSlotWidget = holder().getHoveredSlotWidget();
+        if (hoveredSlotWidget == null) {
+            return;
+        }
+
+        Slot hoveredSlot = hoveredSlotWidget.slot();
 
         // Get the slot to check (if cursor stack isn't empty, or there is no hovered slot, then check cursor stack)
         // Otherwise, check hovered slot stack
         ItemStack cursorStack = getCursorStack();
-        ItemStack stackToCheck = (hoveredSlot == null || !cursorStack.isEmpty())
+        ItemStack stackToCheck = (!cursorStack.isEmpty())
                 ? cursorStack
                 : hoveredSlot.getItem();
+
+        // Determine total slots based on if the player is in inventory or container screen
+        boolean isDroppingFromContainer = client().management().quickDrop.enabled() && isContainerScreen() && hasCtrlDown() && hasAltDown();
+        int totalSlots = isDroppingFromContainer
+                ? getContainerSize()
+                : getTotalSlots();
 
         // Check all slots in current screen
         boolean foundMatchingItem = false;
 
-        for (int i = 0; i < getTotalSlots(); i++) {
-            Slot slot = holder().menu().getSlot(i);
-            ItemStack slotStack = slot.getItem();
+        for (int i = 0; i < totalSlots; i++) {
+            Slot slotToCheck = holder().menu().getSlot(i);
+            ItemStack slotStack = slotToCheck.getItem();
 
             if (slotStack.isEmpty()) {
                 continue;
             }
 
-            boolean isHoveredSlot = hoveredSlot != null && slot.index == hoveredSlot.index;
+            boolean isHoveredSlot = slotToCheck.index == hoveredSlot.index;
 
             if (stackToCheck.is(slotStack.getItem()) && !isHoveredSlot) {
-                renderHighlightedSlot(graphics, slot);
+                renderHighlightedSlot(graphics, slotToCheck);
                 foundMatchingItem = true;
             }
         }
 
         // Highlight hovered slot afterward if another match exists
-        if (foundMatchingItem && hoveredSlot != null) {
+        if (foundMatchingItem) {
             ItemStack hoveredStack = hoveredSlot.getItem();
 
-            if (!hoveredStack.isEmpty() && stackToCheck.is(hoveredStack.getItem())) {
+            if (!hoveredStack.isEmpty()
+                    && stackToCheck.is(hoveredStack.getItem())
+                    && !(isDroppingFromContainer && isPlayerInventorySlot(hoveredSlot))) {
                 renderHighlightedSlot(graphics, hoveredSlot);
             }
         }
@@ -222,18 +243,17 @@ public class ExtractingEvents extends ManagementEvents {
     /**
      * Renders the process of unlocking / locking slots.
      */
-    private void extractLockingUnlockingSlots(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+    private void extractLockingUnlockingSlots(GuiGraphicsExtractor graphics) {
         // Only render other locked slot textures on valid screens
         if (isValidScreen()) {
             // Renders the key, or unlocked slot texture beside the mouse, indicating that the user is attempting to lock/unlock slots
-            if (client().lockedSlots().lockedSlots && client().lockedSlots().showLock.inScreens() && holder().screensHoveredSlot() != null && holder().excludedSlots().isEmpty()
+            if (client().lockedSlots().lockedSlots && client().lockedSlots().showLock.inScreens() && holder().getHoveredSlotWidget() != null && holder().excludedSlots().isEmpty()
                     && hasLockSlotModifierDown() && !hasAnyManagementModifierDown() && !hasCtrlDown() && !hasShiftDown()) {
                 lockedSlotEvents().renderLockOverlayNearCursor(
                         graphics,
-                        lockedSlotEvents().isLockedSlot(holder().screensHoveredSlot().index)
+                        lockedSlotEvents().isLockedSlot(holder().getHoveredSlotWidget().slot().index)
                                 ? LockType.KEY
-                                : LockType.UNLOCK,
-                        mouseX, mouseY
+                                : LockType.UNLOCK
                 );
             }
 
@@ -241,15 +261,13 @@ public class ExtractingEvents extends ManagementEvents {
             if (SortButton.canRenderLockOverlayAndHovered(holder().managementButtons().getSort())) {
                 lockedSlotEvents().renderLockOverlayNearCursor(
                         graphics,
-                        LockType.KEY,
-                        mouseX,
-                        mouseY
+                        LockType.KEY
                 );
             }
 
             // For drag sorting and/or locking slots, set the cursor to "pointing hand", like the user is grabbing onto slots to lock/select them
-            if (client().misc().enhancedCursor && (client().management().dragSorting || client().lockedSlots().lockedSlots)
-                    && holder().screensHoveredSlot() != null
+            if (client().gui().enhancedCursor && (client().management().dragSorting || client().lockedSlots().lockedSlots)
+                    && holder().getHoveredSlotWidget() != null
                     && !hasCtrlDown()
                     && hasAltDown()) {
                 graphics.requestCursor(CursorTypes.POINTING_HAND);
@@ -261,11 +279,11 @@ public class ExtractingEvents extends ManagementEvents {
      * Draws an enhanced cursor on the screen.
      */
     private void extractEnhancedCursor(GuiGraphicsExtractor graphics) {
-        if (!client().misc().enhancedCursor) {
+        if (!client().gui().enhancedCursor) {
             return;
         }
 
-        boolean hasHoveredSlot = holder().screensHoveredSlot() != null && holder().screensHoveredSlot().hasItem();
+        boolean hasHoveredSlot = hoveredSlotHasItem(holder().getHoveredSlotWidget());
         if (!getCursorStack().isEmpty() || hasHoveredSlot) {
             graphics.requestCursor(CursorTypes.POINTING_HAND);
         }
@@ -322,19 +340,19 @@ public class ExtractingEvents extends ManagementEvents {
     /**
      * Renders and extracts all search fields.
      */
-    private void extractSearchFields(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+    private void extractSearchFields(GuiGraphicsExtractor graphics) {
         // Render the search field
         if (holder().searchFields().container() != null) {
-            holder().searchFields().container().extractWidgetRenderState(graphics, mouseX, mouseY, a);
+            holder().searchFields().container().extractWidgetRenderState(graphics);
         }
 
         // Render inventory search field
         if (holder().searchFields().inventory() != null) {
             // Re-position the inventory search field if the recipe book screen is open
             holder().searchFields().inventory().setX(holder().screen().width / 2 + getBarWidth(getImageWidth(holder().screen())) / 2 - (
-                    !client().misc().noRecipeBookShift && holder().screen() instanceof AbstractRecipeBookScreen<?> recipeBookScreen && getRecipeBookComponent(recipeBookScreen).isVisible() ? -16 : 60
+                    !client().gui().noRecipeBookShift && holder().screen() instanceof AbstractRecipeBookScreen<?> recipeBookScreen && getRecipeBookComponent(recipeBookScreen).isVisible() ? -16 : 60
             ));
-            holder().searchFields().inventory().extractWidgetRenderState(graphics, mouseX, mouseY, a);
+            holder().searchFields().inventory().extractWidgetRenderState(graphics);
         }
     }
 
@@ -360,10 +378,15 @@ public class ExtractingEvents extends ManagementEvents {
      */
     public boolean shiftHeld(boolean inventory) {
         int totalSlots = getTotalSlots();
-        Slot hoveredSlot = getHoveredSlot(holder().screen());
+        SlotWidget hoveredSlotWidget = getHoveredSlot(holder().screen());
+
+        if (hoveredSlotWidget == null) {
+            return false;
+        }
+
+        Slot hoveredSlot = hoveredSlotWidget.slot();
         return hasShiftDown()
                 && (!client().management().dragSorting || !hasSelectSlotsModifierDown())
-                && hoveredSlot != null
                 && hoveredSlot.hasItem()
                 && (inventory ? hoveredSlot.index >= totalSlots - 36 : hoveredSlot.index <= totalSlots - 37);
     }
@@ -371,7 +394,7 @@ public class ExtractingEvents extends ManagementEvents {
     /**
      * Renders and extracts all buttons, including management buttons and layouts.
      */
-    private void extractButtons(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+    private void extractButtons(GuiGraphicsExtractor graphics) {
         widgetEvents().initTransferContainer();
 
         widgetEvents().initTransferInventory();
@@ -392,12 +415,10 @@ public class ExtractingEvents extends ManagementEvents {
 
         widgetEvents().initClearExcludedSlots();
 
-        widgetEvents().initBulkTrade();
-
         widgetEvents().initBulkCraft();
 
         widgetEvents().initLockInventory();
 
-        widgetEvents().initLayout(graphics, mouseX, mouseY, a);
+        widgetEvents().initLayout(graphics);
     }
 }

@@ -95,7 +95,7 @@ public class ModOptionUtil {
                 translation,
                 toggleText,
                 currentValue,
-                ModClientOptions.INSTANCE,
+                ModClientOptions.getInstance(),
                 consumer,
                 obj
         );
@@ -117,7 +117,7 @@ public class ModOptionUtil {
                 display,
                 new OptionInstance.IntRange(minValue, maxValue),
                 currentValue,
-                ModClientOptions.INSTANCE,
+                ModClientOptions.getInstance(),
                 consumer
         );
     }

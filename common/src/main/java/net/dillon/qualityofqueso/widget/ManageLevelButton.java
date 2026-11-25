@@ -9,6 +9,7 @@ import net.dillon.dillonlib.platform.Platforms;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.ScaledWidgetSprites;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -30,10 +31,8 @@ public class ManageLevelButton extends SpriteIconButtonWithSound {
         super(
                 20,
                 20,
-                16,
-                16,
                 null,
-                new WidgetSprites(getSprite()),
+                new ScaledWidgetSprites(new WidgetSprites(getSprite()), 16, 16),
                 Component::empty,
                 onPress
         );
@@ -55,7 +54,7 @@ public class ManageLevelButton extends SpriteIconButtonWithSound {
     @Override
     public void playDownSound(SoundManager soundManager) {
         if (!isOnServer() && !isCurrentLevelNull()) {
-            SoundBuilder.create(SoundEvents.BOOK_PAGE_TURN)
+            SoundBuilder.create(SoundEvents.BOOK_PAGE_TURN.value())
                     .volume(0.8F)
                     .buildAndPlay();
         } else {
@@ -65,7 +64,7 @@ public class ManageLevelButton extends SpriteIconButtonWithSound {
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean doubleClicked) {
-        if (!isCurrentLevelNull() && event.button() == InputConstants.MOUSE_BUTTON_RIGHT && this.isHoveredOrFocused()) {
+        if (!isCurrentLevelNull() && event.button() == InputConstants.MOUSE_BUTTON_RIGHT && this.isHovered()) {
             openConfigDirectory();
             return true;
         }
@@ -74,8 +73,8 @@ public class ManageLevelButton extends SpriteIconButtonWithSound {
     }
 
     @Override
-    public void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
-        super.extractContents(graphics, mouseX, mouseY, a);
+    public void extractContents(GuiGraphicsExtractor graphics) {
+        super.extractContents(graphics);
 
         if (isOnServer()) {
             TextureBuilder.create(
@@ -88,17 +87,6 @@ public class ManageLevelButton extends SpriteIconButtonWithSound {
                     this.getWidth(),
                     this.getHeight()
             ).buildAndBlit(true);
-
-            if (universal().multiServerConfigs) {
-                TextureBuilder.create(
-                        graphics,
-                        MULTI_CONFIG_TEXTURE,
-                                this.getX() - 2,
-                                this.getY() - 1,
-                                16,
-                                16
-                ).buildAndBlit(true);
-            }
         }
 
         this.setTooltip(Tooltip.create(tooltip()));
@@ -127,13 +115,6 @@ public class ManageLevelButton extends SpriteIconButtonWithSound {
                                     Component.translatable("qualityofqueso.gui.remove_blacklisted_server") :
                                     Component.translatable("qualityofqueso.gui.add_blacklisted_server")
                     );
-
-            if (universal().multiServerConfigs) {
-                finalTooltip = finalTooltip
-                        .copy().append(
-                                Component.translatable("qualityofqueso.gui.multi_server_configs_enabled")
-                        );
-            }
 
             return finalTooltip
                     .copy().append(rightClickOpenConfigDirectory);

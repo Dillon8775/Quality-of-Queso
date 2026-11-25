@@ -13,6 +13,7 @@ import net.minecraft.network.chat.Component;
 
 import java.awt.*;
 
+import static net.dillon.dillonlib.task.ClientTasks.getMinecraft;
 import static net.dillon.qualityofqueso.config.ConfigurationScreen.fixedSizeImage;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 import static net.dillon.qualityofqueso.option.OptionInstances.mixins;
@@ -24,13 +25,6 @@ import static net.dillon.qualityofqueso.util.ModOptionUtil.fabricOption;
 public class GuiCategory {
 
     protected static ConfigCategory create() {
-        Option<Boolean> forceAntiRageQuit = Option.<Boolean>createBuilder()
-                .name(Component.translatable("qualityofqueso.options.force_anti_rage_quit"))
-                .description(OptionDescription.of(Component.translatable("qualityofqueso.options.force_anti_rage_quit.description")))
-                .binding(false, () -> client().misc().forceAntiRageQuit, v -> client().misc().forceAntiRageQuit = v)
-                .controller(TickBoxControllerBuilder::create)
-                .build();
-
         boolean canUseEnhancedTooltips = QualityOfQuesoPlatforms.getPlatform().platform().fabric() && mixins().itemStackMixin;
 
         Option<Boolean> showDamageValue = Option.<Boolean>createBuilder()
@@ -84,6 +78,17 @@ public class GuiCategory {
                         .allowAlpha(true))
                 .build();
 
+        Option<Boolean> forceAntiRageQuit = Option.<Boolean>createBuilder()
+                .name(Component.translatable("qualityofqueso.options.force_anti_rage_quit"))
+                .description(OptionDescription.of(Component.translatable("qualityofqueso.options.force_anti_rage_quit.description")))
+                .binding(false, () -> client().misc().forceAntiRageQuit, v -> {
+                    client().misc().forceAntiRageQuit = v;
+                    getMinecraft().options.quitShortcuts().set(!v);
+                    getMinecraft().options.save();
+                })
+                .controller(TickBoxControllerBuilder::create)
+                .build();
+
         return ConfigCategory.createBuilder()
                 .name(Component.translatable("qualityofqueso.options.title.gui"))
                 .tooltip(Component.translatable("qualityofqueso.options.gui.tooltip"))
@@ -101,7 +106,7 @@ public class GuiCategory {
                                                                 .customImage(fixedSizeImage("enchantment_helper", 116, 88))
                                                                 .build()
                                                 )
-                                                .binding(true, () -> client().misc().enchantmentHelper, v -> client().misc().enchantmentHelper = v)
+                                                .binding(true, () -> client().gui().enchantmentHelper, v -> client().gui().enchantmentHelper = v)
                                                 .controller(BooleanControllerBuilder::create)
                                                 .build()
                                 )
@@ -109,7 +114,7 @@ public class GuiCategory {
                                         Option.<Boolean>createBuilder()
                                                 .name(Component.translatable("qualityofqueso.options.enhanced_cursor"))
                                                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.enhanced_cursor.description")))
-                                                .binding(true, () -> client().misc().enhancedCursor, v -> client().misc().enhancedCursor = v)
+                                                .binding(true, () -> client().gui().enhancedCursor, v -> client().gui().enhancedCursor = v)
                                                 .controller(BooleanControllerBuilder::create)
                                                 .build()
                                 )
@@ -117,7 +122,7 @@ public class GuiCategory {
                                         Option.<Boolean>createBuilder()
                                                 .name(Component.translatable("qualityofqueso.options.quick_gui_exit"))
                                                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.quick_gui_exit.description")))
-                                                .binding(true, () -> client().misc().quickGuiExit, v -> client().misc().quickGuiExit = v)
+                                                .binding(true, () -> client().gui().quickGuiExit, v -> client().gui().quickGuiExit = v)
                                                 .controller(BooleanControllerBuilder::create)
                                                 .build()
                                 )
@@ -159,7 +164,7 @@ public class GuiCategory {
                                         Option.<Boolean>createBuilder()
                                                 .name(Component.translatable("qualityofqueso.options.no_recipe_book_shift"))
                                                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.no_recipe_book_shift.description")))
-                                                .binding(false, () -> client().misc().noRecipeBookShift, v -> client().misc().noRecipeBookShift = v)
+                                                .binding(false, () -> client().gui().noRecipeBookShift, v -> client().gui().noRecipeBookShift = v)
                                                 .controller(TickBoxControllerBuilder::create)
                                                 .build()
                                 )
@@ -167,7 +172,7 @@ public class GuiCategory {
                                         Option.<Boolean>createBuilder()
                                                 .name(Component.translatable("qualityofqueso.options.auto_close_recipe_book"))
                                                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.auto_close_recipe_book.description")))
-                                                .binding(true, () -> client().misc().autoCloseRecipeBook, v -> client().misc().autoCloseRecipeBook = v)
+                                                .binding(true, () -> client().gui().autoCloseRecipeBook, v -> client().gui().autoCloseRecipeBook = v)
                                                 .controller(TickBoxControllerBuilder::create)
                                                 .build()
                                 )

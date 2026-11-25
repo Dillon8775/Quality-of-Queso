@@ -31,7 +31,7 @@ public class NeoForgeAbstractContainerScreenMixin {
     @Redirect(method = "keyPressed", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/KeyMapping;isActiveAndMatches(Lcom/mojang/blaze3d/platform/InputConstants$Key;)Z", ordinal = 2))
     private boolean preventDroppingInFull(KeyMapping original, InputConstants.Key key) {
         boolean bl = original.isActiveAndMatches(key);
-        return client().management().quickDrop.any() ? bl && !Minecraft.getInstance().hasShiftDown() : bl;
+        return client().management().quickDrop.enabled() ? bl && !Minecraft.getInstance().hasShiftDown() : bl;
     }
 
     /**

@@ -30,7 +30,7 @@ public class OpenVisualTimeGuiButton extends AbstractButton {
     }
 
     @Override
-    protected void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+    protected void extractContents(GuiGraphicsExtractor graphics) {
         this.extractDefaultSprite(graphics);
         drawVisualTimeClock(
                 graphics,

@@ -5,13 +5,18 @@ import net.dillon.qualityofqueso.helper.ModConstants;
 import java.util.ArrayList;
 import java.util.List;
 
+import static net.dillon.dillonlib.util.BaseOptions.guardedInstance;
+
 /**
  * A separate option instance, which is not affected by multi-server configs.
  */
 public class UniversalOptions {
-    public static final UniversalOptionsHandler INSTANCE = new UniversalOptionsHandler();
-    public boolean multiServerConfigs = false;
+    private static final UniversalOptionsHandler INSTANCE = new UniversalOptionsHandler();
     public List<String> blacklistedServers = new ArrayList<>();
+
+    public static UniversalOptionsHandler getInstance() {
+        return guardedInstance(INSTANCE);
+    }
 
     public static class UniversalOptionsHandler extends ModBaseOptionsHandler<UniversalOptions> {
 

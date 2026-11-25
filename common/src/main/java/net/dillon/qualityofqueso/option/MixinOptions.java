@@ -2,19 +2,23 @@ package net.dillon.qualityofqueso.option;
 
 import net.dillon.qualityofqueso.helper.ModConstants;
 
+import static net.dillon.dillonlib.util.BaseOptions.guardedInstance;
+
 /**
  * An option instance that stores mixin configurations.
  */
 public class MixinOptions {
-    public static final MixinHandler INSTANCE = new MixinHandler();
-    public boolean titleScreenMixin = true;
-    public boolean pauseScreenMixin = true;
+    private static final MixinHandler INSTANCE = new MixinHandler();
     public boolean fogMixins = true;
     public boolean fovEffectsMixin = true;
     public boolean redArmorTintMixin = true;
     public boolean clockManagerMixin = true;
     public boolean itemArgumentMixin = true;
     public boolean itemStackMixin = true;
+
+    public static MixinHandler getInstance() {
+        return guardedInstance(INSTANCE);
+    }
 
     public static class MixinHandler extends ModBaseOptionsHandler<MixinOptions> {
 

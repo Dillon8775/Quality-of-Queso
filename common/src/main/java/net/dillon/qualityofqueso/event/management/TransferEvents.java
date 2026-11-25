@@ -8,6 +8,7 @@ import net.dillon.qualityofqueso.sound.BundleDropContentsSoundEvents;
 import net.dillon.qualityofqueso.sound.BundleInsertFailSoundEvents;
 import net.dillon.qualityofqueso.sound.BundleInsertSoundEvents;
 import net.dillon.qualityofqueso.widget.management.SwapButton;
+import net.minecraft.client.gui.components.inventory.SlotWidget;
 import net.minecraft.client.gui.screens.inventory.AbstractFurnaceScreen;
 import net.minecraft.client.gui.screens.inventory.BrewingStandScreen;
 import net.minecraft.client.gui.screens.inventory.EnchantmentScreen;
@@ -45,7 +46,7 @@ public class TransferEvents extends ManagementEvents {
     /**
      * Helper method to drop all selected items in the respective inventory/container.
      */
-    public void dropItems(boolean fromInventory) {
+    public void dropItems() {
         boolean dropFromInventory = isInventoryScreen();
         moveItems(true, true, dropFromInventory, false);
     }
@@ -71,15 +72,21 @@ public class TransferEvents extends ManagementEvents {
         return client().management().scrollMoving
                 && event.key() == inputKey(getDropKey()).getValue()
                 && hasDropOnlyOneItemModifierDown()
-                && hoveredSlotHasItem(holder().screensHoveredSlot());
+                && hoveredSlotHasItem(holder().getHoveredSlotWidget());
     }
 
     /**
      * Performs a singular drop on an item.
      */
-    public void performSingularDrop() {
+    public void performSingularDrop(SlotWidget hoveredSlotWidget) {
+        if (hoveredSlotWidget == null) {
+            return;
+        }
+
+        Slot hoveredSlot = hoveredSlotWidget.slot();
+
         for (int i = 0; i < MOVE_AMOUNT; i++) {
-            sendClickSlotPacket(holder().screensHoveredSlot().index, ContainerInput.THROW);
+            sendClickSlotPacket(hoveredSlot.index, ContainerInput.THROW);
         }
     }
 
@@ -98,7 +105,8 @@ public class TransferEvents extends ManagementEvents {
         int playerStorageStart = findPlayerStorageStartIndex();
         int playerStorageEnd = findPlayerStorageEndIndexExclusive();
         int containerSize = getContainerSize();
-        ItemStack hoveredDropFilter = drop && hoveredSlotHasItem(holder().screensHoveredSlot()) ? holder().screensHoveredSlot().getItem().copy() : ItemStack.EMPTY;
+        SlotWidget hoveredSlotWidget = holder().getHoveredSlotWidget();
+        ItemStack hoveredDropFilter = drop && hoveredSlotHasItem(hoveredSlotWidget) ? hoveredSlotWidget.slot().getItem().copy() : ItemStack.EMPTY;
 
         int containerEnd = playerStorageStart != -1 ? playerStorageStart : Math.max(0, Math.min(containerSize, totalSlots));
         int effectivePlayerStart = playerStorageStart != -1 ? playerStorageStart : containerEnd;
@@ -241,13 +249,14 @@ public class TransferEvents extends ManagementEvents {
      *
      * @return {@code true} if the scroll was handled.
      */
-    public boolean tryMoveSingleFromScroll(Slot hoveredSlot, double scrollY) {
+    public boolean tryMoveSingleFromScroll(SlotWidget hoveredSlotWidget, double scrollY) {
         if (!client().management().scrollMoving
-                || hoveredSlot == null
-                || !hoveredSlot.hasItem()
+                || !hoveredSlotHasItem(hoveredSlotWidget)
                 || scrollY == 0) {
             return false;
         }
+
+        Slot hoveredSlot = hoveredSlotWidget.slot();
 
         if (hoveredSlot.index == 0 && (isCraftingScreen() || isInventoryScreen())) {
             return moveSingleCraftingResult(hoveredSlot);
@@ -424,7 +433,6 @@ public class TransferEvents extends ManagementEvents {
         // Take exactly one crafted result (vanilla handles all crafting logic)
         performClickSlot(
                 holder().screen(),
-                resultSlot,
                 resultSlot.index,
                 0,
                 ContainerInput.PICKUP
@@ -457,7 +465,6 @@ public class TransferEvents extends ManagementEvents {
 
             performClickSlot(
                     holder().screen(),
-                    slot,
                     slot.index,
                     0,
                     ContainerInput.PICKUP
@@ -480,7 +487,6 @@ public class TransferEvents extends ManagementEvents {
 
                 performClickSlot(
                         holder().screen(),
-                        slot,
                         slot.index,
                         0,
                         ContainerInput.PICKUP
@@ -492,9 +498,9 @@ public class TransferEvents extends ManagementEvents {
 
         // If still not placed, return to cursor safety net
         if (!getCursorStack().isEmpty()) {
+
             performClickSlot(
                     holder().screen(),
-                    resultSlot,
                     resultSlot.index,
                     0,
                     ContainerInput.PICKUP
@@ -593,12 +599,12 @@ public class TransferEvents extends ManagementEvents {
         int parkedCursorSlot = -1;
         if (preserveCarriedStack && !getCursorStack().isEmpty()) {
             parkedCursorSlot = findTemporaryEmptySlotForCursor();
+
             if (parkedCursorSlot == -1) {
                 return false;
             }
 
-            Slot parkedSlot = holder().menu().getSlot(parkedCursorSlot);
-            performClickSlot(holder().screen(), parkedSlot, parkedCursorSlot, 0, ContainerInput.PICKUP);
+            performClickSlot(holder().screen(), parkedCursorSlot, 0, ContainerInput.PICKUP);
         }
 
         try {
@@ -637,15 +643,15 @@ public class TransferEvents extends ManagementEvents {
             if (parkedCursorSlot != -1) {
                 // If a move path left something on the cursor, attempt to return it to source first.
                 if (!holder().menu().getCarried().isEmpty()) {
-                    Slot freshSourceSlot = holder().menu().getSlot(sourceSlot.index);
-                    performClickSlot(holder().screen(), freshSourceSlot, sourceSlot.index, 0, ContainerInput.PICKUP);
+                    performClickSlot(holder().screen(), sourceSlot.index, 0, ContainerInput.PICKUP);
                 }
 
                 // Restore the originally parked carried stack when possible.
                 if (holder().menu().getCarried().isEmpty()) {
                     Slot parkedSlot = holder().menu().getSlot(parkedCursorSlot);
+
                     if (parkedSlot.hasItem()) {
-                        performClickSlot(holder().screen(), parkedSlot, parkedCursorSlot, 0, ContainerInput.PICKUP);
+                        performClickSlot(holder().screen(), parkedCursorSlot, 0, ContainerInput.PICKUP);
                     }
                 }
             }
@@ -698,7 +704,7 @@ public class TransferEvents extends ManagementEvents {
         int slotId = sourceSlot.index;
 
         // Pick up full stack
-        performClickSlot(holder().screen(), sourceSlot, slotId, 0, ContainerInput.PICKUP);
+        performClickSlot(holder().screen(), slotId, 0, ContainerInput.PICKUP);
 
         ItemStack carried = holder().menu().getCarried();
         if (carried.isEmpty()) {
@@ -735,7 +741,7 @@ public class TransferEvents extends ManagementEvents {
             }
 
             // Right-click places 1 item
-            performClickSlot(holder().screen(), target, target.index, 1, ContainerInput.PICKUP);
+            performClickSlot(holder().screen(), target.index, 1, ContainerInput.PICKUP);
 
             movedOne = true;
             // Only move one item total per source sourceSlot
@@ -751,7 +757,7 @@ public class TransferEvents extends ManagementEvents {
                     continue;
                 }
 
-                performClickSlot(holder().screen(), empty, empty.index, 1, ContainerInput.PICKUP);
+                performClickSlot(holder().screen(), empty.index, 1, ContainerInput.PICKUP);
 
                 if (empty.hasItem()) {
                     nonEmptySlots.add(empty);
@@ -764,13 +770,11 @@ public class TransferEvents extends ManagementEvents {
 
         // Return leftovers to original sourceSlot
         if (!holder().menu().getCarried().isEmpty()) {
-            Slot freshSourceSlot = holder().menu().getSlot(slotId);
-            performClickSlot(holder().screen(), freshSourceSlot, slotId, 0, ContainerInput.PICKUP);
+            performClickSlot(holder().screen(), slotId, 0, ContainerInput.PICKUP);
 
             // Defensive second pass: in edge cases (e.g., transient slot mutation), first restore can fail.
             if (!holder().menu().getCarried().isEmpty()) {
-                freshSourceSlot = holder().menu().getSlot(slotId);
-                performClickSlot(holder().screen(), freshSourceSlot, slotId, 0, ContainerInput.PICKUP);
+                performClickSlot(holder().screen(), slotId, 0, ContainerInput.PICKUP);
             }
         }
 

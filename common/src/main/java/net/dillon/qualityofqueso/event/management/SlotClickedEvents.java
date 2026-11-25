@@ -53,7 +53,7 @@ public class SlotClickedEvents extends ManagementEvents {
      * Handles clicking out of bounds in a screen.
      */
     private void outOfBoundsClick(Slot slot, int buttonNum) {
-        if (client().misc().quickGuiExit && getCursorStack().isEmpty() && buttonNum == 0 && slot == null) {
+        if (client().gui().quickGuiExit && getCursorStack().isEmpty() && buttonNum == 0 && slot == null) {
             holder().screen().onClose();
         }
     }
@@ -81,7 +81,7 @@ public class SlotClickedEvents extends ManagementEvents {
             return;
         }
 
-        if ((!client().management().bulkTrade || !client().buttonDisplayOptions().displayBulkTrade) || !client().buttonDisplayOptions().displayBulkTrade || !(holder().screen() instanceof MerchantScreen merchantScreen)) {
+        if ((!client().management().bulkTrading || client().display().hideBulkTrade) || !(holder().screen() instanceof MerchantScreen merchantScreen)) {
             return;
         }
 
@@ -120,7 +120,7 @@ public class SlotClickedEvents extends ManagementEvents {
             return;
         }
 
-        if ((!client().management().bulkCraft || !client().buttonDisplayOptions().displayBulkCraft) || !(isCraftingScreen() || isInventoryScreen())) {
+        if ((!client().management().bulkCrafting || client().display().hideBulkCraft) || !(isCraftingScreen() || isInventoryScreen())) {
             return;
         }
 
@@ -197,7 +197,7 @@ public class SlotClickedEvents extends ManagementEvents {
 
         processingQueuedTradeAllClick = true;
         try {
-            performClickSlot(merchantScreen, merchantMenu.getSlot(2), 2, 0, ContainerInput.QUICK_MOVE);
+             performClickSlot(merchantScreen, 2, 0, ContainerInput.QUICK_MOVE);
         } finally {
             processingQueuedTradeAllClick = false;
         }
@@ -248,7 +248,7 @@ public class SlotClickedEvents extends ManagementEvents {
 
         processingQueuedBulkCraftClick = true;
         try {
-            performClickSlot(screen, menu.getSlot(0), 0, 0, ContainerInput.QUICK_MOVE);
+            performClickSlot(screen, 0, 0, ContainerInput.QUICK_MOVE);
         } finally {
             processingQueuedBulkCraftClick = false;
         }

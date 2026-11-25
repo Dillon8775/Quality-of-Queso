@@ -3,19 +3,18 @@ package net.dillon.qualityofqueso.packet;
 import net.blay09.mods.balm.Balm;
 import net.dillon.dillonlib.annotation.Dill;
 import net.dillon.dillonlib.annotation.DillEnv;
+import net.dillon.dillonlib.task.CommonTasks;
 import net.dillon.qualityofqueso.container.ShulkerBlockEntityHolder;
-import net.dillon.qualityofqueso.option.ModCommonOptions;
 import net.dillon.qualityofqueso.packet.clientbound.SyncShulkerStateS2CPacket;
 import net.dillon.qualityofqueso.packet.serverbound.*;
 import net.dillon.qualityofqueso.server.DedicatedServerStorage;
 import net.dillon.qualityofqueso.server.LockedInventoryStorage;
 import net.dillon.qualityofqueso.server.PendingManualPickup;
+import net.dillon.qualityofqueso.sound.OtherSoundEvents;
 import net.dillon.qualityofqueso.util.GlowCountdown;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -29,6 +28,9 @@ import net.minecraft.world.phys.Vec3;
 import java.util.List;
 
 import static net.dillon.qualityofqueso.container.ShulkerSyncer.*;
+import static net.dillon.qualityofqueso.option.ModClientOptions.getFormattedGlowDuration;
+import static net.dillon.qualityofqueso.option.OptionInstances.common;
+import static net.dillon.qualityofqueso.sound.ModSoundEvents.getSoundFromRegistration;
 
 /**
  * Server-safe packet handlers used during common packet registration.
@@ -40,8 +42,8 @@ public class ServerPacketHandlers {
     /**
      * Plays feedback sound at the player's location.
      */
-    private static void playSound(ServerPlayer player, SoundEvent sound, float volume) {
-        player.level().playSound(null, player.blockPosition(), sound, SoundSource.PLAYERS, volume, 1.0F);
+    private static void playSound(ServerPlayer player, OtherSoundEvents otherSoundEvent, float volume) {
+        CommonTasks.playSoundFromLiving(player, getSoundFromRegistration(otherSoundEvent.sound()), SoundSource.PLAYERS, volume, 1.0F);
     }
 
     /**
@@ -161,10 +163,8 @@ public class ServerPacketHandlers {
     /**
      * Applies glow or clear behavior to nearby item frames based on payload options.
      */
-    private static void handleGlowPacket(ServerPlayer player, String query, boolean matchCase, boolean clear, int timer,
-                                         int radius) {
-        ModCommonOptions options = ModCommonOptions.INSTANCE.getInstance();
-        if (options == null || !options.itemFrameSearching) {
+    public static void handleGlowPacket(ServerPlayer player, String query, boolean matchCase, boolean clear, int timer, int radius) {
+        if (!common().itemFrameSearching) {
             return;
         }
 
@@ -205,33 +205,34 @@ public class ServerPacketHandlers {
             }
 
             if (!clear && timer != 0) {
-                ((GlowCountdown) frame).startGlowCountdown(timer * 20);
+                ((GlowCountdown) frame).startGlowCountdown(timer);
             }
         }
 
         if (clear) {
-            player.sendSystemMessage(Component.translatable("qualityofqueso.item_frame_searcher.executed.cleared", searched), false);
-            playSound(player, SoundEvents.PLAYER_SPLASH, 1.0F);
+            player.sendSystemMessage(Component.translatable("qualityofqueso.item_frame_searcher.cleared", searched), false);
+            playSound(player, OtherSoundEvents.ITEM_FRAMES_GLOW_REMOVED, 1.0F);
             return;
         }
 
         if (nearbyFrames.isEmpty()) {
             player.sendSystemMessage(matchCase ?
-                    Component.translatable("qualityofqueso.item_frame_searcher.executed.found_none.match_case", searched, query) :
-                    Component.translatable("qualityofqueso.item_frame_searcher.executed.found_none", searched, query), false);
-            playSound(player, SoundEvents.NOTE_BLOCK_BASS.value(), 2.0F);
+                    Component.translatable("qualityofqueso.item_frame_searcher.found_none.match_case", searched, query) :
+                    Component.translatable("qualityofqueso.item_frame_searcher.found_none", searched, query), false);
+            playSound(player, OtherSoundEvents.ITEM_FRAME_SEARCH_FAILED, 2.0F);
             return;
         }
 
         if (timer == 0) {
             player.sendSystemMessage(matchCase ?
-                    Component.translatable("qualityofqueso.item_frame_searcher.executed.without_timer.match_case", searched, query) :
-                    Component.translatable("qualityofqueso.item_frame_searcher.executed.without_timer", searched, query));
+                    Component.translatable("qualityofqueso.item_frame_searcher.without_timer.match_case", searched, query) :
+                    Component.translatable("qualityofqueso.item_frame_searcher.without_timer", searched, query));
         } else {
+            String formattedTime = getFormattedGlowDuration(timer);
             player.sendSystemMessage(matchCase ?
-                    Component.translatable("qualityofqueso.item_frame_searcher.executed.with_timer.match_case", searched, query, timer) :
-                    Component.translatable("qualityofqueso.item_frame_searcher.executed.with_timer", searched, query, timer), false);
+                    Component.translatable("qualityofqueso.item_frame_searcher.with_timer.match_case", searched, query, formattedTime) :
+                    Component.translatable("qualityofqueso.item_frame_searcher.with_timer", searched, query, formattedTime), false);
         }
-        playSound(player, SoundEvents.ARROW_HIT_PLAYER, 1.0F);
+        playSound(player, OtherSoundEvents.ITEM_FRAMES_FOUND, 1.0F);
     }
 }

@@ -335,9 +335,9 @@ public class HudPositionsScreen extends DillonLibScreen {
     }
 
     @Override
-    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks) {
+    public void extractBackground(GuiGraphicsExtractor graphics) {
         if (isCurrentLevelNull()) {
-            this.extractPanorama(graphics, deltaTicks);
+            this.extractPanorama(graphics);
         }
 
         this.extractMenuBackground(graphics);

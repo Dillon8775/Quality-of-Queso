@@ -43,23 +43,23 @@ public class ClientPacketListenerMixin {
             return;
         }
 
-        if (this.level.getEntity(packet.getPlayerId()) == null || this.level.getEntity(packet.getItemId()) == null) {
+        if (this.level.getEntity(packet.playerId()) == null || this.level.getEntity(packet.itemId()) == null) {
             return;
         }
 
-        Entity entity = this.level.getEntity(packet.getItemId());
+        Entity entity = this.level.getEntity(packet.itemId());
 
         LocalPlayer player = getLocalPlayer();
         if (player == null) {
             return;
         }
 
-        if (this.level.getEntity(packet.getPlayerId()) == null) {
+        if (this.level.getEntity(packet.playerId()) == null) {
             return;
         }
 
         try {
-            if (this.level.getEntity(packet.getPlayerId()).getId() != player.getId()) {
+            if (this.level.getEntity(packet.playerId()).getId() != player.getId()) {
                 return;
             }
         } catch (NullPointerException e) {

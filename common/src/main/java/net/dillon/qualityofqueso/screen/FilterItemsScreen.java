@@ -5,11 +5,11 @@ import net.dillon.qualityofqueso.container.ContainerSyncer;
 import net.dillon.qualityofqueso.helper.ModConstants;
 import net.dillon.qualityofqueso.sound.BundleInsertSoundEvents;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiPipeline;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.inventory.Slot;
@@ -315,9 +315,9 @@ public class FilterItemsScreen extends Screen {
      * Extracts background textures, items and tooltips.
      */
     @Override
-    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks) {
-        this.lastMouseX = mouseX;
-        this.lastMouseY = mouseY;
+    public void extractRenderState(GuiGraphicsExtractor graphics) {
+        this.lastMouseX = graphics.mouseX();
+        this.lastMouseY = graphics.mouseY();
 
         int panelX = this.panelX();
         int panelY = this.panelY();
@@ -327,8 +327,8 @@ public class FilterItemsScreen extends Screen {
         int hotbarY = panelY + HOTBAR_Y;
 
         // Match vanilla GenericContainerScreen rendering to avoid slot/background offset drift.
-        graphics.blit(RenderPipelines.GUI_TEXTURED, CHEST_TEXTURE, panelX, panelY, 0, 0, GUI_WIDTH, TOP_BACKGROUND_HEIGHT, 256, 256);
-        graphics.blit(RenderPipelines.GUI_TEXTURED, CHEST_TEXTURE, panelX, panelY + TOP_BACKGROUND_HEIGHT, 0, 126, GUI_WIDTH, BOTTOM_BACKGROUND_HEIGHT, 256, 256);
+        graphics.blit(GuiPipeline.TEXTURED, CHEST_TEXTURE, panelX, panelY, 0, 0, GUI_WIDTH, TOP_BACKGROUND_HEIGHT, 256, 256);
+        graphics.blit(GuiPipeline.TEXTURED, CHEST_TEXTURE, panelX, panelY + TOP_BACKGROUND_HEIGHT, 0, 126, GUI_WIDTH, BOTTOM_BACKGROUND_HEIGHT, 256, 256);
 
         graphics.text(this.font, Component.translatable("qualityofqueso.gui.placeholder_editor"), panelX + 8, panelY + 6, ModConstants.DEFAULT_TRANSPARENT_SEARCH_BAR_TEXT_COLOR, false);
         graphics.text(this.font, Component.translatable("container.inventory"), panelX + 8, panelY + (GUI_HEIGHT - 94), ModConstants.DEFAULT_TRANSPARENT_SEARCH_BAR_TEXT_COLOR, false);
@@ -367,7 +367,7 @@ public class FilterItemsScreen extends Screen {
             }
         }
 
-        int hoveredSource = this.sourceSlotAt(mouseX, mouseY);
+        int hoveredSource = this.sourceSlotAt(graphics.mouseX(), graphics.mouseY());
         if (hoveredSource >= 0) {
             ItemStack stack = this.sourceStackAt(hoveredSource);
             if (!stack.isEmpty()) {
@@ -375,12 +375,12 @@ public class FilterItemsScreen extends Screen {
                         this.font,
                         stack.getTooltipLines(Item.TooltipContext.EMPTY, this.minecraft.player, minecraft.options.advancedItemTooltips ? TooltipFlag.ADVANCED : TooltipFlag.NORMAL),
                         Optional.empty(),
-                        mouseX,
-                        mouseY
+                        graphics.mouseX(),
+                        graphics.mouseY()
                 );
             }
         } else {
-            int hoveredPlaceholder = this.placeholderSlotAt(mouseX, mouseY);
+            int hoveredPlaceholder = this.placeholderSlotAt(graphics.mouseX(), graphics.mouseY());
             if (hoveredPlaceholder >= 0) {
                 ItemStack stack = this.placeholders.get(hoveredPlaceholder);
                 if (!stack.isEmpty()) {
@@ -388,18 +388,18 @@ public class FilterItemsScreen extends Screen {
                             this.font,
                             stack.getTooltipLines(Item.TooltipContext.EMPTY, this.minecraft.player, minecraft.options.advancedItemTooltips ? TooltipFlag.ADVANCED : TooltipFlag.NORMAL),
                             Optional.empty(),
-                            mouseX,
-                            mouseY
+                            graphics.mouseX(),
+                            graphics.mouseY()
                     );
                 }
             }
         }
 
         if (!this.selectedStack.isEmpty()) {
-            graphics.fakeItem(this.selectedStack, mouseX - 8, mouseY - 8);
-            graphics.itemDecorations(this.font, this.selectedStack, mouseX - 8, mouseY - 8);
+            graphics.fakeItem(this.selectedStack, graphics.mouseX() - 8, graphics.mouseY() - 8);
+            graphics.itemDecorations(this.font, this.selectedStack, graphics.mouseX() - 8, graphics.mouseY() - 8);
         }
 
-        super.extractRenderState(graphics, mouseX, mouseY, deltaTicks);
+        super.extractRenderState(graphics);
     }
 }

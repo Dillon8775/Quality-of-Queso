@@ -2,6 +2,7 @@ package net.dillon.qualityofqueso.event;
 
 import net.dillon.qualityofqueso.keybind.ModKeyMappings;
 import net.dillon.qualityofqueso.main.ClientEvents;
+import net.dillon.qualityofqueso.option.ModClientOptions;
 import net.dillon.qualityofqueso.platform.QualityOfQuesoPlatforms;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -22,20 +23,24 @@ public class FabricClientEvents {
      * Registers all {@code client-side events.}
      */
     public static void registerFabricClientEvents() {
-        ClientPlayConnectionEvents.JOIN.register((handler, packet, minecraft) -> {
-            ClientEvents.onPlayerJoin(minecraft);
+        ClientPlayConnectionEvents.DISCONNECT.register((listener, client) -> {
+            ClientEvents.onPlayerDisconnect(client);
+        });
 
-            if (!QualityOfQuesoPlatforms.getClientPlatform().canSendPacket(minecraft.player)) {
-                ClientEvents.warnModNotPresent(minecraft);
+        ClientPlayConnectionEvents.JOIN.register((listener, sender, client) -> {
+            ClientEvents.onPlayerJoin(client);
+
+            if (!QualityOfQuesoPlatforms.getClientPlatform().canSendPacket(client.player)) {
+                ClientEvents.warnModNotPresent(client);
             }
         });
 
-        ClientLevelEvents.AFTER_CLIENT_LEVEL_CHANGE.register((level, minecraft) -> {
+        ClientLevelEvents.AFTER_CLIENT_LEVEL_CHANGE.register((client, level) -> {
             ClientEvents.afterLevelChangeOrRespawn();
         });
 
-        ClientPlayConnectionEvents.DISCONNECT.register((handler, minecraft) -> {
-            ClientEvents.onPlayerDisconnect(minecraft);
+        ClientPlayConnectionEvents.DISCONNECT.register((listener, client) -> {
+            ClientEvents.onPlayerDisconnect(client);
         });
     }
 }

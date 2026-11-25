@@ -18,7 +18,7 @@ public class InventoryScreenMixin {
      * Removes the title {@code "Crafting"} text from rendering on the inventory screen.
      */
     @Inject(method = "extractLabels", at = @At("HEAD"), cancellable = true)
-    private void removeInventoryScreenTitleText(GuiGraphicsExtractor graphics, int xm, int ym, CallbackInfo ci) {
+    private void removeInventoryScreenTitleText(GuiGraphicsExtractor graphics, CallbackInfo ci) {
         if (!modEnabled()) {
             return;
         }

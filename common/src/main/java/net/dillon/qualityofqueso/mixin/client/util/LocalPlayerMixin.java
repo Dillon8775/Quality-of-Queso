@@ -3,6 +3,7 @@ package net.dillon.qualityofqueso.mixin.client.util;
 import com.mojang.authlib.GameProfile;
 import net.dillon.qualityofqueso.hud.counter.ItemTracker;
 import net.dillon.qualityofqueso.main.ClientEvents;
+import net.dillon.qualityofqueso.sound.OtherSoundEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -21,7 +22,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import static net.dillon.qualityofqueso.helper.GuiHelper.*;
 import static net.dillon.qualityofqueso.helper.ModConstants.PLAYER_FALL_DISTANCE;
 import static net.dillon.qualityofqueso.helper.ModConstants.SHOULD_WARN_OF_ELYTRA;
-import static net.dillon.qualityofqueso.helper.ModHelper.*;
+import static net.dillon.qualityofqueso.helper.ModHelper.equipmentSlots;
+import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
+import static net.dillon.qualityofqueso.helper.SoundHelper.playDingSound;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 @Mixin(LocalPlayer.class)
@@ -121,7 +124,7 @@ public class LocalPlayerMixin extends AbstractClientPlayer {
 
             // Play one shared ding queue for armor warnings
             if (this.armorTimesToPlay > 0 && this.armorDingCooldown == 0) {
-                playDingSound();
+                playDingSound(OtherSoundEvents.ARMOR_DING_DINGING);
                 this.armorTimesToPlay--;
                 this.armorDingCooldown = 3;
             }
@@ -165,7 +168,7 @@ public class LocalPlayerMixin extends AbstractClientPlayer {
         }
 
         if (this.elytraWarningCooldown <= 0) {
-            playDingSound();
+            playDingSound(OtherSoundEvents.ELYTRA_ALARM_RINGING);
             this.elytraWarningCooldown = client().elytraAlarm().elytraAlarmSoundDelayTicks;
             return;
         }

@@ -114,7 +114,7 @@ public class SearchEvents extends ManagementEvents {
             return true;
         }
 
-        if (!ModConstants.SEARCHING_TRANSPORTABLES || !client().buttonDisplayOptions().displaySearchTransportables) {
+        if (!ModConstants.SEARCHING_TRANSPORTABLES || client().display().hideSearchTransportables) {
             return false;
         }
 

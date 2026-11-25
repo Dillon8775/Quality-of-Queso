@@ -48,15 +48,15 @@ public class VisualTimeScreen extends DillonLibScreen {
     }
 
     @Override
-    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks) {
-        super.extractRenderState(graphics, mouseX, mouseY, deltaTicks);
+    public void extractRenderState(GuiGraphicsExtractor graphics) {
+        super.extractRenderState(graphics);
         this.extractBlurredBackground(graphics);
     }
 
     @Override
-    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks) {
+    public void extractBackground(GuiGraphicsExtractor graphics) {
         if (isCurrentLevelNull()) {
-            this.extractPanorama(graphics, deltaTicks);
+            this.extractPanorama(graphics);
         }
         this.extractMenuBackground(graphics);
     }

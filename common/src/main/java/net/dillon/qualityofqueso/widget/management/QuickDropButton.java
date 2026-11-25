@@ -25,7 +25,7 @@ public class QuickDropButton extends ManagementButton {
                 QUICK_DROP_BUTTON_NAME,
                 isInventoryScreen() ? ".inventory" : NO_APPENDED_TOOLTIP,
                 true,
-                b -> params.managementEvents().transferEvents().dropItems(!isContainerScreen())
+                b -> params.managementEvents().transferEvents().dropItems()
         );
     }
 
@@ -63,7 +63,7 @@ public class QuickDropButton extends ManagementButton {
 
             String outline = "quick_drop_all";
 
-            if (getScreen() instanceof AbstractContainerScreen<?> screen && getHoveredSlot(screen) != null && getHoveredSlot(screen).hasItem()) {
+            if (getScreen() instanceof AbstractContainerScreen<?> screen && getHoveredSlot(screen) != null && getHoveredSlot(screen).slot().hasItem()) {
                 outline = "quick_drop_hovered";
             }
 
@@ -74,7 +74,7 @@ public class QuickDropButton extends ManagementButton {
                 && (
                         (
                                 client().management().scrollMoving && (
-                                        (this.isHovered()) || getScreen() instanceof AbstractContainerScreen<?> screen && getHoveredSlot(screen) != null && getHoveredSlot(screen).hasItem()
+                                        (this.isHovered()) || getScreen() instanceof AbstractContainerScreen<?> screen && getHoveredSlot(screen) != null && getHoveredSlot(screen).slot().hasItem()
                                 )
                         ) || shortcutKeyPressed
         )) {

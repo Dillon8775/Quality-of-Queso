@@ -8,11 +8,12 @@ import net.dillon.qualityofqueso.event.management.SlotClickedEvents;
 import net.dillon.qualityofqueso.event.mouse.MouseClickedEvents;
 import net.dillon.qualityofqueso.event.mouse.MouseReleasedEvents;
 import net.dillon.qualityofqueso.event.mouse.MouseScrolledEvents;
-import net.dillon.qualityofqueso.event.screen.TooltipEvents;
 import net.dillon.qualityofqueso.widget.management.WidgetLayout;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.components.inventory.SlotGroup;
+import net.minecraft.client.gui.components.inventory.SlotWidget;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.MenuAccess;
@@ -24,7 +25,6 @@ import net.minecraft.world.Container;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.Slot;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -46,9 +46,12 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
     protected T menu;
 
     @Shadow
-    @Nullable
-    protected Slot hoveredSlot;
+    protected abstract SlotWidget getHoveredSlot();
 
+    @Shadow
+    protected int leftPos;
+    @Shadow
+    protected int topPos;
     @Unique
     private final AbstractContainerScreen<?> screen = (AbstractContainerScreen<?>) (Object) this;
 
@@ -99,8 +102,8 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
     }
 
     @Override
-    public Slot screensHoveredSlot() {
-        return this.hoveredSlot;
+    public SlotWidget getHoveredSlotWidget() {
+        return this.getHoveredSlot();
     }
 
     @Override
@@ -232,8 +235,8 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
     /**
      * Renders the locked slot overlay overtop of slots.
      */
-    @Inject(method = "extractContents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;extractLabels(Lnet/minecraft/client/gui/GuiGraphicsExtractor;II)V"))
-    private void renderLockedSlotsOverlay(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a, CallbackInfo ci) {
+    @Inject(method = "extractContents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;extractLabels(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V"))
+    private void renderLockedSlotsOverlay(GuiGraphicsExtractor graphics, CallbackInfo ci) {
         if (!modEnabled()) {
             return;
         }
@@ -244,8 +247,8 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
     /**
      * Grays out any slot which doesn't contain the query name being searched, and renders the lock texture for locked slots.
      */
-    @Inject(method = "extractContents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;extractSlotHighlightFront(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V", shift = At.Shift.AFTER))
-    private void grayOutAndRenderLockTexture(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a, CallbackInfo ci) {
+    @Inject(method = "extractContents", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;extractSlots(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V", shift = At.Shift.AFTER))
+    private void grayOutAndRenderLockTexture(GuiGraphicsExtractor graphics, CallbackInfo ci) {
         if (!modEnabled()) {
             return;
         }
@@ -257,43 +260,31 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
      * Renders widgets, including management buttons, search fields, and the {@link WidgetLayout}.
      */
     @Inject(method = "extractContents", at = @At("TAIL"))
-    private void renderAndInitializeWidgets(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a, CallbackInfo ci) {
+    private void renderAndInitializeWidgets(GuiGraphicsExtractor graphics, CallbackInfo ci) {
         if (!modEnabled()) {
             return;
         }
 
-        events().extracting().handle(graphics, mouseX, mouseY, a);
-    }
-
-    /**
-     * Renders mod tooltips with the help of the {@link TooltipEvents} record.
-     */
-    @Inject(method = "extractTooltip", at = @At("HEAD"), cancellable = true)
-    private void modifyExistingAndNewTooltips(GuiGraphicsExtractor graphics, int mouseX, int mouseY, CallbackInfo ci) {
-        if (!modEnabled()) {
-            return;
-        }
-
-        events().tooltips().handle(graphics, this.font, mouseX, mouseY, ci);
+        events().extracting().handle(graphics);
     }
 
     /**
      * Handles slot clicking with the help of the {@link SlotClickedEvents} record.
      */
-    @Inject(method = "slotClicked(Lnet/minecraft/world/inventory/Slot;IILnet/minecraft/world/inventory/ContainerInput;)V", at = @At("HEAD"), cancellable = true)
-    private void handleSlotClicked(Slot slot, int slotId, int buttonNum, ContainerInput containerInput, CallbackInfo ci) {
-        if (!modEnabled()) {
+    @Inject(method = "slotClicked", at = @At("HEAD"), cancellable = true)
+    private void handleSlotClicked(SlotWidget slotWidget, int slotId, int buttonNum, ContainerInput containerInput, CallbackInfo ci) {
+        if (!modEnabled() || slotWidget == null) {
             return;
         }
 
-        events().slotClicked().handle(slot, slotId, buttonNum, containerInput, ci);
+        events().slotClicked().handle(slotWidget.slot(), slotId, buttonNum, containerInput, ci);
     }
 
     /**
      * Handles clicking outside the GUI screen, for the {@link WidgetLayout}.
      */
     @Inject(method = "hasClickedOutside", at = @At("HEAD"), cancellable = true)
-    private void handleHasClickedOutside(double mx, double my, int xo, int yo, CallbackInfoReturnable<Boolean> cir) {
+    private void handleHasClickedOutside(double mx, double my, CallbackInfoReturnable<Boolean> cir) {
         if (!modEnabled()) {
             return;
         }
@@ -329,13 +320,18 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
     /**
      * Handles mouse scrolling events with the help of the {@link MouseScrolledEvents} record.
      */
-    @Inject(method = "mouseScrolled", at = @At("HEAD"), cancellable = true)
-    private void handleMouseScrolling(double x, double y, double scrollX, double scrollY, CallbackInfoReturnable<Boolean> cir) {
+    @Override
+    public boolean mouseScrolled(double x, double y, double scrollX, double scrollY) {
         if (!modEnabled()) {
-            return;
+            return super.mouseScrolled(x, y, scrollX, scrollY);
         }
 
-        events().mouseScrolled().handle(scrollY, cir);
+        // Handle scrolling events
+        if (events().mouseScrolled().handle(scrollY)) {
+            return true;
+        }
+
+        return super.mouseScrolled(x, y, scrollX, scrollY);
     }
 
     /**
@@ -353,13 +349,13 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
     /**
      * Handles mouse-releasing events with the help of the {@link MouseReleasedEvents} record.
      */
-    @Inject(method = "mouseReleased", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;slotClicked(Lnet/minecraft/world/inventory/Slot;ILnet/minecraft/client/input/MouseButtonEvent;Lnet/minecraft/world/inventory/ContainerInput;)V", ordinal = 0), cancellable = true, locals = LocalCapture.CAPTURE_FAILEXCEPTION)
-    private void handleMouseReleased(MouseButtonEvent event, CallbackInfoReturnable<Boolean> cir, Slot slot, int xo, int yo, boolean clickedOutside, int slotId, Iterator var7, Slot target) {
-        if (!modEnabled()) {
+    @Inject(method = "handleDoublePress", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;slotClicked(Lnet/minecraft/client/gui/components/inventory/SlotWidget;IILnet/minecraft/world/inventory/ContainerInput;)V", ordinal = 1), cancellable = true, locals = LocalCapture.CAPTURE_FAILEXCEPTION)
+    private void handleMouseReleased(SlotWidget slotWidget, boolean isDoublePress, boolean hasShiftDown, int button, CallbackInfoReturnable<Boolean> cir, int slotId, Iterator var6, SlotGroup group, Iterator var8, SlotWidget targetWidget, Slot target) {
+        if (!modEnabled() || slotWidget == null) {
             return;
         }
 
-        events().mouseReleased().disableHardLockedSlotsOnDoubleClick(slot, target, cir);
+        events().mouseReleased().disableHardLockedSlotsOnDoubleClick(slotWidget.slot(), target, cir);
     }
 
     /**

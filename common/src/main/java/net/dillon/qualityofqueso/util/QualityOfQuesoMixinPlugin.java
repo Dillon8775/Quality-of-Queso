@@ -31,46 +31,39 @@ public class QualityOfQuesoMixinPlugin extends MixinPluginUtil {
                         "ViaFabricPlus mod is loaded for fabric, disabling this mixin prevents a game crash."
                 ),
                 PredicateEntry.ofDebug(
-                        PredicateEntry.single("client.screen.TitleScreenMixin"),
-                        !MixinOptions.INSTANCE.getInstance().titleScreenMixin,
-                        "\"title_screen_mixin\" is disabled."
-                ),
-                PredicateEntry.ofDebug(
-                        PredicateEntry.single("client.screen.PauseScreenMixin"),
-                        !MixinOptions.INSTANCE.getInstance().pauseScreenMixin,
-                        "\"pause_screen_mixin\" is disabled."
-                ),
-                PredicateEntry.ofDebug(
                         PredicateEntry.ddouble(
                                 "render.FogRendererMixin",
                                 "render.CameraMixin"
                         ),
-                        !MixinOptions.INSTANCE.getInstance().fogMixins,
+                        !MixinOptions.getInstance().get().fogMixins,
                         "\"fog_mixins\" are disabled."
                 ),
                 PredicateEntry.ofDebug(
                         PredicateEntry.single("client.util.AbstractClientPlayerMixin"),
-                        !MixinOptions.INSTANCE.getInstance().fovEffectsMixin,
+                        !MixinOptions.getInstance().get().fovEffectsMixin,
                         "\"fov_effects_mixin\" is disabled."
                 ),
                 PredicateEntry.ofDebug(
                         PredicateEntry.single("client.render.EquipmentLayerRendererMixin"),
-                        !MixinOptions.INSTANCE.getInstance().redArmorTintMixin,
+                        !MixinOptions.getInstance().get().redArmorTintMixin,
                         "\"red_armor_tint_mixin\" is disabled."
                 ),
                 PredicateEntry.ofDebug(
                         PredicateEntry.single("client.util.ClientClockManagerMixin"),
-                        !MixinOptions.INSTANCE.getInstance().clockManagerMixin,
+                        !MixinOptions.getInstance().get().clockManagerMixin,
                         "\"clock_manager_mixin\" is disabled."
                 ),
                 PredicateEntry.ofDebug(
-                        PredicateEntry.single("main.ItemArgumentMixin"),
-                        !MixinOptions.INSTANCE.getInstance().itemArgumentMixin,
+                        PredicateEntry.ddouble(
+                                "main.ItemArgumentMixin",
+                                "main.ItemParserMixin"
+                        ),
+                        !MixinOptions.getInstance().get().itemArgumentMixin,
                         "\"item_argument_mixin\" is disabled."
                 ),
                 PredicateEntry.ofDebug(
                         PredicateEntry.single("fabric.FabricItemStackMixin"),
-                        !MixinOptions.INSTANCE.getInstance().itemStackMixin,
+                        !MixinOptions.getInstance().get().itemStackMixin,
                         "\"item_stack_mixin\" is disabled."
                 )
         );

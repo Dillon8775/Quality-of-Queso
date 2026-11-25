@@ -8,6 +8,7 @@ import net.dillon.qualityofqueso.helper.GuiHelper;
 import net.dillon.qualityofqueso.helper.MethodHelper;
 import net.dillon.qualityofqueso.keybind.ModKeyMappings;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.inventory.SlotWidget;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.AbstractRecipeBookScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
@@ -35,7 +36,7 @@ public class KeyPressedEvents extends ManagementEvents {
     private final CallbackInfoReturnable<Boolean> cir;
 
     /// Applies to disallowed keys that block autofocusing and hotbar switching actions Both of these variables apply to disallowed keys and hotbar switching
-    private boolean blockRecipeBookTyping = hoveredSlotHasItem(holder().screensHoveredSlot()); // Basic ignore typing variable; applies to recipe book screens only
+    private boolean blockRecipeBookTyping = hoveredSlotHasItem(holder().getHoveredSlotWidget()); // Basic ignore typing variable; applies to recipe book screens only
     private boolean blockContainerTyping; // Secondary ignore typing variable; applies to "T" and "E" keys and chest searching screens only
 
     /// Only apply to container search bar
@@ -87,16 +88,18 @@ public class KeyPressedEvents extends ManagementEvents {
     private void handleManagementKeybinds() {
         boolean quickDropShortcutPressed = kumaKeyPressed(QUICK_DROP, event);
 
+        SlotWidget hoveredSlotWidget = holder().getHoveredSlotWidget();
+
         if (!quickDropShortcutPressed
                 && !isCreativeInventoryScreen()
                 && transferEvents().canSingularQuickDrop(event)) {
-            transferEvents().performSingularDrop();
+            transferEvents().performSingularDrop(hoveredSlotWidget);
         }
 
-        if (client().lockedSlots().lockedSlots && client().lockedSlots().preventDropping && event.key() == inputKey(getDropKey()).getValue() && holder().screensHoveredSlot() != null && lockedSlotEvents().isLockedSlot(holder().screensHoveredSlot().index)) {
+        if (client().lockedSlots().lockedSlots && client().lockedSlots().preventDropping && event.key() == inputKey(getDropKey()).getValue() && hoveredSlotWidget != null && lockedSlotEvents().isLockedSlot(hoveredSlotWidget.slot().index)) {
             if (canScrollMoveAndHasScrollModifierDown() && hasDropOnlyOneItemModifierDown()) {
                 if (!hasAltDown()) {
-                    performClickSlot(holder().screen(), holder().screensHoveredSlot(), holder().screensHoveredSlot().index, 1, ContainerInput.THROW);
+                    performClickSlot(holder().screen(), hoveredSlotWidget.slot().index, 1, ContainerInput.THROW);
                 }
             } else {
                 cir.setReturnValue(false);
@@ -111,26 +114,28 @@ public class KeyPressedEvents extends ManagementEvents {
             return;
         }
 
-        if (client().management().transferring.any()) {
+        if (client().management().transferring.enabled()) {
             if (kumaKeyPressed(ModKeyMappings.MOVE_TO_INVENTORY, event)) {
                 transferEvents().transferItems(true, false);
             }
+
             if (!isBrewingOrFurnaceScreen() && kumaKeyPressed(ModKeyMappings.MOVE_TO_CONTAINER, event)) {
                 transferEvents().transferItems(false, false);
             }
         }
 
-        if (client().sorting().sorting.any()
+        if (client().sorting().sorting.enabled()
                 && kumaKeyPressed(ModKeyMappings.SORT, event)) {
             sortingEvents().trySort();
         }
 
-        if (client().management().quickDrop.any() && quickDropShortcutPressed) {
-            transferEvents().dropItems(!isContainerScreen());
+        if (client().management().quickDrop.enabled() && quickDropShortcutPressed) {
+            transferEvents().dropItems();
+            cir.setReturnValue(true);
         }
 
         if (isContainerScreen()
-                && client().management().swapping.any()
+                && client().management().swapping.enabled()
                 && kumaKeyPressed(ModKeyMappings.SWAP_ITEMS, event)) {
             transferEvents().trySwap();
         }
@@ -142,7 +147,7 @@ public class KeyPressedEvents extends ManagementEvents {
     private boolean handleQuickEquip() {
         if (kumaKeyPressed(ModKeyMappings.QUICK_EQUIP, event)) {
             quickEquipEvents().quickEquipItem();
-            if (hoveredSlotHasItem(holder().screensHoveredSlot())) {
+            if (hoveredSlotHasItem(holder().getHoveredSlotWidget())) {
                 if (holder().searchFields().inventory() != null && holder().searchFields().inventory().isFocused()) {
                     holder().searchFields().inventory().setFocused(false);
                 }
@@ -183,7 +188,7 @@ public class KeyPressedEvents extends ManagementEvents {
      * Handles hotbar switching between inventories, and when quick-equipping.
      */
     private void checkForItemSwitch() {
-        if (holder().screen().getMenu().getCarried().isEmpty() && holder().screensHoveredSlot() != null) {
+        if (holder().screen().getMenu().getCarried().isEmpty() && holder().getHoveredSlotWidget() != null) {
             for (int i = 0; i < 9; i++) {
                 if (getMinecraft().options.keyHotbarSlots[i].matches(event)) {
                     blockRecipeBookTyping = true;
@@ -193,7 +198,7 @@ public class KeyPressedEvents extends ManagementEvents {
                 }
             }
 
-            if (holder().screen() instanceof InventoryScreen && kumaKeyPressed(ModKeyMappings.QUICK_EQUIP, event) && hoveredSlotHasItem(holder().screensHoveredSlot())) {
+            if (holder().screen() instanceof InventoryScreen && kumaKeyPressed(ModKeyMappings.QUICK_EQUIP, event) && hoveredSlotHasItem(holder().getHoveredSlotWidget())) {
                 blockRecipeBookTyping = true;
             }
         }
@@ -240,7 +245,7 @@ public class KeyPressedEvents extends ManagementEvents {
      * Checks if the drop key was pressed.
      */
     private void checkDropKeyPressed() {
-        if (holder().screensHoveredSlot() != null) {
+        if (holder().getHoveredSlotWidget() != null) {
             if (event.key() == inputKey(getDropKey()).getValue()) {
                 blockContainerTyping = true;
                 dropKeyPressed = true;
@@ -253,7 +258,7 @@ public class KeyPressedEvents extends ManagementEvents {
      */
     private void checkSwapKeyPressed() {
         Minecraft minecraft = getMinecraft();
-        if (hoveredSlotHasItem(holder().screensHoveredSlot()) || minecraft.player.getOffhandItem().isEmpty()) {
+        if (hoveredSlotHasItem(holder().getHoveredSlotWidget()) || minecraft.player.getOffhandItem().isEmpty()) {
             if (event.key() == inputKey(minecraft.options.keySwapOffhand).getValue()) {
                 blockContainerTyping = true;
                 swapKeyPressed = true;
@@ -266,12 +271,12 @@ public class KeyPressedEvents extends ManagementEvents {
      */
     public void handleKeyPressing() {
         // Return key pressed cannot quick drop but attempted
-        if (isContainerScreen() && hoveredSlotHasItem(holder().screensHoveredSlot()) && hasAllQuickDropModifiersDown() && !shouldButtonBeActive(false, null)) {
+        if (isContainerScreen() && hoveredSlotHasItem(holder().getHoveredSlotWidget()) && hasAllQuickDropModifiersDown() && !shouldButtonBeActive(false, null)) {
             cir.setReturnValue(true);
         }
 
         // If user dropped something, set static cursor to crosshair
-        if (client().misc().enhancedCursor && event.key() == inputKey(getDropKey()).getValue()) {
+        if (client().gui().enhancedCursor && event.key() == inputKey(getDropKey()).getValue()) {
             setCursor(CursorKey.CROSSHAIR);
         }
 
@@ -310,14 +315,14 @@ public class KeyPressedEvents extends ManagementEvents {
         checkSwapKeyPressed();
 
         // If any of these are true, the user cannot type in the search field
-        boolean cannotType = (numberOrHotbarKeyPressed || dropKeyPressed || swapKeyPressed) && hoveredSlotHasItem(holder().screensHoveredSlot());
+        boolean cannotType = (numberOrHotbarKeyPressed || dropKeyPressed || swapKeyPressed) && hoveredSlotHasItem(holder().getHoveredSlotWidget());
 
         // Determine if user can type into recipe book
         boolean canTypeRecipeBook = !hasCtrlDown() && !hasAltDown();
 
         // Recipe book search field logic
         if (holder().screen() instanceof AbstractRecipeBookScreen<?> recipeScreen && canTypeRecipeBook) {
-            boolean swapKeyValid = swapKeyPressed && (hoveredSlotHasItem(holder().screensHoveredSlot()) || holder().screen().getMenu().getSlot(45).hasItem());
+            boolean swapKeyValid = swapKeyPressed && (hoveredSlotHasItem(holder().getHoveredSlotWidget()) || holder().screen().getMenu().getSlot(45).hasItem());
             if (!client().accessibility().preventEFromTyping || event.key() != inputKey(getMinecraft().options.keyInventory).getValue()) {
                 if (client().searching().quickSearch.enabledForAny() && !blockRecipeBookTyping && !swapKeyValid && !dropKeyPressed && !getRecipeBookComponent(recipeScreen).isVisible() &&
                         (holder().searchFields().inventory() == null ||
@@ -329,7 +334,7 @@ public class KeyPressedEvents extends ManagementEvents {
                 if (getSearchBoxInsideRecipeBook(recipeScreen) != null) {
                     boolean unfocus = false;
                     for (int i = 0; i < 9; i++) {
-                        if (holder().screensHoveredSlot() != null && getMinecraft().options.keyHotbarSlots[i].matches(event)) {
+                        if (holder().getHoveredSlotWidget() != null && getMinecraft().options.keyHotbarSlots[i].matches(event)) {
                             unfocus = true;
                             break;
                         }

@@ -6,11 +6,11 @@ import net.dillon.qualityofqueso.container.data.StoredEnderChestStack;
 import net.dillon.qualityofqueso.helper.ModConstants;
 import net.dillon.qualityofqueso.helper.SoundHelper;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiPipeline;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.CharacterEvent;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -120,17 +120,17 @@ public class LastKnownEnderChestScreen extends Screen {
     }
 
     @Override
-    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks) {
+    public void extractRenderState(GuiGraphicsExtractor graphics) {
         int panelX = (this.width - GUI_WIDTH) / 2;
         int panelY = (this.height - GUI_HEIGHT) / 2;
         int slotStartX = panelX + 8;
         int slotStartY = panelY + 18;
 
-        graphics.blit(RenderPipelines.GUI_TEXTURED, CHEST_TEXTURE, panelX, panelY, 0, 0, GUI_WIDTH, TOP_BACKGROUND_HEIGHT, 256, 256);
-        graphics.blit(RenderPipelines.GUI_TEXTURED, CHEST_TEXTURE, panelX, panelY + TOP_BACKGROUND_HEIGHT, 0, BOTTOM_CAP_V, GUI_WIDTH, BOTTOM_CAP_HEIGHT, 256, 256);
+        graphics.blit(GuiPipeline.TEXTURED, CHEST_TEXTURE, panelX, panelY, 0, 0, GUI_WIDTH, TOP_BACKGROUND_HEIGHT, 256, 256);
+        graphics.blit(GuiPipeline.TEXTURED, CHEST_TEXTURE, panelX, panelY + TOP_BACKGROUND_HEIGHT, 0, BOTTOM_CAP_V, GUI_WIDTH, BOTTOM_CAP_HEIGHT, 256, 256);
         graphics.text(this.font, this.title, panelX + 8, panelY + 6, ModConstants.DEFAULT_TRANSPARENT_SEARCH_BAR_TEXT_COLOR, false);
 
-        int hoveredSlot = hoveredSlotAt(mouseX, mouseY, slotStartX, slotStartY);
+        int hoveredSlot = hoveredSlotAt(graphics.mouseX(), graphics.mouseY(), slotStartX, slotStartY);
         for (int row = 0; row < ROWS; row++) {
             for (int col = 0; col < COLUMNS; col++) {
                 int slot = row * COLUMNS + col;
@@ -157,13 +157,13 @@ public class LastKnownEnderChestScreen extends Screen {
                                 this.minecraft.options.advancedItemTooltips ? TooltipFlag.ADVANCED : TooltipFlag.NORMAL
                         ),
                         Optional.empty(),
-                        mouseX,
-                        mouseY
+                        graphics.mouseX(),
+                        graphics.mouseY()
                 );
             }
         }
 
-        super.extractRenderState(graphics, mouseX, mouseY, deltaTicks);
+        super.extractRenderState(graphics);
     }
 
     private int hoveredSlotAt(int mouseX, int mouseY, int slotStartX, int slotStartY) {

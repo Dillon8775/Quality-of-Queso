@@ -1,6 +1,7 @@
 package net.dillon.qualityofqueso.event.management;
 
 import net.dillon.qualityofqueso.event.QuesoScreenHolder;
+import net.minecraft.client.gui.components.inventory.SlotWidget;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -82,12 +83,18 @@ public class QuickEquipEvents extends ManagementEvents {
      */
     public void quickEquipItem() {
         AbstractContainerMenu menu = holder().menu();
-        if (!client().management().quickEquip || holder().screensHoveredSlot() == null || !isValidMenuForQuickEquipping(menu) || (client().management().dragSorting && hasSelectSlotsModifierDown())) {
+        if (!client().management().quickEquip || holder().getHoveredSlotWidget() == null || !isValidMenuForQuickEquipping(menu) || (client().management().dragSorting && hasSelectSlotsModifierDown())) {
             return;
         }
 
         // Get the screens hovered slot
-        Slot hoveredSlot = holder().screensHoveredSlot();
+        SlotWidget hoveredSlotWidget = holder().getHoveredSlotWidget();
+
+        if (hoveredSlotWidget == null) {
+            return;
+        }
+
+        Slot hoveredSlot = hoveredSlotWidget.slot();
         ItemStack stack = hoveredSlot.getItem();
 
         // Check if item isn't equippable

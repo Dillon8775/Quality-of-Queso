@@ -1,8 +1,8 @@
 package net.dillon.qualityofqueso.util;
 
 import net.dillon.dillonlib.client.component.SoundBuilder;
+import net.dillon.qualityofqueso.sound.OtherSoundEvents;
 import net.minecraft.client.Minecraft;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import static net.dillon.dillonlib.task.ClientTasks.isCurrentLevelNull;
+import static net.dillon.qualityofqueso.sound.ModSoundEvents.getSoundFromRegistration;
 
 /**
  * Tracks the mob hit ding, to play the correct sound upon hitting an entity.
@@ -58,12 +59,12 @@ public class MobHitDingTracker {
 
             boolean isPlayer = pendingHit.wasPlayer() || entity instanceof Player;
             if (!isPlayer) {
-                SoundBuilder.create(SoundEvents.ARROW_HIT_PLAYER)
+                SoundBuilder.create(getSoundFromRegistration(OtherSoundEvents.MOB_HIT.sound()))
                         .volume(0.18F)
                         .buildAndPlay();
             }
             if (deadOrRemoved) {
-                SoundBuilder.create(SoundEvents.PLAYER_LEVELUP)
+                SoundBuilder.create(getSoundFromRegistration(OtherSoundEvents.ENTITY_KILLED.sound()))
                         .volume(0.32F)
                         .buildAndPlay();
             } else if (isPlayer && currentTime < pendingHit.expireAtGameTime()) {

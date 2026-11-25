@@ -286,13 +286,6 @@ Toggle sprinting, potion effects, flying, bow pulling, and submerged in fluid to
 <br><br>
 - Found in the mod's <code>main menu</code>
 
-## 💾 Multi-Server Configs and Blacklisted Servers
-
-- Create separate Quality of Queso configurations for each server that you play on
-- Additionally, you can block the mod from working on certain servers
-<br><br>
-- Configurable in the mod's <code>Accessibility</code> tab
-
 ---
 
 # Requires [DillonLib](https://modrinth.com/mod/dillon-lib/versions), [Balm](https://modrinth.com/mod/balm/versions) and [YetAnotherConfigLib](https://modrinth.com/mod/yacl/versions)!

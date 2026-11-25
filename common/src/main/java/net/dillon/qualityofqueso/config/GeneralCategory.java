@@ -4,7 +4,6 @@ import dev.isxander.yacl3.api.ConfigCategory;
 import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.OptionGroup;
-import dev.isxander.yacl3.api.controller.BooleanControllerBuilder;
 import dev.isxander.yacl3.api.controller.EnumControllerBuilder;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
 import net.dillon.qualityofqueso.option.eum.general.Theme;
@@ -13,7 +12,6 @@ import net.minecraft.network.chat.Component;
 
 import static net.dillon.qualityofqueso.config.ConfigurationScreen.fixedSizeImage;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
-import static net.dillon.qualityofqueso.option.OptionInstances.universal;
 
 /**
  * The general options category for the {@link ConfigurationScreen}.
@@ -44,10 +42,14 @@ public class GeneralCategory {
                                                             .text(Component.translatable("qualityofqueso.options.theme.description"));
 
                                                     return switch (value) {
-                                                        case VANILLA -> builder.customImage(fixedSizeImage("theme_vanilla", 36, 36)).build();
-                                                        case DARK -> builder.customImage(fixedSizeImage("theme_dark", 36, 36)).build();
-                                                        case TRUE_DARK -> builder.customImage(fixedSizeImage("theme_true_dark", 136, 36)).build();
-                                                        case TRANSPARENT -> builder.customImage(fixedSizeImage("theme_transparent", 36, 36)).build();
+                                                        case VANILLA ->
+                                                                builder.customImage(fixedSizeImage("theme_vanilla", 36, 36)).build();
+                                                        case DARK ->
+                                                                builder.customImage(fixedSizeImage("theme_dark", 36, 36)).build();
+                                                        case TRUE_DARK ->
+                                                                builder.customImage(fixedSizeImage("theme_true_dark", 136, 36)).build();
+                                                        case TRANSPARENT ->
+                                                                builder.customImage(fixedSizeImage("theme_transparent", 36, 36)).build();
                                                     };
                                                 })
                                                 .binding(Theme.VANILLA, () -> client().general().theme, v -> client().general().theme = v)
@@ -64,14 +66,6 @@ public class GeneralCategory {
                                                 .controller(o -> EnumControllerBuilder.create(o)
                                                         .enumClass(Tooltips.class)
                                                         .formatValue(v -> Component.literal(v.getSerializedName())))
-                                                .build()
-                                )
-                                .option(
-                                        Option.<Boolean>createBuilder()
-                                                .name(Component.translatable("qualityofqueso.options.multi_server_configs"))
-                                                .description(OptionDescription.of(Component.translatable("qualityofqueso.options.multi_server_configs.description")))
-                                                .binding(false, () -> universal().multiServerConfigs, v -> universal().multiServerConfigs = v)
-                                                .controller(BooleanControllerBuilder::create)
                                                 .build()
                                 )
                                 .build()

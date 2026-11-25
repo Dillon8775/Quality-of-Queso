@@ -1,6 +1,5 @@
 package net.dillon.qualityofqueso.mixin.client.screen;
 
-import net.dillon.dillonlib.mixinplugin.Predicated;
 import net.dillon.dillonlib.platform.info.Release;
 import net.dillon.qualityofqueso.helper.ModConstants;
 import net.dillon.qualityofqueso.platform.QualityOfQuesoPlatforms;
@@ -18,16 +17,15 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import static net.dillon.dillonlib.task.ClientTasks.getMinecraft;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
-@Predicated
 @Mixin(TitleScreen.class)
-public abstract class TitleScreenMixin extends Screen {
+public class TitleScreenMixin extends Screen {
 
     public TitleScreenMixin(Component pTitle) {
         super(pTitle);
     }
 
     /**
-     * Warns the user of a possible beta Quality of Queso version.
+     * Warns the user of a possible beta mod version.
      */
     @Inject(method = "init", at = @At("TAIL"), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
     private void sendWarning(CallbackInfo ci, int copyrightWidth, int copyrightX, int spacing, int topPos, int numberOfButtons, int currentButton, SpriteIconButton language, SpriteIconButton accessibility) {

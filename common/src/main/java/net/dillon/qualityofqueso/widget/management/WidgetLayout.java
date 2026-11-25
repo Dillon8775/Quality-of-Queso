@@ -1,13 +1,13 @@
 package net.dillon.qualityofqueso.widget.management;
 
-import net.dillon.qualityofqueso.widget.management.toggleable.BulkCraftButton;
+import net.dillon.qualityofqueso.widget.management.toggleable.BulkSelectButton;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiPipeline;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.Container;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -187,7 +187,7 @@ public class WidgetLayout extends AbstractWidget {
      * Renders all buttons in an orderly manner.
      */
     @Override
-    protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+    protected void extractWidgetRenderState(GuiGraphicsExtractor graphics) {
         LocalPlayer player = getLocalPlayer();
 
         this.setX(this.getPanelX(player));
@@ -231,7 +231,7 @@ public class WidgetLayout extends AbstractWidget {
                 continue;
             }
 
-            boolean repositionBulkCraft = widget instanceof BulkCraftButton && client().accessibility().repositionBulkCraftButton;
+            boolean repositionBulkCraft = inventoryScreen && widget instanceof BulkSelectButton && client().accessibility().repositionBulkCraftButton;
 
             if (client().management().layout.horizontal()) {
                 widget.setX(getManagementButtonX(getImageWidth(this.screen), this.screen.width, buttons));
@@ -274,7 +274,7 @@ public class WidgetLayout extends AbstractWidget {
                 widget.setX(this.screen.width / 2 + getImageWidth(this.screen) / 2 + x);
                 widget.setY(y + this.getContainerY());
 
-                if (repositionBulkCraft && inventoryScreen) {
+                if (repositionBulkCraft) {
                    this.repositionBulkCraftButton(widget);
                 }
 
@@ -297,7 +297,7 @@ public class WidgetLayout extends AbstractWidget {
                 }
             }
 
-            widget.extractRenderState(graphics, mouseX, mouseY, a);
+            widget.extractRenderState(graphics);
 
             if (!repositionBulkCraft) {
                 buttons++;
@@ -328,7 +328,7 @@ public class WidgetLayout extends AbstractWidget {
 
             graphics.pose().pushMatrix();
             graphics.pose().translate(panelX, panelY);
-            graphics.blit(RenderPipelines.GUI_TEXTURED, layoutTexture, 0, 0, 0.0F, 0.0F,
+            graphics.blit(GuiPipeline.TEXTURED, layoutTexture, 0, 0, 0.0F, 0.0F,
                     borderWidth, borderHeight, LAYOUT_TEXTURE_WIDTH, LAYOUT_TEXTURE_HEIGHT);
             graphics.pose().popMatrix();
 
@@ -337,14 +337,14 @@ public class WidgetLayout extends AbstractWidget {
                 graphics.pose().pushMatrix();
                 graphics.pose().translate(panelX + borderWidth, panelY);
                 graphics.pose().scale(centerXScale, 1.0F);
-                graphics.blit(RenderPipelines.GUI_TEXTURED, layoutTexture, 0, 0, borderWidth, 0.0F,
+                graphics.blit(GuiPipeline.TEXTURED, layoutTexture, 0, 0, borderWidth, 0.0F,
                         centerSourceWidth, borderHeight, LAYOUT_TEXTURE_WIDTH, LAYOUT_TEXTURE_HEIGHT);
                 graphics.pose().popMatrix();
             }
 
             graphics.pose().pushMatrix();
             graphics.pose().translate(panelX + panelWidth - borderWidth, panelY);
-            graphics.blit(RenderPipelines.GUI_TEXTURED, layoutTexture, 0, 0, LAYOUT_BASE_WIDTH - borderWidth, 0.0F,
+            graphics.blit(GuiPipeline.TEXTURED, layoutTexture, 0, 0, LAYOUT_BASE_WIDTH - borderWidth, 0.0F,
                     borderWidth, borderHeight, LAYOUT_TEXTURE_WIDTH, LAYOUT_TEXTURE_HEIGHT);
             graphics.pose().popMatrix();
 
@@ -354,7 +354,7 @@ public class WidgetLayout extends AbstractWidget {
                 graphics.pose().pushMatrix();
                 graphics.pose().translate(panelX, panelY + borderHeight);
                 graphics.pose().scale(1.0F, centerYScale);
-                graphics.blit(RenderPipelines.GUI_TEXTURED, layoutTexture, 0, 0, 0.0F, borderHeight,
+                graphics.blit(GuiPipeline.TEXTURED, layoutTexture, 0, 0, 0.0F, borderHeight,
                         borderWidth, centerSourceHeight, LAYOUT_TEXTURE_WIDTH, LAYOUT_TEXTURE_HEIGHT);
                 graphics.pose().popMatrix();
 
@@ -363,7 +363,7 @@ public class WidgetLayout extends AbstractWidget {
                     graphics.pose().pushMatrix();
                     graphics.pose().translate(panelX + borderWidth, panelY + borderHeight);
                     graphics.pose().scale(centerXScale, centerYScale);
-                    graphics.blit(RenderPipelines.GUI_TEXTURED, layoutTexture, 0, 0, borderWidth, borderHeight,
+                    graphics.blit(GuiPipeline.TEXTURED, layoutTexture, 0, 0, borderWidth, borderHeight,
                             centerSourceWidth, centerSourceHeight, LAYOUT_TEXTURE_WIDTH, LAYOUT_TEXTURE_HEIGHT);
                     graphics.pose().popMatrix();
                 }
@@ -371,14 +371,14 @@ public class WidgetLayout extends AbstractWidget {
                 graphics.pose().pushMatrix();
                 graphics.pose().translate(panelX + panelWidth - borderWidth, panelY + borderHeight);
                 graphics.pose().scale(1.0F, centerYScale);
-                graphics.blit(RenderPipelines.GUI_TEXTURED, layoutTexture, 0, 0, LAYOUT_BASE_WIDTH - borderWidth, borderHeight,
+                graphics.blit(GuiPipeline.TEXTURED, layoutTexture, 0, 0, LAYOUT_BASE_WIDTH - borderWidth, borderHeight,
                         borderWidth, centerSourceHeight, LAYOUT_TEXTURE_WIDTH, LAYOUT_TEXTURE_HEIGHT);
                 graphics.pose().popMatrix();
             }
 
             graphics.pose().pushMatrix();
             graphics.pose().translate(panelX, panelY + panelHeight - borderHeight);
-            graphics.blit(RenderPipelines.GUI_TEXTURED, layoutTexture, 0, 0, 0.0F, LAYOUT_BASE_HEIGHT - borderHeight,
+            graphics.blit(GuiPipeline.TEXTURED, layoutTexture, 0, 0, 0.0F, LAYOUT_BASE_HEIGHT - borderHeight,
                     borderWidth, borderHeight, LAYOUT_TEXTURE_WIDTH, LAYOUT_TEXTURE_HEIGHT);
             graphics.pose().popMatrix();
 
@@ -387,14 +387,14 @@ public class WidgetLayout extends AbstractWidget {
                 graphics.pose().pushMatrix();
                 graphics.pose().translate(panelX + borderWidth, panelY + panelHeight - borderHeight);
                 graphics.pose().scale(centerXScale, 1.0F);
-                graphics.blit(RenderPipelines.GUI_TEXTURED, layoutTexture, 0, 0, borderWidth, LAYOUT_BASE_HEIGHT - borderHeight,
+                graphics.blit(GuiPipeline.TEXTURED, layoutTexture, 0, 0, borderWidth, LAYOUT_BASE_HEIGHT - borderHeight,
                         centerSourceWidth, borderHeight, LAYOUT_TEXTURE_WIDTH, LAYOUT_TEXTURE_HEIGHT);
                 graphics.pose().popMatrix();
             }
 
             graphics.pose().pushMatrix();
             graphics.pose().translate(panelX + panelWidth - borderWidth, panelY + panelHeight - borderHeight);
-            graphics.blit(RenderPipelines.GUI_TEXTURED, layoutTexture, 0, 0, LAYOUT_BASE_WIDTH - borderWidth, LAYOUT_BASE_HEIGHT - borderHeight,
+            graphics.blit(GuiPipeline.TEXTURED, layoutTexture, 0, 0, LAYOUT_BASE_WIDTH - borderWidth, LAYOUT_BASE_HEIGHT - borderHeight,
                     borderWidth, borderHeight, LAYOUT_TEXTURE_WIDTH, LAYOUT_TEXTURE_HEIGHT);
             graphics.pose().popMatrix();
         } else {
@@ -406,7 +406,7 @@ public class WidgetLayout extends AbstractWidget {
             graphics.pose().pushMatrix();
             graphics.pose().translate(panelX, panelY);
             graphics.pose().scale(xScale, 1.0F);
-            graphics.blit(RenderPipelines.GUI_TEXTURED, layoutTexture, 0, 0, 0.0F, 0.0F,
+            graphics.blit(GuiPipeline.TEXTURED, layoutTexture, 0, 0, 0.0F, 0.0F,
                     LAYOUT_BASE_WIDTH, topCapHeight, LAYOUT_TEXTURE_WIDTH, LAYOUT_TEXTURE_HEIGHT);
             graphics.pose().popMatrix();
 
@@ -415,7 +415,7 @@ public class WidgetLayout extends AbstractWidget {
                 graphics.pose().pushMatrix();
                 graphics.pose().translate(panelX, panelY + topCapHeight);
                 graphics.pose().scale(xScale, centerYScale);
-                graphics.blit(RenderPipelines.GUI_TEXTURED, layoutTexture, 0, 0, 0.0F, LAYOUT_CAP_HEIGHT,
+                graphics.blit(GuiPipeline.TEXTURED, layoutTexture, 0, 0, 0.0F, LAYOUT_CAP_HEIGHT,
                         LAYOUT_BASE_WIDTH, centerSourceHeight, LAYOUT_TEXTURE_WIDTH, LAYOUT_TEXTURE_HEIGHT);
                 graphics.pose().popMatrix();
             }
@@ -423,7 +423,7 @@ public class WidgetLayout extends AbstractWidget {
             graphics.pose().pushMatrix();
             graphics.pose().translate(panelX, panelY + panelHeight - bottomCapHeight);
             graphics.pose().scale(xScale, 1.0F);
-            graphics.blit(RenderPipelines.GUI_TEXTURED, layoutTexture, 0, 0, 0.0F, LAYOUT_BASE_HEIGHT - LAYOUT_CAP_HEIGHT,
+            graphics.blit(GuiPipeline.TEXTURED, layoutTexture, 0, 0, 0.0F, LAYOUT_BASE_HEIGHT - LAYOUT_CAP_HEIGHT,
                     LAYOUT_BASE_WIDTH, bottomCapHeight, LAYOUT_TEXTURE_WIDTH, LAYOUT_TEXTURE_HEIGHT);
             graphics.pose().popMatrix();
         }

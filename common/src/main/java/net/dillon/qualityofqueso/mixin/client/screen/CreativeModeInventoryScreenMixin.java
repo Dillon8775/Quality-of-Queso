@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import net.dillon.qualityofqueso.helper.GuiHelper;
 import net.dillon.qualityofqueso.widget.SearchBar;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.inventory.SlotWidget;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.client.input.KeyEvent;
@@ -11,7 +12,6 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerInput;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.ItemStack;
@@ -108,12 +108,12 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
      * Closes the screen when clicking outside of the menu.
      */
     @Inject(method = "slotClicked", at = @At("HEAD"))
-    private void quickGuiClose(Slot slot, int slotId, int mouseButton, ContainerInput type, CallbackInfo ci) {
+    private void quickGuiClose(SlotWidget slotWidget, int slotId, int mouseButton, ContainerInput type, CallbackInfo ci) {
         if (!modEnabled()) {
             return;
         }
 
-        if (client().misc().quickGuiExit && this.menu.getCarried().isEmpty() && mouseButton == 0 && slot == null) {
+        if (client().gui().quickGuiExit && this.menu.getCarried().isEmpty() && mouseButton == 0 && slotWidget == null) {
             this.onClose();
         }
     }
@@ -127,20 +127,22 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
             return;
         }
 
-        if (!hasShiftDown() && selectedTab.getType() == CreativeModeTab.Type.SEARCH && hoveredSlotHasItem(this.hoveredSlot) && this.searchBox != null) {
-            for (int i = 0; i < 9; i++) {
-                if (minecraft.options.keyHotbarSlots[i].matches(event)) {
-                    this.ignoreTextInput = true;
-                    boolean handled = super.keyPressed(event);
-                    this.searchBox.setFocused(false);
-                    cir.setReturnValue(handled);
-                    return;
-                }
+        SlotWidget hoveredSlotWidget = this.getHoveredSlot();
+
+        // Handle hotbar key pressing in search tab
+        if (!hasShiftDown()
+                && selectedTab.getType() == CreativeModeTab.Type.SEARCH
+                && hoveredSlotHasItem(hoveredSlotWidget)
+        ) {
+            if (checkHotbarKeyPressed(event)) {
+                this.ignoreTextInput = true;
+                cir.setReturnValue(true);
+                return;
             }
         }
 
-        if (client().searching().quickSearch.creativeMenu()) {
-            if (hoveredSlotHasItem(this.hoveredSlot) && !this.searchBox.isFocused()) {
+        if (client().searching().quickSearch.canSearchCreativeMenu()) {
+            if (hoveredSlotHasItem(hoveredSlotWidget) && !this.searchBox.isFocused()) {
                 this.ignoreTextInput = true;
                 cir.setReturnValue(super.keyPressed(event));
                 return;
@@ -174,13 +176,13 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
                 }
             }
 
-            if (this.ignoreTextInput || (!(client().searching().quickSearch.creativeMenu()) && selectedTab.getType() != CreativeModeTab.Type.SEARCH)) {
+            if (this.ignoreTextInput || (!(client().searching().quickSearch.canSearchCreativeMenu()) && selectedTab.getType() != CreativeModeTab.Type.SEARCH)) {
                 cir.setReturnValue(false);
                 return;
             }
 
             for (int i = 0; i < 9; i++) {
-                if (this.hoveredSlot != null && minecraft.options.keyHotbarSlots[i].matches(event)) {
+                if (getHoveredSlot() != null && minecraft.options.keyHotbarSlots[i].matches(event)) {
                     Inventory inventory = this.minecraft.player.getInventory();
                     ItemStack stack = inventory.getItem(i);
 

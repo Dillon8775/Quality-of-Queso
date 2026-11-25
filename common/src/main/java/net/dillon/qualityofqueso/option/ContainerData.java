@@ -9,11 +9,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static net.dillon.dillonlib.util.BaseOptions.guardedInstance;
+
 /**
  * Stores tracked containers in a separate file.
  */
 public class ContainerData {
-    public static final ContainerDataHandler INSTANCE = new ContainerDataHandler();
+    private static final ContainerDataHandler INSTANCE = new ContainerDataHandler();
 
     /// Mapped to world name -> list of full container data
     public Map<String, List<FilteredContainerData>> filteredContainers = new HashMap<>();
@@ -23,6 +25,10 @@ public class ContainerData {
 
     /// Mapped to world name -> list of ender chest data
     public Map<String, List<StoredEnderChestStack>> enderChestItems = new HashMap<>();
+
+    public static ContainerDataHandler getInstance() {
+        return guardedInstance(INSTANCE);
+    }
 
     public static class ContainerDataHandler extends ModBaseOptionsHandler<ContainerData> {
 

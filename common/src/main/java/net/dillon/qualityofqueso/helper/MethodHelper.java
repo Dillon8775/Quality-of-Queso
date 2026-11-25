@@ -12,6 +12,7 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.components.inventory.SlotWidget;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.*;
@@ -21,7 +22,6 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerInput;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
 /**
@@ -130,17 +130,17 @@ public class MethodHelper {
     }
 
     /**
-     * @return a hovered slot.
-     */
-    public static Slot getHoveredSlot(AbstractContainerScreen<?> screen) {
-        return ((AbstractContainerScreenAccessor) screen).getHoveredSlot();
-    }
-
-    /**
      * @return the bar width for a screen.
      */
     public static int getImageWidth(AbstractContainerScreen<?> screen) {
         return ((AbstractContainerScreenAccessor) screen).getImageWidth();
+    }
+
+    /**
+     * @return the left position for a container screen.
+     */
+    public static int getLeftPos(AbstractContainerScreen<?> screen) {
+        return ((AbstractContainerScreenAccessor)screen).getLeftPos();
     }
 
     /**
@@ -164,8 +164,18 @@ public class MethodHelper {
         return ((AbstractContainerMenuInvoker) menu).invokeMoveItemStackTo(itemStack, startSlot, endSlot, backwards);
     }
 
-    public static void performClickSlot(AbstractContainerScreen<?> screen, Slot slot, int slotId, int buttonNum, ContainerInput containerInput) {
-        ((AbstractContainerScreenAccessor)screen).performClickSlot(slot, slotId, buttonNum, containerInput);
+    /**
+     * @return a hovered slot.
+     */
+    public static SlotWidget getHoveredSlot(AbstractContainerScreen<?> screen) {
+        return ((AbstractContainerScreenAccessor) screen).invokeGetHoveredSlot();
+    }
+
+    /**
+     * Sends a basic click slot packet without a slot widget.
+     */
+    public static void performClickSlot(AbstractContainerScreen<?> screen, int slotId, int buttonNum, ContainerInput containerInput) {
+        ((AbstractContainerScreenAccessor)screen).performClickSlot(null, slotId, buttonNum, containerInput);
     }
 
     /**

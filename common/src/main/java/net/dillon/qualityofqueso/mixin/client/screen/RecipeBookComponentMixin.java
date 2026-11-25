@@ -1,6 +1,5 @@
-package net.dillon.qualityofqueso.mixin.client.hud;
+package net.dillon.qualityofqueso.mixin.client.screen;
 
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
@@ -25,27 +24,11 @@ public class RecipeBookComponentMixin {
     public EditBox searchBox;
 
     /**
-     * Prevents the actual screen from shifting when opening the recipe book.
-     */
-    @ModifyReturnValue(method = "updateScreenPosition", at = @At("RETURN"))
-    private int removeRecipeBookScreenShift(int original, int width, int imageWidth) {
-        return client().misc().noRecipeBookShift ? (width - imageWidth) / 2 : original;
-    }
-
-    /**
-     * The {@code X origin} position for the recipe book.
-     */
-    @ModifyReturnValue(method = "getXOrigin", at = @At("RETURN"))
-    private int changeRecipeBookPosition(int original) {
-        return client().misc().noRecipeBookShift ? original - 77 : original;
-    }
-
-    /**
      * Updates tabs accordingly when removing the shift from the recipe book.
      */
-    @ModifyArg(method = "updateTabs", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/recipebook/RecipeBookTabButton;setPosition(II)V"), index = 0)
+    @ModifyArg(method = "initVisuals", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/recipebook/RecipeBookComponent;setPosition(II)V"), index = 0)
     private int changeRecipeBookTabButtonPosition(int original) {
-        return client().misc().noRecipeBookShift ? original - 77 : original;
+        return client().gui().noRecipeBookShift ? original - 77 : original;
     }
 
     /**

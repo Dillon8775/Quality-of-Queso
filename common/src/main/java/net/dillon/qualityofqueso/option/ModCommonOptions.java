@@ -2,14 +2,20 @@ package net.dillon.qualityofqueso.option;
 
 import net.dillon.qualityofqueso.helper.ModConstants;
 
+import static net.dillon.dillonlib.util.BaseOptions.guardedInstance;
+
 /**
  * Common options, shared on server and client.
  */
 public class ModCommonOptions {
-    public static final CommonOptionsHandler INSTANCE = new CommonOptionsHandler();
+    private static final CommonOptionsHandler INSTANCE = new CommonOptionsHandler();
     public boolean itemFrameSearching = true;
     public boolean inventoryLocking = true;
     public boolean optimizeItemArgument = false;
+
+    public static CommonOptionsHandler getInstance() {
+        return guardedInstance(INSTANCE);
+    }
 
     public static class CommonOptionsHandler extends ModBaseOptionsHandler<ModCommonOptions> {
 

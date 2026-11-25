@@ -168,7 +168,7 @@ public class ArmorStatusHudElement extends ModHudElement {
                     float slotHighlightAlpha = 1.0F;
                     if (fadeAnimating && animationTimeTicks > 0 && (client().hud().armorStatus.always() || client().hud().armorHotbar)) {
                         int elapsedTicks = tick - ARMOR_TIMERS[i];
-                        slotHighlightAlpha = Mth.clamp(1.0F - ((float) elapsedTicks / animationTimeTicks), 0.0F, 1.0F);
+                        slotHighlightAlpha = Mth.clampedLerp(1.0F - ((float) elapsedTicks / animationTimeTicks), 0.0F, 1.0F);
                     }
                     if ((canEverRenderArmorHotbar && client().hud().highlightArmor) || timerActive || animating || fadeAnimating) {
                         renderHighlightedSlot(graphics, equipmentSlots()[i], false, armorYOffset, slotHighlightAlpha);

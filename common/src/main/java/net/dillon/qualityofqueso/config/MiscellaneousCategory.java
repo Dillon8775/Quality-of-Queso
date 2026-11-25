@@ -87,6 +87,22 @@ public class MiscellaneousCategory {
                                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.misc.dings.description")))
                                 .option(
                                         Option.<Boolean>createBuilder()
+                                                .name(Component.translatable("qualityofqueso.options.alarm_sounds"))
+                                                .description(OptionDescription.of(Component.translatable("qualityofqueso.options.alarm_sounds.description")))
+                                                .binding(true, () -> client().misc().alarmSounds, v -> client().misc().alarmSounds = v)
+                                                .controller(BooleanControllerBuilder::create)
+                                                .build()
+                                )
+                                .option(
+                                        Option.<Boolean>createBuilder()
+                                                .name(Component.translatable("qualityofqueso.options.armor_ding"))
+                                                .description(OptionDescription.of(Component.translatable("qualityofqueso.options.armor_ding.description")))
+                                                .binding(true, () -> client().misc().armorDing, v -> client().misc().armorDing = v)
+                                                .controller(BooleanControllerBuilder::create)
+                                                .build()
+                                )
+                                .option(
+                                        Option.<Boolean>createBuilder()
                                                 .name(Component.translatable("qualityofqueso.options.mob_hit_ding"))
                                                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.mob_hit_ding.description")))
                                                 .binding(true, () -> client().misc().mobHitDing, v -> client().misc().mobHitDing = v)
@@ -100,14 +116,6 @@ public class MiscellaneousCategory {
                                 )
                                 .option(
                                         mobHitDingMinDistance
-                                )
-                                .option(
-                                        Option.<Boolean>createBuilder()
-                                                .name(Component.translatable("qualityofqueso.options.armor_ding"))
-                                                .description(OptionDescription.of(Component.translatable("qualityofqueso.options.armor_ding.description")))
-                                                .binding(true, () -> client().misc().armorDing, v -> client().misc().armorDing = v)
-                                                .controller(BooleanControllerBuilder::create)
-                                                .build()
                                 )
                                 .build()
                 )

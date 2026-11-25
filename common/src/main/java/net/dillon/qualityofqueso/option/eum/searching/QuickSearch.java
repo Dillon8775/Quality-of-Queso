@@ -5,7 +5,7 @@ import net.dillon.qualityofqueso.helper.ModConstants;
 import net.minecraft.util.StringRepresentable;
 
 public enum QuickSearch implements StringRepresentable {
-    ENABLED(ModConstants.ENABLED_SERIALiZED_NAME),
+    EVERYWHERE(ModConstants.EVERYWHERE_SERIALiZED_NAME),
     RECIPE_BOOK("§bRecipe Book"),
     SEARCH_BAR("§6Search Bar"),
     CREATIVE_MENU("§2Creative Menu"),
@@ -23,7 +23,7 @@ public enum QuickSearch implements StringRepresentable {
     }
 
     public boolean onForAny() {
-        return this == ENABLED;
+        return this == EVERYWHERE;
     }
 
     public boolean recipeBook() {
@@ -34,7 +34,7 @@ public enum QuickSearch implements StringRepresentable {
         return this == SEARCH_BAR;
     }
 
-    public boolean creativeMenu() {
+    public boolean canSearchCreativeMenu() {
         return this != OFF && this != RECIPE_BOOK;
     }
 

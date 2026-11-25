@@ -1,5 +1,6 @@
 package net.dillon.qualityofqueso.debug;
 
+import net.minecraft.client.gui.components.debug.DebugGroups;
 import net.minecraft.client.gui.components.debug.DebugScreenDisplayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -12,7 +13,7 @@ import static net.dillon.dillonlib.task.ClientTasks.getMinecraft;
 /**
  * Displays your facing direction, accurately (ex. northwest, northeast, southwest, etc.)
  */
-public class ModDebugEntryAccurateFacing extends ModDebugEntry {
+public class AccurateFacingDebugEntry extends ModDebugEntry {
 
     @Override
     public void display(DebugScreenDisplayer displayer, @Nullable Level serverOrClientLevel, @Nullable LevelChunk clientChunk, @Nullable LevelChunk serverChunk) {
@@ -54,6 +55,10 @@ public class ModDebugEntryAccurateFacing extends ModDebugEntry {
         }
 
         // Add the facing line
-        displayer.addToGroup(ModDebugScreenEntries.PLAYER_POS, "Facing: " + facing);
+        displayer.addFactToGroup(
+                DebugGroups.POSITION,
+                "Facing",
+                fact -> fact.value(facing)
+        );
     }
 }

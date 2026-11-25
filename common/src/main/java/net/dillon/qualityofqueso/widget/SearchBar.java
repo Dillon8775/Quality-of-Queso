@@ -122,7 +122,7 @@ public class SearchBar extends EditBox {
     }
 
     @Override
-    public void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks) {
+    public void extractWidgetRenderState(GuiGraphicsExtractor graphics) {
         if (!client().searching().searchBarColor.black()) {
             if ((this.isFocused() || !client().searching().searchBarColor.transparent()) && client().searching().searchBarPosition.top()) {
                 TextureBuilder.create(
@@ -146,7 +146,7 @@ public class SearchBar extends EditBox {
             }
         }
 
-        super.extractWidgetRenderState(graphics, mouseX, mouseY, deltaTicks);
+        super.extractWidgetRenderState(graphics);
 
         if (client().general().tooltips.enabled() && this.isHovered() && this.getValue().isEmpty()) {
             Component matchCase = Component.literal(":").withStyle(ChatFormatting.BOLD).withColor(0xC4FFD7);
@@ -156,7 +156,7 @@ public class SearchBar extends EditBox {
             Component mod = Component.literal("@").withStyle(ChatFormatting.ITALIC);
             drawTooltip(Component.translatable("qualityofqueso.gui.chest_search.search_filtering",
                     matchCase.copy(), multiple.copy(), tag.copy(), exclude.copy(), mod.copy()
-            ), graphics, mouseX, mouseY, true);
+            ), graphics, true);
         }
     }
 }

@@ -1,5 +1,7 @@
 package net.dillon.qualityofqueso.option;
 
+import net.dillon.dillonlib.client.util.DebugTextAlignment;
+import net.dillon.dillonlib.util.TickValue;
 import net.dillon.qualityofqueso.helper.ModConstants;
 import net.dillon.qualityofqueso.option.eum.fov_effects.Bows;
 import net.dillon.qualityofqueso.option.eum.fov_effects.PotionEffects;
@@ -18,9 +20,13 @@ import net.dillon.qualityofqueso.option.eum.searching.SearchBarColor;
 import net.dillon.qualityofqueso.option.eum.searching.SearchBarPosition;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import static net.dillon.dillonlib.util.BaseOptions.guardedInstance;
 import static net.dillon.qualityofqueso.helper.ModConstants.*;
+import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 /**
  * Client-side options, only loaded on client side.
@@ -54,15 +60,16 @@ public class ModClientOptions {
             SEARCH_TRANSPORTABLES_BUTTON_SERIALIZED_NAME,
             CLEAR_EXCLUDED_SLOTS_BUTTON_SERIALIZED_NAME
     );
-    public static final ClientOptionsHandler INSTANCE = new ClientOptionsHandler();
+    private static final ClientOptionsHandler INSTANCE = new ClientOptionsHandler();
 
     private final GeneralOptions generalOptions = new GeneralOptions();
     private final SearchingOptions searchingOptions = new SearchingOptions();
     private final ManagementOptions managementOptions = new ManagementOptions();
     private final SortingOptions sortingOptions = new SortingOptions();
     private final LockedSlotOptions lockedSlotOptions = new LockedSlotOptions();
-    private final ButtonDisplayOptions buttonDisplayOptions = new ButtonDisplayOptions();
+    private final Display display = new Display();
     private final HudOptions hudOptions = new HudOptions();
+    private final GuiOptions guiOptions = new GuiOptions();
     private final ItemCounterOptions itemCounterOptions = new ItemCounterOptions();
     private final ElytraAlarmOptions elytraAlarmOptions = new ElytraAlarmOptions();
     private final MiscellaneousOptions miscellaneousOptions = new MiscellaneousOptions();
@@ -71,6 +78,10 @@ public class ModClientOptions {
     private final FogOptions fogOptions = new FogOptions();
     private final FovEffectOptions forEffects = new FovEffectOptions();
     private final AccessibilityOptions accessibilityOptions = new AccessibilityOptions();
+
+    public static ClientOptionsHandler getInstance() {
+        return guardedInstance(INSTANCE);
+    }
 
     public GeneralOptions general() {
         return this.generalOptions;
@@ -92,12 +103,16 @@ public class ModClientOptions {
         return this.lockedSlotOptions;
     }
 
-    public ButtonDisplayOptions buttonDisplayOptions() {
-        return this.buttonDisplayOptions;
+    public Display display() {
+        return this.display;
     }
 
     public HudOptions hud() {
         return this.hudOptions;
+    }
+
+    public GuiOptions gui() {
+        return this.guiOptions;
     }
 
     public ItemCounterOptions itemCounter() {
@@ -147,19 +162,38 @@ public class ModClientOptions {
         public int searchBarTextColor = DEFAULT_TRANSPARENT_SEARCH_BAR_TEXT_COLOR;
         public boolean underlineText = false;
 
-        public QuickSearch quickSearch = QuickSearch.ENABLED;
+        public QuickSearch quickSearch = QuickSearch.EVERYWHERE;
         public boolean saveSearchText = false;
         public String savedSearchText = "";
         public String savedItemFrameSearchText = "";
         public String savedCreativeMenuText = "";
+
+        public int itemFrameSearchGlowDuration = 0;
+        public int itemFrameSearchRadius = 150;
+    }
+
+    /**
+     * @return the glow duration.
+     */
+    public static TickValue getGlowDuration() {
+        return client().searching().itemFrameSearchGlowDuration == 0
+                ? new TickValue(0)
+                : new TickValue(client().searching().itemFrameSearchGlowDuration);
+    }
+
+    /**
+     * @return the formatted glow duration.
+     */
+    public static String getFormattedGlowDuration(int timer) {
+        return new TickValue(timer).formattedFromTick();
     }
 
     public static class ManagementOptions {
         public Layout layout = Layout.HORIZONTAL;
         public boolean playSounds = true;
 
-        public Transferring transferring = Transferring.BUTTON_OR_KEY;
-        public QuickDrop quickDrop = QuickDrop.KEY_ONLY;
+        public Transferring transferring = Transferring.BUTTON_OR_SHORTCUT_KEY;
+        public QuickDrop quickDrop = QuickDrop.SHORTCUT_KEY_ONLY;
         public boolean containerFiltering = true;
         public LockInventory lockInventory = LockInventory.UNLOCKED;
         public boolean quickEquip = true;
@@ -170,8 +204,8 @@ public class ModClientOptions {
         public int matchingItemsColor = DEFAULT_MATCHING_ITEMS_COLOR;
         public boolean dragMoving = true;
 
-        public boolean bulkTrade = false;
-        public boolean bulkCraft = false;
+        public boolean bulkTrading = false;
+        public boolean bulkCrafting = false;
 
         public Swapping swapping = Swapping.OFF;
         public boolean dragSorting = true;
@@ -224,7 +258,7 @@ public class ModClientOptions {
      * @return if always quick move is enabled.
      */
     public boolean isAlwaysQuickMove() {
-        return this.buttonDisplayOptions.displayAlwaysQuickMove && this.managementOptions.alwaysQuickMove;
+        return !this.display.hideAlwaysQuickMove && this.managementOptions.alwaysQuickMove;
     }
 
     /**
@@ -242,7 +276,7 @@ public class ModClientOptions {
     }
 
     public static class SortingOptions {
-        public Sorting sorting = Sorting.BUTTON_OR_KEY;
+        public Sorting sorting = Sorting.BUTTON_OR_SHORTCUT_KEY;
         public CurrentSortingMode currentSortingMode = CurrentSortingMode.ALPHABETICAL;
 
         public DefaultSortingMode defaultSortingMode = DefaultSortingMode.ALPHABETICALLY;
@@ -259,13 +293,13 @@ public class ModClientOptions {
         public boolean hardLockSlots = false;
     }
 
-    public static class ButtonDisplayOptions {
-        public boolean displaySearchTransportables = true;
-        public boolean displayLockInventory = true;
-        public boolean displayBulkCraft = true;
-        public boolean displayBulkTrade = true;
+    public static class Display {
+        public boolean hideSearchTransportables = false;
+        public boolean hideLockInventory = false;
+        public boolean hideBulkCraft = false;
+        public boolean hideBulkTrade = false;
         public boolean safeBulk = true;
-        public boolean displayAlwaysQuickMove = false;
+        public boolean hideAlwaysQuickMove = true;
         public IncludeHotbar displayIncludeHotbar = IncludeHotbar.ALWAYS;
         public FilteringButton displayFiltering = FilteringButton.ALWAYS;
     }
@@ -285,6 +319,15 @@ public class ModClientOptions {
 
         public int[] armorStatusPosition = new int[]{0, 0};
         public int otherElementsY = 0;
+    }
+
+    public static class GuiOptions {
+        public boolean enchantmentHelper = true;
+        public boolean enhancedCursor = true;
+        public boolean quickGuiExit = true;
+
+        public boolean noRecipeBookShift = false;
+        public boolean autoCloseRecipeBook = true;
     }
 
     public static class ItemCounterOptions {
@@ -321,23 +364,19 @@ public class ModClientOptions {
     }
 
     public static class MiscellaneousOptions {
+        public boolean armorDing = true;
         public boolean mobHitDing = true;
         public int minMobHitDingDistance = 15;
-        public boolean armorDing = true;
 
-        public boolean noRecipeBookShift = false;
-        public boolean autoCloseRecipeBook = true;
+        public boolean alarmSounds = true;
+        public boolean showTimeUntilAlarmSounds = false;
+        public boolean msForStopwatches = true;
 
         public boolean antiRageQuit = false;
         public boolean forceAntiRageQuit = false;
 
         public boolean redArmorTint = false;
-        public boolean enchantmentHelper = true;
-        public boolean enhancedCursor = true;
-        public boolean quickGuiExit = true;
-
-        public int itemFrameSearchGlowDuration = 0;
-        public int itemFrameSearchRadius = 150;
+        public Map<String, Long> levelPlaytimes = new HashMap<>();
     }
 
     public static class EnhancedDurabilityTooltips {
@@ -383,10 +422,10 @@ public class ModClientOptions {
         public boolean operatorItemsTab = true;
         public boolean betaWarning = true;
         public boolean serverWarnings = true;
+        public DebugTextAlignment debugTextAlignment = DebugTextAlignment.AUTO;
         public boolean ignoreFabricTags = false;
 
         public boolean darkerOverlay = false;
-        public boolean darkDisc = true;
 
         public String[] bannedServers = new String[]{
                 "hypixel"

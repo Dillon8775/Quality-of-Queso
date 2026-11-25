@@ -1,4 +1,4 @@
-package net.dillon.qualityofqueso.mixin.client.hud;
+package net.dillon.qualityofqueso.mixin.client.screen;
 
 import net.dillon.dillonlib.client.component.TextureBuilder;
 import net.dillon.qualityofqueso.helper.ModConstants;
@@ -33,9 +33,9 @@ public abstract class RecipeButtonMixin extends AbstractWidget {
     /**
      * Renders a selected sprite over top of a selected recipe, when bulk crafting.
      */
-    @Inject(method = "extractWidgetRenderState", at = @At("TAIL"))
-    private void extractSelectedRecipe(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a, CallbackInfo ci) {
-        if (!modEnabled() || !client().management().bulkCraft || !client().buttonDisplayOptions().displayBulkCraft) {
+    @Inject(method = "extractContents", at = @At("TAIL"))
+    private void extractSelectedRecipe(GuiGraphicsExtractor graphics, CallbackInfo ci) {
+        if (!modEnabled() || !client().management().bulkCrafting || client().display().hideBulkCraft) {
             return;
         }
 

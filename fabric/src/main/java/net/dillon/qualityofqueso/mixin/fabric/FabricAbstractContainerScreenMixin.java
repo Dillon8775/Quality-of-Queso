@@ -19,6 +19,6 @@ public class FabricAbstractContainerScreenMixin {
     @Redirect(method = "keyPressed", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/KeyMapping;matches(Lnet/minecraft/client/input/KeyEvent;)Z", ordinal = 2))
     private boolean preventDroppingInFull(KeyMapping original, KeyEvent event) {
         boolean bl = original.matches(event);
-        return client().management().quickDrop.any() ? bl && !Minecraft.getInstance().hasShiftDown() : bl;
+        return client().management().quickDrop.enabled() ? bl && !Minecraft.getInstance().hasShiftDown() : bl;
     }
 }

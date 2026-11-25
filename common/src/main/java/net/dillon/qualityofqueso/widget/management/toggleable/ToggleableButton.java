@@ -58,12 +58,12 @@ public abstract class ToggleableButton extends ManagementButton {
     }
 
     @Override
-    protected void extractContents(GuiGraphicsExtractor context, int mouseX, int mouseY, float deltaTicks) {
+    protected void extractContents(GuiGraphicsExtractor context) {
         this.activateButton();
         this.renderButton(context);
 
         if (this.isHovered() && client().general().tooltips.enabled()) {
-            drawTooltip(this.getDefaultTooltip(), context, mouseX, mouseY);
+            drawTooltip(this.getDefaultTooltip(), context);
         }
     }
 }

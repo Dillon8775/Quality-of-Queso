@@ -7,8 +7,7 @@ import net.dillon.qualityofqueso.event.management.ManagementEvents;
 import net.dillon.qualityofqueso.option.eum.management.sorting.CurrentSortingMode;
 import net.dillon.qualityofqueso.option.eum.management.sorting.GlobalSortingMode;
 import net.dillon.qualityofqueso.sound.BundleRemoveOneSoundEvents;
-import net.minecraft.world.inventory.Slot;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import net.minecraft.client.gui.components.inventory.SlotWidget;
 
 import static net.dillon.qualityofqueso.event.management.ExtractingEvents.setCursor;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
@@ -31,16 +30,22 @@ public class MouseScrolledEvents extends ManagementEvents {
     /**
      * All mouse scrolled events.
      */
-    public void handle(double scrollY, CallbackInfoReturnable<Boolean> cir) {
-        changeSortMode(scrollY);
-        changeFilterType(scrollY);
-        moveHoveredItem(scrollY, cir);
+    public boolean handle(double scrollY) {
+        if (changeSortMode(scrollY)) {
+            return true;
+        }
+
+        if (changeFilterType(scrollY)) {
+            return true;
+        }
+
+        return moveSingularHoveredItem(scrollY);
     }
 
     /**
      * Changes the sort mode when scrolling on the sort button.
      */
-    private void changeSortMode(double scrollY) {
+    private boolean changeSortMode(double scrollY) {
         if (buttonHoveredAndActive(holder().managementButtons().getSort())) {
             CurrentSortingMode nextMode = client().sorting().currentSortingMode.next(scrollY > 0);
             updateClient(client -> {
@@ -59,82 +64,110 @@ public class MouseScrolledEvents extends ManagementEvents {
             });
             ContainerSyncer.storeActiveSortMode(nextMode);
             playSafeSortSound(BundleRemoveOneSoundEvents.SORT_MODE_CHANGED);
+            return true;
         }
+
+        return false;
     }
 
     /**
      * Changes filter type (item/tag) when scrolling on the filtering button.
      */
-    private void changeFilterType(double scrollY) {
+    private boolean changeFilterType(double scrollY) {
         if (scrollY == 0) {
-            return;
+            return false;
         }
+
         if (!ContainerSyncer.isTrackedFilteringActive()) {
-            return;
+            return false;
         }
+
         if (!buttonHoveredAndActive(holder().managementButtons().getFiltering())) {
-            return;
+            return false;
         }
 
         ContainerSyncer.toggleCurrentFilterMode();
         playSafeSortSound(BundleRemoveOneSoundEvents.FILTER_MODE_CHANGED);
+        return true;
     }
 
     /**
      * Sets the move amount when scrolling.
      */
-    private void setMoveAmount(Slot hoveredSlot, double scrollY) {
+    private boolean setMoveAmount(SlotWidget hoveredSlotWidget, double scrollY) {
         if (!client().management().scrollMoving) {
-            return;
+            return false;
         }
 
         try {
-            if (canScrollMoveAndHasScrollModifierDown() && (holder().managementButtons().getTransferContainer().isHovered() || holder().managementButtons().getTransferInventory().isHovered())) {
-                changeMountAmount(hoveredSlot, scrollY);
+            // Change move amount on transfer buttons
+            if (canScrollMoveAndHasScrollModifierDown()
+                    && (holder().managementButtons().getTransferContainer().isHovered() || holder().managementButtons().getTransferInventory().isHovered())) {
+                return changeMountAmount(hoveredSlotWidget, scrollY);
             }
         } catch (NullPointerException o) {
+            // Sometimes, a null pointer exception is thrown from this. Do nothing if caught
         }
 
-        if (lockedSlotEvents().shouldCancelDrop()) {
-            return;
+        if (lockedSlotEvents().shouldCancelDrop(hoveredSlotWidget)) {
+            // Return false if dropped canceled
+            return false;
         }
 
-        boolean validHoveredSlot = hoveredSlotHasItem(hoveredSlot) && hoveredSlot.getItem().count() > 1;
-        if (!isCreativeInventoryScreen() && holder().getCanMoveOne() && (validHoveredSlot && hasDropOnlyOneItemModifierDown())
+        boolean validHoveredSlot = hoveredSlotHasItem(hoveredSlotWidget) && hoveredSlotWidget.slot().getItem().count() > 1;
+        if (!isCreativeInventoryScreen()
+                && holder().getCanMoveOne()
+                && (validHoveredSlot && hasDropOnlyOneItemModifierDown())
                 || buttonHoveredAndActive(holder().managementButtons().getQuickDrop()) ? hasDropOnlyOneItemModifierDown()
-                : ((validHoveredSlot || buttonHoveredAndActive(holder().managementButtons().getTransferContainer()) || buttonHoveredAndActive(holder().managementButtons().getTransferInventory())) && canScrollMoveAndHasScrollModifierDown())) {
-            changeMountAmount(hoveredSlot, scrollY);
+                : (
+                (
+                        validHoveredSlot || buttonHoveredAndActive(holder().managementButtons().getTransferContainer()) || buttonHoveredAndActive(holder().managementButtons().getTransferInventory())
+                ) && canScrollMoveAndHasScrollModifierDown()
+        )) {
+            return changeMountAmount(hoveredSlotWidget, scrollY);
         }
+
+        return false;
     }
 
     /**
      * Changes the move amount.
      */
-    private void changeMountAmount(Slot hoveredSlot, double scrollY) {
-        MOVE_AMOUNT += (int)scrollY;
+    private boolean changeMountAmount(SlotWidget hoveredSlotWidget, double scrollY) {
+        // Increment move amount
+        MOVE_AMOUNT += (int) scrollY;
+
+        // Cap move amount
         if (MOVE_AMOUNT < 1) {
             MOVE_AMOUNT = 1;
         } else if (MOVE_AMOUNT > 64) {
             MOVE_AMOUNT = 64;
-        } else if (hoveredSlotHasItem(hoveredSlot) && MOVE_AMOUNT > hoveredSlot.getItem().getMaxStackSize()) {
-            MOVE_AMOUNT = hoveredSlot.getItem().getMaxStackSize();
+        } else {
+            // Ensure move amount cannot go over slot stack size if it's not null
+            if (hoveredSlotHasItem(hoveredSlotWidget) && MOVE_AMOUNT > hoveredSlotWidget.slot().getItem().getMaxStackSize()) {
+                MOVE_AMOUNT = hoveredSlotWidget.slot().getItem().getMaxStackSize();
+            }
         }
+
+        return true;
     }
 
     /**
      * Moves one hovered item by scrolling.
      */
-    private void moveHoveredItem(double scrollY, CallbackInfoReturnable<Boolean> cir) {
+    private boolean moveSingularHoveredItem(double scrollY) {
         if (!isCreativeInventoryScreen()
                 && client().management().scrollMoving
                 && canScrollMoveAndHasScrollModifierDown()
                 && !hasDropOnlyOneItemModifierDown()
-                && transferEvents().tryMoveSingleFromScroll(holder().screensHoveredSlot(), scrollY)) {
+                && transferEvents().tryMoveSingleFromScroll(holder().getHoveredSlotWidget(), scrollY)) {
+            // Single move item, return true that moved
             setCursor(CursorKey.MOVE);
             playSafeSortSound(BundleRemoveOneSoundEvents.SINGLE_MOVE);
-            cir.setReturnValue(true);
+            return true;
         } else {
-            setMoveAmount(holder().screensHoveredSlot(), scrollY);
+            // Set move amount for other reasons (hovered buttons)
+            return setMoveAmount(holder().getHoveredSlotWidget(), scrollY);
         }
     }
 }

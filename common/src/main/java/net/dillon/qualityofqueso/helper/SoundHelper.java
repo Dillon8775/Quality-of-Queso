@@ -16,6 +16,16 @@ import static net.dillon.qualityofqueso.sound.ModSoundEvents.getSoundFromRegistr
 public class SoundHelper {
 
     /**
+     * Plays a generic ding sound.
+     */
+    public static void playDingSound(OtherSoundEvents dingSoundEvent) {
+        SoundBuilder.create(getSoundFromRegistration(dingSoundEvent.sound()))
+                .volume(0.72F)
+                .pitch(0.2F)
+                .buildAndPlay();
+    }
+
+    /**
      * Plays the default button press sound.
      */
     public static void playDefaultSound() {

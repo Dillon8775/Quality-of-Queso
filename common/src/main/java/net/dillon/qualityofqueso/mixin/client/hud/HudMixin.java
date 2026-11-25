@@ -3,7 +3,6 @@ package net.dillon.qualityofqueso.mixin.client.hud;
 import net.dillon.qualityofqueso.container.EnderChestSyncer;
 import net.dillon.qualityofqueso.hud.*;
 import net.dillon.qualityofqueso.hud.counter.CounterHudElement;
-import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.Hud;
@@ -39,7 +38,7 @@ public class HudMixin {
      * Extracts the {@link ArmorStatusHudElement} and {@link VisualClockHudElement}.
      */
     @Inject(method = "extractItemHotbar", at = @At("HEAD"))
-    private void extractAtHead(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+    private void extractAtHead(GuiGraphicsExtractor graphics, CallbackInfo ci) {
         if (!modEnabled()) {
             return;
         }
@@ -55,7 +54,7 @@ public class HudMixin {
      * Extracts the {@link LockedHotbarSlotsHudElement} and {@link LowItemHealthHudElement}.
      */
     @Inject(method = "extractItemHotbar", at = @At("TAIL"))
-    private void extractAtTail(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+    private void extractAtTail(GuiGraphicsExtractor graphics, CallbackInfo ci) {
         if (!modEnabled()) {
             return;
         }
@@ -67,7 +66,7 @@ public class HudMixin {
     /**
      * Redirects the {@code highlighted slot} to use the colored highlighting of slots.
      */
-    @ModifyArg(method = "extractItemHotbar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;blitSprite(Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;IIII)V", ordinal = 1), index = 1)
+    @ModifyArg(method = "extractItemHotbar", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphicsExtractor;blitSprite(Lnet/minecraft/client/gui/GuiPipeline;Lnet/minecraft/resources/Identifier;IIII)V", ordinal = 1), index = 1)
     private Identifier modifyHighlightedSlot(Identifier original) {
         if (!modEnabled() || minecraft.player == null) {
             return original;

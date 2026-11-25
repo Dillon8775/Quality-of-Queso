@@ -4,13 +4,13 @@ import net.dillon.qualityofqueso.event.management.ExtractingEvents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.inventory.SlotWidget;
 import net.minecraft.client.gui.screens.inventory.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.AbstractMountInventoryMenu;
 import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraft.world.inventory.Slot;
 
 import static net.dillon.dillonlib.task.ClientTasks.getScreen;
 import static net.dillon.dillonlib.task.ClientTasks.hasShiftDown;
@@ -211,8 +211,8 @@ public class ManagementHelper {
     /**
      * @return {@code true} if the hovered slot has an query (assuming hovered slot isn't {@code null}).
      */
-    public static boolean hoveredSlotHasItem(Slot hoveredSlot) {
-        return hoveredSlot != null && !hoveredSlot.getItem().isEmpty();
+    public static boolean hoveredSlotHasItem(SlotWidget hoveredSlotWidget) {
+        return hoveredSlotWidget != null && !hoveredSlotWidget.slot().getItem().isEmpty();
     }
 
     /**
@@ -233,7 +233,7 @@ public class ManagementHelper {
      * @return the modifier to use for recipe books.
      */
     public static int getRecipeBookModifier() {
-        return !client().misc().noRecipeBookShift
+        return !client().gui().noRecipeBookShift
                 && getScreen() instanceof AbstractRecipeBookScreen<?> recipeBookScreen && getRecipeBookComponent(recipeBookScreen).isVisible() ? 77 : 0;
     }
 
@@ -295,7 +295,7 @@ public class ManagementHelper {
     /**
      * The tooltips to display for single-move items.
      */
-    public static void extractMoveAmountTooltip(String buttonName, GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+    public static void extractMoveAmountTooltip(String buttonName, GuiGraphicsExtractor graphics) {
         Component tooltip = Component.translatable(buttonName.equals(QUICK_DROP_BUTTON_NAME)
                         ? "qualityofqueso.gui.quick_drop_button.move_amount"
                         : "qualityofqueso.gui.move_amount_each",
@@ -306,7 +306,7 @@ public class ManagementHelper {
 
         drawTooltip(
                 tooltip,
-                graphics, mouseX, mouseY
+                graphics
         );
     }
 

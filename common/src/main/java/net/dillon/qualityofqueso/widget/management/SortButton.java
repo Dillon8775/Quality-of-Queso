@@ -38,7 +38,7 @@ public class SortButton extends ManagementButton {
      * @return if the lock overlay can be rendered over {@code this} button.
      */
     public static boolean canRenderLockOverlay(ManagementButton sort) {
-        if (!(getScreen() instanceof QuesoScreenHolder quesoScreen)) {
+        if (sort == null || !(getScreen() instanceof QuesoScreenHolder quesoScreen)) {
             return false;
         }
 

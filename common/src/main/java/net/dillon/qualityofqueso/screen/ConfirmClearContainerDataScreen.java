@@ -194,15 +194,15 @@ public class ConfirmClearContainerDataScreen extends ManageContainerDataScreen {
 
             if (selectedLevel.isEmpty()) {
                 if (clearMarkedContainerData) {
-                    ContainerData.INSTANCE.setInstance(new ContainerData());
+                    ContainerData.getInstance().setInstance(new ContainerData());
                 }
 
                 if (clearLockedContainerSlots) {
-                    LockedContainerSlots.INSTANCE.setInstance(new LockedContainerSlots());
+                    LockedContainerSlots.getInstance().setInstance(new LockedContainerSlots());
                 }
 
                 if (clearLockedPlayerSlots) {
-                    LockedPlayerSlots.INSTANCE.setInstance(new LockedPlayerSlots());
+                    LockedPlayerSlots.getInstance().setInstance(new LockedPlayerSlots());
                 }
             } else {
                 if (clearMarkedContainerData) {
@@ -220,14 +220,14 @@ public class ConfirmClearContainerDataScreen extends ManageContainerDataScreen {
                 }
             }
 
-            ContainerData.INSTANCE.save();
-            ContainerData.INSTANCE.load();
+            ContainerData.getInstance().save();
+            ContainerData.getInstance().load();
 
-            LockedContainerSlots.INSTANCE.save();
-            LockedContainerSlots.INSTANCE.load();
+            LockedContainerSlots.getInstance().save();
+            LockedContainerSlots.getInstance().load();
 
-            LockedPlayerSlots.INSTANCE.save();
-            LockedPlayerSlots.INSTANCE.load();
+            LockedPlayerSlots.getInstance().save();
+            LockedPlayerSlots.getInstance().load();
         } catch (IOException e) {
             e.printStackTrace();
         }

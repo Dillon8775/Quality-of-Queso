@@ -3,7 +3,7 @@ dependencies {
         changing = balm_version.contains('SNAPSHOT')
     }
 
-    implementation "net.dillon.dillonlib:dillonlib-neoforge-mc26.3:unspecified"
+    implementation "net.dillon.dillonlib:dillonlib-neoforge-mc${project.minecraft_version}:unspecified"
     implementation "dev.isxander:yet-another-config-lib:${project.yacl_version}-neoforge"
 
     // runtimeOnly "net.dillon.simplekeybinds:simplekeybinds-neoforge-mc26.3:unspecified"

@@ -17,10 +17,10 @@ import net.dillon.qualityofqueso.mixin.client.screen.AbstractContainerScreenMixi
 import net.dillon.qualityofqueso.widget.management.WidgetLayout;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.components.inventory.SlotWidget;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.Slot;
 
 import java.util.List;
 import java.util.Set;
@@ -48,7 +48,7 @@ public interface QuesoScreenHolder {
     /**
      * @return the current {@link AbstractContainerScreen}'s hovered slot.
      */
-    Slot screensHoveredSlot();
+    SlotWidget getHoveredSlotWidget();
 
     /**
      * @return the set of excluded slots in the current instance of {@link AbstractContainerScreen}.

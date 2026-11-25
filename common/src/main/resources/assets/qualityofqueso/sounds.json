@@ -181,5 +181,77 @@
     "sounds": [
       "qualityofqueso:slot_unlocked"
     ]
+  },
+  "qualityofqueso.other.elytra_alarm_ringing": {
+    "subtitle": "qualityofqueso.sound.elytra_alarm_ringing",
+    "sounds": [
+      {
+        "name": "minecraft:entity.arrow.hit_player",
+        "type": "event"
+      }
+    ]
+  },
+  "qualityofqueso.other.armor_ding_dinging": {
+    "subtitle": "qualityofqueso.sound.armor_ding_dinging",
+    "sounds": [
+      {
+        "name": "minecraft:entity.arrow.hit_player",
+        "type": "event"
+      }
+    ]
+  },
+  "qualityofqueso.other.alarm_ringing": {
+    "subtitle": "qualityofqueso.sound.alarm_ringing",
+    "sounds": [
+      {
+        "name": "minecraft:entity.arrow.hit_player",
+        "type": "event"
+      }
+    ]
+  },
+  "qualityofqueso.other.item_frames_found": {
+    "subtitle": "qualityofqueso.sound.item_frames_found",
+    "sounds": [
+      {
+        "name": "minecraft:entity.arrow.hit_player",
+        "type": "event"
+      }
+    ]
+  },
+  "qualityofqueso.other.item_frames_glow_removed": {
+    "subtitle": "qualityofqueso.sound.item_frames_glow_removed",
+    "sounds": [
+      {
+        "name": "minecraft:entity.player.splash",
+        "type": "event"
+      }
+    ]
+  },
+  "qualityofqueso.other.item_frame_search_failed": {
+    "subtitle": "qualityofqueso.sound.item_frame_search_failed",
+    "sounds": [
+      {
+        "name": "minecraft:block.note_block.bass",
+        "type": "event"
+      }
+    ]
+  },
+  "qualityofqueso.other.mob_hit": {
+    "subtitle": "qualityofqueso.sound.mob_hit",
+    "sounds": [
+      {
+        "name": "minecraft:entity.arrow.hit_player",
+        "type": "event"
+      }
+    ]
+  },
+  "qualityofqueso.other.entity_killed": {
+    "subtitle": "qualityofqueso.sound.entity_killed",
+    "sounds": [
+      {
+        "name": "minecraft:entity.player.levelup",
+        "type": "event"
+      }
+    ]
   }
 }

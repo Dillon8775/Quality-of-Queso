@@ -11,13 +11,18 @@ import java.time.format.DateTimeFormatter;
 /**
  * Displays the date in-game.
  */
-public class ModDebugEntryDate extends ModDebugEntry {
+public class DateDebugEntry extends ModDebugEntry {
 
     @Override
-    public void display(DebugScreenDisplayer lines, @Nullable Level serverOrClientLevel, @Nullable LevelChunk clientChunk, @Nullable LevelChunk serverChunk) {
+    public void display(DebugScreenDisplayer displayer, @Nullable Level serverOrClientLevel, @Nullable LevelChunk clientChunk, @Nullable LevelChunk serverChunk) {
         // Display the date in-game
         LocalDate date = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE, MMMM d, yyyy");
-        lines.addToGroup(ModDebugScreenEntries.REAL_TIME, date.format(formatter));
+
+        // Add the date line
+        displayer.addToGroup(
+                ModDebugScreenEntries.DATE_AND_TIME_GROUP,
+                date.format(formatter)
+        );
     }
 }

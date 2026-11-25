@@ -2,56 +2,47 @@ package net.dillon.qualityofqueso.helper;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.blay09.mods.balm.Balm;
-import net.dillon.dillonlib.client.component.SoundBuilder;
-import net.dillon.dillonlib.platform.Platforms;
+import net.dillon.dillonlib.annotation.Dill;
+import net.dillon.dillonlib.annotation.DillEnv;
+import net.dillon.qualityofqueso.event.management.SlotClickedEvents;
 import net.dillon.qualityofqueso.option.ModClientOptions;
 import net.dillon.qualityofqueso.option.ModCommonOptions;
 import net.dillon.qualityofqueso.option.UniversalOptions;
 import net.dillon.qualityofqueso.packet.serverbound.ClientPreferencesC2SPacket;
 import net.dillon.qualityofqueso.packet.serverbound.ManualItemPickupC2SPacket;
-import net.dillon.qualityofqueso.util.GlowCountdown;
+import net.dillon.qualityofqueso.sound.OtherSoundEvents;
+import net.dillon.qualityofqueso.timer.Timers;
+import net.dillon.qualityofqueso.util.MobHitDingTracker;
 import net.dillon.qualityofqueso.widget.management.SwapButton;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.fog.FogData;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.FogType;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
 import static net.dillon.dillonlib.task.ClientTasks.*;
 import static net.dillon.qualityofqueso.helper.ModConstants.*;
-import static net.dillon.qualityofqueso.option.OptionInstances.*;
+import static net.dillon.qualityofqueso.helper.SoundHelper.playDingSound;
+import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.OptionInstances.universal;
 
 /**
  * Utility class for the Quality of Queso mod.
  */
+@Dill(env = DillEnv.COMMON)
 public class ModHelper {
-    public static boolean LOADED = false;
-    private static boolean UNLOADED = false;
-    private static boolean CONTINUE = true;
-
     private static boolean KEY_ATTACK_WASDOWN;
 
     /**
@@ -99,24 +90,14 @@ public class ModHelper {
     }
 
     /**
-     * Plays a generic ding sound.
-     */
-    public static void playDingSound() {
-        SoundBuilder.create(SoundEvents.ARROW_HIT_PLAYER)
-                .volume(0.72F)
-                .pitch(0.2F)
-                .buildAndPlay();
-    }
-
-    /**
      * Sends client options to server, for reference.
      */
     public static void sendClientPreferencesToServer() {
         Balm.networking().sendToServer(new ClientPreferencesC2SPacket(
                 client().management().includingHotbar,
                 !client().management().includingHotbar || client().accessibility().perpendicularQuickMoving,
-                !client().buttonDisplayOptions().displayLockInventory ? "UNLOCKED" : client().management().lockInventory.name()
-                ));
+                client().display().hideLockInventory ? "UNLOCKED" : client().management().lockInventory.name()
+        ));
     }
 
     /**
@@ -126,13 +107,6 @@ public class ModHelper {
         Arrays.fill(ARMOR_TIMERS, 0);
         Arrays.fill(LAST_ARMOR_STACKS, null);
         CAN_ACTUALLY_RENDER_ARMOR_HOTBAR = false;
-    }
-
-    /**
-     * Plays a sound at the correct position.
-     */
-    private static void playSound(ServerPlayer player, SoundEvent sound, float volume) {
-        player.level().playSound(null, player.blockPosition(), sound, SoundSource.PLAYERS, volume, 1.0F);
     }
 
     /**
@@ -152,29 +126,6 @@ public class ModHelper {
     }
 
     /**
-     * Stops the game if it should stop.
-     */
-    public static void stop(boolean shouldStop, String configName) {
-        if (shouldStop) {
-            try {
-                getMinecraft().stop();
-            } catch (NullPointerException e) {
-                throw new NullPointerException("Quality of Queso's \"" + configName + "\" configuration file is null. Not sure what happened! Please delete this config file (located in your \".minecraft/config\" directory), and then you can relaunch your game.");
-            }
-        }
-    }
-
-    /**
-     * Unloads a config properly.
-     */
-    private static void unload(boolean preventContinuation) {
-        unloadServerConfig();
-        UNLOADED = true;
-        LOADED = false;
-        CONTINUE = !preventContinuation;
-    }
-
-    /**
      * @return if the passed in effect instance is a beacon effect (or ambient).
      */
     public static boolean canApplyEffect(MobEffectInstance effect) {
@@ -190,9 +141,9 @@ public class ModHelper {
     }
 
     /**
-     * Handles all cooldown-related timers.
+     * Ticks all runtime events.
      */
-    public static void tickCooldowns() {
+    public static void tickRuntime(Minecraft minecraft) {
         if (client().management().containerFiltering && TRACKED_CONTAINER_COOLDOWN > 0) {
             TRACKED_CONTAINER_COOLDOWN--;
         }
@@ -201,23 +152,52 @@ public class ModHelper {
             LOCKED_SLOT_SOUND_COOLDOWN--;
         }
 
-        if (client().sorting().sorting.any() && SORT_SOUND_COOLDOWN > 0) {
+        if (client().sorting().sorting.enabled() && SORT_SOUND_COOLDOWN > 0) {
             SORT_SOUND_COOLDOWN--;
         }
 
-        if (client().management().swapping.any() && SwapButton.SWAP_COOLDOWN > 0) {
+        if (client().management().swapping.enabled() && SwapButton.SWAP_COOLDOWN > 0) {
             SwapButton.SWAP_COOLDOWN--;
         }
 
-        if (getScreen() != null && client().misc().enhancedCursor && ENHANCED_COOLDOWN_SWAP > 0) {
+        if (getScreen() != null && client().gui().enhancedCursor && ENHANCED_COOLDOWN_SWAP > 0) {
             ENHANCED_COOLDOWN_SWAP--;
+        }
+
+        Timers.tick();
+        MobHitDingTracker.tick(minecraft);
+        ModHelper.tickManualItemPickup(minecraft);
+        SlotClickedEvents.tickTradeAllTask();
+        SlotClickedEvents.tickBulkCraftTask();
+    }
+
+    /**
+     * Ticks all game events.
+     */
+    public static void tickGame() {
+        // Tick game playtime
+        if (ONE_SECOND_PASSED > 0) {
+            ONE_SECOND_PASSED--;
+        } else if (!isCurrentLevelNull()) {
+            client().misc().levelPlaytimes.merge(getLevelKey(), 1L, Long::sum);
+            ONE_SECOND_PASSED = DEFAULT_ONE_SECOND_PASSED_COOLDOWN;
+        }
+
+        // Tick all game timers
+        Timers.tickGameTimer(TIMERS, false);
+        Timers.tickGameTimer(STOPWATCHES, true);
+
+        // Play alarm triggered sound
+        if (client().misc().alarmSounds && ALARM_TRIGGERED && ALARM_TRIGGERED_COOLDOWN == 0) {
+            playDingSound(OtherSoundEvents.ALARM_RINGING);
+            ALARM_TRIGGERED_COOLDOWN = DEFAULT_ALARM_TRIGGERED_COOLDOWN;
         }
     }
 
     /**
      * Allows the player to manually pickup an item with a locked inventory.
      */
-    public static void tickManualItemPickup(Minecraft minecraft) {
+    private static void tickManualItemPickup(Minecraft minecraft) {
         boolean useDown = minecraft.options.keyAttack.isDown();
         if (!useDown) {
             KEY_ATTACK_WASDOWN = false;
@@ -307,224 +287,12 @@ public class ModHelper {
     }
 
     /**
-     * Handles the glow packet.
-     */
-    public static void handleGlowPacket(ServerPlayer player, String query, boolean matchCase, boolean clear, int timer,
-                                        int radius) {
-        if (common().itemFrameSearching) {
-            ServerLevel world = player.level();
-
-            Vec3 playerPos = player.position();
-
-            // Find all nearby item frames
-            List<ItemFrame> nearbyFrames = world.getEntitiesOfClass(ItemFrame.class,
-                    new AABB(playerPos.add(-radius, -radius, -radius), playerPos.add(radius, radius, radius)),
-                    frame -> {
-                        String[] terms = query.split(",");
-
-                        // If payload is clear, all item frames found are added to list no matter their stack.
-                        if (clear) {
-                            return true;
-                        } else {
-                            ItemStack stack = frame.getItem();
-
-                            // If item frame stack is empty it is not checked to glow
-                            if (stack.isEmpty()) {
-                                return false;
-                            }
-
-                            String rawItemName = stack.getHoverName().getString().toLowerCase();
-
-                            // Check all searched queries (separated by comma)
-                            // If item frame has stack, add it to the list to glow
-                            for (String term : terms) {
-                                String trimmed = term.trim().toLowerCase();
-                                if (matchCase ?
-                                        rawItemName.matches(trimmed) :
-                                        rawItemName.contains(trimmed)) {
-                                    return true;
-                                }
-                            }
-                        }
-
-                        // Otherwise return false and don't add to list
-                        return false;
-                    });
-
-            int searched = 0;
-            // If item is found, make it glow
-            for (ItemFrame frame : nearbyFrames) {
-                boolean alreadyGlowing = frame.isCurrentlyGlowing();
-                frame.setGlowingTag(!clear);
-                searched++; // Add to search count
-                if (clear && !alreadyGlowing) {
-                    searched--; // If clearing and the frame wasn't already glowing to begin with, subtract it from searched
-                }
-                // If payload timer isn't null and not clearing, begin the countdown before the glow effect is removed
-                if (!clear && timer != 0) {
-                    ((GlowCountdown) frame).startGlowCountdown(timer * 20);
-                }
-            }
-            if (clear) { // Send clear message and play sound
-                player.sendSystemMessage(Component.translatable("qualityofqueso.item_frame_searcher.executed.cleared", searched), false);
-                playSound(player, SoundEvents.PLAYER_SPLASH, 1.0F);
-            } else if (nearbyFrames.isEmpty()) { // Send no item frames found message
-                player.sendSystemMessage(matchCase ?
-                        Component.translatable("qualityofqueso.item_frame_searcher.executed.found_none.match_case", searched, query) :
-                        Component.translatable("qualityofqueso.item_frame_searcher.executed.found_none", searched, query), false);
-                playSound(player, SoundEvents.NOTE_BLOCK_BASS.value(), 2.0F);
-            } else {
-                if (timer == 0) { // Send found item frames with no timer
-                    player.sendSystemMessage(matchCase ?
-                            Component.translatable("qualityofqueso.item_frame_searcher.executed.without_timer.match_case", searched, query) :
-                            Component.translatable("qualityofqueso.item_frame_searcher.executed.without_timer", searched, query));
-                } else { // Send found item frames with timer
-                    player.sendSystemMessage(matchCase ?
-                            Component.translatable("qualityofqueso.item_frame_searcher.executed.with_timer.match_case", searched, query, timer) :
-                            Component.translatable("qualityofqueso.item_frame_searcher.executed.with_timer", searched, query, timer), false);
-                }
-                // Play sound
-                playSound(player, SoundEvents.ARROW_HIT_PLAYER, 1.0F);
-            }
-        }
-    }
-
-    /**
      * Saves all configurations.
      */
     public static void saveAndApplyChanges() {
-        UniversalOptions.INSTANCE.save();
-        // Continue if multi-server configs are enabled
-        if (universal().multiServerConfigs) {
-            CONTINUE = true;
-        }
-        Minecraft instance = getMinecraft();
-        if (instance.getCurrentServer() != null && instance.getCurrentServer().ip != null) {
-            // If the server is blacklisted, and multi-server configs are off, the config hasn't already been unloaded, unload it
-            if (isServerBlacklisted() && !universal().multiServerConfigs && !UNLOADED) {
-                unload(true);
-            } else if (!universal().multiServerConfigs && !UNLOADED) { // Otherwise, if multi-server configs are off and it hasn't been unloaded, unload it
-                unload(true);
-            }
-            // If we can continue...
-            if (CONTINUE) {
-                if (isServerBlacklisted()) {
-                    // If server is blacklisted and not been unloaded, unload it
-                    if (!UNLOADED) {
-                        unload(false);
-                    }
-                } else {
-                    // If config hasn't been loaded, load it, set unloaded to false, because it has just been loaded
-                    if (!LOADED) {
-                        loadServerConfig();
-                        LOADED = true;
-                        UNLOADED = false;
-                    }
-                }
-            }
-        }
-        // Save appropriate instances
-        ModClientOptions.INSTANCE.save();
-        ModCommonOptions.INSTANCE.save();
-    }
-
-    /**
-     * Loads and saves server-specific config.
-     */
-    public static void loadServerConfig() {
-        // Don't try to load a new config if multi-server configs are disabled
-        if (!universal().multiServerConfigs) {
-            return;
-        }
-
-        Minecraft minecraft = getMinecraft();
-        // Ensure server is valid
-        if (minecraft.getCurrentServer() == null) {
-            return;
-        } else if (minecraft.getCurrentServer().ip == null) {
-            return;
-        }
-
-        // Get safe address for the server's IP
-        String address = minecraft.getCurrentServer().ip;
-        String safe = address.replace(":", "_").replace(".", "-");
-        String safeAndUnderscore = safe + "_";
-
-        // Resolve the multi-server config directory, located in .minecraft/config/qualityofqueso/server-configs/*server-name*
-        File serverDir = Platforms.getUniversalPlatform().configDir()
-                .resolve(DEFAULT_SERVER_CONFIG_DIR + safe)
-                .toFile();
-
-        // Get config file names
-        String clientServerConfig = safeAndUnderscore + DEFAULT_CLIENT_CONFIG_FILE_NAME;
-        String commonServerConfig = safeAndUnderscore + DEFAULT_COMMON_CONFIG_FILE_NAME;
-
-        // Get config files
-        File clientServerFile = new File(serverDir, clientServerConfig);
-        File commonServerFile = new File(serverDir, commonServerConfig);
-
-        // Get the cached instances
-        ModClientOptions cachedClientInstance = ModClientOptions.INSTANCE.getInstance();
-        ModCommonOptions cachedCommonInstance = ModCommonOptions.INSTANCE.getInstance();
-
-        // Determine if all config files exists
-        final boolean configExists = clientServerFile.exists()
-                && commonServerFile.exists();
-
-        // Update config instances for the multi-server config
-        ModClientOptions.INSTANCE.setCustomDirectory(serverDir);
-        ModClientOptions.INSTANCE.setFileName(clientServerConfig);
-
-        ModCommonOptions.INSTANCE.setCustomDirectory(serverDir);
-        ModCommonOptions.INSTANCE.setFileName(commonServerConfig);
-
-        // If the config wasn't present, send created message, and set the minecraft
-        if (!configExists) {
-            LOGGER.info("Creating new Quality of Queso server config minecraft for \"{}\".", address);
-
-            ModClientOptions.INSTANCE.setInstance(cachedClientInstance);
-            ModClientOptions.INSTANCE.save();
-
-            ModCommonOptions.INSTANCE.setInstance(cachedCommonInstance);
-            ModCommonOptions.INSTANCE.save();
-        }
-
-        // Load all instances for new multi-server config
-        ModClientOptions.INSTANCE.load();
-        ModCommonOptions.INSTANCE.load();
-
-        // Send appropriate message
-        String message = !configExists ? "qualityofqueso.created_server_config" : "qualityofqueso.loaded_server_config";
-        if (minecraft.player != null) {
-            minecraft.player.sendSystemMessage(Component.translatable(message).withStyle(ChatFormatting.GOLD));
-        }
-
-        // Log the multi-server config
-        LOGGER.info("Successfully loaded Quality of Queso config for \"{}\".", address);
-    }
-
-    /**
-     * Unloads server config and reloads universal one.
-     */
-    public static void unloadServerConfig() {
-        // Resets all current config instances to default (or global)
-        ModClientOptions.INSTANCE.clearCustomDirectory();
-        ModClientOptions.INSTANCE.setFileName(DEFAULT_CLIENT_CONFIG_FILE_NAME);
-        ModClientOptions.INSTANCE.load();
-
-        ModCommonOptions.INSTANCE.clearCustomDirectory();
-        ModCommonOptions.INSTANCE.setFileName(DEFAULT_COMMON_CONFIG_FILE_NAME);
-        ModCommonOptions.INSTANCE.load();
-
-        // Send reset message
-        LocalPlayer player = getLocalPlayer();
-        if (player != null) {
-            player.sendSystemMessage(Component.translatable("qualityofqueso.unloaded_server_config").withStyle(ChatFormatting.GOLD));
-        }
-        // Log the message
-        if (universal().multiServerConfigs) {
-            LOGGER.info("Reverting back to global Quality of Queso config.");
-        }
+        UniversalOptions.getInstance().save();
+        ModClientOptions.getInstance().save();
+        ModCommonOptions.getInstance().save();
     }
 
     /**

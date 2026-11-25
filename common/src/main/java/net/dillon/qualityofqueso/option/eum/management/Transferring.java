@@ -5,8 +5,8 @@ import net.dillon.qualityofqueso.helper.ModConstants;
 import net.minecraft.util.StringRepresentable;
 
 public enum Transferring implements StringRepresentable {
-    BUTTON_OR_KEY(ModConstants.BUTTON_OR_KEY_SERIALIZED_NAME),
-    KEY_ONLY(ModConstants.KEY_ONLY_SERIALIZED_NAME),
+    BUTTON_OR_SHORTCUT_KEY(ModConstants.BUTTON_OR_SHORTCUT_KEY_SERIALIZED_NAME),
+    SHORTCUT_KEY_ONLY(ModConstants.SHORTCUT_KEY_ONLY_SERIALIZED_NAME),
     OFF(ModConstants.OFF_SERIALIZED_NAME);
 
     public static final Codec<Transferring> CODEC = StringRepresentable.fromEnum(Transferring::values);
@@ -16,12 +16,12 @@ public enum Transferring implements StringRepresentable {
         this.name = name;
     }
 
-    public boolean buttonOrKey() {
-        return this == BUTTON_OR_KEY;
+    public boolean buttonOrShortcutKey() {
+        return this == BUTTON_OR_SHORTCUT_KEY;
     }
 
-    public boolean any() {
-        return this == BUTTON_OR_KEY || this == KEY_ONLY;
+    public boolean enabled() {
+        return this == BUTTON_OR_SHORTCUT_KEY || this == SHORTCUT_KEY_ONLY;
     }
 
     @Override
