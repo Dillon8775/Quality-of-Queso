@@ -10,12 +10,7 @@ import net.dillon.qualityofqueso.helper.ModConstants;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 
-public abstract class QualityOfQuesoPlatform extends ModPlatform {
-
-    /**
-     * Adds all mod ids to a list, for the ItemArgument.
-     */
-    public abstract void addModIds();
+public class QualityOfQuesoPlatform extends ModPlatform {
 
     @Override
     public void registerCommonCommands(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext commandRegistryAccess) {

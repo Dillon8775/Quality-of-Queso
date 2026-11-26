@@ -6,7 +6,7 @@ import net.fabricmc.loader.api.ModContainer;
 
 import java.util.List;
 
-public class FabricQualityOfQuesoPlatform extends QualityOfQuesoPlatform {
+public class FabricModPlatformHelper extends ModPlatformHelper {
 
     @Override
     public void addModIds() {

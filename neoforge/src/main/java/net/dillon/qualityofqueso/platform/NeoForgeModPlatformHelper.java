@@ -6,7 +6,7 @@ import net.neoforged.fml.ModList;
 
 import java.util.List;
 
-public class NeoForgeQualityOfQuesoPlatform extends QualityOfQuesoPlatform {
+public class NeoForgeModPlatformHelper extends ModPlatformHelper {
 
     @Override
     public void addModIds() {

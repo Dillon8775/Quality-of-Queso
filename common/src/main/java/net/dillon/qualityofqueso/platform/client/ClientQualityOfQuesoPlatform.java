@@ -20,7 +20,7 @@ import net.minecraft.core.WritableRegistry;
 import java.util.List;
 import java.util.function.Function;
 
-public abstract class ClientQualityOfQuesoPlatform extends ClientModPlatform {
+public class ClientQualityOfQuesoPlatform extends ClientModPlatform {
 
     @Override
     public String modId() {

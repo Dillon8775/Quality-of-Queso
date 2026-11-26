@@ -32,7 +32,7 @@ public class CommonMain {
         registerPackets();
         loadCommonConfigs();
 
-        QualityOfQuesoPlatforms.getPlatform().addModIds();
+        QualityOfQuesoPlatforms.getPlatformHelper().addModIds();
 
         ModConstants.LOGGER.info("Quality of Queso version {} (for {}) loaded successfully!", QualityOfQuesoPlatforms.getPlatform().modVersion(), Balm.platform().name());
 

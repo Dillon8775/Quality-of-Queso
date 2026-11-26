@@ -2,7 +2,6 @@ package net.dillon.qualityofqueso.event;
 
 import net.dillon.qualityofqueso.keybind.ModKeyMappings;
 import net.dillon.qualityofqueso.main.ClientEvents;
-import net.dillon.qualityofqueso.option.ModClientOptions;
 import net.dillon.qualityofqueso.platform.QualityOfQuesoPlatforms;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
