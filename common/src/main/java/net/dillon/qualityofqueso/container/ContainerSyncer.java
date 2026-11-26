@@ -230,7 +230,7 @@ public class ContainerSyncer {
      * Saves the container data.
      */
     private static void saveContainerData() {
-        ContainerData.getInstance().save();
+        ContainerData.INSTANCE.save();
     }
 
     /**
@@ -905,7 +905,7 @@ public class ContainerSyncer {
 
         CAN_PLAY_INACTIVE_SOUND = data.locked;
         playLockSlotSound(data.locked);
-        ContainerData.getInstance().save();
+        ContainerData.INSTANCE.save();
     }
 
     /**
@@ -981,7 +981,7 @@ public class ContainerSyncer {
             }
 
             playLockSlotSound(locked);
-            LockedContainerSlots.getInstance().save();
+            LockedContainerSlots.INSTANCE.save();
             return;
         }
 
@@ -1005,7 +1005,7 @@ public class ContainerSyncer {
         }
 
         playLockSlotSound(locked);
-        LockedPlayerSlots.getInstance().save();
+        LockedPlayerSlots.INSTANCE.save();
     }
 
     /**

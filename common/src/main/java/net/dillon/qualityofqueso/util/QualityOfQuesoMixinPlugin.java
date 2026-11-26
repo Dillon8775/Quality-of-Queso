@@ -35,22 +35,22 @@ public class QualityOfQuesoMixinPlugin extends MixinPluginUtil {
                                 "render.FogRendererMixin",
                                 "render.CameraMixin"
                         ),
-                        !MixinOptions.getInstance().get().fogMixins,
+                        !MixinOptions.INSTANCE.get().fogMixins,
                         "\"fog_mixins\" are disabled."
                 ),
                 PredicateEntry.ofDebug(
                         PredicateEntry.single("client.util.AbstractClientPlayerMixin"),
-                        !MixinOptions.getInstance().get().fovEffectsMixin,
+                        !MixinOptions.INSTANCE.get().fovEffectsMixin,
                         "\"fov_effects_mixin\" is disabled."
                 ),
                 PredicateEntry.ofDebug(
                         PredicateEntry.single("client.render.EquipmentLayerRendererMixin"),
-                        !MixinOptions.getInstance().get().redArmorTintMixin,
+                        !MixinOptions.INSTANCE.get().redArmorTintMixin,
                         "\"red_armor_tint_mixin\" is disabled."
                 ),
                 PredicateEntry.ofDebug(
                         PredicateEntry.single("client.util.ClientClockManagerMixin"),
-                        !MixinOptions.getInstance().get().clockManagerMixin,
+                        !MixinOptions.INSTANCE.get().clockManagerMixin,
                         "\"clock_manager_mixin\" is disabled."
                 ),
                 PredicateEntry.ofDebug(
@@ -58,12 +58,12 @@ public class QualityOfQuesoMixinPlugin extends MixinPluginUtil {
                                 "main.ItemArgumentMixin",
                                 "main.ItemParserMixin"
                         ),
-                        !MixinOptions.getInstance().get().itemArgumentMixin,
+                        !MixinOptions.INSTANCE.get().itemArgumentMixin,
                         "\"item_argument_mixin\" is disabled."
                 ),
                 PredicateEntry.ofDebug(
                         PredicateEntry.single("fabric.FabricItemStackMixin"),
-                        !MixinOptions.getInstance().get().itemStackMixin,
+                        !MixinOptions.INSTANCE.get().itemStackMixin,
                         "\"item_stack_mixin\" is disabled."
                 )
         );

@@ -73,7 +73,7 @@ public class EnderChestSyncer {
         }
 
         byWorld.put(worldKey(), serialized);
-        ContainerData.getInstance().save();
+        ContainerData.INSTANCE.save();
     }
 
     /**

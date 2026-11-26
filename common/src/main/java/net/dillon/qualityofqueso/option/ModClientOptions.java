@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static net.dillon.dillonlib.util.BaseOptions.guardedInstance;
 import static net.dillon.qualityofqueso.helper.ModConstants.*;
 import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
@@ -60,7 +59,7 @@ public class ModClientOptions {
             SEARCH_TRANSPORTABLES_BUTTON_SERIALIZED_NAME,
             CLEAR_EXCLUDED_SLOTS_BUTTON_SERIALIZED_NAME
     );
-    private static final ClientOptionsHandler INSTANCE = new ClientOptionsHandler();
+    public static final ClientOptionsHandler INSTANCE = new ClientOptionsHandler();
 
     private final GeneralOptions generalOptions = new GeneralOptions();
     private final SearchingOptions searchingOptions = new SearchingOptions();
@@ -78,10 +77,6 @@ public class ModClientOptions {
     private final FogOptions fogOptions = new FogOptions();
     private final FovEffectOptions forEffects = new FovEffectOptions();
     private final AccessibilityOptions accessibilityOptions = new AccessibilityOptions();
-
-    public static ClientOptionsHandler getInstance() {
-        return guardedInstance(INSTANCE);
-    }
 
     public GeneralOptions general() {
         return this.generalOptions;

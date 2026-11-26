@@ -290,9 +290,9 @@ public class ModHelper {
      * Saves all configurations.
      */
     public static void saveAndApplyChanges() {
-        UniversalOptions.getInstance().save();
-        ModClientOptions.getInstance().save();
-        ModCommonOptions.getInstance().save();
+        UniversalOptions.INSTANCE.save();
+        ModClientOptions.INSTANCE.save();
+        ModCommonOptions.INSTANCE.save();
     }
 
     /**

@@ -29,9 +29,9 @@ public class ModDebugScreenEntries {
     public static final ResourceKey<DebugScreenEntry> PLAY_TIME = key("play_time");
     public static final ResourceKey<DebugScreenEntry> POTION_EFFECTS = key("potion_effects");
 
-    protected static final DebugGroup DATE_AND_TIME_GROUP = DebugBuilder.leftAlignedDebugGroup(Component.translatable("qualityofqueso.debug.date_and_time"), client().accessibility().debugTextAlignment);
-    protected static final DebugGroup ALARMS_AND_TIMERS_GROUP = DebugBuilder.alignedDebugGroup(Component.translatable("qualityofqueso.debug.alarms_and_timers"), client().accessibility().debugTextAlignment);
-    protected static final DebugGroup POTION_EFFECTS_GROUP = DebugBuilder.alignedDebugGroup(Component.translatable("qualityofqueso.debug.potion_effects"), client().accessibility().debugTextAlignment);
+    protected static final DebugGroup DATE_AND_TIME_GROUP = DebugBuilder.leftAlignedDebugGroup(Component.translatable("qualityofqueso.debug.date_and_time"), () -> client().accessibility().debugTextAlignment);
+    protected static final DebugGroup ALARMS_AND_TIMERS_GROUP = DebugBuilder.alignedDebugGroup(Component.translatable("qualityofqueso.debug.alarms_and_timers"), () -> client().accessibility().debugTextAlignment);
+    protected static final DebugGroup POTION_EFFECTS_GROUP = DebugBuilder.alignedDebugGroup(Component.translatable("qualityofqueso.debug.potion_effects"), () -> client().accessibility().debugTextAlignment);
 
     protected static final DebugEntryCategory MOD_CATEGORY = basicDebugCategory(Component.translatable("qualityofqueso"));
 

@@ -46,7 +46,7 @@ public class ClientEvents {
     public static void onPlayerDisconnect(Minecraft minecraft) {
         resetArmorHudState();
 
-        ModClientOptions.getInstance().save();
+        ModClientOptions.INSTANCE.save();
     }
 
     /**

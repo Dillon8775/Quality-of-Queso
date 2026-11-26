@@ -29,12 +29,12 @@ public class ClientMain {
      */
     private static void loadClientConfigs() {
         List<ModBaseOptionsHandler<?>> handlers = List.of(
-                ModClientOptions.getInstance(),
-                UniversalOptions.getInstance(),
-                ContainerData.getInstance(),
-                LockedContainerSlots.getInstance(),
-                LockedPlayerSlots.getInstance(),
-                MixinOptions.getInstance()
+                ModClientOptions.INSTANCE,
+                UniversalOptions.INSTANCE,
+                ContainerData.INSTANCE,
+                LockedContainerSlots.INSTANCE,
+                LockedPlayerSlots.INSTANCE,
+                MixinOptions.INSTANCE
         );
 
         List<BaseOptions<?>> instances = new ArrayList<>();

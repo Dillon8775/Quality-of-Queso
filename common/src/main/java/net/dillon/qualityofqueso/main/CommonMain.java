@@ -51,6 +51,6 @@ public class CommonMain {
      * Loads all common configs.
      */
     private static void loadCommonConfigs() {
-        ModCommonOptions.getInstance().load();
+        ModCommonOptions.INSTANCE.load();
     }
 }
