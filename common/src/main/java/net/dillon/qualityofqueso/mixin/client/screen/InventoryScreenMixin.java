@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
 
 @Mixin(InventoryScreen.class)
 public class InventoryScreenMixin {

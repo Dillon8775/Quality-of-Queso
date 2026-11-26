@@ -14,7 +14,7 @@ import static net.dillon.qualityofqueso.helper.ManagementHelper.isMountingMenu;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.isValidMenuForQuickEquipping;
 import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.hasSelectSlotsModifierDown;
 import static net.dillon.qualityofqueso.helper.SoundHelper.playQuickEquipSound;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
 
 /**
  * Handles quick equip feature and methods.

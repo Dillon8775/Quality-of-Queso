@@ -10,8 +10,8 @@ import net.dillon.qualityofqueso.option.eum.fov_effects.PotionEffects;
 import net.minecraft.network.chat.Component;
 
 import static net.dillon.dillonlib.task.ClientTasks.getMinecraft;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
-import static net.dillon.qualityofqueso.option.OptionInstances.mixins;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.mixins;
 
 /**
  * The Fov effects options category for the {@link ConfigurationScreen}.

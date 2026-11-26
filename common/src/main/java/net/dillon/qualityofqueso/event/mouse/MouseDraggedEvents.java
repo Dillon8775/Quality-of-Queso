@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import static net.dillon.qualityofqueso.helper.ManagementHelper.hoveredSlotHasItem;
 import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.hasAttemptedToLockSelectOrDeselect;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
 
 /**
  * Handles mouse dragging events.

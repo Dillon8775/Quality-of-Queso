@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import static net.dillon.dillonlib.task.ClientTasks.getMinecraft;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
 
 @Mixin(TitleScreen.class)
 public class TitleScreenMixin extends Screen {

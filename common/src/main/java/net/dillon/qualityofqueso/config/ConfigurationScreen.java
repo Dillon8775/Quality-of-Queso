@@ -33,7 +33,8 @@ public class ConfigurationScreen {
                         GuiCategory.create(),
                         FovEffectsCategory.create(),
                         FogCategory.create(),
-                        MiscellaneousCategory.create(),
+                        DingsAndAlarmsCategory.create(),
+                        DebugTextCategory.create(),
                         AccessibilityCategory.create()
                 ))
                 .save(ModHelper::saveAndApplyChanges)

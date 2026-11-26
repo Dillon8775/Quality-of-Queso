@@ -9,7 +9,7 @@ import static net.dillon.dillonlib.task.ClientTasks.*;
 import static net.dillon.qualityofqueso.helper.MethodHelper.kumaAnyModifierDown;
 import static net.dillon.qualityofqueso.helper.MethodHelper.kumaMousePressed;
 import static net.dillon.qualityofqueso.keybind.ModKeyMappings.*;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
 
 /**
  * A helper class for Quality of Queso's keybinds.

@@ -31,7 +31,7 @@ import java.util.*;
 import static net.dillon.dillonlib.task.ClientTasks.*;
 import static net.dillon.qualityofqueso.container.ShulkerSyncer.*;
 import static net.dillon.qualityofqueso.helper.SoundHelper.playLockSlotSound;
-import static net.dillon.qualityofqueso.option.OptionInstances.*;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.*;
 import static net.dillon.qualityofqueso.option.eum.management.FilteringMode.unfiltered;
 
 /**
@@ -1169,12 +1169,11 @@ public class ContainerSyncer {
      */
     public static String worldKey() {
         if (isSingleplayer()) {
-            return "singleplayer:"
-                    + getLocalWorldDirName();
+            return getLocalWorldDirName(true);
         }
 
         if (isOnServer()) {
-            return "server:" + getCurrentServerIp();
+            return getCurrentServerIp(true);
         }
 
         return "unknown_world";

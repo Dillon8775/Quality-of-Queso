@@ -30,7 +30,7 @@ import static net.dillon.dillonlib.client.component.GridBuilder.createColumn;
 import static net.dillon.dillonlib.task.ClientTasks.openScreen;
 import static net.dillon.dillonlib.widespread.DillonsWidgets.addTitleToHeader;
 import static net.dillon.dillonlib.widespread.DillonsWidgets.createMultiLineText;
-import static net.dillon.qualityofqueso.option.OptionInstances.*;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.*;
 
 /**
  * Confirms if you want to clear container data or not.

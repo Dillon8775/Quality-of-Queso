@@ -10,7 +10,8 @@ import net.minecraft.world.level.chunk.LevelChunk;
 import org.jspecify.annotations.Nullable;
 
 import static net.dillon.qualityofqueso.helper.ModConstants.*;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
 
 /**
  * Displays {@link Timer}s, {@link Alarm}s and {@link Stopwatch}s on the debug hud.
@@ -19,11 +20,15 @@ public class AlarmsAndTimersDebugEntry extends ModDebugEntry {
 
     @Override
     public void display(DebugScreenDisplayer displayer, @Nullable Level serverOrClientLevel, @Nullable LevelChunk clientChunk, @Nullable LevelChunk serverChunk) {
+        if (!modEnabled()) {
+            return;
+        }
+
         for (Alarm alarm : ALARMS) {
             String name = alarm.name;
             displayer.addFactToGroup(
                     ModDebugScreenEntries.ALARMS_AND_TIMERS_GROUP,
-                    client().misc().showTimeUntilAlarmSounds ? name + " (" + new TickValue(alarm.ticks).formattedFromTick() + ")" : name,
+                    client().dingsAndAlarms().showTimeUntilAlarmSounds ? name + " (" + new TickValue(alarm.ticks).formattedFromTick() + ")" : name,
                     fact -> fact.value(alarm.formattedDisplay())
             );
         }
@@ -45,7 +50,7 @@ public class AlarmsAndTimersDebugEntry extends ModDebugEntry {
                     stopwatch.name,
                     fact -> fact.value(
                             new TickValue.TimeFormatter(new TickValue(stopwatch.ticks))
-                                    .includeMilliseconds(client().misc().msForStopwatches)
+                                    .includeMilliseconds(client().dingsAndAlarms().msForStopwatches)
                                     .build()
                                     + stopwatch.pausedLabel()
                     )

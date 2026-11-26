@@ -6,8 +6,8 @@ import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
 import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
 import net.minecraft.network.chat.Component;
 
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
-import static net.dillon.qualityofqueso.option.OptionInstances.mixins;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.mixins;
 
 /**
  * The fog options category for the {@link ConfigurationScreen}.

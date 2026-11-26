@@ -27,6 +27,7 @@ import static net.dillon.dillonlib.task.ClientTasks.getMinecraft;
 import static net.dillon.dillonlib.task.CommonTasks.sendOverlayMessage;
 import static net.dillon.dillonlib.task.CommonTasks.sendSystemMessage;
 import static net.dillon.qualityofqueso.helper.ModConstants.*;
+import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
 
 /**
  * Helper methods for creating timer objects.
@@ -93,9 +94,25 @@ public class Timers {
     }
 
     /**
+     * @return if the user can execute a timer command.
+     */
+    public static boolean canExecuteCommand(ClientCommandFeedback source) {
+        if (!modEnabled()) {
+            source.sendFailure(Component.translatable("qualityofqueso.command.disabled"));
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * @return if a ticker doesn't exist.
      */
     public static <T extends Timer> boolean tickerDoesntExist(ClientCommandFeedback source, String name, List<T> tickers, String id) {
+        if (!canExecuteCommand(source)) {
+            return true;
+        }
+
         if (!Timers.contains(name, tickers)) {
             source.sendFailure(Component.translatable("qualityofqueso.timer.doesnt_exist", id.toLowerCase()));
             return true;
@@ -108,6 +125,10 @@ public class Timers {
      * @return if a ticker exists.
      */
     public static <T extends Timer> boolean tickerExists(ClientCommandFeedback source, String name, List<T> tickers, String id) {
+        if (!canExecuteCommand(source)) {
+            return true;
+        }
+
         if (Timers.contains(name, tickers)) {
             source.sendSuccess(Component.translatable("qualityofqueso.timer.already_exists", id.toLowerCase()));
             return true;
@@ -199,6 +220,10 @@ public class Timers {
      * Dismisses a ticker with a custom message supplier.
      */
     public static <T extends Timer> int dismissTicker(ClientCommandFeedback source, String name, List<T> tickers, String id, boolean stopSound) {
+        if (!canExecuteCommand(source)) {
+            return 0;
+        }
+
         if (stopSound) {
             ALARM_TRIGGERED = false;
         }

@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 import static net.dillon.qualityofqueso.container.ContainerSyncer.*;
 import static net.dillon.qualityofqueso.helper.SoundHelper.playLockSlotSound;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
 import static net.dillon.qualityofqueso.option.eum.management.FilteringMode.unfiltered;
 
 /**

@@ -14,7 +14,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import static net.dillon.dillonlib.task.ClientTasks.openScreen;
 import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
 import static net.dillon.qualityofqueso.keybind.ModKeyMappings.OPEN_ITEM_FRAME_SEARCH_GUI;
-import static net.dillon.qualityofqueso.option.OptionInstances.common;
 
 @Mixin(Minecraft.class)
 public abstract class MinecraftMixin {
@@ -31,7 +30,7 @@ public abstract class MinecraftMixin {
             return;
         }
 
-        if (common().itemFrameSearching) {
+        if (ModKeyMappings.canSearchItemFrames()) {
             while (OPEN_ITEM_FRAME_SEARCH_GUI.isActiveAndDown()) {
                 openScreen(new ItemFrameSearchScreen(null));
             }

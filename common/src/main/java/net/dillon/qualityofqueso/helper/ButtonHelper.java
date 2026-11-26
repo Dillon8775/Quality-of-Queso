@@ -22,8 +22,8 @@ import java.nio.file.Path;
 import static net.dillon.dillonlib.task.ClientTasks.*;
 import static net.dillon.qualityofqueso.helper.ModConstants.*;
 import static net.dillon.qualityofqueso.helper.ModHelper.saveAndApplyChanges;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
-import static net.dillon.qualityofqueso.option.OptionInstances.universal;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.universal;
 import static net.minecraft.client.gui.components.AbstractWidget.playButtonClickSound;
 
 /**

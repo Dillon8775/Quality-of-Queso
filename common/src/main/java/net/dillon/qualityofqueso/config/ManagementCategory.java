@@ -16,8 +16,8 @@ import net.minecraft.network.chat.Component;
 import java.awt.*;
 import java.util.ArrayList;
 
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
-import static net.dillon.qualityofqueso.option.OptionInstances.common;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
+import static net.dillon.qualityofqueso.option.CommonOptionInstances.common;
 import static net.dillon.qualityofqueso.util.ModOptionUtil.fullKumaKeyMappingAsString;
 
 /**

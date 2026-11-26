@@ -11,6 +11,7 @@ import org.jspecify.annotations.Nullable;
 
 import static net.dillon.dillonlib.task.ClientTasks.getMinecraft;
 import static net.dillon.dillonlib.util.Arithmetics.roundToTenths;
+import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
 
 /**
  * Displays the player's rotation values, which allows for perfection in flying the fastest with firework rockets and an elytra (40 = target).
@@ -19,6 +20,10 @@ public class RotationDebugEntry extends ModDebugEntry {
 
     @Override
     public void display(DebugScreenDisplayer displayer, @Nullable Level serverOrClientLevel, @Nullable LevelChunk clientChunk, @Nullable LevelChunk serverChunk) {
+        if (!modEnabled()) {
+            return;
+        }
+
         Entity entity = getMinecraft().getCameraEntity();
 
         // Ensure our entity is a player

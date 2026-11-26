@@ -14,7 +14,7 @@ import static net.dillon.dillonlib.task.ClientTasks.getGuiWidth;
 import static net.dillon.qualityofqueso.helper.GuiHelper.*;
 import static net.dillon.qualityofqueso.helper.ModConstants.*;
 import static net.dillon.qualityofqueso.hud.ModHudElement.*;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
 
 /**
  * Helper class for the item counter.

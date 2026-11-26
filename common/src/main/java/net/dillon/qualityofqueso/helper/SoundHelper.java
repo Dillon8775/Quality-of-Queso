@@ -7,7 +7,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 
 import static net.dillon.qualityofqueso.helper.ModConstants.*;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
 import static net.dillon.qualityofqueso.sound.ModSoundEvents.getSoundFromRegistration;
 
 /**

@@ -6,10 +6,7 @@
   },
   "compatibilityLevel": "JAVA_25",
   "package": "net.dillon.qualityofqueso.mixin",
-  "plugin": "net.dillon.qualityofqueso.mixin.ConditionalMixinPlugin",
   "client": [
-    "CameraMixin",
-    "FogRendererMixin",
     "client.accessor.AbstractContainerScreenAccessor",
     "client.accessor.AbstractRecipeBookScreenAccessor",
     "client.accessor.BrewingStandMenuAccessor",
@@ -36,21 +33,7 @@
     "client.util.ClientPacketListenerMixin",
     "client.util.LocalPlayerMixin",
     "client.util.MinecraftMixin",
-    "client.util.MultiPlayerGameModeMixin",
-    "fabric.FabricAbstractContainerScreenMixin",
-    "fabric.FabricItemStackMixin",
-    "fix.AbstractContainerScreenFix"
-  ],
-  "mixins": [
-    "main.AbstractContainerMenuInvoker",
-    "main.BlockItemMixin",
-    "main.ContainerMenusMixin",
-    "main.ItemArgumentMixin",
-    "main.ItemEntityMixin",
-    "main.ItemFrameMixin",
-    "main.ItemParserMixin",
-    "main.ShulkerBoxBlockEntityMixin",
-    "main.ShulkerBoxBlockMixin"
+    "client.util.MultiPlayerGameModeMixin"
   ],
   "injectors": {
     "defaultRequire": 1

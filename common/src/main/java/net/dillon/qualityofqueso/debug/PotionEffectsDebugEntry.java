@@ -11,6 +11,7 @@ import org.jspecify.annotations.Nullable;
 
 import static net.dillon.dillonlib.task.ClientTasks.getLocalPlayer;
 import static net.dillon.qualityofqueso.helper.ModConstants.INFINITY_SYMBOL;
+import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
 
 /**
  * Displays all the player's current status effects.
@@ -19,6 +20,10 @@ public class PotionEffectsDebugEntry extends ModDebugEntry {
 
     @Override
     public void display(DebugScreenDisplayer displayer, @Nullable Level serverOrClientLevel, @Nullable LevelChunk clientChunk, @Nullable LevelChunk serverChunk) {
+        if (!modEnabled()) {
+            return;
+        }
+
         // Return out if level is null
         if (serverChunk == null) {
             return;

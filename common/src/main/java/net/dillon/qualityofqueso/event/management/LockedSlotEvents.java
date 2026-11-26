@@ -19,7 +19,7 @@ import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
 import static net.dillon.qualityofqueso.helper.MethodHelper.kumaMousePressed;
 import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.*;
 import static net.dillon.qualityofqueso.keybind.ModKeyMappings.LOCK_SLOT;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
 
 /**
  * Handles locked slot colors, overlays, and functions.

@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import static net.dillon.dillonlib.task.ClientTasks.getScreen;
 import static net.dillon.qualityofqueso.helper.MethodHelper.getRecipeBookComponent;
 import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
 
 @Mixin(RecipeButton.class)
 public abstract class RecipeButtonMixin extends AbstractWidget {

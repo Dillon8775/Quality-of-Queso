@@ -9,7 +9,7 @@ import net.minecraft.network.chat.Component;
 
 import static net.dillon.qualityofqueso.helper.GuiHelper.drawTooltip;
 import static net.dillon.qualityofqueso.helper.SoundHelper.playDefaultSound;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
 
 /**
  * A {@code toggleable} button, which toggles certain management features.

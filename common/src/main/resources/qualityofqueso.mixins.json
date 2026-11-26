@@ -1,0 +1,23 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "mixinextras": {
+    "minVersion": "0.5.4"
+  },
+  "compatibilityLevel": "JAVA_25",
+  "package": "net.dillon.qualityofqueso.mixin",
+  "mixins": [
+    "main.AbstractContainerMenuInvoker",
+    "main.BlockItemMixin",
+    "main.ContainerMenusMixin",
+    "main.ItemArgumentMixin",
+    "main.ItemEntityMixin",
+    "main.ItemFrameMixin",
+    "main.ItemParserMixin",
+    "main.ShulkerBoxBlockEntityMixin",
+    "main.ShulkerBoxBlockMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

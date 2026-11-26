@@ -25,7 +25,7 @@ import static net.dillon.qualityofqueso.helper.MethodHelper.getTitleLabelY;
 import static net.dillon.qualityofqueso.helper.MethodHelper.getTopPos;
 import static net.dillon.qualityofqueso.helper.ModConstants.*;
 import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.hasAllQuickDropModifiersDown;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
 
 /**
  * Handles all widget events.
@@ -111,8 +111,8 @@ public class WidgetEvents extends ManagementEvents {
     }
 
     public void initBulkCraft() {
-        holder().managementButtons().setBulkSelect(
-                initButton(this::canInitBulkSelectButton, createBulkSelect())
+        holder().managementButtons().setBulk(
+                initButton(this::canInitBulkButton, createBulkSelect())
         );
     }
 
@@ -136,7 +136,7 @@ public class WidgetEvents extends ManagementEvents {
         // Construct the final layout
         AbstractList<AbstractWidget> finalLayout = client().management().layout.horizontal() ? horizontalLayout : verticalLayout;
         if (isMerchantScreen()) {
-            finalLayout = NonNullList.of(null, holder().managementButtons().getBulkSelect());
+            finalLayout = NonNullList.of(null, holder().managementButtons().getBulk());
         }
 
         // Set and initialize the widget layout
@@ -165,7 +165,7 @@ public class WidgetEvents extends ManagementEvents {
                 case ALWAYS_QUICK_MOVE_BUTTON_SERIALIZED_NAME ->
                         finalLayout.add(holder().managementButtons().getAlwaysQuickMove());
                 case FILTERING_BUTTON_SERIALIZED_NAME -> finalLayout.add(holder().managementButtons().getFiltering());
-                case BULK_CRAFT_BUTTON_SERIALIZED_NAME -> finalLayout.add(holder().managementButtons().getBulkSelect());
+                case BULK_CRAFT_BUTTON_SERIALIZED_NAME -> finalLayout.add(holder().managementButtons().getBulk());
                 case QUICK_DROP_BUTTON_SERIALIZED_NAME -> finalLayout.add(holder().managementButtons().getQuickDrop());
                 case SWAP_BUTTON_SERIALIZED_NAME -> finalLayout.add(holder().managementButtons().getSwap());
                 case SEARCH_TRANSPORTABLES_BUTTON_SERIALIZED_NAME ->
@@ -270,7 +270,7 @@ public class WidgetEvents extends ManagementEvents {
      * @return the {@code bulk craft} button.
      */
     private ManagementButton createBulkSelect() {
-        return createButton(BulkSelectButton::new);
+        return createButton(BulkButton::new);
     }
 
     /**
@@ -392,9 +392,9 @@ public class WidgetEvents extends ManagementEvents {
     }
 
     /**
-     * @return if the {@link BulkSelectButton} can be {@code initialized}.
+     * @return if the {@link BulkButton} can be {@code initialized}.
      */
-    private boolean canInitBulkSelectButton() {
+    private boolean canInitBulkButton() {
         if (isMerchantScreen()) {
             return !client().display().hideBulkTrade;
         } else {

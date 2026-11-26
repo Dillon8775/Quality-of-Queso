@@ -21,7 +21,7 @@ import java.util.function.Consumer;
 
 import static net.dillon.qualityofqueso.helper.GuiHelper.acceptDotTooltip;
 import static net.dillon.qualityofqueso.helper.GuiHelper.acceptEnhancedDurabilityTooltips;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
 
 @Mixin(ItemStack.class)
 public abstract class FabricItemStackMixin {

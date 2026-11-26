@@ -11,7 +11,8 @@ import net.dillon.qualityofqueso.option.eum.general.Tooltips;
 import net.minecraft.network.chat.Component;
 
 import static net.dillon.qualityofqueso.config.ConfigurationScreen.fixedSizeImage;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
+import static net.dillon.qualityofqueso.option.CommonOptionInstances.common;
 
 /**
  * The general options category for the {@link ConfigurationScreen}.
@@ -30,7 +31,7 @@ public class GeneralCategory {
                                         Option.<Boolean>createBuilder()
                                                 .name(Component.translatable("qualityofqueso.options.enable_mod"))
                                                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.enable_mod.description")))
-                                                .binding(true, () -> client().general().enableMod, v -> client().general().enableMod = v)
+                                                .binding(true, () -> common().enableMod, v ->common().enableMod = v)
                                                 .controller(TickBoxControllerBuilder::create)
                                                 .build()
                                 )

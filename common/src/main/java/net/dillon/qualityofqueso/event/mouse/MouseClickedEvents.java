@@ -28,7 +28,7 @@ import static net.dillon.qualityofqueso.helper.ModConstants.MOVE_AMOUNT;
 import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.*;
 import static net.dillon.qualityofqueso.helper.SoundHelper.playButtonInactiveSound;
 import static net.dillon.qualityofqueso.helper.SoundHelper.playSafeSortSound;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
 
 /**
  * Handles mouse-clicking events.

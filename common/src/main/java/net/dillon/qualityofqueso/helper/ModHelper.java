@@ -35,8 +35,9 @@ import java.util.List;
 import static net.dillon.dillonlib.task.ClientTasks.*;
 import static net.dillon.qualityofqueso.helper.ModConstants.*;
 import static net.dillon.qualityofqueso.helper.SoundHelper.playDingSound;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
-import static net.dillon.qualityofqueso.option.OptionInstances.universal;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.universal;
+import static net.dillon.qualityofqueso.option.CommonOptionInstances.common;
 
 /**
  * Utility class for the Quality of Queso mod.
@@ -62,7 +63,7 @@ public class ModHelper {
         }
 
         // Otherwise, return if enableMod is enabled
-        return client().general().enableMod;
+        return common().enableMod;
     }
 
     /**
@@ -179,7 +180,7 @@ public class ModHelper {
         if (ONE_SECOND_PASSED > 0) {
             ONE_SECOND_PASSED--;
         } else if (!isCurrentLevelNull()) {
-            client().misc().levelPlaytimes.merge(getLevelKey(), 1L, Long::sum);
+            client().dingsAndAlarms().levelPlaytimes.merge(getLevelKey(true), 1L, Long::sum);
             ONE_SECOND_PASSED = DEFAULT_ONE_SECOND_PASSED_COOLDOWN;
         }
 
@@ -188,7 +189,7 @@ public class ModHelper {
         Timers.tickGameTimer(STOPWATCHES, true);
 
         // Play alarm triggered sound
-        if (client().misc().alarmSounds && ALARM_TRIGGERED && ALARM_TRIGGERED_COOLDOWN == 0) {
+        if (client().dingsAndAlarms().alarmSounds && ALARM_TRIGGERED && ALARM_TRIGGERED_COOLDOWN == 0) {
             playDingSound(OtherSoundEvents.ALARM_RINGING);
             ALARM_TRIGGERED_COOLDOWN = DEFAULT_ALARM_TRIGGERED_COOLDOWN;
         }

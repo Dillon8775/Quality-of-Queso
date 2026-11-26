@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import net.blay09.mods.kuma.api.KeyModifier;
 import net.blay09.mods.kuma.api.Kuma;
 import net.blay09.mods.kuma.api.ManagedKeyMapping;
+import net.dillon.dillonlib.util.TickValue;
 import net.dillon.qualityofqueso.option.ModClientOptions;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.OptionInstance;
@@ -21,6 +22,7 @@ import static net.dillon.qualityofqueso.helper.MethodHelper.kumaKey;
  * Utility class for option lists.
  */
 public class ModOptionUtil {
+    public static final int ITEM_FRAME_GLOW_DURATION_MAX_VALUE = new TickValue(3).toTicksMinutes();
 
     /**
      * @return a server-side option.
@@ -85,6 +87,17 @@ public class ModOptionUtil {
         }
 
         return String.format("%d:%02d %s", hour12, minute, suffix);
+    }
+
+    /**
+     * @return the formatted item frame glow duration.
+     */
+    public static Component formattedItemFrameGlowDuration(int value) {
+        if (value == 0) {
+            return Component.literal("Indefinite").withStyle(ChatFormatting.RED);
+        }
+
+        return Component.literal(new TickValue(value).formattedFromTick());
     }
 
     /**

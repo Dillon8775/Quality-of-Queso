@@ -5,7 +5,7 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import static net.dillon.dillonlib.task.ClientTasks.getGuiHeight;
 import static net.dillon.qualityofqueso.helper.GuiHelper.drawVisualTimeClock;
 import static net.dillon.qualityofqueso.helper.GuiHelper.isPositioningElements;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
 
 /**
  * Holds the {@code Visual Clock} to extract.

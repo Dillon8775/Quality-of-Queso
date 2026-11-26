@@ -12,6 +12,7 @@ import net.dillon.qualityofqueso.server.LockedInventoryStorage;
 import net.dillon.qualityofqueso.server.PendingManualPickup;
 import net.dillon.qualityofqueso.sound.OtherSoundEvents;
 import net.dillon.qualityofqueso.util.GlowCountdown;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -28,8 +29,8 @@ import net.minecraft.world.phys.Vec3;
 import java.util.List;
 
 import static net.dillon.qualityofqueso.container.ShulkerSyncer.*;
+import static net.dillon.qualityofqueso.option.CommonOptionInstances.common;
 import static net.dillon.qualityofqueso.option.ModClientOptions.getFormattedGlowDuration;
-import static net.dillon.qualityofqueso.option.OptionInstances.common;
 import static net.dillon.qualityofqueso.sound.ModSoundEvents.getSoundFromRegistration;
 
 /**
@@ -164,7 +165,7 @@ public class ServerPacketHandlers {
      * Applies glow or clear behavior to nearby item frames based on payload options.
      */
     public static void handleGlowPacket(ServerPlayer player, String query, boolean matchCase, boolean clear, int timer, int radius) {
-        if (!common().itemFrameSearching) {
+        if (!common().enableMod || !common().itemFrameSearching) {
             return;
         }
 
@@ -210,28 +211,28 @@ public class ServerPacketHandlers {
         }
 
         if (clear) {
-            player.sendSystemMessage(Component.translatable("qualityofqueso.item_frame_searcher.cleared", searched), false);
+            player.sendSystemMessage(Component.translatable("qualityofqueso.item_frame_searcher.cleared", searched).withStyle(ChatFormatting.BLUE), false);
             playSound(player, OtherSoundEvents.ITEM_FRAMES_GLOW_REMOVED, 1.0F);
             return;
         }
 
         if (nearbyFrames.isEmpty()) {
             player.sendSystemMessage(matchCase ?
-                    Component.translatable("qualityofqueso.item_frame_searcher.found_none.match_case", searched, query) :
-                    Component.translatable("qualityofqueso.item_frame_searcher.found_none", searched, query), false);
+                    Component.translatable("qualityofqueso.item_frame_searcher.found_none.match_case", searched, query).withStyle(ChatFormatting.RED) :
+                    Component.translatable("qualityofqueso.item_frame_searcher.found_none", searched, query).withStyle(ChatFormatting.RED), false);
             playSound(player, OtherSoundEvents.ITEM_FRAME_SEARCH_FAILED, 2.0F);
             return;
         }
 
         if (timer == 0) {
             player.sendSystemMessage(matchCase ?
-                    Component.translatable("qualityofqueso.item_frame_searcher.without_timer.match_case", searched, query) :
-                    Component.translatable("qualityofqueso.item_frame_searcher.without_timer", searched, query));
+                    Component.translatable("qualityofqueso.item_frame_searcher.without_timer.match_case", searched, query).withStyle(ChatFormatting.GREEN) :
+                    Component.translatable("qualityofqueso.item_frame_searcher.without_timer", searched, query).withStyle(ChatFormatting.GREEN));
         } else {
             String formattedTime = getFormattedGlowDuration(timer);
             player.sendSystemMessage(matchCase ?
-                    Component.translatable("qualityofqueso.item_frame_searcher.with_timer.match_case", searched, query, formattedTime) :
-                    Component.translatable("qualityofqueso.item_frame_searcher.with_timer", searched, query, formattedTime), false);
+                    Component.translatable("qualityofqueso.item_frame_searcher.with_timer.match_case", searched, query, formattedTime).withStyle(ChatFormatting.GREEN) :
+                    Component.translatable("qualityofqueso.item_frame_searcher.with_timer", searched, query, formattedTime).withStyle(ChatFormatting.GREEN), false);
         }
         playSound(player, OtherSoundEvents.ITEM_FRAMES_FOUND, 1.0F);
     }

@@ -16,7 +16,7 @@ public class ManagementButtons {
     private ManagementButton searchTransportables;
     private ManagementButton alwaysQuickMove;
     private ManagementButton clearExcludedSlots;
-    private ManagementButton bulkSelect;
+    private ManagementButton bulk;
     private ManagementButton lockInventory;
 
     public ManagementButton getTransferContainer() {
@@ -59,8 +59,8 @@ public class ManagementButtons {
         return clearExcludedSlots;
     }
 
-    public ManagementButton getBulkSelect() {
-        return bulkSelect;
+    public ManagementButton getBulk() {
+        return bulk;
     }
 
     public ManagementButton getLockInventory() {
@@ -107,8 +107,8 @@ public class ManagementButtons {
         clearExcludedSlots = button;
     }
 
-    public void setBulkSelect(ManagementButton button) {
-        bulkSelect = button;
+    public void setBulk(ManagementButton button) {
+        bulk = button;
     }
 
     public void setLockInventory(ManagementButton button) {

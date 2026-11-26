@@ -12,7 +12,7 @@ import static net.dillon.dillonlib.task.ClientTasks.getGuiHeight;
 import static net.dillon.qualityofqueso.helper.GuiHelper.*;
 import static net.dillon.qualityofqueso.helper.ModConstants.*;
 import static net.dillon.qualityofqueso.helper.ModHelper.equipmentSlots;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
 
 /**
  * Holds the {@code Armor Status} to extract.

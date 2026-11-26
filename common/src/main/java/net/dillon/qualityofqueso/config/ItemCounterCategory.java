@@ -8,7 +8,7 @@ import net.dillon.qualityofqueso.option.eum.hud.ItemCounter;
 import net.minecraft.network.chat.Component;
 
 import static net.dillon.qualityofqueso.config.ConfigurationScreen.fixedSizeImage;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
 
 /**
  * The item counter optons category for the {@link ConfigurationScreen}.

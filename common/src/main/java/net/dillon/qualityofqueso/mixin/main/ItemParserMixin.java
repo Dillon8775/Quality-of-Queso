@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import static net.dillon.qualityofqueso.option.OptionInstances.common;
+import static net.dillon.qualityofqueso.option.CommonOptionInstances.common;
 
 @Predicated
 @Dill(env = DillEnv.COMMON)
@@ -30,7 +30,7 @@ public class ItemParserMixin {
      */
     @Inject(method = "parse(Lcom/mojang/brigadier/StringReader;)Lnet/minecraft/commands/arguments/item/ItemInput;", at = @At("HEAD"), cancellable = true)
     private void modifyItemParsing(StringReader reader, CallbackInfoReturnable<ItemInput> cir) {
-        if (!common().optimizeItemArgument) {
+        if (!common().enableMod || !common().optimizeItemArgument) {
             return;
         }
 

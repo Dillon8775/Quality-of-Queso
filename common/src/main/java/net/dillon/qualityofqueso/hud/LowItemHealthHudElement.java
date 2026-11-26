@@ -5,7 +5,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 
 import static net.dillon.qualityofqueso.helper.GuiHelper.getItemHealthPercentage;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
 
 /**
  * Extracts items with low durability.

@@ -20,7 +20,7 @@ import net.minecraft.sounds.SoundEvents;
 
 import static net.dillon.dillonlib.task.ClientTasks.*;
 import static net.dillon.qualityofqueso.helper.ModConstants.*;
-import static net.dillon.qualityofqueso.option.OptionInstances.universal;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.universal;
 
 /**
  * A button to manage the level you are playing on.

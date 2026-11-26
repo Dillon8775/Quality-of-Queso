@@ -12,9 +12,8 @@ import net.minecraft.commands.arguments.IntegerArgument;
 import net.minecraft.commands.arguments.StringArgument;
 import net.minecraft.network.chat.Component;
 
+import static net.dillon.qualityofqueso.option.CommonOptionInstances.common;
 import static net.dillon.qualityofqueso.option.ModClientOptions.getFormattedGlowDuration;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
-import static net.dillon.qualityofqueso.option.OptionInstances.common;
 import static net.dillon.qualityofqueso.packet.ServerPacketHandlers.handleGlowPacket;
 
 /**
@@ -31,8 +30,8 @@ public class QuesoItemFrameSearcherCommand {
      */
     private static int execute(CommandSourceStack source, String query, boolean clear, int timer, int radius) {
         // Only works if item frame searching and the mod are enabled; checked here because
-        if (!common().itemFrameSearching || !client().general().enableMod) {
-            source.sendFailure(Component.translatable("qualityofqueso.item_frame_searcher_command.disabled"));
+        if (!common().itemFrameSearching || !common().enableMod) {
+            source.sendFailure(Component.translatable("qualityofqueso.command.disabled"));
             return 0;
         }
 
@@ -61,9 +60,10 @@ public class QuesoItemFrameSearcherCommand {
                         .then(
                                 Commands.literal("help")
                                         .executes(context -> {
-                                            context.getSource().sendSuccess(() -> Component.translatable("qualityofqueso.item_frame_searcher_command.help"), false);
-                                            return 0;
-                                        })
+                                                    context.getSource().sendSuccess(() -> Component.translatable("qualityofqueso.item_frame_searcher_command.help"), false);
+                                                    return 0;
+                                                }
+                                        )
                         )
                         .then(
                                 Commands.literal("clear") // Clear argument, which removes all glow from item frames
@@ -73,7 +73,7 @@ public class QuesoItemFrameSearcherCommand {
                                                         "",
                                                         true,
                                                         0,
-                                                        client().searching().itemFrameSearchRadius
+                                                        150
                                                 )
                                         )
                                         .then( // Radius for the clear argument
@@ -99,7 +99,7 @@ public class QuesoItemFrameSearcherCommand {
                                                                         getItem(context),
                                                                         false,
                                                                         0,
-                                                                        client().searching().itemFrameSearchRadius
+                                                                        150
                                                                 )
                                                         )
                                                         .then( // Radius argument for searching item frames

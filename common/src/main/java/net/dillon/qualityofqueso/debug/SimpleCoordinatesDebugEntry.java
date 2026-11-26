@@ -9,6 +9,7 @@ import org.jspecify.annotations.Nullable;
 
 import static net.dillon.dillonlib.task.ClientTasks.getLocalPlayer;
 import static net.dillon.dillonlib.util.Arithmetics.roundToTenths;
+import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
 
 /**
  * A simple hud entry to display the player's coordinates. Just the coordinates alone.
@@ -17,6 +18,10 @@ public class SimpleCoordinatesDebugEntry extends ModDebugEntry {
 
     @Override
     public void display(DebugScreenDisplayer lines, @Nullable Level serverOrClientLevel, @Nullable LevelChunk levelChunk, @Nullable LevelChunk levelChunk1) {
+        if (!modEnabled()) {
+            return;
+        }
+
         // Return out if the player isn't in a world, or the player is null
         if (serverOrClientLevel == null) {
             return;

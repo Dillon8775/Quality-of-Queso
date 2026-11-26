@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import static net.dillon.dillonlib.task.ClientTasks.drawTooltip;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
 
 @Mixin(PauseScreen.class)
 public class PauseScreenMixin extends Screen {
@@ -30,7 +30,7 @@ public class PauseScreenMixin extends Screen {
      */
     @ModifyExpressionValue(method = "createPauseMenu", at = @At(value = "NEW", target = "(IILnet/minecraft/network/chat/Component;Lnet/minecraft/client/gui/components/Button$OnPress;Lnet/minecraft/client/gui/components/Tooltip;Ljava/util/function/Predicate;)Lnet/minecraft/client/gui/screens/reporting/DraftIconButton;"))
     private DraftIconButton grayoutButton(DraftIconButton button) {
-        if (!client().misc().antiRageQuit) {
+        if (!client().gui().antiRageQuit) {
             return button;
         }
 
@@ -44,7 +44,7 @@ public class PauseScreenMixin extends Screen {
      */
     @Inject(method = "extractRenderState", at = @At("TAIL"))
     private void tooltipForDisconnectButton(GuiGraphicsExtractor graphics, CallbackInfo ci) {
-        if (!client().misc().antiRageQuit || !client().general().tooltips.enabled() || disconnectButton == null || !disconnectButton.isHovered()) {
+        if (!client().gui().antiRageQuit || !client().general().tooltips.enabled() || disconnectButton == null || !disconnectButton.isHovered()) {
             return;
         }
 

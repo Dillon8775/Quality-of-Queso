@@ -1,33 +1,32 @@
 package net.dillon.qualityofqueso.debug;
 
 import net.dillon.dillonlib.client.component.DebugBuilder;
+import net.dillon.dillonlib.client.component.LibDebugScreenEntry;
 import net.minecraft.client.gui.components.debug.DebugEntryCategory;
 import net.minecraft.client.gui.components.debug.DebugGroup;
-import net.minecraft.client.gui.components.debug.DebugScreenEntry;
 import net.minecraft.client.gui.components.debug.DebugScreenEntryStatus;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceKey;
 
-import java.util.Map;
+import java.util.List;
 
 import static net.dillon.dillonlib.client.component.DebugBuilder.basicDebugCategory;
-import static net.dillon.dillonlib.factory.ClientFactories.createDebugEntryKey;
+import static net.dillon.dillonlib.factory.ClientFactories.createLibDebugEntryKey;
 import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
 
 /**
  * All debug hud entries.
  */
 public class ModDebugScreenEntries {
-    public static final ResourceKey<DebugScreenEntry> DATE = key("date");
-    public static final ResourceKey<DebugScreenEntry> IN_GAME_TIME = key("in_game_time");
-    public static final ResourceKey<DebugScreenEntry> REAL_LIFE_TIME = key("real_life_time");
-    public static final ResourceKey<DebugScreenEntry> ALARMS_AND_TIMERS = key("alarms_and_timers");
-    public static final ResourceKey<DebugScreenEntry> SIMPLE_COORDINATES = key("simple_coordinates");
-    public static final ResourceKey<DebugScreenEntry> ACCURATE_FACING = key("accurate_facing");
-    public static final ResourceKey<DebugScreenEntry> ROTATION = key("rotation");
-    public static final ResourceKey<DebugScreenEntry> PLAY_TIME = key("play_time");
-    public static final ResourceKey<DebugScreenEntry> POTION_EFFECTS = key("potion_effects");
+    public static final LibDebugScreenEntry SIMPLE_COORDINATES = create("simple_coordinates");
+    public static final LibDebugScreenEntry ACCURATE_FACING = create("accurate_facing");
+    public static final LibDebugScreenEntry ROTATION = create("rotation");
+    public static final LibDebugScreenEntry PLAY_TIME = create("play_time", DebugScreenEntryStatus.IN_OVERLAY);
+    public static final LibDebugScreenEntry POTION_EFFECTS = create("potion_effects", DebugScreenEntryStatus.IN_OVERLAY);
+    public static final LibDebugScreenEntry ALARMS_AND_TIMERS = create("alarms_and_timers", DebugScreenEntryStatus.ALWAYS_ON);
+    public static final LibDebugScreenEntry LOCAL_TIME = create("local_time", DebugScreenEntryStatus.ALWAYS_ON);
+    public static final LibDebugScreenEntry DATE = create("date");
+    public static final LibDebugScreenEntry IN_GAME_TIME = create("in_game_time");
 
     protected static final DebugGroup DATE_AND_TIME_GROUP = DebugBuilder.leftAlignedDebugGroup(Component.translatable("qualityofqueso.debug.date_and_time"), () -> client().accessibility().debugTextAlignment);
     protected static final DebugGroup ALARMS_AND_TIMERS_GROUP = DebugBuilder.alignedDebugGroup(Component.translatable("qualityofqueso.debug.alarms_and_timers"), () -> client().accessibility().debugTextAlignment);
@@ -36,10 +35,17 @@ public class ModDebugScreenEntries {
     protected static final DebugEntryCategory MOD_CATEGORY = basicDebugCategory(Component.translatable("qualityofqueso"));
 
     /**
+     * @return a debug entry key with a default status.
+     */
+    private static LibDebugScreenEntry create(String name, DebugScreenEntryStatus defaultStatus) {
+        return createLibDebugEntryKey(qoqIdentifier(name), defaultStatus);
+    }
+
+    /**
      * @return a debug entry key.
      */
-    private static ResourceKey<DebugScreenEntry> key(String name) {
-        return createDebugEntryKey(qoqIdentifier(name));
+    private static LibDebugScreenEntry create(String name) {
+        return create(name, DebugScreenEntryStatus.NEVER);
     }
 
     /**
@@ -47,11 +53,11 @@ public class ModDebugScreenEntries {
      */
     public static void createProfile() {
         DebugBuilder.createCustomProfile(
-                Map.of(
-                        REAL_LIFE_TIME, DebugScreenEntryStatus.ALWAYS_ON,
-                        ALARMS_AND_TIMERS, DebugScreenEntryStatus.ALWAYS_ON,
-                        PLAY_TIME, DebugScreenEntryStatus.IN_OVERLAY,
-                        POTION_EFFECTS, DebugScreenEntryStatus.IN_OVERLAY
+                List.of(
+                        LOCAL_TIME,
+                        ALARMS_AND_TIMERS,
+                        PLAY_TIME,
+                        POTION_EFFECTS
                 )
         );
     }

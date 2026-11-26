@@ -15,8 +15,8 @@ import java.awt.*;
 
 import static net.dillon.dillonlib.task.ClientTasks.getMinecraft;
 import static net.dillon.qualityofqueso.config.ConfigurationScreen.fixedSizeImage;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
-import static net.dillon.qualityofqueso.option.OptionInstances.mixins;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.mixins;
 import static net.dillon.qualityofqueso.util.ModOptionUtil.fabricOption;
 
 /**
@@ -81,8 +81,8 @@ public class GuiCategory {
         Option<Boolean> forceAntiRageQuit = Option.<Boolean>createBuilder()
                 .name(Component.translatable("qualityofqueso.options.force_anti_rage_quit"))
                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.force_anti_rage_quit.description")))
-                .binding(false, () -> client().misc().forceAntiRageQuit, v -> {
-                    client().misc().forceAntiRageQuit = v;
+                .binding(false, () -> client().gui().forceAntiRageQuit, v -> {
+                    client().gui().forceAntiRageQuit = v;
                     getMinecraft().options.quitShortcuts().set(!v);
                     getMinecraft().options.save();
                 })
@@ -186,7 +186,7 @@ public class GuiCategory {
                                         Option.<Boolean>createBuilder()
                                                 .name(Component.translatable("qualityofqueso.options.anti_rage_quit"))
                                                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.anti_rage_quit.description")))
-                                                .binding(false, () -> client().misc().antiRageQuit, v -> client().misc().antiRageQuit = v)
+                                                .binding(false, () -> client().gui().antiRageQuit, v -> client().gui().antiRageQuit = v)
                                                 .controller(BooleanControllerBuilder::create)
                                                 .addListener((opt, event) -> {
                                                     if (event == OptionEventListener.Event.STATE_CHANGE || event == OptionEventListener.Event.INITIAL) {

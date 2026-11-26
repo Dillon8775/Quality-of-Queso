@@ -47,7 +47,7 @@ import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
 import static net.dillon.qualityofqueso.helper.SoundHelper.playBundleInsertSound;
 import static net.dillon.qualityofqueso.helper.SoundHelper.playButtonInactiveSound;
 import static net.dillon.qualityofqueso.hud.ModHudElement.isLockedHotbarSlot;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
 
 @Mixin(MultiPlayerGameMode.class)
 public class MultiPlayerGameModeMixin {

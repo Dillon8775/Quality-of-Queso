@@ -22,9 +22,9 @@ import static net.dillon.dillonlib.client.component.GridBuilder.createRow;
 import static net.dillon.dillonlib.task.ClientTasks.*;
 import static net.dillon.dillonlib.widespread.DillonsWidgets.createMultiLineText;
 import static net.dillon.dillonlib.widespread.DillonsWidgets.createOption;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.updateClient;
 import static net.dillon.qualityofqueso.option.ModClientOptions.getGlowDuration;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
-import static net.dillon.qualityofqueso.option.OptionInstances.updateClient;
 
 /**
  * A utility screen to search for all nearby item frames. If an item frame is found, it glows.

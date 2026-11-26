@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import static net.dillon.qualityofqueso.helper.ModHelper.canApplyEffect;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
 
 @Predicated
 @Mixin(AbstractClientPlayer.class)

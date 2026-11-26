@@ -22,7 +22,7 @@ import static net.dillon.dillonlib.task.ClientTasks.*;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.isInventoryScreen;
 import static net.dillon.qualityofqueso.helper.SoundHelper.playBundleInsertSound;
 import static net.dillon.qualityofqueso.helper.SoundHelper.playButtonInactiveSound;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
 
 /**
  * Handles sorting features.

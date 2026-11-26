@@ -22,7 +22,7 @@ import static net.dillon.dillonlib.widespread.DillonsWidgets.createMultiLineText
 import static net.dillon.dillonlib.widespread.DillonsWidgets.createOption;
 import static net.dillon.qualityofqueso.helper.GuiHelper.drawVisualTimeClock;
 import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
 
 /**
  * A utility screen to change the visual time client-side.

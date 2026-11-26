@@ -8,9 +8,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextColor;
 
 import static net.dillon.dillonlib.task.ClientTasks.executeIfClientPlayer;
+import static net.dillon.dillonlib.task.ClientTasks.getCurrentServerIp;
 import static net.dillon.qualityofqueso.helper.ModConstants.MOD_INFO;
 import static net.dillon.qualityofqueso.helper.ModHelper.*;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
 
 /**
  * Client events for Quality of Queso.
@@ -22,17 +23,19 @@ public class ClientEvents {
     }
 
     public static void onPlayerJoin(Minecraft minecraft) {
-        if (isOnServer() && client().misc().forceAntiRageQuit) {
-            client().misc().antiRageQuit = true;
+        if (isOnServer() && client().gui().forceAntiRageQuit) {
+            client().gui().antiRageQuit = true;
             saveAndApplyChanges();
         }
 
         executeIfClientPlayer(localPlayer -> {
             if (client().accessibility().serverWarnings && isOnServer()) {
                 for (String server : client().accessibility().bannedServers) {
-                    if (minecraft.getCurrentServer().ip.contains(server)) {
+                    String serverIp = getCurrentServerIp(false);
+
+                    if (serverIp.contains(server)) {
                         localPlayer.sendSystemMessage(Component.translatable("qualityofqueso.gui.banned_server",
-                                Component.literal(minecraft.getCurrentServer().ip).withStyle(ChatFormatting.DARK_RED)));
+                                Component.literal(serverIp).withStyle(ChatFormatting.DARK_RED)));
                     }
                 }
             }

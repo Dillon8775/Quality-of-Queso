@@ -5,7 +5,7 @@ import net.minecraft.client.Minecraft;
 import java.time.LocalTime;
 
 import static net.dillon.dillonlib.task.ClientTasks.isCurrentLevelNull;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
 import static net.dillon.qualityofqueso.util.ModOptionUtil.visualTimeStepToTicks;
 
 /**

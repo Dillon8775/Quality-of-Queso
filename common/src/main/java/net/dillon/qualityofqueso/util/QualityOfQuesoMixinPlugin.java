@@ -32,8 +32,8 @@ public class QualityOfQuesoMixinPlugin extends MixinPluginUtil {
                 ),
                 PredicateEntry.ofDebug(
                         PredicateEntry.ddouble(
-                                "render.FogRendererMixin",
-                                "render.CameraMixin"
+                                "FogRendererMixin",
+                                "CameraMixin"
                         ),
                         !MixinOptions.INSTANCE.get().fogMixins,
                         "\"fog_mixins\" are disabled."

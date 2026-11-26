@@ -9,14 +9,13 @@ import net.dillon.qualityofqueso.option.eum.searching.QuickSearch;
 import net.dillon.qualityofqueso.option.eum.searching.SearchBarColor;
 import net.dillon.qualityofqueso.option.eum.searching.SearchBarPosition;
 import net.dillon.qualityofqueso.util.ModOptionUtil;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
 import java.awt.*;
 
 import static net.dillon.qualityofqueso.config.ConfigurationScreen.fixedSizeImage;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
-import static net.dillon.qualityofqueso.option.OptionInstances.common;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
+import static net.dillon.qualityofqueso.option.CommonOptionInstances.common;
 
 /**
  * The searching options category for the {@link ConfigurationScreen}.
@@ -59,23 +58,9 @@ public class SearchingCategory {
                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.item_frame_search_glow_duration.tooltip")))
                 .binding(0, () -> client().searching().itemFrameSearchGlowDuration, v -> client().searching().itemFrameSearchGlowDuration = v)
                 .controller(o -> IntegerSliderControllerBuilder.create(o)
-                        .range(0, 180)
+                        .range(0, ModOptionUtil.ITEM_FRAME_GLOW_DURATION_MAX_VALUE)
                         .step(1)
-                        .formatValue(v -> {
-                            if (v == 0) {
-                                return Component.literal("Indefinite").withStyle(ChatFormatting.RED);
-                            } else if (v < 60) {
-                                return Component.literal(v + "s");
-                            } else {
-                                int minutes = v / 60;
-                                int seconds = v % 60;
-                                if (seconds == 0) {
-                                    return Component.literal(minutes + "m");
-                                } else {
-                                    return Component.literal(minutes + "m " + seconds + "s");
-                                }
-                            }
-                        })
+                        .formatValue(ModOptionUtil::formattedItemFrameGlowDuration)
                 )
                 .build();
 

@@ -25,12 +25,21 @@
 - fix lock overlay
 - tooltip optimizations
 - change to highlighted slots
+- fixed things
+- enable mod is now common option
+- fixed client config loading on server
+- optimized item frame search commands and added /help commands
+- moved red armor tint to accessibility
+- optimizations to options
+- added dedicated debug screen entries config screen
+- improved mod enabled option
 
 - moved options around in file
 - command updates
 - increased item frame search radius to 512
 - playtime entry
 - bulk trade & craft into one button
+- fixed mixin plugin not working
 
 
 - Optimized tooltips.

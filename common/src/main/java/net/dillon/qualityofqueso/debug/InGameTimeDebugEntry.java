@@ -6,6 +6,8 @@ import net.minecraft.world.level.chunk.LevelChunk;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
+import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
+
 /**
  * A debug hud to display Minecraft's in-game time.
  */
@@ -13,6 +15,10 @@ public class InGameTimeDebugEntry extends ModDebugEntry {
 
     @Override
     public void display(@NonNull DebugScreenDisplayer lines, @Nullable Level serverOrClientLevel, @Nullable LevelChunk clientChunk, @Nullable LevelChunk chunk) {
+        if (!modEnabled()) {
+            return;
+        }
+
         // Return out of the mod isn't enabled, or the player is not in a world
         if (serverOrClientLevel == null) {
             return;

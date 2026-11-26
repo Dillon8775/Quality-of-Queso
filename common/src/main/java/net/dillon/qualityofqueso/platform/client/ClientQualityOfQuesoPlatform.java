@@ -13,6 +13,7 @@ import net.dillon.qualityofqueso.helper.ButtonHelper;
 import net.dillon.qualityofqueso.helper.ModConstants;
 import net.dillon.qualityofqueso.helper.ModHelper;
 import net.minecraft.client.gui.components.debug.DebugScreenEntry;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.core.Registry;
 import net.minecraft.core.WritableRegistry;
@@ -20,7 +21,10 @@ import net.minecraft.core.WritableRegistry;
 import java.util.List;
 import java.util.function.Function;
 
-public class ClientQualityOfQuesoPlatform extends ClientModPlatform {
+public abstract class ClientQualityOfQuesoPlatform extends ClientModPlatform {
+
+    @Override
+    public abstract boolean canSendPacket(LocalPlayer localPlayer);
 
     @Override
     public String modId() {
@@ -56,15 +60,15 @@ public class ClientQualityOfQuesoPlatform extends ClientModPlatform {
 
     @Override
     public void registerDebugEntries(WritableRegistry<DebugScreenEntry> registry) {
-        Registry.register(registry, ModDebugScreenEntries.DATE, new DateDebugEntry());
-        Registry.register(registry, ModDebugScreenEntries.IN_GAME_TIME, new InGameTimeDebugEntry());
-        Registry.register(registry, ModDebugScreenEntries.REAL_LIFE_TIME, new RealLifeTimeDebugEntry());
-        Registry.register(registry, ModDebugScreenEntries.ALARMS_AND_TIMERS, new AlarmsAndTimersDebugEntry());
-        Registry.register(registry, ModDebugScreenEntries.SIMPLE_COORDINATES, new SimpleCoordinatesDebugEntry());
-        Registry.register(registry, ModDebugScreenEntries.ROTATION, new RotationDebugEntry());
-        Registry.register(registry, ModDebugScreenEntries.ACCURATE_FACING, new AccurateFacingDebugEntry());
-        Registry.register(registry, ModDebugScreenEntries.PLAY_TIME, new PlayTimeDebugEntry());
-        Registry.register(registry, ModDebugScreenEntries.POTION_EFFECTS, new PotionEffectsDebugEntry());
+        Registry.register(registry, ModDebugScreenEntries.DATE.entry(), new DateDebugEntry());
+        Registry.register(registry, ModDebugScreenEntries.IN_GAME_TIME.entry(), new InGameTimeDebugEntry());
+        Registry.register(registry, ModDebugScreenEntries.LOCAL_TIME.entry(), new RealLifeTimeDebugEntry());
+        Registry.register(registry, ModDebugScreenEntries.ALARMS_AND_TIMERS.entry(), new AlarmsAndTimersDebugEntry());
+        Registry.register(registry, ModDebugScreenEntries.SIMPLE_COORDINATES.entry(), new SimpleCoordinatesDebugEntry());
+        Registry.register(registry, ModDebugScreenEntries.ROTATION.entry(), new RotationDebugEntry());
+        Registry.register(registry, ModDebugScreenEntries.ACCURATE_FACING.entry(), new AccurateFacingDebugEntry());
+        Registry.register(registry, ModDebugScreenEntries.PLAY_TIME.entry(), new PlayTimeDebugEntry());
+        Registry.register(registry, ModDebugScreenEntries.POTION_EFFECTS.entry(), new PotionEffectsDebugEntry());
         ModDebugScreenEntries.createProfile();
     }
 

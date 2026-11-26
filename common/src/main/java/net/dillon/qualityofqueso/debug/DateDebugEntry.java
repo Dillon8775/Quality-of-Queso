@@ -8,6 +8,8 @@ import org.jspecify.annotations.Nullable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
+
 /**
  * Displays the date in-game.
  */
@@ -15,6 +17,10 @@ public class DateDebugEntry extends ModDebugEntry {
 
     @Override
     public void display(DebugScreenDisplayer displayer, @Nullable Level serverOrClientLevel, @Nullable LevelChunk clientChunk, @Nullable LevelChunk serverChunk) {
+        if (!modEnabled()) {
+            return;
+        }
+
         // Display the date in-game
         LocalDate date = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE, MMMM d, yyyy");

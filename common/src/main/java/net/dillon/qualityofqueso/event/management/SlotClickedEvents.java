@@ -21,7 +21,7 @@ import static net.dillon.qualityofqueso.helper.ManagementHelper.isCraftingScreen
 import static net.dillon.qualityofqueso.helper.ManagementHelper.isInventoryScreen;
 import static net.dillon.qualityofqueso.helper.MethodHelper.getRecipeBookComponent;
 import static net.dillon.qualityofqueso.helper.MethodHelper.performClickSlot;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
 
 /**
  * Handles clicking slots.

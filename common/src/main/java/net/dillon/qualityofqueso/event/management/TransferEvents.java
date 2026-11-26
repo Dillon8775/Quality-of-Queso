@@ -32,7 +32,7 @@ import static net.dillon.qualityofqueso.helper.MethodHelper.performClickSlot;
 import static net.dillon.qualityofqueso.helper.ModConstants.MOVE_AMOUNT;
 import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.*;
 import static net.dillon.qualityofqueso.helper.SoundHelper.*;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
 
 /**
  * Handles transferring/basic management related things.

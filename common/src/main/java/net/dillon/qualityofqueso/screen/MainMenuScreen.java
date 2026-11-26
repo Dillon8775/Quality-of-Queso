@@ -10,6 +10,7 @@ import net.dillon.dillonlib.widespread.DillonsWidgets;
 import net.dillon.qualityofqueso.config.ConfigurationScreen;
 import net.dillon.qualityofqueso.helper.ButtonHelper;
 import net.dillon.qualityofqueso.helper.ModConstants;
+import net.dillon.qualityofqueso.helper.ModHelper;
 import net.dillon.qualityofqueso.keybind.ModKeyMappings;
 import net.dillon.qualityofqueso.widget.OpenVisualTimeGuiButton;
 import net.minecraft.ChatFormatting;
@@ -28,7 +29,8 @@ import static net.dillon.dillonlib.widespread.DillonsWidgets.finalizeHeaderAndFo
 import static net.dillon.qualityofqueso.helper.ModConstants.ITEM_FRAME_SEARCH;
 import static net.dillon.qualityofqueso.helper.ModConstants.MOD_INFO;
 import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
-import static net.dillon.qualityofqueso.option.OptionInstances.*;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.mixins;
 
 public class MainMenuScreen extends DillonLibScreen {
 
@@ -38,8 +40,6 @@ public class MainMenuScreen extends DillonLibScreen {
 
     @Override
     public void widgets() {
-        boolean modEnabled = modEnabled();
-
         AbstractWidget configure = createWidget(
                 Button.builder(
                         Component.translatable("qualityofqueso.menu.configure"),
@@ -62,14 +62,19 @@ public class MainMenuScreen extends DillonLibScreen {
                                 ITEM_FRAME_SEARCH,
                                 b -> openScreen(new ItemFrameSearchScreen(getScreen()))
                         )
-                        .tooltip(Component.translatable("qualityofqueso.item_frame_search_gui"))
                         .build(),
-                () -> modEnabled && common().itemFrameSearching && !isCurrentLevelNull()
+                ModKeyMappings::canSearchItemFrames,
+                isActive -> {
+                    if (!isActive) {
+                        return Component.translatable("qualityofqueso.item_frame_search_gui.disabled").withStyle(ChatFormatting.RED);
+                    }
+                    return Component.translatable("qualityofqueso.item_frame_search_gui");
+                }
         );
 
         AbstractWidget visualTime = createWidget(
                 new OpenVisualTimeGuiButton(),
-                () -> modEnabled && mixins().clockManagerMixin && !isCurrentLevelNull()
+                () -> modEnabled() && mixins().clockManagerMixin && !isCurrentLevelNull()
         );
 
         AbstractWidget hudPositions = createWidget(
@@ -78,7 +83,7 @@ public class MainMenuScreen extends DillonLibScreen {
                 }).tooltip(
                         Tooltip.create(Component.translatable("qualityofqueso.menu.hud_positions.tooltip"))
                 ).width(100).build(),
-                () -> modEnabled && !isCurrentLevelNull() && (!client().hud().armorStatus.off() || client().itemCounter().itemCounter.enabled())
+                () -> modEnabled() && !isCurrentLevelNull() && (!client().hud().armorStatus.off() || client().itemCounter().itemCounter.enabled())
         );
 
         AbstractWidget debugHuds = createWidget(
@@ -86,7 +91,7 @@ public class MainMenuScreen extends DillonLibScreen {
                 ).tooltip(
                         Tooltip.create(Component.translatable("qualityofqueso.menu.debug_huds.tooltip"))
                 ).width(100).build(),
-                () -> modEnabled
+                ModHelper::modEnabled
         );
 
         AbstractWidget packTemplate = createWidget(
@@ -95,6 +100,11 @@ public class MainMenuScreen extends DillonLibScreen {
                 ).tooltip(
                         Tooltip.create(Component.translatable("qualityofqueso.menu.resource_pack_template.tooltip"))
                 ).width(100).build()
+        );
+
+        AbstractWidget viewLastKnownEnderChestButton = createWidget(
+                ButtonHelper.createViewLastKnownEnderChestButton(),
+                ModHelper::modEnabled
         );
 
         GridBuilder builder = GridBuilder.create(this)
@@ -127,7 +137,7 @@ public class MainMenuScreen extends DillonLibScreen {
         utilities.addChild(visualTime);
         utilities.addChild(openItemFrameSearchGUI);
         utilities.addChild(ButtonHelper.createManageContainerDataButton());
-        utilities.addChild(ButtonHelper.createViewLastKnownEnderChestButton());
+        utilities.addChild(viewLastKnownEnderChestButton);
         builder.fillRowAndCenter(utilities);
 
         builder.getCurrentRow().addChild(debugHuds);

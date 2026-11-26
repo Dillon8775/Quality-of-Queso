@@ -11,7 +11,7 @@ import static net.dillon.dillonlib.task.ClientTasks.getGuiWidth;
 import static net.dillon.qualityofqueso.helper.GuiHelper.isPositioningElements;
 import static net.dillon.qualityofqueso.helper.ModConstants.LOCKED_SLOT_TEXTURE;
 import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
 
 /**
  * Holds {@code Locked Hotbar Slots} to extract.

@@ -7,6 +7,7 @@ import net.dillon.qualityofqueso.helper.ModConstants;
  */
 public class ModCommonOptions {
     public static final CommonOptionsHandler INSTANCE = new CommonOptionsHandler();
+    public boolean enableMod = true;
     public boolean itemFrameSearching = true;
     public boolean inventoryLocking = true;
     public boolean optimizeItemArgument = false;

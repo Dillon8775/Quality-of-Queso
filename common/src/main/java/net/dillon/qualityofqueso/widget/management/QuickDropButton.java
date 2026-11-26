@@ -11,7 +11,7 @@ import static net.dillon.qualityofqueso.helper.ModConstants.MOVE_ONE_PATH;
 import static net.dillon.qualityofqueso.helper.ModConstants.QUICK_DROP_BUTTON_NAME;
 import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.hasAllQuickDropModifiersDown;
 import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.hasDropOnlyOneItemModifierDown;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
 import static net.dillon.qualityofqueso.widget.management.ManagementSprites.managementIdentifier;
 
 /**

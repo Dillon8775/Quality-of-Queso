@@ -11,33 +11,7 @@ public class ConditionalMixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-        QualityOfQuesoMixinPlugin qoQMixinPlugin = new QualityOfQuesoMixinPlugin();
-        return !qoQMixinPlugin.shouldNotApply(targetClassName, mixinClassName);
-    }
-
-    @Override
-    public void onLoad(String mixinPackage) {
-    }
-
-    @Override
-    public String getRefMapperConfig() {
-        return null;
-    }
-
-    @Override
-    public void acceptTargets(Set<String> myTargets, Set<String> otherTargets) {
-    }
-
-    @Override
-    public List<String> getMixins() {
-        return null;
-    }
-
-    @Override
-    public void preApply(String s, org.objectweb.asm.tree.ClassNode classNode, String s1, IMixinInfo iMixinInfo) {
-    }
-
-    @Override
-    public void postApply(String s, org.objectweb.asm.tree.ClassNode classNode, String s1, IMixinInfo iMixinInfo) {
+        QualityOfQuesoMixinPlugin qoqMixinPlugin = new QualityOfQuesoMixinPlugin();
+        return !qoqMixinPlugin.shouldNotApply(targetClassName, mixinClassName);
     }
 }

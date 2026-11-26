@@ -15,8 +15,8 @@ import static net.dillon.qualityofqueso.helper.ModConstants.MOVE_AMOUNT;
 import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.canScrollMoveAndHasScrollModifierDown;
 import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.hasDropOnlyOneItemModifierDown;
 import static net.dillon.qualityofqueso.helper.SoundHelper.playSafeSortSound;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
-import static net.dillon.qualityofqueso.option.OptionInstances.updateClient;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.updateClient;
 
 /**
  * Handles mouse scrolling events.

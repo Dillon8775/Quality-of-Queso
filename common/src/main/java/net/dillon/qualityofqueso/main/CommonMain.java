@@ -13,7 +13,6 @@ import net.dillon.qualityofqueso.sound.ModSoundEvents;
 import java.util.Set;
 import java.util.TreeSet;
 
-import static net.dillon.qualityofqueso.helper.ModConstants.MOD_INFO;
 import static net.dillon.qualityofqueso.main.CommonEvents.registerPackets;
 
 /**
@@ -42,7 +41,7 @@ public class CommonMain {
             ModConstants.LOGGER.error("Please note that this version of Quality of Queso is in the alpha state, so there will be unknown bugs. Use at your own risk!");
         }
 
-        if (MOD_INFO.hasUpdate()) {
+        if (ModConstants.MOD_INFO.hasUpdate()) {
             ModConstants.LOGGER.warn("A newer version of Quality of Queso is available. Download it here: https://modrinth.com/mod/quality-of-queso/versions");
         }
     }

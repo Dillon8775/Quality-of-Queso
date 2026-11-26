@@ -21,7 +21,7 @@ import java.util.*;
 
 import static net.dillon.dillonlib.task.ClientTasks.getScreen;
 import static net.dillon.qualityofqueso.container.ContainerSyncer.worldKey;
-import static net.dillon.qualityofqueso.option.OptionInstances.containerData;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.containerData;
 
 /**
  * Handles persistent ender chest cache storage in container_data.json.

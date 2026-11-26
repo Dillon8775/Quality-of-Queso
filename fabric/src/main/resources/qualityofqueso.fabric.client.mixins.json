@@ -1,0 +1,20 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "mixinextras": {
+    "minVersion": "0.5.4"
+  },
+  "compatibilityLevel": "JAVA_25",
+  "package": "net.dillon.qualityofqueso.mixin",
+  "plugin": "net.dillon.qualityofqueso.mixin.ConditionalMixinPlugin",
+  "client": [
+    "fix.AbstractContainerScreenFix",
+    "fabric.FabricAbstractContainerScreenMixin",
+    "CameraMixin",
+    "FogRendererMixin",
+    "fabric.FabricItemStackMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

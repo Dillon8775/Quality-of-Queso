@@ -10,7 +10,7 @@ import static net.dillon.dillonlib.task.ClientTasks.getScreen;
 import static net.dillon.qualityofqueso.helper.GuiHelper.blitLockOverlay;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.buttonHovered;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.isContainerScreen;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
 
 /**
  * A management button that sorts all items in a container/player's inventory.

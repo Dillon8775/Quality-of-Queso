@@ -7,12 +7,14 @@ import dev.isxander.yacl3.api.controller.TickBoxControllerBuilder;
 import net.blay09.mods.balm.Balm;
 import net.dillon.dillonlib.client.util.DebugTextAlignment;
 import net.dillon.dillonlib.platform.info.Release;
+import net.dillon.qualityofqueso.option.CommonOptionInstances;
 import net.dillon.qualityofqueso.option.eum.general.Theme;
 import net.dillon.qualityofqueso.platform.QualityOfQuesoPlatforms;
 import net.dillon.qualityofqueso.util.ModOptionUtil;
 import net.minecraft.network.chat.Component;
 
-import static net.dillon.qualityofqueso.option.OptionInstances.*;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.mixins;
 
 /**
  * The accessibility options category for the {@link ConfigurationScreen}.
@@ -26,6 +28,7 @@ public class AccessibilityCategory {
                 .group(
                         OptionGroup.createBuilder()
                                 .name(Component.translatable("qualityofqueso.options.accessibility.user_accessible"))
+                                .description(OptionDescription.of())
                                 .option(
                                         Option.<Boolean>createBuilder()
                                                 .name(Component.translatable("qualityofqueso.options.use_legacy_textures"))
@@ -86,7 +89,7 @@ public class AccessibilityCategory {
                                                                 Component.translatable("qualityofqueso.options.optimize_item_argument.description")
                                                         )
                                                 ))
-                                                .binding(false, () -> common().optimizeItemArgument, v -> common().optimizeItemArgument = v)
+                                                .binding(false, () -> CommonOptionInstances.common().optimizeItemArgument, v -> CommonOptionInstances.common().optimizeItemArgument = v)
                                                 .controller(TickBoxControllerBuilder::create)
                                                 .available(mixins().itemArgumentMixin)
                                                 .build()
@@ -109,17 +112,6 @@ public class AccessibilityCategory {
                                                 .build()
                                 )
                                 .option(
-                                        Option.<DebugTextAlignment>createBuilder()
-                                                .name(Component.translatable("dillonlib.option.debug_text_alignment"))
-                                                .description(OptionDescription.of(Component.translatable("dillonlib.option.debug_text_alignment.description")))
-                                                .binding(DebugTextAlignment.AUTO, () -> client().accessibility().debugTextAlignment, v -> client().accessibility().debugTextAlignment = v)
-                                                .controller(o -> EnumControllerBuilder.create(o)
-                                                        .enumClass(DebugTextAlignment.class)
-                                                        .formatValue(v -> Component.translatable(v.getSerializedName())))
-                                                .flag(OptionFlag.GAME_RESTART)
-                                                .build()
-                                )
-                                .option(
                                         Option.<Boolean>createBuilder()
                                                 .name(Component.translatable("qualityofqueso.options.ignore_fabric_tags"))
                                                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.ignore_fabric_tags.description")))
@@ -135,11 +127,31 @@ public class AccessibilityCategory {
                                 .name(Component.translatable("qualityofqueso.options.accessibility.appearance"))
                                 .option(
                                         Option.<Boolean>createBuilder()
+                                                .name(Component.translatable("qualityofqueso.options.red_armor_tint"))
+                                                .description(OptionDescription.of(Component.translatable("qualityofqueso.options.red_armor_tint.description")))
+                                                .binding(false, () -> client().dingsAndAlarms().redArmorTint, v -> client().dingsAndAlarms().redArmorTint = v)
+                                                .controller(BooleanControllerBuilder::create)
+                                                .available(mixins().redArmorTintMixin)
+                                                .build()
+                                )
+                                .option(
+                                        Option.<Boolean>createBuilder()
                                                 .name(Component.translatable("qualityofqueso.options.darker_overlay"))
                                                 .description(OptionDescription.of(Component.translatable("qualityofqueso.options.darker_overlay.description")))
                                                 .binding(false, () -> client().accessibility().darkerOverlay, v -> client().accessibility().darkerOverlay = v)
                                                 .controller(BooleanControllerBuilder::create)
                                                 .available(client().general().theme == Theme.VANILLA)
+                                                .build()
+                                )
+                                .option(
+                                        Option.<DebugTextAlignment>createBuilder()
+                                                .name(Component.translatable("dillonlib.option.debug_text_alignment"))
+                                                .description(OptionDescription.of(Component.translatable("dillonlib.option.debug_text_alignment.description")))
+                                                .binding(DebugTextAlignment.AUTO, () -> client().accessibility().debugTextAlignment, v -> client().accessibility().debugTextAlignment = v)
+                                                .controller(o -> EnumControllerBuilder.create(o)
+                                                        .enumClass(DebugTextAlignment.class)
+                                                        .formatValue(v -> Component.translatable(v.getSerializedName())))
+                                                .flag(OptionFlag.GAME_RESTART)
                                                 .build()
                                 )
                                 .build()

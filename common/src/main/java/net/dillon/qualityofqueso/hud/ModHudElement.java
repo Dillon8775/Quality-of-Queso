@@ -18,7 +18,7 @@ import static net.dillon.dillonlib.task.ClientTasks.*;
 import static net.dillon.qualityofqueso.helper.GuiHelper.getItemHealthPercentage;
 import static net.dillon.qualityofqueso.helper.GuiHelper.getMainHandStack;
 import static net.dillon.qualityofqueso.helper.ModConstants.*;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
 
 /**
  * Holds common methods for hud elements.

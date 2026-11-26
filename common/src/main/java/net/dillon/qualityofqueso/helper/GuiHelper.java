@@ -43,7 +43,7 @@ import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
 import static net.dillon.qualityofqueso.helper.MethodHelper.*;
 import static net.dillon.qualityofqueso.helper.ModConstants.*;
 import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
 
 /**
  * Utility class for GUI-related things.

@@ -20,7 +20,6 @@ import java.util.*;
 import java.util.List;
 
 import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
 
 /**
  * Constant values for Quality of Queso.
@@ -102,7 +101,7 @@ public class ModConstants {
 
     // Other global variables
     public static Map<Integer, Set<Integer>> SAVED_EXCLUDED_SLOTS = new HashMap<>();
-    public static CurrentSortingMode GLOBAL_SORTING_MODE = client().sorting().currentSortingMode;
+    public static CurrentSortingMode GLOBAL_SORTING_MODE;
     public static CursorKey CURSOR_KEY = CursorKey.NULL;
 
     // Default Minecraft sprites

@@ -5,22 +5,15 @@ import java.util.function.Consumer;
 import static net.dillon.dillonlib.util.BaseOptions.guardedInstance;
 
 /**
- * Getters for all Quality of Queso's option instances.
+ * Getters for all Quality of Queso's {@code client} option instances.
  */
-public class OptionInstances {
+public class ClientOptionInstances {
 
     /**
      * @return the client-options.
      */
     public static ModClientOptions client() {
         return guardedInstance(ModClientOptions.INSTANCE.get());
-    }
-
-    /**
-     * @return the common-options.
-     */
-    public static ModCommonOptions common() {
-        return guardedInstance(ModCommonOptions.INSTANCE.get());
     }
 
     /**

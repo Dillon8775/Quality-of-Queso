@@ -25,7 +25,7 @@ import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
 import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.*;
 import static net.dillon.qualityofqueso.keybind.ModKeyMappings.MOVE_TO_CONTAINER;
 import static net.dillon.qualityofqueso.keybind.ModKeyMappings.MOVE_TO_INVENTORY;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
 
 /**
  * Handles extracting and rendering events.
@@ -202,6 +202,11 @@ public class ExtractingEvents extends ManagementEvents {
         ItemStack stackToCheck = (!cursorStack.isEmpty())
                 ? cursorStack
                 : hoveredSlot.getItem();
+
+        // Do not highlight matching items if dropping entire locked slot stack
+        if (lockedSlotEvents().droppingEntireLockedSlotStack(hoveredSlotWidget)) {
+            return;
+        }
 
         // Determine total slots based on if the player is in inventory or container screen
         boolean isDroppingFromContainer = client().management().quickDrop.enabled() && isContainerScreen() && hasCtrlDown() && hasAltDown();

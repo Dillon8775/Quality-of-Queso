@@ -1,6 +1,6 @@
 package net.dillon.qualityofqueso.widget.management;
 
-import net.dillon.qualityofqueso.widget.management.toggleable.BulkSelectButton;
+import net.dillon.qualityofqueso.widget.management.toggleable.BulkButton;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.GuiPipeline;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -21,7 +21,7 @@ import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
 import static net.dillon.qualityofqueso.helper.MethodHelper.getImageWidth;
 import static net.dillon.qualityofqueso.helper.ModConstants.RENDERED_BUTTONS;
 import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
 
 /**
  * A layout, either horizontally or vertically, that holds all {@link ManagementButton}s on the current screen.
@@ -231,7 +231,7 @@ public class WidgetLayout extends AbstractWidget {
                 continue;
             }
 
-            boolean repositionBulkCraft = inventoryScreen && widget instanceof BulkSelectButton && client().accessibility().repositionBulkCraftButton;
+            boolean repositionBulkCraft = inventoryScreen && widget instanceof BulkButton && client().accessibility().repositionBulkCraftButton;
 
             if (client().management().layout.horizontal()) {
                 widget.setX(getManagementButtonX(getImageWidth(this.screen), this.screen.width, buttons));

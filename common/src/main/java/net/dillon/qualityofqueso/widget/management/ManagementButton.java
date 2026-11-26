@@ -22,7 +22,7 @@ import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
 import static net.dillon.qualityofqueso.helper.ModConstants.MOVE_ONE_PATH;
 import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.canScrollMoveAndHasScrollModifierDown;
 import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.hasAnyManagementModifierDown;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
 import static net.dillon.qualityofqueso.widget.management.ManagementSprites.managementIdentifier;
 
 /**

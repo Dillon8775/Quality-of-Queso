@@ -26,7 +26,7 @@ import static net.dillon.qualityofqueso.helper.ModHelper.allDisallowedAutoFocusK
 import static net.dillon.qualityofqueso.helper.ModHelper.popularKeys;
 import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.*;
 import static net.dillon.qualityofqueso.keybind.ModKeyMappings.QUICK_DROP;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
 
 /**
  * Handles all key pressing events.

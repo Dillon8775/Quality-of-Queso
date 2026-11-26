@@ -13,8 +13,8 @@ import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
 import static net.dillon.qualityofqueso.helper.MethodHelper.*;
 import static net.dillon.qualityofqueso.helper.ModConstants.CURRENT_CONTAINER;
 import static net.dillon.qualityofqueso.helper.ModConstants.SAVED_EXCLUDED_SLOTS;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
-import static net.dillon.qualityofqueso.option.OptionInstances.updateClient;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.updateClient;
 
 /**
  * Handles screen creation, with creating and initializing the correct variables.

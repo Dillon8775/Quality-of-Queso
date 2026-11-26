@@ -29,8 +29,8 @@ import static net.dillon.dillonlib.task.ClientTasks.hasShiftDown;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.hoveredSlotHasItem;
 import static net.dillon.qualityofqueso.helper.MethodHelper.inputKey;
 import static net.dillon.qualityofqueso.helper.ModHelper.*;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
-import static net.dillon.qualityofqueso.option.OptionInstances.updateClient;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.updateClient;
 
 @Mixin(CreativeModeInventoryScreen.class)
 public abstract class CreativeModeInventoryScreenMixin extends AbstractContainerScreen<CreativeModeInventoryScreen.ItemPickerMenu> {

@@ -15,8 +15,8 @@ import static net.dillon.qualityofqueso.helper.ManagementHelper.isContainerScree
 import static net.dillon.qualityofqueso.helper.ManagementHelper.isInventoryScreen;
 import static net.dillon.qualityofqueso.helper.MethodHelper.getRecipeBookComponent;
 import static net.dillon.qualityofqueso.helper.ModConstants.*;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
-import static net.dillon.qualityofqueso.option.OptionInstances.updateClient;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.updateClient;
 
 /**
  * Handles closing of screens.

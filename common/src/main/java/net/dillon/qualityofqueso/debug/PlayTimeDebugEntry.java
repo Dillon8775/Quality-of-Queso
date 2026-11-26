@@ -8,19 +8,24 @@ import net.minecraft.world.level.chunk.LevelChunk;
 import org.jspecify.annotations.Nullable;
 
 import static net.dillon.dillonlib.task.ClientTasks.getLevelKey;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
 
 public class PlayTimeDebugEntry extends ModDebugEntry {
 
     @Override
     public void display(DebugScreenDisplayer displayer, @Nullable Level serverOrClientLevel, @Nullable LevelChunk clientChunk, @Nullable LevelChunk serverChunk) {
+        if (!modEnabled()) {
+            return;
+        }
+
         // Return out if the player isn't in a world, or the player is null
         if (serverOrClientLevel == null) {
             return;
         }
 
         // Add play time fact
-        long playtimeInSeconds = client().misc().levelPlaytimes.getOrDefault(getLevelKey(), 0L);
+        long playtimeInSeconds = client().dingsAndAlarms().levelPlaytimes.getOrDefault(getLevelKey(true), 0L);
         long playtimeInTicks = new TickValue(playtimeInSeconds).toTicksSeconds();
         displayer.addFactToGroup(
                 DebugGroups.MISC,

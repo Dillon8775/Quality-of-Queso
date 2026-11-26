@@ -13,7 +13,7 @@ import static net.dillon.dillonlib.util.Arithmetics.roundToTenths;
 import static net.dillon.qualityofqueso.config.ConfigurationScreen.fixedSizeImage;
 import static net.dillon.qualityofqueso.config.ConfigurationScreen.fixedSizeWebpImage;
 import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
 
 /**
  * The Hud options category for the {@link ConfigurationScreen}.

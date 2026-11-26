@@ -21,7 +21,7 @@ import net.minecraft.world.item.enchantment.ItemEnchantments;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.getBarWidth;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.isInventoryScreen;
 import static net.dillon.qualityofqueso.helper.MethodHelper.*;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
 
 /**
  * Handles searching-related functions.

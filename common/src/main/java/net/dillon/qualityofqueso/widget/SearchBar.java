@@ -23,8 +23,8 @@ import static net.dillon.qualityofqueso.helper.GuiHelper.drawTooltip;
 import static net.dillon.qualityofqueso.helper.ModConstants.DEFAULT_TRANSPARENT_SEARCH_BAR_TEXT_COLOR;
 import static net.dillon.qualityofqueso.helper.ModConstants.SEARCH_TEXTURE;
 import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
-import static net.dillon.qualityofqueso.option.OptionInstances.updateClient;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.updateClient;
 
 /**
  * An representation of a search bar.

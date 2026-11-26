@@ -37,9 +37,12 @@ public class QuesoStopwatchCommand {
      * Dismisses a stopwatch.
      */
     private static <S> int dismiss(S source, Function<S, ClientCommandFeedback> feedback, String name) {
-        Stopwatch stopwatch = Timers.getTickerByName(name, STOPWATCHES);
-
         ClientCommandFeedback commandFeedback = feedback.apply(source);
+        if (!canExecuteCommand(commandFeedback)) {
+            return 0;
+        }
+
+        Stopwatch stopwatch = Timers.getTickerByName(name, STOPWATCHES);
         if (tickerDoesntExist(commandFeedback, name, STOPWATCHES, Stopwatch.ID)) {
             return 0;
         }

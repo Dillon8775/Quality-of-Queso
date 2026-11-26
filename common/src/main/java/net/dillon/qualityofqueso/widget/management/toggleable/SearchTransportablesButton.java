@@ -9,7 +9,7 @@ import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
 import static net.dillon.qualityofqueso.widget.management.ManagementSprites.managementIdentifier;
 
 /**

@@ -1,12 +1,10 @@
 package net.dillon.qualityofqueso.util;
 
-import net.dillon.dillonlib.util.TickValue;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.Options;
 import net.minecraft.network.chat.Component;
 
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
 import static net.dillon.qualityofqueso.util.ModOptionUtil.*;
 
 /**
@@ -136,15 +134,9 @@ public class ListOptions {
     public static OptionInstance<Integer> itemFrameSearchGlowDuration() {
         return createIntegerOption(
                 "qualityofqueso.options.item_frame_search_glow_duration",
-                (optionText, value) -> {
-                    if (value == 0) {
-                        return Options.genericValueLabel(optionText, Component.literal("Indefinite").withStyle(ChatFormatting.RED));
-                    }
-
-                    return Options.genericValueLabel(optionText, Component.literal(new TickValue(value).formattedFromTick()));
-                },
+                (optionText, value) -> Options.genericValueLabel(optionText, formattedItemFrameGlowDuration(value)),
                 0,
-                new TickValue(3).toTicksMinutes(),
+                ITEM_FRAME_GLOW_DURATION_MAX_VALUE,
                 client().searching().itemFrameSearchGlowDuration,
                 (options, value) -> options.searching().itemFrameSearchGlowDuration = value
         );

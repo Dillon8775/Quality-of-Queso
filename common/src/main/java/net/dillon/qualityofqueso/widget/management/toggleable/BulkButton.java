@@ -5,16 +5,16 @@ import net.dillon.qualityofqueso.widget.management.ManagementSprites;
 import net.minecraft.network.chat.Component;
 
 import static net.dillon.qualityofqueso.helper.ManagementHelper.isMerchantScreen;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
-import static net.dillon.qualityofqueso.option.OptionInstances.updateClient;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.updateClient;
 import static net.dillon.qualityofqueso.widget.management.ManagementSprites.managementIdentifier;
 
 /**
  * A management button that recursively crafts a selected recipe or trade until ingredients run out.
  */
-public class BulkSelectButton extends ToggleableButton {
+public class BulkButton extends ToggleableButton {
 
-    public BulkSelectButton(ManagementParams params) {
+    public BulkButton(ManagementParams params) {
         super(params, b -> updateClient(client -> {
             if (isMerchantScreen()) {
                 client.management().bulkTrading = !client.management().bulkTrading;
@@ -32,8 +32,8 @@ public class BulkSelectButton extends ToggleableButton {
     @Override
     protected ManagementSprites getManagementSprites() {
         return new ManagementSprites(
-                managementIdentifier("bulk_craft/bulk_craft"),
-                managementIdentifier("bulk_craft/normal_craft")
+                managementIdentifier("bulk/bulking"),
+                managementIdentifier("bulk/normal")
         );
     }
 

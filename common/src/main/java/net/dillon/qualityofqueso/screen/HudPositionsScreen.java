@@ -26,8 +26,8 @@ import static net.dillon.qualityofqueso.helper.GuiHelper.drawVisualTimeClock;
 import static net.dillon.qualityofqueso.helper.GuiHelper.getArmorHotbarTexture;
 import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
 import static net.dillon.qualityofqueso.helper.ModHelper.saveAndApplyChanges;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
-import static net.dillon.qualityofqueso.option.OptionInstances.updateClient;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.updateClient;
 
 /**
  * A screen used to configure the position of elements.

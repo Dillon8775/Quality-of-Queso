@@ -3,7 +3,7 @@ package net.dillon.qualityofqueso.option.eum.general;
 import com.mojang.serialization.Codec;
 import net.minecraft.util.StringRepresentable;
 
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
 
 public enum Theme implements StringRepresentable {
     VANILLA("Vanilla"),

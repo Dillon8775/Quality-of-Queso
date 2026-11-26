@@ -43,6 +43,8 @@ public class ClientMain {
             instances.add(handler);
         }
 
+        ModConstants.GLOBAL_SORTING_MODE = ModClientOptions.INSTANCE.get().sorting().currentSortingMode;
+
         ReloadConfigCommand.createReloadable(
                 ModConstants.MOD_ID,
                 instances

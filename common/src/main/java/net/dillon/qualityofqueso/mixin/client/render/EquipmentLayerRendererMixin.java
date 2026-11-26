@@ -22,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
 
 @Predicated
 @Mixin(EquipmentLayerRenderer.class)
@@ -47,7 +47,7 @@ public class EquipmentLayerRendererMixin {
             )
     )
     private RenderType applyArmorHurtRenderType(Identifier texture) {
-        if (!client().misc().redArmorTint || !this.hasRedOverlay) {
+        if (!client().dingsAndAlarms().redArmorTint || !this.hasRedOverlay) {
             return RenderTypes.armorCutoutNoCull(texture);
         }
 
@@ -70,7 +70,7 @@ public class EquipmentLayerRendererMixin {
             index = 4
     )
     private int applyArmorHurtBrightness(int lightCoords) {
-        if (!client().misc().redArmorTint) {
+        if (!client().dingsAndAlarms().redArmorTint) {
             return lightCoords;
         }
 
@@ -93,7 +93,7 @@ public class EquipmentLayerRendererMixin {
             index = 6
     )
     private int applyArmorHurtTint(int tintedColor) {
-        if (!client().misc().redArmorTint) {
+        if (!client().dingsAndAlarms().redArmorTint) {
             return tintedColor;
         }
 
@@ -120,7 +120,7 @@ public class EquipmentLayerRendererMixin {
             index = 5
     )
     private int applyArmorHurtOverlay(int overlayCoords) {
-        if (!client().misc().redArmorTint) {
+        if (!client().dingsAndAlarms().redArmorTint) {
             return overlayCoords;
         }
 
@@ -139,7 +139,7 @@ public class EquipmentLayerRendererMixin {
         at = @At("HEAD")
     )
     private <S> void captureRedOverlayState(EquipmentClientInfo.LayerType layerType, ResourceKey<EquipmentAsset> equipmentAssetId, Model<? super S> model, Object state, ItemStack itemStack, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int lightCoords, Identifier playerTextureOverride, int outlineColor, int order, CallbackInfoReturnable<Integer> cir) {
-        if (!client().misc().redArmorTint) {
+        if (!client().dingsAndAlarms().redArmorTint) {
             return;
         }
 
@@ -155,7 +155,7 @@ public class EquipmentLayerRendererMixin {
         at = @At("RETURN")
     )
     private <S> void clearRedOverlayState(EquipmentClientInfo.LayerType layerType, ResourceKey<EquipmentAsset> equipmentAssetId, Model<? super S> model, Object state, ItemStack itemStack, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int lightCoords, Identifier playerTextureOverride, int outlineColor, int order, CallbackInfoReturnable<Integer> cir) {
-        if (!client().misc().redArmorTint) {
+        if (!client().dingsAndAlarms().redArmorTint) {
             return;
         }
 

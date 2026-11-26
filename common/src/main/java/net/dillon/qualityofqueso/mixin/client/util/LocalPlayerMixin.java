@@ -25,7 +25,7 @@ import static net.dillon.qualityofqueso.helper.ModConstants.SHOULD_WARN_OF_ELYTR
 import static net.dillon.qualityofqueso.helper.ModHelper.equipmentSlots;
 import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
 import static net.dillon.qualityofqueso.helper.SoundHelper.playDingSound;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
 
 @Mixin(LocalPlayer.class)
 public class LocalPlayerMixin extends AbstractClientPlayer {
@@ -94,7 +94,7 @@ public class LocalPlayerMixin extends AbstractClientPlayer {
 
         LocalPlayer player = (LocalPlayer) (Object) this;
 
-        if (client().misc().armorDing) {
+        if (client().dingsAndAlarms().armorDing) {
             boolean triggeredNewLowArmor = false;
             for (int i = 0; i < this.playedDing.length; i++) {
                 EquipmentSlot slot = equipmentSlots()[i];

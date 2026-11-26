@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.concurrent.CompletableFuture;
 
-import static net.dillon.qualityofqueso.option.OptionInstances.common;
+import static net.dillon.qualityofqueso.option.CommonOptionInstances.common;
 
 @Predicated
 @Dill(env = DillEnv.COMMON)
@@ -29,7 +29,7 @@ public class ItemArgumentMixin {
      */
     @Inject(method = "listSuggestions", at = @At("HEAD"), cancellable = true)
     private void fixCommandArgumentSuggestions(CommandContext<? extends SuggestionContext> context, SuggestionsBuilder builder, CallbackInfoReturnable<CompletableFuture<Suggestions>> cir) {
-        if (!common().optimizeItemArgument) {
+        if (!common().enableMod || !common().optimizeItemArgument) {
             return;
         }
 

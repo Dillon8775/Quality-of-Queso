@@ -30,7 +30,7 @@ import static net.dillon.qualityofqueso.helper.GuiHelper.*;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.*;
 import static net.dillon.qualityofqueso.helper.ModConstants.MOVE_AMOUNT;
 import static net.dillon.qualityofqueso.helper.ModKeyMappingHelper.*;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
 import static net.dillon.qualityofqueso.util.EnchantingHelper.isEnchantmentInGroup;
 
 /**

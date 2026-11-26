@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 import static net.dillon.qualityofqueso.helper.ModConstants.*;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
 
 /**
  * Client-side options, only loaded on client side.
@@ -71,7 +71,7 @@ public class ModClientOptions {
     private final GuiOptions guiOptions = new GuiOptions();
     private final ItemCounterOptions itemCounterOptions = new ItemCounterOptions();
     private final ElytraAlarmOptions elytraAlarmOptions = new ElytraAlarmOptions();
-    private final MiscellaneousOptions miscellaneousOptions = new MiscellaneousOptions();
+    private final DingsAndAlarms dingsAndAlarms = new DingsAndAlarms();
     private final EnhancedDurabilityTooltips enhancedDurabilityTooltips = new EnhancedDurabilityTooltips();
     private final VisualTimeOptions visualTimeOptions = new VisualTimeOptions();
     private final FogOptions fogOptions = new FogOptions();
@@ -118,8 +118,8 @@ public class ModClientOptions {
         return this.elytraAlarmOptions;
     }
 
-    public MiscellaneousOptions misc() {
-        return this.miscellaneousOptions;
+    public DingsAndAlarms dingsAndAlarms() {
+        return this.dingsAndAlarms;
     }
 
     public EnhancedDurabilityTooltips enhancedDurabilityTooltips() {
@@ -143,7 +143,6 @@ public class ModClientOptions {
     }
 
     public static class GeneralOptions {
-        public boolean enableMod = true;
         public Tooltips tooltips = Tooltips.DEFAULT;
         public Theme theme = Theme.VANILLA;
     }
@@ -323,6 +322,9 @@ public class ModClientOptions {
 
         public boolean noRecipeBookShift = false;
         public boolean autoCloseRecipeBook = true;
+
+        public boolean antiRageQuit = false;
+        public boolean forceAntiRageQuit = false;
     }
 
     public static class ItemCounterOptions {
@@ -358,7 +360,7 @@ public class ModClientOptions {
         ));
     }
 
-    public static class MiscellaneousOptions {
+    public static class DingsAndAlarms {
         public boolean armorDing = true;
         public boolean mobHitDing = true;
         public int minMobHitDingDistance = 15;
@@ -366,9 +368,6 @@ public class ModClientOptions {
         public boolean alarmSounds = true;
         public boolean showTimeUntilAlarmSounds = false;
         public boolean msForStopwatches = true;
-
-        public boolean antiRageQuit = false;
-        public boolean forceAntiRageQuit = false;
 
         public boolean redArmorTint = false;
         public Map<String, Long> levelPlaytimes = new HashMap<>();

@@ -15,8 +15,8 @@ import net.minecraft.network.chat.Component;
 
 import static net.dillon.dillonlib.task.ClientTasks.*;
 import static net.dillon.qualityofqueso.helper.ManagementHelper.isDropperDispenserOrHopperScreen;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
-import static net.dillon.qualityofqueso.option.OptionInstances.updateClient;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.updateClient;
 import static net.dillon.qualityofqueso.widget.management.ManagementSprites.managementIdentifier;
 
 /**

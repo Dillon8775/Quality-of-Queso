@@ -3,6 +3,7 @@ package net.dillon.qualityofqueso.keybind;
 import com.mojang.blaze3d.platform.InputConstants;
 import net.blay09.mods.kuma.api.*;
 import net.dillon.qualityofqueso.helper.SoundHelper;
+import net.dillon.qualityofqueso.platform.QualityOfQuesoPlatforms;
 import net.dillon.qualityofqueso.screen.LastKnownEnderChestScreen;
 import net.dillon.qualityofqueso.screen.MainMenuScreen;
 import net.dillon.qualityofqueso.screen.VisualTimeScreen;
@@ -11,7 +12,8 @@ import net.minecraft.client.KeyMapping;
 import static net.dillon.dillonlib.task.ClientTasks.*;
 import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
 import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
-import static net.dillon.qualityofqueso.option.OptionInstances.mixins;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.mixins;
+import static net.dillon.qualityofqueso.option.CommonOptionInstances.common;
 
 /**
  * Keybindings for the {@code Quality of Queso} mod.
@@ -101,4 +103,14 @@ public class ModKeyMappings {
                 return false;
             })
             .build();
+
+    /**
+     * @return if item frames can be searched.
+     */
+    public static boolean canSearchItemFrames() {
+        return modEnabled()
+                && common().itemFrameSearching
+                && !isCurrentLevelNull()
+                && QualityOfQuesoPlatforms.getClientPlatform().canSendPacket(getLocalPlayer());
+    }
 }

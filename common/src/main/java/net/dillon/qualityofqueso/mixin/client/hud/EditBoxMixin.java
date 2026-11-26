@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
 import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
-import static net.dillon.qualityofqueso.option.OptionInstances.client;
+import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
 
 @Mixin(EditBox.class)
 public abstract class EditBoxMixin extends AbstractWidget {
