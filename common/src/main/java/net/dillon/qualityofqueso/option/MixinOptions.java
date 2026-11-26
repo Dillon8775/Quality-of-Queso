@@ -18,7 +18,6 @@ public class MixinOptions {
 
         protected MixinHandler() {
             super(ModConstants.DEFAULT_MIXIN_CONFIG_FILE_NAME);
-            this.load();
         }
 
         @Override

@@ -28,7 +28,6 @@ public class ContainerData {
 
         protected ContainerDataHandler() {
             super(ModConstants.DEFAULT_CONTAINER_DATA_FILE_NAME);
-            this.load();
         }
 
         @Override

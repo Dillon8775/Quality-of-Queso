@@ -16,7 +16,6 @@ public class UniversalOptions {
 
         protected UniversalOptionsHandler() {
             super(ModConstants.DEFAULT_UNIVERSAL_CONFIG_FILE_NAME);
-            this.load();
         }
 
         @Override

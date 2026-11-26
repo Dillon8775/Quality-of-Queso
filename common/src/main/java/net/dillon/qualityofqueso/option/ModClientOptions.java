@@ -431,7 +431,6 @@ public class ModClientOptions {
 
         protected ClientOptionsHandler() {
             super(ModConstants.DEFAULT_CLIENT_CONFIG_FILE_NAME);
-            this.load();
         }
 
         @Override

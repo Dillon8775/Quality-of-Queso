@@ -15,7 +15,6 @@ public class ModCommonOptions {
 
         protected CommonOptionsHandler() {
             super(ModConstants.DEFAULT_COMMON_CONFIG_FILE_NAME);
-            this.load();
         }
 
         @Override

@@ -17,7 +17,6 @@ public class LockedPlayerSlots {
 
         protected LockedPlayerSlotsHandler() {
             super(ModConstants.DEFAULT_LOCKED_PLAYER_SLOTS_FILE_NAME);
-            this.load();
         }
 
         @Override

@@ -18,7 +18,6 @@ public class LockedContainerSlots {
 
         protected LockedContainerSlotsHandler() {
             super(ModConstants.DEFAULT_LOCKED_CONTAINER_SLOTS_FILE_NAME);
-            this.load();
         }
 
         @Override
