@@ -8,11 +8,11 @@
   "package": "net.dillon.qualityofqueso.mixin",
   "plugin": "net.dillon.qualityofqueso.mixin.ConditionalMixinPlugin",
   "client": [
-    "fix.AbstractContainerScreenFix",
-    "fabric.FabricAbstractContainerScreenMixin",
-    "CameraMixin",
-    "FogRendererMixin",
-    "fabric.FabricItemStackMixin"
+    "client.FabricAbstractContainerScreenMixin",
+    "client.FabricCameraMixin",
+    "client.FabricFogRendererMixin",
+    "client.FabricItemStackMixin",
+    "fix.AbstractContainerScreenFix"
   ],
   "injectors": {
     "defaultRequire": 1

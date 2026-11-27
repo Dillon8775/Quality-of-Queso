@@ -1,4 +1,4 @@
-package net.dillon.qualityofqueso.mixin;
+package net.dillon.qualityofqueso.mixin.client;
 
 import net.dillon.qualityofqueso.helper.ModHelper;
 import net.minecraft.client.Camera;
@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(FogRenderer.class)
-public class FogRendererMixin {
+public class NeoForgeFogRendererMixin {
 
     /**
      * Removes fog from the game when using the keybind.

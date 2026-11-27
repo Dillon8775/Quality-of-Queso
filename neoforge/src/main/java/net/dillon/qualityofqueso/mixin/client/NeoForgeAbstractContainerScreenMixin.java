@@ -1,4 +1,4 @@
-package net.dillon.qualityofqueso.mixin.neoforge;
+package net.dillon.qualityofqueso.mixin.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import net.dillon.qualityofqueso.event.QuesoScreenHolder;

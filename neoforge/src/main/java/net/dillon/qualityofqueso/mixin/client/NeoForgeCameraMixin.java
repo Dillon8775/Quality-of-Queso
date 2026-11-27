@@ -1,4 +1,4 @@
-package net.dillon.qualityofqueso.mixin;
+package net.dillon.qualityofqueso.mixin.client;
 
 import net.minecraft.client.Camera;
 import net.minecraft.world.level.material.FogType;
@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import static net.dillon.qualityofqueso.helper.ModHelper.cancelFluidFov;
 
 @Mixin(Camera.class)
-public abstract class CameraMixin {
+public abstract class NeoForgeCameraMixin {
     @Shadow
     public abstract FogType getFluidInCamera();
 

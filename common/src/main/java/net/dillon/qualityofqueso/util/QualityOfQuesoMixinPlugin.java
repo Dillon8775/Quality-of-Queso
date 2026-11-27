@@ -31,9 +31,9 @@ public class QualityOfQuesoMixinPlugin extends MixinPluginUtil {
                         "ViaFabricPlus mod is loaded for fabric, disabling this mixin prevents a game crash."
                 ),
                 PredicateEntry.ofDebug(
-                        PredicateEntry.ddouble(
-                                "FogRendererMixin",
-                                "CameraMixin"
+                        PredicateEntry.fabricAndNeoForge(
+                                "client.%sCameraMixin",
+                                "client.%sFogRendererMixin"
                         ),
                         !MixinOptions.INSTANCE.get().fogMixins,
                         "\"fog_mixins\" are disabled."

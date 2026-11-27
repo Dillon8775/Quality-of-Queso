@@ -1,4 +1,4 @@
-package net.dillon.qualityofqueso.mixin;
+package net.dillon.qualityofqueso.mixin.client;
 
 import net.dillon.dillonlib.mixinplugin.Predicated;
 import net.minecraft.client.Camera;
@@ -13,7 +13,7 @@ import static net.dillon.qualityofqueso.helper.ModHelper.cancelFluidFov;
 
 @Predicated
 @Mixin(Camera.class)
-public abstract class CameraMixin {
+public abstract class FabricCameraMixin {
     @Shadow
     public abstract FogType getFogType();
 

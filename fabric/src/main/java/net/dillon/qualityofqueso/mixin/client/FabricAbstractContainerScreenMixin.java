@@ -1,4 +1,4 @@
-package net.dillon.qualityofqueso.mixin.fabric;
+package net.dillon.qualityofqueso.mixin.client;
 
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;

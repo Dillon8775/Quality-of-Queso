@@ -8,9 +8,9 @@
   "package": "net.dillon.qualityofqueso.mixin",
   "plugin": "net.dillon.qualityofqueso.mixin.ConditionalMixinPlugin",
   "client": [
-    "CameraMixin",
-    "FogRendererMixin",
-    "neoforge.NeoForgeAbstractContainerScreenMixin"
+    "client.NeoForgeAbstractContainerScreenMixin",
+    "client.NeoForgeCameraMixin",
+    "client.NeoForgeFogRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

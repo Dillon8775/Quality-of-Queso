@@ -1,4 +1,4 @@
-package net.dillon.qualityofqueso.mixin;
+package net.dillon.qualityofqueso.mixin.client;
 
 import net.dillon.dillonlib.mixinplugin.Predicated;
 import net.dillon.qualityofqueso.helper.ModHelper;
@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Predicated
 @Mixin(FogRenderer.class)
-public class FogRendererMixin {
+public class FabricFogRendererMixin {
 
     /**
      * Removes fog from the game when using the keybind.
