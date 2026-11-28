@@ -18,6 +18,7 @@
 - CUSTOM ITEM GROUPS LOL as well as button
 - add backup config button
 - simple fps entry
+- fixed ctrl + a bug
 
 
 - Completely revamped the mod's main menu screen.

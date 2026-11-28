@@ -60,9 +60,6 @@ public class KeyPressedEvents extends ManagementEvents {
             return false;
         }
 
-        boolean isContainer = isContainerScreen();
-        boolean isInventory = isInventoryScreen();
-
         if (!searchEvents().hasSearchField()) {
             holder().screen().onClose();
             cir.setReturnValue(true);
@@ -70,16 +67,48 @@ public class KeyPressedEvents extends ManagementEvents {
         }
 
         if (client().misc().preventEFromTyping) {
-            boolean isFocused = (holder().searchFields().container() != null && holder().searchFields().container().isFocused())
-                    || (holder().searchFields().inventory() != null && holder().searchFields().inventory().isFocused());
-
-            if (!isFocused || (!isContainer && !isInventory)) {
-                holder().screen().onClose();
-                cir.setReturnValue(true);
-            }
+            return handlePreventEFromTyping();
         }
 
         return false;
+    }
+
+    /**
+     * Handles the "{@code prevent E from typing}" option.
+     */
+    private boolean handlePreventEFromTyping() {
+        if (event.key() == inputKey(getMinecraft().options.keyInventory).getValue()
+                && client().misc().preventEFromTyping
+                && canCloseFromE()
+                && (isContainerScreen() || isInventoryScreen() || isCreativeInventoryScreen())) {
+            holder().screen().onClose();
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return if the screen can close from the "{@code E}" key.
+     */
+    private boolean canCloseFromE() {
+        boolean containerFieldFocused =
+                (holder().searchFields().container() != null && holder().searchFields().container().isFocused());
+
+        boolean inventoryFieldFocused =
+                (holder().searchFields().inventory() != null && holder().searchFields().inventory().isFocused())
+                        || isSearchBoxInsideRecipeBookBordered();
+
+        return !containerFieldFocused && !inventoryFieldFocused;
+    }
+
+    /**
+     * @return if the search box inside the current recipe book screen is bordered.
+     */
+    private boolean isSearchBoxInsideRecipeBookBordered() {
+        return holder().screen() instanceof AbstractRecipeBookScreen<?> recipeBookScreen
+                && getSearchBoxInsideRecipeBook(recipeBookScreen) != null
+                && getSearchBoxInsideRecipeBook(recipeBookScreen).isBordered();
     }
 
     /**
@@ -142,6 +171,13 @@ public class KeyPressedEvents extends ManagementEvents {
     }
 
     /**
+     * @return if the user attempted to press ctrl + a or no ctrl at all.
+     */
+    private boolean hasCtrlAllOrNoCtrl() {
+        return !hasCtrlDown() || (hasCtrlDown() && event.key() == InputConstants.KEY_A);
+    }
+
+    /**
      * Handles quick equipping.
      */
     private boolean handleQuickEquip() {
@@ -157,18 +193,6 @@ public class KeyPressedEvents extends ManagementEvents {
         }
 
         return false;
-    }
-
-    /**
-     * Handles the "{@code prevent E from typing}" option.
-     */
-    private void handlePreventEFromTyping() {
-        boolean canCloseFromE = (holder().searchFields().container() != null && !holder().searchFields().container().isFocused()) || (holder().searchFields().inventory() != null && !holder().searchFields().inventory().isFocused());
-        if ((event.key() == inputKey(getMinecraft().options.keyInventory).getValue() && client().misc().preventEFromTyping && canCloseFromE)
-                && (isContainerScreen() || isInventoryScreen() || isCreativeInventoryScreen())) {
-            holder().screen().onClose();
-            cir.setReturnValue(true);
-        }
     }
 
     /**
@@ -294,7 +318,9 @@ public class KeyPressedEvents extends ManagementEvents {
         }
 
         // Prevent E from typing entirely in fromInventory screens
-        handlePreventEFromTyping();
+        if (handlePreventEFromTyping()) {
+            return;
+        }
 
         // If a "disallowed key that blocks auto-focusing" is pressed, blockRecipeBookTyping and blockContainerTyping become true
         handleAllDisallowedKeys();
@@ -321,16 +347,32 @@ public class KeyPressedEvents extends ManagementEvents {
         boolean canTypeRecipeBook = !hasCtrlDown() && !hasAltDown();
 
         // Recipe book search field logic
-        if (holder().screen() instanceof AbstractRecipeBookScreen<?> recipeScreen && canTypeRecipeBook) {
-            boolean swapKeyValid = swapKeyPressed && (hoveredSlotHasItem(holder().getHoveredSlotWidget()) || holder().screen().getMenu().getSlot(45).hasItem());
-            if (!client().misc().preventEFromTyping || event.key() != inputKey(getMinecraft().options.keyInventory).getValue()) {
-                if (client().searching().quickSearch.enabledForAny() && !blockRecipeBookTyping && !swapKeyValid && !dropKeyPressed && !getRecipeBookComponent(recipeScreen).isVisible() &&
-                        (holder().searchFields().inventory() == null ||
-                                (!holder().searchFields().inventory().isFocused() && !client().searching().quickSearch.searchBar()))) {
+        if (holder().screen() instanceof AbstractRecipeBookScreen<?> recipeScreen
+                && canTypeRecipeBook
+        ) {
+            boolean swapKeyValid = swapKeyPressed
+                    && (hoveredSlotHasItem(holder().getHoveredSlotWidget()) || holder().screen().getMenu().getSlot(45).hasItem());
+            if (!client().misc().preventEFromTyping
+                    || event.key() != inputKey(getMinecraft().options.keyInventory).getValue()
+            ) {
+                if (client().searching().quickSearch.enabledForAny()
+                        && !blockRecipeBookTyping
+                        && !swapKeyValid
+                        && !dropKeyPressed
+                        && !getRecipeBookComponent(recipeScreen).isVisible()
+                        &&
+                        (
+                                holder().searchFields().inventory() == null
+                                        ||
+                                        (
+                                                !holder().searchFields().inventory().isFocused() && !client().searching().quickSearch.searchBar()
+                                        )
+                        )
+                ) {
                     getRecipeBookComponent(recipeScreen).toggleVisibility();
                     MethodHelper.refreshWidgets(holder().screen());
                 }
-                
+
                 if (getSearchBoxInsideRecipeBook(recipeScreen) != null) {
                     boolean unfocus = false;
                     for (int i = 0; i < 9; i++) {
@@ -362,16 +404,27 @@ public class KeyPressedEvents extends ManagementEvents {
 
         // Inventory search field logic
         if (client().searching().inventorySearching && holder().searchFields().inventory() != null) {
-            if (canTypeRecipeBook && holder().screen() instanceof AbstractRecipeBookScreen<?> recipeScreen && getRecipeBookComponent(recipeScreen).isVisible() && !holder().searchFields().inventory().isFocused()) {
+            if (canTypeRecipeBook
+                    && holder().screen() instanceof AbstractRecipeBookScreen<?> recipeScreen
+                    && getRecipeBookComponent(recipeScreen).isVisible()
+                    && !holder().searchFields().inventory().isFocused()
+            ) {
                 GuiHelper.autoFocusElement(getSearchBoxInsideRecipeBook(recipeScreen), event, !cannotType);
-            } else if ((client().searching().quickSearch.enabledForAny() || client().searching().quickSearch.searchBar()) && !blockContainerTyping && (!hasCtrlDown() || (hasCtrlDown() && event.key() == InputConstants.KEY_A))) {
+            } else if (
+                    (client().searching().quickSearch.enabledForAny() || client().searching().quickSearch.searchBar())
+                            && !isSearchBoxInsideRecipeBookBordered()
+                            && !blockContainerTyping
+                            && hasCtrlAllOrNoCtrl()
+            ) {
                 GuiHelper.autoFocusElement(holder().searchFields().inventory(), event, true);
             } else if (holder().searchFields().inventory().isFocused() && cannotType) {
                 holder().searchFields().inventory().setFocused(false);
             }
 
             // Unfocus and close recipe book when fromInventory search field is focused
-            if (holder().screen() instanceof AbstractRecipeBookScreen<?> recipeScreen && getSearchBoxInsideRecipeBook(recipeScreen) != null) {
+            if (holder().screen() instanceof AbstractRecipeBookScreen<?> recipeScreen
+                    && getSearchBoxInsideRecipeBook(recipeScreen) != null
+            ) {
                 if (holder().searchFields().inventory().isFocused()) {
                     getSearchBoxInsideRecipeBook(recipeScreen).setFocused(false);
                     if (event.key() == InputConstants.KEY_BACKSPACE && getRecipeBookComponent(recipeScreen).isVisible()) {
@@ -390,20 +443,31 @@ public class KeyPressedEvents extends ManagementEvents {
                 }
             }
 
-            if (holder().searchFields().inventory().isFocused() && holder().searchFields().inventory().keyPressed(event)) {
+            if (holder().searchFields().inventory().isFocused()
+                    && holder().searchFields().inventory().keyPressed(event)
+            ) {
                 cir.setReturnValue(true);
             }
         }
 
         // Container search field logic
-        if (client().searching().containerSearching && isContainerScreen() && holder().searchFields().container() != null) {
-            if ((client().searching().quickSearch.onForAny() || client().searching().quickSearch.searchBar()) && !blockContainerTyping && (!hasCtrlDown() || (hasCtrlDown() && event.key() == InputConstants.KEY_A))) {
+        if (client().searching().containerSearching
+                && isContainerScreen()
+                && holder().searchFields().container() != null
+        ) {
+            if (
+                    (client().searching().quickSearch.onForAny() || client().searching().quickSearch.searchBar())
+                            && !blockContainerTyping
+                            && hasCtrlAllOrNoCtrl()
+            ) {
                 GuiHelper.autoFocusElement(holder().searchFields().container(), event, true);
             } else if (holder().searchFields().container().isFocused() && cannotType) {
                 holder().searchFields().container().setFocused(false);
             }
 
-            if (holder().searchFields().container().isFocused() && holder().searchFields().container().keyPressed(event)) {
+            if (holder().searchFields().container().isFocused()
+                    && holder().searchFields().container().keyPressed(event)
+            ) {
                 cir.setReturnValue(true);
             }
         }

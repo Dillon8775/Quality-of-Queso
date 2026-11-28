@@ -5,6 +5,8 @@ import dev.isxander.yacl3.gui.image.ImageRenderer;
 import dev.isxander.yacl3.gui.image.ImageRendererManager;
 import dev.isxander.yacl3.gui.image.impl.AnimatedDynamicTextureImage;
 import net.dillon.dillonlib.client.component.TextureBuilder;
+import net.dillon.dillonlib.util.YaclOneConfigBridge;
+import net.dillon.qualityofqueso.helper.ModConstants;
 import net.dillon.qualityofqueso.helper.ModHelper;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
@@ -37,7 +39,10 @@ public class ConfigurationScreen {
                         DebugTextCategory.create(),
                         MiscellaneousCategory.create()
                 ))
-                .save(ModHelper::saveAndApplyChanges)
+                .save(() -> {
+                    ModHelper.saveAndApplyChanges();
+                    YaclOneConfigBridge.reparse(ModConstants.MOD_ID, configScreen());
+                })
                 .build();
     }
 

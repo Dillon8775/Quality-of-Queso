@@ -3,6 +3,8 @@ package net.dillon.qualityofqueso.main;
 import net.blay09.mods.balm.core.BalmRegistrars;
 import net.dillon.dillonlib.client.command.ReloadConfigCommand;
 import net.dillon.dillonlib.util.BaseOptions;
+import net.dillon.dillonlib.util.YaclOneConfigBridge;
+import net.dillon.qualityofqueso.config.ConfigurationScreen;
 import net.dillon.qualityofqueso.helper.ModConstants;
 import net.dillon.qualityofqueso.option.*;
 import net.dillon.qualityofqueso.sound.ModSoundEvents;
@@ -25,6 +27,7 @@ public class ClientMain {
         loadClientConfigs();
 
         CustomItemGroup.registerCustomItemGroups();
+        YaclOneConfigBridge.createInitialParseBridge(ModConstants.MOD_ID, ConfigurationScreen::configScreen);
     }
 
     /**

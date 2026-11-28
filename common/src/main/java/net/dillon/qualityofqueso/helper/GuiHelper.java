@@ -420,7 +420,7 @@ public class GuiHelper {
             screen.setFocused(editBox);
         }
 
-        if (!wasFocused || overrideFocus) {
+        if ((!wasFocused && !hasCtrlDown()) || overrideFocus) {
             String input = SDLKeyboard.SDL_GetKeyName(event.keycode());
 
             if (input == null || input.length() > 1) {
