@@ -2,10 +2,10 @@ package net.dillon.qualityofqueso.main;
 
 import net.dillon.dillonlib.task.CommonTasks;
 import net.dillon.qualityofqueso.option.ModClientOptions;
+import net.dillon.qualityofqueso.util.CustomItemGroup;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextColor;
+import net.minecraft.network.chat.*;
 
 import static net.dillon.dillonlib.task.ClientTasks.executeIfClientPlayer;
 import static net.dillon.dillonlib.task.ClientTasks.getCurrentServerIp;
@@ -29,8 +29,8 @@ public class ClientEvents {
         }
 
         executeIfClientPlayer(localPlayer -> {
-            if (client().accessibility().serverWarnings && isOnServer()) {
-                for (String server : client().accessibility().bannedServers) {
+            if (client().misc().serverWarnings && isOnServer()) {
+                for (String server : client().misc().bannedServers) {
                     String serverIp = getCurrentServerIp(false);
 
                     if (serverIp.contains(server)) {
@@ -38,6 +38,21 @@ public class ClientEvents {
                                 Component.literal(serverIp).withStyle(ChatFormatting.DARK_RED)));
                     }
                 }
+            }
+
+            if (CustomItemGroup.ERROR_PARSING_FILE) {
+                localPlayer.sendSystemMessage(Component.translatable("qualityofqueso.custom_item_group_file_parse_failed")
+                        .withStyle(ChatFormatting.RED)
+                        .withStyle(
+                                Style.EMPTY
+                                        .withHoverEvent(
+                                                new HoverEvent.ShowText(Component.literal(CustomItemGroup.PARSING_ERROR))
+                                        )
+                                        .withClickEvent(
+                                                new ClickEvent.OpenFile(CustomItemGroup.filePath())
+                                        )
+                        )
+                );
             }
 
             CommonTasks.sendUpdateMessage(MOD_INFO, localPlayer, TextColor.GOLD.getValue());
@@ -60,7 +75,7 @@ public class ClientEvents {
             return;
         }
 
-        if (client().accessibility().serverWarnings && minecraft.player != null) {
+        if (client().misc().serverWarnings && minecraft.player != null) {
             minecraft.player.sendSystemMessage(Component.translatable("qualityofqueso.gui.mod_not_installed"));
         }
     }

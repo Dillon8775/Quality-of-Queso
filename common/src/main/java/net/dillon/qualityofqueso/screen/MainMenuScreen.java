@@ -107,6 +107,11 @@ public class MainMenuScreen extends DillonLibScreen {
                 ModHelper::modEnabled
         );
 
+        AbstractWidget createCustomItemGroups = createWidget(
+                ButtonHelper.createCustomItemGroupsButton(),
+                ModHelper::modEnabled
+        );
+
         GridBuilder builder = GridBuilder.create(this)
                 .setRowSpacing(4)
                 .setColumnSpacing(8);
@@ -136,6 +141,7 @@ public class MainMenuScreen extends DillonLibScreen {
         utilities.addChild(ButtonHelper.createScreenshotsButton());
         utilities.addChild(visualTime);
         utilities.addChild(openItemFrameSearchGUI);
+        utilities.addChild(createCustomItemGroups);
         utilities.addChild(ButtonHelper.createManageContainerDataButton());
         utilities.addChild(viewLastKnownEnderChestButton);
         builder.fillRowAndCenter(utilities);

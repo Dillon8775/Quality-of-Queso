@@ -3,11 +3,11 @@ package net.dillon.qualityofqueso.screen;
 import net.dillon.dillonlib.client.component.DoneButtonBuilder;
 import net.dillon.dillonlib.client.component.GridBuilder;
 import net.dillon.dillonlib.client.screen.LevelSelectorScreen;
-import net.dillon.dillonlib.platform.Platforms;
 import net.dillon.qualityofqueso.helper.ModConstants;
 import net.dillon.qualityofqueso.option.ContainerData;
 import net.dillon.qualityofqueso.option.LockedContainerSlots;
 import net.dillon.qualityofqueso.option.LockedPlayerSlots;
+import net.dillon.qualityofqueso.widget.ManageConfigAndLevelButton;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.components.MultiLineTextWidget;
@@ -17,10 +17,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.CommonColors;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -163,74 +159,44 @@ public class ConfirmClearContainerDataScreen extends ManageContainerDataScreen {
      * Clears container data.
      */
     private void clearData() {
-        try {
-            Path configDir = Platforms.getUniversalPlatform()
-                    .configDir()
-                    .resolve(ModConstants.DEFAULT_CONFIG_DIR);
+        ManageConfigAndLevelButton.backupConfigs(ModConstants.CONTAINER_DATA_CONFIGS);
 
-            Path backupDir = Platforms.getUniversalPlatform()
-                    .configDir()
-                    .resolve(ModConstants.BACKUP_CONFIG_DIR);
-
-            Files.createDirectories(backupDir);
-
-            Files.copy(
-                    configDir.resolve(ModConstants.DEFAULT_CONTAINER_DATA_FILE_NAME),
-                    backupDir.resolve(ModConstants.DEFAULT_CONTAINER_DATA_FILE_NAME),
-                    StandardCopyOption.REPLACE_EXISTING
-            );
-
-            Files.copy(
-                    configDir.resolve(ModConstants.DEFAULT_LOCKED_CONTAINER_SLOTS_FILE_NAME),
-                    backupDir.resolve(ModConstants.DEFAULT_LOCKED_CONTAINER_SLOTS_FILE_NAME),
-                    StandardCopyOption.REPLACE_EXISTING
-            );
-
-            Files.copy(
-                    configDir.resolve(ModConstants.DEFAULT_LOCKED_PLAYER_SLOTS_FILE_NAME),
-                    backupDir.resolve(ModConstants.DEFAULT_LOCKED_PLAYER_SLOTS_FILE_NAME),
-                    StandardCopyOption.REPLACE_EXISTING
-            );
-
-            if (selectedLevel.isEmpty()) {
-                if (clearMarkedContainerData) {
-                    ContainerData.INSTANCE.setInstance(new ContainerData());
-                }
-
-                if (clearLockedContainerSlots) {
-                    LockedContainerSlots.INSTANCE.setInstance(new LockedContainerSlots());
-                }
-
-                if (clearLockedPlayerSlots) {
-                    LockedPlayerSlots.INSTANCE.setInstance(new LockedPlayerSlots());
-                }
-            } else {
-                if (clearMarkedContainerData) {
-                    containerData().filteredContainers.entrySet().removeIf(this::removeData);
-                    containerData().sortingModes.entrySet().removeIf(this::removeData);
-                    containerData().enderChestItems.entrySet().removeIf(this::removeData);
-                }
-
-                if (clearLockedContainerSlots) {
-                    lockedContainerSlots().lockedContainerSlots.entrySet().removeIf(this::removeData);
-                }
-
-                if (clearLockedPlayerSlots) {
-                    lockedPlayerSlots().lockedPlayerSlots.entrySet().removeIf(this::removeData);
-                }
+        if (selectedLevel.isEmpty()) {
+            if (clearMarkedContainerData) {
+                ContainerData.INSTANCE.setInstance(new ContainerData());
             }
 
-            ContainerData.INSTANCE.save();
-            ContainerData.INSTANCE.load();
+            if (clearLockedContainerSlots) {
+                LockedContainerSlots.INSTANCE.setInstance(new LockedContainerSlots());
+            }
 
-            LockedContainerSlots.INSTANCE.save();
-            LockedContainerSlots.INSTANCE.load();
+            if (clearLockedPlayerSlots) {
+                LockedPlayerSlots.INSTANCE.setInstance(new LockedPlayerSlots());
+            }
+        } else {
+            if (clearMarkedContainerData) {
+                containerData().filteredContainers.entrySet().removeIf(this::removeData);
+                containerData().sortingModes.entrySet().removeIf(this::removeData);
+                containerData().enderChestItems.entrySet().removeIf(this::removeData);
+            }
 
-            LockedPlayerSlots.INSTANCE.save();
-            LockedPlayerSlots.INSTANCE.load();
-        } catch (IOException e) {
-            e.printStackTrace();
+            if (clearLockedContainerSlots) {
+                lockedContainerSlots().lockedContainerSlots.entrySet().removeIf(this::removeData);
+            }
+
+            if (clearLockedPlayerSlots) {
+                lockedPlayerSlots().lockedPlayerSlots.entrySet().removeIf(this::removeData);
+            }
         }
+
+        ContainerData.INSTANCE.save();
+        ContainerData.INSTANCE.load();
+
+        LockedContainerSlots.INSTANCE.save();
+        LockedContainerSlots.INSTANCE.load();
+
+        LockedPlayerSlots.INSTANCE.save();
+        LockedPlayerSlots.INSTANCE.load();
 
         openScreen(this.parent);
     }

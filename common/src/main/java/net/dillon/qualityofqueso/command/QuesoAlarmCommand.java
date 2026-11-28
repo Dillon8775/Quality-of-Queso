@@ -18,8 +18,8 @@ import static net.dillon.qualityofqueso.timer.Timers.*;
  * The command to create alarms.
  */
 public class QuesoAlarmCommand {
-    private static final String HOUR = "hour";
-    private static final String MINUTE = "minute";
+    private static final String hourArgument = "hour";
+    private static final String minuteArgument = "minute";
 
     /**
      * Displays helpful information.
@@ -53,7 +53,7 @@ public class QuesoAlarmCommand {
      * @return the {@code /quesoalarm} command.
      */
     public static <S> LiteralArgumentBuilder<S> create(Function<S, ClientCommandFeedback> feedback) {
-        return LiteralArgumentBuilder.<S>literal("quesoalarm")
+        return LiteralArgumentBuilder.<S>literal("queso_alarm")
                 .then(
                         LiteralArgumentBuilder.<S>literal("help")
                                 .executes(context -> help(
@@ -120,27 +120,27 @@ public class QuesoAlarmCommand {
      * @return a created hour argument.
      */
     private static <S> RequiredArgumentBuilder<S, Integer> hourArgument() {
-        return RequiredArgumentBuilder.argument(HOUR, IntegerArgument.integer(1, 12));
+        return RequiredArgumentBuilder.argument(hourArgument, IntegerArgument.integer(1, 12));
     }
 
     /**
      * @return a created hour argument.
      */
     private static <S> RequiredArgumentBuilder<S, Integer> minuteArgument() {
-        return RequiredArgumentBuilder.argument(MINUTE, IntegerArgument.integer(0, 59));
+        return RequiredArgumentBuilder.argument(minuteArgument, IntegerArgument.integer(0, 59));
     }
 
     /**
      * @return the passed hour argument.
      */
     private static <S> Integer getHour(CommandContext<S> source) {
-        return IntegerArgument.getInteger(source, HOUR);
+        return IntegerArgument.getInteger(source, hourArgument);
     }
 
     /**
      * @return the passed minute argument.
      */
     private static <S> Integer getMinute(CommandContext<S> source) {
-        return IntegerArgument.getInteger(source, MINUTE);
+        return IntegerArgument.getInteger(source, minuteArgument);
     }
 }

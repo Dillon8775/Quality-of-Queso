@@ -36,6 +36,13 @@ public class DebugTextCategory {
                                 )
                                 .option(
                                         debugEntryOption(
+                                                Component.translatable("qualityofqueso.options.simple_fps"),
+                                                OptionDescription.of(Component.translatable("qualityofqueso.options.simple_fps.description")),
+                                                ModDebugScreenEntries.SIMPLE_FPS
+                                        )
+                                )
+                                .option(
+                                        debugEntryOption(
                                                 Component.translatable("qualityofqueso.options.accurate_facing"),
                                                 OptionDescription.of(Component.translatable("qualityofqueso.options.accurate_facing.description")),
                                                 ModDebugScreenEntries.ACCURATE_FACING
@@ -116,7 +123,7 @@ public class DebugTextCategory {
                 .binding(value.status(), () -> minecraft.debugEntries.getStatus(value.entry()), v -> minecraft.debugEntries.setStatus(value.entry(), v))
                 .controller(o -> EnumControllerBuilder.create(o)
                         .enumClass(DebugScreenEntryStatus.class)
-                        .formatValue(v -> Component.literal(DebugBuilder.debugEntryStatus(v))))
+                        .formatValue(DebugBuilder::debugEntryStatus))
                 .build();
     }
 }

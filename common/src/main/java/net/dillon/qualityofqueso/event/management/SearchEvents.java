@@ -104,7 +104,7 @@ public class SearchEvents extends ManagementEvents {
         if (!client().management().includingHotbar
                 && isHotbarSlot(holder().menu().slots.size(), dropping ? slot.index + 1 : slot.index)
                 && (!dropping || !isInventoryScreen() || slot.index != 45)) {
-            boolean applyHotbarFilter = client().accessibility().searchInventory || isInventoryScreen();
+            boolean applyHotbarFilter = client().misc().searchInventory || isInventoryScreen();
             if (applyHotbarFilter) {
                 return false;
             }

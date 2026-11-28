@@ -13,6 +13,7 @@ import java.util.function.Function;
 import static net.dillon.qualityofqueso.helper.ModConstants.ALARM_TRIGGERED;
 import static net.dillon.qualityofqueso.helper.ModConstants.STOPWATCHES;
 import static net.dillon.qualityofqueso.timer.Timers.*;
+import static net.dillon.qualityofqueso.util.ModOptionUtil.canExecuteCommand;
 
 /**
  * The command to create stopwatches.
@@ -77,7 +78,7 @@ public class QuesoStopwatchCommand {
      * Registers the {@code /stopwatch} command.
      */
     public static <S> LiteralArgumentBuilder<S> create(Function<S, ClientCommandFeedback> feedback) {
-        return LiteralArgumentBuilder.<S>literal("quesostopwatch")
+        return LiteralArgumentBuilder.<S>literal("queso_stopwatch")
                 .then(
                         LiteralArgumentBuilder.<S>literal("help")
                                 .executes(context -> help(

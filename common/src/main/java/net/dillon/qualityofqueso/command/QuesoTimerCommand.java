@@ -102,7 +102,7 @@ public class QuesoTimerCommand {
      * @return the {@code /timer} command.
      */
     public static <S> LiteralArgumentBuilder<S> create(Function<S, ClientCommandFeedback> feedback) {
-        return LiteralArgumentBuilder.<S>literal("quesotimer")
+        return LiteralArgumentBuilder.<S>literal("queso_timer")
                 .then(
                         LiteralArgumentBuilder.<S>literal("help")
                                 .executes(context -> help(

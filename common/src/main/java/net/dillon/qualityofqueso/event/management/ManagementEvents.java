@@ -114,7 +114,7 @@ public class ManagementEvents implements ModEvent {
      * @return the fromInventory (size) that should be searched.
      */
     public int getInventorySize() {
-        return client().accessibility().searchInventory ? holder().menu().slots.size() : holder().container() == null ? 0 : holder().container().getContainerSize();
+        return client().misc().searchInventory ? holder().menu().slots.size() : holder().container() == null ? 0 : holder().container().getContainerSize();
     }
 
     /**
@@ -122,7 +122,7 @@ public class ManagementEvents implements ModEvent {
      * <p>Automatically returns {@code true} if "ignore fabric tags" is disabled.</p>
      */
     public boolean isFabricTag(String tagLocation) {
-        return client().accessibility().ignoreFabricTags && tagLocation.startsWith("c:");
+        return client().misc().ignoreFabricTags && tagLocation.startsWith("c:");
     }
 
     /**

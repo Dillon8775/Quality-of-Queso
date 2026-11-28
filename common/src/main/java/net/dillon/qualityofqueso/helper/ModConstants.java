@@ -1,5 +1,6 @@
 package net.dillon.qualityofqueso.helper;
 
+import net.dillon.dillonlib.platform.Platforms;
 import net.dillon.dillonlib.platform.info.ModInfo;
 import net.dillon.dillonlib.util.TickValue;
 import net.dillon.qualityofqueso.event.management.CursorKey;
@@ -16,8 +17,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.*;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static net.dillon.qualityofqueso.helper.ModHelper.qoqIdentifier;
 
@@ -158,14 +161,31 @@ public class ModConstants {
 
     // Config constants
     public static final String DEFAULT_CONFIG_DIR = "qualityofqueso";
-    public static final String BACKUP_CONFIG_DIR = DEFAULT_CONFIG_DIR + "/backups";
+    public static final String DEFAULT_BACKUP_CONFIG_DIR = DEFAULT_CONFIG_DIR + "/backups";
     public static final String DEFAULT_CLIENT_CONFIG_FILE_NAME = "client.json";
     public static final String DEFAULT_COMMON_CONFIG_FILE_NAME = "common.json";
-    public static final String DEFAULT_UNIVERSAL_CONFIG_FILE_NAME = "universal.json";
     public static final String DEFAULT_MIXIN_CONFIG_FILE_NAME = "mixins.json";
     public static final String DEFAULT_CONTAINER_DATA_FILE_NAME = "container_data.json";
     public static final String DEFAULT_LOCKED_CONTAINER_SLOTS_FILE_NAME = "locked_container_slots.json";
     public static final String DEFAULT_LOCKED_PLAYER_SLOTS_FILE_NAME = "locked_player_slots.json";
+    public static final String DEFAULT_CUSTOM_ITEM_GROUPS_CONFIG_FILE_NAME = "custom_item_groups.json";
+    public static final Path CONFIG_DIR = Platforms.getUniversalPlatform().configDir().resolve(DEFAULT_CONFIG_DIR)
+            .toFile().toPath();
+    public static final Path BACKUP_CONFIG_DIR = CONFIG_DIR.resolve("backups");
+    public static final List<String> CONTAINER_DATA_CONFIGS = List.of(
+            DEFAULT_CONTAINER_DATA_FILE_NAME,
+            DEFAULT_LOCKED_CONTAINER_SLOTS_FILE_NAME,
+            DEFAULT_LOCKED_PLAYER_SLOTS_FILE_NAME
+    );
+    public static final List<String> CONFIGS = Stream.concat(
+            Stream.of(
+                    DEFAULT_CLIENT_CONFIG_FILE_NAME,
+                    DEFAULT_COMMON_CONFIG_FILE_NAME,
+                    DEFAULT_MIXIN_CONFIG_FILE_NAME,
+                    DEFAULT_CUSTOM_ITEM_GROUPS_CONFIG_FILE_NAME
+            ),
+            CONTAINER_DATA_CONFIGS.stream()
+    ).toList();
 
     // HUD constants
     public static double PLAYER_FALL_DISTANCE;

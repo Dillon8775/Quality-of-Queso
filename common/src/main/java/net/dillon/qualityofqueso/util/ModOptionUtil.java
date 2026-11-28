@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import net.blay09.mods.kuma.api.KeyModifier;
 import net.blay09.mods.kuma.api.Kuma;
 import net.blay09.mods.kuma.api.ManagedKeyMapping;
+import net.dillon.dillonlib.client.command.ClientCommandFeedback;
 import net.dillon.dillonlib.util.TickValue;
 import net.dillon.qualityofqueso.option.ModClientOptions;
 import net.minecraft.ChatFormatting;
@@ -17,12 +18,25 @@ import java.util.function.BiFunction;
 import static net.dillon.dillonlib.client.util.ModernWidgetOptions.createSimpleBooleanOption;
 import static net.dillon.dillonlib.client.util.ModernWidgetOptions.createSimpleIntegerOption;
 import static net.dillon.qualityofqueso.helper.MethodHelper.kumaKey;
+import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
 
 /**
  * Utility class for option lists.
  */
 public class ModOptionUtil {
     public static final int ITEM_FRAME_GLOW_DURATION_MAX_VALUE = new TickValue(3).toTicksMinutes();
+
+    /**
+     * @return if the user can execute a timer command.
+     */
+    public static boolean canExecuteCommand(ClientCommandFeedback source) {
+        if (!modEnabled()) {
+            source.sendFailure(Component.translatable("qualityofqueso.command.disabled"));
+            return false;
+        }
+
+        return true;
+    }
 
     /**
      * @return a server-side option.

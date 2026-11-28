@@ -6,6 +6,7 @@ import net.dillon.dillonlib.client.component.PlatformMenuButton;
 import net.dillon.dillonlib.platform.client.ClientModPlatform;
 import net.dillon.dillonlib.task.ClientTasks;
 import net.dillon.qualityofqueso.command.QuesoAlarmCommand;
+import net.dillon.qualityofqueso.command.QuesoCustomItemGroupsCommand;
 import net.dillon.qualityofqueso.command.QuesoStopwatchCommand;
 import net.dillon.qualityofqueso.command.QuesoTimerCommand;
 import net.dillon.qualityofqueso.debug.*;
@@ -56,6 +57,7 @@ public abstract class ClientQualityOfQuesoPlatform extends ClientModPlatform {
         dispatcher.register(QuesoAlarmCommand.create(feedback));
         dispatcher.register(QuesoStopwatchCommand.create(feedback));
         dispatcher.register(QuesoTimerCommand.create(feedback));
+        dispatcher.register(QuesoCustomItemGroupsCommand.create(feedback));
     }
 
     @Override
@@ -65,6 +67,7 @@ public abstract class ClientQualityOfQuesoPlatform extends ClientModPlatform {
         Registry.register(registry, ModDebugScreenEntries.LOCAL_TIME.entry(), new RealLifeTimeDebugEntry());
         Registry.register(registry, ModDebugScreenEntries.ALARMS_AND_TIMERS.entry(), new AlarmsAndTimersDebugEntry());
         Registry.register(registry, ModDebugScreenEntries.SIMPLE_COORDINATES.entry(), new SimpleCoordinatesDebugEntry());
+        Registry.register(registry, ModDebugScreenEntries.SIMPLE_FPS.entry(), new SimpleFpsDebugEntry());
         Registry.register(registry, ModDebugScreenEntries.ROTATION.entry(), new RotationDebugEntry());
         Registry.register(registry, ModDebugScreenEntries.ACCURATE_FACING.entry(), new AccurateFacingDebugEntry());
         Registry.register(registry, ModDebugScreenEntries.PLAY_TIME.entry(), new PlayTimeDebugEntry());

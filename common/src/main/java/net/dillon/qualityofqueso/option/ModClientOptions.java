@@ -76,7 +76,7 @@ public class ModClientOptions {
     private final VisualTimeOptions visualTimeOptions = new VisualTimeOptions();
     private final FogOptions fogOptions = new FogOptions();
     private final FovEffectOptions forEffects = new FovEffectOptions();
-    private final AccessibilityOptions accessibilityOptions = new AccessibilityOptions();
+    private final MiscellaneousOptions miscellaneous = new MiscellaneousOptions();
 
     public GeneralOptions general() {
         return this.generalOptions;
@@ -138,13 +138,14 @@ public class ModClientOptions {
         return this.forEffects;
     }
 
-    public AccessibilityOptions accessibility() {
-        return this.accessibilityOptions;
+    public MiscellaneousOptions misc() {
+        return this.miscellaneous;
     }
 
     public static class GeneralOptions {
         public Tooltips tooltips = Tooltips.DEFAULT;
         public Theme theme = Theme.VANILLA;
+        public List<String> blacklistedServers = new ArrayList<>();
     }
 
     public static class SearchingOptions {
@@ -368,9 +369,6 @@ public class ModClientOptions {
         public boolean alarmSounds = true;
         public boolean showTimeUntilAlarmSounds = false;
         public boolean msForStopwatches = true;
-
-        public boolean redArmorTint = false;
-        public Map<String, Long> levelPlaytimes = new HashMap<>();
     }
 
     public static class EnhancedDurabilityTooltips {
@@ -407,7 +405,7 @@ public class ModClientOptions {
         public Bows bows = Bows.ENABLED;
     }
 
-    public static class AccessibilityOptions {
+    public static class MiscellaneousOptions {
         public boolean useLegacyTextures = false;
         public boolean repositionBulkCraftButton = true;
         public boolean perpendicularQuickMoving = false;
@@ -416,11 +414,13 @@ public class ModClientOptions {
         public boolean operatorItemsTab = true;
         public boolean betaWarning = true;
         public boolean serverWarnings = true;
-        public DebugTextAlignment debugTextAlignment = DebugTextAlignment.AUTO;
         public boolean ignoreFabricTags = false;
 
+        public boolean redArmorTint = false;
         public boolean darkerOverlay = false;
+        public DebugTextAlignment debugTextAlignment = DebugTextAlignment.AUTO;
 
+        public Map<String, Long> levelPlaytimes = new HashMap<>();
         public String[] bannedServers = new String[]{
                 "hypixel"
         };

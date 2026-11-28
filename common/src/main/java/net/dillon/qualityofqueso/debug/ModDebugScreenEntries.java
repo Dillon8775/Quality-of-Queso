@@ -19,6 +19,7 @@ import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
  */
 public class ModDebugScreenEntries {
     public static final LibDebugScreenEntry SIMPLE_COORDINATES = create("simple_coordinates");
+    public static final LibDebugScreenEntry SIMPLE_FPS = create("simple_fps");
     public static final LibDebugScreenEntry ACCURATE_FACING = create("accurate_facing");
     public static final LibDebugScreenEntry ROTATION = create("rotation");
     public static final LibDebugScreenEntry PLAY_TIME = create("play_time", DebugScreenEntryStatus.IN_OVERLAY);
@@ -28,9 +29,9 @@ public class ModDebugScreenEntries {
     public static final LibDebugScreenEntry DATE = create("date");
     public static final LibDebugScreenEntry IN_GAME_TIME = create("in_game_time");
 
-    protected static final DebugGroup DATE_AND_TIME_GROUP = DebugBuilder.leftAlignedDebugGroup(Component.translatable("qualityofqueso.debug.date_and_time"), () -> client().accessibility().debugTextAlignment);
-    protected static final DebugGroup ALARMS_AND_TIMERS_GROUP = DebugBuilder.alignedDebugGroup(Component.translatable("qualityofqueso.debug.alarms_and_timers"), () -> client().accessibility().debugTextAlignment);
-    protected static final DebugGroup POTION_EFFECTS_GROUP = DebugBuilder.alignedDebugGroup(Component.translatable("qualityofqueso.debug.potion_effects"), () -> client().accessibility().debugTextAlignment);
+    protected static final DebugGroup DATE_AND_TIME_GROUP = DebugBuilder.leftAlignedDebugGroup(Component.translatable("qualityofqueso.debug.date_and_time"), () -> client().misc().debugTextAlignment);
+    protected static final DebugGroup ALARMS_AND_TIMERS_GROUP = DebugBuilder.alignedDebugGroup(Component.translatable("qualityofqueso.debug.alarms_and_timers"), () -> client().misc().debugTextAlignment);
+    protected static final DebugGroup POTION_EFFECTS_GROUP = DebugBuilder.alignedDebugGroup(Component.translatable("qualityofqueso.debug.potion_effects"), () -> client().misc().debugTextAlignment);
 
     protected static final DebugEntryCategory MOD_CATEGORY = basicDebugCategory(Component.translatable("qualityofqueso"));
 

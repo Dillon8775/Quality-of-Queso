@@ -25,7 +25,7 @@ public class PlayTimeDebugEntry extends ModDebugEntry {
         }
 
         // Add play time fact
-        long playtimeInSeconds = client().dingsAndAlarms().levelPlaytimes.getOrDefault(getLevelKey(true), 0L);
+        long playtimeInSeconds = client().misc().levelPlaytimes.getOrDefault(getLevelKey(true), 0L);
         long playtimeInTicks = new TickValue(playtimeInSeconds).toTicksSeconds();
         displayer.addFactToGroup(
                 DebugGroups.MISC,

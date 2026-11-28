@@ -67,7 +67,7 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
      */
     @Redirect(method = "<init>", at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/screens/inventory/CreativeModeInventoryScreen;displayOperatorCreativeTab:Z"))
     private void enableOperatorTabByDefault(CreativeModeInventoryScreen instance, boolean value) {
-        this.displayOperatorCreativeTab = client().accessibility().operatorItemsTab || minecraft.options.operatorItemsTab().get();
+        this.displayOperatorCreativeTab = client().misc().operatorItemsTab || minecraft.options.operatorItemsTab().get();
     }
 
     /**
@@ -148,7 +148,7 @@ public abstract class CreativeModeInventoryScreenMixin extends AbstractContainer
                 return;
             }
 
-            if (client().accessibility().preventEFromTyping && event.key() == inputKey(minecraft.options.keyInventory).getValue() && !this.searchBox.isFocused()) {
+            if (client().misc().preventEFromTyping && event.key() == inputKey(minecraft.options.keyInventory).getValue() && !this.searchBox.isFocused()) {
                 this.ignoreTextInput = true;
                 this.onClose();
                 cir.setReturnValue(true);

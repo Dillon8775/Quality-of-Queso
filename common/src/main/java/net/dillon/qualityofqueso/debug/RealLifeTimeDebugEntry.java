@@ -9,6 +9,8 @@ import org.jspecify.annotations.Nullable;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
+import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
+
 /**
  * A debug hud to display real-life time.
  */
@@ -17,6 +19,11 @@ public class RealLifeTimeDebugEntry extends ModDebugEntry {
 
     @Override
     public void display(@NonNull DebugScreenDisplayer lines, @Nullable Level serverOrClientLevel, @Nullable LevelChunk clientChunk, @Nullable LevelChunk chunk) {
+        // Return out if mod disabled
+        if (!modEnabled()) {
+            return;
+        }
+
         // Display the player's local time in game
         LocalTime time = LocalTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm a");

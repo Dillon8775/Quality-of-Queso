@@ -69,7 +69,7 @@ public class KeyPressedEvents extends ManagementEvents {
             return true;
         }
 
-        if (client().accessibility().preventEFromTyping) {
+        if (client().misc().preventEFromTyping) {
             boolean isFocused = (holder().searchFields().container() != null && holder().searchFields().container().isFocused())
                     || (holder().searchFields().inventory() != null && holder().searchFields().inventory().isFocused());
 
@@ -164,7 +164,7 @@ public class KeyPressedEvents extends ManagementEvents {
      */
     private void handlePreventEFromTyping() {
         boolean canCloseFromE = (holder().searchFields().container() != null && !holder().searchFields().container().isFocused()) || (holder().searchFields().inventory() != null && !holder().searchFields().inventory().isFocused());
-        if ((event.key() == inputKey(getMinecraft().options.keyInventory).getValue() && client().accessibility().preventEFromTyping && canCloseFromE)
+        if ((event.key() == inputKey(getMinecraft().options.keyInventory).getValue() && client().misc().preventEFromTyping && canCloseFromE)
                 && (isContainerScreen() || isInventoryScreen() || isCreativeInventoryScreen())) {
             holder().screen().onClose();
             cir.setReturnValue(true);
@@ -323,7 +323,7 @@ public class KeyPressedEvents extends ManagementEvents {
         // Recipe book search field logic
         if (holder().screen() instanceof AbstractRecipeBookScreen<?> recipeScreen && canTypeRecipeBook) {
             boolean swapKeyValid = swapKeyPressed && (hoveredSlotHasItem(holder().getHoveredSlotWidget()) || holder().screen().getMenu().getSlot(45).hasItem());
-            if (!client().accessibility().preventEFromTyping || event.key() != inputKey(getMinecraft().options.keyInventory).getValue()) {
+            if (!client().misc().preventEFromTyping || event.key() != inputKey(getMinecraft().options.keyInventory).getValue()) {
                 if (client().searching().quickSearch.enabledForAny() && !blockRecipeBookTyping && !swapKeyValid && !dropKeyPressed && !getRecipeBookComponent(recipeScreen).isVisible() &&
                         (holder().searchFields().inventory() == null ||
                                 (!holder().searchFields().inventory().isFocused() && !client().searching().quickSearch.searchBar()))) {

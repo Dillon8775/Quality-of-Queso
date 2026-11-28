@@ -21,9 +21,9 @@ import static net.dillon.qualityofqueso.packet.ServerPacketHandlers.handleGlowPa
  */
 @Dill(env = DillEnv.COMMON)
 public class QuesoItemFrameSearcherCommand {
-    private static final String ITEM = "item (string)";
-    private static final String RADIUS = "radius (1-512)";
-    private static final String GLOW_DURATION = "glow duration (seconds, max 180)";
+    private static final String itemArgument = "item (string)";
+    private static final String radiusArgument = "radius (1-512)";
+    private static final String glowDurationArgument = "glow duration (seconds, max 180)";
 
     /**
      * Executes the command and makes respective item frames glow.
@@ -56,7 +56,7 @@ public class QuesoItemFrameSearcherCommand {
      */
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(
-                Commands.literal("quesoitemframesearcher")
+                Commands.literal("queso_item_frame_searcher")
                         .then(
                                 Commands.literal("help")
                                         .executes(context -> {
@@ -135,41 +135,41 @@ public class QuesoItemFrameSearcherCommand {
      * @return a created item argument.
      */
     private static RequiredArgumentBuilder<CommandSourceStack, String> itemArgument() {
-        return Commands.argument(ITEM, StringArgument.string());
+        return Commands.argument(itemArgument, StringArgument.string());
     }
 
     /**
      * @return a created radius argument.
      */
     private static RequiredArgumentBuilder<CommandSourceStack, Integer> radiusArgument() {
-        return Commands.argument(RADIUS, IntegerArgument.integer(1, 512));
+        return Commands.argument(radiusArgument, IntegerArgument.integer(1, 512));
     }
 
     /**
      * @return a created glow duration argument.
      */
     private static RequiredArgumentBuilder<CommandSourceStack, Integer> glowDurationArgument() {
-        return Commands.argument(GLOW_DURATION, IntegerArgument.integer(1, 300));
+        return Commands.argument(glowDurationArgument, IntegerArgument.integer(1, 300));
     }
 
     /**
      * @return the passed item argument.
      */
     private static String getItem(CommandContext<CommandSourceStack> source) {
-        return StringArgument.getString(source, ITEM);
+        return StringArgument.getString(source, itemArgument);
     }
 
     /**
      * @return the passed radius argument.
      */
     private static Integer getRadius(CommandContext<CommandSourceStack> source) {
-        return IntegerArgument.getInteger(source, RADIUS);
+        return IntegerArgument.getInteger(source, radiusArgument);
     }
 
     /**
      * @return the passed glow duration argument.
      */
     private static Integer getGlowDuration(CommandContext<CommandSourceStack> source) {
-        return new TickValue(IntegerArgument.getInteger(source, GLOW_DURATION)).toTicksSeconds();
+        return new TickValue(IntegerArgument.getInteger(source, glowDurationArgument)).toTicksSeconds();
     }
 }

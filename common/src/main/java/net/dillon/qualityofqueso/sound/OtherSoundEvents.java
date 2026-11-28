@@ -15,7 +15,8 @@ public enum OtherSoundEvents {
     ITEM_FRAMES_GLOW_REMOVED(ModSoundEvents.Other.ITEM_FRAMES_GLOW_REMOVED),
     ITEM_FRAME_SEARCH_FAILED(ModSoundEvents.Other.ITEM_FRAME_SEARCH_FAILED),
     MOB_HIT(ModSoundEvents.Other.MOB_HIT),
-    ENTITY_KILLED(ModSoundEvents.Other.ENTITY_KILLED);
+    ENTITY_KILLED(ModSoundEvents.Other.ENTITY_KILLED),
+    FILE_OPENED(ModSoundEvents.Other.FILE_OPENED);
 
     private final BalmHolderRegistration<SoundEvent> sound;
 

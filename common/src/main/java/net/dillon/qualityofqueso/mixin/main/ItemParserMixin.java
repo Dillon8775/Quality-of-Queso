@@ -6,6 +6,7 @@ import net.dillon.dillonlib.annotation.Dill;
 import net.dillon.dillonlib.annotation.DillEnv;
 import net.dillon.dillonlib.mixinplugin.Predicated;
 import net.dillon.qualityofqueso.main.CommonMain;
+import net.dillon.qualityofqueso.util.CustomItemGroup;
 import net.minecraft.commands.arguments.item.ItemInput;
 import net.minecraft.commands.arguments.item.ItemParser;
 import net.minecraft.core.Holder;
@@ -30,7 +31,7 @@ public class ItemParserMixin {
      */
     @Inject(method = "parse(Lcom/mojang/brigadier/StringReader;)Lnet/minecraft/commands/arguments/item/ItemInput;", at = @At("HEAD"), cancellable = true)
     private void modifyItemParsing(StringReader reader, CallbackInfoReturnable<ItemInput> cir) {
-        if (!common().enableMod || !common().optimizeItemArgument) {
+        if (!common().enableMod || CustomItemGroup.PARSING_CUSTOM_ITEM_GROUPS || !common().optimizeItemArgument) {
             return;
         }
 

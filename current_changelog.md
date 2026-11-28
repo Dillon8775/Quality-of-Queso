@@ -15,6 +15,9 @@
 
 - Revamped Hud Positions screen.
 - You can now modify the visual clock position in the Hud Positions screen.
+- CUSTOM ITEM GROUPS LOL as well as button
+- add backup config button
+- simple fps entry
 
 
 - Completely revamped the mod's main menu screen.
@@ -33,6 +36,7 @@
 - optimizations to options
 - added dedicated debug screen entries config screen
 - improved mod enabled option
+- removed universal options
 
 - moved options around in file
 - command updates

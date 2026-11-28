@@ -65,6 +65,7 @@ public class ModSoundEvents {
         Other.ALARM_RINGING = registerClient("other.alarm_ringing");
         Other.MOB_HIT = registerClient("other.mob_hit");
         Other.ENTITY_KILLED = registerClient("other.entity_killed");
+        Other.FILE_OPENED = registerClient("other.file_opened");
 
         SLOT_LOCKED = registerClient("management.slot_locked");
         SLOT_UNLOCKED = registerClient("management.slot_unlocked");
@@ -156,5 +157,6 @@ public class ModSoundEvents {
         public static BalmHolderRegistration<SoundEvent> ITEM_FRAME_SEARCH_FAILED;
         public static BalmHolderRegistration<SoundEvent> MOB_HIT;
         public static BalmHolderRegistration<SoundEvent> ENTITY_KILLED;
+        public static BalmHolderRegistration<SoundEvent> FILE_OPENED;
     }
 }

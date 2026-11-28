@@ -6,6 +6,7 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.dillon.dillonlib.annotation.Dill;
 import net.dillon.dillonlib.annotation.DillEnv;
 import net.dillon.dillonlib.mixinplugin.Predicated;
+import net.dillon.qualityofqueso.util.CustomItemGroup;
 import net.minecraft.commands.arguments.item.ItemArgument;
 import net.minecraft.commands.suggestions.SuggestionContext;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -29,7 +30,7 @@ public class ItemArgumentMixin {
      */
     @Inject(method = "listSuggestions", at = @At("HEAD"), cancellable = true)
     private void fixCommandArgumentSuggestions(CommandContext<? extends SuggestionContext> context, SuggestionsBuilder builder, CallbackInfoReturnable<CompletableFuture<Suggestions>> cir) {
-        if (!common().enableMod || !common().optimizeItemArgument) {
+        if (!common().enableMod || CustomItemGroup.PARSING_CUSTOM_ITEM_GROUPS || !common().optimizeItemArgument) {
             return;
         }
 

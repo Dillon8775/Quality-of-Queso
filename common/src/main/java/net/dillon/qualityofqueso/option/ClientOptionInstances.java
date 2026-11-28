@@ -17,13 +17,6 @@ public class ClientOptionInstances {
     }
 
     /**
-     * @return universal options, unaffected by server configs.
-     */
-    public static UniversalOptions universal() {
-        return guardedInstance(UniversalOptions.INSTANCE.get());
-    }
-
-    /**
      * @return mixin options, unaffected by server configs.
      */
     public static MixinOptions mixins() {
@@ -49,6 +42,13 @@ public class ClientOptionInstances {
      */
     public static LockedContainerSlots lockedContainerSlots() {
         return LockedContainerSlots.INSTANCE.get();
+    }
+
+    /**
+     * @return custom item groups.
+     */
+    public static CustomItemGroups customItemGroups() {
+        return guardedInstance(CustomItemGroups.INSTANCE.get());
     }
 
     /**

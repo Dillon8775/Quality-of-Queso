@@ -29,7 +29,7 @@ public class TitleScreenMixin extends Screen {
      */
     @Inject(method = "init", at = @At("TAIL"), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
     private void sendWarning(CallbackInfo ci, int copyrightWidth, int copyrightX, int spacing, int topPos, int numberOfButtons, int currentButton, SpriteIconButton language, SpriteIconButton accessibility) {
-        if (!ModConstants.SHOWN_BETA_TOAST && client().accessibility().betaWarning && QualityOfQuesoPlatforms.getPlatform().release() != Release.STABLE) {
+        if (!ModConstants.SHOWN_BETA_TOAST && client().misc().betaWarning && QualityOfQuesoPlatforms.getPlatform().release() != Release.STABLE) {
             getMinecraft().gui.toastManager().addToast(new SystemToast(
                             SystemToast.SystemToastId.PERIODIC_NOTIFICATION,
                             Component.translatable("qualityofqueso.toast.title.beta_or_alpha"),

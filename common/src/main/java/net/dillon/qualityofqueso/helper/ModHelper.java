@@ -7,7 +7,6 @@ import net.dillon.dillonlib.annotation.DillEnv;
 import net.dillon.qualityofqueso.event.management.SlotClickedEvents;
 import net.dillon.qualityofqueso.option.ModClientOptions;
 import net.dillon.qualityofqueso.option.ModCommonOptions;
-import net.dillon.qualityofqueso.option.UniversalOptions;
 import net.dillon.qualityofqueso.packet.serverbound.ClientPreferencesC2SPacket;
 import net.dillon.qualityofqueso.packet.serverbound.ManualItemPickupC2SPacket;
 import net.dillon.qualityofqueso.sound.OtherSoundEvents;
@@ -36,7 +35,6 @@ import static net.dillon.dillonlib.task.ClientTasks.*;
 import static net.dillon.qualityofqueso.helper.ModConstants.*;
 import static net.dillon.qualityofqueso.helper.SoundHelper.playDingSound;
 import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
-import static net.dillon.qualityofqueso.option.ClientOptionInstances.universal;
 import static net.dillon.qualityofqueso.option.CommonOptionInstances.common;
 
 /**
@@ -80,7 +78,7 @@ public class ModHelper {
         }
 
         // Search through the blacklisted servers lists, and see if current IP address is in the list. Return true if present
-        return universal().blacklistedServers.contains(minecraft.getCurrentServer().ip);
+        return client().general().blacklistedServers.contains(minecraft.getCurrentServer().ip);
     }
 
     /**
@@ -96,7 +94,7 @@ public class ModHelper {
     public static void sendClientPreferencesToServer() {
         Balm.networking().sendToServer(new ClientPreferencesC2SPacket(
                 client().management().includingHotbar,
-                !client().management().includingHotbar || client().accessibility().perpendicularQuickMoving,
+                !client().management().includingHotbar || client().misc().perpendicularQuickMoving,
                 client().display().hideLockInventory ? "UNLOCKED" : client().management().lockInventory.name()
         ));
     }
@@ -180,7 +178,7 @@ public class ModHelper {
         if (ONE_SECOND_PASSED > 0) {
             ONE_SECOND_PASSED--;
         } else if (!isCurrentLevelNull()) {
-            client().dingsAndAlarms().levelPlaytimes.merge(getLevelKey(true), 1L, Long::sum);
+            client().misc().levelPlaytimes.merge(getLevelKey(true), 1L, Long::sum);
             ONE_SECOND_PASSED = DEFAULT_ONE_SECOND_PASSED_COOLDOWN;
         }
 
@@ -291,7 +289,6 @@ public class ModHelper {
      * Saves all configurations.
      */
     public static void saveAndApplyChanges() {
-        UniversalOptions.INSTANCE.save();
         ModClientOptions.INSTANCE.save();
         ModCommonOptions.INSTANCE.save();
     }
@@ -330,5 +327,14 @@ public class ModHelper {
                 InputConstants.KEY_RGUI,
                 InputConstants.KEY_SPACE
         );
+    }
+
+    /**
+     * @return the name in quotes.
+     */
+    public static String quoted(String str, boolean ignoreSpaces) {
+        return ignoreSpaces || str.contains(" ")
+                ? "\"" + str + "\""
+                : str;
     }
 }

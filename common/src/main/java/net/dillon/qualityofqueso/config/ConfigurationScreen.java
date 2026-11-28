@@ -35,7 +35,7 @@ public class ConfigurationScreen {
                         FogCategory.create(),
                         DingsAndAlarmsCategory.create(),
                         DebugTextCategory.create(),
-                        AccessibilityCategory.create()
+                        MiscellaneousCategory.create()
                 ))
                 .save(ModHelper::saveAndApplyChanges)
                 .build();

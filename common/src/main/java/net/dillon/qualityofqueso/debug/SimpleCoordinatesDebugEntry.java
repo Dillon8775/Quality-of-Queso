@@ -12,7 +12,7 @@ import static net.dillon.dillonlib.util.Arithmetics.roundToTenths;
 import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
 
 /**
- * A simple hud entry to display the player's coordinates. Just the coordinates alone.
+ * Displays the player's coordinates, and only the coordinates.
  */
 public class SimpleCoordinatesDebugEntry extends ModDebugEntry {
 

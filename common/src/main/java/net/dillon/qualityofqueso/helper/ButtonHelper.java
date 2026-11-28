@@ -1,16 +1,15 @@
 package net.dillon.qualityofqueso.helper;
 
 import com.mojang.blaze3d.Blaze3D;
-import net.dillon.dillonlib.client.component.BasicSpriteIconButtonBuilder;
-import net.dillon.dillonlib.client.component.SoundBuilder;
-import net.dillon.dillonlib.client.component.SpriteIconButtonWithSound;
-import net.dillon.dillonlib.client.component.UpdatableSpriteButton;
+import net.dillon.dillonlib.client.component.*;
 import net.dillon.dillonlib.core.DillonLibModReferences;
 import net.dillon.dillonlib.platform.info.ModReference;
+import net.dillon.dillonlib.task.ClientTasks;
+import net.dillon.qualityofqueso.command.QuesoCustomItemGroupsCommand;
 import net.dillon.qualityofqueso.screen.LastKnownEnderChestScreen;
 import net.dillon.qualityofqueso.screen.MainMenuScreen;
 import net.dillon.qualityofqueso.screen.ManageContainerDataScreen;
-import net.dillon.qualityofqueso.widget.ManageLevelButton;
+import net.dillon.qualityofqueso.widget.ManageConfigAndLevelButton;
 import net.minecraft.client.gui.components.SpriteIconButton;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -23,7 +22,6 @@ import static net.dillon.dillonlib.task.ClientTasks.*;
 import static net.dillon.qualityofqueso.helper.ModConstants.*;
 import static net.dillon.qualityofqueso.helper.ModHelper.saveAndApplyChanges;
 import static net.dillon.qualityofqueso.option.ClientOptionInstances.client;
-import static net.dillon.qualityofqueso.option.ClientOptionInstances.universal;
 import static net.minecraft.client.gui.components.AbstractWidget.playButtonClickSound;
 
 /**
@@ -50,17 +48,17 @@ public class ButtonHelper {
      * Creates the manage level button.
      */
     public static SpriteIconButtonWithSound createManageLevelButton() {
-        String address = ManageLevelButton.getCurrentServerAddress();
+        String address = ManageConfigAndLevelButton.getCurrentServerAddress();
 
-        return new ManageLevelButton(
+        return new ManageConfigAndLevelButton(
                 b -> {
                     if (isCurrentLevelNull()) {
-                        ManageLevelButton.openConfigDirectory();
+                        ManageConfigAndLevelButton.openConfigDirectory();
                     } else if (isOnServer()) {
-                        if (universal().blacklistedServers.contains(address)) {
-                            universal().blacklistedServers.remove(address);
+                        if (client().general().blacklistedServers.contains(address)) {
+                            client().general().blacklistedServers.remove(address);
                         } else {
-                            universal().blacklistedServers.add(address);
+                            client().general().blacklistedServers.add(address);
                         }
                         saveAndApplyChanges();
                     } else {
@@ -124,10 +122,20 @@ public class ButtonHelper {
     }
 
     /**
+     * @return the create custom item groups button.
+     */
+    public static TexturedIconButton createCustomItemGroupsButton() {
+        return new TexturedIconButton(Identifier.withDefaultNamespace("textures/item/creeper_spawn_egg.png"), Component.translatable("qualityofqueso.create_custom_item_groups"), button -> {
+            executeIfClientLevel(clientLevel -> ClientTasks.setNullScreen());
+            QuesoCustomItemGroupsCommand.execute();
+        });
+    }
+
+    /**
      * @return the path for a widget.
      */
     public static String getWidgetPath(boolean forSearchBar) {
-        String appended = !forSearchBar && client().accessibility().useLegacyTextures ? "legacy/" : "";
+        String appended = !forSearchBar && client().misc().useLegacyTextures ? "legacy/" : "";
         return switch (client().general().theme) {
             case DARK, TRUE_DARK -> "dark/" + appended;
             case TRANSPARENT -> "transparent/";

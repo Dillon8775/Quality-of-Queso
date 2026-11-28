@@ -27,7 +27,8 @@ import static net.dillon.dillonlib.task.ClientTasks.getMinecraft;
 import static net.dillon.dillonlib.task.CommonTasks.sendOverlayMessage;
 import static net.dillon.dillonlib.task.CommonTasks.sendSystemMessage;
 import static net.dillon.qualityofqueso.helper.ModConstants.*;
-import static net.dillon.qualityofqueso.helper.ModHelper.modEnabled;
+import static net.dillon.qualityofqueso.helper.ModHelper.quoted;
+import static net.dillon.qualityofqueso.util.ModOptionUtil.canExecuteCommand;
 
 /**
  * Helper methods for creating timer objects.
@@ -94,27 +95,15 @@ public class Timers {
     }
 
     /**
-     * @return if the user can execute a timer command.
-     */
-    public static boolean canExecuteCommand(ClientCommandFeedback source) {
-        if (!modEnabled()) {
-            source.sendFailure(Component.translatable("qualityofqueso.command.disabled"));
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
      * @return if a ticker doesn't exist.
      */
-    public static <T extends Timer> boolean tickerDoesntExist(ClientCommandFeedback source, String name, List<T> tickers, String id) {
-        if (!canExecuteCommand(source)) {
+    public static <T extends Timer> boolean tickerDoesntExist(ClientCommandFeedback feedback, String name, List<T> tickers, String id) {
+        if (!canExecuteCommand(feedback)) {
             return true;
         }
 
         if (!Timers.contains(name, tickers)) {
-            source.sendFailure(Component.translatable("qualityofqueso.timer.doesnt_exist", id.toLowerCase()));
+            feedback.sendFailure(Component.translatable("qualityofqueso.timer.doesnt_exist", id.toLowerCase()));
             return true;
         }
 
@@ -124,13 +113,13 @@ public class Timers {
     /**
      * @return if a ticker exists.
      */
-    public static <T extends Timer> boolean tickerExists(ClientCommandFeedback source, String name, List<T> tickers, String id) {
-        if (!canExecuteCommand(source)) {
+    public static <T extends Timer> boolean tickerExists(ClientCommandFeedback feedback, String name, List<T> tickers, String id) {
+        if (!canExecuteCommand(feedback)) {
             return true;
         }
 
         if (Timers.contains(name, tickers)) {
-            source.sendSuccess(Component.translatable("qualityofqueso.timer.already_exists", id.toLowerCase()));
+            feedback.sendSuccess(Component.translatable("qualityofqueso.timer.already_exists", id.toLowerCase()));
             return true;
         }
 
@@ -189,8 +178,8 @@ public class Timers {
     /**
      * Creates a ticker.
      */
-    public static <T extends Timer> int createTicker(ClientCommandFeedback source, String name, List<T> tickers, T ticker) {
-        return createTicker(source, name, tickers, ticker, () -> Component.translatable("qualityofqueso.timer.created",
+    public static <T extends Timer> int createTicker(ClientCommandFeedback feedback, String name, List<T> tickers, T ticker) {
+        return createTicker(feedback, name, tickers, ticker, () -> Component.translatable("qualityofqueso.timer.created",
                 ticker.id().toLowerCase(),
                 name
         ));
@@ -199,13 +188,13 @@ public class Timers {
     /**
      * Creates a ticker with a custom message supplier.
      */
-    public static <T extends Timer> int createTicker(ClientCommandFeedback source, String name, List<T> tickers, T ticker, Supplier<Component> message) {
-        if (tickerExists(source, name, tickers, ticker.id())) {
+    public static <T extends Timer> int createTicker(ClientCommandFeedback feedback, String name, List<T> tickers, T ticker, Supplier<Component> message) {
+        if (tickerExists(feedback, name, tickers, ticker.id())) {
             return 0;
         }
 
         tickers.add(ticker);
-        source.sendSuccess(message.get());
+        feedback.sendSuccess(message.get());
         return 1;
     }
 
@@ -219,8 +208,8 @@ public class Timers {
     /**
      * Dismisses a ticker with a custom message supplier.
      */
-    public static <T extends Timer> int dismissTicker(ClientCommandFeedback source, String name, List<T> tickers, String id, boolean stopSound) {
-        if (!canExecuteCommand(source)) {
+    public static <T extends Timer> int dismissTicker(ClientCommandFeedback feedback, String name, List<T> tickers, String id, boolean stopSound) {
+        if (!canExecuteCommand(feedback)) {
             return 0;
         }
 
@@ -228,7 +217,7 @@ public class Timers {
             ALARM_TRIGGERED = false;
         }
         removeTicker(name, tickers);
-        source.sendSuccess(Component.translatable("qualityofqueso.timer.dismissed",
+        feedback.sendSuccess(Component.translatable("qualityofqueso.timer.dismissed",
                 id.toLowerCase(),
                 name
         ));
@@ -238,8 +227,8 @@ public class Timers {
     /**
      * Pauses a ticker.
      */
-    public static <T extends Timer> int pauseTicker(ClientCommandFeedback source, String name, List<T> tickers, String id) {
-        if (tickerDoesntExist(source, name, tickers, id)) {
+    public static <T extends Timer> int pauseTicker(ClientCommandFeedback feedback, String name, List<T> tickers, String id) {
+        if (tickerDoesntExist(feedback, name, tickers, id)) {
             return 0;
         }
 
@@ -249,7 +238,7 @@ public class Timers {
         }
 
         Objects.requireNonNull(ticker).stopped = !ticker.stopped;
-        source.sendSuccess(Component.translatable("qualityofqueso.timer.paused",
+        feedback.sendSuccess(Component.translatable("qualityofqueso.timer.paused",
                 ticker.stopped ? "Paused" : "Unpaused",
                 id.toLowerCase(),
                 name
@@ -260,14 +249,14 @@ public class Timers {
     /**
      * Renames a ticker.
      */
-    public static <T extends Timer> int renameTicker(ClientCommandFeedback source, String name, String newName, List<T> tickers, String id) {
-        if (tickerDoesntExist(source, name, tickers, id)) {
+    public static <T extends Timer> int renameTicker(ClientCommandFeedback feedback, String name, String newName, List<T> tickers, String id) {
+        if (tickerDoesntExist(feedback, name, tickers, id)) {
             return 0;
         }
 
         T ticker = Timers.getTickerByName(name, tickers);
         Objects.requireNonNull(ticker).name = newName;
-        source.sendSuccess(Component.translatable("qualityofqueso.timer.renamed",
+        feedback.sendSuccess(Component.translatable("qualityofqueso.timer.renamed",
                 id.toLowerCase(),
                 name,
                 newName
@@ -365,7 +354,7 @@ public class Timers {
 
             if (player != null && timer.ticks == 0) {
                 String name = timer.name;
-                String command = (isAlarm ? "quesoalarm dismiss " : "quesotimer dismiss ") + quotedName(name);
+                String command = (isAlarm ? "quesoalarm dismiss " : "quesotimer dismiss ") + quoted(name, false);
 
                 sendOverlayMessage(player, Component.translatable("qualityofqueso.timer.triggered_overlay", id, name).withStyle(ChatFormatting.GREEN));
                 sendSystemMessage(player, Component.translatable("qualityofqueso.timer.triggered", id, name)
@@ -417,7 +406,7 @@ public class Timers {
         if (!create) {
             name.suggests((context, builder) -> {
                 for (T timer : timers) {
-                    builder.suggest(quotedName(timer.name));
+                    builder.suggest(quoted(timer.name, false));
                 }
                 return builder.buildFuture();
             });
@@ -525,12 +514,5 @@ public class Timers {
      */
     private static boolean isAm(String str) {
         return str.equalsIgnoreCase(Alarm.AM);
-    }
-
-    /**
-     * @return the name in quotes.
-     */
-    public static String quotedName(String name) {
-        return name.contains(" ") ? "\"" + name + "\"" : name;
     }
 }

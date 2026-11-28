@@ -253,5 +253,14 @@
         "type": "event"
       }
     ]
+  },
+  "qualityofqueso.other.file_opened": {
+    "subtitle": "qualityofqueso.sound.file_opened",
+    "sounds": [
+      {
+        "name": "minecraft:entity.arrow.hit_player",
+        "type": "event"
+      }
+    ]
   }
 }

@@ -147,7 +147,7 @@ public class ExtractingEvents extends ManagementEvents {
         String id = "grayed";
         if (hotbarOverlay) {
             id = "grayed_hotbar";
-        } else if (client().accessibility().darkerOverlay || client().general().theme != Theme.VANILLA) {
+        } else if (client().misc().darkerOverlay || client().general().theme != Theme.VANILLA) {
             id = "grayed_dark";
         }
         TextureBuilder.create(
@@ -204,7 +204,7 @@ public class ExtractingEvents extends ManagementEvents {
                 : hoveredSlot.getItem();
 
         // Do not highlight matching items if dropping entire locked slot stack
-        if (lockedSlotEvents().droppingEntireLockedSlotStack(hoveredSlotWidget)) {
+        if (lockedSlotEvents().droppingEntireLockedSlotStack(hoveredSlotWidget) && !hasAltDown()) {
             return;
         }
 

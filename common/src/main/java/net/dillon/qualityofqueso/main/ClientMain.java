@@ -6,6 +6,7 @@ import net.dillon.dillonlib.util.BaseOptions;
 import net.dillon.qualityofqueso.helper.ModConstants;
 import net.dillon.qualityofqueso.option.*;
 import net.dillon.qualityofqueso.sound.ModSoundEvents;
+import net.dillon.qualityofqueso.util.CustomItemGroup;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,8 @@ public class ClientMain {
         ModSoundEvents.registerClientSounds(registrars);
 
         loadClientConfigs();
+
+        CustomItemGroup.registerCustomItemGroups();
     }
 
     /**
@@ -30,11 +33,11 @@ public class ClientMain {
     private static void loadClientConfigs() {
         List<ModBaseOptionsHandler<?>> handlers = List.of(
                 ModClientOptions.INSTANCE,
-                UniversalOptions.INSTANCE,
                 ContainerData.INSTANCE,
                 LockedContainerSlots.INSTANCE,
                 LockedPlayerSlots.INSTANCE,
-                MixinOptions.INSTANCE
+                MixinOptions.INSTANCE,
+                CustomItemGroups.INSTANCE
         );
 
         List<BaseOptions<?>> instances = new ArrayList<>();

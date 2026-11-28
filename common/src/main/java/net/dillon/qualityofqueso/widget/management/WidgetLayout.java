@@ -231,7 +231,7 @@ public class WidgetLayout extends AbstractWidget {
                 continue;
             }
 
-            boolean repositionBulkCraft = inventoryScreen && widget instanceof BulkButton && client().accessibility().repositionBulkCraftButton;
+            boolean repositionBulkCraft = inventoryScreen && widget instanceof BulkButton && client().misc().repositionBulkCraftButton;
 
             if (client().management().layout.horizontal()) {
                 widget.setX(getManagementButtonX(getImageWidth(this.screen), this.screen.width, buttons));
